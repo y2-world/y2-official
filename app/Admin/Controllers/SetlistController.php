@@ -15,7 +15,7 @@ class SetlistController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Setlist';
+    protected $title = 'セットリスト';
 
     /**
      * Make a grid builder.
@@ -31,15 +31,15 @@ class SetlistController extends AdminController
         $grid->column('tour_title', __('ツアータイトル'));
         $grid->column('date', __('公演日'))->default(date('Y.m.d'));
         $grid->column('venue', __('会場'));
-        $grid->column('setlist', __('セットリスト'))->display(function ($setlist) {
-            $result = [];
-            foreach($setlist as $data) {
-                $result[] = $data['#'].'.'.$data['楽曲'];
-            }
-            return implode('<br>', $result);
-        });
         $grid->field('created_at', __('created_at'))->default(date('Y.m.d'));
         $grid->field('updated_at', __('updated_at'))->default(date('Y.m.d'));
+
+        $grid->filter(function($filter){
+            $filter->like('artist', 'アーティスト');
+            $filter->like('tour_title', 'ツアータイトル');
+            $filter->year('date', '年');
+            $filter->like('venue', __('会場'));
+        });
         
         return $grid;
     }
@@ -60,12 +60,11 @@ class SetlistController extends AdminController
         $show->field('date', __('公演日'));
         $show->field('venue', __('会場'));
         $show->field('setlist', __('セットリスト'))->unescape()->as(function ($setlist) {
-            $results = [];
+            $result = [];
             foreach($setlist as $data) {
-                $results[] = $data['#'];
-                $results[] = $data['楽曲'];
+                $result[] = $data['#'].'.'.$data['楽曲'];
             }
-            return implode('<br>', $results);
+            return implode('<br>', $result);
         });
         $show->field('created_at', __('作成日時'));
         $show->field('updated_at', __('更新日時'));
