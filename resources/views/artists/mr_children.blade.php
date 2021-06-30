@@ -1,8 +1,5 @@
 @extends('layouts.app')
 <style>
-html {
-    font-size: 11px;
-}
 </style>
 @section('content')
 <div class="container">

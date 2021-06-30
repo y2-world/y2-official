@@ -1,14 +1,10 @@
 @extends('layouts.app')
 <title>Yuki Yoshida Live History - Home</title>
 <style>
-html {
-    font-size: 11px;
-}
 .title {
         padding-top: 10px;
     }
 .top-image {
-    padding: 20px 20px;
     text-align: center;
 }
 .btn-outline-dark {
