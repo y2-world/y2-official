@@ -1,4 +1,5 @@
 @extends('layouts.app')
+<title>Yuki Yoshida Live History - 2003</title>
 <style>
 </style>
 @section('content')
