@@ -3,8 +3,6 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;600&display=swap" rel="stylesheet">
         <!-- CSS only -->
@@ -13,7 +11,17 @@
         <!-- Styles -->
         <style>
         nav {
-            font-size:11px;
+          font-size:11px;
+        }
+        footer {
+          height: 100px;
+          background-color: #1872cc;
+          text-align: center;
+          color:white;
+          padding-bottom: 100px;
+        }
+        .footer_logo {
+          padding-top: 50px;
         }
         </style>
     </head>
@@ -86,4 +94,9 @@
 </nav>
     @yield('content')
     </body>
+    <footer>
+        <div class="footer_logo">
+            Yuki Yoshida Live History
+        </div>
+    </footer>
 </html>
