@@ -94,9 +94,5 @@
 </nav>
     @yield('content')
     </body>
-    <footer>
-        <div class="footer_logo">
-            Yuki Yoshida Live History
-        </div>
-    </footer>
+    <div class="mt-4">
 </html>

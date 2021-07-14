@@ -28,5 +28,4 @@
     </li>
     @endforeach
 </div>
-<div class="mt-4"
 @endsection
