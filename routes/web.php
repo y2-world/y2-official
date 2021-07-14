@@ -21,10 +21,15 @@ Route::get('years/2003', function () {
     return view('years/2003');
 });
 
-Route::get('setlists/index', function () {
-    return view('setlists.index');
+Route::get('setlists', function () {
+    return view('setlists');
 });
 
 Route::get('artists/mr.children', function () {
     return view('artists/mr_children');
 });
+
+Route::get('setlists', 'getSetlistController@index');
+Route::resource('setlists', 'getSetlistController');
+
+

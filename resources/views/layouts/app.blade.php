@@ -29,6 +29,7 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{{ url('/') }}">Home</a>
         </li>
+        <a class="nav-link active" aria-current="page" href="{{ url('/setlists') }}">All Set Lists</a>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Year

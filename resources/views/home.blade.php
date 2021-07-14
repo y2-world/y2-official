@@ -21,6 +21,7 @@
     <div class="col-md-4 my-auto">
         <div class="container">
             <h1 class="title"> Yuki Yoshida Live History</h1>
+            <a href="{{ url('setlists') }}"><button type="button" class="btn btn-outline-dark">ALL SET LISTS</button></a>
             <hr>
             <div class="year">
                 <h4>YEAR</h4>
