@@ -18,7 +18,7 @@
                 {{ $setlist -> artist }}
                 </div>
                 <div class="col-md-4">
-                {{ $setlist -> tour_title }}
+                <a href="{{ route('setlist.show', $setlist->id) }}">{{ $setlist -> tour_title }}</a>
                 </div>
                 <div class="col-md-3">
                 {{ $setlist -> venue }}

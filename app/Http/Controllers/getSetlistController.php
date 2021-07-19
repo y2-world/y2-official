@@ -47,7 +47,10 @@ class getSetlistController extends Controller
      */
     public function show($id)
     {
-        //
+        $setlists = Setlist::find($id);
+        // $json = json_decode($setlists['setlist'], true);
+        
+        return view('setlist.show', compact('setlists'));
     }
 
     /**

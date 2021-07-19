@@ -33,3 +33,4 @@ Route::get('setlists', 'getSetlistController@index');
 Route::resource('setlists', 'getSetlistController');
 
 
+Route::get('setlists/{id}', 'getSetlistController@show')->name('setlist.show');
