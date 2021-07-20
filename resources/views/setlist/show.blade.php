@@ -10,6 +10,11 @@
     <br>
     {{ $setlists -> venue }}
     <hr>
+    @php
+        $rec = [];
+        $rec = json_encode($setlists['setlist'], true);
+    @endphp
+    {{$rec}}
 </div>
             
 @endsection

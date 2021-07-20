@@ -62,7 +62,7 @@ class SetlistController extends AdminController
         $show->field('setlist', __('セットリスト'))->unescape()->as(function ($setlist) {
             $result = [];
             foreach($setlist as $data) {
-                $result[] = $data['#'].'.'.$data['楽曲'];
+                $result[] = $data['#'].'.'.$data['song'];
             }
             return implode('<br>', $result);
         });
@@ -87,7 +87,7 @@ class SetlistController extends AdminController
         $form->text('venue', __('会場'))->rules('required');
         $form->table('setlist', __('セットリスト'), function ($table) {
             $table->number('#')->rules('required');
-            $table->text('楽曲')->rules('required');
+            $table->text('song', __('楽曲'))->rules('required');
         });
 
         return $form;
