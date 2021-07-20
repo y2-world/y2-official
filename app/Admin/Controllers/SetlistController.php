@@ -62,7 +62,7 @@ class SetlistController extends AdminController
         $show->field('setlist', __('セットリスト'))->unescape()->as(function ($setlist) {
             $result = [];
             foreach($setlist as $data) {
-                $result[] = $data['#'].'.'.$data['song'];
+                $result[] = $data['#'].'.'.$data['楽曲'];
             }
             return implode('<br>', $result);
         });

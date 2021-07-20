@@ -12,9 +12,9 @@
     <hr>
     @php
         $rec = [];
-        $rec = json_encode($setlists['setlist'], true);
+        $rec = json_encode( $setlists['setlist'], JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT );
     @endphp
-    {{$rec}}
+    {{ $rec }}
 </div>
             
 @endsection
