@@ -4,17 +4,18 @@
 @section('content')
 <br>
 <div class="container">
-    {{ $setlists -> artist }}
+    <h4>{{ $setlists -> artist }}</h4>
     <h2>{{ $setlists -> tour_title }}</h2>
     {{ $setlists -> date }}
     <br>
     {{ $setlists -> venue }}
     <hr>
     @php
-        $rec = [];
-        $rec = json_encode( $setlists['setlist'], JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT );
+        $rec = json_decode($setlists -> setlist, true);
     @endphp
-    {{ $rec }}
+    @foreach ($rec as $data)
+    {{ $rec['楽曲'] }}
+    @endforeach
 </div>
             
 @endsection
