@@ -21,4 +21,9 @@ class Setlist extends Model
     {
         $this->attributes['setlist'] = json_encode(array_values($value));
     }
+
+    public function artist()
+    {
+        return $this->belongsTo(Artist::class, 'artist_id');
+    }
 }

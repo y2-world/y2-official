@@ -25,42 +25,42 @@
             <hr>
             <div class="year">
                 <h4>YEAR</h4>
-                <a href="{{ url('years/2003') }}"><button type="button" class="btn btn-outline-dark">2003</button></a>
-                <button type="button" class="btn btn-outline-dark">2004</button>
-                <button type="button" class="btn btn-outline-dark">2005</button>
-                <button type="button" class="btn btn-outline-dark">2009</button>
-                <button type="button" class="btn btn-outline-dark">2011</button>
-                <button type="button" class="btn btn-outline-dark">2012</button>
-                <button type="button" class="btn btn-outline-dark">2013</button>
-                <button type="button" class="btn btn-outline-dark">2014</button>
-                <button type="button" class="btn btn-outline-dark">2015</button>
-                <button type="button" class="btn btn-outline-dark">2016</button>
-                <button type="button" class="btn btn-outline-dark">2017</button>
-                <button type="button" class="btn btn-outline-dark">2018</button>
-                <button type="button" class="btn btn-outline-dark">2019</button>
-                <button type="button" class="btn btn-outline-dark">2020</button>
-                <button type="button" class="btn btn-outline-dark">2021</button>
+                <a class="btn btn-outline-dark" href="#" role="button">2003</a>
+                <a class="btn btn-outline-dark" href="#" role="button">2004</a>
+                <a class="btn btn-outline-dark" href="#" role="button">2005</a>
+                <a class="btn btn-outline-dark" href="#" role="button">2009</a>
+                <a class="btn btn-outline-dark" href="#" role="button">2011</a>
+                <a class="btn btn-outline-dark" href="#" role="button">2012</a>
+                <a class="btn btn-outline-dark" href="#" role="button">2013</a>
+                <a class="btn btn-outline-dark" href="#" role="button">2014</a>
+                <a class="btn btn-outline-dark" href="#" role="button">2015</a>
+                <a class="btn btn-outline-dark" href="#" role="button">2016</a>
+                <a class="btn btn-outline-dark" href="#" role="button">2017</a>
+                <a class="btn btn-outline-dark" href="#" role="button">2018</a>
+                <a class="btn btn-outline-dark" href="#" role="button">2019</a>
+                <a class="btn btn-outline-dark" href="#" role="button">2020</a>
+                <a class="btn btn-outline-dark" href="#" role="button">2021</a>
             </div>
             <hr>
             <div class="artists">
                 <h4>ARTISTS</h4>
                 <div class="artist-button">
-                    <a href="{{ url('artists/1') }}"><button type="button" class="btn btn-outline-dark">w-inds.</button></a>
-                    <a href="{{ url('artists/2') }}"><button type="button" class="btn btn-outline-dark">Mr.Children</button></a>
-                    <button type="button" class="btn btn-outline-dark">B'z</button>
-                    <button type="button" class="btn btn-outline-dark">flumpool</button>
-                    <button type="button" class="btn btn-outline-dark">福山雅治</button>
-                    <button type="button" class="btn btn-outline-dark">コブクロ</button>
-                    <button type="button" class="btn btn-outline-dark">小池美由</button>
-                    <button type="button" class="btn btn-outline-dark">SE7EN</button>
-                    <button type="button" class="btn btn-outline-dark">スキマスイッチ</button>
-                    <button type="button" class="btn btn-outline-dark">Kis-My-Ft2</button>
-                    <button type="button" class="btn btn-outline-dark">CHEMISTRY</button>
-                    <button type="button" class="btn btn-outline-dark">Charlie Puth</button>
-                    <button type="button" class="btn btn-outline-dark">ウカスカジー</button>
-                    <button type="button" class="btn btn-outline-dark">嵐</button>
-                    <button type="button" class="btn btn-outline-dark">フラチナリズム</button>
-                    <button type="button" class="btn btn-outline-dark">Official髭男dism</button>
+                    <a class="btn btn-outline-dark" href="{{ url('artists/1') }}" role="button">w-inds.</a>
+                    <a class="btn btn-outline-dark" href="{{ url('artists/2') }}" role="button">Mr.Children</a>
+                    <a class="btn btn-outline-dark" href="{{ url('artists/3') }}" role="button">B'z</a>
+                    <a class="btn btn-outline-dark" href="{{ url('artists/4') }}" role="button">flumpool</a>
+                    <a class="btn btn-outline-dark" href="{{ url('artists/5') }}" role="button">福山雅治</a>
+                    <a class="btn btn-outline-dark" href="{{ url('artists/6') }}" role="button">コブクロ</a>
+                    <a class="btn btn-outline-dark" href="{{ url('artists/7') }}" role="button">小池美由</a>
+                    <a class="btn btn-outline-dark" href="{{ url('artists/8') }}" role="button">SE7EN</a>
+                    <a class="btn btn-outline-dark" href="{{ url('artists/9') }}" role="button">スキマスイッチ</a>
+                    <a class="btn btn-outline-dark" href="{{ url('artists/10') }}" role="button">Kis-My-Ft2</a>
+                    <a class="btn btn-outline-dark" href="{{ url('artists/11') }}" role="button">CHEMISTRY</a>
+                    <a class="btn btn-outline-dark" href="{{ url('artists/12') }}" role="button">Charlie Puth</a>
+                    <a class="btn btn-outline-dark" href="{{ url('artists/13') }}" role="button">ウカスカジー</a>
+                    <a class="btn btn-outline-dark" href="{{ url('artists/14') }}" role="button">嵐</a>
+                    <a class="btn btn-outline-dark" href="{{ url('artists/15') }}" role="button">フラチナリズム</a>
+                    <a class="btn btn-outline-dark" href="{{ url('artists/16') }}" role="button">Official髭男dism</a>
                 </div>
             </div>
             <hr>

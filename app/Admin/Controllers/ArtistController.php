@@ -15,7 +15,7 @@ class ArtistController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Artist';
+    protected $title = 'アーティスト';
 
     /**
      * Make a grid builder.

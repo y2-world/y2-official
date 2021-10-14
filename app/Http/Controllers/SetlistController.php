@@ -6,7 +6,7 @@ use App\Artist;
 use App\Setlist;
 use Illuminate\Http\Request;
 
-class getSetlistController extends Controller
+class SetlistController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,8 @@ class getSetlistController extends Controller
      */
     public function index()
     {
-        $setlists = Setlist::all();
+        $setlists = Setlist::orderBy('date', 'asc')
+        ->paginate(10);
         return view('setlists', compact('setlists'));
     }
 
@@ -50,7 +51,7 @@ class getSetlistController extends Controller
     {
         $setlists = Setlist::find($id);
         
-        return view('setlist.show', compact('setlists'));
+        return view('setlists.show', compact('setlists'));
     }
 
     /**

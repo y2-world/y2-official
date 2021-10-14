@@ -23,6 +23,21 @@
         .footer_logo {
           padding-top: 50px;
         }
+        a {
+          color: black;
+          text-decoration: none;
+        }
+        table {
+          counter-reset: rowCount;
+        }
+
+        table > tbody > tr {
+          counter-increment: rowCount;
+        }
+
+        table > tbody > tr > td:first-child::before {
+          content: counter(rowCount);
+        }
         </style>
     </head>
     <body>
@@ -43,7 +58,7 @@
             Year
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="{{ url('years/2003') }}">2003</a></li>
+            <li><a class="dropdown-item" href="#">2003</a></li>
             <li><a class="dropdown-item" href="#">2004</a></li>
             <li><a class="dropdown-item" href="#">2005</a></li>
             <li><a class="dropdown-item" href="#">2009</a></li>
@@ -66,22 +81,22 @@
             Artists
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#">w-inds.</a></li>
-            <li><a class="dropdown-item" href="{{ url('artists/mr.children') }}">Mr.Children</a></li>
-            <li><a class="dropdown-item" href="#">B'z</a></li>
-            <li><a class="dropdown-item" href="#">flumpool</a></li>
-            <li><a class="dropdown-item" href="#">福山雅治</a></li>
-            <li><a class="dropdown-item" href="#">コブクロ</a></li>
-            <li><a class="dropdown-item" href="#">小池美由</a></li>
-            <li><a class="dropdown-item" href="#">SE7EN</a></li>
-            <li><a class="dropdown-item" href="#">スキマスイッチ</a></li>
-            <li><a class="dropdown-item" href="#">Kis-My-Ft2</a></li>
-            <li><a class="dropdown-item" href="#">CHEMISTRY</a></li>
-            <li><a class="dropdown-item" href="#">Charlie Puth</a></li>
-            <li><a class="dropdown-item" href="#">ウカスカジー</a></li>
-            <li><a class="dropdown-item" href="#">嵐</a></li>
-            <li><a class="dropdown-item" href="#">フラチナリズム</a></li>
-            <li><a class="dropdown-item" href="#">Official髭男dism</a></li>
+            <li><a class="dropdown-item" href="{{ url('artists/1') }}">w-inds.</a></li>
+            <li><a class="dropdown-item" href="{{ url('artists/2') }}">Mr.Children</a></li>
+            <li><a class="dropdown-item" href="{{ url('artists/3') }}">B'z</a></li>
+            <li><a class="dropdown-item" href="{{ url('artists/4') }}">flumpool</a></li>
+            <li><a class="dropdown-item" href="{{ url('artists/5') }}">福山雅治</a></li>
+            <li><a class="dropdown-item" href="{{ url('artists/6') }}">コブクロ</a></li>
+            <li><a class="dropdown-item" href="{{ url('artists/7') }}">小池美由</a></li>
+            <li><a class="dropdown-item" href="{{ url('artists/8') }}">SE7EN</a></li>
+            <li><a class="dropdown-item" href="{{ url('artists/9') }}">スキマスイッチ</a></li>
+            <li><a class="dropdown-item" href="{{ url('artists/10') }}">Kis-My-Ft2</a></li>
+            <li><a class="dropdown-item" href="{{ url('artists/11') }}">CHEMISTRY</a></li>
+            <li><a class="dropdown-item" href="{{ url('artists/12') }}">Charlie Puth</a></li>
+            <li><a class="dropdown-item" href="{{ url('artists/13') }}">ウカスカジー</a></li>
+            <li><a class="dropdown-item" href="{{ url('artists/14') }}">嵐</a></li>
+            <li><a class="dropdown-item" href="{{ url('artists/15') }}">フラチナリズム</a></li>
+            <li><a class="dropdown-item" href="{{ url('artists/16') }}">Official髭男dism</a></li>
           </ul>
         </li>
       </ul>
