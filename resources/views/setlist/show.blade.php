@@ -10,11 +10,8 @@
     <br>
     {{ $setlists -> venue }}
     <hr>
-    @php
-        $rec = json_decode($setlists -> setlist, true);
-    @endphp
-    @foreach ($rec as $data)
-    {{ $rec['楽曲'] }}
+    @foreach ($setlists -> setlist as $data)
+    {{ $data['#'] }}.{{ $data['楽曲'] }}<br>
     @endforeach
 </div>
             
