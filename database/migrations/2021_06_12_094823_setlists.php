@@ -20,6 +20,7 @@ class Setlists extends Migration
             $table->date('date');
             $table->string('venue');
             $table->json('setlist')->nullable();
+            $table->json('encore')->nullable();
             $table->timestamps();
         });
     }

@@ -14,6 +14,10 @@
                 @foreach ($setlists->setlist as $data)
                 {{ $data['#'] }}. {{ $data['song'] }}<br>
                 @endforeach
+                <br>
+                @foreach ((array)$setlists->encore as $data)
+                {{ $data['#'] }}. {{ $data['song'] }}<br>
+                @endforeach
             </div>   
         </div>
     </div>       

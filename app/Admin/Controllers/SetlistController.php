@@ -71,16 +71,38 @@ class SetlistController extends AdminController
         $show = new Show(Setlist::findOrFail($id));
 
         $show->field('id', __('ID'));
-        $show->field('artist_id', __('アーティストID'));
+        $show->field('artist_id', __('アーティストID'))->using(['1' => 'w-inds.',
+        '2' => 'Mr.Children', 
+        '3' => "B'z", 
+        '4' => 'flumpool', 
+        '5' => '福山雅治', 
+        '6' => 'コブクロ', 
+        '7' => '小池美由',
+        '8' => 'SE7EN',
+        '9' => 'スキマスイッチ',
+        '10' => 'Kis-My-Ft2',
+        '11' => 'CHEMISTRY',
+        '12' => 'Charlie Puth',
+        '13' => 'ウカスカジー',
+        '14' => '嵐',
+        '15' => 'フラチナリズム',
+        '16' => 'Official髭男dism']);
         $show->field('tour_title', __('ツアータイトル'));
         $show->field('date', __('公演日'));
         $show->field('venue', __('会場'));
-        $show->field('setlist', __('セットリスト'))->unescape()->as(function ($setlist) {
-            $result = [];
-            foreach($setlist as $data) {
-                $result[] = $data['#'].'. '.$data['song'];
+        $show->field('setlist', __('本編'))->unescape()->as(function ($setlist) {
+            $result1 = [];
+            foreach($setlist as $data1) {
+                $result1[] = $data1['#'].'. '.$data1['song'];
             }
-            return implode('<br>', $result);
+            return implode('<br>', $result1);
+        });
+        $show->field('encore', __('アンコール'))->unescape()->as(function ($encore) {
+            $result2 = [];
+            foreach((array)$encore as $data2) {
+                $result2[] = $data2['#'].'. '.$data2['song'];
+            }
+            return implode('<br>', $result2);
         });
         $show->field('created_at', __('作成日時'));
         $show->field('updated_at', __('更新日時'));
@@ -117,7 +139,11 @@ class SetlistController extends AdminController
         $form->text('tour_title', __('ツアータイトル'))->rules('required');
         $form->date('date', __('公演日'))->default(date('Y-m-d'))->rules('required');
         $form->text('venue', __('会場'))->rules('required');
-        $form->table('setlist', __('セットリスト'), function ($table) {
+        $form->table('setlist', __('本編'), function ($table) {
+            $table->number('#')->rules('required');
+            $table->text('song', __('楽曲'))->rules('required');
+        });
+        $form->table('encore', __('アンコール'), function ($table) {
             $table->number('#')->rules('required');
             $table->text('song', __('楽曲'))->rules('required');
         });

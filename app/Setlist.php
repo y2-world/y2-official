@@ -10,6 +10,7 @@ class Setlist extends Model
 
     protected $casts = [
         'setlist' =>'json',
+        'encore' =>'json'
     ];
 
     public function getSetlistAttribute($value)
@@ -20,6 +21,11 @@ class Setlist extends Model
     public function setSetlistAttribute($value)
     {
         $this->attributes['setlist'] = json_encode(array_values($value));
+    }
+
+    public function setEncoreAttribute($value)
+    {
+        $this->attributes['encore'] = json_encode(array_values($value));
     }
 
     public function artist()
