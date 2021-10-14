@@ -16,7 +16,7 @@ class SetlistController extends Controller
     public function index()
     {
         $setlists = Setlist::orderBy('date', 'asc')
-        ->paginate(10);
+        ->paginate(100);
         return view('setlists', compact('setlists'));
     }
 

@@ -10,9 +10,11 @@
             <br>
             {{ $setlists->venue }}
             <hr>
-            @foreach ($setlists->setlist as $data)
-            {{ $data['#'] }}. {{ $data['song'] }}<br>
-            @endforeach
+            <div class="setlist">
+                @foreach ($setlists->setlist as $data)
+                {{ $data['#'] }}. {{ $data['song'] }}<br>
+                @endforeach
+            </div>   
         </div>
     </div>       
 </div>

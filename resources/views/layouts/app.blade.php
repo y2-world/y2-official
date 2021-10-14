@@ -29,6 +29,7 @@
         }
         table {
           counter-reset: rowCount;
+          font-size: 13px;
         }
 
         table > tbody > tr {
@@ -37,6 +38,10 @@
 
         table > tbody > tr > td:first-child::before {
           content: counter(rowCount);
+        }
+
+        .setlist {
+          font-size: 14px;
         }
         </style>
     </head>

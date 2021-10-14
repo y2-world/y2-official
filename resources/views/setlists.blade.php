@@ -2,7 +2,7 @@
 <style>
 </style>
 @section('content')
-<div class="container-lg">
+<div class="container">
     <h1>All Setlists</h1>
     <table class="table table-striped">
         <thead>
