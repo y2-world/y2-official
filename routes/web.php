@@ -25,11 +25,12 @@ Route::get('setlists', function () {
     return view('setlists');
 });
 
-Route::get('artists/mr.children', function () {
-    return view('artists/mr_children');
+Route::get('artists', function () {
+    return view('artists');
 });
 
 Route::get('setlists', 'getSetlistController@index');
 Route::resource('setlists', 'getSetlistController');
+Route::resource('artists', 'ArtistController');
 
 Route::get('setlists/{id}', 'getSetlistController@show')->name('setlist.show');

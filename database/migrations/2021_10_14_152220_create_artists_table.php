@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Setlists extends Migration
+class CreateArtistsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,9 @@ class Setlists extends Migration
      */
     public function up()
     {
-        Schema::create('setlists', function (Blueprint $table) {
+        Schema::create('artists', function (Blueprint $table) {
             $table->id();
-            $table->string('artist_id');
-            $table->string('tour_title');
-            $table->date('date');
-            $table->string('venue');
-            $table->json('setlist')->nullable();
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -31,6 +27,6 @@ class Setlists extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('setlists');
+        Schema::dropIfExists('artists');
     }
 }

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Artist;
 use App\Setlist;
-use Illuminate\Http\Request;
 
-class getSetlistController extends Controller
+class ArtistController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,7 @@ class getSetlistController extends Controller
      */
     public function index()
     {
-        $setlists = Setlist::all();
-        return view('setlists', compact('setlists'));
+        //
     }
 
     /**
@@ -46,11 +45,16 @@ class getSetlistController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Artist $artist)
     {
-        $setlists = Setlist::find($id);
-        
-        return view('setlist.show', compact('setlists'));
+        $artist = Artist::find($artist->id); //idが、リクエストされた$userのidと一致するuserを取得
+        $setlists = Setlist::where('artist_id', $artist->id)
+            ->orderBy('date', 'asc') //$userによる投稿を取得
+            ->paginate(10); // 投稿作成日が新しい順に並べる
+        return view('artists', [
+            'setlists' => $setlists,
+            'artist' => $artist, // $userの書いた記事をviewへ渡す
+        ]);
     }
 
     /**

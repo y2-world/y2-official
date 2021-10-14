@@ -11,7 +11,7 @@
     {{ $setlists -> venue }}
     <hr>
     @foreach ($setlists -> setlist as $data)
-    {{ $data['#'] }}.{{ $data['楽曲'] }}<br>
+    {{ $data['#'] }}. {{ $data['song'] }}<br>
     @endforeach
 </div>
             

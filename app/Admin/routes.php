@@ -12,6 +12,7 @@ Route::group([
 ], function (Router $router) {
 
     $router->get('/', 'HomeController@index')->name('home');
-    $router->resource('auth/setlist', SetlistController::class);
+    $router->resource('setlists', SetlistController::class);
+    $router->resource('artists', ArtistController::class);
 
 });

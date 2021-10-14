@@ -45,8 +45,8 @@
             <div class="artists">
                 <h4>ARTISTS</h4>
                 <div class="artist-button">
-                    <button type="button" class="btn btn-outline-dark">w-inds.</button>
-                    <a href="{{ url('artists/mr.children') }}"><button type="button" class="btn btn-outline-dark">Mr.Children</button></a>
+                    <a href="{{ url('artists/1') }}"><button type="button" class="btn btn-outline-dark">w-inds.</button></a>
+                    <a href="{{ url('artists/2') }}"><button type="button" class="btn btn-outline-dark">Mr.Children</button></a>
                     <button type="button" class="btn btn-outline-dark">B'z</button>
                     <button type="button" class="btn btn-outline-dark">flumpool</button>
                     <button type="button" class="btn btn-outline-dark">福山雅治</button>

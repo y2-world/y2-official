@@ -27,12 +27,28 @@ class SetlistController extends AdminController
         $grid = new Grid(new Setlist());
 
         $grid->column('id', __('ID'));
-        $grid->column('artist', __('アーティスト'));
+        $grid->column('artist_id', __('アーティストID'))
+        ->using(['1' => 'w-inds.',
+        '2' => 'Mr.Children', 
+        '3' => "B'z", 
+        '4' => 'flumpool', 
+        '5' => '福山雅治', 
+        '6' => 'コブクロ', 
+        '7' => '小池美由',
+        '8' => 'SE7EN',
+        '9' => 'スキマスイッチ',
+        '10' => 'Kis-My-Ft2',
+        '11' => 'CHEMISTRY',
+        '12' => 'Charlie Puth',
+        '13' => 'ウカスカジー',
+        '14' => '嵐',
+        '15' => 'フラチナリズム',
+        '16' => 'Official髭男dism']);
         $grid->column('tour_title', __('ツアータイトル'));
         $grid->column('date', __('公演日'))->default(date('Y.m.d'));
         $grid->column('venue', __('会場'));
-        $grid->field('created_at', __('created_at'))->default(date('Y.m.d'));
-        $grid->field('updated_at', __('updated_at'))->default(date('Y.m.d'));
+        $grid->field('created_at', __('作成日'))->default(date('Y.m.d'));
+        $grid->field('updated_at', __('更新日'))->default(date('Y.m.d'));
 
         $grid->filter(function($filter){
             $filter->like('artist', 'アーティスト');
@@ -55,7 +71,7 @@ class SetlistController extends AdminController
         $show = new Show(Setlist::findOrFail($id));
 
         $show->field('id', __('ID'));
-        $show->field('artist', __('アーティスト'));
+        $show->field('artist_id', __('アーティストID'));
         $show->field('tour_title', __('ツアータイトル'));
         $show->field('date', __('公演日'));
         $show->field('venue', __('会場'));
@@ -81,7 +97,23 @@ class SetlistController extends AdminController
     {
         $form = new Form(new Setlist());
 
-        $form->text('artist', __('アーティスト'))->rules('required');
+        $form->select('artist_id', __('アーティストID'))->rules('required')
+        ->options(['1' => 'w-inds.',
+        '2' => 'Mr.Children', 
+        '3' => "B'z", 
+        '4' => 'flumpool', 
+        '5' => '福山雅治', 
+        '6' => 'コブクロ', 
+        '7' => '小池美由',
+        '8' => 'SE7EN',
+        '9' => 'スキマスイッチ',
+        '10' => 'Kis-My-Ft2',
+        '11' => 'CHEMISTRY',
+        '12' => 'Charlie Puth',
+        '13' => 'ウカスカジー',
+        '14' => '嵐',
+        '15' => 'フラチナリズム',
+        '16' => 'Official髭男dism']);
         $form->text('tour_title', __('ツアータイトル'))->rules('required');
         $form->date('date', __('公演日'))->default(date('Y-m-d'))->rules('required');
         $form->text('venue', __('会場'))->rules('required');
