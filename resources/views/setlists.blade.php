@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+<br>
 <div class="container">
     <h1>All Setlists</h1>
     <table class="table table-striped">

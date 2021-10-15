@@ -102,6 +102,8 @@
             <li><a class="dropdown-item" href="{{ url('artists/14') }}">嵐</a></li>
             <li><a class="dropdown-item" href="{{ url('artists/15') }}">フラチナリズム</a></li>
             <li><a class="dropdown-item" href="{{ url('artists/16') }}">Official髭男dism</a></li>
+            <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{{ url('artists/17') }}">FES</a>
           </ul>
         </li>
       </ul>
