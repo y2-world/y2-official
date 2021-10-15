@@ -113,8 +113,8 @@
           </ul>
         </li>
       </ul>
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+      <form class="d-flex" action="{{url('/search')}}" method="GET">
+        <input class="form-control me-2" type="search" aria-label="Search" value="{{request('keyword')}}" name="keyword" required>
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
     </div>

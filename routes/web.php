@@ -25,6 +25,11 @@ Route::get('artists', function () {
     return view('artists');
 });
 
+Route::get('search', function () {
+    return view('search');
+});
+
 Route::resource('setlists', 'SetlistController');
 Route::resource('artists', 'ArtistController');
+Route::resource('search', 'SearchController');
 
