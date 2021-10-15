@@ -1,6 +1,4 @@
 @extends('layouts.app')
-<style>
-</style>
 @section('content')
 <div class="container">
     <h1>All Setlists</h1>

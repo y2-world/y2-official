@@ -1,7 +1,6 @@
 @extends('layouts.app')
-<style>
-</style>
 @section('content')
+<br>
 <div class="container-lg">
     <h1>{{ $artist->name  }}</h1>
     <table class="table table-striped">
