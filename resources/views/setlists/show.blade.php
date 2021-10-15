@@ -18,7 +18,16 @@
                 @foreach ((array)$setlists->encore as $data)
                 {{ $data['#'] }}. {{ $data['song'] }}<br>
                 @endforeach --}}
-            </div>   
+            </div>  
+            <br>
+            <div class="show_button">
+                @if(isset($previous))
+                <a class="btn btn-outline-dark" href="{{ route('setlists.show', $previous->id)}}"　rel="prev" role="button"><</a>
+                @endif
+                @if(isset($next))
+                <a class="btn btn-outline-dark" href="{{ route('setlists.show', $next->id)}}"　rel="next" role="button">></a>
+                @endif
+            </div> 
         </div>
     </div>       
 </div>
