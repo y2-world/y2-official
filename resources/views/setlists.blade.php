@@ -2,7 +2,7 @@
 @section('content')
 <br>
 <div class="container">
-    <h1>All Setlists</h1>
+    <h1>ALL SETLISTS</h1>
     <table class="table table-striped">
         <thead>
           <tr>
