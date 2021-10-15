@@ -1,5 +1,5 @@
 @extends('layouts.app')
-<title>Yuki Yoshida Live History - Home</title>
+<title>Live History - Home</title>
 <style>
 .title {
         padding-top: 10px;
@@ -20,7 +20,7 @@
     </div>
     <div class="col-md-4 my-auto">
         <div class="container">
-            <h1 class="title"> Yuki Yoshida Live History</h1>
+            <h1 class="title">LIVE HISTORY</h1>
             <a href="{{ url('setlists') }}"><button type="button" class="btn btn-outline-dark">ALL SET LISTS</button></a>
             <hr>
             <div class="year">
