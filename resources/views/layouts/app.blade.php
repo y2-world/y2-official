@@ -43,6 +43,12 @@
         .setlist {
           font-size: 14px;
         }
+
+        @media screen and (max-width: 648px) {
+          .show_button {
+            text-align: center;
+          }
+        }
         </style>
     </head>
     <body>
