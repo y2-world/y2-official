@@ -44,26 +44,8 @@
             <hr>
             <div class="artists">
                 <h4>ARTISTS</h4>
-                <a class="btn btn-outline-dark" href="{{ url('artists') }}" role="button">ALL ARTISTS</a>
-                <a class="btn btn-outline-dark" href="{{ url('artists/17') }}" role="button">FES</a>
-                <hr>
-                <div class="artist-button">
-                    <a class="btn btn-outline-dark" href="{{ url('artists/1') }}" role="button">w-inds.</a>
-                    <a class="btn btn-outline-dark" href="{{ url('artists/2') }}" role="button">Mr.Children</a>
-                    <a class="btn btn-outline-dark" href="{{ url('artists/3') }}" role="button">B'z</a>
-                    <a class="btn btn-outline-dark" href="{{ url('artists/4') }}" role="button">flumpool</a>
-                    <a class="btn btn-outline-dark" href="{{ url('artists/5') }}" role="button">福山雅治</a>
-                    <a class="btn btn-outline-dark" href="{{ url('artists/6') }}" role="button">コブクロ</a>
-                    <a class="btn btn-outline-dark" href="{{ url('artists/7') }}" role="button">小池美由</a>
-                    <a class="btn btn-outline-dark" href="{{ url('artists/8') }}" role="button">SE7EN</a>
-                    <a class="btn btn-outline-dark" href="{{ url('artists/9') }}" role="button">スキマスイッチ</a>
-                    <a class="btn btn-outline-dark" href="{{ url('artists/10') }}" role="button">Kis-My-Ft2</a>
-                    <a class="btn btn-outline-dark" href="{{ url('artists/11') }}" role="button">CHEMISTRY</a>
-                    <a class="btn btn-outline-dark" href="{{ url('artists/12') }}" role="button">Charlie Puth</a>
-                    <a class="btn btn-outline-dark" href="{{ url('artists/13') }}" role="button">ウカスカジー</a>
-                    <a class="btn btn-outline-dark" href="{{ url('artists/14') }}" role="button">嵐</a>
-                    <a class="btn btn-outline-dark" href="{{ url('artists/15') }}" role="button">フラチナリズム</a>
-                    <a class="btn btn-outline-dark" href="{{ url('artists/16') }}" role="button">Official髭男dism</a>
+                    <a class="btn btn-outline-dark" href="{{ url('artists') }}" role="button">ALL ARTISTS</a>
+                    <a class="btn btn-outline-dark" href="{{ url('artists/17') }}" role="button">FES</a>
                 </div>
             </div>
             <hr>
