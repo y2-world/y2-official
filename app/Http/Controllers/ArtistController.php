@@ -15,7 +15,9 @@ class ArtistController extends Controller
      */
     public function index()
     {
-        //
+        $artists = Artist::orderBy('created_at', 'asc')
+        ->paginate(100);
+        return view('artists.index', compact('artists'));
     }
 
     /**
@@ -51,7 +53,7 @@ class ArtistController extends Controller
         $setlists = Setlist::where('artist_id', $artist->id)
             ->orderBy('date', 'asc') //$userによる投稿を取得
             ->paginate(100); // 投稿作成日が新しい順に並べる
-        return view('artists', [
+        return view('artists.show', [
             'setlists' => $setlists,
             'artist' => $artist, // $userの書いた記事をviewへ渡す
         ]);

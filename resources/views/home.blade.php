@@ -44,6 +44,9 @@
             <hr>
             <div class="artists">
                 <h4>ARTISTS</h4>
+                <a class="btn btn-outline-dark" href="{{ url('artists') }}" role="button">ALL ARTISTS</a>
+                <a class="btn btn-outline-dark" href="{{ url('artists/17') }}" role="button">FES</a>
+                <hr>
                 <div class="artist-button">
                     <a class="btn btn-outline-dark" href="{{ url('artists/1') }}" role="button">w-inds.</a>
                     <a class="btn btn-outline-dark" href="{{ url('artists/2') }}" role="button">Mr.Children</a>
@@ -61,8 +64,6 @@
                     <a class="btn btn-outline-dark" href="{{ url('artists/14') }}" role="button">嵐</a>
                     <a class="btn btn-outline-dark" href="{{ url('artists/15') }}" role="button">フラチナリズム</a>
                     <a class="btn btn-outline-dark" href="{{ url('artists/16') }}" role="button">Official髭男dism</a>
-                    <hr>
-                    <a class="btn btn-outline-dark" href="{{ url('artists/17') }}" role="button">FES</a>
                 </div>
             </div>
             <hr>
