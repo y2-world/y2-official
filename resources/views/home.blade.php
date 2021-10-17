@@ -22,31 +22,32 @@
         <div class="container">
             <h1 class="title">LIVE HISTORY</h1>
             <a href="{{ url('setlists') }}"><button type="button" class="btn btn-outline-dark">ALL SET LISTS</button></a>
-            <hr>
-            <div class="year">
-                <h4>YEAR</h4>
-                    <a class="btn btn-outline-dark" href="#" role="button">ALL YEARS</a>
-                {{-- <a class="btn btn-outline-dark" href="#" role="button">2003</a>
-                <a class="btn btn-outline-dark" href="#" role="button">2004</a>
-                <a class="btn btn-outline-dark" href="#" role="button">2005</a>
-                <a class="btn btn-outline-dark" href="#" role="button">2009</a>
-                <a class="btn btn-outline-dark" href="#" role="button">2011</a>
-                <a class="btn btn-outline-dark" href="#" role="button">2012</a>
-                <a class="btn btn-outline-dark" href="#" role="button">2013</a>
-                <a class="btn btn-outline-dark" href="#" role="button">2014</a>
-                <a class="btn btn-outline-dark" href="#" role="button">2015</a>
-                <a class="btn btn-outline-dark" href="#" role="button">2016</a>
-                <a class="btn btn-outline-dark" href="#" role="button">2017</a>
-                <a class="btn btn-outline-dark" href="#" role="button">2018</a>
-                <a class="btn btn-outline-dark" href="#" role="button">2019</a>
-                <a class="btn btn-outline-dark" href="#" role="button">2020</a>
-                <a class="btn btn-outline-dark" href="#" role="button">2021</a> --}}
-            </div>
-            <hr>
-            <div class="artists">
-                <h4>ARTISTS</h4>
-                    <a class="btn btn-outline-dark" href="{{ url('artists') }}" role="button">ALL ARTISTS</a>
-                    <a class="btn btn-outline-dark" href="{{ url('artists/17') }}" role="button">FES</a>
+            <br><br>
+            <div class="menu">
+                <div class="year">
+                    <h4>YEAR</h4>
+                        <a class="btn btn-outline-dark" href="#" role="button">ALL YEARS</a>
+                    {{-- <a class="btn btn-outline-dark" href="#" role="button">2003</a>
+                    <a class="btn btn-outline-dark" href="#" role="button">2004</a>
+                    <a class="btn btn-outline-dark" href="#" role="button">2005</a>
+                    <a class="btn btn-outline-dark" href="#" role="button">2009</a>
+                    <a class="btn btn-outline-dark" href="#" role="button">2011</a>
+                    <a class="btn btn-outline-dark" href="#" role="button">2012</a>
+                    <a class="btn btn-outline-dark" href="#" role="button">2013</a>
+                    <a class="btn btn-outline-dark" href="#" role="button">2014</a>
+                    <a class="btn btn-outline-dark" href="#" role="button">2015</a>
+                    <a class="btn btn-outline-dark" href="#" role="button">2016</a>
+                    <a class="btn btn-outline-dark" href="#" role="button">2017</a>
+                    <a class="btn btn-outline-dark" href="#" role="button">2018</a>
+                    <a class="btn btn-outline-dark" href="#" role="button">2019</a>
+                    <a class="btn btn-outline-dark" href="#" role="button">2020</a>
+                    <a class="btn btn-outline-dark" href="#" role="button">2021</a> --}}
+                </div>
+                <div class="artists">
+                    <h4>ARTISTS</h4>
+                        <a class="btn btn-outline-dark" href="{{ url('artists') }}" role="button">ALL ARTISTS</a>
+                        <a class="btn btn-outline-dark" href="{{ url('artists/17') }}" role="button">FES</a>
+                    </div>
                 </div>
             </div>
         </div>

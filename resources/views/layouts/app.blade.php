@@ -44,6 +44,14 @@
           font-size: 14px;
         }
 
+        .menu {
+          display: flex;
+        }
+
+        .year {
+          padding-right: 10px;
+        }
+
         @media screen and (max-width: 648px) {
           .show_button {
             text-align: center;
