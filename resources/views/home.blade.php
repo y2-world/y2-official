@@ -25,7 +25,8 @@
             <hr>
             <div class="year">
                 <h4>YEAR</h4>
-                <a class="btn btn-outline-dark" href="#" role="button">2003</a>
+                    <a class="btn btn-outline-dark" href="#" role="button">ALL YEARS</a>
+                {{-- <a class="btn btn-outline-dark" href="#" role="button">2003</a>
                 <a class="btn btn-outline-dark" href="#" role="button">2004</a>
                 <a class="btn btn-outline-dark" href="#" role="button">2005</a>
                 <a class="btn btn-outline-dark" href="#" role="button">2009</a>
@@ -39,7 +40,7 @@
                 <a class="btn btn-outline-dark" href="#" role="button">2018</a>
                 <a class="btn btn-outline-dark" href="#" role="button">2019</a>
                 <a class="btn btn-outline-dark" href="#" role="button">2020</a>
-                <a class="btn btn-outline-dark" href="#" role="button">2021</a>
+                <a class="btn btn-outline-dark" href="#" role="button">2021</a> --}}
             </div>
             <hr>
             <div class="artists">
@@ -48,7 +49,6 @@
                     <a class="btn btn-outline-dark" href="{{ url('artists/17') }}" role="button">FES</a>
                 </div>
             </div>
-            <hr>
         </div>
     </div>
 </div>
