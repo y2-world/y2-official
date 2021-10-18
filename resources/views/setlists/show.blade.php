@@ -12,7 +12,11 @@
             <hr>
             <div class="setlist">
                 @foreach ($setlists->setlist as $data)
-                {{ $data['#'] }}. {{ $data['song'] }}<br>
+                    @if($data['#'] === 'Artist')
+                    {{ $data['#'] }}: <b>{{ $data['song'] }}</b><br>
+                    @else
+                    {{ $data['#'] }}. {{ $data['song'] }}<br>
+                    @endif
                 @endforeach
                 {{-- <br>
                 @foreach ((array)$setlists->encore as $data)
