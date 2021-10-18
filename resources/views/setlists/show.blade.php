@@ -13,6 +13,7 @@
             <div class="setlist">
                 @foreach ($setlists->setlist as $data)
                     @if($data['#'] === 'Artist')
+                    <br>
                     {{ $data['#'] }}: <b>{{ $data['song'] }}</b><br>
                     @else
                     {{ $data['#'] }}. {{ $data['song'] }}<br>
