@@ -50,8 +50,8 @@ class SetlistController extends Controller
     public function show($id)
     {
         $setlists = Setlist::find($id);
-        $previous = Setlist::where('id', '<', $setlists->id)->orderBy('id', 'desc')->first();
-        $next = Setlist::where('id', '>', $setlists->id)->orderBy('id')->first();
+        $previous = Setlist::where('date', '<', $setlists->date)->orderBy('date', 'desc')->first();
+        $next = Setlist::where('date', '>', $setlists->date)->orderBy('date')->first();
         
         return view('setlists.show', compact('setlists', 'previous', 'next'));
     }
