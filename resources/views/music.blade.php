@@ -25,6 +25,7 @@
                                 <iframe width="480" height="270" src="https://www.youtube.com/embed/videoseries?list=PLPky7Hthrm_dRbmcTqh6hKOavDpCyKBvt" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                             </div>
                         </div>
+                        <hr>
                     </div>
                 </div>
             </div>
