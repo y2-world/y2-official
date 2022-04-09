@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <a href="{{ url('artists', $setlists->artist_id)}}"><h4>{{ $setlists->artist->name  }}</h4></a>
-            <h2>{{ $setlists->tour_title }}</h2>
+            <div class="setlist_title">{{ $setlists->tour_title }}</div>
             {{ $setlists->date }}
             <br>
             {{ $setlists->venue }}

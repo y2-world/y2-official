@@ -28,6 +28,30 @@ Route::get('artists', function () {
 Route::get('search', function () {
     return view('search');
 });
+Route::get('/news', function () {
+    return view('news');
+});
+Route::get('/profile', function () {
+    return view('profile');
+});
+Route::get('/works', function () {
+    return view('works');
+});
+Route::get('/radio', function () {
+    return view('radio');
+});
+Route::get('/music', function () {
+    return view('music');
+});
+Route::get('/music/single', function () {
+    return view('single');
+});
+Route::get('/music/album', function () {
+    return view('album');
+});
+Route::get('/database', function () {
+    return view('database');
+});
 
 Route::resource('setlists', 'SetlistController');
 Route::resource('artists', 'ArtistController');
