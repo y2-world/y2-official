@@ -21,10 +21,6 @@ Route::get('setlists', function () {
     return view('setlists');
 });
 
-Route::get('artists', function () {
-    return view('artists');
-});
-
 Route::get('search', function () {
     return view('search');
 });

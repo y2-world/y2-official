@@ -3,6 +3,6 @@
 <br>
 <div class="container">
     <h1>Mr.Children Database</h1>
-    <h3>Coming Soon!</h3>
+    <p>Coming Soon!</p>
 </div>
 @endsection

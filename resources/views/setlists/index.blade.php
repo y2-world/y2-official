@@ -1,58 +1,47 @@
 @extends('layouts.app')
-<title>Live History - Home</title>
-<style>
-.title {
-        padding-top: 10px;
-    }
-.top-image {
-    text-align: center;
-}
-.btn-outline-dark {
-    margin: 2px 0px;
-}
-</style>
 @section('content')
-<div class="row">
-    <div class="col-md-8 my-auto">
-        <div class="top-image">
-            <img src={{ asset('images/top_image.jpg') }} width="100%">
-        </div>
-    </div>
-    <div class="col-md-4 my-auto">
-        <div class="container">
-            <h1 class="title">LIVE HISTORY</h1>
-            <a href="{{ url('setlists/all') }}"><button type="button" class="btn btn-outline-dark">ALL SET LISTS</button></a>
-            <br><br>
-            <div class="menu">
-                <div class="year">
-                    <h4>YEAR</h4>
-                        <a class="btn btn-outline-dark" href="#" role="button">ALL YEARS</a>
-                    {{-- <a class="btn btn-outline-dark" href="#" role="button">2003</a>
-                    <a class="btn btn-outline-dark" href="#" role="button">2004</a>
-                    <a class="btn btn-outline-dark" href="#" role="button">2005</a>
-                    <a class="btn btn-outline-dark" href="#" role="button">2009</a>
-                    <a class="btn btn-outline-dark" href="#" role="button">2011</a>
-                    <a class="btn btn-outline-dark" href="#" role="button">2012</a>
-                    <a class="btn btn-outline-dark" href="#" role="button">2013</a>
-                    <a class="btn btn-outline-dark" href="#" role="button">2014</a>
-                    <a class="btn btn-outline-dark" href="#" role="button">2015</a>
-                    <a class="btn btn-outline-dark" href="#" role="button">2016</a>
-                    <a class="btn btn-outline-dark" href="#" role="button">2017</a>
-                    <a class="btn btn-outline-dark" href="#" role="button">2018</a>
-                    <a class="btn btn-outline-dark" href="#" role="button">2019</a>
-                    <a class="btn btn-outline-dark" href="#" role="button">2020</a>
-                    <a class="btn btn-outline-dark" href="#" role="button">2021</a> --}}
-                </div>
-                <div class="artists">
-                    <h4>ARTISTS</h4>
-                        <a class="btn btn-outline-dark" href="{{ url('artists') }}" role="button">ALL ARTISTS</a>
-                        <a class="btn btn-outline-dark" href="{{ url('artists/17') }}" role="button">FES</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<br>
+<div class="container">
+  <h1>ALL SET LISTS</h1>
+  <a class="btn btn-outline-dark btn-sm" href="{{ url('/setlists') }}" role="button">All</a>
+  <div class="btn-group">
+    <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+      Artists
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+      @foreach ($artists as $artist)
+      <li><a class="dropdown-item" href="{{ url('/artists', $artist->id)}}">{{ $artist->name }}</a></li>
+      @endforeach
+    </ul>
+  </div>
+  <div class="btn-group">
+    <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+      Years
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+    </ul>
+  </div>
+  <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>開催日</th>
+          <th>アーティスト名</th>
+          <th>ツアータイトル</th>
+          <th>会場</th>
+        </tr>
+      </thead>
+      <tbody>
+          @foreach ($setlists as $setlist)
+          <tr>
+              <td></td>
+              <td>{{ $setlist->date }}</td>
+              <td><a href="{{ url('artists', $setlist->artist_id)}}">{{ $setlist->artist->name }}</a></td>
+              <td><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->tour_title }}</a></td>
+              <td>{{ $setlist->venue }}</td>
+          </tr>
+          @endforeach
+      </tbody>
+  </table>
 </div>
-<script>
-</script>
 @endsection

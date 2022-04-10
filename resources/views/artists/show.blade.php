@@ -3,6 +3,17 @@
 <br>
 <div class="container-lg">
     <h1>{{ $artist->name  }}</h1>
+    <a class="btn btn-outline-dark btn-sm" href="{{ url('/setlists') }}" role="button">All</a>
+    <div class="btn-group">
+      <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        Artists
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        @foreach ($artists as $artist)
+        <li><a class="dropdown-item" href="{{ url('/artists', $artist->id)}}">{{ $artist->name }}</a></li>
+        @endforeach
+      </ul>
+    </div>
     <table class="table table-striped">
         <thead>
           <tr>
