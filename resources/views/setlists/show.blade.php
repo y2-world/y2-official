@@ -26,7 +26,7 @@
                     @endif
                 @endforeach
                 @if(isset($setlists->encore))
-                    <hr width="200">
+                    <hr width="250">
                     @foreach ((array)$setlists->encore as $data)
                     {{ $data['#'] }}. {{ $data['song'] }}<br>
                     @endforeach
