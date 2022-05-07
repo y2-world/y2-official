@@ -88,7 +88,7 @@
                     <a href="https://open.spotify.com/user/21oiucbvpex7hvueehkm4bkpy" target="_blank"><i class="fab fa-spotify fa-lg"> </i></a>
                     <a href="https://www.youtube.com/user/yuki92496" target="_blank"><i class="fab fa-youtube fa-lg"></i></a>
                     <a href="https://podcasts.apple.com/us/podcast/y2-radio/id1555086566?uo=4" target="_blank"><i class="fas fa-podcast fa-lg"></i></a>
-                </div>c
+                </div>
                 <br>
                 <div class="hour">Yuki Yoshida Official Website</div>
             </div> 
