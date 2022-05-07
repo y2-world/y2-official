@@ -27,7 +27,7 @@
           @foreach ($setlists as $setlist)
           <tr>
             <td></td>
-            <td>{{ $setlist->date }}</td>
+            <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
             <td><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->tour_title }}</a></td>
             <td>{{ $setlist->venue }}</td>
           </tr>
