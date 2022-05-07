@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="setlist_artist">
-                <a href="{{ url('artists', $setlists->artist_id)}}"><h4>{{ $setlists->artist->name  }}</h4></a>
+                <a href="{{ url('artists', $setlists->artist_id)}}"><h5>{{ $setlists->artist->name  }}</h5></a>
             </div>
             <div class="setlist_title">{{ $setlists->tour_title }}</div>
             <div class="setlist_info">
@@ -19,6 +19,8 @@
                     @if($data['#'] === 'Artist')
                     <br>
                     {{ $data['#'] }} : <b>{{ $data['song'] }}</b><br>
+                    @elseif($data['#'] === '-')
+                    {{ $data['#'] }} <b>{{ $data['song'] }}</b><br>
                     @else
                     {{ $data['#'] }}. {{ $data['song'] }}<br>
                     @endif

@@ -48,8 +48,8 @@ class SetlistController extends AdminController
         $grid->column('tour_title', __('ツアータイトル'));
         $grid->column('date', __('公演日'))->default(date('Y.m.d'));
         $grid->column('venue', __('会場'));
-        $grid->field('created_at', __('作成日'))->default(date('Y.m.d'));
-        $grid->field('updated_at', __('更新日'))->default(date('Y.m.d'));
+        $grid->column('created_at', __('作成日'));
+        $grid->column('updated_at', __('更新日'))->default(date('Y.m.d'));
 
         $grid->filter(function($filter){
             $filter->like('artist', 'アーティスト');
@@ -99,13 +99,13 @@ class SetlistController extends AdminController
             }
             return implode('<br>', $result1);
         });
-        // $show->field('encore', __('アンコール'))->unescape()->as(function ($encore) {
-        //     $result2 = [];
-        //     foreach((array)$encore as $data2) {
-        //         $result2[] = $data2['#'].'. '.$data2['song'];
-        //     }
-        //     return implode('<br>', $result2);
-        // });
+        $show->field('encore', __('アンコール'))->unescape()->as(function ($encore) {
+            $result2 = [];
+            foreach((array)$encore as $data2) {
+                $result2[] = $data2['#'].'. '.$data2['song'];
+            }
+            return implode('<br>', $result2);
+        });
         $show->field('created_at', __('作成日時'));
         $show->field('updated_at', __('更新日時'));
 

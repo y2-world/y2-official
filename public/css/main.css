@@ -603,7 +603,7 @@ table > tbody > tr > td:first-child::before {
         font-size: 12px;
     }
 
-    .setlist_artist h4{
+    .setlist_artist h5{
         font-size: 14px;
     }
 }
