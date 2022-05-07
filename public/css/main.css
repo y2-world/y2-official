@@ -590,4 +590,20 @@ table > tbody > tr > td:first-child::before {
     .topic-menu {
         justify-content: center;
     }
+
+    .setlist {
+        font-size: 14px;
+    }
+
+    .setlist_title {
+        font-size: 17px;
+    }
+
+    .setlist_info {
+        font-size: 12px;
+    }
+
+    .setlist_artist h4{
+        font-size: 14px;
+    }
 }

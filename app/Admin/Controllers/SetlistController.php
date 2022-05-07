@@ -146,10 +146,10 @@ class SetlistController extends AdminController
             $table->number('#')->rules('required');
             $table->text('song', __('楽曲'))->rules('required');
         });
-        // $form->table('encore', __('アンコール'), function ($table) {
-        //     $table->number('#')->rules('required');
-        //     $table->text('song', __('楽曲'))->rules('required');
-        // });
+        $form->table('encore', __('アンコール'), function ($table) {
+            $table->number('#')->rules('required');
+            $table->text('song', __('楽曲'))->rules('required');
+        });
 
         return $form;
     }
