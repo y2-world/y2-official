@@ -592,11 +592,11 @@ table > tbody > tr > td:first-child::before {
     }
 
     .setlist {
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .setlist_title {
-        font-size: 17px;
+        font-size: 18px;
     }
 
     .setlist_info {
