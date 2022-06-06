@@ -44,7 +44,8 @@ class SetlistController extends AdminController
         '14' => '嵐',
         '15' => 'フラチナリズム',
         '16' => 'Official髭男dism',
-        '17' => 'フェス']);
+        '17' => 'フェス',
+        '18' => 'Tak Matsumoto & Daniel Ho']);
         $grid->column('tour_title', __('ツアータイトル'));
         $grid->column('date', __('公演日'))->default(date('Y.m.d'));
         $grid->column('venue', __('会場'));
@@ -88,7 +89,8 @@ class SetlistController extends AdminController
         '14' => '嵐',
         '15' => 'フラチナリズム',
         '16' => 'Official髭男dism',
-        '17' => 'フェス']);
+        '17' => 'フェス',
+        '18' => 'Tak Matsumoto & Daniel Ho']);
         $show->field('tour_title', __('ツアータイトル'));
         $show->field('date', __('公演日'));
         $show->field('venue', __('会場'));
@@ -138,7 +140,8 @@ class SetlistController extends AdminController
         '14' => '嵐',
         '15' => 'フラチナリズム',
         '16' => 'Official髭男dism',
-        '17' => 'フェス']);
+        '17' => 'フェス',
+        '18' => 'Tak Matsumoto & Daniel Ho']);
         $form->text('tour_title', __('ツアータイトル'))->rules('required');
         $form->date('date', __('公演日'))->default(date('Y-m-d'))->rules('required');
         $form->text('venue', __('会場'))->rules('required');
