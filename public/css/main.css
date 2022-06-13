@@ -606,4 +606,8 @@ table > tbody > tr > td:first-child::before {
     .setlist_artist h5{
         font-size: 14px;
     }
+
+    .pc_list {
+        display: none;
+    }
 }
