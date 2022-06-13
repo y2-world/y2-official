@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <br>
-<div class="container">
+<div class="container-lg">
   <h1>ALL SET LISTS</h1>
   <a class="btn btn-outline-dark btn-sm" href="{{ url('/setlists') }}" role="button">All</a>
   <div class="btn-group">
