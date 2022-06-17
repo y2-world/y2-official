@@ -34,13 +34,13 @@
       <div class="all-setlist">
         <tbody>
             @foreach ($setlists as $setlist)
-            <tr>
-                <td></td>
-                <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
-                <td><a href="{{ url('artists', $setlist->artist_id)}}">{{ $setlist->artist->name }}</a></td>
-                <td><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->tour_title }}</a></td>
-                <td class="pc_list">{{ $setlist->venue }}</td>
-            </tr>
+              <tr>
+                  <td>{{$setlist->id}}</td>
+                  <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
+                  <td><a href="{{ url('artists', $setlist->artist_id)}}">{{ $setlist->artist->name }}</a></td>
+                  <td><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->tour_title }}</a></td>
+                  <td class="pc_list">{{ $setlist->venue }}</td>
+              </tr>
             @endforeach
         </tbody>
       </div>
