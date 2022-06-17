@@ -439,6 +439,24 @@ table > tbody > tr > td:first-child::before {
     text-align: left;
 }
 
+.pagination {
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    justify-content: center;
+}
+
+.pagination a {
+    color: black;
+}
+
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: black;
+    border-color: black;
+}
+
 @media screen and (max-width: 648px) {
     .show_button {
         text-align: center;

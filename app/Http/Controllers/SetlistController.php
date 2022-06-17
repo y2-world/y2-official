@@ -16,7 +16,7 @@ class SetlistController extends Controller
     public function index()
     {
         $setlists = Setlist::orderBy('date', 'asc')
-        ->paginate(100);
+        ->paginate(10);
         $artists = Artist::orderBy('created_at', 'asc')
         ->paginate(100);
         return view('setlists.index', compact('artists', 'setlists'));
