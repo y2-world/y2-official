@@ -630,10 +630,6 @@ table > tbody > tr > td:first-child::before {
     }
 
     td {
-        font-size: 9px;
-    }
-
-    th {
-        font-size: 6px;
+        font-size: 10px;
     }
 }
