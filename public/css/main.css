@@ -628,4 +628,8 @@ table > tbody > tr > td:first-child::before {
     .pc_list {
         display: none;
     }
+
+    td {
+        font-size: 10px;
+    }
 }
