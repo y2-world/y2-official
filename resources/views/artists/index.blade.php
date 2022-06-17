@@ -8,8 +8,8 @@
       <table class="table table-striped">
         <thead>
           <tr>
-            <th>#</th>
-            <th>アーティスト名</th>
+            <th class="mb_list">#</th>
+            <th class="mb_list">アーティスト</th>
           </tr>
         </thead>
         <tbody>
