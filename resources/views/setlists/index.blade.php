@@ -26,9 +26,9 @@
         <tr>
           <th class="mb_list">#</th>
           <th class="mb_list">開催日</th>
-          <th class="mb_list">Artist</th>
-          <th class="mb_list">Tour Title</th>
-          <th class="pc_list">Venue</th>
+          <th class="mb_list">アーティスト</th>
+          <th class="mb_list">ツアータイトル</th>
+          <th class="pc_list">会場</th>
         </tr>
       </thead>
       <div class="all-setlist">
