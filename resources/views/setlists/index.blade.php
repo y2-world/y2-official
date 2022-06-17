@@ -24,10 +24,10 @@
   <table class="table table-striped">
       <thead>
         <tr>
-          <th>#</th>
-          <th>開催日</th>
-          <th>アーティスト</th>
-          <th>ツアータイトル</th>
+          <th class="mb_list">#</th>
+          <th class="mb_list">開催日</th>
+          <th class="mb_list">アーティスト</th>
+          <th class="mb_list">ツアータイトル</th>
           <th class="pc_list">会場</th>
         </tr>
       </thead>
