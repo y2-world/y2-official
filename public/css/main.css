@@ -634,6 +634,6 @@ table > tbody > tr > td:first-child::before {
     }
 
     .mb_list {
-        font-size: 8px;
+        font-size: 9px;
     }
 }
