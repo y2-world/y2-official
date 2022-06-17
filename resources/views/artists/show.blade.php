@@ -9,12 +9,15 @@
         Artists
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        <li><a class="dropdown-item" href="{{ url('/artists')}}">All Artists</a></li>
+        <div class="dropdown-divider"></div>
         @foreach ($artists as $artist)
         <li><a class="dropdown-item" href="{{ url('/artists', $artist->id)}}">{{ $artist->name }}</a></li>
         @endforeach
       </ul>
     </div>
-    <table class="table table-striped">
+    <div class="artist">
+      <table class="table table-striped">
         <thead>
           <tr>
             <th class="mb_list">#</th>
@@ -33,6 +36,7 @@
           </tr>
           @endforeach
         </tbody>
-    </table>
+      </table>
+    </div>  
 </div>
 @endsection

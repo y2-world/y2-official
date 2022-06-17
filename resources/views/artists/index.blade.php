@@ -4,7 +4,8 @@
 <div class="container">
     <h1>ALL ARTISTS</h1>
     <a class="btn btn-outline-dark btn-sm" href="{{ url('/setlists') }}" role="button">All</a>
-    <table class="table table-striped">
+    <div class="artist">
+      <table class="table table-striped">
         <thead>
           <tr>
             <th>#</th>
@@ -19,6 +20,7 @@
             </tr>
             @endforeach
         </tbody>
-    </table>
+      </table>
+    </div>
 </div>
 @endsection
