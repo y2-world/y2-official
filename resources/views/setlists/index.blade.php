@@ -45,10 +45,8 @@
         </tbody>
       </div>
   </table>
-
   <div class=”pagination”>
     {!! $setlists->links() !!}
   </div>
-  
 </div>
 @endsection
