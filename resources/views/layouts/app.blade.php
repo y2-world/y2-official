@@ -212,6 +212,7 @@
 
     .sns a {
         padding-right: 5px;
+        color: white;
     }
 
     .sns-nav {
