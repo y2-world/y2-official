@@ -123,6 +123,7 @@ class SetlistController extends AdminController
     {
         $form = new Form(new Setlist());
 
+        $form->text('id', __('ID'))->rules('required');
         $form->select('artist_id', __('アーティストID'))->rules('required')
         ->options(['1' => 'w-inds.',
         '2' => 'Mr.Children', 
