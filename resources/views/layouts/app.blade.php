@@ -65,7 +65,7 @@
                 </li>
                 </li>
                     <li class="nav-item">
-                <a class="nav-link" href="{{ url('/setlists') }}">&emsp;Live History</a>
+                <a class="nav-link" href="{{ url('/setlists') }}">&emsp;Set Lists</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('/database') }}">&emsp;Database</a>
