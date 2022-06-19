@@ -458,6 +458,17 @@
         text-align: left;
     }
 
+    .parts-wrapper {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .dropdown-wrapper {
+        padding: 5px;
+    }
+
     .pagination {
         display: flex;
         padding-left: 0;
@@ -654,6 +665,14 @@
 
         .mb_list {
             font-size: 9px;
+        }
+
+        .parts-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            flex-direction: row;
+            align-items: center;
         }
     }
     </style>

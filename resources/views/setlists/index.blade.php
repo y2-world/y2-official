@@ -3,25 +3,35 @@
 <br>
 <div class="container-lg">
   <h1>ALL SET LISTS</h1>
-  <a class="btn btn-outline-dark btn-sm" href="{{ url('/setlists') }}" role="button">All</a>
-  <div class="btn-group">
-    <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-      Artists
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-      <li><a class="dropdown-item" href="{{ url('/artists')}}">All Artists</a></li>
-      <div class="dropdown-divider"></div>
-      @foreach ($artists as $artist)
-      <li><a class="dropdown-item" href="{{ url('/artists', $artist->id)}}">{{ $artist->name }}</a></li>
-      @endforeach
-    </ul>
-  </div>
-  <div class="btn-group">
-    <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-      Years
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-    </ul>
+  <div class="parts-wrapper">
+    <div class="dropdown-wrapper">
+      <a class="btn btn-outline-dark btn-sm" href="{{ url('/setlists') }}" role="button">All</a>
+      <div class="btn-group">
+        <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          Artists
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+          <li><a class="dropdown-item" href="{{ url('/artists')}}">All Artists</a></li>
+          <div class="dropdown-divider"></div>
+          @foreach ($artists as $artist)
+          <li><a class="dropdown-item" href="{{ url('/artists', $artist->id)}}">{{ $artist->name }}</a></li>
+          @endforeach
+        </ul>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          Years
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        </ul>
+      </div>
+    </div>
+    <div class="search">
+      <form class="d-flex" action="{{url('/search')}}" method="GET">
+        <input class="form-control me-2" type="search" aria-label="Search" value="{{request('keyword')}}" name="keyword" required>
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
   </div>
   <table class="table table-striped">
       <thead>
