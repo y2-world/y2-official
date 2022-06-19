@@ -24,7 +24,7 @@
                     <td>{{ $result->date }}</td>
                     <td><a href="{{ url('artists', $result->artist_id)}}">{{ $result->artist->name }}</a></td>
                     <td><a href="{{ route('setlists.show', $result->id) }}">{{ $result->tour_title }}</a></td>
-                    <td>{{ $result->venue }}</td>
+                    <td class="pc_list>{{ $result->venue }}</td>
                 </tr>
                 @endforeach
             </tbody>
