@@ -2,10 +2,18 @@
 @section('content')
 <br>
 <div class="container">
-    <h4>検索結果 : {{$keyword}}</h4>
-    @if($data->isEmpty())
-        <p>検索結果がありません。</p>
-    @endif 
+    <div class="parts-wrapper">
+        <h4>検索結果 : {{$keyword}}</h4>
+        @if($data->isEmpty())
+            <p>検索結果がありません。</p>
+        @endif 
+        <div class="search">
+            <form class="d-flex" action="{{url('/search')}}" method="GET">
+                <input class="form-control me-2" type="search" aria-label="Search" value="{{request('keyword')}}" name="keyword" required>
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
     <div class="artist">
         <table class="table table-striped">
             <thead>
@@ -29,6 +37,9 @@
                 @endforeach
             </tbody>
         </table>
+        {{-- <div class=”pagination”>
+            {!! $data->links() !!}
+        </div> --}}
     </div>
 </div>
 @endsection

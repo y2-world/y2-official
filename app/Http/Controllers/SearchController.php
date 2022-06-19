@@ -20,7 +20,8 @@ class SearchController extends Controller
  
         if (!empty($keyword)) {
             $query = Setlist::query();
-            $setlists = $query->where('setlist', 'like', "%{$keyword}%");
+            $setlists = $query->where('setlist', 'like', "%{$keyword}%")
+            ->orWhere('encore', 'like', "%{$keyword}%");
         }
 
         $data = $query->orderBy('date','desc')->paginate(100);
