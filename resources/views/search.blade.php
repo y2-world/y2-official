@@ -11,9 +11,11 @@
             </form>
         </div>
     </div>
-    @if($data->isEmpty())
-    <p>検索結果がありません。</p>
-    @endif 
+    <div class="error">
+        @if($data->isEmpty())
+        <p>検索結果がありません。</p>
+        @endif 
+    </div>
     <div class="artist">
         <table class="table table-striped">
             <thead>
