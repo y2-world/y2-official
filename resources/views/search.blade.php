@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <br>
-<div class="container">
+<div class="container-lg">
     <div class="parts-wrapper">
         <h4>検索結果 : {{$keyword}}</h4>
         <div class="search">
