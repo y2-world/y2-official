@@ -4,9 +4,6 @@
 <div class="container">
     <div class="parts-wrapper">
         <h4>検索結果 : {{$keyword}}</h4>
-        @if($data->isEmpty())
-            <p>検索結果がありません。</p>
-        @endif 
         <div class="search">
             <form class="d-flex" action="{{url('/search')}}" method="GET">
                 <input class="form-control me-2" type="search" aria-label="Search" value="{{request('keyword')}}" name="keyword" required>
@@ -14,6 +11,9 @@
             </form>
         </div>
     </div>
+    @if($data->isEmpty())
+    <p>検索結果がありません。</p>
+    @endif 
     <div class="artist">
         <table class="table table-striped">
             <thead>
