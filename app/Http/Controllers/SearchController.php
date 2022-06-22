@@ -14,19 +14,25 @@ class SearchController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {
-        $keyword = $request->input('keyword');
+    {   
+        $artist_id = $request->input('artist_id');
         $query = Setlist::query();
+        $keyword = $request->input('keyword');
  
         if (!empty($keyword)) {
-            $query = Setlist::query();
-            $setlists = $query->where('setlist', 'like', "%{$keyword}%")
-            ->orWhere('encore', 'like', "%{$keyword}%");
-        }
+            $setlists = $query->where('artist_id','like', "$artist_id") 
+            ->where(function($query) use ($keyword) {
+                $query->where('setlist', 'like', "%{$keyword}%")
+                ->orWhere('encore', 'like', "%{$keyword}%");
+            });
+        };
 
         $data = $query->orderBy('date','desc')->paginate(100);
+
+        $artists = Artist::orderBy('created_at', 'asc')
+        ->paginate(100);
  
-        return view('search', compact('data', 'keyword'));
+        return view('search', compact('data', 'keyword', 'artist_id', 'artists'));
     }
 
     /**

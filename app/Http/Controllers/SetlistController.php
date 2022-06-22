@@ -14,11 +14,12 @@ class SetlistController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+    {   
         $setlists = Setlist::orderBy('date', 'asc')
         ->paginate(10);
         $artists = Artist::orderBy('created_at', 'asc')
         ->paginate(100);
+
         return view('setlists.index', compact('artists', 'setlists'));
     }
 

@@ -27,9 +27,19 @@
       </div>
     </div>
     <div class="search">
-      <form class="d-flex" action="{{url('/search')}}" method="GET">
-        <input class="form-control me-2" type="search" aria-label="Search" value="{{request('keyword')}}" name="keyword" required>
-        <button class="btn btn-outline-success" type="submit">Search</button>
+      <form action="{{url('/search')}}" method="GET">
+        <select name="artist_id" data-toggle="select">
+          <option hidden>Artists</option>
+            @foreach ($artists as $artist)
+                <option value="{{ $artist->id }}">{{$artist->name}}</option>
+            @endforeach
+        </select>
+        <div class="input-group mb-3">
+            <input type="search" class="form-control" aria-label="Search" value="{{request('keyword')}}" name="keyword" required>
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+            </div>
+        </div>
       </form>
     </div>
   </div>

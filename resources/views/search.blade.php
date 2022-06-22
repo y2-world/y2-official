@@ -5,10 +5,24 @@
     <div class="parts-wrapper">
         <h4>検索結果 : {{$keyword}}</h4>
         <div class="search">
-            <form class="d-flex" action="{{url('/search')}}" method="GET">
-                <input class="form-control me-2" type="search" aria-label="Search" value="{{request('keyword')}}" name="keyword" required>
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
+            <form action="{{url('/search')}}" method="GET">
+            <select name="artist_id" data-toggle="select">
+                <?php $artist_name = $artists[$artist_id - 1]['name']; ?>
+                @foreach ($artists as $artist)
+                    @if($artist->name !== $artist_name)
+                    <option value="{{ $artist->id }}">{{$artist->name}}</option>
+                    @else
+                    <option value="{{ $artist->id }}" selected>{{$artist->name}}</option>
+                    @endif
+                @endforeach
+            </select>
+            <div class="input-group mb-3">
+                <input type="search" class="form-control" aria-label="Search" value="{{request('keyword')}}" name="keyword" required>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+                </div>
+            </div>
+          </form>
         </div>
     </div>
     <div class="error">
@@ -22,8 +36,7 @@
             <tr>
                 <th class="mb_list">#</th>
                 <th class="mb_list">開催日</th>
-                <th class="mb_list">アーティスト</th>
-                <th class="mb_list">ツアータイトル</th>
+                 <th class="mb_list">ツアータイトル</th>
                 <th class="pc_list">会場</th>
             </tr>
             </thead>
@@ -32,7 +45,6 @@
                 <tr>
                     <td></td>
                     <td>{{ date('Y.m.d', strtotime($result->date)) }}</td>
-                    <td><a href="{{ url('artists', $result->artist_id)}}">{{ $result->artist->name }}</a></td>
                     <td><a href="{{ route('setlists.show', $result->id) }}">{{ $result->tour_title }}</a></td>
                     <td class="pc_list">{{ $result->venue }}</td>
                 </tr>
