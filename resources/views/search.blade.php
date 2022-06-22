@@ -8,16 +8,18 @@
         </div>
         <div class="search">
             <form action="{{url('/search')}}" method="GET">
-            <select name="artist_id" data-toggle="select">
-                <?php $artist_name = $artists[$artist_id - 1]['name']; ?>
-                @foreach ($artists as $artist)
-                    @if($artist->name !== $artist_name)
-                    <option value="{{ $artist->id }}">{{$artist->name}}</option>
-                    @else
-                    <option value="{{ $artist->id }}" selected>{{$artist->name}}</option>
-                    @endif
-                @endforeach
-            </select>
+            <div class="mb_dropdown">
+                <select name="artist_id" data-toggle="select">
+                    <?php $artist_name = $artists[$artist_id - 1]['name']; ?>
+                    @foreach ($artists as $artist)
+                        @if($artist->name !== $artist_name)
+                        <option value="{{ $artist->id }}">{{$artist->name}}</option>
+                        @else
+                        <option value="{{ $artist->id }}" selected>{{$artist->name}}</option>
+                        @endif
+                    @endforeach
+                </select>
+            </div>
             <div class="input-group mb-3">
                 <input type="search" class="form-control" aria-label="Search" value="{{request('keyword')}}" name="keyword" required>
                 <div class="input-group-append">

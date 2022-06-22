@@ -678,6 +678,10 @@
         .error {
             padding-top: 10px;
         }
+
+        .mb_dropdown {
+            padding: 10px 0px;
+        }
     }
     </style>
 </head>

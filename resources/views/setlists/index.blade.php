@@ -28,12 +28,14 @@
     </div>
     <div class="search">
       <form action="{{url('/search')}}" method="GET">
-        <select name="artist_id" data-toggle="select">
-          <option hidden>Artists</option>
-            @foreach ($artists as $artist)
-                <option value="{{ $artist->id }}">{{$artist->name}}</option>
-            @endforeach
-        </select>
+        <div class="mb_dropdown">
+          <select name="artist_id" data-toggle="select">
+            <option hidden>Artists</option>
+              @foreach ($artists as $artist)
+                  <option value="{{ $artist->id }}">{{$artist->name}}</option>
+              @endforeach
+          </select>
+        </div>
         <div class="input-group mb-3">
             <input type="search" class="form-control" aria-label="Search" value="{{request('keyword')}}" name="keyword" required>
             <div class="input-group-append">
