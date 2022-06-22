@@ -4,21 +4,32 @@
 <div class="container-lg">
     <div class="parts-wrapper">
         <div class="pc_list">
+            @if (isset($artist_id)) 
             <h4>検索結果 : {{$keyword}}</h4>
+            @endif
         </div>
         <div class="search">
             <form action="{{url('/search')}}" method="GET">
             <div class="mb_dropdown">
-                <select name="artist_id" data-toggle="select">
-                    <?php $artist_name = $artists[$artist_id - 1]['name']; ?>
-                    @foreach ($artists as $artist)
-                        @if($artist->name !== $artist_name)
-                        <option value="{{ $artist->id }}">{{$artist->name}}</option>
-                        @else
-                        <option value="{{ $artist->id }}" selected>{{$artist->name}}</option>
+                @if (isset($artist_id)) 
+                    <select name="artist_id" data-toggle="select">
+                        <?php $artist_name = $artists[$artist_id - 1]['name']; ?>
+                        @foreach ($artists as $artist)
+                            @if($artist->name !== $artist_name)
+                            <option value="{{ $artist->id }}">{{$artist->name}}</option>
+                            @else
+                            <option value="{{ $artist->id }}" selected>{{$artist->name}}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                @else
+                    <select name="artist_id" data-toggle="select">
+                        <option hidden>Artists</option>
+                        @foreach ($artists as $artist)
+                            <option value="{{ $artist->id }}">{{$artist->name}}</option>
+                        @endforeach
                         @endif
-                    @endforeach
-                </select>
+                    </select>
             </div>
             <div class="input-group mb-3">
                 <input type="search" class="form-control" aria-label="Search" value="{{request('keyword')}}" name="keyword" required>
