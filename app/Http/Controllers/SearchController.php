@@ -20,7 +20,7 @@ class SearchController extends Controller
         $keyword = $request->input('keyword');
  
         if (!empty($keyword)) {
-            $setlists = $query->where('artist_id','like', "$artist_id") 
+            $setlists = $query->where('artist_id', "$artist_id") 
             ->where(function($query) use ($keyword) {
                 $query->where('setlist', 'like', "%{$keyword}%")
                 ->orWhere('encore', 'like', "%{$keyword}%");
