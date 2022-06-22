@@ -3,7 +3,9 @@
 <br>
 <div class="container-lg">
     <div class="parts-wrapper">
-        <h4>検索結果 : {{$keyword}}</h4>
+        <div class="pc_list">
+            <h4>検索結果 : {{$keyword}}</h4>
+        </div>
         <div class="search">
             <form action="{{url('/search')}}" method="GET">
             <select name="artist_id" data-toggle="select">
