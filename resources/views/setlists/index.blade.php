@@ -29,10 +29,10 @@
     <div class="search">
       <form action="{{url('/search')}}" method="GET">
         <div class="mb_dropdown">
-          <select name="artist_id" data-toggle="select">
-            <option hidden>Artists</option>
+          <select name="artist_id" required data-toggle="select"> 
+            <option value="" disabled selected>Artists</option>
               @foreach ($artists as $artist)
-                  <option value="{{ $artist->id }}">{{$artist->name}}</option>
+                  <option value="{{ $artist->id }}" required>{{$artist->name}}</option>
               @endforeach
           </select>
         </div>
