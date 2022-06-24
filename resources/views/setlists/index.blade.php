@@ -2,7 +2,7 @@
 @section('content')
 <br>
 <div class="container-lg">
-  <h1>Set Lists</h1>
+  <h2>Set Lists</h2>
   <div class="parts-wrapper">
     <div class="dropdown-wrapper">
       <div class="btn-group">

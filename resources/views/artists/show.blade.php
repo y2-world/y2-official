@@ -2,7 +2,7 @@
 @section('content')
 <br>
 <div class="container-lg">
-    <h1>{{ $artist->name  }}</h1>
+    <h2>{{ $artist->name  }}</h2>
     <?php $artist_id = $artist->id; ?>
     <div class="parts-wrapper">
       <div class="dropdown-wrapper">

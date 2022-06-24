@@ -2,7 +2,7 @@
 @section('content')
 <br>
 <div class="container">
-  <h1>All Artists</h1>
+  <h2>All Artists</h2>
   <a class="btn btn-outline-dark btn-sm" href="{{ url('/setlists') }}" role="button">All</a>
   <table class="table table-striped">
     <thead>
