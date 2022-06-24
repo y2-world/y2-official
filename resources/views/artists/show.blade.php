@@ -5,26 +5,28 @@
     <h2>{{ $artist->name  }}</h2>
     <?php $artist_id = $artist->id; ?>
     <div class="parts-wrapper">
-      <div class="dropdown-wrapper">
-        <a class="btn btn-outline-dark btn-sm" href="{{ url('/setlists') }}" role="button">All</a>
-        <div class="btn-group">
-          <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            Artists
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" href="{{ url('/artists')}}">All Artists</a></li>
-            <div class="dropdown-divider"></div>
-            @foreach ($artists as $artist)
-            <li><a class="dropdown-item" href="{{ url('/artists', $artist->id)}}">{{ $artist->name }}</a></li>
-            @endforeach
-          </ul>
-        </div>
-        <div class="btn-group">
-          <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            Years
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-          </ul>
+      <div class="pc_list">
+        <div class="dropdown-wrapper">
+          <a class="btn btn-outline-dark btn-sm" href="{{ url('/setlists') }}" role="button">All</a>
+          <div class="btn-group">
+            <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              Artists
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+              <li><a class="dropdown-item" href="{{ url('/artists')}}">All Artists</a></li>
+              <div class="dropdown-divider"></div>
+              @foreach ($artists as $artist)
+              <li><a class="dropdown-item" href="{{ url('/artists', $artist->id)}}">{{ $artist->name }}</a></li>
+              @endforeach
+            </ul>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              Years
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            </ul>
+          </div>
         </div>
       </div>
       <div class="search">
