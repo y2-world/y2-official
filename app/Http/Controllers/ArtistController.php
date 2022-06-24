@@ -15,7 +15,8 @@ class ArtistController extends Controller
      */
     public function index()
     {
-        $artists = Artist::orderBy('created_at', 'asc');
+        $artists = Artist::orderBy('created_at', 'asc')
+        ->paginate(100);
         return view('artists.index', compact('artists'));
     }
 
