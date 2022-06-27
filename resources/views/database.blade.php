@@ -2,7 +2,9 @@
 @section('content')
 <br>
 <div class="container">
-    <h1>Mr.Children Database</h1>
-    <p>Coming Soon!</p>
+    <h2>Mr.Children Database</h2>
+    <a href="{{ url('/songs') }}">Songs</a><br>
+    <a href="{{ url('/albums') }}">Albums</a><br>
+    <a href="{{ url('/tour') }}">Tour</a>
 </div>
 @endsection

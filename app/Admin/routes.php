@@ -14,5 +14,6 @@ Route::group([
     $router->get('/', 'HomeController@index')->name('home');
     $router->resource('setlists', SetlistController::class);
     $router->resource('artists', ArtistController::class);
-
+    $router->resource('songs', SongController::class);
+    $router->resource('albums', AlbumController::class);
 });

@@ -48,8 +48,16 @@ Route::get('/music/album', function () {
 Route::get('/database', function () {
     return view('database');
 });
+Route::get('/songs', function () {
+    return view('songs');
+});
+Route::get('/albums', function () {
+    return view('albums');
+});
 
 Route::resource('setlists', 'SetlistController');
 Route::resource('artists', 'ArtistController');
 Route::resource('search', 'SearchController');
+Route::resource('songs', 'SongController');
+Route::resource('albums', 'AlbumController');
 
