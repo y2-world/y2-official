@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-          <h2> {{$albums->title}}</h2>
+          <h3> {{$albums->title}}</h3>
           <p>{{ date('Y.m.d', strtotime($albums->date)) }}</p>
           <hr>
             @foreach ($songs as $song)
