@@ -24,7 +24,7 @@
       </div>
     </table>
   <div class=”pagination”>
-    {!! $albums->links() !!}
+    {!! $albums->onEachSide(5)->links() !!}
   </div>
 </div>
 @endsection
