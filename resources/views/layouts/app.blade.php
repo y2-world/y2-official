@@ -683,7 +683,7 @@
             padding: 5px 0px;
         }
 
-        .setlist {
+        .album_show {
             font-size: 15px;
         }
     }
