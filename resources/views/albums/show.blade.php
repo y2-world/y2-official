@@ -7,7 +7,7 @@
           <h3> {{$albums->title}}</h3>
           <p>{{ date('Y.m.d', strtotime($albums->date)) }}</p>
           <hr>
-          <div class="setlist">
+          <div class="album">
             @foreach ($songs as $song)
               @if($albums->id == $song->album_id)
               {{$song->album_trk}}. <td><a href="{{ route('songs.show', $song->id) }}">{{ $song->title }}</a></td>

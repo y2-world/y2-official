@@ -682,6 +682,10 @@
         .mb_dropdown {
             padding: 5px 0px;
         }
+
+        .setlist {
+            font-size: 15px;
+        }
     }
     </style>
 </head>
