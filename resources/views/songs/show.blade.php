@@ -4,6 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
+            # {{$songs->id}}
             <h3> {{$songs->title}}</h3>
             <hr>
             <br>
