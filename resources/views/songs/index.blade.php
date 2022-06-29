@@ -12,7 +12,7 @@
         </tr>
       </thead>
       <div class="all-setlist">
-        
+        <tbody>
             @foreach ($songs as $song)
               @if(!is_null($song->song_id))
               <tbody>
@@ -25,7 +25,7 @@
               </tbody>
               @endif
             @endforeach
-       
+        </tbody>
       </div>
     </table>
   <div class=”pagination”>
