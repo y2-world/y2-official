@@ -9,12 +9,16 @@
             @endif
             <h3> {{$songs->title}}</h3>
             <hr>
-            @if(isset($songs->song_id))
-            Album : <a href="{{ route('albums.show', $songs->album_id) }}">{{ $songs->album->title }}</a></td>
-            @endif
-            <br>
-            @if(isset($songs->album->date))
-            Release Date : {{ date('Y.m.d', strtotime($songs->album->date)) }}
+            @if(isset($songs->album->title))
+                @if(isset($songs->song_id))
+                Album : <a href="{{ route('albums.show', $songs->album_id) }}">{{ $songs->album->title }}</a></td>
+                @endif
+                <br>
+                @if(isset($songs->album->date))
+                Release Date : {{ date('Y.m.d', strtotime($songs->album->date)) }}
+                @endif
+            @else
+                アルバム未収録
             @endif
             <br>
             <br>
