@@ -18,7 +18,7 @@ class SongController extends Controller
         $songs = Song::orderBy('id', 'asc')
         ->whereNotNull('song_id')
         ->paginate(30);
-        $albums = Album::orderBy('created_at', 'asc')
+        $albums = Album::orderBy('id', 'asc')
         ->get();
         return view('songs.index', compact('albums', 'songs'));
     }
@@ -53,10 +53,12 @@ class SongController extends Controller
     public function show($id)
     {
         $songs = Song::find($id);
+        $albums = Album::orderBy('id', 'asc')
+        ->get();
         $previous = Song::where('id', '<', $songs->id)->orderBy('id', 'desc')->first();
         $next = Song::where('id', '>', $songs->id)->orderBy('id')->first();
         
-        return view('songs.show', compact('songs', 'previous', 'next'));
+        return view('songs.show', compact('songs', 'previous', 'next', 'albums'));
     }
 
     /**

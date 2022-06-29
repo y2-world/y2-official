@@ -9,6 +9,12 @@
             @endif
             <h3> {{$songs->title}}</h3>
             <hr>
+            @if(isset($songs->song_id))
+            Album : <a href="{{ route('albums.show', $songs->album_id) }}">{{ $songs->album->title }}</a></td>
+            @endif
+            <br>
+            Release Date : {{ date('Y.m.d', strtotime($songs->album->date)) }}
+            <br>
             <br>
             <div class="show_button">
                 @if(isset($previous))
