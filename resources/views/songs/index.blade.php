@@ -23,7 +23,7 @@
                     <td class="pc_list">{{ date('Y.m.d', strtotime($song->album->date)) }}</td>
                   @else
                     <td></td>
-                    <td></td>
+                    <td class="pc_list"></td>
                   @endif
                   
                 </tr>
