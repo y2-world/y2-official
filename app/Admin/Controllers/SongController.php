@@ -51,7 +51,7 @@ class SongController extends AdminController
         '18' => 'SENSE',
         '19' => 'Mr.Children 2001-2005 <micro>',
         '20' => 'Mr.Children 2005-2010 <macro>',
-        '21' => '[(an imitation) blood orange',
+        '21' => '[(an imitation) blood orange]',
         '22' => 'REFLECTION',
         '23' => '重力と呼吸',
         '24' => 'SOUNDTRACKS',

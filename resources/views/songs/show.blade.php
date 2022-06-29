@@ -10,7 +10,7 @@
             <h3> {{$songs->title}}</h3>
             <hr>
             @if(isset($songs->album->title))
-                @if(isset($songs->song_id))
+                @if(isset($songs->album->title))
                 Album : <a href="{{ route('albums.show', $songs->album_id) }}">{{ $songs->album->title }}</a></td>
                 @endif
                 <br>
