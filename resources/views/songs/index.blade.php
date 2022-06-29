@@ -9,7 +9,7 @@
           <th class="mb_list">#</th>
           <th class="mb_list">タイトル</th>
           <th class="mb_list">アルバム</th>
-          <th class="pc_list">会場</th>
+          <th class="pc_list">リリース日</th>
         </tr>
       </thead>
       <div class="all-setlist">
@@ -20,7 +20,7 @@
                   <td><a href="{{ route('songs.show', $song->id) }}">{{ $song->title }}</a></td>
                   @if(isset($song->album_id))
                     <td><a href="{{ route('albums.show', $song->album_id) }}">{{ $song->album->title }}</a></td>
-                    <td>{{ date('Y.m.d', strtotime($song->album->date)) }}</td>
+                    <td class="pc_list">{{ date('Y.m.d', strtotime($song->album->date)) }}</td>
                   @else
                     <td></td>
                     <td></td>
