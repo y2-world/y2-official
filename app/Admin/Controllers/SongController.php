@@ -31,8 +31,7 @@ class SongController extends AdminController
         $grid->column('title', __('タイトル'));
         $grid->column('album_trk', __('#'));
         $grid->column('album_id', __('アルバム'))
-        ->using(['0' => 'アルバム未収録',
-        '1' => 'EVERYTHING',
+        ->using(['1' => 'EVERYTHING',
         '2' => 'Kind of Love', 
         '3' => "Versus", 
         '4' => 'Atomic Heart', 
@@ -98,8 +97,7 @@ class SongController extends AdminController
         $form->text('song_id', __('song ID'));
         $form->text('title', __('タイトル'))->rules('required');
         $form->select('album_id', __('アルバム'))
-        ->options(['0' => 'アルバム未収録',
-        '1' => 'EVERYTHING',
+        ->options(['1' => 'EVERYTHING',
         '2' => 'Kind of Love', 
         '3' => "Versus", 
         '4' => 'Atomic Heart', 
