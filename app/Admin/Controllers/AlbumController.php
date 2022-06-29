@@ -27,6 +27,7 @@ class AlbumController extends AdminController
         $grid = new Grid(new Album());
 
         $grid->column('id', __('ID'));
+        $grid->column('album_id', __('Album ID'));
         $grid->column('title', __('タイトル'));
         $grid->column('date', __('リリース日'));
 
@@ -44,6 +45,7 @@ class AlbumController extends AdminController
         $show = new Show(Album::findOrFail($id));
 
         $show->field('id', __('ID'));
+        $show->field('album_id', __('Album ID'));
         $show->field('title', __('タイトル'));
         $show->field('date', __('リリース日'));
 
@@ -60,6 +62,7 @@ class AlbumController extends AdminController
         $form = new Form(new Album());
 
         $form->text('id', __('ID'))->rules('required');
+        $form->text('album_id', __('Album ID'));
         $form->text('title', __('タイトル'))->rules('required');
         $form->date('date', __('リリース日'));
 

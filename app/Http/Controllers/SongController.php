@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Song;
+use App\Models\Album;
 use Illuminate\Http\Request;
 
 class SongController extends Controller
@@ -16,7 +17,9 @@ class SongController extends Controller
     {
         $songs = Song::orderBy('id', 'asc')
         ->paginate(25);
-        return view('songs.index', compact('songs'));
+        $albums = Album::orderBy('created_at', 'asc')
+        ->get();
+        return view('songs.index', compact('albums', 'songs'));
     }
 
     /**
@@ -49,8 +52,8 @@ class SongController extends Controller
     public function show($id)
     {
         $songs = Song::find($id);
-        $previous = Song::where('created_at', '<', $songs->created_at)->orderBy('created_at', 'desc')->first();
-        $next = Song::where('created_at', '>', $songs->created_at)->orderBy('created_at')->first();
+        $previous = Song::where('created_at', '<', $songs->created_at)->orderBy('id', 'desc')->first();
+        $next = Song::where('created_at', '>', $songs->created_at)->orderBy('id')->first();
         
         return view('songs.show', compact('songs', 'previous', 'next'));
     }

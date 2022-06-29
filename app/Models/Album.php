@@ -4,7 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class album extends Model
+class Album extends Model
 {
-    //
+    public function songs()
+    {
+        return $this->hasMany('App\Models\Song'); 
+    }
 }
