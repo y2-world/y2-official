@@ -13,7 +13,9 @@
             Album : <a href="{{ route('albums.show', $songs->album_id) }}">{{ $songs->album->title }}</a></td>
             @endif
             <br>
+            @if(isset($albums))
             Release Date : {{ date('Y.m.d', strtotime($songs->album->date)) }}
+            @endif
             <br>
             <br>
             <div class="show_button">
