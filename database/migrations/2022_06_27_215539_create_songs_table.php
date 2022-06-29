@@ -16,10 +16,11 @@ class CreateSongsTable extends Migration
         Schema::create('songs', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->int('album_id')->nullable();
-            $table->int('album_trk')->nullable();
-            $table->int('single_id')->nullable();
-            $table->int('single_trk')->nullable();
+            $table->string('album_id')->nullable();
+            $table->string('album_trk')->nullable();
+            $table->string('single_id')->nullable();
+            $table->string('single_trk')->nullable();
+            $table->string('song_id')->nullable();
             $table->timestamps();
         });
     }

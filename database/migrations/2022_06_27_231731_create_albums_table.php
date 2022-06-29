@@ -17,6 +17,7 @@ class CreateAlbumsTable extends Migration
             $table->id(); 
             $table->string('title');
             $table->date('date');
+            $table->string('album_id');
             $table->timestamps();
         });
     }
