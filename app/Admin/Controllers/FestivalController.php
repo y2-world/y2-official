@@ -79,19 +79,19 @@ class FestivalController extends AdminController
     {
         $form = new Form(new Festival());
 
-        $form->text('id', __('ID'));
-        $form->text('title', __('タイトル'));
+        $form->text('id', __('ID'))->rules('required');
+        $form->text('title', __('タイトル'))->rules('required');
         $form->date('date', __('公演日'))->default(date('Y-m-d'))->rules('required');
-        $form->text('venue', __('会場'));
+        $form->text('venue', __('会場'))->rules('required');
         $form->table('setlist', __('本編'), function ($table) {
-            $table->text('artist');
-            $table->number('#');
-            $table->text('song', __('楽曲'));
+            $table->text('artist')->rules('required');
+            $table->number('#')->rules('required');
+            $table->text('song', __('楽曲'))->rules('required');
         });
         $form->table('encore', __('アンコール'), function ($table) {
-            $table->text('artist');
-            $table->number('#');
-            $table->text('song', __('楽曲'));
+            $table->text('artist')->rules('required');
+            $table->number('#')->rules('required');
+            $table->text('song', __('楽曲'))->rules('required');
         });
 
 
