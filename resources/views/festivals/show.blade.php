@@ -13,16 +13,23 @@
             <hr>
             <div class="setlist">
                 @foreach ($festivals->setlist as $data) 
-                    @if($data['artist'] === '-')
+                    @if($data['#'] === '-' && $data['song'] === '-')
+                    {{ $data['artist'] }}<br>
+                    @elseif($data['artist'] === '-')
                     {{ $data['#'] }}. {{ $data['song'] }}<br>
-                    @else
-                    <b>{{ $data['artist'] }}</b>
-                    {{ $data['#'] }}. {{ $data['song'] }}<br>
+                    @elseif($data['artist'] === 'END')
+                    {{ $data['#'] }}. {{ $data['song'] }}<br><br>
+                    @endif
                 @endforeach
                 @if(isset($festivals->encore))
                     <hr width="250">
                     @foreach ((array)$festivals->encore as $data)
-                    {{ $data['#'] }}. {{ $data['song'] }} / {{ $data['artist'] }}<br>
+                        @if($data['artist'] === '-')
+                        {{ $data['#'] }}. {{ $data['song'] }}<br>
+                        @else
+                        <b>{{ $data['artist'] }}</b><br>
+                        {{ $data['#'] }}. {{ $data['song'] }}<br>
+                        @endif
                     @endforeach
                 @endif
             </div>  
