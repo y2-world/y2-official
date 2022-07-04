@@ -24,7 +24,7 @@
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
         </ul>
       </div>
-      <a class="btn btn-outline-dark btn-sm" href="{{ url('/festivals') }}" role="button">Festivals</a>
+      <a class="btn btn-outline-dark btn-sm" href="{{ url('/setlists') }}" role="button">All</a>
     </div>
     <div class="search">
       <form action="{{url('/search')}}" method="GET">
@@ -50,27 +50,25 @@
         <tr>
           <th class="mb_list">#</th>
           <th class="mb_list">開催日</th>
-          <th class="mb_list">アーティスト</th>
-          <th class="mb_list">ツアータイトル</th>
+          <th class="mb_list">タイトル</th>
           <th class="pc_list">会場</th>
         </tr>
       </thead>
       <div class="all-setlist">
         <tbody>
-            @foreach ($setlists as $setlist)
+            @foreach ($festivals as $festival)
               <tr>
-                  <td>{{$setlist->id}}</td>
-                  <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
-                  <td><a href="{{ url('artists', $setlist->artist_id)}}">{{ $setlist->artist->name }}</a></td>
-                  <td><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->tour_title }}</a></td>
-                  <td class="pc_list">{{ $setlist->venue }}</td>
+                  <td>{{$festival->id}}</td>
+                  <td>{{ date('Y.m.d', strtotime($festival->date)) }}</td>
+                  <td><a href="{{ route('festivals.show', $festival->id) }}">{{ $festival->title }}</a></td>
+                  <td class="pc_list">{{ $festival->venue }}</td>
               </tr>
             @endforeach
         </tbody>
       </div>
     </table>
   <div class=”pagination”>
-    {!! $setlists->links() !!}
+    {!! $festivals->links() !!}
   </div>
 </div>
 @endsection

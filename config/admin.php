@@ -11,7 +11,7 @@ return [
     | login page.
     |
     */
-    'name' => 'LIVE HISTORY',
+    'name' => 'Yuki Official',
 
     /*
     |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ return [
     | `img` tag, eg '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo' => 'LIVE HISTORY',
+    'logo' => 'Yuki Official',
 
     /*
     |--------------------------------------------------------------------------

@@ -13,7 +13,7 @@ class HomeController extends Controller
     public function index(Content $content)
     {
         return $content
-            ->title('LIVE HISTORY')
+            ->title('Yuki Official')
             ->description('Home')
             ->row(function (Row $row) {
 

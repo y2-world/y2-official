@@ -54,10 +54,14 @@ Route::get('/songs', function () {
 Route::get('/albums', function () {
     return view('albums');
 });
+Route::get('/festivals', function () {
+    return view('festivals');
+});
 
 Route::resource('setlists', 'SetlistController');
 Route::resource('artists', 'ArtistController');
 Route::resource('search', 'SearchController');
 Route::resource('songs', 'SongController');
 Route::resource('albums', 'AlbumController');
+Route::resource('festivals', 'FestivalController');
 

@@ -16,4 +16,5 @@ Route::group([
     $router->resource('artists', ArtistController::class);
     $router->resource('songs', SongController::class);
     $router->resource('albums', AlbumController::class);
+    $router->resource('festivals', FestivalController::class);
 });
