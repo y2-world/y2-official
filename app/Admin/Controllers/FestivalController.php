@@ -79,10 +79,10 @@ class FestivalController extends AdminController
     {
         $form = new Form(new Festival());
 
-        $form->text('id', __('ID'))->rules('required');
+        $form->text('id', __('ID'));
         $form->text('title', __('タイトル'))->rules('required');
         $form->date('date', __('公演日'))->default(date('Y-m-d'))->rules('required');
-        $form->text('venue', __('会場'))->rules('required');
+        $form->text('venue', __('会場'));
         $form->table('setlist', __('本編'), function ($table) {
             $table->text('artist');
             $table->number('#');
