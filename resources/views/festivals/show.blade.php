@@ -24,11 +24,12 @@
                 @if(isset($festivals->encore))
                     <hr width="250">
                     @foreach ((array)$festivals->encore as $data)
-                        @if($data['artist'] === '-')
+                        @if($data['#'] === '-' && $data['song'] === '-')
+                        {{ $data['artist'] }}<br>
+                        @elseif($data['artist'] === '-')
                         {{ $data['#'] }}. {{ $data['song'] }}<br>
-                        @else
-                        <b>{{ $data['artist'] }}</b><br>
-                        {{ $data['#'] }}. {{ $data['song'] }}<br>
+                        @elseif($data['artist'] === 'END')
+                        {{ $data['#'] }}. {{ $data['song'] }}<br><br>
                         @endif
                     @endforeach
                 @endif
