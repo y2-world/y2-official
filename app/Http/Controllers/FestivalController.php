@@ -15,7 +15,7 @@ class FestivalController extends Controller
      */
     public function index()
     {
-        $festivals = Festival::orderBy('date', 'desc')
+        $festivals = Festival::orderBy('date', 'asc')
         ->paginate(10);
         $artists = Artist::orderBy('created_at', 'asc')
         ->get();
