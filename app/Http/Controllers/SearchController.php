@@ -29,8 +29,8 @@ class SearchController extends Controller
 
         $data = $query->orderBy('date','desc')->paginate(100);
 
-        $artists = Artist::orderBy('created_at', 'asc')
-        ->paginate(100);
+        $artists = Artist::orderBy('id', 'asc')
+        ->get();
  
         return view('search', compact('data', 'keyword', 'artist_id', 'artists'));
     }
