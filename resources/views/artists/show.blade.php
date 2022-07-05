@@ -8,6 +8,7 @@
       <div class="pc_list">
         <div class="dropdown-wrapper">
           <a class="btn btn-outline-dark btn-sm" href="{{ url('/setlists') }}" role="button">All</a>
+          <a class="btn btn-outline-dark btn-sm" href="{{ url('/festivals') }}" role="button">Festivals</a>
           <div class="btn-group">
             <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
               Artists
