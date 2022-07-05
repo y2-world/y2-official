@@ -5,6 +5,7 @@
   <h2>Set Lists</h2>
   <div class="parts-wrapper">
     <div class="dropdown-wrapper">
+      <a class="btn btn-outline-dark btn-sm" href="{{ url('/festivals') }}" role="button">Festivals</a>
       <div class="btn-group">
         <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
           Artists
@@ -24,7 +25,6 @@
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
         </ul>
       </div>
-      <a class="btn btn-outline-dark btn-sm" href="{{ url('/festivals') }}" role="button">Festivals</a>
     </div>
     <div class="search">
       <form action="{{url('/search')}}" method="GET">
