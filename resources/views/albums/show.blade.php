@@ -18,7 +18,7 @@
               <br>
               @endif
             @endforeach
-            @if(!empty($song->album_trk))
+            @if(!isnull($song->album_trk))
             <br>
             @endif
             {{ $albums->text }}
