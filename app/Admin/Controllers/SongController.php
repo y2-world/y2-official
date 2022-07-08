@@ -94,6 +94,7 @@ class SongController extends AdminController
         '20' => 'SOUNDTRACKS']);
         $show->field('single_trk', __('#'));
         $show->field('single_id', __('シングル'));
+        $show->field('text', __('コメント'));
 
         return $show;
     }
@@ -134,6 +135,7 @@ class SongController extends AdminController
         $form->text('album_trk', __('#'));
         $form->text('single_id', __('シングル'));
         $form->text('single_trk', __('#'));
+        $form->textarea('text', __('コメント'));
 
         return $form;
     }
