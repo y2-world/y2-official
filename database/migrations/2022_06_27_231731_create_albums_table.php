@@ -18,6 +18,7 @@ class CreateAlbumsTable extends Migration
             $table->string('title');
             $table->date('date');
             $table->integer('album_id');
+            $table->text('text')->nullable();
             $table->timestamps();
         });
     }

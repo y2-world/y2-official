@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             @if(isset($songs->song_id))
-            # {{$songs->song_id}}
+            <div class="setlist"># {{$songs->song_id}}</div>
             @endif
             <h3> {{$songs->title}}</h3>
             <div class="setlist">

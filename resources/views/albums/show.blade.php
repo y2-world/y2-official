@@ -4,16 +4,19 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
+          <div class="setlist"># {{$albums->album_id}}</div>
           <h3> {{$albums->title}}</h3>
-          <p>{{ date('Y.m.d', strtotime($albums->date)) }}</p>
-          <hr>
-          <div class="album_show">
+          <div class="setlist">
+            Release Date : {{ date('Y.m.d', strtotime($albums->date)) }}
+            <hr>
             @foreach ($songs as $song)
               @if($albums->id == $song->album_id)
               {{$song->album_trk}}. <td><a href="{{ route('songs.show', $song->id) }}">{{ $song->title }}</a></td>
               <br>
               @endif
             @endforeach
+            <br>
+            {{ $albums->text }}
           </div>
           <br>
           <div class="show_button">
