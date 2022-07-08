@@ -18,7 +18,9 @@
               <br>
               @endif
             @endforeach
+            @if(!is_null($song->album_trk))
             <br>
+            @endif
             {!! nl2br(e($albums->text)) !!}
           </div>
           <br>
