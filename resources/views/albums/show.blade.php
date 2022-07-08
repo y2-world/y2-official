@@ -18,10 +18,8 @@
               <br>
               @endif
             @endforeach
-            @if(!empty($song->album_trk))
             <br>
             {{ $albums->text }}
-            @endif
           </div>
           <br>
           <div class="show_button">
