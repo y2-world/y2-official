@@ -18,10 +18,10 @@
               <br>
               @endif
             @endforeach
-            @if(!isnull($song->album_trk))
+            @if(!empty($song->album_trk))
             <br>
-            @endif
             {{ $albums->text }}
+            @endif
           </div>
           <br>
           <div class="show_button">
