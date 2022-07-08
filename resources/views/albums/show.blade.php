@@ -18,8 +18,9 @@
               <br>
               @endif
             @endforeach
-            {{$song->album_trk}}
+            @if($albums->album_id !== 8)
             <br>
+            @endif
             {!! nl2br(e($albums->text)) !!}
           </div>
           <br>
