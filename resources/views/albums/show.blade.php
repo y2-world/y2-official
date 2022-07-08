@@ -4,6 +4,8 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
+          <a class="btn btn-outline-dark btn-sm" href="{{ url('/albums') }}" role="button">Albums</a>
+          <br><br>
           <div class="setlist"># {{$albums->album_id}}</div>
           <h3> {{$albums->title}}</h3>
           <div class="setlist">

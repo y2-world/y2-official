@@ -4,6 +4,8 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
+            <a class="btn btn-outline-dark btn-sm" href="{{ url('/songs') }}" role="button">Songs</a>
+            <br><br>
             @if(isset($songs->song_id))
             <div class="setlist"># {{$songs->song_id}}</div>
             @endif
