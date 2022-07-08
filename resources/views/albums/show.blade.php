@@ -19,7 +19,7 @@
               @endif
             @endforeach
             <br>
-            {{ $albums->text }}
+            {!! nl2br(e($albums->text)) !!}
           </div>
           <br>
           <div class="show_button">
