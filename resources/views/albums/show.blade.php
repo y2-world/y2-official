@@ -15,7 +15,9 @@
               <br>
               @endif
             @endforeach
+            @if(isset($songs))
             <br>
+            @endif
             {{ $albums->text }}
           </div>
           <br>

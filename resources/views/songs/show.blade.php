@@ -24,7 +24,6 @@
                 {{ $songs->text }}
             </div>
             <br>
-            <br>
             <div class="show_button">
                 @if(isset($previous))
                 <a class="btn btn-outline-dark" href="{{ route('songs.show', $previous->id)}}" rel="prev" role="button"><</a>
