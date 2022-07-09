@@ -36,16 +36,16 @@ class SetlistController extends AdminController
         '6' => 'コブクロ', 
         '7' => '小池美由',
         '8' => 'SE7EN',
-        '9' => 'スキマスイッチ',
-        '10' => 'Kis-My-Ft2',
-        '11' => 'CHEMISTRY',
-        '12' => 'Charlie Puth',
-        '13' => 'ウカスカジー',
-        '14' => '嵐',
-        '15' => 'フラチナリズム',
-        '16' => 'Official髭男dism',
-        '17' => 'フェス',
-        '18' => 'Tak Matsumoto & Daniel Ho']);
+        '9' => 'Tak Matsumoto & Daniel Ho',
+        '10' => 'スキマスイッチ',
+        '11' => 'Kis-My-Ft2',
+        '12' => 'CHEMISTRY',
+        '13' => 'Charlie Puth',
+        '14' => 'ウカスカジー',
+        '15' => '嵐',
+        '16' => 'フラチナリズム',
+        '17' => 'Official髭男dism',
+        '18' => 'Nissy']);
         $grid->column('tour_title', __('ツアータイトル'));
         $grid->column('date', __('公演日'))->default(date('Y.m.d'));
         $grid->column('venue', __('会場'));
