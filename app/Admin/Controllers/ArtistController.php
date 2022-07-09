@@ -61,6 +61,7 @@ class ArtistController extends AdminController
     {
         $form = new Form(new Artist());
 
+        $form->text('id', __('ID'))->rules('required');
         $form->text('name', __('アーティスト名'));
 
         return $form;
