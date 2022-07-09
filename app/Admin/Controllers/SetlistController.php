@@ -74,7 +74,6 @@ class SetlistController extends AdminController
 
         $show->field('id', __('ID'));
         $show->field('artist_id', __('アーティストID'))->using(['1' => 'w-inds.',
-        ->using(['1' => 'w-inds.',
         '2' => 'Mr.Children', 
         '3' => "B'z", 
         '4' => 'flumpool', 
@@ -127,7 +126,6 @@ class SetlistController extends AdminController
         $form->text('id', __('ID'))->rules('required');
         $form->select('artist_id', __('アーティストID'))->rules('required')
         ->options(['1' => 'w-inds.',
-        ->using(['1' => 'w-inds.',
         '2' => 'Mr.Children', 
         '3' => "B'z", 
         '4' => 'flumpool', 
