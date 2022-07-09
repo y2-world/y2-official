@@ -74,6 +74,7 @@ class SetlistController extends AdminController
 
         $show->field('id', __('ID'));
         $show->field('artist_id', __('アーティストID'))->using(['1' => 'w-inds.',
+        ->using(['1' => 'w-inds.',
         '2' => 'Mr.Children', 
         '3' => "B'z", 
         '4' => 'flumpool', 
@@ -81,16 +82,16 @@ class SetlistController extends AdminController
         '6' => 'コブクロ', 
         '7' => '小池美由',
         '8' => 'SE7EN',
-        '9' => 'スキマスイッチ',
-        '10' => 'Kis-My-Ft2',
-        '11' => 'CHEMISTRY',
-        '12' => 'Charlie Puth',
-        '13' => 'ウカスカジー',
-        '14' => '嵐',
-        '15' => 'フラチナリズム',
-        '16' => 'Official髭男dism',
-        '17' => 'フェス',
-        '18' => 'Tak Matsumoto & Daniel Ho']);
+        '9' => 'Tak Matsumoto & Daniel Ho',
+        '10' => 'スキマスイッチ',
+        '11' => 'Kis-My-Ft2',
+        '12' => 'CHEMISTRY',
+        '13' => 'Charlie Puth',
+        '14' => 'ウカスカジー',
+        '15' => '嵐',
+        '16' => 'フラチナリズム',
+        '17' => 'Official髭男dism',
+        '18' => 'Nissy']);
         $show->field('tour_title', __('ツアータイトル'));
         $show->field('date', __('公演日'));
         $show->field('venue', __('会場'));
@@ -126,6 +127,7 @@ class SetlistController extends AdminController
         $form->text('id', __('ID'))->rules('required');
         $form->select('artist_id', __('アーティストID'))->rules('required')
         ->options(['1' => 'w-inds.',
+        ->using(['1' => 'w-inds.',
         '2' => 'Mr.Children', 
         '3' => "B'z", 
         '4' => 'flumpool', 
@@ -133,16 +135,16 @@ class SetlistController extends AdminController
         '6' => 'コブクロ', 
         '7' => '小池美由',
         '8' => 'SE7EN',
-        '9' => 'スキマスイッチ',
-        '10' => 'Kis-My-Ft2',
-        '11' => 'CHEMISTRY',
-        '12' => 'Charlie Puth',
-        '13' => 'ウカスカジー',
-        '14' => '嵐',
-        '15' => 'フラチナリズム',
-        '16' => 'Official髭男dism',
-        '17' => 'フェス',
-        '18' => 'Tak Matsumoto & Daniel Ho']);
+        '9' => 'Tak Matsumoto & Daniel Ho',
+        '10' => 'スキマスイッチ',
+        '11' => 'Kis-My-Ft2',
+        '12' => 'CHEMISTRY',
+        '13' => 'Charlie Puth',
+        '14' => 'ウカスカジー',
+        '15' => '嵐',
+        '16' => 'フラチナリズム',
+        '17' => 'Official髭男dism',
+        '18' => 'Nissy']);
         $form->text('tour_title', __('ツアータイトル'))->rules('required');
         $form->date('date', __('公演日'))->default(date('Y-m-d'))->rules('required');
         $form->text('venue', __('会場'))->rules('required');
