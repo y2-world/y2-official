@@ -58,24 +58,9 @@ class SetlistController extends AdminController
         $show = new Show(Setlist::findOrFail($id));
 
         $show->field('id', __('ID'));
-        $show->field('artist_id', __('アーティストID'))->using(['1' => 'w-inds.',
-        '2' => 'Mr.Children', 
-        '3' => "B'z", 
-        '4' => 'flumpool', 
-        '5' => '福山雅治', 
-        '6' => 'コブクロ', 
-        '7' => '小池美由',
-        '8' => 'SE7EN',
-        '9' => 'Tak Matsumoto & Daniel Ho',
-        '10' => 'スキマスイッチ',
-        '11' => 'Kis-My-Ft2',
-        '12' => 'CHEMISTRY',
-        '13' => 'Charlie Puth',
-        '14' => 'ウカスカジー',
-        '15' => '嵐',
-        '16' => 'フラチナリズム',
-        '17' => 'Official髭男dism',
-        '18' => 'Nissy']);
+        $show->field('artist_id', __('アーティスト'))->as(function($id) {
+            return Artist::find($id)->name;
+        });
         $show->field('tour_title', __('ツアータイトル'));
         $show->field('date', __('公演日'));
         $show->field('venue', __('会場'));
