@@ -24,7 +24,7 @@
               <br>
               @endif
             @endforeach
-            @if($albums->album_id !== 8)
+            @if($albums->album_id !== 8 | is_null($albums->album_id))
             <br>
             @endif
             {!! nl2br(e($albums->text)) !!}
