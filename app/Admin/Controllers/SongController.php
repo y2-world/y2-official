@@ -35,6 +35,9 @@ class SongController extends AdminController
             $album = Album::find($id)->title;
             if(isset($album)) {
                 return $album;
+            } else {
+                $album = '-';
+                return $album;
             }
         });
         $grid->column('single_trk', __('#'));
