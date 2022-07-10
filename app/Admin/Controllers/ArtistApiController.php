@@ -6,7 +6,7 @@ use App\Artist;
 use Illuminate\Http\Request;
 use Encore\Admin\Controllers\AdminController;
 
-class ArtistsApiController extends AdminController
+class ArtistApiController extends AdminController
 {
     public function artists(Request $request)
     {

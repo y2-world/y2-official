@@ -32,29 +32,11 @@ class SongController extends AdminController
         $grid->column('title', __('タイトル'));
         $grid->column('album_trk', __('#'));
         $grid->column('album_id', __('アルバム'))->display(function($id) {
-            return Album::find($id)->title;
+            if(isset($album)) {
+                $album = Album::find($id)->title;
+                return $album;
+            }
         });
-        // $grid->column('album_id', __('アルバム'))
-        // ->using(['1' => 'EVERYTHING',
-        // '2' => 'Kind of Love', 
-        // '3' => "Versus", 
-        // '4' => 'Atomic Heart', 
-        // '5' => '深海', 
-        // '6' => 'BOLERO', 
-        // '7' => 'DISCOVERY',
-        // '8' => '1/42',
-        // '9' => 'Q',
-        // '10' => "IT'S A WONDERFUL WORLD",
-        // '11' => 'シフクノオト',
-        // '12' => 'I ♡ U',
-        // '13' => 'HOME',
-        // '14' => 'B-SIDE',
-        // '15' => 'SUPERMARKET FANTASY',
-        // '16' => 'SENSE',
-        // '17' => '[(an imitation) blood orange]',
-        // '18' => 'REFLECTION',
-        // '19' => '重力と呼吸',
-        // '20' => 'SOUNDTRACKS']);
         $grid->column('single_trk', __('#'));
         $grid->column('single_id', __('シングル'));
 
