@@ -18,8 +18,10 @@
           <div class="setlist">
             Release Date : {{ date('Y.m.d', strtotime($albums->date)) }}
             <hr>
+            @if(is_null($albums->text))
             {!! nl2br(e($albums->text)) !!}
             <br><br>
+            @endif
             @foreach ($songs as $song)
               @if($albums->id == $song->album_id)
               {{$song->album_trk}}. <td><a href="{{ route('songs.show', $song->id) }}">{{ $song->title }}</a></td>
