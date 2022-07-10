@@ -18,7 +18,7 @@
           <div class="setlist">
             Release Date : {{ date('Y.m.d', strtotime($albums->date)) }}
             <hr>
-            @if(is_null($albums->text))
+            @if(!is_null($albums->text))
             {!! nl2br(e($albums->text)) !!}
             <br><br>
             @endif
