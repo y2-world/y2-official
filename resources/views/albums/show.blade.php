@@ -7,7 +7,11 @@
           <a class="btn btn-outline-dark btn-sm" href="{{ url('/songs') }}" role="button">Songs</a>
           <a class="btn btn-outline-dark btn-sm" href="{{ url('/albums') }}" role="button">Albums</a>
           <br><br>
-          <div class="setlist"># {{$albums->album_id}}</div>
+          <div class="setlist">
+            @if(is_null($albums->album_id))
+            # {{$albums->album_id}}
+            @endif
+          </div>
           <h3> {{$albums->title}}</h3>
           <div class="setlist">
             Release Date : {{ date('Y.m.d', strtotime($albums->date)) }}
