@@ -8,8 +8,10 @@
           <a class="btn btn-outline-dark btn-sm" href="{{ url('/albums') }}" role="button">Albums</a>
           <br><br>
           <div class="setlist">
-            @if(is_null($albums->album_id))
+            @if(!is_null($albums->album_id))
             # {{$albums->album_id}}
+            @else
+            Best Album
             @endif
           </div>
           <h3> {{$albums->title}}</h3>
