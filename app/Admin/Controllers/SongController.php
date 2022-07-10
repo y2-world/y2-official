@@ -32,8 +32,8 @@ class SongController extends AdminController
         $grid->column('title', __('タイトル'));
         $grid->column('album_trk', __('#'));
         $grid->column('album_id', __('アルバム'))->display(function($id) {
+            $album = Album::find($id)->title;
             if(isset($album)) {
-                $album = Album::find($id)->title;
                 return $album;
             }
         });
