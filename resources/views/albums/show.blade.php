@@ -28,6 +28,7 @@
             <br>
             @endif
             {!! nl2br(e($albums->text)) !!}
+            {{$albums->album_id}}
           </div>
           <br>
           <div class="show_button">
