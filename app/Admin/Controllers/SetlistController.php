@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Setlist;
+use App\Artist;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -124,25 +125,12 @@ class SetlistController extends AdminController
         $form = new Form(new Setlist());
 
         $form->text('id', __('ID'))->rules('required');
-        $form->select('artist_id', __('アーティストID'))->rules('required')
-        ->options(['1' => 'w-inds.',
-        '2' => 'Mr.Children', 
-        '3' => "B'z", 
-        '4' => 'flumpool', 
-        '5' => '福山雅治', 
-        '6' => 'コブクロ', 
-        '7' => '小池美由',
-        '8' => 'SE7EN',
-        '9' => 'Tak Matsumoto & Daniel Ho',
-        '10' => 'スキマスイッチ',
-        '11' => 'Kis-My-Ft2',
-        '12' => 'CHEMISTRY',
-        '13' => 'Charlie Puth',
-        '14' => 'ウカスカジー',
-        '15' => '嵐',
-        '16' => 'フラチナリズム',
-        '17' => 'Official髭男dism',
-        '18' => 'Nissy']);
+        $form->select('artist_id', __('アーティスト'))->options(function($id) {
+            $artist = Artist::find($id);
+            if ($artist) {
+                return [$artist->id => $artist->name];
+            }
+        })->ajax('admin/api/artists');
         $form->text('tour_title', __('ツアータイトル'))->rules('required');
         $form->date('date', __('公演日'))->default(date('Y-m-d'))->rules('required');
         $form->text('venue', __('会場'))->rules('required');
