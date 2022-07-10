@@ -28,25 +28,9 @@ class SetlistController extends AdminController
         $grid = new Grid(new Setlist());
 
         $grid->column('id', __('ID'));
-        $grid->column('artist_id', __('アーティストID'))
-        ->using(['1' => 'w-inds.',
-        '2' => 'Mr.Children', 
-        '3' => "B'z", 
-        '4' => 'flumpool', 
-        '5' => '福山雅治', 
-        '6' => 'コブクロ', 
-        '7' => '小池美由',
-        '8' => 'SE7EN',
-        '9' => 'Tak Matsumoto & Daniel Ho',
-        '10' => 'スキマスイッチ',
-        '11' => 'Kis-My-Ft2',
-        '12' => 'CHEMISTRY',
-        '13' => 'Charlie Puth',
-        '14' => 'ウカスカジー',
-        '15' => '嵐',
-        '16' => 'フラチナリズム',
-        '17' => 'Official髭男dism',
-        '18' => 'Nissy']);
+        $grid->column('artist_id', __('アーティスト'))->display(function($id) {
+            return Artist::find($id)->name;
+        });
         $grid->column('tour_title', __('ツアータイトル'));
         $grid->column('date', __('公演日'))->default(date('Y.m.d'));
         $grid->column('venue', __('会場'));
