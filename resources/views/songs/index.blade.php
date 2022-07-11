@@ -2,7 +2,10 @@
 @section('content')
 <br>
 <div class="container-lg">
-  <h2>Songs</h2>
+  <a class="btn btn-outline-dark btn-sm" href="{{ url('/songs') }}" role="button">Songs</a>
+  <a class="btn btn-outline-dark btn-sm" href="{{ url('/singles') }}" role="button">Singles</a>
+  <a class="btn btn-outline-dark btn-sm" href="{{ url('/albums') }}" role="button">Albums</a>
+  <br><br>
   <table class="table table-striped">
       <thead>
         <tr>

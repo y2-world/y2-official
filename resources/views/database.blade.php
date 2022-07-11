@@ -6,6 +6,8 @@
     <hr>
     <h2><a href="{{ url('/songs') }}">Songs</a></h2>
     <hr>
+    <h2><a href="{{ url('/singles') }}">Singles</a></h2>
+    <hr>
     <h2><a href="{{ url('/albums') }}">Albums</a></h2>
     <hr>
     <h2><a href="{{ url('/tour') }}">Tour</a></h2>

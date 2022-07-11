@@ -2,20 +2,20 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\Album;
+use App\Models\Single;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 
-class AlbumController extends AdminController
+class SingleController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = 'Albums';
+    protected $title = 'Single';
 
     /**
      * Make a grid builder.
@@ -24,10 +24,10 @@ class AlbumController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new Album());
+        $grid = new Grid(new Single());
 
-        $grid->column('id', __('ID'));
-        $grid->column('album_id', __('Album ID'));
+        $grid->column('id', __('Id'));
+        $grid->column('single_id', __('Single ID'));
         $grid->column('title', __('タイトル'));
         $grid->column('date', __('リリース日'));
 
@@ -42,13 +42,13 @@ class AlbumController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(Album::findOrFail($id));
+        $show = new Show(Single::findOrFail($id));
 
-        $show->field('id', __('ID'));
-        $show->field('album_id', __('Album ID'));
-        $show->field('title', __('タイトル'));
-        $show->field('date', __('リリース日'));
-        $show->field('text', __('コメント'));
+        $show->field('id', __('Id'));
+        $show->field('title', __('Title'));
+        $show->field('date', __('Date'));
+        $show->field('single_id', __('Single id'));
+        $show->field('text', __('Text'));
         $show->field('created_at', __('作成日'));
         $show->field('updated_at', __('更新日'));
 
@@ -62,10 +62,10 @@ class AlbumController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new Album());
+        $form = new Form(new Single());
 
         $form->text('id', __('ID'))->rules('required');
-        $form->text('album_id', __('Album ID'));
+        $form->text('single_id', __('Single ID'));
         $form->text('title', __('タイトル'))->rules('required');
         $form->date('date', __('リリース日'));
         $form->textarea('text', __('コメント'));

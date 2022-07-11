@@ -6,7 +6,7 @@
   <a class="btn btn-outline-dark btn-sm" href="{{ url('/singles') }}" role="button">Singles</a>
   <a class="btn btn-outline-dark btn-sm" href="{{ url('/albums') }}" role="button">Albums</a>
   <br><br>
-  <h2>Albums</h2>
+  <h2>Singles</h2>
   <table class="table table-striped">
       <thead>
         <tr>
@@ -17,18 +17,18 @@
       </thead>
       <div class="all-setlist">
         <tbody>
-            @foreach ($albums as $album)
+            @foreach ($singles as $single)
               <tr>
-                  <td>{{$album->album_id}}</td>
-                  <td><a href="{{ route('albums.show', $album->id) }}">{{ $album->title }}</a></td>
-                  <td>{{ date('Y.m.d', strtotime($album->date)) }}</td>
+                  <td>{{$single->single_id}}</td>
+                  <td><a href="{{ route('albums.show', $single->id) }}">{{ $single->title }}</a></td>
+                  <td>{{ date('Y.m.d', strtotime($single->date)) }}</td>
               </tr>
             @endforeach
         </tbody>
       </div>
     </table>
   <div class=”pagination”>
-    {!! $albums->onEachSide(5)->links() !!}
+    {!! $singles->onEachSide(5)->links() !!}
   </div>
 </div>
 @endsection

@@ -64,5 +64,6 @@ Route::resource('search', 'SearchController');
 Route::resource('songs', 'SongController');
 Route::resource('albums', 'AlbumController');
 Route::resource('festivals', 'FestivalController');
+Route::resource('singles', 'SingleController');
 
 

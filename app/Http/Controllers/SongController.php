@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Song;
 use App\Models\Album;
+use App\Models\Single;
 use Illuminate\Http\Request;
 
 class SongController extends Controller
@@ -55,10 +56,12 @@ class SongController extends Controller
         $songs = Song::find($id);
         $albums = Album::orderBy('id', 'asc')
         ->get();
+        $singles = Single::orderBy('id', 'asc')
+        ->get();
         $previous = Song::where('id', '<', $songs->id)->orderBy('id', 'desc')->first();
         $next = Song::where('id', '>', $songs->id)->orderBy('id')->first();
         
-        return view('songs.show', compact('songs', 'previous', 'next', 'albums'));
+        return view('songs.show', compact('songs', 'previous', 'next', 'albums', 'singles'));
     }
 
     /**

@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Album;
-use App\Models\Song;
-use App\Models\Single;
 use Illuminate\Http\Request;
+use App\Models\Single;
+use App\Models\Song;
 
-class AlbumController extends Controller
+class SingleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,9 +15,9 @@ class AlbumController extends Controller
      */
     public function index()
     {
-        $albums = Album::orderBy('id', 'asc')
+        $singles = Single::orderBy('id', 'asc')
         ->paginate(10);
-        return view('albums.index', compact('albums'));
+        return view('singles.index', compact('singles'));
     }
 
     /**
@@ -49,15 +48,15 @@ class AlbumController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        $albums = Album::find($id);
+    {   
+        $singles = Single::find($id);
         $songs = Song::orderBy('album_disc', 'asc')
-        ->orderBy('album_trk', 'asc')
+        ->orderBy('single_trk', 'asc')
         ->get();
-        $previous = Album::where('id', '<', $albums->id)->orderBy('id', 'desc')->first();
-        $next = Album::where('id', '>', $albums->id)->orderBy('id')->first();
+        $previous = Album::where('id', '<', $singles->id)->orderBy('id', 'desc')->first();
+        $next = Album::where('id', '>', $singles->id)->orderBy('id')->first();
         
-        return view('albums.show', compact('songs', 'albums', 'previous', 'next'));
+        return view('albums.show', compact('songs', 'singles', 'previous', 'next'));
     }
 
     /**
