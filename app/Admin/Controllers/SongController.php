@@ -38,7 +38,7 @@ class SongController extends AdminController
         });
         $grid->column('album_trk', __('#'));
         $grid->column('single_id', __('シングル'))->display(function($id) {
-            $single = optional(Album::find($id));
+            $single = optional(Single::find($id));
             if ($single) {
                 return $single->title;
             }
