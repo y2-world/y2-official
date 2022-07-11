@@ -6,7 +6,7 @@ use App\Single;
 use Illuminate\Http\Request;
 use Encore\Admin\Controllers\AdminController;
 
-class AlbumApiController extends AdminController
+class SingleApiController extends AdminController
 {
     public function singles(Request $request)
     {
