@@ -22,7 +22,7 @@
                   <td>{{$song->song_id}}</td>
                   <td><a href="{{ route('songs.show', $song->id) }}">{{ $song->title }}</a></td>
                   @if(isset($song->single_id))
-                  <td><a href="{{ route('albums.show', $song->single_id) }}">{{ $song->single->title }}</a></td>
+                  <td><a href="{{ route('singles.show', $song->single_id) }}">{{ $song->single->title }}</a></td>
                   <td class="pc_list">{{ date('Y.m.d', strtotime($song->single->date)) }}</td>
                   @elseif(isset($song->album_id))
                     <td><a href="{{ route('albums.show', $song->album_id) }}">{{ $song->album->title }}</a></td>
