@@ -55,7 +55,7 @@ class SingleController extends Controller
         $previous = Single::where('id', '<', $singles->id)->orderBy('id', 'desc')->first();
         $next = Single::where('id', '>', $singles->id)->orderBy('id')->first();
         
-        return view('albums.show', compact('songs', 'singles', 'previous', 'next'));
+        return view('singles.show', compact('songs', 'singles', 'previous', 'next'));
     }
 
     /**
