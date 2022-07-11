@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Models\Song;
 use App\Models\Album;
+use App\Models\Single;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
