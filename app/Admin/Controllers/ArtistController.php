@@ -28,8 +28,8 @@ class ArtistController extends AdminController
 
         $grid->column('id', __('ID'));
         $grid->column('name', __('アーティスト名'));
-        $grid->column('created_at', __('作成日'));
-        $grid->column('updated_at', __('更新日'));
+        $grid->column('created_at', __('作成日時'));
+        $grid->column('updated_at', __('更新日時'));
 
         return $grid;
     }
@@ -46,8 +46,8 @@ class ArtistController extends AdminController
 
         $show->field('id', __('ID'));
         $show->field('name', __('アーティスト名'));
-        $show->field('created_at', __('作成日'));
-        $show->field('updated_at', __('更新日'));
+        $show->field('created_at', __('作成日時'));
+        $show->field('updated_at', __('更新日時'));
 
         return $show;
     }

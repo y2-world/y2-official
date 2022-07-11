@@ -49,8 +49,8 @@ class AlbumController extends AdminController
         $show->field('title', __('タイトル'));
         $show->field('date', __('リリース日'));
         $show->field('text', __('コメント'));
-        $show->field('created_at', __('作成日'));
-        $show->field('updated_at', __('更新日'));
+        $show->field('created_at', __('作成日時'));
+        $show->field('updated_at', __('更新日時'));
 
         return $show;
     }
