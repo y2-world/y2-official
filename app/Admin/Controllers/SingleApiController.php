@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Single;
+use App\Models\Single;
 use Illuminate\Http\Request;
 use Encore\Admin\Controllers\AdminController;
 
