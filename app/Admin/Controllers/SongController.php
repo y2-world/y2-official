@@ -89,6 +89,7 @@ class SongController extends AdminController
             }
         })->ajax('admin/api/albums');
         $form->text('album_trk', __('#'));
+        $form->text('album_disc', __('ディスク'));
         $form->text('single_id', __('シングル'));
         $form->text('single_trk', __('#'));
         $form->textarea('text', __('コメント'));
