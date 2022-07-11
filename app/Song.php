@@ -10,4 +10,9 @@ class Song extends Model
     {
         return $this->belongsTo(Album::class, 'album_id');
     }
+
+    public function single()
+    {
+        return $this->belongsTo(Single::class, 'single_id');
+    }
 }
