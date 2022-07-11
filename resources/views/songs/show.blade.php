@@ -12,6 +12,15 @@
             @endif
             <h3> {{$songs->title}}</h3>
             <div class="setlist">
+                @if(isset($songs->single->title))
+                    @if(isset($songs->album->title))
+                    Single : <a href="{{ route('singles.show', $songs->single_id) }}">{{ $songs->single->title }}</a></td>
+                    @endif
+                    <br>
+                    @if(isset($songs->single->date))
+                    Release Date : {{ date('Y.m.d', strtotime($songs->single->date)) }}
+                    @endif
+                @endif
                 @if(isset($songs->album->title))
                     @if(isset($songs->album->title))
                     Album : <a href="{{ route('albums.show', $songs->album_id) }}">{{ $songs->album->title }}</a></td>
