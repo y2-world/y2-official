@@ -44,11 +44,11 @@ class SingleController extends AdminController
     {
         $show = new Show(Single::findOrFail($id));
 
-        $show->field('id', __('Id'));
-        $show->field('title', __('Title'));
-        $show->field('date', __('Date'));
-        $show->field('single_id', __('Single id'));
-        $show->field('text', __('Text'));
+        $show->field('id', __('ID'));
+        $show->field('single_id', __('Single ID'));
+        $show->field('title', __('タイトル'));
+        $show->field('date', __('リリース日'));
+        $show->field('text', __('コメント'));
         $show->field('created_at', __('作成日'));
         $show->field('updated_at', __('更新日'));
 
