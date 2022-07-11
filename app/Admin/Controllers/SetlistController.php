@@ -34,9 +34,7 @@ class SetlistController extends AdminController
         $grid->column('tour_title', __('ツアータイトル'));
         $grid->column('date', __('公演日'))->default(date('Y.m.d'));
         $grid->column('venue', __('会場'));
-        $grid->column('created_at', __('作成日時'));
-        $grid->column('updated_at', __('更新日時'))->default(date('Y.m.d'));
-
+       
         $grid->filter(function($filter){
             $filter->like('artist', 'アーティスト');
             $filter->like('tour_title', 'ツアータイトル');

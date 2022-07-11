@@ -30,8 +30,6 @@ class FestivalController extends AdminController
         $grid->column('title', __('タイトル'));
         $grid->column('date', __('公演日'))->default(date('Y.m.d'));
         $grid->column('venue', __('会場'));
-        $grid->column('created_at', __('作成日'));
-        $grid->column('updated_at', __('更新日'))->default(date('Y.m.d'));
 
         return $grid;
     }
