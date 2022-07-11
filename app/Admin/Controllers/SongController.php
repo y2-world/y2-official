@@ -37,7 +37,12 @@ class SongController extends AdminController
             }
         });
         $grid->column('album_trk', __('#'));
-        $grid->column('single_id', __('シングル'));
+        $grid->column('single_id', __('シングル'))->display(function($id) {
+            $single = optional(Album::find($id));
+            if ($single) {
+                return $single->title;
+            }
+        });
         $grid->column('single_trk', __('#'));
 
         return $grid;
@@ -63,7 +68,12 @@ class SongController extends AdminController
             }
         });
         $show->field('album_trk', __('#'));
-        $show->field('single_id', __('シングル'));
+        $show->field('single_id', __('シングル'))->as(function($id) {
+            $single = optional(Single::find($id));
+            if ($single) {
+                return $single->title;
+            }
+        });
         $show->field('single_trk', __('#'));
         $show->field('text', __('コメント'));
 
@@ -90,7 +100,12 @@ class SongController extends AdminController
         })->ajax('admin/api/albums');
         $form->text('album_trk', __('#'));
         $form->text('album_disc', __('ディスク'));
-        $form->text('single_id', __('シングル'));
+        $form->select('single_id', __('シングル'))->options(function($id) {
+            $single = Single::find($id);
+            if ($single) {
+                return [$single->id => $single->title];
+            }
+        })->ajax('admin/api/albums');
         $form->text('single_trk', __('#'));
         $form->textarea('text', __('コメント'));
 
