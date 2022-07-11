@@ -13,7 +13,7 @@
             <h3> {{$songs->title}}</h3>
             <div class="setlist">
                 @if(isset($songs->single->title))
-                    @if(isset($songs->album->title))
+                    @if(isset($songs->single->title))
                     Single : <a href="{{ route('singles.show', $songs->single_id) }}">{{ $songs->single->title }}</a></td>
                     @endif
                     <br>
