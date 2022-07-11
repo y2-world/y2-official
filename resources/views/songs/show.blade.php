@@ -14,7 +14,11 @@
             <div class="setlist">
                 @if(isset($songs->single->title))
                     @if(isset($songs->single->title))
-                    Single : <a href="{{ route('singles.show', $songs->single_id) }}">{{ $songs->single->title }}</a></td>
+                        @if($songs->single_trk == 1)
+                        Single #{{$songs->single->single_id}}
+                        @else
+                        Single : <a href="{{ route('singles.show', $songs->single_id) }}">{{ $songs->single->title }}</a></td>
+                        @endif
                     @endif
                     <br>
                     @if(isset($songs->single->date))
