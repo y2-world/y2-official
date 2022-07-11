@@ -14,7 +14,7 @@
             <div class="setlist">
                 @if(isset($songs->single->title))
                     @if(isset($songs->single->title))
-                    {{ $songs->single->single_id }} Single : <a href="{{ route('singles.show', $songs->single_id) }}">{{ $songs->single->title }}</a></td>
+                    Single : <a href="{{ route('singles.show', $songs->single_id) }}">{{ $songs->single->title }}</a></td>
                     @endif
                     <br>
                     @if(isset($songs->single->date))
