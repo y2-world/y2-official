@@ -27,6 +27,9 @@
                   @elseif(isset($song->album_id))
                     <td><a href="{{ route('albums.show', $song->album_id) }}">{{ $song->album->title }}</a></td>
                     <td class="pc_list">{{ date('Y.m.d', strtotime($song->album->date)) }}</td>
+                  @elseif(isset($song->single_id))
+                    <td><a href="{{ route('singles.show', $song->single_id) }}">{{ $song->single->title }}</a></td>
+                    <td class="pc_list">{{ date('Y.m.d', strtotime($song->single->date)) }}</td>
                   @else
                     <td></td>
                     <td class="pc_list"></td>
