@@ -25,7 +25,7 @@
             @endif
             @foreach ($songs as $song)
               @if($singles->id == $song->single_id)
-              {{$song->single_trk}}. <td><a href="{{ route('singles.show', $song->id) }}">{{ $song->title }}</a></td>
+              {{$song->single_trk}}. <td><a href="{{ route('songs.show', $song->id) }}">{{ $song->title }}</a></td>
               <br>
               @endif
             @endforeach
