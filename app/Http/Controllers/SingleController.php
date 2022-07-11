@@ -50,11 +50,10 @@ class SingleController extends Controller
     public function show($id)
     {   
         $singles = Single::find($id);
-        $songs = Song::orderBy('album_disc', 'asc')
-        ->orderBy('single_trk', 'asc')
+        $songs = Song::orderBy('single_trk', 'asc')
         ->get();
-        $previous = Album::where('id', '<', $singles->id)->orderBy('id', 'desc')->first();
-        $next = Album::where('id', '>', $singles->id)->orderBy('id')->first();
+        $previous = Single::where('id', '<', $singles->id)->orderBy('id', 'desc')->first();
+        $next = Single::where('id', '>', $singles->id)->orderBy('id')->first();
         
         return view('albums.show', compact('songs', 'singles', 'previous', 'next'));
     }
