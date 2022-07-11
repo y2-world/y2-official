@@ -18,7 +18,7 @@
                     @endif
                     <br>
                     @if(isset($songs->single->date))
-                    Release Date : {{ date('Y.m.d', strtotime($songs->single->date)) }}
+                    Release Date : {{ date('Y.m.d', strtotime($songs->single->date)) }}<br>
                     @endif
                 @endif
                 @if(isset($songs->album->title))
