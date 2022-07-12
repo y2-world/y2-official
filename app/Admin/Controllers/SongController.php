@@ -100,7 +100,7 @@ class SongController extends AdminController
             if ($album) {
                 return [$album->id => $album->title];
             }
-        })->ajax('/admin/api/albums');
+        })->ajax('admin/api/albums');
         $form->text('album_trk', __('#'));
         $form->text('album_disc', __('ディスク'));
         $form->select('single_id', __('シングル'))->options(function($id) {
