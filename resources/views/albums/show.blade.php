@@ -29,7 +29,6 @@
             @elseif($albums->best == 1)
             @endif
             @if(!is_null($albums->text))
-            <br><br>
             {!! nl2br(e($albums->text)) !!}
             @endif
           </div>
