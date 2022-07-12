@@ -11,4 +11,5 @@ class Setlist extends Model
     ];
 
     protected $dates = ['date'];
+    
 }
