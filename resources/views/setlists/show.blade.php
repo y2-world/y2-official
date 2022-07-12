@@ -17,7 +17,7 @@
             </div>
             <hr>
             <div class="setlist">
-                @if($setlists->fes == false)
+                @if($setlists->fes == 0)
                     @foreach ($setlists->setlist as $data) 
                         @if($data['#'] === '-')
                         {{ $data['#'] }} <b>{{ $data['song'] }}</b><br>
@@ -31,7 +31,7 @@
                         {{ $data['#'] }}. {{ $data['song'] }}<br>
                         @endforeach
                     @endif
-                @elseif($setlists->fes == true)
+                @elseif($setlists->fes == 1)
                     @foreach ((array)$setlists->fes_setlist as $data) 
                         @if($data['#'] === '-' && $data['song'] === '-')
                         {{ $data['artist'] }}<br>
