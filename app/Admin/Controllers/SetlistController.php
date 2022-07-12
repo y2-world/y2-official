@@ -33,6 +33,7 @@ class SetlistController extends AdminController
         });
         $grid->column('tour_title', __('ツアータイトル'));
         $grid->column('date', __('公演日'))->default(date('Y.m.d'));
+        $grid->column('year', __('年'));
         $grid->column('venue', __('会場'));
        
         $grid->filter(function($filter){
@@ -61,6 +62,7 @@ class SetlistController extends AdminController
         });
         $show->field('tour_title', __('ツアータイトル'));
         $show->field('date', __('公演日'));
+        $show->field('year', __('年'));
         $show->field('venue', __('会場'));
         $show->field('setlist', __('本編'))->unescape()->as(function ($setlist) {
             $result1 = [];
@@ -100,6 +102,7 @@ class SetlistController extends AdminController
         })->ajax('admin/api/artists');
         $form->text('tour_title', __('ツアータイトル'))->rules('required');
         $form->date('date', __('公演日'))->default(date('Y-m-d'))->rules('required');
+        $form->text('year', __('年'))->rules('required');
         $form->text('venue', __('会場'))->rules('required');
         $form->table('setlist', __('本編'), function ($table) {
             $table->number('#')->rules('required');

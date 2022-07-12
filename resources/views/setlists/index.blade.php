@@ -23,6 +23,11 @@
           Years
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+          <li><a class="dropdown-item" href="{{ url('/years')}}">All Years</a></li>
+          <div class="dropdown-divider"></div>
+          @foreach ($years as $year)
+          <li><a class="dropdown-item" href="{{ url('/years', $year->id)}}">{{ $year->year }}</a></li>
+          @endforeach
         </ul>
       </div>
     </div>

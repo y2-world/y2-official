@@ -51,7 +51,7 @@ class ArtistController extends Controller
     {
         $artist = Artist::find($artist->id); //idが、リクエストされた$userのidと一致するuserを取得
         $artists = Artist::orderBy('id', 'asc')
-        ->paginate(100);
+        ->get();
         $setlists = Setlist::where('artist_id', $artist->id)
             ->orderBy('date', 'asc') //$userによる投稿を取得
             ->paginate(100); // 投稿作成日が新しい順に並べる

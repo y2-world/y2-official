@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Artist;
-use App\Setlist;
-use App\Models\Year;
 use Illuminate\Http\Request;
+use App\Setlist;
+use App\Artist;
+use App\Models\Year;
 
-class SetlistController extends Controller
+class YearController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,14 +15,10 @@ class SetlistController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
-        $setlists = Setlist::orderBy('date', 'desc')
+    {
+        $years = Year::orderBy('id', 'asc')
         ->paginate(10);
-        $artists = Artist::orderBy('id', 'asc')
-        ->get();
-        $years = Year::orderBy('year', 'asc')
-        ->get();
-        return view('setlists.index', compact('artists', 'setlists', 'years'));
+        return view('years.index', compact('years'));
     }
 
     /**
@@ -52,13 +48,22 @@ class SetlistController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Year $year)
     {
-        $setlists = Setlist::find($id);
-        $previous = Setlist::where('date', '<', $setlists->date)->orderBy('date', 'desc')->first();
-        $next = Setlist::where('date', '>', $setlists->date)->orderBy('date')->first();
-        
-        return view('setlists.show', compact('setlists', 'previous', 'next'));
+        $year = Year::find($year->id); //idが、リクエストされた$userのidと一致するuserを取得
+        $artists = Artist::orderBy('id', 'asc')
+        ->get();
+        $years = Year::orderBy('year', 'asc')
+        ->get();
+        $setlists = Setlist::where('year', $year->year)
+            ->orderBy('date', 'asc') //$userによる投稿を取得
+            ->paginate(100); // 投稿作成日が新しい順に並べる
+        return view('years.show', [
+            'setlists' => $setlists,
+            'year' => $year, // $userの書いた記事をviewへ渡す
+            'artists' => $artists,
+            'years' => $years
+        ]);
     }
 
     /**

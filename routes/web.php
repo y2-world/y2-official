@@ -65,5 +65,6 @@ Route::resource('songs', 'SongController');
 Route::resource('albums', 'AlbumController');
 Route::resource('festivals', 'FestivalController');
 Route::resource('singles', 'SingleController');
+Route::resource('years', 'YearController');
 
 

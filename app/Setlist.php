@@ -32,4 +32,9 @@ class Setlist extends Model
     {
         return $this->belongsTo(Artist::class, 'artist_id');
     }
+
+    public function year()
+    {
+        return $this->belongsTo(Year::class, 'year');
+    }
 }
