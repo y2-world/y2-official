@@ -86,7 +86,7 @@ class SetlistController extends AdminController
         $show->field('fes', __('フェス'));
         $show->field('fes_setlist', __('本編'))->unescape()->as(function ($setlist) {
             $result3 = [];
-            foreach($fes_setlist as $data3) {
+            foreach((array)$fes_setlist as $data3) {
                 $result3[] = $data3['#'].'. '.$data3['song'].' / '.$data3['artist'];
             }
             return implode('<br>', $result3);
