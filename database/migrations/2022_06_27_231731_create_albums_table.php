@@ -19,6 +19,7 @@ class CreateAlbumsTable extends Migration
             $table->date('date');
             $table->integer('album_id');
             $table->text('text')->nullable();
+            $table->json('tracklist')->nullable();
             $table->timestamps();
         });
     }

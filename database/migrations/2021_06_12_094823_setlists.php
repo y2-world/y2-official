@@ -18,9 +18,13 @@ class Setlists extends Migration
             $table->string('artist_id');
             $table->string('tour_title');
             $table->date('date');
+            $table->integer('year')->nullable();
             $table->string('venue');
             $table->json('setlist')->nullable();
             $table->json('encore')->nullable();
+            $table->integer('fes')->nullable();
+            $table->json('fes_setlist')->nullable();
+            $table->json('fes_encore')->nullable();
             $table->timestamps();
         });
     }
