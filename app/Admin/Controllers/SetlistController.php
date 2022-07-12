@@ -29,7 +29,10 @@ class SetlistController extends AdminController
 
         $grid->column('id', __('ID'));
         $grid->column('artist_id', __('アーティスト'))->display(function($id) {
-            return Artist::find($id)->name;
+            $artist = optional(Artist::find($id));
+            if ($artist) {
+                return $artist->name;
+            }
         });
         $grid->column('tour_title', __('ツアータイトル'));
         $grid->column('date', __('公演日'))->default(date('Y.m.d'));
@@ -57,7 +60,10 @@ class SetlistController extends AdminController
 
         $show->field('id', __('ID'));
         $show->field('artist_id', __('アーティスト'))->as(function($id) {
-            return Artist::find($id)->name;
+            $artist = optional(Artist::find($id));
+            if ($artist) {
+                return $artist->name;
+            }
         });
         $show->field('tour_title', __('ツアータイトル'));
         $show->field('date', __('公演日'));
