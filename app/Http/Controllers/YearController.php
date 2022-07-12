@@ -18,7 +18,9 @@ class YearController extends Controller
     {
         $years = Year::orderBy('id', 'asc')
         ->paginate(10);
-        return view('years.index', compact('years'));
+        $artists = Artist::orderBy('id', 'asc')
+        ->get();
+        return view('years.index', compact('artists', 'years'));
     }
 
     /**
