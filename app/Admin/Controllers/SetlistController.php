@@ -33,7 +33,6 @@ class SetlistController extends AdminController
         });
         $grid->column('tour_title', __('ツアータイトル'));
         $grid->column('date', __('公演日'))->default(date('Y.m.d'));
-        $grid->column('year', __('年'));
         $grid->column('venue', __('会場'));
        
         $grid->filter(function($filter){
