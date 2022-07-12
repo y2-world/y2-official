@@ -21,4 +21,5 @@ Route::group([
     $router->get("setlists/admin/api/artists", "ArtistApiController@artists");
     $router->get("songs/admin/api/albums", "AlbumApiController@albums");
     $router->get("songs/admin/api/singles", "SingleApiController@singles");
+    $router->get("albums/admin/api/songs", "SongApiController@songs");
 });
