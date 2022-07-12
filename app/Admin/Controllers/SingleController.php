@@ -26,7 +26,7 @@ class SingleController extends AdminController
     {
         $grid = new Grid(new Single());
 
-        $grid->column('id', __('Id'));
+        $grid->column('id', __('ID'));
         $grid->column('single_id', __('Single ID'));
         $grid->column('title', __('タイトル'));
         $grid->column('date', __('リリース日'));
