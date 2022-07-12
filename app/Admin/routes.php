@@ -16,7 +16,6 @@ Route::group([
     $router->resource('artists', ArtistController::class);
     $router->resource('songs', SongController::class);
     $router->resource('albums', AlbumController::class);
-    $router->resource('festivals', FestivalController::class);
     $router->resource('singles', SingleController::class);
     $router->resource('years', YearController::class);
     $router->get("setlists/admin/api/artists", "ArtistApiController@artists");
