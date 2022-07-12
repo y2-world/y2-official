@@ -26,6 +26,7 @@
                 <br>
                 @endif
               @endforeach
+              <br>
             @elseif($albums->best == 1)
             @endif
             @if(!is_null($albums->text))
