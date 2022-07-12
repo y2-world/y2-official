@@ -85,18 +85,18 @@ class SetlistController extends AdminController
         });
         $show->field('fes', __('フェス'));
         $show->field('fes_setlist', __('本編'))->unescape()->as(function ($setlist) {
-            $result1 = [];
-            foreach($setlist as $data1) {
-                $result1[] = $data1['#'].'. '.$data1['song'].' / '.$data1['artist'];
+            $result3 = [];
+            foreach($fes_setlist as $data3) {
+                $result3[] = $data3['#'].'. '.$data3['song'].' / '.$data3['artist'];
             }
-            return implode('<br>', $result1);
+            return implode('<br>', $result3);
         });
         $show->field('fes_encore', __('アンコール'))->unescape()->as(function ($encore) {
-            $result2 = [];
-            foreach((array)$encore as $data2) {
-                $result2[] = $data2['#'].'. '.$data2['song'].' / '.$data2['artist'];
+            $result4 = [];
+            foreach((array)$fes_encore as $data4) {
+                $result4[] = $data4['#'].'. '.$data4['song'].' / '.$data4['artist'];
             }
-            return implode('<br>', $result2);
+            return implode('<br>', $result4);
         });
         $show->field('created_at', __('作成日時'));
         $show->field('updated_at', __('更新日時'));
