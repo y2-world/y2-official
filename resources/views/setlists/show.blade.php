@@ -5,7 +5,9 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="setlist_artist">
-                <a href="{{ url('artists', $setlists->artist_id)}}"><h5>{{ $setlists->artist->name  }}</h5></a>
+                @if($setlists->fes == false)
+                    <a href="{{ url('artists', $setlists->artist_id)}}"><h5>{{ $setlists->artist->name  }}</h5></a>
+                @endif
             </div>
             <div class="setlist_title">{{ $setlists->tour_title }}</div>
             <div class="setlist_info">
