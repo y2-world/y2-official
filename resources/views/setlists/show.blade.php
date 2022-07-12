@@ -15,18 +15,42 @@
             </div>
             <hr>
             <div class="setlist">
-                @foreach ($setlists->setlist as $data) 
-                    @if($data['#'] === '-')
-                    {{ $data['#'] }} <b>{{ $data['song'] }}</b><br>
-                    @else
-                    {{ $data['#'] }}. {{ $data['song'] }}<br>
-                    @endif
-                @endforeach
-                @if(isset($setlists->encore))
-                    <hr width="250">
-                    @foreach ((array)$setlists->encore as $data)
-                    {{ $data['#'] }}. {{ $data['song'] }}<br>
+                @if($setlists->fes == false)
+                    @foreach ($setlists->setlist as $data) 
+                        @if($data['#'] === '-')
+                        {{ $data['#'] }} <b>{{ $data['song'] }}</b><br>
+                        @else
+                        {{ $data['#'] }}. {{ $data['song'] }}<br>
+                        @endif
                     @endforeach
+                    @if(isset($setlists->encore))
+                        <hr width="250">
+                        @foreach ((array)$setlists->encore as $data)
+                        {{ $data['#'] }}. {{ $data['song'] }}<br>
+                        @endforeach
+                    @endif
+                @elseif($setlists->fes == true)
+                    @foreach ($setlist->fes_setlist as $data) 
+                        @if($data['#'] === '-' && $data['song'] === '-')
+                        {{ $data['artist'] }}<br>
+                        @elseif($data['artist'] === '-')
+                        {{ $data['#'] }}. {{ $data['song'] }}<br>
+                        @elseif($data['artist'] === 'END')
+                        {{ $data['#'] }}. {{ $data['song'] }}<br><br>
+                        @endif
+                    @endforeach
+                    @if(isset($setlist->fes_encore))
+                        <hr width="250">
+                        @foreach ((array)$setlist->fes_encore as $data)
+                            @if($data['#'] === '-' && $data['song'] === '-')
+                            {{ $data['artist'] }}<br>
+                            @elseif($data['artist'] === '-')
+                            {{ $data['#'] }}. {{ $data['song'] }}<br>
+                            @elseif($data['artist'] === 'END')
+                            {{ $data['#'] }}. {{ $data['song'] }}<br><br>
+                            @endif
+                        @endforeach
+                    @endif
                 @endif
             </div>  
             <br>
