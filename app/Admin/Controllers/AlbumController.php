@@ -48,6 +48,7 @@ class AlbumController extends AdminController
         $show->field('album_id', __('Album ID'));
         $show->field('title', __('タイトル'));
         $show->field('date', __('リリース日'));
+        $show->field('best', __('ベスト'));
         $show->field('text', __('コメント'));
         $show->field('created_at', __('作成日時'));
         $show->field('updated_at', __('更新日時'));
@@ -68,6 +69,7 @@ class AlbumController extends AdminController
         $form->text('album_id', __('Album ID'));
         $form->text('title', __('タイトル'))->rules('required');
         $form->date('date', __('リリース日'));
+        $form->switch('best', __('ベスト'));
         $form->textarea('text', __('コメント'));
 
         return $form;

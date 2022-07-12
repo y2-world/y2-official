@@ -19,16 +19,19 @@
           <div class="setlist">
             Release Date : {{ date('Y.m.d', strtotime($albums->date)) }}
             <hr>
-            @if(!is_null($albums->text))
-            {!! nl2br(e($albums->text)) !!}
-            <br><br>
+            @if($albums->best == 0)
+              @foreach ($songs as $song)
+                @if($albums->id == $song->album_id)
+                {{$song->album_trk}}. <td><a href="{{ route('songs.show', $song->id) }}">{{ $song->title }}</a></td>
+                <br>
+                @endif
+              @endforeach
+            @elseif($albums->best == 1)
             @endif
-            @foreach ($songs as $song)
-              @if($albums->id == $song->album_id)
-              {{$song->album_trk}}. <td><a href="{{ route('songs.show', $song->id) }}">{{ $song->title }}</a></td>
-              <br>
-              @endif
-            @endforeach
+            @if(!is_null($albums->text))
+            <br><br>
+            {!! nl2br(e($albums->text)) !!}
+            @endif
           </div>
           <br>
           <div class="show_button">
