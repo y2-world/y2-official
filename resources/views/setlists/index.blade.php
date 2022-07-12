@@ -66,7 +66,11 @@
               <tr>
                   <td>{{$setlist->id}}</td>
                   <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
+                  @if(isset($setlist->artist_id))
                   <td><a href="{{ url('artists', $setlist->artist_id)}}">{{ $setlist->artist->name }}</a></td>
+                  @else
+                  <td></td>
+                  @endif
                   <td><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->tour_title }}</a></td>
                   <td class="pc_list">{{ $setlist->venue }}</td>
               </tr>
