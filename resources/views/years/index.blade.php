@@ -3,9 +3,7 @@
 <br>
 <div class="container">
   <h2>All Years</h2>
-  <div class="pc_list">
-    <a class="btn btn-outline-dark btn-sm" href="{{ url('/setlists') }}" role="button">All</a>
-  </div>
+  <a class="btn btn-outline-dark btn-sm" href="{{ url('/setlists') }}" role="button">All</a>
   <select name="select" onChange="location.href=value;">
     <option value="" disabled selected>Artists</option>
     <option value="{{ url('/artists')}}">All Artists</option>
