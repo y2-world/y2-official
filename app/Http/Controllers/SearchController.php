@@ -24,6 +24,9 @@ class SearchController extends Controller
             ->where(function($query) use ($keyword) {
                 $query->where('setlist', 'like', "%{$keyword}%")
                 ->orWhere('encore', 'like', "%{$keyword}%");
+            })->orWhere(function($query) use ($keyword) {
+                $query->where('fes_setlist', 'like', "%{$keyword}%")
+                ->orWhere('fes_encore', 'like', "%{$keyword}%");
             });
         };
 
