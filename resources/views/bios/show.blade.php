@@ -2,7 +2,7 @@
 @section('content')
 <br>
 <div class="container-lg">
-  <h2>Songs</h2>
+  <h2>{{ $bio->year  }}</h2>
   <div class="parts_wrapper">
     <a class="btn btn-outline-dark btn-sm" href="{{ url('/songs') }}" role="button">Songs</a>
     <a class="btn btn-outline-dark btn-sm" href="{{ url('/singles') }}" role="button">Singles</a>
@@ -59,8 +59,5 @@
         </tbody>
       </div>
     </table>
-  <div class=”pagination”>
-    {!! $songs->onEachSide(5)->links() !!}
-  </div>
 </div>
 @endsection

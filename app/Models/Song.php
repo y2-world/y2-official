@@ -15,4 +15,9 @@ class Song extends Model
     {
         return $this->belongsTo(Single::class, 'single_id');
     }
+
+    public function bios()
+    {
+        return $this->belongsTo(Bio::class, 'year');
+    }
 }

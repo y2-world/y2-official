@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Single;
 use App\Models\Song;
+use App\Models\Bio;
 
 class SingleController extends Controller
 {
@@ -17,7 +18,9 @@ class SingleController extends Controller
     {
         $singles = Single::orderBy('id', 'asc')
         ->paginate(10);
-        return view('singles.index', compact('singles'));
+        $bios = Bio::orderBy('id', 'asc')
+        ->get();
+        return view('singles.index', compact('singles', 'bios'));
     }
 
     /**

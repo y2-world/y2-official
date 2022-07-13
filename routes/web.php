@@ -62,5 +62,6 @@ Route::resource('songs', 'SongController');
 Route::resource('albums', 'AlbumController');
 Route::resource('singles', 'SingleController');
 Route::resource('years', 'YearController');
+Route::resource('bios', 'BioController');
 
 

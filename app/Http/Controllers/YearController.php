@@ -59,7 +59,7 @@ class YearController extends Controller
         ->get();
         $setlists = Setlist::where('year', $year->year)
             ->orderBy('date', 'asc') //$userによる投稿を取得
-            ->paginate(100); // 投稿作成日が新しい順に並べる
+            ->get(); // 投稿作成日が新しい順に並べる
         return view('years.show', [
             'setlists' => $setlists,
             'year' => $year, // $userの書いた記事をviewへ渡す

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Album;
 use App\Models\Song;
 use App\Models\Single;
+use App\Models\Bio;
 use Illuminate\Http\Request;
 
 class AlbumController extends Controller
@@ -18,7 +19,9 @@ class AlbumController extends Controller
     {
         $albums = Album::orderBy('id', 'asc')
         ->paginate(10);
-        return view('albums.index', compact('albums'));
+        $bios = Bio::orderBy('id', 'asc')
+        ->get();
+        return view('albums.index', compact('albums', 'bios'));
     }
 
     /**

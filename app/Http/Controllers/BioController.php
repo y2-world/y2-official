@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Song;
-use App\Models\Album;
-use App\Models\Single;
-use App\Models\Bio;
 use Illuminate\Http\Request;
+use App\Models\Song;
+use App\Models\Single;
+use App\Models\Album;
+use App\Models\Bio;
 
-class SongController extends Controller
+class BioController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,14 +17,9 @@ class SongController extends Controller
      */
     public function index()
     {
-        $songs = Song::orderBy('id', 'asc')
-        ->whereNotNull('song_id')
-        ->paginate(30);
-        $albums = Album::orderBy('id', 'asc')
-        ->get();
         $bios = Bio::orderBy('id', 'asc')
-        ->get();
-        return view('songs.index', compact('albums', 'songs', 'bios'));
+        ->paginate(10);
+        return view('bios.index', compact('bios'));
     }
 
     /**
@@ -54,17 +49,25 @@ class SongController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Bio $bio)
     {
-        $songs = Song::find($id);
-        $albums = Album::orderBy('id', 'asc')
-        ->get();
+        $bio = Bio::find($bio->id); //idが、リクエストされた$userのidと一致するuserを取得
         $singles = Single::orderBy('id', 'asc')
         ->get();
-        $previous = Song::where('id', '<', $songs->id)->orderBy('id', 'desc')->first();
-        $next = Song::where('id', '>', $songs->id)->orderBy('id')->first();
-        
-        return view('songs.show', compact('songs', 'previous', 'next', 'albums', 'singles'));
+        $albums = Album::orderBy('id', 'asc')
+        ->get();
+        $bios = Bio::orderBy('year', 'asc')
+        ->get();
+        $songs = Song::where('year', $bio->year)
+            ->orderBy('id', 'asc') //$userによる投稿を取得
+            ->get(); // 投稿作成日が新しい順に並べる
+        return view('bios.show', [
+            'bio' => $bio,
+            'singles' => $singles, // $userの書いた記事をviewへ渡す
+            'albums' => $albums,
+            'bios' => $bios,
+            'songs' => $songs,
+        ]);
     }
 
     /**
