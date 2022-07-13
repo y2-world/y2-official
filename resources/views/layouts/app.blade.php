@@ -729,7 +729,7 @@
                 <a class="nav-link" href="{{ url('/setlists') }}">&emsp;Set Lists</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/database') }}">&emsp;Database</a>
+                    <a class="nav-link" href="{{ url('/songs') }}">&emsp;Database</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('https://ameblo.jp/y2-world') }}" target="_blank">&emsp;Blog&emsp;</a>

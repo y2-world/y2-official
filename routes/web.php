@@ -45,9 +45,6 @@ Route::get('/music/single', function () {
 Route::get('/music/album', function () {
     return view('album');
 });
-Route::get('/database', function () {
-    return view('database');
-});
 Route::get('/songs', function () {
     return view('songs');
 });

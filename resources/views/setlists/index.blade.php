@@ -6,30 +6,20 @@
   <div class="parts-wrapper">
     <div class="dropdown-wrapper">
       <a class="btn btn-outline-dark btn-sm" href="{{ url('/setlists') }}" role="button">All</a>
-      <div class="btn-group">
-        <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-          Artists
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-          <li><a class="dropdown-item" href="{{ url('/artists')}}">All Artists</a></li>
-          <div class="dropdown-divider"></div>
-          @foreach ($artists as $artist)
-          <li><a class="dropdown-item" href="{{ url('/artists', $artist->id)}}">{{ $artist->name }}</a></li>
-          @endforeach
-        </ul>
-      </div>
-      <div class="btn-group">
-        <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-          Years
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-          <li><a class="dropdown-item" href="{{ url('/years')}}">All Years</a></li>
-          <div class="dropdown-divider"></div>
-          @foreach ($years as $year)
-          <li><a class="dropdown-item" href="{{ url('/years', $year->id)}}">{{ $year->year }}</a></li>
-          @endforeach
-        </ul>
-      </div>
+      <select name="select" onChange="location.href=value;">
+        <option value="" disabled selected>Artists</option>
+        <option value="{{ url('/artists')}}">All Artists</option>
+        @foreach ($artists as $artist)
+        <option value="{{ url('/artists', $artist->id)}}">{{ $artist->name }}</option>
+        @endforeach
+      </select>
+      <select name="select" onChange="location.href=value;">
+        <option value="" disabled selected>Years</option>
+        <option value="{{ url('/years')}}">All Years</option>
+        @foreach ($years as $year)
+        <option value="{{ url('/years', $year->id)}}">{{ $year->year }}</option>
+        @endforeach
+      </select>
     </div>
     <div class="search">
       <form action="{{url('/search')}}" method="GET">
