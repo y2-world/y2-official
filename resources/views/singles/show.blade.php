@@ -19,16 +19,19 @@
           <div class="setlist">
             Release Date : {{ date('Y.m.d', strtotime($singles->date)) }}
             <hr>
+            @if($singles->exception == 0)
+              @foreach ($songs as $song)
+                @if($singles->id == $song->single_id)
+                {{$song->single_trk}}. <td><a href="{{ route('songs.show', $song->id) }}">{{ $song->title }}</a></td>
+                <br>
+                @endif
+              @endforeach
+              <br>
+            @elseif($singles->exception == 1)
+            @endif
             @if(!is_null($singles->text))
             {!! nl2br(e($singles->text)) !!}
-            <br><br>
             @endif
-            @foreach ($songs as $song)
-              @if($singles->id == $song->single_id)
-              {{$song->single_trk}}. <td><a href="{{ route('songs.show', $song->id) }}">{{ $song->title }}</a></td>
-              <br>
-              @endif
-            @endforeach
           </div>
           <br>
           <div class="show_button">

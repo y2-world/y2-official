@@ -48,6 +48,7 @@ class SingleController extends AdminController
         $show->field('single_id', __('Single ID'));
         $show->field('title', __('タイトル'));
         $show->field('date', __('リリース日'));
+        $show->field('exception', __('例外'));
         $show->field('text', __('コメント'));
         $show->field('created_at', __('作成日時'));
         $show->field('updated_at', __('更新日時'));
@@ -68,6 +69,7 @@ class SingleController extends AdminController
         $form->text('single_id', __('Single ID'));
         $form->text('title', __('タイトル'))->rules('required');
         $form->date('date', __('リリース日'));
+        $form->switch('exception', __('例外'));
         $form->textarea('text', __('コメント'));
 
         return $form;
