@@ -5,7 +5,7 @@
   <h2>Set Lists</h2>
   <div class="parts-wrapper">
     <div class="dropdown-wrapper">
-      <th class="pc_list">
+      <div class="pc_list">
         <a class="btn btn-outline-dark btn-sm" href="{{ url('/setlists') }}" role="button">All</a>
       </div>
       <select name="select" onChange="location.href=value;">
