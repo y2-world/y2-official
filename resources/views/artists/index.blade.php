@@ -3,7 +3,6 @@
 <br>
 <div class="container">
   <h2>All Artists</h2>
-  <a class="btn btn-outline-dark btn-sm" href="{{ url('/setlists') }}" role="button">All</a>
   <select name="select" onChange="location.href=value;">
     <option value="" disabled selected>Years</option>
     <option value="{{ url('/years')}}">All Years</option>
