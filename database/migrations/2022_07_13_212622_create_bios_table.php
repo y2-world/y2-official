@@ -16,6 +16,7 @@ class CreateBiosTable extends Migration
         Schema::create('bios', function (Blueprint $table) {
             $table->id();
             $table->integer('year');
+            $table->text('text')->nullable();
             $table->timestamps();
         });
     }
