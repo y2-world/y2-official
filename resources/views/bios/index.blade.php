@@ -28,7 +28,7 @@
       </tr>
     </thead>
     <tbody>
-        @foreach ($bios as $year)
+        @foreach ($bios as $bio)
         <tr>
             <td>{{ $bio->id }}</td>
             <td><a href="{{ url('bios', $bio->id)}}">{{ $bio->year }}</a></td>
