@@ -46,6 +46,7 @@ class BioController extends AdminController
 
         $show->field('id', __('ID'));
         $show->field('year', __('年'));
+        $show->field('text', __('コメント'));
         $show->field('created_at', __('作成日時'));
         $show->field('updated_at', __('更新日時'));
 
@@ -62,6 +63,7 @@ class BioController extends AdminController
         $form = new Form(new Bio());
 
         $form->text('year', __('年'));
+        $form->textarea('text', __('コメント'));
 
         return $form;
     }
