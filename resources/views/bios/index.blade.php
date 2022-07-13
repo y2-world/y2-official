@@ -36,5 +36,8 @@
         @endforeach
     </tbody>
   </table>
+  <div class=”pagination”>
+    {!! $bios->links() !!}
+  </div>
 </div>
 @endsection
