@@ -29,7 +29,7 @@
   <hr>
   <h4 class="bio">Biography</h4>
   <div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="col-md-6">
       <div class="year-wrapper">
           @foreach ($bios as $bio)
           <div class="year-padding">

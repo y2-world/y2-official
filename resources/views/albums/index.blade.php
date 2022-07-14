@@ -3,15 +3,19 @@
 <br>
 <div class="container-lg">
   <h2>Albums</h2>
-  <a class="btn btn-outline-dark btn-sm" href="{{ url('/songs') }}" role="button">Songs</a>
-  <a class="btn btn-outline-dark btn-sm" href="{{ url('/singles') }}" role="button">Singles</a>
-  <a class="btn btn-outline-dark btn-sm" href="{{ url('/albums') }}" role="button">Albums</a>
-  <select name="select" onChange="location.href=value;">
-    <option value="" disabled selected>Years</option>
-    @foreach ($bios as $bio)
-    <option value="{{ url('/bios', $bio->id)}}">{{ $bio->year }}</option>
-    @endforeach
-  </select>
+  <div class="parts-wrapper">
+    <div class="dropdown-wrapper">
+      <a class="btn btn-outline-dark btn-sm" href="{{ url('/songs') }}" role="button">Songs</a>
+      <a class="btn btn-outline-dark btn-sm" href="{{ url('/singles') }}" role="button">Singles</a>
+      <a class="btn btn-outline-dark btn-sm" href="{{ url('/albums') }}" role="button">Albums</a>
+      <select name="select" onChange="location.href=value;">
+        <option value="" disabled selected>Years</option>
+        @foreach ($bios as $bio)
+        <option value="{{ url('/bios', $bio->id)}}">{{ $bio->year }}</option>
+        @endforeach
+      </select>
+    </div>
+  </div>
   <table class="table table-striped">
       <thead>
         <tr>
