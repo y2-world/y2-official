@@ -497,6 +497,10 @@
         padding: 3px;
     }
 
+    .bio {
+        text-align: center;
+    }
+
     @media screen and (max-width: 648px) {
         .show_button {
             text-align: center;
