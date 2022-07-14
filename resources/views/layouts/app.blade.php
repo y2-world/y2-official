@@ -487,6 +487,12 @@
         border-color: black;
     }
 
+    .year-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
     @media screen and (max-width: 648px) {
         .show_button {
             text-align: center;
@@ -729,7 +735,7 @@
                 <a class="nav-link" href="{{ url('/setlists') }}">&emsp;Set Lists</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/songs') }}">&emsp;Database</a>
+                    <a class="nav-link" href="{{ url('/bios') }}">&emsp;Database</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('https://ameblo.jp/y2-world') }}" target="_blank">&emsp;Blog&emsp;</a>
