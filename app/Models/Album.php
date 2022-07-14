@@ -10,4 +10,14 @@ class Album extends Model
     {
         return $this->hasMany('App\Models\Song'); 
     }
+
+    public function getSongsAttribute($tracklist)
+    {
+        return explode(',', $tracklist);
+    }
+
+    public function setSongsAttribute($tracklist)
+    {
+        $this->attributes['tracklist'] = implode(',', $tracklist);
+    }
 }

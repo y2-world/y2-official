@@ -3,7 +3,6 @@
 namespace App\Admin\Controllers;
 
 use App\Models\Album;
-use App\Artist;
 use App\Models\Song;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -52,6 +51,7 @@ class AlbumController extends AdminController
         $show->field('date', __('リリース日'));
         $show->field('best', __('ベスト'));
         $show->field('text', __('コメント'));
+        $show->field('tracklist', __('収録曲'));
         $show->field('created_at', __('作成日時'));
         $show->field('updated_at', __('更新日時'));
 
@@ -73,6 +73,12 @@ class AlbumController extends AdminController
         $form->date('date', __('リリース日'));
         $form->switch('best', __('ベスト'));
         $form->textarea('text', __('コメント'));
+        $form->multipleSelect('tracklist', __('収録曲'))->options(function($id) {
+            $song = Song::find($id);
+            if ($song) {
+                return [$song->id => $song->title];
+            }
+        })->ajax('admin/api/songs');
 
         return $form;
     }
