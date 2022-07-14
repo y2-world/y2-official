@@ -28,12 +28,13 @@
   </div>
   <hr>
   <h4>Biography</h4>
-  <br>
   <div class="row justify-content-center">
     <div class="col-md-8">
       <div class="year-wrapper">
           @foreach ($bios as $bio)
+          <div class="year-padding">
           <a class="btn btn-outline-dark btn-sm" href="{{ url('bios', $bio->id)}}" role="button">{{ $bio->year }}</a>
+          </div>
           @endforeach
       </div>
     </div>

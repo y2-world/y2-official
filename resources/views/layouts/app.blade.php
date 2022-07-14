@@ -493,6 +493,10 @@
         justify-content: center;
     }
 
+    .year-padding {
+        padding: 3px;
+    }
+
     @media screen and (max-width: 648px) {
         .show_button {
             text-align: center;
