@@ -18,7 +18,7 @@ class BioController extends Controller
     public function index()
     {
         $bios = Bio::orderBy('id', 'asc')
-        ->paginate(10);
+        ->get();
         return view('bios.index', compact('bios'));
     }
 

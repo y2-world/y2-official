@@ -34,8 +34,5 @@
     <a class="btn btn-outline-dark btn-sm" href="{{ url('bios', $bio->id)}}" role="button">{{ $bio->year }}</a>
     @endforeach
   </div>
-  <div class=”pagination”>
-    {!! $bios->links() !!}
-  </div>
 </div>
 @endsection
