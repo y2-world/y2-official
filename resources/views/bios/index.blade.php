@@ -29,11 +29,13 @@
   <hr>
   <h4>Biography</h4>
   <br>
-  <div class="year-wrapper">
-    <div class="dropdown-wrapper">
-      @foreach ($bios as $bio)
-      <a class="btn btn-outline-dark btn-sm" href="{{ url('bios', $bio->id)}}" role="button">{{ $bio->year }}</a>
-      @endforeach
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="year-wrapper">
+          @foreach ($bios as $bio)
+          <a class="btn btn-outline-dark btn-sm" href="{{ url('bios', $bio->id)}}" role="button">{{ $bio->year }}</a>
+          @endforeach
+      </div>
     </div>
   </div>
 </div>
