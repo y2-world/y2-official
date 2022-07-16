@@ -15,18 +15,19 @@
           <div class="setlist">
             Release Date : {{ date('Y.m.d', strtotime($albums->date)) }}
             <hr>
-            @foreach ($albums->tracklist as $data)
-              @if(isset($albums->tracklist))
+            @if(isset($albums->tracklist))
+              @foreach ($albums->tracklist as $data)
                 @if(isset($data['disc']))
-                  {{ $data['disc'] }}<br>
-                  {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['song'] }}</a><br>
+                  @if($data['artist'] !== 'END')
+                      {{ $data['disc'] }}<br>
+                      {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['song'] }}</a><br>
+                  @else
+                      {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['song'] }}</a><br><br>
+                  @endif
                 @else
-                  {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['song'] }}</a><br><br>
+                  {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['song'] }}</a><br>
                 @endif
-              @else
-                {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['song'] }}</a><br>
-               @endif
-            @endforeach
+              @endforeach
               <br>
             @endif
             @if(!is_null($albums->text))
