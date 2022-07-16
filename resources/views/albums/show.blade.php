@@ -15,9 +15,15 @@
           <div class="setlist">
             Release Date : {{ date('Y.m.d', strtotime($albums->date)) }}
             <hr>
-            @foreach ($albums->tracklist as $data)
-            {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['song'] }}</a><br>
-            @endforeach
+            @if(isset($albums->tracklist))
+              @foreach ($albums->tracklist as $data)
+              @if($data['disc'] !== "-")
+              {{ $data['disc'] }}<br>
+              @endif
+              {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['song'] }}</a><br>
+              @endforeach
+              <br>
+            @endif
             @if(!is_null($albums->text))
             {!! nl2br(e($albums->text)) !!}
             @endif
