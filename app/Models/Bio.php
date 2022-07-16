@@ -11,4 +11,9 @@ class Bio extends Model
     {
         return $this->hasMany('App\Models\Song'); 
     }
+
+    public function tours()
+    {
+        return $this->hasMany('App\Models\Tour'); 
+    }
 }

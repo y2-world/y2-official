@@ -51,6 +51,9 @@ Route::get('/songs', function () {
 Route::get('/albums', function () {
     return view('albums');
 });
+Route::get('/tours', function () {
+    return view('tours');
+});
 
 Route::resource('setlists', 'SetlistController');
 Route::resource('artists', 'ArtistController');
@@ -60,5 +63,6 @@ Route::resource('albums', 'AlbumController');
 Route::resource('singles', 'SingleController');
 Route::resource('years', 'YearController');
 Route::resource('bios', 'BioController');
+Route::resource('tours', 'TourController');
 
 
