@@ -73,12 +73,13 @@ class AlbumController extends AdminController
         $form->date('date', __('リリース日'));
         $form->switch('best', __('ベスト'));
         $form->textarea('text', __('コメント'));
-        $form->multipleSelect('tracklist', __('収録曲'))->options(function($id) {
-            $song = Song::find($id);
-            if ($song) {
-                return [$song->id => $song->title];
-            }
-        })->ajax('admin/api/songs');
+        $form->multipleSelect('tracklist')->options(Song::all()->pluck('title', 'id'));
+        // $form->multipleSelect('tracklist', __('収録曲'))->options(function($id) {
+        //     $song = Song::find($id);
+        //     if ($song) {
+        //         return [$song->id => $song->title];
+        //     }
+        // })->ajax('admin/api/songs');
 
         return $form;
     }

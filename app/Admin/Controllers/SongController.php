@@ -96,20 +96,10 @@ class SongController extends AdminController
         $form->text('id', __('ID'))->rules('required');
         $form->text('song_id', __('song ID'));
         $form->text('title', __('タイトル'))->rules('required');
-        $form->select('album_id', __('アルバム'))->options(function($id) {
-            $album = Album::find($id);
-            if ($album) {
-                return [$album->id => $album->title];
-            }
-        })->ajax('admin/api/albums');
+        $form->select('album_id', __('アルバム'))->options(Album::all()->pluck('title', 'id'));
         $form->text('album_trk', __('#'));
         $form->text('album_disc', __('ディスク'));
-        $form->select('single_id', __('シングル'))->options(function($id) {
-            $single = Single::find($id);
-            if ($single) {
-                return [$single->id => $single->title];
-            }
-        })->ajax('admin/api/singles');
+        $form->select('single_id', __('シングル'))->options(Single::all()->pluck('title', 'id'));
         $form->text('single_trk', __('#'));
         $form->text('year', __('年'));
         $form->textarea('text', __('コメント'));

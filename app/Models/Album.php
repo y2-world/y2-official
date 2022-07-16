@@ -11,13 +11,17 @@ class Album extends Model
         return $this->hasMany('App\Models\Song'); 
     }
 
+    public function getSongs()
+    {
+        return $this->belongsToMany(Song::class);
+    }
+
     public function getSongsAttribute($tracklist)
     {
         return explode(',', $tracklist);
     }
 
-    public function setSongsAttribute($tracklist)
-    {
-        $this->attributes['tracklist'] = implode(',', $tracklist);
+    public function setSongsAttribute($tracklist) {
+        $this->attributes['tracklist'] = trim(implode($tracklist, ','), ',');
     }
 }

@@ -114,12 +114,7 @@ class SetlistController extends AdminController
         $form = new Form(new Setlist());
 
         $form->text('id', __('ID'))->rules('required');
-        $form->select('artist_id', __('アーティスト'))->options(function($id) {
-            $artist = Artist::find($id);
-            if ($artist) {
-                return [$artist->id => $artist->name];
-            }
-        })->ajax('admin/api/artists');
+        $form->select('artist_id', __('アーティスト'))->options(Artist::all()->pluck('artist', 'id'));
         $form->text('tour_title', __('ツアータイトル'))->rules('required');
         $form->date('date', __('公演日'))->default(date('Y-m-d'))->rules('required');
         $form->text('year', __('年'))->rules('required');
