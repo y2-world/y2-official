@@ -34,7 +34,7 @@
                 @elseif($setlists->fes == 1)
                     @foreach ((array)$setlists->fes_setlist as $data) 
                         @if(isset($data['artist']))
-                            @if($data['artist'] !== 'END');
+                            @if($data['artist'] !== 'END')
                             {{ $data['artist'] }}<br>
                             {{ $data['#'] }}. {{ $data['song'] }}<br>
                             @else
@@ -48,7 +48,7 @@
                         <hr width="250">
                         @foreach ((array)$setlists->fes_encore as $data) 
                             @if(isset($data['artist']))
-                                @if($data['artist'] !== 'END');
+                                @if($data['artist'] !== 'END')
                                 {{ $data['artist'] }}<br>
                                 {{ $data['#'] }}. {{ $data['song'] }}<br>
                                 @else
