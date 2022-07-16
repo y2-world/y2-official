@@ -29,7 +29,7 @@
                     <br>
                 @endif
                 @if(!is_null($tours->text))
-                <hr>
+                <br>
                 {!! nl2br(e($tours->text)) !!}
                 @endif
             </div>  
