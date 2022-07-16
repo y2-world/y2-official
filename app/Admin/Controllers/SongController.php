@@ -37,14 +37,12 @@ class SongController extends AdminController
                 return $album->title;
             }
         });
-        $grid->column('album_trk', __('#'));
         $grid->column('single_id', __('シングル'))->display(function($id) {
             $single = optional(Single::find($id));
             if ($single) {
                 return $single->title;
             }
         });
-        $grid->column('single_trk', __('#'));
 
         return $grid;
     }
@@ -68,14 +66,12 @@ class SongController extends AdminController
                 return $album->title;
             }
         });
-        $show->field('album_trk', __('#'));
         $show->field('single_id', __('シングル'))->as(function($id) {
             $single = optional(Single::find($id));
             if ($single) {
                 return $single->title;
             }
         });
-        $show->field('single_trk', __('#'));
         $show->field('year', __('年'));
         $show->field('text', __('コメント'));
         $show->field('created_at', __('作成日時'));
@@ -97,10 +93,7 @@ class SongController extends AdminController
         $form->text('song_id', __('song ID'));
         $form->text('title', __('タイトル'))->rules('required');
         $form->select('album_id', __('アルバム'))->options(Album::all()->pluck('title', 'id'));
-        $form->text('album_trk', __('#'));
-        $form->text('album_disc', __('ディスク'));
         $form->select('single_id', __('シングル'))->options(Single::all()->pluck('title', 'id'));
-        $form->text('single_trk', __('#'));
         $form->text('year', __('年'));
         $form->textarea('text', __('コメント'));
 

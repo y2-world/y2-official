@@ -54,8 +54,7 @@ class AlbumController extends Controller
     public function show($id)
     {
         $albums = Album::find($id);
-        $songs = Song::orderBy('album_disc', 'asc')
-        ->orderBy('album_trk', 'asc')
+        $songs = Song::orderBy('id', 'asc')
         ->get();
         $previous = Album::where('id', '<', $albums->id)->orderBy('id', 'desc')->first();
         $next = Album::where('id', '>', $albums->id)->orderBy('id')->first();
