@@ -20,6 +20,7 @@
                     @foreach ((array)$tours->encore as $data)
                     {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['song'] }}</a><br>
                     @endforeach
+                    <br>
                 @endif
                 @if(!is_null($tours->text))
                 {!! nl2br(e($tours->text)) !!}
