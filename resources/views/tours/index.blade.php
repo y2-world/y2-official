@@ -32,7 +32,6 @@
           <th class="mb_list">#</th>
           <th class="mb_list">開催日</th>
           <th class="mb_list">ツアータイトル</th>
-          <th class="pc_list">会場</th>
         </tr>
       </thead>
       <div class="all-setlist">
@@ -42,7 +41,6 @@
                   <td>{{$tour->id}}</td>
                   <td>{{ date('Y.m.d', strtotime($tour->date1)) }} - {{ date('Y.m.d', strtotime($tour->date2)) }} </td>
                   <td><a href="{{ route('tours.show', $tour->id) }}">{{ $tour->tour_title }}</a></td>
-                  <td class="pc_list">{{ $tour->venue }}</td>
               </tr>
             @endforeach
         </tbody>

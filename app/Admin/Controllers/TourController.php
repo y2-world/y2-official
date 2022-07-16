@@ -50,7 +50,7 @@ class TourController extends AdminController
         $show->field('date1', __('開始日'));
         $show->field('date2', __('終了日'));
         $show->field('year', __('年'));
-        $show->field('setlist', __('本編'));
+        $show->field('setlist', __('セットリスト'));
         $show->field('encore', __('アンコール'));
         $show->field('text', __('コメント'));
         $show->field('created_at', __('作成日時'));
@@ -72,8 +72,14 @@ class TourController extends AdminController
         $form->date('date1', __('開始日'))->default(date('Y-m-d'));
         $form->date('date2', __('終了日'))->default(date('Y-m-d'));
         $form->text('year', __('年'));
-        $form->multipleSelect('setlist', __('本編'))->options(Song::all()->pluck('title', 'id'));
-        $form->multipleSelect('encore', __('アンコール'))->options(Song::all()->pluck('title', 'id'));
+        $form->table('setlist', __('本編'), function ($table) {
+            $table->number('#')->rules('required');
+            $table->select('song', __('楽曲'))->options(Song::all()->pluck('title', 'id'));
+        });
+        $form->table('encore', __('アンコール'), function ($table) {
+            $table->number('#')->rules('required');
+            $table->select('song', __('楽曲'))->options(Song::all()->pluck('title', 'id'));
+        });
         $form->textarea('text', __('コメント'));
 
         return $form;

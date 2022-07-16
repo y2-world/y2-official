@@ -16,12 +16,13 @@ class Album extends Model
         return $this->belongsToMany(Song::class);
     }
 
-    public function getSongsAttribute($tracklist)
+    public function getAlbumAttribute($value)
     {
-        return explode(',', $tracklist);
+        return array_values(json_decode($value, true) ?: []);
     }
 
-    public function setSongsAttribute($tracklist) {
-        $this->attributes['tracklist'] = trim(implode($tracklist, ','), ',');
+    public function setTracklistAttribute($value)
+    {
+        $this->attributes['tracklist'] = json_encode(array_values($value));
     }
 }

@@ -51,11 +51,7 @@ class AlbumController extends AdminController
         $show->field('date', __('リリース日'));
         $show->field('best', __('ベスト'));
         $show->field('text', __('コメント'));
-        $show->field('tracklist', __('収録曲'))->unescape()->as(function($tracklist) {
-            $tracklists = explode(",", $tracklist);
-            
-            return implode('<br>', $tracklists);
-        });
+        $show->field('tracklist', __('収録曲'));
         $show->field('created_at', __('作成日時'));
         $show->field('updated_at', __('更新日時'));
 
@@ -77,7 +73,10 @@ class AlbumController extends AdminController
         $form->date('date', __('リリース日'));
         $form->switch('best', __('ベスト'));
         $form->textarea('text', __('コメント'));
-        $form->multipleSelect('tracklist', __('収録曲'))->options(Song::all()->pluck('title', 'id'));
+        $form->table('tracklist', __('収録曲'), function ($table) {
+            $table->number('#')->rules('required');
+            $table->select('song', __('楽曲'))->options(Song::all()->pluck('title', 'id'));
+        });
 
         return $form;
     }

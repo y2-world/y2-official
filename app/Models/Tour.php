@@ -11,21 +11,18 @@ class Tour extends Model
         return $this->hasMany('App\Models\Song'); 
     }
 
-    public function getSetlistAttribute($setlist)
+    public function getTourAttribute($value)
     {
-        return explode(',', $setlist);
+        return array_values(json_decode($value, true) ?: []);
     }
 
-    public function setSetlistAttribute($setlist) {
-        $this->attributes['setlist'] = trim(implode($setlist, ','), ',');
-    }
-
-    public function getEncoreAttribute($encore)
+    public function setSetlistAttribute($value)
     {
-        return explode(',', $encore);
+        $this->attributes['setlist'] = json_encode(array_values($value));
     }
 
-    public function setEncoreAttribute($encore) {
-        $this->attributes['encore'] = trim(implode($encore, ','), ',');
+    public function setEncoreAttribute($value)
+    {
+        $this->attributes['encore'] = json_encode(array_values($value));
     }
 }
