@@ -12,9 +12,11 @@
             </div>
             <hr>
             <div class="setlist">
-                @foreach ($tours->setlist as $data) 
-                {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['song'] }}</a><br>
-                @endforeach
+                @if(isset($tours->setlist))
+                    @foreach ($tours->setlist as $data) 
+                    {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['song'] }}</a><br>
+                    @endforeach
+                @endif
                 @if(isset($tours->encore))
                     <hr width="250">
                     @foreach ((array)$tours->encore as $data)
