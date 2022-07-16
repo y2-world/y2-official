@@ -120,22 +120,22 @@ class SetlistController extends AdminController
         $form->text('year', __('年'))->rules('required');
         $form->text('venue', __('会場'))->rules('required');
         $form->table('setlist', __('本編'), function ($table) {
-            $table->number('#')->rules('required');
+            $table->number('#');
             $table->text('song', __('楽曲'))->rules('required');
         });
         $form->table('encore', __('アンコール'), function ($table) {
-            $table->number('#')->rules('required');
+            $table->number('#');
             $table->text('song', __('楽曲'))->rules('required');
         });
         $form->switch('fes', __('フェス'));
         $form->table('fes_setlist', __('本編'), function ($table) {
             $table->text('artist');
-            $table->number('#')->rules('required');
+            $table->number('#');
             $table->text('song', __('楽曲'))->rules('required');
         });
         $form->table('fes_encore', __('アンコール'), function ($table) {
             $table->text('artist');
-            $table->number('#')->rules('required');
+            $table->number('#');
             $table->text('song', __('楽曲'))->rules('required');
         });
 
