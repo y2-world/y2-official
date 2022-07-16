@@ -50,8 +50,20 @@ class TourController extends AdminController
         $show->field('date1', __('開始日'));
         $show->field('date2', __('終了日'));
         $show->field('year', __('年'));
-        $show->field('setlist', __('セットリスト'));
-        $show->field('encore', __('アンコール'));
+        $show->field('setlist', __('本編'))->unescape()->as(function ($setlist) {
+            $result1 = [];
+            foreach($setlist as $data1) {
+                $result1[] = $data1['#'].'. '.$data1['song'];
+            }
+            return implode('<br>', $result1);
+        });
+        $show->field('encore', __('アンコール'))->unescape()->as(function ($encore) {
+            $result2 = [];
+            foreach((array)$encore as $data2) {
+                $result2[] = $data2['#'].'. '.$data2['song'];
+            }
+            return implode('<br>', $result2);
+        });
         $show->field('text', __('コメント'));
         $show->field('created_at', __('作成日時'));
         $show->field('updated_at', __('更新日時'));

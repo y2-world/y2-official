@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
           <div class="setlist">
-            @if(!is_null($albums->album_id))
+            @if($albums->best == 0)
             # {{$albums->album_id}}
             @else
             Best Album
@@ -15,16 +15,9 @@
           <div class="setlist">
             Release Date : {{ date('Y.m.d', strtotime($albums->date)) }}
             <hr>
-            @if($albums->best == 0)
-              @foreach ($songs as $song)
-                @if($albums->id == $song->album_id)
-                {{$song->album_trk}}. <td><a href="{{ route('songs.show', $song->id) }}">{{ $song->title }}</a></td>
-                <br>
-                @endif
-              @endforeach
-              <br>
-            @elseif($albums->best == 1)
-            @endif
+            @foreach ($albums->tracklist as $data)
+            {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['song'] }}</a><br>
+            @endforeach
             @if(!is_null($albums->text))
             {!! nl2br(e($albums->text)) !!}
             @endif

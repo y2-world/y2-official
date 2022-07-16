@@ -13,16 +13,12 @@
             <hr>
             <div class="setlist">
                 @foreach ($tours->setlist as $data) 
-                    @if($data['#'] === '-')
-                    {{ $data['#'] }} <b>{{ $data['song'] }}</b><br>
-                    @else
-                    {{ $data['#'] }}. {{ $data['song'] }}<br>
-                    @endif
+                {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['song'] }}</a><br>
                 @endforeach
                 @if(isset($tours->encore))
                     <hr width="250">
                     @foreach ((array)$tours->encore as $data)
-                    {{ $data['#'] }}. {{ $data['song'] }}<br>
+                    {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['song'] }}</a><br>
                     @endforeach
                 @endif
                 @if(!is_null($tours->text))
