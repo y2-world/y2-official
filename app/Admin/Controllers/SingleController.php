@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\Single;
+use App\Models\Song;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -48,7 +49,14 @@ class SingleController extends AdminController
         $show->field('single_id', __('Single ID'));
         $show->field('title', __('タイトル'));
         $show->field('date', __('リリース日'));
-        $show->field('exception', __('例外'));
+        $show->field('download', __('配信シングル'));
+        $show->field('trackilist', __('収録曲'))->unescape()->as(function ($trackilist) {
+            $result1 = [];
+            foreach($trackilist as $data1) {
+                $result1[] = $data1['#'].'. '.$data1['song'];
+            }
+            return implode('<br>', $result1);
+        });
         $show->field('text', __('コメント'));
         $show->field('created_at', __('作成日時'));
         $show->field('updated_at', __('更新日時'));
@@ -69,7 +77,11 @@ class SingleController extends AdminController
         $form->text('single_id', __('Single ID'));
         $form->text('title', __('タイトル'))->rules('required');
         $form->date('date', __('リリース日'));
-        $form->switch('exception', __('例外'));
+        $form->switch('download', __('配信シングル'));
+        $form->table('tracklist', __('収録曲'), function ($table) {
+            $table->number('#')->rules('required');
+            $table->select('song', __('楽曲'))->options(Song::all()->pluck('title', 'id'))->rules('required');
+        });
         $form->textarea('text', __('コメント'));
 
         return $form;

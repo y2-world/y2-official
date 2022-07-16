@@ -10,4 +10,23 @@ class Single extends Model
     {
         return $this->hasMany('App\Models\Song'); 
     }
+
+    protected $casts = [
+        'tracklist' =>'json',
+    ];
+
+    public function getSongs()
+    {
+        return $this->belongsToMany(Song::class);
+    }
+
+    public function getAlbumAttribute($value)
+    {
+        return array_values(json_decode($value, true) ?: []);
+    }
+
+    public function setTracklistAttribute($value)
+    {
+        $this->attributes['tracklist'] = json_encode(array_values($value));
+    }
 }

@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
           <div class="setlist">
-            @if(!is_null($singles->single_id))
+            @if($singles->download == 0)
             # {{$singles->single_id}}
             @else
             Download Single
@@ -15,15 +15,11 @@
           <div class="setlist">
             Release Date : {{ date('Y.m.d', strtotime($singles->date)) }}
             <hr>
-            @if($singles->exception == 0)
-              @foreach ($songs as $song)
-                @if($singles->id == $song->single_id)
-                {{$song->single_trk}}. <td><a href="{{ route('songs.show', $song->id) }}">{{ $song->title }}</a></td>
-                <br>
-                @endif
+            @if(isset($singles->tracklist))
+              @foreach ($singles->tracklist as $data)
+                {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['song'] }}</a><br>
               @endforeach
               <br>
-            @elseif($singles->exception == 1)
             @endif
             @if(!is_null($singles->text))
             {!! nl2br(e($singles->text)) !!}

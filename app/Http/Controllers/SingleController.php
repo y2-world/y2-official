@@ -53,7 +53,7 @@ class SingleController extends Controller
     public function show($id)
     {   
         $singles = Single::find($id);
-        $songs = Song::orderBy('single_trk', 'asc')
+        $songs = Song::orderBy('id', 'asc')
         ->get();
         $previous = Single::where('id', '<', $singles->id)->orderBy('id', 'desc')->first();
         $next = Single::where('id', '>', $singles->id)->orderBy('id')->first();
