@@ -46,7 +46,7 @@
                     @endforeach
                     @if(isset($setlists->fes_encore))
                         <hr width="250">
-                        @foreach ((array)$setlists->fes_setlist as $data) 
+                        @foreach ((array)$setlists->fes_encore as $data) 
                             @if(isset($data['artist']))
                                 @if($data['artist'] !== 'END');
                                 {{ $data['artist'] }}<br>
