@@ -23,6 +23,7 @@
                     <br>
                 @endif
                 @if(!is_null($tours->text))
+                <hr width="250">
                 {!! nl2br(e($tours->text)) !!}
                 @endif
             </div>  
