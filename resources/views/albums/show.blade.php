@@ -15,7 +15,7 @@
           <div class="setlist">
             Release Date : {{ date('Y.m.d', strtotime($albums->date)) }}
             <hr>
-            @if(isset($albums->tracklist))
+            @if(!is_null($albums->tracklist))
               @foreach ($albums->tracklist as $data)
               @if($data['disc'] !== "-")
               {{ $data['disc'] }}<br>
