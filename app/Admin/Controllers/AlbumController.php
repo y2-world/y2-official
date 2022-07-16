@@ -51,7 +51,11 @@ class AlbumController extends AdminController
         $show->field('date', __('リリース日'));
         $show->field('best', __('ベスト'));
         $show->field('text', __('コメント'));
-        $show->field('tracklist', __('収録曲'));
+        $show->field('tracklist', __('収録曲'))->unescape()->as(function($tracklist) {
+            $tracklists = explode(",", $tracklist);
+            
+            return implode('<br>', $tracklists);
+        });
         $show->field('created_at', __('作成日時'));
         $show->field('updated_at', __('更新日時'));
 
