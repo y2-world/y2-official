@@ -24,7 +24,7 @@
                 @if(isset($tours->encore))
                     <hr width="250">
                     @foreach ((array)$tours->encore as $data)
-                    {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['song'] }}</a><br>
+                    {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['encore'] }}</a><br>
                     @endforeach
                     <br>
                 @endif
