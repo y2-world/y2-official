@@ -33,25 +33,30 @@
                     @endif
                 @elseif($setlists->fes == 1)
                     @foreach ((array)$setlists->fes_setlist as $data) 
+                    @if(isset($data['artist']))
                         @if($data['artist'] !== 'END');
                         {{ $data['artist'] }}<br>
-                        @elseif(isnull($data['artist']))
                         {{ $data['#'] }}. {{ $data['song'] }}<br>
-                        @elseif($data['artist'] === 'END')
+                        @else
                         {{ $data['#'] }}. {{ $data['song'] }}<br><br>
+                        @endif
+                     @else
+                        {{ $data['#'] }}. {{ $data['song'] }}<br>
                         @endif
                     @endforeach
                     @if(isset($setlists->fes_encore))
                         <hr width="250">
-                        @foreach ((array)$setlists->fes_encore as $data)
-                            @if($data['artist'] !== 'END');
-                            {{ $data['artist'] }}<br>
-                            @elseif(isnull($data['artist']))
-                            {{ $data['#'] }}. {{ $data['song'] }}<br>
-                            @elseif($data['artist'] === 'END')
-                            {{ $data['#'] }}. {{ $data['song'] }}<br><br>
-                            @endif
-                        @endforeach
+                    @if(isset($data['artist']))
+                        @if($data['artist'] !== 'END');
+                        {{ $data['artist'] }}<br>
+                        {{ $data['#'] }}. {{ $data['song'] }}<br>
+                        @else
+                        {{ $data['#'] }}. {{ $data['song'] }}<br><br>
+                        @endif
+                     @else
+                        {{ $data['#'] }}. {{ $data['song'] }}<br>
+                        @endif
+                    @endforeach
                     @endif
                 @endif
             </div>  
