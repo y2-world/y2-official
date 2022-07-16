@@ -23,9 +23,13 @@
                 @endif
                 @if(isset($tours->encore))
                     <hr width="250">
-                    @foreach ((array)$tours->encore as $data)
-                    {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['encore'] }}</a><br>
-                    @endforeach
+                    @foreach ($tours->encore as $data) 
+                    @if(isset($data['song']))
+                        {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['song'] }}</a><br>
+                    @elseif(isset($data['exception']))
+                        {{ $data['#'] }}. {{ $data['exception'] }}<br>
+                    @endif
+                @endforeach
                     <br>
                 @endif
                 @if(!is_null($tours->text))
