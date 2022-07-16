@@ -12,9 +12,22 @@
             </div>
             <hr>
             <div class="setlist">
-                {{ $tours->setlist }}
-                <hr>
-                {{ $tours->encore }}
+                @foreach ($tours->setlist as $data) 
+                    @if($data['#'] === '-')
+                    {{ $data['#'] }} <b>{{ $data['song'] }}</b><br>
+                    @else
+                    {{ $data['#'] }}. {{ $data['song'] }}<br>
+                    @endif
+                @endforeach
+                @if(isset($tours->encore))
+                    <hr width="250">
+                    @foreach ((array)$tours->encore as $data)
+                    {{ $data['#'] }}. {{ $data['song'] }}<br>
+                    @endforeach
+                @endif
+                @if(!is_null($tours->text))
+                {!! nl2br(e($tours->text)) !!}
+                @endif
             </div>  
             <br>
             <div class="show_button">

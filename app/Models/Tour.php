@@ -5,7 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class Tour extends Model
-{
+{   
+    protected $casts = [
+        'setlist' =>'json',
+        'encore' =>'json',
+    ];
+
     public function songs()
     {
         return $this->hasMany('App\Models\Song'); 
