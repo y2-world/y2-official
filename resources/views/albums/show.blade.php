@@ -18,7 +18,7 @@
             @if(isset($albums->tracklist))
               @foreach ($albums->tracklist as $data)
                 @if(isset($data['disc']))
-                  @if($data['artist'] !== 'END')
+                  @if($data['disc'] !== 'END')
                       {{ $data['disc'] }}<br>
                       {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['song'] }}</a><br>
                   @else
