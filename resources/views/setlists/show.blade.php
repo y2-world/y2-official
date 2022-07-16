@@ -33,9 +33,9 @@
                     @endif
                 @elseif($setlists->fes == 1)
                     @foreach ((array)$setlists->fes_setlist as $data) 
-                        @if($data['#'] === '-' && $data['song'] === '-')
+                        @if($data['artist'] !== 'END');
                         {{ $data['artist'] }}<br>
-                        @elseif($data['artist'] === '-')
+                        @elseif(isnull($data['artist']))
                         {{ $data['#'] }}. {{ $data['song'] }}<br>
                         @elseif($data['artist'] === 'END')
                         {{ $data['#'] }}. {{ $data['song'] }}<br><br>
