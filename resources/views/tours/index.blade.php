@@ -38,7 +38,7 @@
         <tbody>
             @foreach ($tours as $tour)
               <tr>
-                  <td>{{$tour->id}}</td>
+                  <td>{{$tour->tour_id}}</td>
                   <td>{{ date('Y.m.d', strtotime($tour->date1)) }} - {{ date('Y.m.d', strtotime($tour->date2)) }} </td>
                   <td><a href="{{ route('tours.show', $tour->id) }}">{{ $tour->tour_title }}</a></td>
               </tr>

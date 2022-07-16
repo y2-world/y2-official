@@ -28,6 +28,7 @@ class TourController extends AdminController
         $grid = new Grid(new Tour());
 
         $grid->column('id', __('ID'));
+        $grid->column('tour_id', __('ツアーID'));
         $grid->column('tour_title', __('ツアータイトル'));
         $grid->column('date1', __('開始日'));
         $grid->column('date2', __('終了日'));
@@ -46,6 +47,7 @@ class TourController extends AdminController
         $show = new Show(Tour::findOrFail($id));
 
         $show->field('id', __('ID'));
+        $show->field('tour_id', __('ツアーID'));
         $show->field('tour_title', __('ツアータイトル'));
         $show->field('date1', __('開始日'));
         $show->field('date2', __('終了日'));
@@ -81,6 +83,7 @@ class TourController extends AdminController
         $form = new Form(new Tour());
 
         $form->text('tour_title', __('ツアータイトル'));
+        $form->text('tour_id', __('ツアーID'));
         $form->date('date1', __('開始日'))->default(date('Y-m-d'));
         $form->date('date2', __('終了日'))->default(date('Y-m-d'));
         $form->text('year', __('年'));
