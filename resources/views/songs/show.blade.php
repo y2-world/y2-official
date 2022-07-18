@@ -4,9 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            @if(isset($songs->song_id))
-            <div class="setlist"># {{$songs->song_id}}</div>
-            @endif
+            <div class="setlist"># {{$songs->id}}</div>
             <h3> {{$songs->title}}</h3>
             <div class="setlist">
                 @if(isset($songs->single->title))

@@ -29,7 +29,7 @@
         <tbody>
             @foreach ($songs as $song)
                 <tr>
-                  <td>{{$song->song_id}}</td>
+                  <td>{{$song->id}}</td>
                   <td><a href="{{ route('songs.show', $song->id) }}">{{ $song->title }}</a></td>
                   @if(isset($song->single_id) && isset($song->album_id))
                     @if($song->single->date > $song->album->date)

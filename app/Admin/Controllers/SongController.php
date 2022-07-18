@@ -29,7 +29,6 @@ class SongController extends AdminController
         $grid = new Grid(new Song());
 
         $grid->column('id', __('ID'));
-        $grid->column('song_id', __('song ID'));
         $grid->column('title', __('タイトル'));
         $grid->column('album_id', __('アルバム'))->display(function($id) {
             $album = optional(Album::find($id));
@@ -58,7 +57,6 @@ class SongController extends AdminController
         $show = new Show(Song::findOrFail($id));
 
         $show->field('id', __('ID'));
-        $show->field('song_id', __('song ID'));
         $show->field('title', __('タイトル'));
         $show->field('album_id', __('アルバム'))->as(function($id) {
             $album = optional(Album::find($id));
@@ -90,7 +88,6 @@ class SongController extends AdminController
         $form = new Form(new Song());
 
         $form->text('id', __('ID'))->rules('required');
-        $form->text('song_id', __('song ID'));
         $form->text('title', __('タイトル'))->rules('required');
         $form->select('album_id', __('アルバム'))->options(Album::all()->pluck('title', 'id'));
         $form->select('single_id', __('シングル'))->options(Single::all()->pluck('title', 'id'));
