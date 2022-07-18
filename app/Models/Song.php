@@ -12,7 +12,7 @@ class Song extends Model
     }
 
     public function single()
-    {
+    {   
         return $this->belongsTo(Single::class, 'single_id');
     }
 
@@ -20,4 +20,10 @@ class Song extends Model
     {
         return $this->belongsTo(Bio::class, 'year');
     }
+
+    public function getSingle()
+    {   
+        return $this->belongsTo(Single::class);
+    }
 }
+

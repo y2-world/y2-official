@@ -20,9 +20,9 @@
                 @if(isset($data['disc']))
                   @if($data['disc'] !== 'END')
                       {{ $data['disc'] }}<br>
-                      {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['song'] }}</a><br>
+                      {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br>
                   @else
-                      {{ $data['#'] }}. <a href="{{ url('songs', $data['song'])}}">{{ $data['song'] }}</a><br><br>
+                      {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br><br>
                   @endif
                 @else
                   @if(isset($data['song']))

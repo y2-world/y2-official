@@ -41,16 +41,7 @@ class Setlist extends Model
         $this->attributes['fes_encore'] = json_encode(array_values($value));
     }
     public function artist()
-    {
+    {   
         return $this->belongsTo(Artist::class, 'artist_id');
     }
-    public function getArtist()
-    {
-        return $this->belongsToMany(Artist::class, 'artist_id');
-    }
-
-    // public function year()
-    // {
-    //     return $this->belongsTo(Year::class, 'year');
-    // }
 }
