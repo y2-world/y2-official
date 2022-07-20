@@ -19,13 +19,19 @@
               @foreach ($albums->tracklist as $data)
                 @if(isset($data['disc']))
                   @if($data['disc'] !== 'END')
-                      {{ $data['disc'] }}<br>
-                      {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br>
-                  @elseif(isset($data['id']) && isset($data['exception']))
+                    @if(isset($data['id']) && !isset($data['song']))
                       {{ $data['disc'] }}<br>
                       {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
-                  @else
-                      {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br><br>
+                    @elseif(isset($data['id']) && !isset($data['exception']))
+                      {{ $data['disc'] }}<br>
+                      {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br>
+                    @endif
+                  @elseif($data['disc'] == 'END')
+                    @if(isset($data['id']) && !isset($data['song']))
+                        {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br><br>
+                    @elseif(isset($data['id']) && !isset($data['exception']))
+                        {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br><br>
+                    @endif
                   @endif
                 @else
                   @if(isset($data['song']))
