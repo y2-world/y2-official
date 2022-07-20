@@ -14,8 +14,12 @@
             <div class="setlist">
                 @if(isset($tours->setlist))
                     @foreach ($tours->setlist as $data) 
-                        @if($data['#'] === '-')
+                        @if($data['#'] == '-')
                             {{ $data['#'] }} <b>{{ $data['song'] }}</b><br>
+                        @elseif($data['#'] == 'ENCORE')
+                            <hr width="250">
+                        @elseif($data['#'] !== '-' | $data['#'] !== 'ENCORE')
+                            <h3>{{ $data['#'] }} <h3>
                         @elseif(isset($data['song']))
                             {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br>
                         @elseif(isset($data['id']) && isset($data['exception']))
@@ -24,8 +28,9 @@
                             {{ $data['#'] }}. {{ $data['exception'] }}<br>
                         @endif
                     @endforeach
+                    <hr>
                 @endif
-                @if(isset($tours->encore))
+                {{-- @if(isset($tours->encore))
                     <hr width="250">
                     @foreach ($tours->encore as $data) 
                     @if(isset($data['song']))
@@ -37,7 +42,7 @@
                     @endif
                 @endforeach
                     <br>
-                @endif
+                @endif --}}
                 @if(!is_null($tours->text))
                 <br>
                 {!! nl2br(e($tours->text)) !!}
