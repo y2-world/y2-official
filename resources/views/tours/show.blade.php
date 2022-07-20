@@ -14,18 +14,24 @@
             <div class="setlist">
                 @if(isset($tours->setlist))
                     @foreach ($tours->setlist as $data) 
-                        @if($data['#'] == '-')
-                            {{ $data['#'] }} <b>{{ $data['song'] }}</b><br>
-                        @elseif($data['#'] == 'ENCORE')
-                            <hr width="250">
-                        @elseif($data['#'] !== '-' | $data['#'] !== 'ENCORE')
-                            <h3>{{ $data['#'] }} <h3>
-                        @elseif(isset($data['song']))
-                            {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br>
-                        @elseif(isset($data['id']) && isset($data['exception']))
-                            {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
-                        @elseif(!isset($data['id']) && isset($data['exception']))
-                            {{ $data['#'] }}. {{ $data['exception'] }}<br>
+                        @if(!isset($data['song']) && !isset($data['exception']))
+                            @if($data['#'] == 'ENCORE')
+                                <hr width="250">
+                            @else
+                                <h4>{{ $data['#'] }} <h4>
+                            @endif
+                        @elseif(isset($data['song']) && !isset($data['exception']))
+                            @if($data['#'] == '-')
+                                {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br>
+                            @elseif($data['#'] !== '-')
+                                {{ $data['#'] }} <b>{{ $data['song'] }}</b><br>
+                            @endif
+                        @elseif(!isset($data['song']) && isset($data['exception']))
+                            @if(isset($data['id']) && isset($data['exception']))
+                                {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
+                            @elseif(!isset($data['id']) && isset($data['exception']))
+                                {{ $data['#'] }}. {{ $data['exception'] }}<br>
+                            @endif
                         @endif
                     @endforeach
                     <hr>
