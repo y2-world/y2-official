@@ -14,7 +14,9 @@
             <div class="setlist">
                 @if(isset($tours->setlist))
                     @foreach ($tours->setlist as $data) 
-                        @if(isset($data['song']))
+                        @if($data['#'] === '-')
+                            {{ $data['#'] }} <b>{{ $data['song'] }}</b><br>
+                        @elseif(isset($data['song']))
                             {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br>
                         @elseif(isset($data['id']) && isset($data['exception']))
                             {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
