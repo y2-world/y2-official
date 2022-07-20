@@ -19,6 +19,7 @@
                                 <hr width="250">
                             @elseif($data['#'] == 'END')
                                 <br>
+                                <br>
                             @else
                                 <h4>{{ $data['#'] }} <h4>
                             @endif
