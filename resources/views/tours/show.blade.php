@@ -18,8 +18,7 @@
                             @if($data['#'] == 'ENCORE')
                                 <hr width="250">
                             @elseif($data['#'] == 'END')
-                                <br>
-                                <br>
+                                <hr>
                             @else
                                 <h4>{{ $data['#'] }} </h4>
                             @endif
