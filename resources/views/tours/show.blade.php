@@ -24,7 +24,7 @@
                             @if($data['#'] !== '-')
                                 {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br>
                             @elseif($data['#'] == '-')
-                                {{ $data['#'] }} <b>{{ $data['song'] }}</b><br>
+                                {{ $data['#'] }} <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br>
                             @endif
                         @elseif(!isset($data['song']) && isset($data['exception']))
                             @if(isset($data['id']) && isset($data['exception']))
