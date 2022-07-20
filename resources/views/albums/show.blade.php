@@ -21,6 +21,9 @@
                   @if($data['disc'] !== 'END')
                       {{ $data['disc'] }}<br>
                       {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br>
+                  @elseif(isset($data['id']) && isset($data['exception']))
+                      {{ $data['disc'] }}<br>
+                      {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
                   @else
                       {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br><br>
                   @endif
