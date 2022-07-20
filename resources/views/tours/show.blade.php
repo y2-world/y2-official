@@ -17,7 +17,7 @@
                         @if(!isset($data['song']) && !isset($data['exception']))
                             @if($data['#'] == 'ENCORE')
                                 <hr width="250">
-                            @if($data['#'] == 'HR')
+                            @elseif($data['#'] == 'HR')
                                 <hr>
                             @else
                                 <h4>{{ $data['#'] }} </h4>
