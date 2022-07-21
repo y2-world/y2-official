@@ -42,19 +42,32 @@
                     @endforeach
                     <hr>
                 @endif
-                {{-- @if(isset($tours->encore))
-                    <hr width="250">
-                    @foreach ($tours->encore as $data) 
-                    @if(isset($data['song']))
-                        {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br>
-                    @elseif(isset($data['id']) && isset($data['exception']))
-                        {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
-                    @elseif(!isset($data['id']) && isset($data['exception']))
-                        {{ $data['#'] }}. {{ $data['exception'] }}<br>
+                @if(isset($tours->encore))
+                @foreach ($tours->encore as $data) 
+                    @if(!isset($data['song']) && !isset($data['exception']))
+                        @if($data['#'] == 'ENCORE')
+                            <hr width="250">
+                        @elseif($data['#'] == 'HR')
+                            <hr>
+                        @else
+                            <h5>{{ $data['#'] }} </h5>
+                        @endif
+                    @elseif(isset($data['song']) && !isset($data['exception']))
+                        @if($data['#'] !== '-')
+                            {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br>
+                        @elseif($data['#'] == '-')
+                            {{ $data['#'] }} <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br>
+                        @endif
+                    @elseif(!isset($data['song']) && isset($data['exception']))
+                        @if(isset($data['id']) && isset($data['exception']))
+                            {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
+                        @elseif(!isset($data['id']) && isset($data['exception']))
+                            {{ $data['#'] }}. {{ $data['exception'] }}<br>
+                        @endif
                     @endif
                 @endforeach
-                    <br>
-                @endif --}}
+                <hr>
+            @endif
                 @if(!is_null($tours->text))
                 <br>
                 {!! nl2br(e($tours->text)) !!}
