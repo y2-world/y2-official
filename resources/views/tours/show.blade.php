@@ -17,7 +17,7 @@
             <hr>
             <div class="setlist">
                 <div class="setlist-row">
-                    <div class="setlist1">
+                    <div class="column">
                         @if(isset($tours->setlist))
                             @foreach ($tours->setlist as $data) 
                                 @if(!isset($data['song']) && !isset($data['exception']))
@@ -45,7 +45,7 @@
                         @endif
                     </div>
                     <br>
-                    <div class="setlist2">
+                    <div class="column">
                         @if(isset($tours->encore))
                         @foreach ($tours->encore as $data) 
                             @if(!isset($data['song']) && !isset($data['exception']))

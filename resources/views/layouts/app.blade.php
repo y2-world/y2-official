@@ -504,11 +504,9 @@
     .setlist-row {
         display: flex;
         flex-wrap: wrap;
-        justify-content: flex-start;
     }
-
-    .setlist {
-        padding-bottom: 10px;
+    .column {
+        width: 100%;
     }
 
     @media screen and (max-width: 648px) {
