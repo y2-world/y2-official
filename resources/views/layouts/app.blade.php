@@ -509,6 +509,12 @@
         width: 100%;
     }
 
+    @media (min-width: 1024px) {
+    .column {
+        width: 50%;
+    }
+    }
+
     @media screen and (max-width: 648px) {
         .show_button {
             text-align: center;
