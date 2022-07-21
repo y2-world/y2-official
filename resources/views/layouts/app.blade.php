@@ -501,6 +501,12 @@
         text-align: center;
     }
 
+    .setlist-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+    }
+
     @media screen and (max-width: 648px) {
         .show_button {
             text-align: center;
