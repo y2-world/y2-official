@@ -507,7 +507,7 @@
     }
     .column {
         width: 100%;
-        padding-bottom: 20px;
+        padding-bottom: 30px;
     }
 
     @media (min-width: 1024px) {

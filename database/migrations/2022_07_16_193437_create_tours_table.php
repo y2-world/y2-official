@@ -19,8 +19,8 @@ class CreateToursTable extends Migration
             $table->date('date1');
             $table->date('date2');
             $table->integer('year')->nullable();
-            $table->text('setlist')->nullable();
-            $table->text('encore')->nullable();
+            $table->text('setlist1')->nullable();
+            $table->text('setlist2')->nullable();
             $table->text('text')->nullable();
             $table->timestamps();
         });

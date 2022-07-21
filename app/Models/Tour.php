@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Tour extends Model
 {   
     protected $casts = [
-        'setlist' =>'json',
-        'encore' =>'json',
+        'setlist1' =>'json',
+        'setlist2' =>'json',
     ];
 
     public function songs()
@@ -23,11 +23,11 @@ class Tour extends Model
 
     public function setSetlistAttribute($value)
     {
-        $this->attributes['setlist'] = json_encode(array_values($value));
+        $this->attributes['setlist1'] = json_encode(array_values($value));
     }
 
     public function setEncoreAttribute($value)
     {
-        $this->attributes['encore'] = json_encode(array_values($value));
+        $this->attributes['setlist2'] = json_encode(array_values($value));
     }
 }

@@ -52,16 +52,16 @@ class TourController extends AdminController
         $show->field('date1', __('開始日'));
         $show->field('date2', __('終了日'));
         $show->field('year', __('年'));
-        $show->field('setlist', __('本編'))->unescape()->as(function ($setlist) {
+        $show->field('setlist1', __('セットリスト1'))->unescape()->as(function ($setlist1) {
             $result1 = [];
-            foreach($setlist as $data1) {
+            foreach($setlist1 as $data1) {
                 $result1[] = $data1['#'].'. '.$data1['song'];
             }
             return implode('<br>', $result1);
         });
-        $show->field('encore', __('アンコール'))->unescape()->as(function ($encore) {
+        $show->field('setlist2', __('セットリスト2'))->unescape()->as(function ($setlist2) {
             $result2 = [];
-            foreach((array)$encore as $data2) {
+            foreach((array)$setlist2 as $data2) {
                 $result2[] = $data2['#'].'. '.$data2['song'];
             }
             return implode('<br>', $result2);
@@ -87,13 +87,13 @@ class TourController extends AdminController
         $form->date('date1', __('開始日'))->default(date('Y-m-d'));
         $form->date('date2', __('終了日'))->default(date('Y-m-d'));
         $form->text('year', __('年'));
-        $form->table('setlist', __('セットリスト1'), function ($table) {
+        $form->table('setlist1', __('セットリスト1'), function ($table) {
             $table->number('#')->rules('required');
             $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
             $table->select('song', __('楽曲'))->options(Song::all()->pluck('title', 'title'));
             $table->text('exception', __('例外'));
         });
-        $form->table('encore', __('セットリスト2'), function ($table) {
+        $form->table('setlist2', __('セットリスト2'), function ($table) {
             $table->number('#')->rules('required');
             $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
             $table->select('song', __('楽曲'))->options(Song::all()->pluck('title', 'title'));
