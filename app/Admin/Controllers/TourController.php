@@ -87,13 +87,13 @@ class TourController extends AdminController
         $form->date('date1', __('開始日'))->default(date('Y-m-d'));
         $form->date('date2', __('終了日'))->default(date('Y-m-d'));
         $form->text('year', __('年'));
-        $form->table('setlist', __('本編'), function ($table) {
+        $form->table('setlist', __('セットリスト1'), function ($table) {
             $table->number('#')->rules('required');
             $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
             $table->select('song', __('楽曲'))->options(Song::all()->pluck('title', 'title'));
             $table->text('exception', __('例外'));
         });
-        $form->table('encore', __('アンコール'), function ($table) {
+        $form->table('encore', __('セットリスト2'), function ($table) {
             $table->number('#')->rules('required');
             $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
             $table->select('song', __('楽曲'))->options(Song::all()->pluck('title', 'title'));
