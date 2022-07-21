@@ -45,7 +45,7 @@
                         @endif
                     </div>
                     <br>
-                    <div class="setlist1">
+                    <div class="setlist2">
                         @if(isset($tours->encore))
                         @foreach ($tours->encore as $data) 
                             @if(!isset($data['song']) && !isset($data['exception']))
