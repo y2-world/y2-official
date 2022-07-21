@@ -512,6 +512,7 @@
     @media (min-width: 1024px) {
     .column {
         width: 50%;
+        padding-bottom: 10px;
     }
     }
 
