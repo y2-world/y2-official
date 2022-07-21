@@ -6,7 +6,11 @@
         <div class="col-md-8">
             <div class="setlist_title">{{ $tours->tour_title }}</div>
             <div class="setlist_info">
+                @if(isset($date1) && isset($date2))
                 {{ date('Y.m.d', strtotime($tours->date1)) }} - {{ date('Y.m.d', strtotime($tours->date2)) }}
+                @elseif(isset($date1) && !isset($date2))
+                {{ date('Y.m.d', strtotime($tours->date1)) }}
+                @endif
                 <br>
                 {{ $tours->venue }}
             </div>

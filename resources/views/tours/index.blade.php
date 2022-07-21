@@ -39,7 +39,11 @@
             @foreach ($tours as $tour)
               <tr>
                   <td>{{$tour->tour_id}}</td>
-                  <td>{{ date('Y.m.d', strtotime($tour->date1)) }} - {{ date('Y.m.d', strtotime($tour->date2)) }} </td>
+                  @if(isset($date1) && isset($date2))
+                  <td>{{ date('Y.m.d', strtotime($tours->date1)) }} - {{ date('Y.m.d', strtotime($tours->date2)) }}</td>
+                  @elseif(isset($date1) && !isset($date2))
+                  <td>{{ date('Y.m.d', strtotime($tours->date1)) }}</td>
+                  @endif
                   <td><a href="{{ route('tours.show', $tour->id) }}">{{ $tour->tour_title }}</a></td>
               </tr>
             @endforeach
