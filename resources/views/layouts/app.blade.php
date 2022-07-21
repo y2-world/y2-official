@@ -505,15 +505,17 @@
         display: flex;
         flex-wrap: wrap;
     }
-    .column {
-        width: 100%;
-        padding-bottom: 30px;
-    }
 
     @media (min-width: 1024px) {
     .column {
         width: 50%;
     }
+    }
+
+    @media screen and (max-width: 1024px) {
+        .column {
+        width: 100%;
+        padding-bottom: 30px;
     }
 
     @media screen and (max-width: 648px) {
