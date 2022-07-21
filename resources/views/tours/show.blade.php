@@ -24,7 +24,7 @@
                             @elseif($data['#'] == 'HR')
                                 <hr>
                             @else
-                                <h4>{{ $data['#'] }} </h4>
+                                <h5>{{ $data['#'] }} </h5>
                             @endif
                         @elseif(isset($data['song']) && !isset($data['exception']))
                             @if($data['#'] !== '-')
