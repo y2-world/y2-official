@@ -710,6 +710,12 @@
         .album_show {
             font-size: 15px;
         }
+
+        .setlist-row {
+            display: column;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+    }
     }
     </style>
 </head>
