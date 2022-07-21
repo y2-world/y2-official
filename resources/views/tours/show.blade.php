@@ -44,7 +44,6 @@
                             @endforeach
                         @endif
                     </div>
-                    <br>
                     <div class="column">
                         @if(isset($tours->encore))
                         @foreach ($tours->encore as $data) 
