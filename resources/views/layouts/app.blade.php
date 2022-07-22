@@ -507,15 +507,19 @@
     }
 
     @media (min-width: 1024px) {
-    .column {
+    .column1, .column2 {
         width: 50%;
     }
     }
 
     @media screen and (max-width: 1024px) {
-        .column {
-        width: 100%;
-        padding-bottom: 30px;
+            .column1 {
+            width: 100%;
+            padding-bottom: 30px;
+        }
+            .column2 {
+                width: 100%;
+        }
     }
 
     @media screen and (max-width: 648px) {
