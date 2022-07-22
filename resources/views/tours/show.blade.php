@@ -74,6 +74,7 @@
                 </div>
                 @if(!is_null($tours->schedule))
                 <hr>
+                <h5>TOUR SCHEDULE</h5>
                 {!! nl2br(e($tours->schedule)) !!}
                 @endif
                 @if(!is_null($tours->text))
