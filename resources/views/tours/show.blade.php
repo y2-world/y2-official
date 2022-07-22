@@ -72,8 +72,12 @@
                         @endif
                     </div>
                 </div>
+                @if(!is_null($tours->schedule))
+                <hr>
+                {!! nl2br(e($tours->schedule)) !!}
+                @endif
                 @if(!is_null($tours->text))
-                <br>
+                <hr>
                 {!! nl2br(e($tours->text)) !!}
                 @endif
             </div>  

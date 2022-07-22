@@ -99,6 +99,7 @@ class TourController extends AdminController
             $table->select('song', __('楽曲'))->options(Song::all()->pluck('title', 'title'));
             $table->text('exception', __('例外'));
         });
+        $form->textarea('schedule', __('スケジュール'));
         $form->textarea('text', __('コメント'));
 
         return $form;
