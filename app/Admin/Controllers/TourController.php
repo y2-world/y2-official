@@ -83,25 +83,30 @@ class TourController extends AdminController
     {
         $form = new Form(new Tour());
 
-        $form->text('tour_title', __('ツアータイトル'));
-        $form->text('tour_id', __('ツアーID'));
-        $form->date('date1', __('開始日'))->default(date('Y-m-d'));
-        $form->date('date2', __('終了日'))->default(date('Y-m-d'));
-        $form->multipleSelect('year', __('年'))->options(Bio::pluck('year', 'year'));
-        $form->table('setlist1', __('セットリスト1'), function ($table) {
-            $table->number('#')->rules('required');
-            $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
-            $table->select('song', __('楽曲'))->options(Song::all()->pluck('title', 'title'));
-            $table->text('exception', __('例外'));
+        $form->tab('データ',function($form) {
+            $form->text('tour_title', __('ツアータイトル'));
+            $form->text('tour_id', __('ツアーID'));
+            $form->date('date1', __('開始日'))->default(date('Y-m-d'));
+            $form->date('date2', __('終了日'))->default(date('Y-m-d'));
+            $form->multipleSelect('year', __('年'))->options(Bio::pluck('year', 'year'));
+        })->tab('セットリスト1',function($form) {
+            $form->table('setlist1', __('セットリスト1'), function ($table) {
+                $table->number('#')->rules('required');
+                $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
+                $table->select('song', __('楽曲'))->options(Song::all()->pluck('title', 'title'));
+                $table->text('exception', __('例外'));
+            });
+        })->tab('セットリスト2',function($form) {
+            $form->table('setlist2', __('セットリスト2'), function ($table) {
+                $table->number('#')->rules('required');
+                $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
+                $table->select('song', __('楽曲'))->options(Song::all()->pluck('title', 'title'));
+                $table->text('exception', __('例外'));
+            });
+        })->tab('コメント',function($form) {
+            $form->textarea('schedule', __('スケジュール'));
+            $form->textarea('text', __('コメント'));
         });
-        $form->table('setlist2', __('セットリスト2'), function ($table) {
-            $table->number('#')->rules('required');
-            $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
-            $table->select('song', __('楽曲'))->options(Song::all()->pluck('title', 'title'));
-            $table->text('exception', __('例外'));
-        });
-        $form->textarea('schedule', __('スケジュール'));
-        $form->textarea('text', __('コメント'));
 
         return $form;
     }
