@@ -15,9 +15,7 @@
                 {{ $tours->venue }}
             </div>
             <div class="setlist">
-                @if(isset($tours->setlist1))
                 <hr>
-                @endif
                 <div class="setlist-row">
                     <div class="column1">
                         @if(isset($tours->setlist1))
