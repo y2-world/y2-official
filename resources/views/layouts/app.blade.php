@@ -515,10 +515,10 @@
     @media screen and (max-width: 1024px) {
             .column1 {
             width: 100%;
-            padding-bottom: 30px;
         }
             .column2 {
-                width: 100%;
+            padding-top: 30px;
+            width: 100%;
         }
     }
 
