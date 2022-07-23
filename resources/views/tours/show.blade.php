@@ -15,10 +15,10 @@
                 {{ $tours->venue }}
             </div>
             <div class="setlist">
+                @if(isset($tours->setlist1))
+                <hr>
+                @endif
                 <div class="setlist-row">
-                    @if(isset($tours->setlist1))
-                    <hr>
-                    @endif
                     <div class="column1">
                         @if(isset($tours->setlist1))
                             @foreach ($tours->setlist1 as $data) 
