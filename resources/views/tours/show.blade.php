@@ -16,9 +16,11 @@
             </div>
             <div class="setlist">
                 <div class="setlist-row">
+                    @if(isset($tours->setlist1))
+                    <hr>
+                    @endif
                     <div class="column1">
                         @if(isset($tours->setlist1))
-                            <hr>
                             @foreach ($tours->setlist1 as $data) 
                                 @if(!isset($data['song']) && !isset($data['exception']))
                                     @if($data['#'] == 'ENCORE')
