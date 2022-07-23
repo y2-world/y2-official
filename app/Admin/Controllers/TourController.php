@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Models\Tour;
 use App\Models\Song;
+use App\Models\Bio;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -86,7 +87,7 @@ class TourController extends AdminController
         $form->text('tour_id', __('ツアーID'));
         $form->date('date1', __('開始日'))->default(date('Y-m-d'));
         $form->date('date2', __('終了日'))->default(date('Y-m-d'));
-        $form->text('year', __('年'));
+        $form->multipleSelect('year', __('年'))->options(Bio::pluck('year', 'year'));
         $form->table('setlist1', __('セットリスト1'), function ($table) {
             $table->number('#')->rules('required');
             $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
