@@ -119,25 +119,55 @@ class SetlistController extends AdminController
         $form->date('date', __('公演日'))->default(date('Y-m-d'))->rules('required');
         $form->text('year', __('年'))->rules('required');
         $form->text('venue', __('会場'))->rules('required');
-        $form->table('setlist', __('本編'), function ($table) {
-            $table->number('#')->rules('required');
-            $table->text('song', __('楽曲'))->rules('required');
+        $form->radio('fes','ライブ形態')
+        ->options([
+            0 =>'単独ライブ',
+            1 =>'フェス',
+        ])->when(0, function (Form $form) {
+
+            $form->table('setlist', __('本編'), function ($table) {
+                $table->number('#')->rules('required');
+                $table->text('song', __('楽曲'))->rules('required');
+            });
+            $form->table('encore', __('アンコール'), function ($table) {
+                $table->number('#')->rules('required');
+                $table->text('song', __('楽曲'))->rules('required');
+            });
+
+        })->when(1, function (Form $form) {
+
+            $form->table('fes_setlist', __('本編'), function ($table) {
+                $table->text('artist');
+                $table->number('#')->rules('required');
+                $table->text('song', __('楽曲'))->rules('required');
+            });
+            $form->table('fes_encore', __('アンコール'), function ($table) {
+                $table->text('artist');
+                $table->number('#')->rules('required');
+                $table->text('song', __('楽曲'))->rules('required');
+            });
+    
+
         });
-        $form->table('encore', __('アンコール'), function ($table) {
-            $table->number('#')->rules('required');
-            $table->text('song', __('楽曲'))->rules('required');
-        });
-        $form->switch('fes', __('フェス'));
-        $form->table('fes_setlist', __('本編'), function ($table) {
-            $table->text('artist');
-            $table->number('#')->rules('required');
-            $table->text('song', __('楽曲'))->rules('required');
-        });
-        $form->table('fes_encore', __('アンコール'), function ($table) {
-            $table->text('artist');
-            $table->number('#')->rules('required');
-            $table->text('song', __('楽曲'))->rules('required');
-        });
+        // $form->table('setlist', __('本編'), function ($table) {
+        //     $table->number('#')->rules('required');
+        //     $table->text('song', __('楽曲'))->rules('required');
+        // });
+        // $form->table('encore', __('アンコール'), function ($table) {
+        //     $table->number('#')->rules('required');
+        //     $table->text('song', __('楽曲'))->rules('required');
+        // });
+        // $form->switch('fes', __('フェス'));
+        // $form->table('fes_setlist', __('本編'), function ($table) {
+        //     $table->text('artist');
+        //     $table->number('#')->rules('required');
+        //     $table->text('song', __('楽曲'))->rules('required');
+        // });
+        // $form->table('fes_encore', __('アンコール'), function ($table) {
+        //     $table->text('artist');
+        //     $table->number('#')->rules('required');
+        //     $table->text('song', __('楽曲'))->rules('required');
+        // });
 
         return $form;
     }
