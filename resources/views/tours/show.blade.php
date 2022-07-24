@@ -35,13 +35,13 @@
                                         {{ $data['#'] }} <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br>
                                     @endif
                                 @elseif(!isset($data['song']) && isset($data['exception']))
-                                    @if(isset($data['id']) && isset($data['exception']))
+                                    @if(isset($data['id']))
                                         @if($data['#'] == '-')
                                             {{ $data['#'] }} <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
-                                        @elseif($data['#'] !== '-')
+                                        @else
                                             {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
                                         @endif
-                                    @elseif(!isset($data['id']) && isset($data['exception']))
+                                    @else
                                         {{ $data['#'] }}. {{ $data['exception'] }}<br>
                                     @endif
                                 @endif
