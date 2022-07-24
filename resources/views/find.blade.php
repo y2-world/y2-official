@@ -20,6 +20,8 @@
     <div class="error">
         @if($data->isEmpty())
         <p>検索結果がありません。</p>
+        @else
+        <p>全{{count($data)}}件</p>
         @endif 
     </div>
     <div class="artist">
