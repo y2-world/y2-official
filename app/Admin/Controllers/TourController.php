@@ -87,7 +87,7 @@ class TourController extends AdminController
             $form->text('tour_title', __('ツアータイトル'));
             $form->text('tour_id', __('ツアーID'));
             $form->multipleSelect('year', __('年'))->options(Bio::pluck('year', 'year'));
-            $form->radio('fes','ライブ形態')
+            $form->radio('tour','ライブ形態')
             ->options([
                 0 =>'単独ライブ',
                 1 =>'ツアー',
