@@ -87,19 +87,19 @@ class TourController extends AdminController
             $form->text('tour_title', __('ツアータイトル'));
             $form->text('tour_id', __('ツアーID'));
             $form->multipleSelect('year', __('年'))->options(Bio::pluck('year', 'year'));
-            $form->radio('tour','ライブ形態')
-                ->options([
-                    0 =>'単発ライブ',
-                    1 =>'ツアー',
-                ])->when(0, function (Form $form) {
+            $form->radio('fes','ライブ形態')
+            ->options([
+                0 =>'単独ライブ',
+                1 =>'ツアー',
+            ])->when(0, function (Form $form) {
+                $form->date('date1', __('開催日'))->default(date('Y-m-d'));
+               
+            })->when(1, function (Form $form) {
 
-                    $form->date('date1', __('開催日'))->default(date('Y-m-d'));
+                $form->date('date1', __('開始日'))->default(date('Y-m-d'));
+                $form->date('date2', __('終了日'))->default(date('Y-m-d'));
 
-                })->when(1, function (Form $form) {
-
-                    $form->date('date1', __('開始日'))->default(date('Y-m-d'));
-                    $form->date('date2', __('終了日'))->default(date('Y-m-d'));
-                });
+            });
         })->tab('セットリスト1',function($form) {
             $form->table('setlist1', __('セットリスト1'), function ($table) {
                 $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
