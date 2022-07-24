@@ -38,9 +38,9 @@
                                     @if(isset($data['id']))
                                         @if($data['#'] == '-')
                                             {{ $data['#'] }} <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
-                                        @else
+                                        {{-- @else
                                             {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
-                                        @endif
+                                        @endif --}}
                                     @else
                                         {{ $data['#'] }}. {{ $data['exception'] }}<br>
                                     @endif
