@@ -64,5 +64,6 @@ Route::resource('singles', 'SingleController');
 Route::resource('years', 'YearController');
 Route::resource('bios', 'BioController');
 Route::resource('tours', 'TourController');
+Route::resource('find', 'FindController');
 
 

@@ -5,7 +5,7 @@
   <div class="parts-wrapper">
     <h2>Mr.Children Database</h2>
     <div class="search">
-      <form action="{{url('/search')}}" method="GET">
+      <form action="{{url('/find')}}" method="GET">
         <div class="input-group mb-3">
             <input type="search" class="form-control" aria-label="Search" value="{{request('keyword')}}" name="keyword" required>
             <div class="input-group-append">
