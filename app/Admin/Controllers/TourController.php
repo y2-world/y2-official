@@ -93,7 +93,6 @@ class TourController extends AdminController
                 1 =>'ツアー',
             ])->when(0, function (Form $form) {
                 $form->date('date1', __('開催日'))->default(date('Y-m-d'));
-                $form->date('date2')->disable();
                
             })->when(1, function (Form $form) {
 
