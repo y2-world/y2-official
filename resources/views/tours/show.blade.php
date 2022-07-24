@@ -38,9 +38,9 @@
                                     @if(isset($data['id']))
                                         @if($data['#'] == '-')
                                             {{ $data['#'] }} <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
-                                        {{-- @else
+                                        @else
                                             {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
-                                        @endif --}}
+                                        @endif
                                     @else
                                         {{ $data['#'] }}. {{ $data['exception'] }}<br>
                                     @endif
@@ -64,10 +64,14 @@
                                     @elseif($data['#'] == '-')
                                         {{ $data['#'] }} <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br>
                                     @endif
-                                @elseif(!isset($data['song']) && isset($data['exception']))
-                                    @if(isset($data['id']) && isset($data['exception']))
-                                        {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
-                                    @elseif(!isset($data['id']) && isset($data['exception']))
+                                 @elseif(!isset($data['song']) && isset($data['exception']))
+                                    @if(isset($data['id']))
+                                        @if($data['#'] == '-')
+                                            {{ $data['#'] }} <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
+                                        @else
+                                            {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
+                                        @endif
+                                    @else
                                         {{ $data['#'] }}. {{ $data['exception'] }}<br>
                                     @endif
                                 @endif
