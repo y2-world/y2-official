@@ -24,7 +24,7 @@ class FindController extends Controller
                 ->orWhere('setlist2', 'like', "%{$keyword}%");
         };
 
-        $data = $query->orderBy('date','desc')->paginate(100);
+        $data = $query->orderBy('date2','desc')->paginate(100);
 
         $bios = Bio::orderBy('id', 'asc')
         ->get();
