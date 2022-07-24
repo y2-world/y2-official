@@ -21,7 +21,7 @@ class FindController extends Controller
  
         if (!empty($keyword)) {
             $tours =  $query->where('setlist1', 'like', "%{$keyword}%")
-                ->orWhere('setlist2', 'like', "%{$keyword}%");
+                ->orWhere('setlist1', 'like', "%{$keyword}%");
         };
 
         $data = $query->orderBy('date2','desc')->paginate(100);
