@@ -36,7 +36,7 @@
           <div class="year-padding">
             <a class="btn btn-outline-dark btn-sm" href="{{ url('/tours') }}" role="button">Tours</a>
             <a class="btn btn-outline-dark btn-sm" href="{{ url('/events') }}" role="button">Events</a>
-            <a class="btn btn-outline-dark btn-sm" href="{{ url('/aps') }}" role="button">ap bank fes</a>
+            <a class="btn btn-outline-dark btn-sm" href="{{ url('/apbanks') }}" role="button">ap bank fes</a>
           </div>
       </div>
     </div>

@@ -3,6 +3,8 @@
 namespace App\Admin\Controllers;
 
 use App\Models\Apbank;
+use App\Models\Song;
+use App\Models\Bio;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -30,6 +32,7 @@ class ApbankController extends AdminController
         $grid->column('title', __('タイトル'));
         $grid->column('date1', __('開始日'));
         $grid->column('date2', __('終了日'));
+        $grid->column('venue', __('会場'));
 
         return $grid;
     }
@@ -49,8 +52,8 @@ class ApbankController extends AdminController
         $show->field('date1', __('開始日'));
         $show->field('date2', __('終了日'));
         $show->field('year', __('年'));
-        $show->field('setlist', __('Setlist'));
-        $show->field('setlist1', __('セットリスト'))->unescape()->as(function ($setlist) {
+        $show->field('venue', __('会場'));
+        $show->field('setlist', __('セットリスト'))->unescape()->as(function ($setlist) {
             $result = [];
             foreach($setlist as $data) {
                 $result[] = $data['#'].'. '.$data['song'];
@@ -74,10 +77,11 @@ class ApbankController extends AdminController
         $form = new Form(new Apbank());
 
         $form->tab('データ',function($form) {
-            $form->text('tour_title', __('タイトル'));
-            $form->date('date1', __('開始日'))->default(date('Y-m-d'));
+            $form->text('title', __('タイトル'))->rules('required');
+            $form->date('date1', __('開始日'))->default(date('Y-m-d'))->rules('required');
             $form->date('date2', __('終了日'))->default(date('Y-m-d'));
             $form->multipleSelect('year', __('年'))->options(Bio::pluck('year', 'year'));
+            $form->text('venue', __('会場'))->rules('required');
         })->tab('セットリスト',function($form) {
             $form->table('setlist', __('セットリスト'), function ($table) {
                 $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
