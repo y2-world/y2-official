@@ -16,7 +16,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        $tours = Tour::where('id', 'asc')
+        $tours = Tour::orderBy('id', 'asc')
         ->paginate(10);
         $bios = Bio::orderBy('id', 'asc')
         ->get();
