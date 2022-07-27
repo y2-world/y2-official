@@ -37,7 +37,7 @@
       <div class="all-setlist">
         <tbody>
             @foreach ($tours as $tour)
-              {{-- @if($tour->type == 0 | $tour->type == 1) --}}
+              @if($tour->type == 0 | $tour->type == 1)
                 <tr>
                     <td>{{$tour->tour_id}}</td>
                     @if(isset($tour->date1) && isset($tour->date2))
@@ -47,7 +47,7 @@
                     @endif
                     <td><a href="{{ route('tours.show', $tour->id) }}">{{ $tour->title }}</a></td>
                 </tr>
-              {{-- @endif --}}
+              @endif
             @endforeach
         </tbody>
       </div>
