@@ -30,9 +30,21 @@ class TourController extends AdminController
 
         $grid->column('id', __('ID'));
         $grid->column('tour_id', __('ツアーID'));
-        $grid->column('tour_title', __('ツアータイトル'));
+        $grid->column('title', __('ツアータイトル'));
         $grid->column('date1', __('開始日'));
         $grid->column('date2', __('終了日'));
+
+        $grid->filter(function($filter){
+            $filter->equal('type')->radio([
+                ''   => 'All',
+                0    => 'ツアー',
+                1    => '単発ライブ',
+                2    => 'イベント',
+                3    => 'ap bank fes',
+            ]);
+            
+            $filter->year('year', '年');
+        });
 
         return $grid;
     }
@@ -48,8 +60,11 @@ class TourController extends AdminController
         $show = new Show(Tour::findOrFail($id));
 
         $show->field('id', __('ID'));
+        $show->field('type', __('タイプ'));
+        $show->field('title', __('タイトル'));
         $show->field('tour_id', __('ツアーID'));
-        $show->field('tour_title', __('ツアータイトル'));
+        $show->field('event_id', __('イベントID'));
+        $show->field('ap_id', __('ap ID'));
         $show->field('date1', __('開始日'));
         $show->field('date2', __('終了日'));
         $show->field('year', __('年'));
@@ -84,10 +99,25 @@ class TourController extends AdminController
         $form = new Form(new Tour());
 
         $form->tab('データ',function($form) {
-            $form->text('tour_title', __('ツアータイトル'));
-            $form->text('tour_id', __('ツアーID'));
-            $form->date('date1', __('開始日'))->default(date('Y-m-d'));
-            $form->date('date2', __('終了日'))->default(date('Y-m-d'));
+            $form->text('title', __('タイトル'));
+            $form->radio('type','ライブタイプ')
+            ->options([
+                0 =>'ツアー',
+                1 =>'単発ライブ',
+                2 =>'イベント',
+                3 =>'ap bank fes',
+            ])->when(0, function (Form $form) {
+                $form->text('tour_id', __('ID'));
+                $form->dateRange('date1', 'date2', '開催期間');
+            })->when(1, function (Form $form) {
+                $form->dateRange('date1', 'date2', '開催期間');
+            })->when(2, function (Form $form) {
+                $form->text('event_id', __('ID'));
+                $form->date('date1', __('開催日'))->default(date('Y-m-d'));
+            })->when(3, function (Form $form) {
+                $form->text('ap_id', __('ID'));
+                $form->dateRange('date1', 'date2', '開催期間');
+            });
             $form->multipleSelect('year', __('年'))->options(Bio::pluck('year', 'year'));
         })->tab('セットリスト1',function($form) {
             $form->table('setlist1', __('セットリスト1'), function ($table) {

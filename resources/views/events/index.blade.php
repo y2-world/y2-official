@@ -37,23 +37,25 @@
       </thead>
       <div class="all-setlist">
         <tbody>
-            @foreach ($events as $event)
-              <tr>
-                  <td>{{$event->id}}</td>
-                  @if(isset($event->date1) && isset($event->date2))
-                  <td>{{ date('Y.m.d', strtotime($event->date1)) }} - {{ date('Y.m.d', strtotime($event->date2)) }}</td>
-                  @elseif(isset($event->date1) && !isset($event->date2))
-                  <td>{{ date('Y.m.d', strtotime($event->date1)) }}</td>
-                  @endif
-                  <td><a href="{{ route('events.show', $event->id) }}">{{ $event->title }}</a></td>
-                  <td class="pc_list">{{ $event->venue }}</td>
-              </tr>
+            @foreach ($tours as $tour)
+              @if($tour->type == 2)
+                <tr>
+                    <td>{{$tour->id}}</td>
+                    @if(isset($tour->date1) && isset($tour->date2))
+                    <td>{{ date('Y.m.d', strtotime($tour->date1)) }} - {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
+                    @elseif(isset($tour->date1) && !isset($tour->date2))
+                    <td>{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
+                    @endif
+                    <td><a href="{{ route('tours.show', $tour->id) }}">{{ $tour->title }}</a></td>
+                    <td class="pc_list">{{ $tour->venue }}</td>
+                </tr>
+                @endif
             @endforeach
         </tbody>
       </div>
     </table>
   <div class=”pagination”>
-    {!! $events->links() !!}
+    {!! $tours->links() !!}
   </div>
 </div>
 @endsection

@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="setlist_title">{{ $tours->tour_title }}</div>
+            <div class="setlist_title">{{ $tours->title }}</div>
             <div class="setlist_info">
                 @if(isset($tours->date1) && isset($tours->date2))
                 {{ date('Y.m.d', strtotime($tours->date1)) }} - {{ date('Y.m.d', strtotime($tours->date2)) }}

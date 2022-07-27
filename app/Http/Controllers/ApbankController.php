@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Song;
 use App\Models\Bio;
-use App\Models\Apbank;
+use App\Models\Tour;
 use Illuminate\Http\Request;
 
 class ApbankController extends Controller
@@ -16,13 +16,13 @@ class ApbankController extends Controller
      */
     public function index()
     {
-        $apbanks = Apbank::orderBy('id', 'asc')
+        $tours = Tour::orderBy('id', 'asc')
         ->paginate(10);
         $bios = Bio::orderBy('id', 'asc')
         ->get();
         $songs = Song::orderBy('id', 'asc')
         ->get();
-        return view('apbanks.index', compact('apbanks', 'bios', 'songs'));
+        return view('apbankfes.index', compact('tours', 'bios', 'songs'));
     }
 
     /**
@@ -54,13 +54,13 @@ class ApbankController extends Controller
      */
     public function show($id)
     {
-        $apbanks = Apbank::find($id);
+        $tours = Tour::find($id);
         $songs = Song::orderBy('id', 'asc')
         ->get();
-        $previous = Apbank::where('id', '<', $apbanks->id)->orderBy('id', 'desc')->first();
-        $next = Apbank::where('id', '>', $apbanks->id)->orderBy('id')->first();
+        $previous = Apbank::where('id', '<', $tours->id)->orderBy('id', 'desc')->first();
+        $next = Apbank::where('id', '>', $tours->id)->orderBy('id')->first();
         
-        return view('apbanks.show', compact('songs', 'previous', 'next', 'apbanks'));
+        return view('apbanks.show', compact('songs', 'previous', 'next', 'tours'));
     }
 
     /**

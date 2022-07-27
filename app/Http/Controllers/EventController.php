@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Song;
 use App\Models\Bio;
-use App\Models\Event;
+use App\Models\Tour;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
@@ -16,13 +16,13 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::orderBy('id', 'asc')
+        $tours = Tour::orderBy('id', 'asc')
         ->paginate(10);
         $bios = Bio::orderBy('id', 'asc')
         ->get();
         $songs = Song::orderBy('id', 'asc')
         ->get();
-        return view('events.index', compact('events', 'bios', 'songs'));
+        return view('events.index', compact('tours', 'bios', 'songs'));
     }
 
     /**
@@ -54,13 +54,13 @@ class EventController extends Controller
      */
     public function show($id)
     {
-        $events = Event::find($id);
+        $tours = Tour::find($id);
         $songs = Song::orderBy('id', 'asc')
         ->get();
-        $previous = Event::where('id', '<', $events->id)->orderBy('id', 'desc')->first();
-        $next = Event::where('id', '>', $events->id)->orderBy('id')->first();
+        $previous = Event::where('id', '<', $tours->id)->orderBy('id', 'desc')->first();
+        $next = Event::where('id', '>', $tours->id)->orderBy('id')->first();
         
-        return view('events.show', compact('songs', 'previous', 'next', 'events'));
+        return view('events.show', compact('songs', 'previous', 'next', 'tours'));
     }
 
     /**

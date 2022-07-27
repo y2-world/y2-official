@@ -4,7 +4,7 @@
 <div class="container-lg">
   <h2>ap bank fes</h2>
   <div class="parts-wrapper">
-    <div class="dropdown-wrapper">
+    <div class="dropdown-wrtourper">
       <a class="btn btn-outline-dark btn-sm" href="{{ url('/songs') }}" role="button">Songs</a>
       <a class="btn btn-outline-dark btn-sm" href="{{ url('/singles') }}" role="button">Singles</a>
       <a class="btn btn-outline-dark btn-sm" href="{{ url('/albums') }}" role="button">Albums</a>
@@ -19,7 +19,7 @@
       <form action="{{url('/find')}}" method="GET">
         <div class="input-group mb-3">
             <input type="search" class="form-control" aria-label="Search" value="{{request('keyword')}}" name="keyword" required>
-            <div class="input-group-append">
+            <div class="input-group-tourpend">
                 <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
             </div>
         </div>
@@ -37,23 +37,25 @@
       </thead>
       <div class="all-setlist">
         <tbody>
-            @foreach ($apbanks as $ap)
-              <tr>
-                  <td>{{$ap->id}}</td>
-                  @if(isset($ap->date1) && isset($ap->date2))
-                  <td>{{ date('Y.m.d', strtotime($ap->date1)) }} - {{ date('Y.m.d', strtotime($ap->date2)) }}</td>
-                  @elseif(isset($ap->date1) && !isset($ap->date2))
-                  <td>{{ date('Y.m.d', strtotime($ap->date1)) }}</td>
-                  @endif
-                  <td><a href="{{ route('apbanks.show', $ap->id) }}">{{ $ap->title }}</a></td>
-                  <td class="pc_list">{{ $ap->venue }}</td>
-              </tr>
-            @endforeach
+              @foreach ($tours as $tour)
+                @if($tour->type == 3)
+                  <tr>
+                      <td>{{$tour->ap_id}}</td>
+                      @if(isset($tour->date1) && isset($tour->date2))
+                      <td>{{ date('Y.m.d', strtotime($tour->date1)) }} - {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
+                      @elseif(isset($tour->date1) && !isset($tour->date2))
+                      <td>{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
+                      @endif
+                      <td><a href="{{ route('tourbanks.show', $tour->id) }}">{{ $tour->title }}</a></td>
+                      <td class="pc_list">{{ $tour->venue }}</td>
+                  </tr>
+                @endif
+              @endforeach
         </tbody>
       </div>
     </table>
   <div class=”pagination”>
-    {!! $apbanks->links() !!}
+    {!! $tours->links() !!}
   </div>
 </div>
 @endsection

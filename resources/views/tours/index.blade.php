@@ -37,15 +37,17 @@
       <div class="all-setlist">
         <tbody>
             @foreach ($tours as $tour)
-              <tr>
-                  <td>{{$tour->tour_id}}</td>
-                  @if(isset($tour->date1) && isset($tour->date2))
-                  <td>{{ date('Y.m.d', strtotime($tour->date1)) }} - {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
-                  @elseif(isset($tour->date1) && !isset($tour->date2))
-                  <td>{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
-                  @endif
-                  <td><a href="{{ route('tours.show', $tour->id) }}">{{ $tour->tour_title }}</a></td>
-              </tr>
+              @if($tour->type == 0 | $tour->type == 1)
+                <tr>
+                    <td>{{$tour->tour_id}}</td>
+                    @if(isset($tour->date1) && isset($tour->date2))
+                    <td>{{ date('Y.m.d', strtotime($tour->date1)) }} - {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
+                    @elseif(isset($tour->date1) && !isset($tour->date2))
+                    <td>{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
+                    @endif
+                    <td><a href="{{ route('tours.show', $tour->id) }}">{{ $tour->title }}</a></td>
+                </tr>
+              @endif
             @endforeach
         </tbody>
       </div>

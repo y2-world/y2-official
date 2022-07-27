@@ -42,7 +42,7 @@
                     @elseif(isset($result->date1) && !isset($result->date2))
                     <td>{{ date('Y.m.d', strtotime($result->date1)) }}</td>
                     @endif
-                    <td><a href="{{ route('tours.show', $result->id) }}">{{ $result->tour_title }}</a></td>
+                    <td><a href="{{ route('tours.show', $result->id) }}">{{ $result->title }}</a></td>
                 </tr>
                 @endforeach
             </tbody>
