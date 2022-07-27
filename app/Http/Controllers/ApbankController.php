@@ -16,7 +16,7 @@ class ApbankController extends Controller
      */
     public function index()
     {
-        $tours = Tour::orderBy('id', 'asc')
+        $tours = Tour::orderBy('ap_id', 'asc')
         ->paginate(10);
         $bios = Bio::orderBy('id', 'asc')
         ->get();
@@ -54,13 +54,7 @@ class ApbankController extends Controller
      */
     public function show($id)
     {
-        $tours = Tour::find($id);
-        $songs = Song::orderBy('id', 'asc')
-        ->get();
-        $previous = Apbank::where('id', '<', $tours->id)->orderBy('id', 'desc')->first();
-        $next = Apbank::where('id', '>', $tours->id)->orderBy('id')->first();
-        
-        return view('apbanks.show', compact('songs', 'previous', 'next', 'tours'));
+        //
     }
 
     /**
