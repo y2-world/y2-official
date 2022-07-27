@@ -16,7 +16,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        $tours = Tour::all()
+        $tours = Tour::query()
         ->where('type', '=', "2")
         ->orderBy('id', 'asc')
         ->paginate(10);
