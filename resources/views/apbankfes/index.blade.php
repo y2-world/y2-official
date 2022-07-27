@@ -37,8 +37,9 @@
       </thead>
       <div class="all-setlist">
         <tbody>
+          <?php var_dump($tours) ?>
               @foreach ($tours as $tour)
-                @if($tour->type == 3)
+              @if($tour->type == 2)
                   <tr>
                     <?php var_dump($tour->title) ?>
                       <td>{{$tour->ap_id}}</td>
