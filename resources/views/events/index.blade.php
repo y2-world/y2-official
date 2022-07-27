@@ -39,7 +39,7 @@
         <tbody>
           <?php var_dump($tours) ?>
             @foreach ($tours as $tour)
-            @if($tour->type == 2)
+            @if($tour->type == 0)
                 <tr>
                     <td>{{$tour->event_id}}</td>
                     @if(isset($tour->date1) && isset($tour->date2))
