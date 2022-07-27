@@ -111,12 +111,15 @@ class TourController extends AdminController
                 $form->dateRange('date1', 'date2', '開催期間');
             })->when(1, function (Form $form) {
                 $form->dateRange('date1', 'date2', '開催期間');
+                $form->text('venue', __('会場'));
             })->when(2, function (Form $form) {
                 $form->text('event_id', __('ID'));
                 $form->date('date1', __('開催日'))->default(date('Y-m-d'));
+                $form->text('venue', __('会場'));
             })->when(3, function (Form $form) {
                 $form->text('ap_id', __('ID'));
                 $form->dateRange('date1', 'date2', '開催期間');
+                $form->text('venue', __('会場'));
             });
             $form->multipleSelect('year', __('年'))->options(Bio::pluck('year', 'year'));
         })->tab('セットリスト1',function($form) {
