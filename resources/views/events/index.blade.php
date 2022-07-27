@@ -40,6 +40,7 @@
             @foreach ($tours as $tour)
               @if($tour->type == 2)
                 <tr>
+                  <?php var_dump($tour->title) ?>
                     <td>{{$tour->event_id}}</td>
                     @if(isset($tour->date1) && isset($tour->date2))
                     <td>{{ date('Y.m.d', strtotime($tour->date1)) }} - {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
