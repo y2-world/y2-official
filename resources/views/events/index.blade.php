@@ -37,9 +37,8 @@
       </thead>
       <div class="all-setlist">
         <tbody>
-          <?php var_dump($tours) ?>
             @foreach ($tours as $tour)
-            @if($tour->type == 0)
+            @if($tour->type == '2')
                 <tr>
                     <td>{{$tour->event_id}}</td>
                     @if(isset($tour->date1) && isset($tour->date2))
