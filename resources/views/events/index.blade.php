@@ -37,6 +37,7 @@
       </thead>
       <div class="all-setlist">
         <tbody>
+          <?php var_dump($tours) ?>
             @foreach ($tours as $tour)
             @if($tour->type == 2)
                 <tr>
