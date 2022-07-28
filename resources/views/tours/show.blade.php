@@ -46,6 +46,7 @@
                                             {{ $data['#'] }} {{ $data['exception'] }}<br>
                                         @else
                                             {{ $data['#'] }}. {{ $data['exception'] }}<br>
+                                        @endif
                                     @endif
                                 @endif
                             @endforeach
@@ -79,6 +80,7 @@
                                             {{ $data['#'] }} {{ $data['exception'] }}<br>
                                         @else
                                             {{ $data['#'] }}. {{ $data['exception'] }}<br>
+                                        @endif
                                     @endif
                                 @endif
                             @endforeach
