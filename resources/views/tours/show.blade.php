@@ -42,7 +42,10 @@
                                             {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
                                         @endif
                                     @else
-                                        {{ $data['#'] }}. {{ $data['exception'] }}<br>
+                                        @if($data['#'] == '-')
+                                            {{ $data['#'] }} {{ $data['exception'] }}<br>
+                                        @else
+                                            {{ $data['#'] }}. {{ $data['exception'] }}<br>
                                     @endif
                                 @endif
                             @endforeach
@@ -72,7 +75,10 @@
                                             {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
                                         @endif
                                     @else
-                                        {{ $data['#'] }}. {{ $data['exception'] }}<br>
+                                        @if($data['#'] == '-')
+                                            {{ $data['#'] }} {{ $data['exception'] }}<br>
+                                        @else
+                                            {{ $data['#'] }}. {{ $data['exception'] }}<br>
                                     @endif
                                 @endif
                             @endforeach

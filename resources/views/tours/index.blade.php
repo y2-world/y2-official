@@ -14,12 +14,12 @@
         <option value="{{ url('/bios', $bio->id)}}">{{ $bio->year }}</option>
         @endforeach
       </select>
-      <select name="select" onChange="location.href=value;">
+      {{-- <select name="select" onChange="location.href=value;">
         <option value="" disabled selected>Live</option>
         <option value="{{ url('/tours')}}">Tours</option>
         <option value="{{ url('/events')}}">Events</option>
         <option value="{{ url('/apbankfes')}}">ap bank fes</option>
-      </select>
+      </select> --}}
     </div>
     <div class="search">
       <form action="{{url('/find')}}" method="GET">
