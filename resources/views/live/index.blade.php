@@ -2,12 +2,11 @@
 @section('content')
 <br>
 <div class="container-lg">
-  <h2>ap bank fes</h2>
+  <h2>Live</h2>
   <div class="parts-wrapper">
     <div class="dropdown-wrapper">
       <select name="select" onChange="location.href=value;">
         <option value="" disabled selected>Live</option>
-        <option value="{{ url('/live')}}">All</option>
         <option value="{{ url('/tours')}}">Tours</option>
         <option value="{{ url('/events')}}">Events</option>
         <option value="{{ url('/apbankfes')}}">ap bank fes</option>
@@ -43,7 +42,7 @@
         <tbody>
               @foreach ($tours as $tour)
                   <tr>
-                      <td>{{$tour->ap_id}}</td>
+                      <td>{{$tour->id}}</td>
                       @if(isset($tour->date1) && isset($tour->date2))
                       <td>{{ date('Y.m.d', strtotime($tour->date1)) }} - {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
                       @elseif(isset($tour->date1) && !isset($tour->date2))

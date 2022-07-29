@@ -67,5 +67,6 @@ Route::resource('tours', 'TourController');
 Route::resource('find', 'FindController');
 Route::resource('apbankfes', 'ApbankController');
 Route::resource('events', 'EventController');
+Route::resource('live', 'LiveController');
 
 

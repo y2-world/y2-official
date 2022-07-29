@@ -34,6 +34,7 @@
     <div class="col-md-6">
       <div class="year-wrapper">
           <div class="year-padding">
+            <a class="btn btn-outline-dark btn-sm" href="{{ url('/live') }}" role="button">All</a>
             <a class="btn btn-outline-dark btn-sm" href="{{ url('/tours') }}" role="button">Tours</a>
             <a class="btn btn-outline-dark btn-sm" href="{{ url('/events') }}" role="button">Events</a>
             <a class="btn btn-outline-dark btn-sm" href="{{ url('/apbankfes') }}" role="button">ap bank fes</a>

@@ -7,6 +7,7 @@
     <div class="dropdown-wrapper">
       <select name="select" onChange="location.href=value;">
         <option value="" disabled selected>Live</option>
+        <option value="{{ url('/live')}}">All</option>
         <option value="{{ url('/tours')}}">Tours</option>
         <option value="{{ url('/events')}}">Events</option>
         <option value="{{ url('/apbankfes')}}">ap bank fes</option>
