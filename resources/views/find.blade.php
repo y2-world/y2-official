@@ -47,9 +47,9 @@
                 @endforeach
             </tbody>
         </table>
-        {{-- <div class=”pagination”>
+        <div class=”pagination”>
             {!! $data->links() !!}
-        </div> --}}
+        </div>
     </div>
 </div>
 @endsection

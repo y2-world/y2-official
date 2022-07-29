@@ -30,7 +30,7 @@ class SearchController extends Controller
             });
         };
 
-        $data = $query->orderBy('date','desc')->paginate(100);
+        $data = $query->orderBy('date','desc')->paginate(10);
 
         $artists = Artist::orderBy('id', 'asc')
         ->get();
