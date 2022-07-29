@@ -23,7 +23,7 @@ class LiveController extends Controller
         ->get();
         $songs = Song::orderBy('id', 'asc')
         ->get();
-        return view('tours.index', compact('tours', 'bios', 'songs'));
+        return view('live.index', compact('tours', 'bios', 'songs'));
     }
 
     /**
