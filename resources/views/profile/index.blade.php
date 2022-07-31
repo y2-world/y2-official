@@ -13,14 +13,16 @@
                             </div>
                         </div>
                         <div class="col-md-5 my-auto"> 
-                            @foreach ($profiles as $profile)
-                                <br>
-                                <h2>{{$profile->name}}</h2>
-                                <p>{{$profile->info}}<p>
-                                <hr>
-                                <p class="profile-text">{!! nl2br(e($profile->text)) !!}</p>
-                                <hr>
-                            @endforeach
+                            @if($profiles)
+                                @foreach ($profiles as $profile)
+                                    <br>
+                                    <h2>{{$profile->name}}</h2>
+                                    <p>{{$profile->info}}<p>
+                                    <hr>
+                                    <p class="profile-text">{!! nl2br(e($profile->text)) !!}</p>
+                                    <hr>
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                 </div>

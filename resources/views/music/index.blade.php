@@ -7,22 +7,22 @@
             <div class="col-md-8">
                 <div id="mask" class="hide"></div>
                 <h2 class="music-header">Music</h2>
-                    <ul class="music-menu">
+                    {{-- <ul class="music-menu">
                         <li><a href="{{ url('/music/single') }}">Single</a></li>
                         <li><a href="{{ url('/music/album') }}" class="active">Album</a></li>
-                    </ul>
+                    </ul> --}}
                     <hr>
                     <div class="element js-fadein">
                         <div class="disco-wrapper">
+                            <div class="album-wrapper">
                             @foreach ($discos as $disc)
-                                <div class="album-wrapper">
                                     <div class="single">
-                                        <img src={{ asset('{{$disc->image}}') }} class="single-image">
+                                        <a href="{{ route('music.show', $disc->id) }}"><img src={{ asset('images/'. $disc->image) }} class="single-image"></a>
                                         <div class="topic"><a href="{{ route('music.show', $disc->id) }}">{{$disc->title}}</a></div>
                                         <p class="text">{{$disc->subtitle}}<br>{{ date('Y.m.d', strtotime($disc->date)) }}</p>
                                     </div>
-                                </div>
                             @endforeach
+                        </div>
                         </div>
                     </div>
                 </div>
