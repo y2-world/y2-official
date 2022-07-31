@@ -9,7 +9,7 @@
                     <div class="row">
                         <div class="col-md-6 my-auto">
                             <div class="prof_img">
-                                <img src={{ asset('images/profile_image.jpg') }} class="image" width="80%">
+                                <img src={{ asset('images/'. $profile->image) }} class="image" width="80%">
                             </div>
                         </div>
                         <div class="col-md-5 my-auto"> 
