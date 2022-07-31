@@ -13,28 +13,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-});
-
 Route::get('setlists', function () {
     return view('setlists');
 });
 
 Route::get('search', function () {
     return view('search');
-});
-Route::get('/news', function () {
-    return view('news');
-});
-Route::get('/profile', function () {
-    return view('profile');
-});
-Route::get('/works', function () {
-    return view('works');
-});
-Route::get('/radio', function () {
-    return view('radio');
 });
 Route::get('/music', function () {
     return view('music');
@@ -45,14 +29,8 @@ Route::get('/music/single', function () {
 Route::get('/music/album', function () {
     return view('album');
 });
-Route::get('/songs', function () {
-    return view('songs');
-});
 Route::get('/albums', function () {
     return view('albums');
-});
-Route::get('/tours', function () {
-    return view('tours');
 });
 
 Route::resource('setlists', 'SetlistController');
@@ -68,5 +46,8 @@ Route::resource('find', 'FindController');
 Route::resource('apbankfes', 'ApbankController');
 Route::resource('events', 'EventController');
 Route::resource('live', 'LiveController');
-
-
+Route::resource('news', 'NewsController');
+Route::resource('profile', 'ProfileController');
+Route::resource('music', 'DiscoController');
+Route::resource('radio', 'RadioController');
+Route::resource('/', 'HomeController');

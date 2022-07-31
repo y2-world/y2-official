@@ -22,6 +22,10 @@ Route::group([
     $router->resource('tours', TourController::class);
     $router->resource('events', EventController::class);
     $router->resource('apbanks', ApbankController::class);
+    $router->resource('news', NewsController::class);
+    $router->resource('discos', DiscoController::class);
+    $router->resource('profiles', ProfileController::class);
+    $router->resource('radios', RadioController::class);
     $router->get("setlists/admin/api/artists", "ArtistApiController@artists");
     $router->get("songs/admin/api/albums", "AlbumApiController@albums");
     $router->get("songs/admin/api/singles", "SingleApiController@singles");

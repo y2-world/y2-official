@@ -1,0 +1,26 @@
+@extends('layouts.app')
+@section('content')
+<div class="mt-4"></div>
+    <div class="news">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                <h2 class="news-title">News</h2>
+                    <div class="element js-fadein">
+                        @foreach ($news as $new)
+                            <div class="date">{{ date('Y.m.d', strtotime($new->date)) }}</div>
+                            <h5><a href="{{ route('news.show', $new->id) }}">{{$new->title}}</a></h5>
+                            <p class="text">{{Str::limit($new->text, 120, '…' )}}</p>
+                            <hr>
+                        @endforeach
+                    </div>
+                    <div class=”pagination”>
+                        {!! $news->links() !!}
+                      </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@endsection

@@ -11,13 +11,15 @@
                             週1回不定期で更新！<br>
                             音楽、英語、旅行、プログラミングなどなど何でも語っちゃいます！！<br>
                         </p>
-                        <br>
+                        {{-- @foreach ($radios as $radio)
+                        <hr>
+                        <small class="date">{{$radio->date}}</small><br>
+                        <h5>{{$radio->title}}</h5>
+                        {{$radio->text}}
+                        @endforeach --}}
+                        <hr>
                         <iframe allow="autoplay *; encrypted-media *; fullscreen *" frameborder="0" height="450" style="width:100%;max-width:660px;overflow:hidden;background:transparent;" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation" src="https://embed.podcasts.apple.com/us/podcast/y2-radio/id1555086566"></iframe>
-                        <hr>
-                        <small class="date">最新話</small><br>
-                        #016 (2021.07.01 更新)
-                        <h5>近況報告 <br>〜今年が半分終わっちゃいましたね〜</h5>
-                        <hr>
+                        <br>
                         他のプラットフォームからはコチラ<br>
                         <small class="news_link"><a href="https://anchor.fm/13190" target="_blank">https://anchor.fm/13190</a></small>
                         <hr>

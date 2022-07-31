@@ -114,15 +114,15 @@
         color:gray;
     }
 
-    .date {
+    .topic-list .date {
         color:gray;
         font-size:14px;
         padding: 0px 50px;
     }
 
-    .news .date {
+    .date {
         color:gray;
-        font-size:15px;
+        font-size:11px;
         padding-left: 0px;
     }
 
