@@ -9,7 +9,7 @@
                     <div class="element js-fadein">
                         @foreach ($news as $new)
                             <div class="date">{{ date('Y.m.d', strtotime($new->date)) }}</div>
-                            <h5><a href="{{ route('news.show', $new->id) }}">{{$new->title}}</a></h5>
+                            <h6><a href="{{ route('news.show', $new->id) }}">{{$new->title}}</a></h6>
                             <p class="text">{{Str::limit($new->text, 120, '…' )}}</p>
                             <hr>
                         @endforeach
