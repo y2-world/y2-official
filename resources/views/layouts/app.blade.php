@@ -595,10 +595,6 @@
         #album-modal4, #album-modal3, #album-modal2, #album-modal1 {
             width: 700px;
         }
-
-        .date {
-            padding: 0px 10px;
-        }
     }
 
     @media screen and (max-width:768px) {
@@ -657,13 +653,14 @@
             text-align: center;
         }
 
-        .date {
+        .topic-list .date {
             font-size: 10px;
             padding: 0px 25px;
         }
 
         .topic {
             font-size: 11px;
+            padding: 0px 25px;
         }
         
         .topic-more {

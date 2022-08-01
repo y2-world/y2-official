@@ -5,13 +5,11 @@
     {{-- <div class="container"> --}}
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div id="mask" class="hide"></div>
                 <h2 class="music-header">Music</h2>
                     {{-- <ul class="music-menu">
                         <li><a href="{{ url('/music/single') }}">Single</a></li>
                         <li><a href="{{ url('/music/album') }}" class="active">Album</a></li>
                     </ul> --}}
-                    <hr>
                     <div class="element js-fadein">
                         <div class="disco-wrapper">
                             <div class="album-wrapper">
