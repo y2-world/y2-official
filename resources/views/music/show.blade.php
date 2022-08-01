@@ -10,12 +10,20 @@
                         <h4>{{$discos->title}}</h4>
                         <small class="date">{{ date('Y.m.d', strtotime($discos->date)) }}</small>
                         <hr>
-                        <div class="setlist">
-                            @foreach ($discos->tracklist as $data) 
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class=track-list>
+                                    @foreach ($discos->tracklist as $data) 
                                 {{ $data['#'] }}. {{ $data['title'] }}<br>
                             @endforeach
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="modal-img">
+                                    <img src={{ asset('upload/'. $discos->image) }} class="disco-image" width="100%">
+                                </div>
+                            </div>
                         </div>
-                        <br>
                         <div class="show_button">
                             @if(isset($previous))
                             <a class="btn btn-outline-dark" href="{{ route('music.show', $previous->id)}}" rel="prev" role="button"><</a>

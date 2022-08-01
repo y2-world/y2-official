@@ -63,7 +63,7 @@ class ProfileController extends AdminController
         $form->text('name', __('名前'));
         $form->text('info', __('情報'));
         $form->textarea('text', __('テキスト'));
-        $form->image('image', __('画像'))->move('public/images/');
+        $form->image('image', __('画像'))->move('images')->uniqueName();
 
         return $form;
     }

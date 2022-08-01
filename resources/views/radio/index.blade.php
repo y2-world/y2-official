@@ -22,7 +22,6 @@
                         <br>
                         他のプラットフォームからはコチラ<br>
                         <small class="news_link"><a href="https://anchor.fm/13190" target="_blank">https://anchor.fm/13190</a></small>
-                        <hr>
                     </div>
                 </div>
             </div>

@@ -11,7 +11,7 @@
                             @foreach ($profiles as $profile)
                                 <div class="col-md-6 my-auto">
                                     <div class="prof_img">
-                                        <img src={{ asset('images/'. $profile->image) }} class="image" width="80%">
+                                        <img src={{ asset('upload/'. $profile->image) }} class="image" width="80%">
                                     </div>
                                 </div>
                                 <div class="col-md-5 my-auto"> 
