@@ -29,6 +29,7 @@
     .topic-list {
         display: flex;
         flex-direction: row;
+        align-content: center;
     }
 
     .cover p {
@@ -106,7 +107,7 @@
     }
 
     .topic {
-        font-size: 14px;
+        font-size: 12px;
         color: black;
     }
 
@@ -116,7 +117,7 @@
 
     .topic-list .date {
         color:gray;
-        font-size:14px;
+        font-size:12px;
         padding: 0px 50px;
     }
 
