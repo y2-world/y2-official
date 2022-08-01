@@ -272,10 +272,8 @@
     }
 
     .track-list {
-        font-size: 11px;
+        font-size: 13px;
         padding: 10px;
-        padding-left: 30px;
-        padding-bottom: 30px;
     }
 
     #close4, #close3, #close2, #close1 {
