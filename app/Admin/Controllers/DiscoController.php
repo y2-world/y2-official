@@ -74,6 +74,7 @@ class DiscoController extends AdminController
     {
         $form = new Form(new Disco());
 
+        $form->text('id', __('ID'));
         $form->text('title', __('タイトル'));
         $form->text('subtitle', __('サブタイトル'));
         $form->date('date', __('リリース日'));
