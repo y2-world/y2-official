@@ -28,8 +28,8 @@ class BioController extends AdminController
 
         $grid->column('id', __('ID'));
         $grid->column('year', __('年'));
-        $grid->column('created_at', __('作成日時'));
-        $grid->column('updated_at', __('更新日時'));
+        // $grid->column('created_at', __('作成日時'));
+        // $grid->column('updated_at', __('更新日時'));
 
         return $grid;
     }

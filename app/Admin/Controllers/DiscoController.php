@@ -30,8 +30,6 @@ class DiscoController extends AdminController
         $grid->column('title', __('タイトル'));
         $grid->column('subtitle', __('サブタイトル'));
         $grid->column('date', __('リリース日'));
-        $grid->column('created_at', __('作成日時'));
-        $grid->column('updated_at', __('更新日時'));
 
         return $grid;
     }
