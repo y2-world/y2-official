@@ -17,7 +17,7 @@
                                 <div class="single">
                                     <a href="{{ route('music.show', $disc->id) }}"><img src={{ asset('upload/'. $disc->image) }} class="single-image"></a>
                                     <div class="topic"><a href="{{ route('music.show', $disc->id) }}">{{$disc->title}}</a></div>
-                                    <div class="topic">{{$disc->subtitle}}<br>{{ date('Y.m.d', strtotime($disc->date)) }}</div>
+                                    <p class="topic">{{$disc->subtitle}}<br>{{ date('Y.m.d', strtotime($disc->date)) }}</p>
                                 </div>
                             @endforeach
                         </div>
