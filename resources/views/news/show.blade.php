@@ -23,16 +23,16 @@
                         @else
                         <p class="text"> {!! nl2br(e($news->text)) !!}</p>
                         @endif
+                        <div class="show_button">
+                            @if(isset($previous))
+                            <a class="btn btn-outline-dark" href="{{ route('news.show', $previous->id)}}" rel="prev" role="button"><</a>
+                            @endif
+                            <a class="btn btn-outline-dark" href="{{ route('news.index')}}" rel="prev" role="button">BACK</a>
+                            @if(isset($next))
+                            <a class="btn btn-outline-dark" href="{{ route('news.show', $next->id)}}"rel="next" role="button">></a>
+                            @endif
+                        </div> 
                     </div>
-                    <div class="show_button">
-                        @if(isset($previous))
-                        <a class="btn btn-outline-dark" href="{{ route('news.show', $previous->id)}}" rel="prev" role="button"><</a>
-                        @endif
-                        <a class="btn btn-outline-dark" href="{{ route('news.index')}}" rel="prev" role="button">BACK</a>
-                        @if(isset($next))
-                        <a class="btn btn-outline-dark" href="{{ route('news.show', $next->id)}}"rel="next" role="button">></a>
-                        @endif
-                    </div> 
                 </div>
             </div>
         </div>
