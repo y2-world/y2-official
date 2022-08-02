@@ -45,7 +45,9 @@
                             @foreach ($radios as $radio)
                                 <div class="topic-list">
                                     <div class="date">{{ date('Y.m.d', strtotime($radio->date)) }}</div>
-                                    <div class="topic">{{$radio->title}}</div>
+                                    <div class="radio">
+                                        <div class="topic">{{$radio->title}}</div>
+                                    </div>
                                 </div>
                             @endforeach
                             <div class="topic-more">

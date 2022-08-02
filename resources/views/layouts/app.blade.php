@@ -99,6 +99,7 @@
 
     .text {
         font-size: 12px;
+        color:black;
     }
 
     .music_date {
@@ -107,6 +108,11 @@
     }
 
     .topic {
+        font-size: 12px;
+        color: gray;
+    }
+
+    .radio .topic {
         font-size: 12px;
         color: black;
     }
