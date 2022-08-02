@@ -60,7 +60,7 @@
                 <tr>
                     <td></td>
                     <td>{{ date('Y.m.d', strtotime($result->date)) }}</td>
-                    <td><a href="{{ route('setlists.show', $result->id) }}">{{ $result->tour_title }}</a></td>
+                    <td><a href="{{ route('setlists.show', $result->id) }}">{{ $result->title }}</a></td>
                     <td class="pc_list">{{ $result->venue }}</td>
                 </tr>
                 @endforeach

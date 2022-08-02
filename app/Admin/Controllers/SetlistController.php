@@ -34,13 +34,13 @@ class SetlistController extends AdminController
                 return $artist->name;
             }
         });
-        $grid->column('tour_title', __('ツアータイトル'));
+        $grid->column('title', __('ツアータイトル'));
         $grid->column('date', __('公演日'))->default(date('Y.m.d'));
         $grid->column('venue', __('会場'));
        
         $grid->filter(function($filter){
             $filter->like('artist', 'アーティスト');
-            $filter->like('tour_title', 'ツアータイトル');
+            $filter->like('title', 'ツアータイトル');
             $filter->year('date', '年');
             $filter->like('venue', __('会場'));
         });
@@ -65,7 +65,7 @@ class SetlistController extends AdminController
                 return $artist->name;
             }
         });
-        $show->field('tour_title', __('ツアータイトル'));
+        $show->field('title', __('ツアータイトル'));
         $show->field('date', __('公演日'));
         $show->field('year', __('年'));
         $show->field('venue', __('会場'));
@@ -115,7 +115,7 @@ class SetlistController extends AdminController
 
         $form->text('id', __('ID'))->rules('required');
         $form->select('artist_id', __('アーティスト'))->options(Artist::all()->pluck('name', 'id'));
-        $form->text('tour_title', __('ツアータイトル'))->rules('required');
+        $form->text('title', __('ツアータイトル'))->rules('required');
         $form->date('date', __('公演日'))->default(date('Y-m-d'))->rules('required');
         $form->text('year', __('年'))->rules('required');
         $form->text('venue', __('会場'))->rules('required');

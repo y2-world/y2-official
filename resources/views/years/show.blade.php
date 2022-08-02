@@ -62,7 +62,7 @@
             @else
             <td></td>
             @endif
-            <td><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->tour_title }}</a></td>
+            <td><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
             <td>{{ $setlist->venue }}</td>
           </tr>
           @endforeach

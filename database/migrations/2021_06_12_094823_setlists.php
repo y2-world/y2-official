@@ -16,7 +16,7 @@ class Setlists extends Migration
         Schema::create('setlists', function (Blueprint $table) {
             $table->id();
             $table->string('artist_id');
-            $table->string('tour_title');
+            $table->string('title');
             $table->date('date');
             $table->integer('year')->nullable();
             $table->string('venue');

@@ -21,6 +21,7 @@
                                 @foreach ($discos->tracklist as $data) 
                                 {{ $data['#'] }}. {{ $data['title'] }}<br>
                                 @endforeach
+                                <br>
                                 </div>
                             </div>
                         </div>

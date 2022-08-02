@@ -9,7 +9,7 @@
                     <a href="{{ url('artists', $setlists->artist_id)}}"><h5>{{ $setlists->artist->name  }}</h5></a>
                 @endif
             </div>
-            <div class="setlist_title">{{ $setlists->tour_title }}</div>
+            <div class="setlist_title">{{ $setlists->title }}</div>
             <div class="setlist_info">
                 {{ date('Y.m.d', strtotime($setlists->date)) }}
                 <br>
