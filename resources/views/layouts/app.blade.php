@@ -108,12 +108,12 @@
     }
 
     .topic {
-        font-size: 12px;
+        font-size: 11px;
         color: gray;
     }
 
-    .radio .topic {
-        font-size: 12px;
+    .home-radio .topic {
+        font-size: 11px;
         color: black;
     }
 
