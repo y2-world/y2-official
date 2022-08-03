@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Disco;
 
-class DiscoController extends Controller
+class DiscoAlbumController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,9 @@ class DiscoController extends Controller
     public function index()
     {
         $discos = Disco::orderBy('date', 'desc')
+        ->where('type', '=', "1")
         ->get();
-        return view('music.index', compact('discos'));
+        return view('album.index', compact('discos'));
     }
 
     /**
@@ -48,12 +49,7 @@ class DiscoController extends Controller
      */
     public function show($id)
     {
-        $discos = Disco::find($id);
-        $previous = Disco::where('id', '<', $discos->id)->orderBy('id', 'desc')->first();
-        $next = Disco::where('id', '>', $discos->id)->orderBy('id')->first();
-
-        return view('music.show', compact('discos', 'previous', 'next'));
-        
+        //
     }
 
     /**

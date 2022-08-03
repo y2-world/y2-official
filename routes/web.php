@@ -16,18 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('setlists', function () {
     return view('setlists');
 });
-
 Route::get('search', function () {
     return view('search');
-});
-Route::get('/music', function () {
-    return view('music');
-});
-Route::get('/music/single', function () {
-    return view('music.single');
-});
-Route::get('/music/album', function () {
-    return view('album');
 });
 Route::get('/albums', function () {
     return view('albums');
@@ -49,7 +39,7 @@ Route::resource('live', 'LiveController');
 Route::resource('news', 'NewsController');
 Route::resource('profile', 'ProfileController');
 Route::resource('music', 'DiscoController');
-Route::resource('music/single', 'DiscoController');
-Route::resource('music/album', 'DiscoController');
+Route::resource('single', 'DiscoSingleController');
+Route::resource('album', 'DiscoAlbumController');
 Route::resource('radio', 'RadioController');
 Route::resource('/', 'HomeController');

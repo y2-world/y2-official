@@ -7,9 +7,9 @@
             <div class="col-md-8">
                 <h2 class="music-header">Music</h2>
                 <ul class="music-menu">
-                    <li><a href="{{ url('/music/album') }}" >All</a></li>
-                    <li><a href="{{ url('/music/single') }}">Single</a></li>
-                    <li><a href="{{ url('/music/album') }}" class="active">Album</a></li>
+                    <li><a href="{{ url('/music') }}" >All</a></li>
+                    <li><a href="{{ url('/single') }}" class="active">Single</a></li>
+                    <li><a href="{{ url('/album') }}">Album</a></li>
                 </ul>
                     <div class="element js-fadein">
                         <div class="disco-wrapper">
