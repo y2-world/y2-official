@@ -20,7 +20,7 @@ class SingleController extends Controller
         ->paginate(10);
         $bios = Bio::orderBy('id', 'asc')
         ->get();
-        return view('singles.index', compact('singles', 'bios'));
+        return view('mc_singles.index', compact('singles', 'bios'));
     }
 
     /**
