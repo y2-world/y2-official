@@ -21,7 +21,7 @@ class AlbumController extends Controller
         ->paginate(10);
         $bios = Bio::orderBy('id', 'asc')
         ->get();
-        return view('mc_albums.index', compact('albums', 'bios'));
+        return view('albums.index', compact('albums', 'bios'));
     }
 
     /**
