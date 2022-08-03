@@ -24,7 +24,7 @@ Route::get('/music', function () {
     return view('music');
 });
 Route::get('/music/single', function () {
-    return view('single');
+    return view('music.single');
 });
 Route::get('/music/album', function () {
     return view('album');
@@ -49,5 +49,7 @@ Route::resource('live', 'LiveController');
 Route::resource('news', 'NewsController');
 Route::resource('profile', 'ProfileController');
 Route::resource('music', 'DiscoController');
+Route::resource('music/single', 'DiscoController');
+Route::resource('music/album', 'DiscoController');
 Route::resource('radio', 'RadioController');
 Route::resource('/', 'HomeController');

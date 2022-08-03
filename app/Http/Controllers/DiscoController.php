@@ -19,6 +19,22 @@ class DiscoController extends Controller
         return view('music.index', compact('discos'));
     }
 
+    public function single()
+    {
+        $discos = Disco::orderBy('date', 'desc')
+        ->where('type', '=', "0")
+        ->get();
+        return view('music.single', compact('discos'));
+    }
+
+    public function album()
+    {
+        $discos = Disco::orderBy('date', 'desc')
+        ->where('type', '=', "1")
+        ->get();
+        return view('music.album', compact('discos'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *
