@@ -86,7 +86,7 @@ class DiscoController extends AdminController
             $table->text('title', __('タイトル'));
         });
         $form->textarea('text', __('テキスト'));
-        $form->image('image', __('画像'))->move('images')->uniqueName();
+        $form->image('image', __('画像'))->uniqueName();
 
         return $form;
     }

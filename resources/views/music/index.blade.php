@@ -15,7 +15,7 @@
                             <div class="album-wrapper">
                             @foreach ($discos as $disc)
                                 <div class="single">
-                                    <a href="{{ route('music.show', $disc->id) }}"><img src={{ asset('upload/'. $disc->image) }} class="single-image"></a>
+                                    <a href="{{ route('music.show', $disc->id) }}"><img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $disc->image) }} class="single-image"></a>
                                     <div class="topic"><a href="{{ route('music.show', $disc->id) }}">{{$disc->title}}</a></div>
                                     <p class="topic">{{$disc->subtitle}}<br>{{ date('Y.m.d', strtotime($disc->date)) }}</p>
                                 </div>

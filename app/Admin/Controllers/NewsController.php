@@ -66,7 +66,7 @@ class NewsController extends AdminController
         $form->text('title', __('タイトル'));
         $form->textarea('text', __('テキスト'));
         $form->date('date', __('日付'));
-        $form->image('image', __('画像'))->move('images')->uniqueName();
+        $form->image('image', __('画像'))->uniqueName();
 
         return $form;
     }

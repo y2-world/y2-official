@@ -13,7 +13,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="modal-img">
-                                    <img src={{ asset('upload/'. $discos->image) }} class="disco-image" width="100%">
+                                    <img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $discos->image) }} class="disco-image" width="100%"> 
                                 </div>
                             </div>
                             <div class="col-md-6">

@@ -16,7 +16,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="modal-img">
-                                    <img src={{ asset('upload/'. $news->image) }} class="disco-image" width="100%">
+                                    <img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $news->image) }} class="news-image" width="100%">
                                 </div>
                             </div>
                         </div>
