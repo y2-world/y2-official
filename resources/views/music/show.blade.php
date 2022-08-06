@@ -19,10 +19,9 @@
                             <div class="col-md-6">
                                 <div class=track-list>
                                 @foreach ($discos->tracklist as $data) 
-                                    @if(isset($data['id']))
-                                        @if(!isset($data['title']))
+                                    @if(!isset($data['id']) && !isset($data['title']))
                                         {{ $data['#'] }}<br>
-                                        @else
+                                    @elseif(isset($data['id']))
                                         {{ $data['#'] }}. <a href="{{ url('lyrics', $data['id'])}}">{{ $data['title'] }}</a><br>
                                         @endif
                                     @else
