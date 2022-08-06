@@ -20,7 +20,11 @@
                                 <div class=track-list>
                                 @foreach ($discos->tracklist as $data) 
                                     @if(isset($data['id']))
+                                        @if(!isset($data['title']))
+                                        {{ $data['#'] }}<br>
+                                        @else
                                         {{ $data['#'] }}. <a href="{{ url('lyrics', $data['id'])}}">{{ $data['title'] }}</a><br>
+                                        @endif
                                     @else
                                         {{ $data['#'] }}. {{ $data['title'] }}<br>
                                     @endif
