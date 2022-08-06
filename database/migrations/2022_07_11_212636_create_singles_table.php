@@ -18,7 +18,9 @@ class CreateSinglesTable extends Migration
             $table->string('title');
             $table->date('date');
             $table->integer('single_id');
+            $table->integer('download');
             $table->text('text')->nullable();
+            $table->json('tracklist')->nullable();
             $table->timestamps();
         });
     }

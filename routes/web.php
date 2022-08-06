@@ -13,16 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('setlists', function () {
-    return view('setlists');
-});
-Route::get('search', function () {
-    return view('search');
-});
-Route::get('/albums', function () {
-    return view('albums');
-});
-
 Route::resource('setlists', 'SetlistController');
 Route::resource('artists', 'ArtistController');
 Route::resource('search', 'SearchController');
@@ -33,6 +23,7 @@ Route::resource('years', 'YearController');
 Route::resource('bios', 'BioController');
 Route::resource('tours', 'TourController');
 Route::resource('find', 'FindController');
+Route::resource('search', 'SearchController');
 Route::resource('apbankfes', 'ApbankController');
 Route::resource('events', 'EventController');
 Route::resource('live', 'LiveController');
@@ -42,4 +33,5 @@ Route::resource('music', 'DiscoController');
 Route::resource('single', 'DiscoSingleController');
 Route::resource('album', 'DiscoAlbumController');
 Route::resource('radio', 'RadioController');
+Route::resource('lyrics', 'LyricController');
 Route::resource('/', 'HomeController');

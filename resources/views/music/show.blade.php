@@ -19,7 +19,11 @@
                             <div class="col-md-6">
                                 <div class=track-list>
                                 @foreach ($discos->tracklist as $data) 
-                                {{ $data['#'] }}. {{ $data['title'] }}<br>
+                                    @if(isset($data['id']))
+                                        {{ $data['#'] }}. <a href="{{ url('lyrics', $data['id'])}}">{{ $data['title'] }}</a><br>
+                                    @else
+                                        {{ $data['#'] }}. {{ $data['title'] }}<br>
+                                    @endif
                                 @endforeach
                                 <br>
                                 </div>

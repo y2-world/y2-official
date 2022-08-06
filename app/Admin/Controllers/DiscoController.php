@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\Disco;
+use App\Models\Lyric;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -82,8 +83,9 @@ class DiscoController extends AdminController
                 1 =>'アルバム',
             ]);
         $form->table('tracklist', __('収録曲'), function ($table) {
-            $table->number('#');
-            $table->text('title', __('タイトル'));
+            $table->text('#');
+            $table->select('id', __('ID'))->options(Lyric::all()->pluck('title', 'id'));
+            $table->select('title', __('タイトル'))->options(Lyric::all()->pluck('title', 'title'));
         });
         $form->textarea('text', __('テキスト'));
         $form->image('image', __('画像'))->uniqueName();

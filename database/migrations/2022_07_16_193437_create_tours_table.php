@@ -15,12 +15,17 @@ class CreateToursTable extends Migration
     {
         Schema::create('tours', function (Blueprint $table) {
             $table->id();
+            $table->integer('tour_id')->nullable();
+            $table->integer('event_id')->nullable();
+            $table->integer('ap_id')->nullable();
             $table->string('title');
+            $table->integer('type');
             $table->date('date1');
-            $table->date('date2');
-            $table->integer('year')->nullable();
+            $table->date('date2')->nullable();
+            $table->json('year')->nullable();
             $table->text('setlist1')->nullable();
             $table->text('setlist2')->nullable();
+            $table->text('schedule')->nullable();
             $table->text('text')->nullable();
             $table->timestamps();
         });

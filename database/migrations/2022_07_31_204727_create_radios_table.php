@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRadioTable extends Migration
+class CreateRadiosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateRadioTable extends Migration
      */
     public function up()
     {
-        Schema::create('radio', function (Blueprint $table) {
+        Schema::create('radios', function (Blueprint $table) {
             $table->id();
             $table->text('title')->nullable();
             $table->date('date')->nullable();
@@ -30,6 +30,6 @@ class CreateRadioTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('radio');
+        Schema::dropIfExists('radios');
     }
 }

@@ -17,10 +17,8 @@ class CreateSongsTable extends Migration
             $table->id();
             $table->string('title');
             $table->integer('album_id')->nullable();
-            $table->integer('album_trk')->nullable();
-            $table->integer('album_disc')->nullable();
             $table->integer('single_id')->nullable();
-            $table->integer('single_trk')->nullable();
+            $table->integer('year')->nullable();
             $table->text('text')->nullable();
             $table->timestamps();
         });
