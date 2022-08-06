@@ -23,7 +23,6 @@
                                         {{ $data['#'] }}<br>
                                     @elseif(isset($data['id']))
                                         {{ $data['#'] }}. <a href="{{ url('lyrics', $data['id'])}}">{{ $data['title'] }}</a><br>
-                                        @endif
                                     @else
                                         {{ $data['#'] }}. {{ $data['title'] }}<br>
                                     @endif
