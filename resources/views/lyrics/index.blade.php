@@ -3,15 +3,15 @@
 <br>
 <div class="container">
   <h2>Lyrics</h2>
-  <select name="select">
+  <select name="select" onChange="location.href=value;">
     <option value="" disabled selected>Discography</option>
-    <option value="" disabled selected>Single</option>
+    <option value="" disabled>Single</option>
       @foreach ($discos as $disc)
       @if($disc->type == 0)
       <option value="{{ url('/music', $disc->id)}}">{{ $disc->title }}</option>
       @endif
       @endforeach
-    <option value="" disabled selected>Album</option>
+    <option value="" disabled>Album</option>
       @foreach ($discos as $disc)
       @if($disc->type == 1)
       <option value="{{ url('/music', $disc->id)}}">{{ $disc->title }}</option>
