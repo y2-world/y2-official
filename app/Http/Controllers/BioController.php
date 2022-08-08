@@ -7,6 +7,7 @@ use App\Models\Song;
 use App\Models\Single;
 use App\Models\Album;
 use App\Models\Bio;
+use App\Models\Tour;
 
 class BioController extends Controller
 {
@@ -61,12 +62,16 @@ class BioController extends Controller
         $songs = Song::where('year', $bio->year)
             ->orderBy('id', 'asc') //$userによる投稿を取得
             ->get(); // 投稿作成日が新しい順に並べる
+        $tours = Tour::where('year', $bio->year)
+            ->orderBy('id', 'asc') //$userによる投稿を取得
+            ->get(); // 投稿作成日が新しい順に並べる
         return view('bios.show', [
             'bio' => $bio,
             'singles' => $singles, // $userの書いた記事をviewへ渡す
             'albums' => $albums,
             'bios' => $bios,
             'songs' => $songs,
+            'tours' => $tours,
         ]);
     }
 

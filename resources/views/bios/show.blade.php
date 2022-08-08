@@ -7,7 +7,7 @@
     <div class="dropdown-wrapper">
       <a class="btn btn-outline-dark btn-sm" href="{{ url('/singles') }}" role="button">Singles</a>
       <a class="btn btn-outline-dark btn-sm" href="{{ url('/albums') }}" role="button">Albums</a>
-      <a class="btn btn-outline-dark btn-sm" href="{{ url('/albums') }}" role="button">Tours</a>
+      <a class="btn btn-outline-dark btn-sm" href="{{ url('/tours') }}" role="button">Tours</a>
       <select name="select" onChange="location.href=value;">
         <option value="" disabled selected>Years</option>
         @foreach ($bios as $bio)
@@ -25,6 +25,7 @@
           <th class="pc_list">リリース日</th>
         </tr>
       </thead>
+      <h5>Songs</h5>
       <div class="all-setlist">
         <tbody>
             @foreach ($songs as $song)
@@ -53,6 +54,33 @@
                 </tr>
             @endforeach
         </tbody>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th class="mb_list">#</th>
+              <th class="mb_list">開催日</th>
+              <th class="mb_list">タイトル</th>
+              <th class="pc_list">会場</th>
+            </tr>
+          </thead>
+          <h5>Live</h5>
+          <div class="all-setlist">
+            <tbody>
+                  @foreach ($tours as $tour)
+                      <tr>
+                          <td>{{$tour->id}}</td>
+                          @if(isset($tour->date1) && isset($tour->date2))
+                          <td>{{ date('Y.m.d', strtotime($tour->date1)) }} - {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
+                          @elseif(isset($tour->date1) && !isset($tour->date2))
+                          <td>{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
+                          @endif
+                          <td><a href="{{ route('tours.show', $tour->id) }}">{{ $tour->title }}</a></td>
+                          <td class="pc_list">{{ $tour->venue }}</td>
+                      </tr>
+                  @endforeach
+            </tbody>
+          </div>
+        </table>
       </div>
     </table>
 </div>
