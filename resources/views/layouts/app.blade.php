@@ -768,9 +768,9 @@
         </div>       
         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav">
-                <li class="nav-item active">
+                {{-- <li class="nav-item active">
                     <a class="nav-link" href="{{ url('/') }}">&emsp;Home</a>
-                </li>
+                </li> --}}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('/news') }}">&emsp;News</a>
                 </li>
