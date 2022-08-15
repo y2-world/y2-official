@@ -517,6 +517,12 @@
     }
     }
 
+    @media (min-width: 992px) {
+        .mb-sns-nav {
+            display:none;
+        }
+    }
+
     @media screen and (max-width: 1024px) {
             .column1 {
             width: 100%;
@@ -605,6 +611,16 @@
     @media screen and (max-width:768px) {
         #album-modal4, #album-modal3, #album-modal2, #album-modal1 {
             width: 400px;
+        }
+    }
+
+    @media screen and (max-width:992px) {
+        .mb-sns-nav {
+            text-align: center;
+        }
+
+        .mb-sns-nav a {
+            padding: 5px;
         }
     }
 
@@ -729,14 +745,6 @@
             flex-wrap: wrap;
             justify-content: flex-start;
         }
-
-        .mb-sns-nav {
-            text-align: center;
-        }
-
-        .mb-sns-nav a {
-            padding: 5px;
-        }
     }
     </style>
 </head>
@@ -785,7 +793,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('https://ameblo.jp/y2-world') }}" target="_blank">&emsp;Blog&emsp;</a>
                 </li>
-                <li><hr class="dropdown-divider"></li>
+                {{-- <li><hr class="dropdown-divider"></li> --}}
                 <li class="nav-item">
                     <div class="mb-sns-nav">
                         <a href="https://www.facebook.com/yuki92496?locale=ja_JP" target="_blank"><i class="fab fa-facebook fa-2x"></i></a>
