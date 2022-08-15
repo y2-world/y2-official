@@ -728,7 +728,15 @@
             display: column;
             flex-wrap: wrap;
             justify-content: flex-start;
-    }
+        }
+
+        .mb-sns-nav {
+            text-align: center;
+        }
+
+        .mb-sns-nav a {
+            padding: 5px;
+        }
     }
     </style>
 </head>
@@ -777,6 +785,19 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('https://ameblo.jp/y2-world') }}" target="_blank">&emsp;Blog&emsp;</a>
                 </li>
+                <li><hr class="dropdown-divider"></li>
+                <li class="nav-item">
+                    <div class="mb-sns-nav">
+                        <a href="https://www.facebook.com/yuki92496?locale=ja_JP" target="_blank"><i class="fab fa-facebook fa-2x"></i></a>
+                        <a href="https://twitter.com/y2_engineer" target="_blank"> <i class="fab fa-twitter fa-2x"></i></a>
+                        <a href="https://www.instagram.com/y2_world/" target="_blank"><i class="fab fa-instagram fa-2x"> </i></a>
+                        <a href="https://github.com/y2-world" target="_blank"> <i class="fab fa-github fa-2x"> </i></a>
+                        <a href="https://music.apple.com/jp/artist/yuki-yoshida/1448865361?itsct=music_box_badge&itscg=30200&ct=artists_yuki_yoshida&app=music&ls=1" target="_blank"><i class="fab fa-apple fa-2x"></i></a>
+                        <a href="https://open.spotify.com/user/21oiucbvpex7hvueehkm4bkpy" target="_blank"><i class="fab fa-spotify fa-2x"> </i></a>
+                        <a href="https://www.youtube.com/user/yuki92496" target="_blank"><i class="fab fa-youtube fa-2x"></i></a>
+                        <a href="https://podcasts.apple.com/us/podcast/y2-radio/id1555086566?uo=4" target="_blank"><i class="fas fa-podcast fa-2x"></i></a>
+                    </div>   
+                </li>
             </ul>
         </div>     
         </nav>
@@ -787,7 +808,7 @@
 </div>   
 <div class="header_space"></div> 
 @yield('content')
-<footer id='footer'>
+{{-- <footer id='footer'>
     <footer class="text-left bg-dark text-white">
         <div class="footer-main">
             <div class="container">
@@ -807,7 +828,7 @@
             </div> 
         </div>
     </footer>  
-</footer>
+</footer> --}}
 
 <!-- JS -->    
 <script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
