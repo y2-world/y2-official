@@ -16,7 +16,8 @@
       </select>
     </div>
   </div>
-  @if(!empty($songs))
+
+  @if(!$songs->isEmpty())
     <table class="table table-striped">
       <thead>
         <tr>
@@ -56,7 +57,8 @@
       </tbody>
     </table>
   @endif
-  @if(!empty($tours))
+
+  @if(!$tours->isEmpty())
     <table class="table table-striped bios">
       <thead>
         <tr>
