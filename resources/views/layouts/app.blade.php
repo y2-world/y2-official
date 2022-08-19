@@ -514,9 +514,9 @@
         flex-wrap: wrap;
     }
 
-    /* .mb_list, .pc_list {
+    .bios_list, .bios_pc_list {
             font-size: 9px;
-    } */
+    }
 
     @media (min-width: 1024px) {
         .column1, .column2-tour, .column2-bio {
@@ -722,7 +722,7 @@
             font-size: 14px;
         }
 
-        .pc_list {
+        .pc_list, .bios_pc_list {
             display: none;
         }
 
