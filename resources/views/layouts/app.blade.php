@@ -435,7 +435,6 @@
     table.bios {
         counter-reset: rowCount;
         font-size: 13px;
-        width: 95%;
     }
 
     table.bios > tbody > tr {
