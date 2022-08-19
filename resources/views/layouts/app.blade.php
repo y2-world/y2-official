@@ -435,6 +435,7 @@
     table.bios {
         counter-reset: rowCount;
         font-size: 13px;
+        width: 95%;
     }
 
     table.bios > tbody > tr {
@@ -518,6 +519,10 @@
     .column1, .column2 {
         width: 50%;
     }
+    }
+
+    table.bios, table.songs {
+        width: 95%;
     }
 
     @media (min-width: 992px) {

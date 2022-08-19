@@ -19,7 +19,7 @@
   <div class="setlist-row">
     <div class="column1">
     @if(!$songs->isEmpty())
-      <table class="table table-striped">
+      <table class="table table-striped songs">
         <thead>
           <tr>
             <th class="mb_list">#</th>
