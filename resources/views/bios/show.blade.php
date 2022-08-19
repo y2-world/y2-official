@@ -16,7 +16,8 @@
       </select>
     </div>
   </div>
-  @if(isset($songs))
+  @foreach ($songs as $song)
+  @if(!empty($songs))
     <table class="table table-striped">
       <thead>
         <tr>
@@ -56,7 +57,9 @@
       </tbody>
     </table>
   @endif
-  @if(isset($tours))
+  @endforeach
+  @foreach ($tours as $tour)
+  @if(!empty($tours))
     <table class="table table-striped bios">
       <thead>
         <tr>
@@ -84,5 +87,6 @@
     </table>
     <br>
   @endif
+  @endforeach
 </div>
 @endsection
