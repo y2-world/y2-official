@@ -59,8 +59,11 @@
       </table>
     @endif
     </div>
-
+    @if($songs->isEmpty())
+    <div class="column1">
+    @else
     <div class="column2-bio">
+    @endif
       @if(!$tours->isEmpty())
         <table class="table table-striped count">
           <thead>
