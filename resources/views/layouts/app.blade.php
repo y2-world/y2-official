@@ -432,16 +432,16 @@
     table {
         font-size: 13px;
     }
-    table.bios {
+    table.count {
         counter-reset: rowCount;
         font-size: 13px;
     }
 
-    table.bios > tbody > tr {
+    table.count > tbody > tr {
         counter-increment: rowCount;
     } 
 
-    table.bios > tbody > tr > td:first-child::before {
+    table.count > tbody > tr > td:first-child::before {
         content: counter(rowCount);
     }
 
@@ -513,6 +513,10 @@
         display: flex;
         flex-wrap: wrap;
     }
+
+    /* .mb_list, .pc_list {
+            font-size: 9px;
+    } */
 
     @media (min-width: 1024px) {
         .column1, .column2-tour, .column2-bio {

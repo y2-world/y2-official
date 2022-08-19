@@ -62,7 +62,7 @@
 
     <div class="column2-bio">
       @if(!$tours->isEmpty())
-        <table class="table table-striped bios">
+        <table class="table table-striped count">
           <thead>
             <tr>
               <th class="mb_list">#</th>

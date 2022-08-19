@@ -43,32 +43,32 @@
     <div class="error">
         @if($data->isEmpty())
         <p>検索結果がありません。</p>
+        @else
+        <p>全{{count($data)}}件</p>
         @endif 
     </div>
-    <div class="artist">
-        <table class="table table-striped">
-            <thead>
+    <table class="table table-striped count">
+        <thead>
+        <tr>
+            <th class="mb_list">#</th>
+            <th class="mb_list">開催日</th>
+                <th class="mb_list">ツアータイトル</th>
+            <th class="pc_list">会場</th>
+        </tr>
+        </thead>
+        <tbody>
+            @foreach ($data as $result)
             <tr>
-                <th class="mb_list">#</th>
-                <th class="mb_list">開催日</th>
-                 <th class="mb_list">ツアータイトル</th>
-                <th class="pc_list">会場</th>
+                <td></td>
+                <td>{{ date('Y.m.d', strtotime($result->date)) }}</td>
+                <td><a href="{{ route('setlists.show', $result->id) }}">{{ $result->title }}</a></td>
+                <td class="pc_list">{{ $result->venue }}</td>
             </tr>
-            </thead>
-            <tbody>
-                @foreach ($data as $result)
-                <tr>
-                    <td></td>
-                    <td>{{ date('Y.m.d', strtotime($result->date)) }}</td>
-                    <td><a href="{{ route('setlists.show', $result->id) }}">{{ $result->title }}</a></td>
-                    <td class="pc_list">{{ $result->venue }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+            @endforeach
+        </tbody>
+    </table>
         {{-- <div class=”pagination”>
             {!! $data->links() !!}
         </div> --}}
-    </div>
 </div>
 @endsection

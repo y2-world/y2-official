@@ -41,33 +41,31 @@
         </div>
       </div>
     </div>
-    <div class="artist">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th class="mb_list">#</th>
-            <th class="mb_list">開催日</th>
-            <th class="mb_list">アーティスト</th>
-            <th class="mb_list">ツアータイトル</th>
-            <th class="mb_list">会場</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach ($setlists as $setlist)
-          <tr>
-            <td></td>
-            <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
-            @if(isset($setlist->artist_id))
-            <td><a href="{{ url('artists', $setlist->artist_id)}}">{{ $setlist->artist->name }}</a></td>
-            @else
-            <td></td>
-            @endif
-            <td><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
-            <td>{{ $setlist->venue }}</td>
-          </tr>
-          @endforeach
-        </tbody>
-      </table>
-    </div>  
+    <table class="table table-striped count">
+      <thead>
+        <tr>
+          <th class="mb_list">#</th>
+          <th class="mb_list">開催日</th>
+          <th class="mb_list">アーティスト</th>
+          <th class="mb_list">ツアータイトル</th>
+          <th class="mb_list">会場</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach ($setlists as $setlist)
+        <tr>
+          <td></td>
+          <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
+          @if(isset($setlist->artist_id))
+          <td><a href="{{ url('artists', $setlist->artist_id)}}">{{ $setlist->artist->name }}</a></td>
+          @else
+          <td></td>
+          @endif
+          <td><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
+          <td>{{ $setlist->venue }}</td>
+        </tr>
+        @endforeach
+      </tbody>
+    </table>
 </div>
 @endsection
