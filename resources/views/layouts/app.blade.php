@@ -523,6 +523,10 @@
             width: 50%;
         }
 
+        .column {
+            width: 100%;
+        }
+
         table.bios, table.songs {
             width: 95%;
         }

@@ -18,7 +18,11 @@
   </div>
   <div class="setlist-row">
     @if(!$songs->isEmpty())
+    @if($tours->isEmpty())
+    <div class="column">
+    @else
     <div class="column1">
+    @endif
       <table class="table table-striped songs">
         <thead>
           <tr>
@@ -60,7 +64,7 @@
     @endif
     </div>
     @if($songs->isEmpty())
-    <div class="column1">
+    <div class="column">
     @else
     <div class="column2-bio">
     @endif
