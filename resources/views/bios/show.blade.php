@@ -23,7 +23,11 @@
         @else
         <div class="column1">
       @endif
+      @if($tours->isEmpty())
+      <table class="table table-striped">
+      @else
         <table class="table table-striped songs">
+      @endif
           <thead>
             <tr>
               <th class="bios_list">#</th>
