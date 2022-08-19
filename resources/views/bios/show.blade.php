@@ -18,49 +18,49 @@
   </div>
   <div class="setlist-row">
     @if(!$songs->isEmpty())
-    @if($tours->isEmpty())
-    <div class="column">
-    @else
-    <div class="column1">
-    @endif
-      <table class="table table-striped songs">
-        <thead>
-          <tr>
-            <th class="bios_list">#</th>
-            <th class="bios_list">タイトル</th>
-            <th class="bios_list">シングル / アルバム</th>
-            <th class="bios_pc_list">リリース日</th>
-          </tr>
-        </thead>
-        <h5>Songs</h5>
-        <tbody>
-            @foreach ($songs as $song)
-                <tr>
-                  <td>{{$song->id}}</td>
-                  <td><a href="{{ route('songs.show', $song->id) }}">{{ $song->title }}</a></td>
-                  @if(isset($song->single_id) && isset($song->album_id))
-                    @if($song->single->date > $song->album->date)
-                    <td><a href="{{ route('albums.show', $song->album_id) }}">{{ $song->album->title }}</a></td>
-                    <td class="pc_list">{{ date('Y.m.d', strtotime($song->album->date)) }}</td>
+      @if($tours->isEmpty())
+        <div class="column">
+        @else
+        <div class="column1">
+      @endif
+        <table class="table table-striped songs">
+          <thead>
+            <tr>
+              <th class="bios_list">#</th>
+              <th class="bios_list">タイトル</th>
+              <th class="bios_list">シングル / アルバム</th>
+              <th class="bios_pc_list">リリース日</th>
+            </tr>
+          </thead>
+          <h5>Songs</h5>
+          <tbody>
+              @foreach ($songs as $song)
+                  <tr>
+                    <td>{{$song->id}}</td>
+                    <td><a href="{{ route('songs.show', $song->id) }}">{{ $song->title }}</a></td>
+                    @if(isset($song->single_id) && isset($song->album_id))
+                      @if($song->single->date > $song->album->date)
+                      <td><a href="{{ route('albums.show', $song->album_id) }}">{{ $song->album->title }}</a></td>
+                      <td class="pc_list">{{ date('Y.m.d', strtotime($song->album->date)) }}</td>
+                      @else
+                      <td><a href="{{ route('singles.show', $song->single_id) }}">{{ $song->single->title }}</a></td>
+                      <td class="pc_list">{{ date('Y.m.d', strtotime($song->single->date)) }}</td>
+                      @endif
+                    @elseif(isset($song->album_id))
+                      <td><a href="{{ route('albums.show', $song->album_id) }}">{{ $song->album->title }}</a></td>
+                      <td class="pc_list">{{ date('Y.m.d', strtotime($song->album->date)) }}</td>
+                    @elseif(isset($song->single_id))
+                      <td><a href="{{ route('singles.show', $song->single_id) }}">{{ $song->single->title }}</a></td>
+                      <td class="pc_list">{{ date('Y.m.d', strtotime($song->single->date)) }}</td>
                     @else
-                    <td><a href="{{ route('singles.show', $song->single_id) }}">{{ $song->single->title }}</a></td>
-                    <td class="pc_list">{{ date('Y.m.d', strtotime($song->single->date)) }}</td>
+                      <td></td>
+                      <td class="pc_list"></td>
                     @endif
-                  @elseif(isset($song->album_id))
-                    <td><a href="{{ route('albums.show', $song->album_id) }}">{{ $song->album->title }}</a></td>
-                    <td class="pc_list">{{ date('Y.m.d', strtotime($song->album->date)) }}</td>
-                  @elseif(isset($song->single_id))
-                    <td><a href="{{ route('singles.show', $song->single_id) }}">{{ $song->single->title }}</a></td>
-                    <td class="pc_list">{{ date('Y.m.d', strtotime($song->single->date)) }}</td>
-                  @else
-                    <td></td>
-                    <td class="pc_list"></td>
-                  @endif
-                  
-                </tr>
-            @endforeach
-        </tbody>
-      </table>
+                    
+                  </tr>
+              @endforeach
+          </tbody>
+        </table>
     @endif
     </div>
     @if($songs->isEmpty())

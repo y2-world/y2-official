@@ -539,14 +539,11 @@
     }
 
     @media screen and (max-width: 1024px) {
-            .column1 {
+            .column, .column1, .column2-bio {
             width: 100%;
         }
             .column2-tour {
             padding-top: 30px;
-            width: 100%;
-        }
-            .column2-bio {
             width: 100%;
         }
     }
