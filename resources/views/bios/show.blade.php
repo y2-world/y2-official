@@ -18,6 +18,7 @@
   </div>
   @foreach ($songs as $song)
   @if(!empty($songs))
+  @endforeach
     <table class="table table-striped">
       <thead>
         <tr>
@@ -57,9 +58,9 @@
       </tbody>
     </table>
   @endif
-  @endforeach
   @foreach ($tours as $tour)
   @if(!empty($tours))
+  @endforeach
     <table class="table table-striped bios">
       <thead>
         <tr>
