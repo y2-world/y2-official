@@ -54,7 +54,7 @@
                 </tr>
             @endforeach
         </tbody>
-        <table class="table table-striped">
+        <table class="table table-striped bios">
           <thead>
             <tr>
               <th class="mb_list">#</th>
@@ -64,22 +64,20 @@
             </tr>
           </thead>
           <h5>Live</h5>
-          <div class="all-setlist">
-            <tbody>
-                  @foreach ($tours as $tour)
-                      <tr>
-                          <td>{{$tour->id}}</td>
-                          @if(isset($tour->date1) && isset($tour->date2))
-                          <td>{{ date('Y.m.d', strtotime($tour->date1)) }} - {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
-                          @elseif(isset($tour->date1) && !isset($tour->date2))
-                          <td>{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
-                          @endif
-                          <td><a href="{{ route('tours.show', $tour->id) }}">{{ $tour->title }}</a></td>
-                          <td class="pc_list">{{ $tour->venue }}</td>
-                      </tr>
-                  @endforeach
-            </tbody>
-          </div>
+          <tbody>
+                @foreach ($tours as $tour)
+                    <tr>
+                        <td></td>
+                        @if(isset($tour->date1) && isset($tour->date2))
+                        <td>{{ date('Y.m.d', strtotime($tour->date1)) }} - {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
+                        @elseif(isset($tour->date1) && !isset($tour->date2))
+                        <td>{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
+                        @endif
+                        <td><a href="{{ route('tours.show', $tour->id) }}">{{ $tour->title }}</a></td>
+                        <td class="pc_list">{{ $tour->venue }}</td>
+                    </tr>
+                @endforeach
+          </tbody>
         </table>
         <br>
       </div>

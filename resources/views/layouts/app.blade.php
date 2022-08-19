@@ -430,15 +430,18 @@
         text-decoration: none;
     }
     table {
+        font-size: 13px;
+    }
+    table.bios {
         counter-reset: rowCount;
         font-size: 13px;
     }
 
-    .artist table > tbody > tr {
+    table.bios > tbody > tr {
         counter-increment: rowCount;
     } 
 
-    .artist table > tbody > tr > td:first-child::before {
+    table.bios > tbody > tr > td:first-child::before {
         content: counter(rowCount);
     }
 
