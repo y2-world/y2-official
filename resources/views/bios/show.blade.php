@@ -60,7 +60,7 @@
     @endif
     </div>
 
-    <div class="column2">
+    <div class="column2-bio">
       @if(!$tours->isEmpty())
         <table class="table table-striped bios">
           <thead>
@@ -68,7 +68,6 @@
               <th class="mb_list">#</th>
               <th class="mb_list">開催日</th>
               <th class="mb_list">タイトル</th>
-              {{-- <th class="pc_list">会場</th> --}}
             </tr>
           </thead>
           <h5>Live</h5>
@@ -82,7 +81,6 @@
                         <td>{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
                         @endif
                         <td><a href="{{ route('tours.show', $tour->id) }}">{{ $tour->title }}</a></td>
-                        {{-- <td class="pc_list">{{ $tour->venue }}</td> --}}
                     </tr>
                 @endforeach
           </tbody>

@@ -516,13 +516,13 @@
     }
 
     @media (min-width: 1024px) {
-    .column1, .column2 {
-        width: 50%;
-    }
-    }
+        .column1, .column2-tour, .column2-bio {
+            width: 50%;
+        }
 
-    table.bios, table.songs {
-        width: 95%;
+        table.bios, table.songs {
+            width: 95%;
+        }
     }
 
     @media (min-width: 992px) {
@@ -535,8 +535,11 @@
             .column1 {
             width: 100%;
         }
-            .column2 {
+            .column2-tour {
             padding-top: 30px;
+            width: 100%;
+        }
+            .column2-bio {
             width: 100%;
         }
     }

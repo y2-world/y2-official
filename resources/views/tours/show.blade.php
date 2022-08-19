@@ -55,7 +55,7 @@
                         @endif
                     </div>
                     @if(isset($tours->setlist2))
-                        <div class="column2">
+                        <div class="column2-tour">
                             @if(isset($tours->setlist2))
                             @foreach ($tours->setlist2 as $data) 
                                 @if(!isset($data['song']) && !isset($data['exception']))
