@@ -24,28 +24,31 @@
         <p>全{{count($data)}}件</p>
         @endif 
     </div>
-    <table class="table table-striped count">
-        <thead>
-        <tr>
-            <th class="mb_list">#</th>
-            <th class="mb_list">開催日</th>
-            <th class="mb_list">タイトル</th>
-        </tr>
-        </thead>
-        <tbody>
-            @foreach ($data as $result)
+    @if(!$data->isEmpty())
+        <table class="table table-striped count">
+            <thead>
             <tr>
-                <td></td>
-                @if(isset($result->date1) && isset($result->date2))
-                <td>{{ date('Y.m.d', strtotime($result->date1)) }} - {{ date('Y.m.d', strtotime($result->date2)) }}</td>
-                @elseif(isset($result->date1) && !isset($result->date2))
-                <td>{{ date('Y.m.d', strtotime($result->date1)) }}</td>
-                @endif
-                <td><a href="{{ route('tours.show', $result->id) }}">{{ $result->title }}</a></td>
+                <th class="mb_list">#</th>
+                <th class="mb_list">開催日</th>
+                <th class="mb_list">タイトル</th>
             </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach ($data as $result)
+                <tr>
+                    <td></td>
+                    @if(isset($result->date1) && isset($result->date2))
+                    <td>{{ date('Y.m.d', strtotime($result->date1)) }} - {{ date('Y.m.d', strtotime($result->date2)) }}</td>
+                    @elseif(isset($result->date1) && !isset($result->date2))
+                    <td>{{ date('Y.m.d', strtotime($result->date1)) }}</td>
+                    @endif
+                    <td><a href="{{ route('tours.show', $result->id) }}">{{ $result->title }}</a></td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        <br>
+    @endif 
         {{-- <div class=”pagination”>
             {!! $data->links() !!}
         </div> --}}

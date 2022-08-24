@@ -47,26 +47,29 @@
         <p>全{{count($data)}}件</p>
         @endif 
     </div>
-    <table class="table table-striped count">
-        <thead>
-        <tr>
-            <th class="mb_list">#</th>
-            <th class="mb_list">開催日</th>
-                <th class="mb_list">ツアータイトル</th>
-            <th class="pc_list">会場</th>
-        </tr>
-        </thead>
-        <tbody>
-            @foreach ($data as $result)
+    @if(!$data->isEmpty())
+        <table class="table table-striped count">
+            <thead>
             <tr>
-                <td></td>
-                <td>{{ date('Y.m.d', strtotime($result->date)) }}</td>
-                <td><a href="{{ route('setlists.show', $result->id) }}">{{ $result->title }}</a></td>
-                <td class="pc_list">{{ $result->venue }}</td>
+                <th class="mb_list">#</th>
+                <th class="mb_list">開催日</th>
+                    <th class="mb_list">ツアータイトル</th>
+                <th class="pc_list">会場</th>
             </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach ($data as $result)
+                <tr>
+                    <td></td>
+                    <td>{{ date('Y.m.d', strtotime($result->date)) }}</td>
+                    <td><a href="{{ route('setlists.show', $result->id) }}">{{ $result->title }}</a></td>
+                    <td class="pc_list">{{ $result->venue }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        <br>
+    @endif 
         {{-- <div class=”pagination”>
             {!! $data->links() !!}
         </div> --}}
