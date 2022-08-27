@@ -16,7 +16,8 @@
                             @if(isset($previous))
                             <a class="btn btn-outline-dark" href="{{ route('lyrics.show', $previous->id)}}" rel="prev" role="button"><</a>
                             @endif
-                            <a class="btn btn-outline-dark" href="{{ route('lyrics.index')}}" rel="prev" role="button">BACK</a>
+                            <a class="btn btn-outline-dark"　href="#" onclick="window.history.back(); return false;">BACK</a>
+                            {{-- <a class="btn btn-outline-dark" href="{{ route('lyrics.index')}}" rel="prev" role="button">BACK</a> --}}
                             @if(isset($next))
                             <a class="btn btn-outline-dark" href="{{ route('lyrics.show', $next->id)}}"rel="next" role="button">></a>
                             @endif
