@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Tour extends Model
 {   
     protected $casts = [
-        'year' =>'json',
+        // 'year' =>'json',
         'setlist1' =>'json',
         'setlist2' =>'json',
     ];
@@ -32,8 +32,8 @@ class Tour extends Model
         $this->attributes['setlist2'] = json_encode(array_values($value));
     }
 
-    public function setYearAttribute($value)
-    {
-        $this->attributes['year'] = json_encode(array_values($value));
-    }
+    // public function setYearAttribute($value)
+    // {
+    //     $this->attributes['year'] = json_encode(array_values($value));
+    // }
 }
