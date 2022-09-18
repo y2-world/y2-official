@@ -70,5 +70,6 @@
   <div class=”pagination”>
     {!! $setlists->links() !!}
   </div>
+  <br>
 </div>
 @endsection
