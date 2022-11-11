@@ -6,7 +6,7 @@
     <p><span>Yuki Yoshida</span> <span>Official Website</span></p>
     </div>
 </div>
-<div class="element js-fadein">
+
     <div class="topics">
         <div class="container">
             <div class="row justify-content-center">
@@ -59,7 +59,6 @@
             </div>
         </div>
     </div>
-</div>
 @endsection
    
 
