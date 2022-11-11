@@ -7,16 +7,12 @@
                 <div class="col-md-8">
                     <h2>y2_radio</h2> 
                     <div class="element js-fadein">
-                        <p class="text">
-                            週1回不定期で更新！<br>
-                            音楽、英語、旅行、プログラミングなどなど何でも語っちゃいます！！<br>
-                        </p>
                         <div class="row align-items-center">
                             <div class="col-md-6">
                                 @foreach ($radios as $radio)
                                 <small class="date">{{ date('Y.m.d', strtotime($radio->date)) }}</small><br>
                                 <h6>{{$radio->title}}</h6>
-                                <p class="text">{{!! nl2br(e($radio->text)) !!}}</p>
+                                <p class="text">{!! nl2br(e($radio->text)) !!}</p>
                                 @endforeach
                             </div>
                             <div class="col-md-6">
