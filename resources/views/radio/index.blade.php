@@ -15,8 +15,9 @@
                             <div class="col">
                                 @foreach ($radios as $radio)
                                 <small class="date">{{$radio->date}}</small><br>
-                                <h5>{{$radio->title}}</h5>
-                                {{$radio->text}}
+                                <h6>{{$radio->title}}</h6>
+                                <p class="text">{{$radio->text}}</p>
+                                <hr>
                                 @endforeach
                             </div>
                             <div class="col">
