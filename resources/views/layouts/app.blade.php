@@ -518,6 +518,10 @@
             font-size: 9px;
     }
 
+    .show_button {
+        padding-top: 30px;
+    }
+
     @media (min-width: 1024px) {
         .column1, .column2-tour, .column2-bio {
             width: 50%;
