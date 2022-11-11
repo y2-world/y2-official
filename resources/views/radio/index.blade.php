@@ -17,7 +17,6 @@
                                 <small class="date">{{$radio->date}}</small><br>
                                 <h6>{{$radio->title}}</h6>
                                 <p class="text">{{$radio->text}}</p>
-                                <hr>
                                 @endforeach
                             </div>
                             <div class="col">

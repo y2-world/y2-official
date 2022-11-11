@@ -15,7 +15,7 @@ class RadioController extends Controller
     public function index()
     {
         $radios = Radio::orderBy('date', 'desc')
-        ->paginate(10);
+        ->paginate(1);
         return view('radio.index', compact('radios'));
     }
 
