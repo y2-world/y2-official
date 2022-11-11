@@ -33,63 +33,6 @@
     window.addEventListener('scroll', showElementAnimation);
 }
 {
-    $('#album4').click(() => {
-        $('#album-modal4')
-            .removeClass('hide')
-        $('#mask')
-            .removeClass('hide');
-    });
-
-    $('#album3').click(() => {
-        $('#album-modal3')
-            .removeClass('hide')
-        $('#mask')
-            .removeClass('hide');
-    });
-
-    $('#album2').click(() => {
-        $('#album-modal2')
-            .removeClass('hide')
-        $('#mask')
-            .removeClass('hide');
-    });
-
-    $('#album1').click(() => {
-        $('#album-modal1')
-            .removeClass('hide')
-        $('#mask')
-            .removeClass('hide');
-    });
-
-    $('#close4').click(() => {
-        $('#album-modal4')
-            .addClass('hide')
-        $('#mask')
-            .addClass('hide');
-    });
-
-    $('#close3').click(() => {
-        $('#album-modal3')
-            .addClass('hide')
-        $('#mask')
-            .addClass('hide');
-    });
-
-    $('#close2').click(() => {
-        $('#album-modal2')
-            .addClass('hide')
-        $('#mask')
-            .addClass('hide');
-    });
-
-    $('#close1').click(() => {
-        $('#album-modal1')
-            .addClass('hide')
-        $('#mask')
-            .addClass('hide');
-    });
-}
-{
     //リストのリンク要素を取得
     const menuItems = document.querySelectorAll('.topic-menu li a');
     //コンテンツを取得
