@@ -16,7 +16,7 @@
                                 @foreach ($radios as $radio)
                                 <small class="date">{{ date('Y.m.d', strtotime($radio->date)) }}</small><br>
                                 <h6>{{$radio->title}}</h6>
-                                <p class="text">{{$radio->text}}</p>
+                                <p class="text">{{!! nl2br(e($radio->text)) !!}}</p>
                                 @endforeach
                             </div>
                             <div class="col-md-6">
