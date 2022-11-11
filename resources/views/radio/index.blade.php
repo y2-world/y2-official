@@ -14,7 +14,7 @@
                         <div class="row align-items-center">
                             <div class="col">
                                 @foreach ($radios as $radio)
-                                <small class="date">{{$radio->date}}</small><br>
+                                <small class="date">{{ date('Y.m.d', strtotime($new->date)) }}</small><br>
                                 <h6>{{$radio->title}}</h6>
                                 <p class="text">{{$radio->text}}</p>
                                 @endforeach
