@@ -12,14 +12,14 @@
                             音楽、英語、旅行、プログラミングなどなど何でも語っちゃいます！！<br>
                         </p>
                         <div class="row align-items-center">
-                            <div class="col-6 col-sm-4">
+                            <div class="col-md-6">
                                 @foreach ($radios as $radio)
                                 <small class="date">{{ date('Y.m.d', strtotime($radio->date)) }}</small><br>
                                 <h6>{{$radio->title}}</h6>
                                 <p class="text">{{$radio->text}}</p>
                                 @endforeach
                             </div>
-                            <div class="col-6 col-sm-4">
+                            <div class="col-md-6">
                                 <iframe src="https://embed.podcasts.apple.com/us/podcast/y2-radio/id1555086566?itsct=podcast_box_player&amp;itscg=30200&amp;ls=1&amp;theme=light" height="450px" frameborder="0" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation" allow="autoplay *; encrypted-media *; clipboard-write" style="width: 100%; max-width: 660px; overflow: hidden; border-radius: 10px; background: transparent;"></iframe>
                             </div>
                         </div>
