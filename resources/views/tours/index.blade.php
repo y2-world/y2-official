@@ -35,7 +35,7 @@
         <tr>
           <th class="mb_list">#</th>
           <th class="mb_list">開催日</th>
-          <th class="mb_list">ツアータイトル</th>
+          <th class="mb_list">タイトル</th>
         </tr>
       </thead>
       <div class="all-setlist">

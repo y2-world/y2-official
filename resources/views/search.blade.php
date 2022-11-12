@@ -53,7 +53,7 @@
             <tr>
                 <th class="mb_list">#</th>
                 <th class="mb_list">開催日</th>
-                    <th class="mb_list">ツアータイトル</th>
+                    <th class="mb_list">タイトル</th>
                 <th class="pc_list">会場</th>
             </tr>
             </thead>
