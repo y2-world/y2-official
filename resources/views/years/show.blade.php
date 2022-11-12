@@ -46,9 +46,8 @@
         <tr>
           <th class="mb_list">#</th>
           <th class="mb_list">開催日</th>
-          <th class="mb_list">アーティスト</th>
-          <th class="mb_list">ツアータイトル</th>
-          <th class="mb_list">会場</th>
+          <th class="mb_list">アーティスト / タイトル</th>
+          <th class="pc_list">会場</th>
         </tr>
       </thead>
       <tbody>
@@ -57,11 +56,11 @@
           <td></td>
           <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
           @if(isset($setlist->artist_id))
-          <td><a href="{{ url('artists', $setlist->artist_id)}}">{{ $setlist->artist->name }}</a></td>
+          <td>
+            <a href="{{ url('artists', $setlist->artist_id)}}">{{ $setlist->artist->name }}</a> / <a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
           @else
-          <td></td>
-          @endif
           <td><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
+          @endif
           <td>{{ $setlist->venue }}</td>
         </tr>
         @endforeach
