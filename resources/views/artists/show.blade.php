@@ -41,7 +41,7 @@
           <th class="mb_list">#</th>
           <th class="mb_list">開催日</th>
           <th class="mb_list">ツアータイトル</th>
-          <th class="mb_list">会場</th>
+          <th class="pc_list">会場</th>
         </tr>
       </thead>
       <tbody>
@@ -50,7 +50,7 @@
           <td></td>
           <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
           <td><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
-          <td>{{ $setlist->venue }}</td>
+          <td class="pc_list">{{ $setlist->venue }}</td>
         </tr>
         @endforeach
       </tbody>
