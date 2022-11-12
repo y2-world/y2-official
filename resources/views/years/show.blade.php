@@ -61,7 +61,7 @@
           @else
           <td><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
           @endif
-          <td>{{ $setlist->venue }}</td>
+          <td class="pc_list">{{ $setlist->venue }}</td>
         </tr>
         @endforeach
       </tbody>
