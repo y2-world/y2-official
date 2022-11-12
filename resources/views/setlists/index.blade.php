@@ -59,7 +59,7 @@
                     <a href="{{ url('artists', $setlist->artist_id)}}">{{ $setlist->artist->name }}</a> /  <a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a>
                   </td>
                   @else
-                  <td></td>
+                  <td><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</td>
                   @endif
                   {{-- <td><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td> --}}
                   <td class="pc_list">{{ $setlist->venue }}</td>
