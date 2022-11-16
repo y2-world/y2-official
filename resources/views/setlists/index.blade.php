@@ -20,23 +20,25 @@
         @endforeach
       </select>
     </div>
-    <div class="search">
-      <form action="{{url('/search')}}" method="GET">
-        <div class="mb_dropdown">
-          <select name="artist_id" required data-toggle="select"> 
-            <option value="" disabled selected>Artists</option>
-              @foreach ($artists as $artist)
-                  <option value="{{ $artist->id }}" required>{{$artist->name}}</option>
-              @endforeach
-          </select>
-        </div>
-        <div class="input-group mb-3">
-            <input type="search" class="form-control" aria-label="Search" value="{{request('keyword')}}" name="keyword" required>
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
-            </div>
-        </div>
-      </form>
+    <div class="pc_list">
+      <div class="search">
+        <form action="{{url('/search')}}" method="GET">
+          <div class="mb_dropdown">
+            <select name="artist_id" required data-toggle="select"> 
+              <option value="" disabled selected>Artists</option>
+                @foreach ($artists as $artist)
+                    <option value="{{ $artist->id }}" required>{{$artist->name}}</option>
+                @endforeach
+            </select>
+          </div>
+          <div class="input-group mb-3">
+              <input type="search" class="form-control" aria-label="Search" value="{{request('keyword')}}" name="keyword" required>
+              <div class="input-group-append">
+                  <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+              </div>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
   <table class="table table-striped">
