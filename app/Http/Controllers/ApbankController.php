@@ -18,7 +18,7 @@ class ApbankController extends Controller
     {
         $tours = Tour::query()
         ->where('type', '=', "3")
-        ->orderBy('id', 'asc')
+        ->orderBy('id', 'desc')
         ->paginate(10);
         $bios = Bio::orderBy('id', 'asc')
         ->get();

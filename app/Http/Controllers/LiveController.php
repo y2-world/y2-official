@@ -17,7 +17,7 @@ class LiveController extends Controller
     public function index()
     {
         $tours = Tour::query()
-        ->orderBy('id', 'asc')
+        ->orderBy('id', 'desc')
         ->paginate(10);
         $bios = Bio::orderBy('id', 'asc')
         ->get();

@@ -19,7 +19,7 @@ class TourController extends Controller
         $tours = Tour::query()
         ->where('type', '=', "0")
         ->orWhere('type', '=', "1")
-        ->orderBy('id', 'asc')
+        ->orderBy('id', 'desc')
         ->paginate(10);
         $bios = Bio::orderBy('id', 'asc')
         ->get();
