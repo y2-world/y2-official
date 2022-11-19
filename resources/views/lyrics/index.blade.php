@@ -43,5 +43,6 @@
   <div class=”pagination”>
     {!! $lyrics->links() !!}
   </div>
+  <br>
 </div>
 @endsection

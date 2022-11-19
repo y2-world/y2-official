@@ -58,5 +58,6 @@
   <div class=”pagination”>
     {!! $songs->onEachSide(5)->links() !!}
   </div>
+  <br>
 </div>
 @endsection

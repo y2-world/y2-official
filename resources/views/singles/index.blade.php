@@ -39,5 +39,6 @@
   <div class=”pagination”>
     {!! $singles->onEachSide(5)->links() !!}
   </div>
+  <br>
 </div>
 @endsection

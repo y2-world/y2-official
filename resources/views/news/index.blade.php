@@ -16,7 +16,8 @@
                     </div>
                     <div class=”pagination”>
                         {!! $news->links() !!}
-                      </div>
+                    </div>
+                    <br>
                 </div>
             </div>
         </div>

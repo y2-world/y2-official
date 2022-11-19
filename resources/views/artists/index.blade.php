@@ -29,5 +29,6 @@
   <div class=”pagination”>
     {!! $artists->links() !!}
   </div>
+  <br>
 </div>
 @endsection

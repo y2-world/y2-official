@@ -29,5 +29,6 @@
   <div class=”pagination”>
     {!! $years->links() !!}
   </div>
+  <br>
 </div>
 @endsection

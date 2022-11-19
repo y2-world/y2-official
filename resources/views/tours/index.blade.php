@@ -57,5 +57,6 @@
   <div class=”pagination”>
     {!! $tours->links() !!}
   </div>
+  <br>
 </div>
 @endsection
