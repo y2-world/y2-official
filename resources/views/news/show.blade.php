@@ -12,7 +12,7 @@
                         @if(isset($news->image))
                         <div class="row">
                             <div class="col-md-6">
-                                <p class="text"> <?= html_entity_decode($news->text) ;?></p>
+                                <?= html_entity_decode($news->text) ;?>
                             </div>
                             <div class="col-md-6">
                                 <div class="modal-img">
@@ -21,7 +21,7 @@
                             </div>
                         </div>
                         @else
-                        <p class="text"> <?= html_entity_decode($news->text) ;?></p>
+                        <?= html_entity_decode($news->text) ;?>
                         @endif
                         <div class="show_button">
                             @if(isset($previous))
