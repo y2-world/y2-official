@@ -1,7 +1,7 @@
 <style>
     @media screen and (max-width:480px) {
         p {
-            font-size: 9px;
+            font-size: 11px;
         }
     }
 </style>
