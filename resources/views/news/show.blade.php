@@ -1,6 +1,6 @@
 <style>
     @media screen and (max-width:480px) {
-        p {
+        p, li {
             font-size: 12px;
         }
     }
