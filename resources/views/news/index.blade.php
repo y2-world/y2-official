@@ -11,9 +11,9 @@
                             <div class="date">{{ date('Y.m.d', strtotime($new->date)) }}</div>
                             <h6><a href="{{ route('news.show', $new->id) }}">{{$new->title}}</a></h6>
                             <?php
-                                $text = Str::limit(html_entity_decode($new->text, 120, '…' )); 
+                            $text = strip_tags($new->text);
                             ?>
-                            <p class="text"><?= (strip_tags($text,)); ?></p>
+                            <p class="text">{{Str::limit($text, 120, '…' )}}</p>
                             <hr>
                         @endforeach
                     </div>
