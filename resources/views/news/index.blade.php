@@ -10,7 +10,10 @@
                         @foreach ($news as $new)
                             <div class="date">{{ date('Y.m.d', strtotime($new->date)) }}</div>
                             <h6><a href="{{ route('news.show', $new->id) }}">{{$new->title}}</a></h6>
-                            <p class="text">{{Str::limit($new->text, 120, '…' )}}</p>
+                            <?php
+                                $text = Str::limit(html_entity_decode($new->text, 120, '…' )); 
+                            ?>
+                            <p class="text"><?= (strip_tags($text,)); ?></p>
                             <hr>
                         @endforeach
                     </div>
