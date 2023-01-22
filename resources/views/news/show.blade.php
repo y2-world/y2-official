@@ -1,6 +1,6 @@
 <style>
     p {
-        line-height: 0.5em;
+        line-height: 1em;
     }
 </style>
 @extends('layouts.app')
