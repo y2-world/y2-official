@@ -699,7 +699,7 @@
         }
 
         .topic {
-            font-size: 11px;
+            font-size: 10px;
             padding: 0px 25px;
         }
         
