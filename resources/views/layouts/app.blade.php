@@ -846,7 +846,7 @@
                     <a href="https://www.instagram.com/y2_world/" target="_blank"><i class="fab fa-instagram fa-lg"> </i></a>
                     <a href="https://github.com/y2-world" target="_blank"> <i class="fab fa-github fa-lg"> </i></a>
                     <a href="https://music.apple.com/jp/artist/yuki-yoshida/1448865361?itsct=music_box_badge&itscg=30200&ct=artists_yuki_yoshida&app=music&ls=1" target="_blank"><i class="fab fa-apple fa-lg"></i></a>
-                    <a href="https://open.spotify.com/user/21oiucbvpex7hvueehkm4bkpy" target="_blank"><i class="fab fa-spotify fa-lg"> </i></a>
+                    <a href="I hope so! At least she has some time before her next show so hopefully she can rehearse it. That song deserves more recognition! 😭" target="_blank"><i class="fab fa-spotify fa-lg"> </i></a>
                     <a href="https://www.youtube.com/user/yuki92496" target="_blank"><i class="fab fa-youtube fa-lg"></i></a>
                     <a href="https://podcasts.apple.com/us/podcast/y2-radio/id1555086566?uo=4" target="_blank"><i class="fas fa-podcast fa-lg"></i></a>
                 </div>
