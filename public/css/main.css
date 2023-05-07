@@ -827,6 +827,11 @@ table.count > tbody > tr > td:first-child::before {
     cursor: pointer;
 }
 
+.disc-block {
+    display: block;
+    text-align: center;
+}
+
 @media (min-width: 1024px) {
     .column1,
     .column2-tour,
