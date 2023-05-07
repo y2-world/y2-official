@@ -304,6 +304,7 @@ video {
     padding-bottom: 40px;
 }
 
+
 .topic-list {
     display: flex;
     flex-direction: row;
@@ -316,18 +317,6 @@ video {
     font-size: 25px;
     top: 15%;
     left: 50%;
-    -ms-transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    margin: 0;
-    padding: 0;
-}
-
-.menu-icon {
-    position: absolute;
-    font-size: 25px;
-    top: 5%;
-    right: 1%;
     -ms-transform: translate(-50%, -50%);
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
@@ -679,7 +668,7 @@ li .active {
     font-size: 16px;
     padding-right: 30px;
 }
-
+ƒ
 .topic-container {
     max-width: 700px;
     height: 100px;
@@ -957,18 +946,6 @@ table.count > tbody > tr > td:first-child::before {
 }
 
 @media screen and (max-width: 480px) {
-    .menu-icon {
-        position: absolute;
-        font-size: 25px;
-        top: 10%;
-        right: 1%;
-        -ms-transform: translate(-50%, -50%);
-        -webkit-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
-        margin: 0;
-        padding: 0;
-    }
-
     .topics {
         padding-left: 0px;
         padding-right: 0px;

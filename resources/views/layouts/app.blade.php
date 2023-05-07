@@ -16,7 +16,6 @@
     <link rel="stylesheet" href="{{ asset('/css/main.css')  }}">
 </head>
 <div class="container">
-    <div class="menu-icon"><i class="fa-solid fa-bars"></i></div>
     <div class="nav">
         <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
             <a class="navbar-brand" href="{{ url('/') }}">Yuki Official
