@@ -974,6 +974,14 @@ table.count > tbody > tr > td:first-child::before {
         font-size: 10px;
     }
 
+    .profile-text {
+        font-size: 10px;
+    }
+
+    .profile-info {
+        text-align: center;
+    }
+
     footer,
     .release,
     .works,
