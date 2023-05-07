@@ -969,6 +969,11 @@ table.count > tbody > tr > td:first-child::before {
         height: 200px;
     }
 
+    .prof_img {
+        width: 80%;
+        margin: 0 auto;
+    }
+
     .topics {
         padding-left: 0px;
         padding-right: 0px;
