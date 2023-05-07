@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\News;
 use App\Models\Disco;
 use App\Models\Radio;
+use App\Models\Profile;
 
 class HomeController extends Controller
 {
@@ -22,7 +23,9 @@ class HomeController extends Controller
         ->paginate(5);
         $radios = Radio::orderBy('date', 'desc')
         ->get();
-        return view('home.index', compact('news', 'discos', 'radios'));
+        $profiles = Profile::orderBy('created_at', 'desc')
+        ->get();
+        return view('home.index', compact('news', 'discos', 'radios', 'profiles'));
     }
 
     /**
