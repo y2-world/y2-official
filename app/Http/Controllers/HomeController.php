@@ -19,7 +19,7 @@ class HomeController extends Controller
         $news = News::orderBy('date', 'desc')
         ->paginate(4);
         $discos = Disco::orderBy('date', 'desc')
-        ->paginate(1);
+        ->paginate(5);
         $radios = Radio::orderBy('date', 'desc')
         ->get();
         return view('home.index', compact('news', 'discos', 'radios'));

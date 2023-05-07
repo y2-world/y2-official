@@ -304,7 +304,6 @@ video {
     padding-bottom: 40px;
 }
 
-
 .topic-list {
     display: flex;
     flex-direction: row;
@@ -668,8 +667,7 @@ li .active {
     font-size: 16px;
     padding-right: 30px;
 }
-ƒ
-.topic-container {
+ƒ .topic-container {
     max-width: 700px;
     height: 100px;
 }
@@ -814,6 +812,19 @@ table.count > tbody > tr > td:first-child::before {
     padding-top: 30px;
 }
 
+.cover-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 16px;
+    overflow-x: scroll;
+}
+
+.top-image {
+    width: 300px;
+    height: 300px;
+    cursor: pointer;
+}
+
 @media (min-width: 1024px) {
     .column1,
     .column2-tour,
@@ -946,6 +957,11 @@ table.count > tbody > tr > td:first-child::before {
 }
 
 @media screen and (max-width: 480px) {
+    .top-image {
+        width: 200px;
+        height: 200px;
+    }
+
     .topics {
         padding-left: 0px;
         padding-right: 0px;
