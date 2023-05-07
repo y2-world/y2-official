@@ -817,6 +817,7 @@ table.count > tbody > tr > td:first-child::before {
     flex-wrap: nowrap;
     gap: 16px;
     overflow-x: scroll;
+    
 }
 
 .top-image {
