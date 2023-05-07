@@ -11,32 +11,6 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-11">
-                <div class="element js-fadein">
-                    <h2 class="news-title">Topics</h2>
-                    @foreach ($news as $new)
-                    <div class="topic">
-                        <hr>
-                        <a href="{{ route('news.show', $new->id) }}">
-                            <div class="date">{{ date('Y.m.d', strtotime($new->date)) }}</div>
-                            {{$new->title}}
-                        </a>
-                    </div>
-                    @endforeach
-                    <hr>
-                    <div class="topic-more">
-                        <a href="{{ url('/news') }}">MORE</a>
-                    </div>
-                </div>
-            </div>
-            <br>
-        </div>
-    </div>
-</div>
-
-<div class="topics">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-11">
                 <h2 class="news-title">New Release</h2>
                 <div class="cover-wrapper">
                     @foreach ($discos as $disco)
@@ -96,6 +70,32 @@
                     </div>
                 </section>
             </div> -->
+    </div>
+</div>
+
+<div class="topics">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-11">
+                <div class="element js-fadein">
+                    <h2 class="news-title">Topics</h2>
+                    @foreach ($news as $new)
+                    <div class="topic">
+                        <hr>
+                        <a href="{{ route('news.show', $new->id) }}">
+                            <div class="date">{{ date('Y.m.d', strtotime($new->date)) }}</div>
+                            {{$new->title}}
+                        </a>
+                    </div>
+                    @endforeach
+                    <hr>
+                    <div class="topic-more">
+                        <a href="{{ url('/news') }}">MORE</a>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
     </div>
 </div>
 
