@@ -13,6 +13,7 @@
             <div class="col-md-11">
                 <h2 class="news-title">New Release</h2>
                 <div class="cover-wrapper">
+                    <?= date("Y-m-d") ?>
                     @foreach ($discos as $disco)
                     @if($disco->date < date('Y-m-d'))
                     <div class="disc-block">
