@@ -42,17 +42,17 @@
                     <a class="nav-link" href="{{ url('/news') }}">&emsp;News</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/music') }}">&emsp;Music</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="#profile">&emsp;Profile</a>
                 </li>
-                    <li class="nav-item">
-                <a class="nav-link" href="{{ url('/music') }}">&emsp;Music</a>
-                </li>
-                    <li class="nav-item">
-                <a class="nav-link" href="{{ url('/radio') }}">&emsp;Radio</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="#radio">&emsp;Radio</a>
                 </li>
                 </li>
-                    <li class="nav-item">
-                <a class="nav-link" href="{{ url('/setlists') }}">&emsp;Set Lists</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/setlists') }}">&emsp;LIVE×YOU</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('/bios') }}">&emsp;Database</a>

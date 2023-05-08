@@ -295,7 +295,7 @@ video {
         color: rgba(203, 213, 224, var(--text-opacity));
     }
 }
-.topics {
+.index-wrapper {
     background-color: white;
     display: flex;
     align-items: center;
@@ -303,6 +303,20 @@ video {
     font-size: 14px;
     padding-top: 50px;
     padding-bottom: 40px;
+}
+
+.app-wrapper {
+    background-color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    padding-top: 50px;
+    padding-bottom: 40px;
+}
+
+.radio-wrapper {
+    text-align: center;
 }
 
 .topic-list {
@@ -335,10 +349,6 @@ video {
 .more {
     padding-top: 20px;
     text-align: center;
-}
-
-.works {
-    padding-top: 10px;
 }
 
 .header_space {

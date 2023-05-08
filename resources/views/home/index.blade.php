@@ -10,40 +10,39 @@ $today = strtotime(date('Y-m-d'));
     </div>
 </div>
 
-<div class="topics">
+<div class="index-wrapper">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-11">
                 <!-- <div class="element js-fadein"> -->
-                    <h2 class="news-title">Music</h2>
-                    <div class="cover-wrapper">
-                        @foreach ($discos as $disco)
-                        @if (strtotime($disco->date) <= $today)
-                        <div class="disc-block">
-                            <img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $disco->image) }} class="top-image">
-                            <br><br>
-                            <div class="topic"><a href="{{ route('music.show', $disco->id) }}">{{$disco->title}}</a></div>
-                            <p class="topic">{{ date('Y.m.d', strtotime($disco->date)) }} - {{$disco->subtitle}}</p>
-                        </div>
-                        @endif
-                        @endforeach
-                    </div>
-                    <div class="topic-more">
-                        <a href="{{ url('/music') }}">View All</a>
-                    </div>
-                <!-- </div> -->
+                <h2 class="news-title">New Release</h2>
+                <div class="cover-wrapper">
+                    @foreach ($discos as $disco)
+                    @if (strtotime($disco->date) <= $today) <div class="disc-block">
+                        <img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $disco->image) }} class="top-image">
+                        <br><br>
+                        <div class="topic"><a href="{{ route('music.show', $disco->id) }}">{{$disco->title}}</a></div>
+                        <p class="topic">{{ date('Y.m.d', strtotime($disco->date)) }} - {{$disco->subtitle}}</p>
+                </div>
+                @endif
+                @endforeach
             </div>
-            <br>
+            <div class="topic-more">
+                <a href="{{ url('/music') }}">View All</a>
+            </div>
+            <!-- </div> -->
         </div>
+        <br>
     </div>
 </div>
+</div>
 
-<div class="topics">
+<div class="index-wrapper">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-11">
                 <div class="element js-fadein">
-                    <h2 class="news-title">Topics</h2>
+                    <h2 class="news-title">News</h2>
                     @foreach ($news as $new)
                     <a href="{{ route('news.show', $new->id) }}">
                         <div class="topic-title">
@@ -64,7 +63,7 @@ $today = strtotime(date('Y-m-d'));
     </div>
 </div>
 
-<div class="topics" id="#profile">
+<div class="index-wrapper" id="#profile">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-11">
@@ -89,6 +88,56 @@ $today = strtotime(date('Y-m-d'));
                             @endif
                         </div>
                     </div>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+
+<div class="index-wrapper">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-11">
+                <div class="element js-fadein">
+                    <h2>Radio</h2>
+                    <div class="radio-wrapper">
+                        <iframe src="https://embed.podcasts.apple.com/us/podcast/y2-radio/id1555086566?itsct=podcast_box_player&amp;itscg=30200&amp;ls=1&amp;theme=light" height="450px" frameborder="0" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation" allow="autoplay *; encrypted-media *; clipboard-write" style="width: 100%; max-width: 1080px; overflow: hidden; border-radius: 10px; background: transparent;"></iframe>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+
+<div class="app-wrapper">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-11">
+                <div class="element js-fadein">
+                    <h1>Yuki Yoshida Official Fanclub『NAPO』</h1>
+                    Yuki Yoshida Official Fanclubが7月に発足されることが決定しました！<br>
+                    年会費はもちろん無料です。<br>
+                    スペシャルコンテンツをご用意する予定です！<br>
+                    乞うご期待！
+                    <br><br>
+                    <h4>LIVE×YOU</h4>
+                    このアプリは、自分が参加したライブのセットリストを見返したり、フォロワーが参加したライブの感想を読んだり、直接メッセージを送ることもできます。<br>
+                    ライブを愛する人のためのアプリです！<br>
+                    7月公開予定<br>
+                    <br>
+                    <h4>Mr.Children Database</h4>
+                    Mr.Childrenのバイオグラフィー、ディスコグラフィー、ライブのセットリストなど全ての情報がここに！
+                    <br>
+                    <br>
+                    <h4>Special Blog 『NAPO』</h4>
+                    Official Blogでも投稿できない限定記事をここだけに公開！
+                    <br>
+                    <br>
+                    <h4>Napostagram</h4>
+                    Official Instagramでも投稿されない限定写真をここだけに公開！
+                    <br>
                 </div>
             </div>
             <br>
