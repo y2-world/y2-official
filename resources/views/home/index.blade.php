@@ -80,13 +80,13 @@
                 <div class="element js-fadein">
                     <h2 class="news-title">Topics</h2>
                     @foreach ($news as $new)
-                    <div class="topic-title">
-                        <hr>
-                        <a href="{{ route('news.show', $new->id) }}">
+                    <a href="{{ route('news.show', $new->id) }}">
+                        <div class="topic-title">
+                            <hr>
                             <div class="date">{{ date('Y.m.d', strtotime($new->date)) }}</div>
                             {{$new->title}}
-                        </a>
-                    </div>
+                        </div>
+                    </a>
                     @endforeach
                     <hr>
                     <div class="topic-more">
