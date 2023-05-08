@@ -14,7 +14,7 @@
                 <h2 class="news-title">New Release</h2>
                 <div class="cover-wrapper">
                     @foreach ($discos as $disco)
-                    @if($disco->date < date('Y-m-d'))
+                    @if(date('Y-m-d', strtotime($disco->date)) < date('Y-m-d'))
                     <div class="disc-block">
                         <img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $disco->image) }} class="top-image">
                         <br><br>
