@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('content')
+<?php
+$today = strtotime(date('Y-m-d'));
+?>
 <div class="cover">
     <div class="element js-fadein">
         <img src={{ asset('images/top_image.jpg') }}>
@@ -14,7 +17,7 @@
                 <h2 class="news-title">New Release</h2>
                 <div class="cover-wrapper">
                     @foreach ($discos as $disco)
-                    @if (strtotime($disco->date) < strtotime(date('Y-m-d')))
+                    @if (strtotime($disco->date) < $today)
                     <div class="disc-block">
                         <img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $disco->image) }} class="top-image">
                         <br><br>
