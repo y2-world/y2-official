@@ -1,8 +1,5 @@
 @extends('layouts.app')
 @section('content')
-<?php
-$today = strtotime(date('Y-m-d'));
-?>
 <div class="cover">
     <div class="element js-fadein">
         <img src={{ asset('images/top_image.jpg') }}>
@@ -14,18 +11,48 @@ $today = strtotime(date('Y-m-d'));
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-11">
-                <h2 class="news-title">New Release</h2>
-                <div class="cover-wrapper">
-                    @foreach ($discos as $disco)
-                    <div class="disc-block">
-                    @if (strtotime($disco->date) < $today)
-                        <img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $disco->image) }} class="top-image">
-                        <br><br>
-                        <div class="topic"><a href="{{ route('music.show', $disco->id) }}">{{$disco->title}}</a></div>
-                        <p class="topic">{{ date('Y.m.d', strtotime($disco->date)) }} - {{$disco->subtitle}}</p>
-                    @endif
-                    </div>
+                <!-- <div class="element js-fadein"> -->
+                    <h2 class="news-title">Topics</h2>
+                    @foreach ($news as $new)
+                    <a href="{{ route('news.show', $new->id) }}">
+                        <div class="topic-title">
+                            <hr>
+                            <div class="date">{{ date('Y.m.d', strtotime($new->date)) }}</div>
+                            {{$new->title}}
+                        </div>
+                    </a>
                     @endforeach
+                    <hr>
+                    <div class="topic-more">
+                        <a href="{{ url('/news') }}">View All</a>
+                    </div>
+                <!-- </div> -->
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+
+<div class="topics">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-11">
+                <div class="element js-fadein">
+                    <h2 class="news-title">Music</h2>
+                    <div class="cover-wrapper">
+                        @foreach ($discos as $disco)
+                        <?php date('Y-m-d', strtotime($disco->date)) <= date('Y-m-d'); ?>
+                        <div class="disc-block">
+                            <img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $disco->image) }} class="top-image">
+                            <br><br>
+                            <div class="topic"><a href="{{ route('music.show', $disco->id) }}">{{$disco->title}}</a></div>
+                            <p class="topic">{{ date('Y.m.d', strtotime($disco->date)) }} - {{$disco->subtitle}}</p>
+                        </div>
+                        @endforeach
+                    </div>
+                    <div class="topic-more">
+                        <a href="{{ url('/music') }}">View All</a>
+                    </div>
                 </div>
             </div>
             <br>
@@ -75,32 +102,6 @@ $today = strtotime(date('Y-m-d'));
                     </div>
                 </section>
             </div> -->
-    </div>
-</div>
-
-<div class="topics">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-11">
-                <div class="element js-fadein">
-                    <h2 class="news-title">Topics</h2>
-                    @foreach ($news as $new)
-                    <a href="{{ route('news.show', $new->id) }}">
-                        <div class="topic-title">
-                            <hr>
-                            <div class="date">{{ date('Y.m.d', strtotime($new->date)) }}</div>
-                            {{$new->title}}
-                        </div>
-                    </a>
-                    @endforeach
-                    <hr>
-                    <div class="topic-more">
-                        <a href="{{ url('/news') }}">MORE</a>
-                    </div>
-                </div>
-            </div>
-            <br>
-        </div>
     </div>
 </div>
 

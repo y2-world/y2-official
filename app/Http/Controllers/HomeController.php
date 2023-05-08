@@ -20,7 +20,7 @@ class HomeController extends Controller
         $news = News::orderBy('date', 'desc')
         ->paginate(5);
         $discos = Disco::orderBy('date', 'desc')
-        ->paginate(5);
+        ->paginate(10);
         $radios = Radio::orderBy('date', 'desc')
         ->get();
         $profiles = Profile::orderBy('created_at', 'desc')
