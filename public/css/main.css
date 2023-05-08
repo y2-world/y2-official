@@ -532,6 +532,7 @@ img {
     flex-wrap: wrap;
     justify-content: space-evenly;
     padding-top: 10px;
+    gap: 16px;
 }
 
 .single-image {
@@ -822,7 +823,15 @@ table.count > tbody > tr > td:first-child::before {
     flex-wrap: nowrap;
     gap: 16px;
     overflow-x: scroll;
-    
+}
+
+.cover-wrapper img {
+    margin-bottom: 20px;
+    transition: box-shadow 0.5s;
+}
+
+.cover-wrapper img:hover {
+    box-shadow: 5px 5px 50px gray;
 }
 
 .top-image {
@@ -946,6 +955,11 @@ table.count > tbody > tr > td:first-child::before {
     #album-modal1 {
         width: 700px;
     }
+
+
+    .profile-info {
+        text-align: center;  
+    }
 }
 
 @media screen and (max-width: 768px) {
@@ -990,11 +1004,6 @@ table.count > tbody > tr > td:first-child::before {
 
     .profile-text {
         font-size: 10px;
-    }
-
-    .profile-info {
-        text-align: center;
-        
     }
 
     footer,
