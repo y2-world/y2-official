@@ -18,7 +18,7 @@ $today = strtotime(date('Y-m-d'));
                     <h2 class="news-title">Music</h2>
                     <div class="cover-wrapper">
                         @foreach ($discos as $disco)
-                        @if (strtotime($disco->date) < $today)
+                        @if (strtotime($disco->date) <= $today)
                         <div class="disc-block">
                             <img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $disco->image) }} class="top-image">
                             <br><br>
