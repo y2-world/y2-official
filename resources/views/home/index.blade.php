@@ -15,7 +15,6 @@
                 <div class="cover-wrapper">
                     @foreach ($discos as $disco)
                     <?php date('Y-m-d', strtotime($disco->date)) <= date('Y-m-d'); ?>
-                    @if(date('Y-m-d', strtotime($disco->date)) < date('Y-m-d'))
                     <div class="disc-block">
                         <img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $disco->image) }} class="top-image">
                         <br><br>
