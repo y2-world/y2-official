@@ -17,14 +17,14 @@ $today = strtotime(date('Y-m-d'));
                 <h2 class="news-title">New Release</h2>
                 <div class="cover-wrapper">
                     @foreach ($discos as $disco)
-                    @if (strtotime($disco->date) < $today)
                     <div class="disc-block">
+                    @if (strtotime($disco->date) < $today)
                         <img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $disco->image) }} class="top-image">
                         <br><br>
                         <div class="topic"><a href="{{ route('music.show', $disco->id) }}">{{$disco->title}}</a></div>
                         <p class="topic">{{ date('Y.m.d', strtotime($disco->date)) }} - {{$disco->subtitle}}</p>
-                    </div>
                     @endif
+                    </div>
                     @endforeach
                 </div>
             </div>
