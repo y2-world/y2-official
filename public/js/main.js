@@ -1,19 +1,5 @@
 "use strict";
 {
-    $(function () {
-        //フッターを最下部に固定
-        var $footer = $("#footer");
-        if (window.innerHeight > $footer.offset().top + $footer.outerHeight()) {
-            $footer.attr({
-                style:
-                    "position:fixed; top:" +
-                    (window.innerHeight - $footer.outerHeight()) +
-                    "px;",
-            });
-        }
-    });
-}
-{
     function showElementAnimation() {
         var element = document.getElementsByClassName("js-fadein");
         if (!element) return; // 要素がなかったら処理をキャンセル
