@@ -1104,6 +1104,8 @@ table.count > tbody > tr > td:first-child::before {
 
     .topic-more {
         font-size: 11px;
+        text-align: center;
+        padding-right: 0px;
     }
 
     .topic-menu {
@@ -1171,9 +1173,5 @@ table.count > tbody > tr > td:first-child::before {
 
     .radio-wrapper {
         padding: 50px 0px;
-    }
-
-    .topic-more {
-        text-align: center;
     }
 }
