@@ -116,26 +116,26 @@ $today = strtotime(date('Y-m-d'));
         <div class="row justify-content-center">
             <div class="col-md-11">
                 <div class="element js-fadein">
-                    <h1>Yuki Yoshida Official Fanclub『NAPO』</h1>
+                    <h2>Yuki Yoshida Official Fanclub『NAPO』</h2>
                     Yuki Yoshida Official Fanclubが7月に発足されることが決定しました！<br>
                     年会費はもちろん無料です。<br>
                     スペシャルコンテンツをご用意する予定です！<br>
                     乞うご期待！
                     <br><br>
-                    <h4>LIVE×YOU</h4>
+                    <h5>LIVE×YOU</h5>
                     このアプリは、自分が参加したライブのセットリストを見返したり、フォロワーが参加したライブの感想を読んだり、直接メッセージを送ることもできます。<br>
                     ライブを愛する人のためのアプリです！<br>
                     7月公開予定<br>
                     <br>
-                    <h4>Mr.Children Database</h4>
+                    <h5>Mr.Children Database</h5>
                     Mr.Childrenのバイオグラフィー、ディスコグラフィー、ライブのセットリストなど全ての情報がここに！
                     <br>
                     <br>
-                    <h4>Special Blog 『NAPO』</h4>
+                    <h5>Special Blog 『NAPO』</h5>
                     Official Blogでも投稿できない限定記事をここだけに公開！
                     <br>
                     <br>
-                    <h4>Napostagram</h4>
+                    <h5>Napostagram</h5>
                     Official Instagramでも投稿されない限定写真をここだけに公開！
                     <br>
                 </div>
