@@ -310,7 +310,20 @@ video {
     height: 100px;
     vertical-align: middle;
     color: white;
-    padding: 0px 10px 0px 0px;
+    padding: 10px;
+}
+
+.footer-wrapper a {
+    color: white;
+    font-size: 12px;
+}
+
+.footer {
+    padding: 10px 0px;
+}
+
+.footer-copyright {
+    font-size: 4px;
 }
 
 .app-wrapper {
@@ -324,7 +337,7 @@ video {
 
 .radio-wrapper {
     text-align: center;
-    padding: 100px 0px;
+    padding: 70px 0px;
 }
 
 .topic-list {
@@ -1153,6 +1166,10 @@ table.count > tbody > tr > td:first-child::before {
     }
 
     .app-wrapper {
+        padding: 50px 0px;
+    }
+
+    .radio-wrapper {
         padding: 50px 0px;
     }
 }

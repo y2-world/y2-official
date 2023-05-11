@@ -144,4 +144,27 @@ $today = strtotime(date('Y-m-d'));
         </div>
     </div>
 </div>
+
+<div class="footer-wrapper">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-11">
+                <div class="footer">
+                    <div class="footer-title">
+                        Yuki Yoshida Official Website
+                    </div>
+                    <a href="{{ url('/news') }}">News</a>・
+                    <a href="{{ url('/music') }}">Music</a>・
+                    <a href="#profile">Profile</a>・
+                    <a href="#radio">Radio</a>・
+                    <a href="{{ url('/login') }}">Fanclub</a>・
+                    <a href="{{ url('https://ameblo.jp/y2-world') }}" target="_blank">Blog</a>
+                    <br>
+                    <div class="footer-copyright">©2023 y2_record inc.</div>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
 @endsection
