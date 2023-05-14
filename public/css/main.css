@@ -6,6 +6,7 @@ html {
 }
 body {
     margin: 0;
+    padding-top: 55px;
 }
 a {
     background-color: transparent;
@@ -372,9 +373,9 @@ video {
     text-align: center;
 }
 
-.header_space {
+/* .header_space {
     height: 55px;
-}
+} */
 
 .top-header {
     padding-bottom: 10px;
