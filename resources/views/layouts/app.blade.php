@@ -45,10 +45,10 @@
                     <a class="nav-link" href="{{ url('/music') }}">&emsp;Music</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/home/#profile') }}">&emsp;Profile</a>
+                    <a class="nav-link" href="{{ url('/#profile') }}">&emsp;Profile</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/home/#radio') }}">&emsp;Radio</a>
+                    <a class="nav-link" href="{{ url('/#radio') }}">&emsp;Radio</a>
                 </li>
                 </li>
                 <li class="nav-item">
