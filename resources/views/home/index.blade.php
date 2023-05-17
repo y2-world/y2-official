@@ -44,13 +44,13 @@ $today = strtotime(date('Y-m-d'));
                 <div class="element js-fadein">
                     <h2 class="news-title">News</h2>
                     @foreach ($news as $new)
-                    <a href="{{ route('news.show', $new->id) }}">
-                        <div class="topic-title">
+                        <a href="{{ route('news.show', $new->id) }}">
+                            <div class="topic-title"> 
                             <hr>
-                            <div class="date">{{ date('Y.m.d', strtotime($new->date)) }}</div>
-                            {{$new->title}}
-                        </div>
-                    </a>
+                                <div class="date">{{ date('Y.m.d', strtotime($new->date)) }}</div>
+                                {{$new->title}}
+                            </div>
+                        </a>
                     @endforeach
                     <hr>
                     <div class="topic-more">
@@ -117,6 +117,10 @@ $today = strtotime(date('Y-m-d'));
             <div class="col-md-11">
                 <div class="element js-fadein">
                     <h2>Yuki Yoshida Official Fanclub『NAPO』</h2>
+                    <h5>NAPO = Neo Artist Personal Fanclub</h5>
+                </div>
+                <br>
+                <div class="element js-fadein">
                     Yuki Yoshida Official Fanclubが7月に発足されることが決定しました！<br>
                     年会費はもちろん無料です。<br>
                     スペシャルコンテンツをご用意する予定です！<br>
