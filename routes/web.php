@@ -35,4 +35,4 @@ Route::resource('album', 'DiscoAlbumController');
 Route::resource('radio', 'RadioController');
 Route::resource('lyrics', 'LyricController');
 Route::resource('/', 'HomeController');
-Route::resource('/home', 'HomeController');
+// Route::resource('/home', 'HomeController');

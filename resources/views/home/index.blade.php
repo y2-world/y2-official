@@ -159,8 +159,8 @@ $today = strtotime(date('Y-m-d'));
                     </div>
                     <a href="{{ url('/news') }}">News</a>・
                     <a href="{{ url('/music') }}">Music</a>・
-                    <a href="{{ url('/home/#profile') }}">Profile</a>・
-                    <a href="{{ url('/home/#radio') }}">Radio</a>・
+                    <a href="{{ url('/#profile') }}">Profile</a>・
+                    <a href="{{ url('/#radio') }}">Radio</a>・
                     <a href="{{ url('/login') }}">Fanclub</a>・
                     <a href="{{ url('https://ameblo.jp/y2-world') }}" target="_blank">Blog</a>
                     <br>
