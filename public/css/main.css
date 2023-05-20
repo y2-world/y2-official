@@ -1180,6 +1180,10 @@ table.count > tbody > tr > td:first-child::before {
         padding: 50px 0px;
     }
 
+     .app-wrapper h2, h3 {
+        text-align:center;
+    }
+
     .radio-wrapper {
         padding: 50px 0px;
     }
