@@ -1180,7 +1180,7 @@ table.count > tbody > tr > td:first-child::before {
         padding: 50px 0px;
     }
 
-     .app-wrapper h2, h5 {
+    .app-title h2, h5 {
         text-align:center;
     }
 
