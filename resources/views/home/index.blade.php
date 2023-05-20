@@ -117,7 +117,7 @@ $today = strtotime(date('Y-m-d'));
             <div class="col-md-11">
                 <div class="element js-fadein">
                     <h2>Yuki Yoshida Official Fanclub『NAPO』</h2>
-                    <h5 style="text-align:center;">NAPO = Neo Artist Personal Fanclub</h5>
+                    <h3 style="text-align:center;">NAPO = Neo Artist Personal Official Fanclub</h5>
                 </div>
                 <br>
                 <div class="element js-fadein">
