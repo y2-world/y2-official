@@ -1134,7 +1134,7 @@ table.count > tbody > tr > td:first-child::before {
         font-size: 12px;
     }
 
-    .setlist_artist h5 {
+    .setlist_artist a {
         font-size: 14px;
     }
 
