@@ -1,14 +1,5 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <title>Laravel Vite Vue.js 3</title>
-        @viteReactRefresh
-        @vite(['resources/css/app.css', 'resources/js/components/app.jsx'])
-    </head>
-    <body>
-        <div id="app"></div>
-    </body>
-</html>
+@viteReactRefresh
+@vite(['resources/css/app.css', 'resources/sass/app.scss', 'resources/js/bootstrap.js', 'resources/js/components/app.jsx'])
+<body>
+    <div id="app"></div>
+</body>

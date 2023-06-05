@@ -6,13 +6,8 @@ export default defineConfig({
     plugins: [
         react(),
         laravel({
-            input: ["resources/sass/app.scss", "resources/js/components/app.jsx"],
+            input: ["resources/css/app.css", "resources/js/bootstrap.js", "resources/conponents/app.jsx"],
             refresh: true,
         }),
     ],
-    resolve: {
-        alias: {
-            '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap')
-        },
-    }
 });
