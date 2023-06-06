@@ -389,10 +389,6 @@ video {
     padding-bottom: 10px;
 }
 
-body {
-    font-family: "Nanum Myeongjo", serif;
-}
-
 .sub {
     color: gray;
     font-size: 14px;
@@ -486,8 +482,13 @@ span {
 }
 
 .logo {
-    font-size: 8px;
+    font-size: 1px;
     color: gray;
+}
+
+.flex-logo {
+    display: flex;
+    flex-direction: column;
 }
 
 html,

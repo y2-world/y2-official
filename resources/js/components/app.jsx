@@ -8,12 +8,12 @@ function App() {
             <div class="container">
                 <div class="nav">
                     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-                        <a class="navbar-brand" href="{{ url('/') }}">
-                            Yuki Official
-                            <span class="logo">
-                                Yuki Yoshida Official Website
-                            </span>
-                        </a>
+                        <div class="flex-logo">
+                            <a class="navbar-brand" href="{{ url('/') }}">
+                                Yuki Official
+                            </a>
+                            <span class="logo">Yuki Yoshida Official Website</span>
+                        </div>
                         <button
                             class="navbar-toggler"
                             type="button"
