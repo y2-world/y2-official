@@ -52,7 +52,7 @@
                 </li>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/setlists') }}">&emsp;Set List</a>
+                    <a class="nav-link" href="{{ url('/setlists') }}">&emsp;Set Lists</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('/bios') }}">&emsp;Database</a>
