@@ -312,18 +312,21 @@ video {
     flex-direction: row;
     justify-content: space-between;
     padding: 0px 100px;
-    height: 100px
+    height: 80px
 }
 
 .header-wrapper a {
     text-decoration: none;
     vertical-align: middle;
-    padding-top: 20px;
 }
 
 .header-wrapper a:hover {
     opacity: 0.8;
 }
+
+.mobile-wrapper {
+    display: none;
+ }
 
 .logo-wrapper a {
     color: white;
@@ -338,5 +341,45 @@ video {
 
 .sub-logo {
     color: gray;
-    font-size:3px;
+    font-size: 2px;
+}
+
+@media screen and (max-width: 1080px) {
+    .header-wrapper {
+        padding: 0px 20px;
+    }
+
+    .menu-wrapper {
+       display: block;
+    }
+
+    .menu-wrapper a {
+        padding: 0px 10px;
+    }
+
+    .mobile-wrapper {
+        display: none;
+    }
+
+    .mobile-wrapper i {
+        color: gray;
+    }
+}
+
+@media screen and (max-width: 680px) {
+    .header-wrapper {
+        padding: 0px 20px;
+    }
+
+    .menu-wrapper a {
+        display: none;
+    }
+
+    .mobile-wrapper {
+        display: block;
+    }
+
+    .mobile-wrapper i {
+        color: gray;
+    }
 }
