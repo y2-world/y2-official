@@ -1,8 +1,9 @@
 <x-guest-layout>
     <x-authentication-card>
-        <x-slot name="logo">
-            <x-authentication-card-logo />
-        </x-slot>
+        <div class="login-wrapper">
+            <a href="/" class="login-logo">Yuki Official</a>
+            <div class="sub-logo">Yuki Official Official Website</div>
+        </div>
 
         <x-validation-errors class="mb-4" />
 

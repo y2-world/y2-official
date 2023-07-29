@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+JP&family=Oswald&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -311,17 +313,21 @@ video {
     align-items: center;
     flex-direction: row;
     justify-content: space-between;
-    padding: 0px 100px;
+    padding: 0px 160px;
     height: 80px
 }
 
-.header-wrapper a {
+.header-wrapper a, .login a {
     text-decoration: none;
     vertical-align: middle;
 }
 
 .header-wrapper a:hover {
     opacity: 0.8;
+}
+
+.login a:hover {
+    color: white;
 }
 
 .mobile-wrapper {
@@ -333,8 +339,17 @@ video {
     font-size: 23px;
 }
 
+.login-wrapper {
+    text-align: center;
+}
+
+.login-wrapper a {
+    color: black;
+    font-size: 23px;
+}
+
 .menu-wrapper a {
-    color: gray;
+    color: white;
     font-size: 20px;
     padding: 0px 20px;
 }
@@ -342,6 +357,16 @@ video {
 .sub-logo {
     color: gray;
     font-size: 2px;
+}
+
+.login a {
+    color: gray;
+    font-size: 20px;
+}
+
+.login-logo a {
+    color: black;
+    font-size: 23px;
 }
 
 @media screen and (max-width: 1080px) {
@@ -357,7 +382,7 @@ video {
         padding: 0px 10px;
     }
 
-    .mobile-wrapper {
+    .mobile-wrapper, .login {
         display: none;
     }
 

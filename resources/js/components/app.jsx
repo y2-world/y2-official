@@ -7,17 +7,16 @@ function App() {
         <div>
             <div class="header-wrapper">
                 <div class="logo-wrapper">
-                    <a href="{{ url('/') }}">Yuki Official</a>
+                    <a href="/">Yuki Official</a>
                     <div class="sub-logo">Yuki Official Official Website</div>
                 </div>
                 <div class="menu-wrapper">
-                    <a href="{{ url('/news') }}">News</a>
-                    <a href="{{ url('/music') }}">Music</a>
-                    <a href="{{ url('/#profile') }}">Profile</a>
-                    <a href="{{ url('/#radio') }}">Radio</a>
-                    <a href="{{ url('/setlists') }}">Fan Club</a>
+                    <a href="/news">News</a>
+                    <a href="/music">Music</a>
+                    <a href="#profile">Profile</a>
+                    <a href="#radio">Radio</a>
                     <a
-                        href="{{ url('https://ameblo.jp/y2-world') }}"
+                        href="https://ameblo.jp/y2-world"
                         target="_blank"
                     >
                         Blog
