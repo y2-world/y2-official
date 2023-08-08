@@ -4,10 +4,9 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-mark class="block h-9 w-auto" />
-                    </a>
+                <div class="mypage-wrapper">
+                    <a href="/" class="login-logo">Yuki Official</a>
+                    <div class="sub-logo">Yuki Official Official Website</div>
                 </div>
 
                 <!-- Navigation Links -->

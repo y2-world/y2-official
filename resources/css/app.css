@@ -348,6 +348,15 @@ video {
     font-size: 23px;
 }
 
+.mypage-wrapper {
+    text-align: center;
+}
+
+.mypage-wrapper a {
+    color: black;
+    font-size: 26px;
+}
+
 .menu-wrapper a {
     color: white;
     font-size: 20px;

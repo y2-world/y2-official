@@ -1,4 +1,3 @@
-@extends('layouts.app')
 <x-guest-layout>
     <x-authentication-card>
         <div class="login-wrapper">
