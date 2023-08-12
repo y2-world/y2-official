@@ -13,7 +13,8 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('login') }}">
+        <!-- guard変数がセットされているかによってPOST先を変更 -->
+        <form method="POST" action="{{ isset($guard) ? route('admin.login') : route('login') }}">
             @csrf
 
             <div>
