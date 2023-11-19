@@ -23,7 +23,7 @@ class HomeController extends Controller
         ->paginate(3);
         $profiles = Profile::orderBy('created_at', 'desc')
         ->get();
-        return view('home.index', compact('news', 'discos', 'radios', 'profiles'));
+        return view('home.index', compact('news', 'discos', 'profiles'));
     }
 
     /**
