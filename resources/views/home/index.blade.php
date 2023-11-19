@@ -19,7 +19,7 @@ $today = strtotime(date('Y-m-d'));
                 <div class="cover-wrapper">
                     @foreach ($discos as $disco)
                     <div class="disc-block">
-                        <img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $disco->image) }} class="top-image">
+                        <a href="{{ route('music.show', $disco->id) }}"><img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $disco->image) }} class="top-image"></a>
                         <br><br>
                         <div class="topic"><a href="{{ route('music.show', $disco->id) }}">{{$disco->title}}</a></div>
                         <p class="topic">{{ date('Y.m.d', strtotime($disco->date)) }} - {{$disco->subtitle}}</p>
