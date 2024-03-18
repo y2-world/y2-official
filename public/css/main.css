@@ -818,6 +818,7 @@ table.count > tbody > tr > td:first-child::before {
     padding-left: 0;
     list-style: none;
     justify-content: center;
+    overflow-x: scroll;
 }
 
 .pagination a {
