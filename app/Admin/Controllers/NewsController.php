@@ -64,6 +64,11 @@ class NewsController extends AdminController
         $form = new Form(new News());
 
         $form->text('title', __('タイトル'));
+        $form->radio('visible','公開')
+        ->options([
+            0 =>'公開',
+            1 =>'非公開',
+        ]);
         $form->editor('text', __('テキスト'));
         $form->date('date', __('日付'));
         $form->image('image', __('画像'))->uniqueName();
