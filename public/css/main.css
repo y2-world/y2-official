@@ -751,6 +751,14 @@ li .active {
 nav {
     font-size: 11px;
 }
+
+.pagination {
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    justify-content: left;
+}
+
 footer {
     height: 100px;
     background-color: #1872cc;
