@@ -44,7 +44,7 @@ $today = strtotime(date('Y-m-d'));
                 <div class="element js-fadein">
                     <h2 class="news-title">News</h2>
                     @foreach ($news as $new)
-                    @if($new->visible == 1)
+                    @if($new->visible != 1)
                         <a href="{{ route('news.show', $new->id) }}">
                             <div class="topic-title"> 
                             <hr>
