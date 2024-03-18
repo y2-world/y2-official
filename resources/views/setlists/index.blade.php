@@ -54,7 +54,7 @@
         <tbody>
             @foreach ($setlists as $setlist)
               <tr>
-                  <td></td>
+                  <td>{{$setlist->id}}</td>
                   <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
                   @if(isset($setlist->artist_id))
                   <td>
