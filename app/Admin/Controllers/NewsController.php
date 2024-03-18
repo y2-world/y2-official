@@ -28,6 +28,9 @@ class NewsController extends AdminController
 
         $grid->column('id', __('ID'));
         $grid->column('title', __('タイトル'));
+        $grid->column('visible', __('公開'))->display(function ($released) {
+            return $released ? '非公開' : '公開';
+        });
         $grid->column('date', __('日付'));
 
         return $grid;
