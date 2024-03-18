@@ -890,7 +890,15 @@ nav {
     text-align: center;
 }
 
-
+table {
+    counter-reset: rowCount;
+}
+tbody tr {
+    counter-increment: rowCount;
+}
+tbody tr td:first-child::before {
+    content: counter(rowCount);
+}
 
 @media (min-width: 1024px) {
     .column1,
@@ -1003,9 +1011,8 @@ nav {
         width: 700px;
     }
 
-
     .profile-info {
-        text-align: center;  
+        text-align: center;
     }
 }
 
@@ -1202,8 +1209,10 @@ nav {
         padding: 50px 0px;
     }
 
-    .app-title h2, h5, .footer {
-        text-align:center;
+    .app-title h2,
+    h5,
+    .footer {
+        text-align: center;
     }
 
     .radio-wrapper {

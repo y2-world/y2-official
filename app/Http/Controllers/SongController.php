@@ -18,7 +18,7 @@ class SongController extends Controller
     public function index()
     {
         $songs = Song::orderBy('id', 'asc')
-        ->paginate(30);
+        ->paginate(10);
         $albums = Album::orderBy('id', 'asc')
         ->get();
         $bios = Bio::orderBy('id', 'asc')
