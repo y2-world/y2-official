@@ -31,13 +31,13 @@
                     <?= html_entity_decode($news->text); ?>
                     @endif
                     <div class="show_button">
-                        @if(isset($previous))
+                        {{-- @if(isset($previous))
                         <a class="btn btn-outline-dark" href="{{ route('news.show', $previous->id)}}" rel="prev" role="button"><</a>
-                        @endif
+                        @endif --}}
                         <a class="btn btn-outline-dark" href="#" onclick="window.history.back(); return false;">BACK</a>
-                        @if(isset($next))
+                        {{-- @if(isset($next))
                         <a class="btn btn-outline-dark" href="{{ route('news.show', $next->id)}}" rel="next" role="button">></a>
-                        @endif
+                        @endif --}}
                     </div>
                 </div>
             </div>
