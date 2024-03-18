@@ -54,12 +54,12 @@
         @foreach ($setlists as $setlist)
         <tr>
           <td></td>
-          <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
+          <td class="td_date">{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
           @if(isset($setlist->artist_id))
-          <td>
+          <td class="td_date">
             <a href="{{ url('artists', $setlist->artist_id)}}">{{ $setlist->artist->name }}</a> / <a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
           @else
-          <td><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
+          <td class="td_title"><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
           @endif
           <td class="pc_list">{{ $setlist->venue }}</td>
         </tr>
