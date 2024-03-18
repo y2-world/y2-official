@@ -879,6 +879,21 @@ nav {
     text-align: center;
 }
 
+table.count {
+    counter-reset: rowCount;
+    font-size: 13px;
+}
+
+table.count > tbody > tr {
+    counter-increment: rowCount;
+}
+
+table.count > tbody > tr > td:first-child::before {
+    content: counter(rowCount);
+}
+
+
+
 @media (min-width: 1024px) {
     .column1,
     .column2-tour,
