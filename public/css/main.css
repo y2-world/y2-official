@@ -813,13 +813,6 @@ nav {
     overflow-x: scroll;
 }
 
-.pagination {
-    display: flex;
-    padding-left: 0;
-    list-style: none;
-    justify-content: left;
-}
-
 .pagination a {
     color: black;
 }
@@ -1203,5 +1196,12 @@ nav {
 
     .radio-wrapper {
         padding: 50px 0px;
+    }
+
+    .pagination {
+        display: flex;
+        padding-left: 0;
+        list-style: none;
+        justify-content: left;
     }
 }
