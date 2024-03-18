@@ -87,11 +87,11 @@
                     <tr>
                         <td></td>
                         @if(isset($tour->date1) && isset($tour->date2))
-                        <td>{{ date('Y.m.d', strtotime($tour->date1)) }} - {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
+                        <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }} - {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
                         @elseif(isset($tour->date1) && !isset($tour->date2))
-                        <td>{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
+                        <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
                         @endif
-                        <td><a href="{{ route('tours.show', $tour->id) }}">{{ $tour->title }}</a></td>
+                        <td class="td_title"><a href="{{ route('tours.show', $tour->id) }}">{{ $tour->title }}</a></td>
                     </tr>
                 @endforeach
           </tbody>
