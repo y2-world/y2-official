@@ -324,7 +324,7 @@ video {
 }
 
 .footer-copyright {
-    font-size: 5px;
+    font-size: 6px;
 }
 
 .app-wrapper {
@@ -1144,7 +1144,23 @@ table.count > tbody > tr > td:first-child::before {
     }
 
     td {
-        font-size: 11px;
+        font-size: 10px;
+    }
+
+    .td_date {
+        width: 40%;
+    }
+
+    .td_title {
+        width: 60%;
+    }
+
+    .td_search_date {
+        width: 15%;
+    }
+
+    .td_search_title {
+        width: 85%;
     }
 
     .mb_list {
@@ -1161,6 +1177,7 @@ table.count > tbody > tr > td:first-child::before {
 
     .error {
         padding-top: 10px;
+        font-size: 12px;
     }
 
     .mb_dropdown {
@@ -1181,7 +1198,7 @@ table.count > tbody > tr > td:first-child::before {
         padding: 50px 0px;
     }
 
-    .app-title h2, h5 {
+    .app-title h2, h5, .footer {
         text-align:center;
     }
 

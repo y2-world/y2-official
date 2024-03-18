@@ -53,7 +53,7 @@
             <tr>
                 <th class="mb_list">#</th>
                 <th class="mb_list">開催日</th>
-                    <th class="mb_list">タイトル</th>
+                <th class="mb_list">タイトル</th>
                 <th class="pc_list">会場</th>
             </tr>
             </thead>
@@ -61,8 +61,8 @@
                 @foreach ($data as $result)
                 <tr>
                     <td></td>
-                    <td>{{ date('Y.m.d', strtotime($result->date)) }}</td>
-                    <td><a href="{{ route('setlists.show', $result->id) }}">{{ $result->title }}</a></td>
+                    <td class="td_search_date">{{ date('Y.m.d', strtotime($result->date)) }}</td>
+                    <td class="td_search_title"><a href="{{ route('setlists.show', $result->id) }}">{{ $result->title }}</a></td>
                     <td class="pc_list">{{ $result->venue }}</td>
                 </tr>
                 @endforeach

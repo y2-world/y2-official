@@ -71,7 +71,7 @@
       </div>
     </table>
   <div class=”pagination”>
-    {!! $setlists->links() !!}
+    {!! $setlists->links('vendor.pagination.default') !!}
   </div>
   <br>
 </div>

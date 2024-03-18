@@ -111,44 +111,6 @@ $today = strtotime(date('Y-m-d'));
     </div>
 </div>
 
-<div class="app-wrapper">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-11">
-                <div class="element js-fadein">
-                    <h2 class="app-title">Yuki Yoshida Official Fanclub『NAPO』</h2>
-                    <h5 class="app-title">NAPO = Neo Artist Premium Official Fanclub</h5>
-                </div>
-                <br>
-                <div class="element js-fadein">
-                    Yuki Yoshida Official Fanclubが7月に発足されることが決定しました！<br>
-                    年会費はもちろん無料です。<br>
-                    スペシャルコンテンツをご用意する予定です！<br>
-                    乞うご期待！
-                    <br><br>
-                    <h5>LIVE×YOU</h5>
-                    このアプリは、自分が参加したライブのセットリストを見返したり、フォロワーが参加したライブの感想を読んだり、直接メッセージを送ることもできます。<br>
-                    ライブを愛する人のためのアプリです！<br>
-                    7月公開予定<br>
-                    <br>
-                    <h5>Mr.Children Database</h5>
-                    Mr.Childrenのバイオグラフィー、ディスコグラフィー、ライブのセットリストなど全ての情報がここに！
-                    <br>
-                    <br>
-                    <h5>Special Blog 『NAPO』</h5>
-                    Official Blogでも投稿できない限定記事をここだけに公開！
-                    <br>
-                    <br>
-                    <h5>Napostagram</h5>
-                    Official Instagramでも投稿されない限定写真をここだけに公開！
-                    <br>
-                </div>
-            </div>
-            <br>
-        </div>
-    </div>
-</div>
-
 <div class="footer-wrapper">
     <div class="container">
         <div class="row justify-content-center">
@@ -161,10 +123,9 @@ $today = strtotime(date('Y-m-d'));
                     <a href="{{ url('/music') }}">Music</a>・
                     <a href="{{ url('/#profile') }}">Profile</a>・
                     <a href="{{ url('/#radio') }}">Radio</a>・
-                    <a href="{{ url('/login') }}">Fanclub</a>・
                     <a href="{{ url('https://ameblo.jp/y2-world') }}" target="_blank">Blog</a>
                     <br>
-                    <div class="footer-copyright">©2023 y2_record inc.</div>
+                    <div class="footer-copyright">©2024 y2_record inc.</div>
                 </div>
             </div>
             <br>
