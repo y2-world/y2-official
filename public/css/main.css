@@ -756,7 +756,7 @@ nav {
     display: flex;
     padding-left: 0;
     list-style: none;
-    justify-content: left;
+    justify-content: center;
 }
 
 footer {
@@ -817,7 +817,7 @@ nav {
     display: flex;
     padding-left: 0;
     list-style: none;
-    justify-content: center;
+    justify-content: left;
 }
 
 .pagination a {

@@ -56,7 +56,7 @@
       </div>
     </table>
   <div class=”pagination”>
-    {!! $songs->onEachSide(5)->links() !!}
+    {!! $songs->links() !!}
   </div>
   <br>
 </div>
