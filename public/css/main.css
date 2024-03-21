@@ -809,7 +809,42 @@ table {
     padding: 5px;
 }
 
-nav {
+.select {
+    background: #cfcedb;
+    height: 40px;
+    width: 300px;
+    border-radius: 5px;
+    position: relative;
+    z-index: 1;
+}
+
+.select::after {
+    position: absolute;
+    content: "";
+    width: 8px;
+    height: 8px;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+    border-bottom: 2px solid #fff;
+    border-right: 2px solid #fff;
+    z-index: -1;
+}
+
+select {
+    /* 初期化 */
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 16px;
+    /* width: 25%; */
+    height: 100%;
+    padding: 0 10px;
+}
+ïïïïï nav {
     overflow-x: scroll;
 }
 
@@ -891,8 +926,6 @@ table.count > tbody > tr {
 table.count > tbody > tr > td:first-child::before {
     content: counter(rowCount);
 }
-
-
 
 @media (min-width: 1024px) {
     .column1,
@@ -1217,6 +1250,6 @@ table.count > tbody > tr > td:first-child::before {
         display: flex;
         padding-left: 0;
         list-style: none;
-        justify-content: left;
+        /* justify-content: left; */
     }
 }
