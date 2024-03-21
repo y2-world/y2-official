@@ -844,7 +844,7 @@ select {
     height: 100%;
     padding: 0 10px;
 }
-ïïïïï nav {
+nav {
     overflow-x: scroll;
 }
 
@@ -1250,6 +1250,6 @@ table.count > tbody > tr > td:first-child::before {
         display: flex;
         padding-left: 0;
         list-style: none;
-        /* justify-content: left; */
+        justify-content: left;
     }
 }
