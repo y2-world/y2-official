@@ -16,19 +16,19 @@
                 {{ $setlists->venue }}
             </div>
             <hr>
-            <div class="setlist">
+            <ol class="setlist">
                 @if($setlists->fes == 0)
                     @foreach ($setlists->setlist as $data) 
                         @if($data['#'] === '-')
                         {{ $data['#'] }} <b>{{ $data['song'] }}</b><br>
                         @else
-                        {{ $data['#'] }}. {{ $data['song'] }}<br>
+                        <li> {{ $data['song'] }}</li>
                         @endif
                     @endforeach
                     @if(isset($setlists->encore))
                         <hr width="250">
                         @foreach ((array)$setlists->encore as $data)
-                        {{ $data['#'] }}. {{ $data['song'] }}<br>
+                        <li> {{ $data['song'] }}</li>
                         @endforeach
                     @endif
                 @elseif($setlists->fes == 1)
@@ -36,12 +36,12 @@
                         @if(isset($data['artist']))
                             @if($data['artist'] !== 'END')
                             {{ $data['artist'] }}<br>
-                            {{ $data['#'] }}. {{ $data['song'] }}<br>
+                            <li> {{ $data['song'] }}</li>
                             @else
-                            {{ $data['#'] }}. {{ $data['song'] }}<br><br>
+                            <li> {{ $data['song'] }}</li><br>
                             @endif
                         @else
-                            {{ $data['#'] }}. {{ $data['song'] }}<br>
+                            <li> {{ $data['song'] }}</li>
                         @endif
                     @endforeach
                     @if(isset($setlists->fes_encore))
@@ -50,17 +50,17 @@
                             @if(isset($data['artist']))
                                 @if($data['artist'] !== 'END')
                                 {{ $data['artist'] }}<br>
-                                {{ $data['#'] }}. {{ $data['song'] }}<br>
+                                <li> {{ $data['song'] }}</li>
                                 @else
-                                {{ $data['#'] }}. {{ $data['song'] }}<br><br>
+                                <li> {{ $data['song'] }}</li><br>
                                 @endif
                             @else
-                                {{ $data['#'] }}. {{ $data['song'] }}<br>
+                                <li> {{ $data['song'] }}</li>
                             @endif
                         @endforeach
                     @endif
                 @endif
-            </div>  
+            </ul>  
             <br>
             <div class="show_button">
                 @if(isset($previous))
