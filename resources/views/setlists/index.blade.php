@@ -27,7 +27,7 @@
             <select name="artist_id" required data-toggle="select"> 
               <option value="" disabled selected>Artists</option>
                 @foreach ($artists as $artist)
-                @if($artist->visible != 1)
+                @if($artist->visible !== 1)
                     <option value="{{ $artist->id }}" required>{{$artist->name}}</option>
                 @endif
                 @endforeach
