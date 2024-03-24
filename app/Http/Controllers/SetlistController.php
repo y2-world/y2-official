@@ -55,10 +55,12 @@ class SetlistController extends Controller
     public function show($id)
     {
         $setlists = Setlist::find($id);
+        $artists = Artist::orderBy('id', 'asc')
+        ->get();
         $previous = Setlist::where('date', '<', $setlists->date)->orderBy('date', 'desc')->first();
         $next = Setlist::where('date', '>', $setlists->date)->orderBy('date')->first();
         
-        return view('setlists.show', compact('setlists', 'previous', 'next'));
+        return view('setlists.show', compact('artists', 'setlists', 'previous', 'next'));
     }
 
     /**

@@ -28,6 +28,9 @@ class ArtistController extends AdminController
 
         $grid->column('id', __('ID'));
         $grid->column('name', __('アーティスト名'));
+        $grid->column('visible', __('公開'))->display(function ($released) {
+            return $released ? '非公開' : '公開';
+        });
     
         return $grid;
     }
@@ -60,6 +63,11 @@ class ArtistController extends AdminController
         $form = new Form(new Artist());
 
         $form->text('id', __('ID'))->rules('required');
+        $form->radio('visible','公開')
+        ->options([
+            0 =>'公開',
+            1 =>'非公開',
+        ]);
         $form->text('name', __('アーティスト名'));
 
         return $form;
