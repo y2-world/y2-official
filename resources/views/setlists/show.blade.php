@@ -89,7 +89,7 @@
                                 @endif
                             @elseif (isset($data['artist']))
                                 @if ($key != 0)
-                                    @if ($setlists->fes_encore[$key]['artist'] != $setlists->fes_encore[$key - 1]['artist'])
+                                    @if ($setlists->fes_setlist[$key]['artist'] != $setlists->fes_setlist[$key - 1]['artist'])
                                         <br>{{ $artists[$data['artist'] - 1]['name'] }}<br>
                                         <li> {{ $data['song'] }}</li>
                                     @else
