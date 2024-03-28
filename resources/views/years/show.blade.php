@@ -9,7 +9,9 @@
           <option value="" disabled selected>Artists</option>
           <option value="{{ url('/artists')}}">All Artists</option>
           @foreach ($artists as $artist)
+          @if($artist->visible != 1)
           <option value="{{ url('/artists', $artist->id)}}">{{ $artist->name }}</option>
+          @endif
           @endforeach
         </select>
         <select name="select" onChange="location.href=value;">
