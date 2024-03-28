@@ -55,7 +55,7 @@
                         @endforeach
                         @if (isset($setlists->fes_encore))
                             <hr width="250">
-                            @foreach ((array) $setlists->fes_encore as $data)
+                            @foreach ((array) $setlists->fes_encore as $key => $data)
                                 @if (isset($data['artist']))
                                     @if ($key != 0)
                                         @if ($setlists->fes_encore[$key]['artist'] != $setlists->fes_encore[$key - 1]['artist'])
