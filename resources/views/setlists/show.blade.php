@@ -28,54 +28,65 @@
                             @else
                                 <li> {{ $data['song'] }}</li>
                             @endif
+                        @endforeach
+                        @if (isset($setlists->encore))
+                            <hr width="250">
+                            @foreach ((array) $setlists->encore as $data)
+                                <li> {{ $data['song'] }}</li>
                             @endforeach
-                            @if (isset($setlists->encore))
-                                <hr width="250">
-                                @foreach ((array) $setlists->encore as $data)
-                                    <li> {{ $data['song'] }}</li>
-                                @endforeach
-                            @endif
-                        @elseif($setlists->fes == 1)
-                            @foreach ((array) $setlists->fes_setlist as $data)
-                                @if (isset($data['artist']))
-                                    @if ($data['artist'] !== 'END')
-                                        {{ $data['artist'] }}<br>
+                        @endif
+                    @elseif($setlists->fes == 1)
+                        @foreach ((array) $setlists->fes_setlist as $key => $data)
+                            @if (isset($data['artist']))
+                                @if ($key != 0)
+                                    @if ($setlists->fes_setlist[$key]['artist'] != $setlists->fes_setlist[$key - 1]['artist'])
+                                        <br>{{ $artists[$data['artist'] - 1]['name'] }}<br>
                                         <li> {{ $data['song'] }}</li>
                                     @else
-                                        <li> {{ $data['song'] }}</li><br>
+                                        <li> {{ $data['song'] }}</li>
+                                    @endif
+                                @else
+                                    {{ $artists[$data['artist'] - 1]['name'] }}<br>
+                                    <li> {{ $data['song'] }}</li>
+                                @endif
+                            @else
+                                <li> {{ $data['song'] }}</li>
+                            @endif
+                        @endforeach
+                        @if (isset($setlists->fes_encore))
+                            <hr width="250">
+                            @foreach ((array) $setlists->fes_encore as $data)
+                                @if (isset($data['artist']))
+                                    @if ($key != 0)
+                                        @if ($setlists->fes_setlist[$key]['artist'] != $setlists->fes_setlist[$key - 1]['artist'])
+                                            <br>{{ $artists[$data['artist'] - 1]['name'] }}<br>
+                                            <li> {{ $data['song'] }}</li>
+                                        @else
+                                            <li> {{ $data['song'] }}</li>
+                                        @endif
+                                    @else
+                                        {{ $artists[$data['artist'] - 1]['name'] }}<br>
+                                        <li> {{ $data['song'] }}</li>
                                     @endif
                                 @else
                                     <li> {{ $data['song'] }}</li>
                                 @endif
                             @endforeach
-                            @if (isset($setlists->fes_encore))
-                                <hr width="250">
-                                @foreach ((array) $setlists->fes_encore as $data)
-                                    @if (isset($data['artist']))
-                                        @if ($data['artist'] !== 'END')
-                                            {{ $data['artist'] }}<br>
-                                            <li> {{ $data['song'] }}</li>
-                                        @else
-                                            <li> {{ $data['song'] }}</li><br>
-                                        @endif
-                                    @else
-                                        <li> {{ $data['song'] }}</li>
-                                    @endif
-                                @endforeach
-                            @endif
                         @endif
-                        </ul>
-                        <br>
-                        <div class="show_button">
-                            @if (isset($previous))
-                                <a class="btn btn-outline-dark" href="{{ route('setlists.show', $previous->id) }}"
-                                    rel="prev" role="button"><</a>
-                            @endif
-                            @if (isset($next))
-                                <a class="btn btn-outline-dark" href="{{ route('setlists.show', $next->id) }}"rel="next"
-                                    role="button">></a>
-                            @endif
-                        </div>
+                    @endif
+                    </ul>
+                    <br>
+                    <div class="show_button">
+                        @if (isset($previous))
+                            <a class="btn btn-outline-dark" href="{{ route('setlists.show', $previous->id) }}"
+                                rel="prev" role="button">
+                                <</a>
+                        @endif
+                        @if (isset($next))
+                            <a class="btn btn-outline-dark" href="{{ route('setlists.show', $next->id) }}"rel="next"
+                                role="button">></a>
+                        @endif
+                    </div>
             </div>
         </div>
     </div>

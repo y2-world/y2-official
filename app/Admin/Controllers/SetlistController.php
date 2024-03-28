@@ -135,11 +135,11 @@ class SetlistController extends AdminController
         })->when(1, function (Form $form) {
 
             $form->table('fes_setlist', __('本編'), function ($table) {
-                $table->select('artist', __('アーティスト'))->options(Artist::all()->pluck('name', 'name'));
+                $table->select('artist', __('アーティスト'))->options(Artist::all()->pluck('name', 'id'));
                 $table->text('song', __('楽曲'))->rules('required');
             });
             $form->table('fes_encore', __('アンコール'), function ($table) {
-                $table->select('artist', __('アーティスト'))->options(Artist::all()->pluck('name', 'name'));
+                $table->select('artist', __('アーティスト'))->options(Artist::all()->pluck('name', 'id'));
                 $table->text('song', __('楽曲'))->rules('required');
             });
     
