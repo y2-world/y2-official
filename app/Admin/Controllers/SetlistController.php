@@ -42,6 +42,13 @@ class SetlistController extends AdminController
             $filter->like('artist', 'アーティスト');
             $filter->like('title', 'ツアータイトル');
             $filter->year('date', '年');
+            $filter->equal('fes', 'フェス')->radio([
+                ''   => 'All',
+                0    => 'ライブ',
+                1    => 'フェス',
+                2    => '混合フェス',
+            ]);
+            
             $filter->like('venue', __('会場'));
         });
         
