@@ -73,7 +73,7 @@
                                 @endif
                             @endforeach
                         @endif
-                        @elseif($setlists->fes == 3)
+                        @elseif($setlists->fes == 2)
                         @foreach ((array) $setlists->fes_setlist as $key => $data)
                             @if (isset($data['corner']))
                                 @if ($key != 0)
