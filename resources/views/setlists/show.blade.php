@@ -58,11 +58,13 @@
                             @foreach ((array) $setlists->fes_encore as $key => $data)
                                 @if (isset($data['artist']))
                                     @if ($key != 0)
-                                        @if ($setlists->fes_encore[$key]['artist'] != $setlists->fes_encore[$key - 1]['artist'])
-                                            <br>{{ $artists[$data['artist'] - 1]['name'] }}<br>
-                                            <li> {{ $data['song'] }}</li>
-                                        @else
-                                            <li> {{ $data['song'] }}</li>
+                                        @if (isset($setlists->fes_encore[$key]['artist']))
+                                            @if ($setlists->fes_encore[$key]['artist'] != $setlists->fes_encore[$key - 1]['artist'])
+                                                <br>{{ $artists[$data['artist'] - 1]['name'] }}<br>
+                                                <li> {{ $data['song'] }}</li>
+                                            @else
+                                                <li> {{ $data['song'] }}</li>
+                                            @endif
                                         @endif
                                     @else
                                         {{ $artists[$data['artist'] - 1]['name'] }}<br>
