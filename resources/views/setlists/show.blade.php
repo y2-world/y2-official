@@ -77,8 +77,8 @@
                         @foreach ((array) $setlists->fes_setlist as $key => $data)
                             @if (isset($data['corner']))
                                 @if ($key != 0)
-                                    @if ($setlists->fes_setlist[$key]['corner'] != $setlists->fes_setlist[$key - 1]['corner'])
-                                        <br>{{ $artists[$data['artist'] - 1]['corner'] }}<br>
+                                    @if ($setlists->fes_setlist[$key]['corner'])
+                                        <br>{{ $artists[$data['artist']]['corner'] }}<br>
                                         <li> {{ $data['song'] }}</li>
                                     @else
                                         <li> {{ $data['song'] }}</li>
