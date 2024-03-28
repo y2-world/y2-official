@@ -78,7 +78,7 @@
                             @if (isset($data['corner']))
                                 @if ($key != 0)
                                     @if ($setlists->fes_setlist[$key]['corner'])
-                                        <br>{{ $artists[$data['artist']]['corner'] }}<br>
+                                        <br>{{ $data['corner'] }}<br>
                                         <li> {{ $data['song'] }}</li>
                                     @else
                                         <li> {{ $data['song'] }}</li>
