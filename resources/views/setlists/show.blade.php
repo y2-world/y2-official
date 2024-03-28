@@ -73,6 +73,56 @@
                                 @endif
                             @endforeach
                         @endif
+                        @elseif($setlists->fes == 3)
+                        @foreach ((array) $setlists->fes_setlist as $key => $data)
+                            @if (isset($data['corner']))
+                                @if ($key != 0)
+                                    @if ($setlists->fes_setlist[$key]['corner'] != $setlists->fes_setlist[$key - 1]['corner'])
+                                        <br>{{ $artists[$data['artist'] - 1]['corner'] }}<br>
+                                        <li> {{ $data['song'] }}</li>
+                                    @else
+                                        <li> {{ $data['song'] }}</li>
+                                    @endif
+                                @else
+                                    {{ $artists[$data['artist'] - 1]['corner'] }}<br>
+                                    <li> {{ $data['song'] }}</li>
+                                @endif
+                            @elseif (isset($data['artist']))
+                                @if ($key != 0)
+                                    @if ($setlists->fes_encore[$key]['artist'] != $setlists->fes_encore[$key - 1]['artist'])
+                                        <br>{{ $artists[$data['artist'] - 1]['name'] }}<br>
+                                        <li> {{ $data['song'] }}</li>
+                                    @else
+                                        <li> {{ $data['song'] }}</li>
+                                    @endif
+                                @else
+                                    {{ $artists[$data['artist'] - 1]['name'] }}<br>
+                                    <li> {{ $data['song'] }}</li>
+                                @endif
+                            @else
+                                <li> {{ $data['song'] }}</li>
+                            @endif
+                        @endforeach
+                        @if (isset($setlists->fes_encore))
+                            <hr width="250">
+                            @foreach ((array) $setlists->fes_encore as $key => $data)
+                                @if (isset($data['corner']))
+                                    @if ($key != 0)
+                                        @if ($setlists->fes_encore[$key]['corner'] != $setlists->fes_encore[$key - 1]['corner'])
+                                            <br>{{ $artists[$data['artist'] - 1]['corner'] }}<br>
+                                            <li> {{ $data['song'] }}</li>
+                                        @else
+                                            <li> {{ $data['song'] }}</li>
+                                        @endif
+                                    @else
+                                        {{ $artists[$data['artist'] - 1]['name'] }}<br>
+                                        <li> {{ $data['song'] }}</li>
+                                    @endif
+                                @else
+                                    <li> {{ $data['song'] }}</li>
+                                @endif
+                            @endforeach
+                        @endif
                     @endif
                     </ul>
                     <br>

@@ -123,6 +123,7 @@ class SetlistController extends AdminController
         ->options([
             0 =>'単独ライブ',
             1 =>'フェス',
+            2 =>'混在フェス',
         ])->when(0, function (Form $form) {
 
             $form->table('setlist', __('本編'), function ($table) {
@@ -142,6 +143,19 @@ class SetlistController extends AdminController
                 $table->select('artist', __('アーティスト'))->options(Artist::all()->pluck('name', 'id'));
                 $table->text('song', __('楽曲'))->rules('required');
             });
+        })->when(2, function (Form $form) {
+
+            $form->table('fes_setlist', __('本編'), function ($table) {
+                $table->text('corner', __('コーナー'));
+                $table->select('artist', __('アーティスト'))->options(Artist::all()->pluck('name', 'id'));
+                $table->text('song', __('楽曲'))->rules('required');
+            });
+            $form->table('fes_encore', __('アンコール'), function ($table) {
+                $table->text('corner', __('コーナー'));
+                $table->select('artist', __('アーティスト'))->options(Artist::all()->pluck('name', 'id'));
+                $table->text('song', __('楽曲'))->rules('required');
+            });
+    
     
 
         });
