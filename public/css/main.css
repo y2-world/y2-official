@@ -1004,6 +1004,13 @@ table.count > tbody > tr > td:first-child::before {
     font-feature-settings: "liga";
 }
 
+@media(min-width: 1080px) {
+    .sp {
+        display: none;
+    }
+
+}
+
 @media screen and (max-width: 1080px) {
     h2 {
         text-align: center;
@@ -1040,6 +1047,11 @@ table.count > tbody > tr > td:first-child::before {
 
     .profile-info {
         text-align: center;
+    }
+
+    .pc_list,
+    .bios_pc_list {
+        display: none;
     }
 }
 
@@ -1174,11 +1186,6 @@ table.count > tbody > tr > td:first-child::before {
 
     .setlist_artist a {
         font-size: 14px;
-    }
-
-    .pc_list,
-    .bios_pc_list {
-        display: none;
     }
 
     td {
