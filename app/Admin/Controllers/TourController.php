@@ -71,14 +71,14 @@ class TourController extends AdminController
         $show->field('setlist1', __('セットリスト1'))->unescape()->as(function ($setlist1) {
             $result1 = [];
             foreach($setlist1 as $data1) {
-                $result1[] = $data1['#'].'. '.$data1['song'];
+                $result1[] = $data1['#'].'. '.$data1['id'];
             }
             return implode('<br>', $result1);
         });
         $show->field('setlist2', __('セットリスト2'))->unescape()->as(function ($setlist2) {
             $result2 = [];
             foreach((array)$setlist2 as $data2) {
-                $result2[] = $data2['#'].'. '.$data2['song'];
+                $result2[] = $data2['#'].'. '.$data2['id'];
             }
             return implode('<br>', $result2);
         });
