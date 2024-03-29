@@ -16,8 +16,8 @@
                     {{ $setlists->venue }}
                 </div>
                 <hr>
-                <ol class="setlist">
                     @if ($setlists->fes == 0)
+                    <ol class="setlist">
                         @foreach ($setlists->setlist as $data)
                             @if (isset($data['#']))
                                 @if ($data['#'] === '-')
@@ -35,41 +35,52 @@
                                 <li> {{ $data['song'] }}</li>
                             @endforeach
                         @endif
+                    </ol>
                     @elseif($setlists->fes == 1)
                         @foreach ((array) $setlists->fes_setlist as $key => $data)
                             @if (isset($data['artist']))
                                 @if ($key != 0)
                                     @if ($setlists->fes_setlist[$key]['artist'] != $setlists->fes_setlist[$key - 1]['artist'])
-                                        <br>{{ $artists[$data['artist'] - 1]['name'] }}<br>
+                                    </ol>
+                                    <ol class="setlist">
+                                        {{ $artists[$data['artist'] - 1]['name'] }}<br>
                                         <li> {{ $data['song'] }}</li>
                                     @else
                                         <li> {{ $data['song'] }}</li>
                                     @endif
                                 @else
+                                <ol class="setlist">
                                     {{ $artists[$data['artist'] - 1]['name'] }}<br>
                                     <li> {{ $data['song'] }}</li>
                                 @endif
                             @else
                                 <li> {{ $data['song'] }}</li>
+                                </ol>
                             @endif
                         @endforeach
+                        </ol>
+                    
                         @if (isset($setlists->fes_encore))
                             <hr width="250">
                             @foreach ((array) $setlists->fes_encore as $key => $data)
                                 @if (isset($data['artist']))
                                     @if ($key != 0)
                                         @if ($setlists->fes_encore[$key]['artist'] != $setlists->fes_encore[$key - 1]['artist'])
-                                            <br>{{ $artists[$data['artist'] - 1]['name'] }}<br>
+                                            </ol>
+                                            <ol class="setlist">
+                                            {{ $artists[$data['artist'] - 1]['name'] }}<br>
                                             <li> {{ $data['song'] }}</li>
                                         @else
                                             <li> {{ $data['song'] }}</li>
                                         @endif
                                     @else
+                                        <ol class="setlist">
                                         {{ $artists[$data['artist'] - 1]['name'] }}<br>
                                         <li> {{ $data['song'] }}</li>
                                     @endif
                                 @else
                                     <li> {{ $data['song'] }}</li>
+                                    </ol>
                                 @endif
                             @endforeach
                         @endif
@@ -78,7 +89,7 @@
                             @if (isset($data['corner']))
                                 @if ($key != 0)
                                     @if ($setlists->fes_setlist[$key]['corner'])
-                                        <br>{{ $data['corner'] }}<br>
+                                        <br>{{ $artists[$data['artist']]['corner'] }}<br>
                                         <li> {{ $data['song'] }}</li>
                                     @else
                                         <li> {{ $data['song'] }}</li>
@@ -124,19 +135,18 @@
                             @endforeach
                         @endif
                     @endif
-                    </ul>
-                    <br>
-                    <div class="show_button">
-                        @if (isset($previous))
-                            <a class="btn btn-outline-dark" href="{{ route('setlists.show', $previous->id) }}"
-                                rel="prev" role="button">
-                                <</a>
-                        @endif
-                        @if (isset($next))
-                            <a class="btn btn-outline-dark" href="{{ route('setlists.show', $next->id) }}"rel="next"
-                                role="button">></a>
-                        @endif
-                    </div>
+                <br>
+                <div class="show_button">
+                    @if (isset($previous))
+                        <a class="btn btn-outline-dark" href="{{ route('setlists.show', $previous->id) }}"
+                            rel="prev" role="button">
+                            <</a>
+                    @endif
+                    @if (isset($next))
+                        <a class="btn btn-outline-dark" href="{{ route('setlists.show', $next->id) }}"rel="next"
+                            role="button">></a>
+                    @endif
+                </div>
             </div>
         </div>
     </div>
