@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <br>
+@dump($songs)
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -22,7 +23,7 @@
                     <div class="column1">
                         @if(isset($tours->setlist1))
                             @foreach ($tours->setlist1 as $data) 
-                                @if(!isset($data['song']) && !isset($data['exception']))
+                                @if(!isset($data['id']) && !isset($data['exception']))
                                     @if($data['#'] == 'ENCORE')
                                         <hr width="250">
                                     @elseif($data['#'] == 'hr')
@@ -30,13 +31,13 @@
                                     @else
                                         <h5>{{ $data['#'] }} </h5>
                                     @endif
-                                @elseif(isset($data['song']) && !isset($data['exception']))
+                                @elseif(isset($data['id']) && !isset($data['exception']))
                                     @if($data['#'] !== '-')
-                                        {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br>
+                                        {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
                                     @elseif($data['#'] == '-')
-                                        {{ $data['#'] }} <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br>
+                                        {{ $data['#'] }} <a href="{{ url('songs', $data['id'])}}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
                                     @endif
-                                @elseif(!isset($data['song']) && isset($data['exception']))
+                                @elseif(!isset($data['id']) && isset($data['exception']))
                                     @if(isset($data['id']))
                                         @if($data['#'] == '-')
                                             {{ $data['#'] }} <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
@@ -68,9 +69,9 @@
                                     @endif
                                 @elseif(isset($data['song']) && !isset($data['exception']))
                                     @if($data['#'] !== '-')
-                                        {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br>
+                                        {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
                                     @elseif($data['#'] == '-')
-                                        {{ $data['#'] }} <a href="{{ url('songs', $data['id'])}}">{{ $data['song'] }}</a><br>
+                                        {{ $data['#'] }} <a href="{{ url('songs', $data['id'])}}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
                                     @endif
                                  @elseif(!isset($data['song']) && isset($data['exception']))
                                     @if(isset($data['id']))
