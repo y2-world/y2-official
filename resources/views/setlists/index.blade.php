@@ -21,6 +21,7 @@
         <option value="{{ url('/years', $year->id)}}">{{ $year->year }}</option>
         @endforeach
       </select>
+      </select>
     </div>
     <div class="pc_list">
       <div class="search">

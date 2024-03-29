@@ -137,8 +137,8 @@ class TourController extends AdminController
                 $table->text('exception', __('例外'));
             });
         })->tab('コメント',function($form) {
-            $form->textarea('schedule', __('スケジュール'));
-            $form->textarea('text', __('コメント'));
+            $form->textarea('schedule', __('スケジュール'))->rows(15);
+            $form->textarea('text', __('コメント'))->rows(15);
         });
 
         return $form;
