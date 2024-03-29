@@ -137,7 +137,6 @@
                         @endif
                         </ol>
                     @endif
-                <br>
                 <div class="show_button">
                     @if (isset($previous))
                         <a class="btn btn-outline-dark" href="{{ route('setlists.show', $previous->id) }}"
