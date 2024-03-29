@@ -58,7 +58,7 @@
                         <div class="column2-tour">
                             @if(isset($tours->setlist2))
                             @foreach ($tours->setlist2 as $data) 
-                                @if(!isset($data['song']) && !isset($data['exception']))
+                                @if(!isset($data['id']) && !isset($data['exception']))
                                     @if($data['#'] == 'ENCORE')
                                         <hr width="250">
                                     @elseif($data['#'] == 'hr')
@@ -66,13 +66,13 @@
                                     @else
                                         <h5>{{ $data['#'] }} </h5>
                                     @endif
-                                @elseif(isset($data['song']) && !isset($data['exception']))
+                                @elseif(isset($data['id']) && !isset($data['exception']))
                                     @if($data['#'] !== '-')
                                         {{ $data['#'] }}. <a href="{{ url('songs', $data['id'])}}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
                                     @elseif($data['#'] == '-')
                                         {{ $data['#'] }} <a href="{{ url('songs', $data['id'])}}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
                                     @endif
-                                 @elseif(!isset($data['song']) && isset($data['exception']))
+                                 @elseif(!isset($data['id']) && isset($data['exception']))
                                     @if(isset($data['id']))
                                         @if($data['#'] == '-')
                                             {{ $data['#'] }} <a href="{{ url('songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
