@@ -76,20 +76,12 @@
                                     @foreach ($tours->setlist2 as $data)
                                         @if (isset($data['id']))
                                             @if (isset($data['exception']))
-                                                @if (isset($data['id']))
-                                                    @if ($data['#'] == '-')
-                                                        {{ $data['#'] }} <a
-                                                            href="{{ url('songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
-                                                    @else
-                                                        {{ $data['#'] }}. <a
-                                                            href="{{ url('songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
-                                                    @endif
+                                                @if ($data['#'] == '-')
+                                                    {{ $data['#'] }} <a
+                                                        href="{{ url('songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                                 @else
-                                                    @if ($data['#'] == '-')
-                                                        {{ $data['#'] }} {{ $data['exception'] }}<br>
-                                                    @else
-                                                        {{ $data['#'] }}. {{ $data['exception'] }}<br>
-                                                    @endif
+                                                    {{ $data['#'] }}. <a
+                                                        href="{{ url('songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                                 @endif
                                             @else
                                                 @if ($data['#'] !== '-')
