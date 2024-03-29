@@ -1208,7 +1208,7 @@ table.count > tbody > tr > td:first-child::before {
         width: 85%;
     }
 
-    .mb_list {
+    .mb_list, .sp {
         font-size: 9px;
     }
 
