@@ -18,7 +18,7 @@ class SetlistController extends Controller
     {   
         $setlists = Setlist::orderBy('date', 'desc')
         ->paginate(10);
-        $artists = Artist::orderBy('id', 'asc')
+        $artists = Artist::where('visible', 0)->orderBy('id', 'asc')
         ->get();
         $years = Year::orderBy('year', 'asc')
         ->get();
@@ -55,7 +55,7 @@ class SetlistController extends Controller
     public function show($id)
     {
         $setlists = Setlist::find($id);
-        $artists = Artist::orderBy('id', 'asc')
+        $artists = Artist::orderBy('id', 'asc')->where('visible', 0)
         ->get();
         $previous = Setlist::where('date', '<', $setlists->date)->orderBy('date', 'desc')->first();
         $next = Setlist::where('date', '>', $setlists->date)->orderBy('date')->first();

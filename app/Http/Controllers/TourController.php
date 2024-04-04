@@ -28,6 +28,19 @@ class TourController extends Controller
         return view('tours.index', compact('tours', 'bios', 'songs'));
     }
 
+    public function fes()
+    {
+        $tours = Tour::query()
+        ->orWhere('type', '=', "1")
+        ->orderBy('id', 'desc')
+        ->paginate(10);
+        $bios = Bio::orderBy('id', 'asc')
+        ->get();
+        $songs = Song::orderBy('id', 'asc')
+        ->get();
+        return view('tours.index', compact('tours', 'bios', 'songs'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *

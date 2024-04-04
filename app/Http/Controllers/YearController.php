@@ -18,7 +18,7 @@ class YearController extends Controller
     {
         $years = Year::orderBy('id', 'asc')
         ->paginate(10);
-        $artists = Artist::orderBy('id', 'asc')
+        $artists = Artist::orderBy('id', 'asc')->where('visible', 0)
         ->get();
         return view('years.index', compact('artists', 'years'));
     }
@@ -53,7 +53,7 @@ class YearController extends Controller
     public function show(Year $year)
     {
         $year = Year::find($year->id); //idが、リクエストされた$userのidと一致するuserを取得
-        $artists = Artist::orderBy('id', 'asc')
+        $artists = Artist::orderBy('id', 'asc')->where('visible', 0)
         ->get();
         $years = Year::orderBy('year', 'asc')
         ->get();
