@@ -111,13 +111,14 @@ class TourController extends AdminController
         })->tab('セットリスト1',function($form) {
             $form->table('setlist1', __('セットリスト1'), function ($table) {
                 $table->select('id', __('楽曲'))->options(Song::all()->pluck('title', 'id'));
-                $table->select('id', __('楽曲'))->options(Song::all()->pluck('title', 'title'));
+                $table->select('song', __('楽曲'))->options(Song::all()->pluck('title', 'title'));
                 $table->number('#');
                 $table->text('exception', __('例外'));
             });
         })->tab('セットリスト2',function($form) {
             $form->table('setlist2', __('セットリスト2'), function ($table) {
                 $table->select('id', __('楽曲'))->options(Song::all()->pluck('title', 'id'));
+                $table->select('song', __('楽曲'))->options(Song::all()->pluck('title', 'title'));
                 $table->number('#');
                 $table->text('exception', __('例外'));
             });
