@@ -17,7 +17,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $news = News::orderBy('date', 'desc')
+        $news = News::where('visible', 0)->orderBy('date', 'desc')
         ->paginate(5);
         $discos = Disco::orderBy('date', 'desc')
         ->paginate(3);
