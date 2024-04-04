@@ -927,7 +927,7 @@ table.count > tbody > tr > td:first-child::before {
     content: counter(rowCount);
 }
 
-.news p {
+.news p, li {
     font-size: 12px;
 }
 
