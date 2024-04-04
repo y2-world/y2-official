@@ -927,6 +927,10 @@ table.count > tbody > tr > td:first-child::before {
     content: counter(rowCount);
 }
 
+.news p {
+    font-size: 12px;
+}
+
 @media (min-width: 1024px) {
     .column1,
     .column2-tour,
