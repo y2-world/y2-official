@@ -11,10 +11,10 @@
                     <hr>
                     @if(isset($news->image))
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-xl-6">
                             <?= html_entity_decode($news->text); ?>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-xl-6">
                             <div class="modal-img">
                                 <img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $news->image) }} class="news-image" width="100%">
                             </div>

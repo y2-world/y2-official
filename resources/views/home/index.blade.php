@@ -13,7 +13,7 @@ $today = strtotime(date('Y-m-d'));
 <div class="index-wrapper">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-11">
+            <div class="col-xl-11">
                 <!-- <div class="element js-fadein"> -->
                 <h2 class="news-title">New Release</h2>
                 <div class="cover-wrapper">
@@ -40,7 +40,7 @@ $today = strtotime(date('Y-m-d'));
 <div class="index-wrapper">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-11">
+            <div class="col-xl-11">
                 <div class="element js-fadein">
                     <h2 class="news-title">News</h2>
                     @foreach ($news as $new)
@@ -68,18 +68,18 @@ $today = strtotime(date('Y-m-d'));
 <div class="index-wrapper" id="profile">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-11">
+            <div class="col-xl-11">
                 <div class="element js-fadein">
                     <h2>Profile</h2>
                     <div class="row">
                         @if($profiles)
                         @foreach ($profiles as $profile)
-                        <div class="col-md-6 my-auto">
+                        <div class="col-lg-6 my-auto">
                             <div class="prof_img">
                                 <img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $profile->image) }} class="image" width="80%">
                             </div>
                         </div>
-                        <div class="col-md-5 my-auto">
+                        <div class="col-lg-5 my-auto">
                             <br>
                             <h2>{{$profile->name}}</h2>
                             <p class="profile-info">{{$profile->info}}</p>
@@ -100,7 +100,7 @@ $today = strtotime(date('Y-m-d'));
 <div class="index-wrapper" id="radio">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-11">
+            <div class="col-xl-11">
                 <div class="element js-fadein">
                     <h2>Radio</h2>
                     <div class="radio-wrapper">
@@ -116,7 +116,7 @@ $today = strtotime(date('Y-m-d'));
 <div class="footer-wrapper">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-11">
+            <div class="col-xl-11">
                 <div class="footer">
                     <div class="footer-title">
                         Yuki Yoshida Official Website
