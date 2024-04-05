@@ -10,7 +10,6 @@
                         <hr>
                         <div class="element js-fadein">
                             @foreach ($news as $new)
-                            @if($new->visible != 1)
                                 <a href="{{ route('news.show', $new->id) }}">
                                     <div class="date">{{ date('Y.m.d', strtotime($new->date)) }}</div>
                                     <h6>{{ $new->title }}</h6>
@@ -20,7 +19,6 @@
                                     <p class="text">{{ Str::limit($text, 120, '…') }}</p>
                                     <hr>
                                 </a>
-                            @endif
                             @endforeach
                         </div>
                         <div class=”pagination”>
