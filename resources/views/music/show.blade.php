@@ -11,12 +11,12 @@
                         <small class="date">{{ date('Y.m.d', strtotime($discos->date)) }}</small>
                         <hr>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-xl-6">
                                 <div class="modal-img">
                                     <img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $discos->image) }} class="disco-image" width="100%"> 
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-xl-6">
                                 <div class=track-list>
                                 @foreach ($discos->tracklist as $data) 
                                     @if(!isset($data['id']) && !isset($data['title']))
