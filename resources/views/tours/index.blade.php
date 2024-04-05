@@ -22,7 +22,7 @@
             <div class="search">
                 <form action="{{ url('/find') }}" method="GET">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" id="searchInput" aria-label="Search" value="{{request('keyword')}} name="keyword"
+                        <input type="text" class="form-control" id="searchInput" aria-label="Search" value="{{request('keyword')}}" name="keyword"
                             list="suggestions" required>
                         <datalist id="suggestions"></datalist>
                         <div class="input-group-append">
