@@ -21,14 +21,16 @@
     </div>
     <div class="search">
       <form action="{{url('/find')}}" method="GET">
-        <div class="input-group mb-3">
-            <input type="search" class="form-control" aria-label="Search" value="{{request('keyword')}}" name="keyword" required>
-            <div class="input-group-tourpend">
-                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
-            </div>
-        </div>
+          <div class="input-group mb-3">
+              <input type="text" class="form-control" id="searchInput" aria-label="Search" name="keyword"
+                  list="suggestions" required>
+              <datalist id="suggestions"></datalist>
+              <div class="input-group-append">
+                  <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+              </div>
+          </div>
       </form>
-    </div>
+  </div>
   </div>
   <table class="table table-striped">
       <thead>
@@ -61,4 +63,24 @@
   </div>
   <br>
 </div>
+<script>
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsList = document.getElementById('suggestions');
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            suggestionsList.innerHTML = '';
+
+            fetch(`/find/suggestions?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(song => {
+                        const option = document.createElement('option');
+                        option.value = song;
+                        suggestionsList.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
 @endsection
