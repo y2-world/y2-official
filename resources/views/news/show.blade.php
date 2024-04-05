@@ -1,10 +1,3 @@
-<style>
-    @media screen and (max-width:480px) {
-        p, li {
-            font-size: 12px;
-        }
-    }
-</style>
 @extends('layouts.app')
 @section('content')
 <div class="mt-4"></div>
