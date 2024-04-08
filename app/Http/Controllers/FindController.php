@@ -17,16 +17,31 @@ class FindController extends Controller
 
     public function index(Request $request)
     {
-        return view('find.index');
+        $query = $request->input('keyword');
+        
+        // Songsテーブルから曲を検索
+        $songIds = Song::where('title', 'like', '%' . $query . '%')->pluck('id');
+
+        // Toursテーブルから検索対象のIDを持つものを取得
+        $tours = Tour::where(function ($query) use ($songIds) {
+            $query->orWhereJsonContains('setlist1', $songIds)
+                ->orWhereJsonContains('setlist2', $songIds);
+        })->get();
+
+        $bios = Bio::orderBy('id', 'asc')
+            ->get();
+
+        return view('find', compact('bios', 'tours', 'query'));
     }
 
-    public function getSuggestions(Request $request)
+    public function autocomplete(Request $request)
     {
         $query = $request->input('query');
 
-        // Songsテーブルから曲を検索
-        $songs = Song::where('title', 'like', '%' . $query . '%')->pluck('title');
+        // データベースから検索候補を取得
+        $songs = Song::where('title', 'like', "%{$query}%")->limit(10)->get();
 
-        return response()->json($songs);
+        // タイトルの配列を返す
+        return response()->json($songs->pluck('title'));
     }
 }
