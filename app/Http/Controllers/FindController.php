@@ -17,21 +17,7 @@ class FindController extends Controller
 
     public function index(Request $request)
     {
-        $query = $request->input('keyword');
-        
-        // Songsテーブルから曲を検索
-        $songIds = Song::where('title', 'like', '%' . $query . '%')->pluck('id');
-
-        // Toursテーブルから検索対象のIDを持つものを取得
-        $tours = Tour::where(function ($query) use ($songIds) {
-            $query->orWhereJsonContains('setlist1', $songIds)
-                ->orWhereJsonContains('setlist2', $songIds);
-        })->get();
-
-        $bios = Bio::orderBy('id', 'asc')
-            ->get();
-
-        return view('find', compact('bios', 'tours', 'query'));
+        return view('find.index');
     }
 
     public function getSuggestions(Request $request)

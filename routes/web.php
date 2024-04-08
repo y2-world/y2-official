@@ -24,7 +24,7 @@ Route::resource('years', 'YearController');
 Route::resource('bios', 'BioController');
 Route::resource('tours', 'TourController');
 // Route::resource('find', 'FindController');
-Route::resource('search', 'SearchController');
+// Route::resource('search', 'SearchController');
 Route::resource('apbankfes', 'ApbankController');
 Route::resource('events', 'EventController');
 Route::resource('live', 'LiveController');
@@ -39,5 +39,5 @@ Route::resource('/', 'HomeController');
 // Route::resource('/home', 'HomeController');
 
 Route::get('/find', [FindController::class, 'index'])->name('find.index');
-Route::get('/find/suggestions', [FindController::class, 'getSuggestions'])->name('find.suggestions');
+Route::get('/find/autocomplete', [FindController::class, 'autocomplete'])->name('find.autocomplete');
 Route::get('/find/results', [FindController::class, 'search'])->name('find.results');
