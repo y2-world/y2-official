@@ -20,12 +20,12 @@ class FindController extends Controller
         $query = $request->input('keyword');
         
         // Songsテーブルから曲を検索
-        $songIds = Song::where('title', 'like', '%' . $query . '%')->pluck('id');
-
-        // Toursテーブルから検索対象のIDを持つものを取得
+        $songIds = Song::where('title', $query)->pluck('id');
+        
+        // モデルから検索
         $tours = Tour::where(function ($query) use ($songIds) {
-            $query->orWhereJsonContains('setlist1', $songIds)
-                ->orWhereJsonContains('setlist2', $songIds);
+            $query->whereJsonContains('setlist1', ['id' => $songIds])
+                ->orWhereJsonContains('setlist2', ['id' => $songIds]);
         })->get();
 
         $bios = Bio::orderBy('id', 'asc')
