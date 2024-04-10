@@ -17,21 +17,33 @@ class FindController extends Controller
 
     public function index(Request $request)
     {
-        $query = $request->input('keyword');
-        
+        // $query = $request->input('keyword');
+
         // Songsテーブルから曲を検索
-        $songIds = Song::where('title', $query)->pluck('id');
-        
-        // モデルから検索
-        $tours = Tour::where(function ($query) use ($songIds) {
-            $query->whereJsonContains('setlist1', ['id' => $songIds])
-                ->orWhereJsonContains('setlist2', ['id' => $songIds]);
-        })->get();
+        // $songId = Song::where('title', $query)->value('id');
+
+        // $tours = Tour::where(function ($query) use ($songId) {
+        //     $query->whereJsonContains('setlist1', ['id' => $songId])
+        //         ->orWhereJsonContains('setlist2', ['id' => $songId]);
+        // })->get();
+
+        // $tours = Tour::orderBy('id', 'asc')
+        // ->get();
+
+        $query = Tour::query();
+        $keyword = $request->input('keyword');
+
+        if (!empty($keyword)) {
+            $tours =  $query->where('setlist1', 'like', "%{$keyword}%")
+                ->orWhere('setlist2', 'like', "%{$keyword}%");
+        };
+
+        $data = $query->orderBy('date1','desc')->get();
 
         $bios = Bio::orderBy('id', 'asc')
             ->get();
 
-        return view('find', compact('bios', 'tours', 'query'));
+        return view('find', compact('bios', 'data', 'query', 'keyword'));
     }
 
     public function autocomplete(Request $request)

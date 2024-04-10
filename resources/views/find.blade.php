@@ -4,7 +4,7 @@
 <div class="container-lg">
     <div class="parts-wrapper">
         <div class="pc_list">
-            <h4>検索結果 : {{$query}}</h4>
+            <h4>検索結果 : {{$keyword}}</h4>
         </div>
         <div class="search">
             <form action="{{url('/find')}}" method="GET">
@@ -20,13 +20,13 @@
         </div>
     </div>
     <div class="error">
-        @if($tours->isEmpty())
+        @if($data->isEmpty())
         <p>検索結果がありません。</p>
         @else
-        <p>全{{count($tours)}}件</p>
+        <p>全{{count($data)}}件</p>
         @endif 
     </div>
-    @if(!$tours->isEmpty())
+    @if(!$data->isEmpty())
         <table class="table table-striped count">
             <thead>
             <tr>
@@ -36,7 +36,7 @@
             </tr>
             </thead>
             <tbody>
-                @foreach ($tours as $result)
+                @foreach ($data as $result)
                 <tr>
                     <td></td>
                     @if(isset($result->date1) && isset($result->date2))
