@@ -57,7 +57,6 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <br>
                 @endif
                 <div class="show_button">
                     @if (isset($previous))
