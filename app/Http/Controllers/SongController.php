@@ -6,6 +6,7 @@ use App\Models\Song;
 use App\Models\Album;
 use App\Models\Single;
 use App\Models\Bio;
+use App\Models\Tour;
 use Illuminate\Http\Request;
 
 class SongController extends Controller
@@ -60,10 +61,14 @@ class SongController extends Controller
         ->get();
         $singles = Single::orderBy('id', 'asc')
         ->get();
+        $tours = Tour::whereRaw("JSON_EXTRACT(setlist1, '$.*.id') REGEXP '\"$id\"'")
+        ->orderBy('date1', 'desc')
+        ->get();
+
         $previous = Song::where('id', '<', $songs->id)->orderBy('id', 'desc')->first();
         $next = Song::where('id', '>', $songs->id)->orderBy('id')->first();
         
-        return view('songs.show', compact('songs', 'previous', 'next', 'albums', 'singles'));
+        return view('songs.show', compact('songs', 'previous', 'next', 'albums', 'singles', 'tours'));
     }
 
     /**

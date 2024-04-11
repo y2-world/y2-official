@@ -1,6 +1,6 @@
-<!-- jQuery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Typeahead.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.3.1/typeahead.bundle.min.js"></script>
 
@@ -36,12 +36,7 @@
             <div class="search">
                 <form action="{{ url('/find') }}" method="GET">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" id="searchInput" aria-label="Search"
-                            value="{{ request('keyword') }}" name="keyword" list="suggestions" required>
-                        <datalist id="suggestions"></datalist>
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
-                        </div>
+                        <input type="text" id="searchInput" class="form-control" placeholder="Search">
                     </div>
                 </form>
             </div>

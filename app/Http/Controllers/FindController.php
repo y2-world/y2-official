@@ -33,12 +33,24 @@ class FindController extends Controller
         $query = Tour::query();
         $keyword = $request->input('keyword');
 
-        if (!empty($keyword)) {
-            $tours =  $query->where('setlist1', 'like', "%{$keyword}%")
-                ->orWhere('setlist2', 'like', "%{$keyword}%");
-        };
+         // Songsテーブルから曲を検索
+        $songId = Song::where('title', $query)->value('id')[0];
 
-        $data = $query->orderBy('date1','desc')->get();
+        if (!empty($keyword)) {
+            $data =  Tour::where(function ($query) use ($songId) {
+                $query->whereJsonContains('setlist1', ['id' => $songId])
+                    ->orWhereJsonContains('setlist2', ['id' => $songId])
+                    ->orderBy('date1','desc');
+        })->get();
+        }
+        dd($data);
+
+        // if (!empty($keyword)) {
+        //     $tours =  $query->where('setlist1', 'like', "%{$keyword}%")
+        //         ->orWhere('setlist2', 'like', "%{$keyword}%");
+        // };
+
+        // $data = $query->orderBy('date1','desc')->get();
 
         $bios = Bio::orderBy('id', 'asc')
             ->get();
