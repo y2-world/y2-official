@@ -19,7 +19,7 @@
         @endforeach
       </select>
     </div>
-    <div class="search">
+    {{-- <div class="search">
       <form action="{{url('/find')}}" method="GET">
           <div class="input-group mb-3">
               <input type="text" class="form-control" id="searchInput" aria-label="Search" value="{{request('keyword')}}" name="keyword"
@@ -30,7 +30,13 @@
               </div>
           </div>
       </form>
-  </div>
+    </div> --}}
+    <select name="select" onChange="location.href=value;">
+        <option value="" disabled selected>Search songs</option>
+        @foreach ($songs as $song)
+        <option value="{{ url('songs/' . $song->id) }}">{{ $song->title }}</option>
+        @endforeach
+    </select>
   </div>
   <table class="table table-striped">
       <thead>
