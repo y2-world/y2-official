@@ -16,12 +16,6 @@
                         </div>
                     </form>
                 </div> --}}
-                <select name="select" onChange="location.href=value;">
-                    <option value="" disabled selected>Search songs</option>
-                    @foreach ($allSongs as $song)
-                    <option value="{{ url('songs/' . $song->id) }}">{{ $song->title }}</option>
-                    @endforeach
-                </select>
                 <div class="dropdown-wrapper">
                     <div class="setlist"># {{ $songs->id }}</div>
                     <h3> {{ $songs->title }}</h3>
@@ -51,6 +45,12 @@
                         {{ $songs->text }}
                     </div>
                 </div>
+                <select name="select" onChange="location.href=value;">
+                    <option value="" disabled selected>Search songs</option>
+                    @foreach ($allSongs as $song)
+                    <option value="{{ url('songs/' . $song->id) }}">{{ $song->title }}</option>
+                    @endforeach
+                </select>
             </div>
 
             @if (!$tours->isEmpty())

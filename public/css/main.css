@@ -1066,6 +1066,14 @@ table.count > tbody > tr > td:first-child::before {
     #album-modal1 {
         width: 400px;
     }
+
+    .parts-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        flex-direction: column-reverse;
+        align-items: center;
+    }
 }
 
 @media screen and (max-width: 992px) {
@@ -1214,14 +1222,6 @@ table.count > tbody > tr > td:first-child::before {
 
     .mb_list, .sp {
         font-size: 9px;
-    }
-
-    .parts-wrapper {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        flex-direction: row;
-        align-items: center;
     }
 
     .error {
