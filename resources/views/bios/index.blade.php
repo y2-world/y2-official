@@ -1,15 +1,15 @@
-<!-- Bootstrap JS -->
+{{-- <!-- Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Typeahead.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.3.1/typeahead.bundle.min.js"></script>
 
 <!-- スクリプトファイルの追加 -->
-<script src="{{ asset('js/search.js') }}"></script>
+<script src="{{ asset('js/search.js') }}"></script> --}}
 
 @extends('layouts.app')
 @section('content')
-    <style>
+    {{-- <style>
         /* Typeaheadのドロップダウンのスタイル */
         .tt-menu {
             background-color: white;
@@ -28,18 +28,24 @@
         .tt-suggestion:hover {
             background-color: #f2f2f2;
         }
-    </style>
+    </style> --}}
     <br>
     <div class="container">
         <div class="parts-wrapper">
             <h2>Mr.Children Database</h2>
-            <div class="search">
+            {{-- <div class="search">
                 <form action="{{ url('/find') }}" method="GET">
                     <div class="input-group mb-3">
                         <input type="text" id="searchInput" class="form-control" placeholder="Search">
                     </div>
                 </form>
-            </div>
+            </div> --}}
+            <select name="select" onChange="location.href=value;">
+                <option value="" disabled selected>Search songs</option>
+                @foreach ($songs as $song)
+                <option value="{{ url('songs/' . $song->id) }}">{{ $song->title }}</option>
+                @endforeach
+            </select>
         </div>
         <hr>
         <h4 class="bio">Discography</h4>

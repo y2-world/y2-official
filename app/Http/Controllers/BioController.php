@@ -20,7 +20,9 @@ class BioController extends Controller
     {
         $bios = Bio::orderBy('id', 'asc')
         ->get();
-        return view('bios.index', compact('bios'));
+        $songs = Song::orderBy('id', 'asc')
+        ->get();
+        return view('bios.index', compact('bios', 'songs'));
     }
 
     /**
