@@ -20,10 +20,10 @@
                             <div class="col-xl-6">
                                 <div class=track-list>
                                 @foreach ($discos->tracklist as $data) 
-                                    @if(!isset($data['id']))
-                                        {{ $data['#'] }}. <a href="{{ url('lyrics', $data['id'])}}">{{ $lyrics[$data['id'] - 1]['title'] }}</a><br>
-                                    @else
-                                        {{ $data['#'] }}. {{ $data['title'] }}<br>
+                                    @if(isset($data['#']) && isset($data['id']))
+                                    {{ $data['#'] }}. <a href="{{ url('lyrics', $data['id'])}}">{{ $lyrics[$data['id'] - 1]['title'] }}</a><br>
+                                    @elseif(isset($data['#']))
+                                    {{ $data['#'] }}<br>
                                     @endif
                                 @endforeach
                                 <br>
