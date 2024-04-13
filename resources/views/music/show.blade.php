@@ -9,7 +9,6 @@
                         <small class="date">{{ $discos->subtitle}}</small>
                         <h4>{{$discos->title}}</h4>
                         <small class="date">{{ date('Y.m.d', strtotime($discos->date)) }}</small>
-                        @if(!empty($discos))
                         <hr>
                         <div class="row">
                             <div class="col-xl-6">
@@ -17,6 +16,7 @@
                                     <img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $discos->image) }} class="disco-image" width="100%"> 
                                 </div>
                             </div>
+                            @if(!empty($discos))
                             <div class="col-xl-6">
                                 <div class=track-list>
                                 @foreach ($discos->tracklist as $data) 
@@ -31,8 +31,8 @@
                                 <br>
                                 </div>
                             </div>
+                            @endif
                         </div>
-                        @endif
                         <div class="show_button">
                             {{-- @if(isset($previous))
                             <a class="btn btn-outline-dark" href="{{ route('music.show', $previous->id)}}" rel="prev" role="button"><</a>
