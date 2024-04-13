@@ -3,33 +3,47 @@
     <br>
     <div class="container-lg">
         <div class="row justify-content-center">
-
-            <div class="setlist"># {{ $songs->id }}</div>
-            <h3> {{ $songs->title }}</h3>
-            <div class="setlist">
-                @if (isset($songs->single->title))
+            <div class="parts-wrapper">
+                {{-- <div class="search">
+                    <form action="{{ url('/find') }}" method="GET">
+                        <div class="input-group mb-3">
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search">
+                        </div>
+                    </form>
+                </div> --}}
+                <div class="setlist">
+                    <div class="setlist"># {{ $songs->id }}</div>
+                    <h3> {{ $songs->title }}</h3>
                     @if (isset($songs->single->title))
-                        Single : <a href="{{ route('singles.show', $songs->single_id) }}">{{ $songs->single->title }}</a>
-                        </td>
+                        @if (isset($songs->single->title))
+                            Single : <a href="{{ route('singles.show', $songs->single_id) }}">{{ $songs->single->title }}</a>
+                            </td>
+                        @endif
+                        <br>
+                        @if (isset($songs->single->date))
+                            Release Date : {{ date('Y.m.d', strtotime($songs->single->date)) }}<br>
+                        @endif
                     @endif
-                    <br>
-                    @if (isset($songs->single->date))
-                        Release Date : {{ date('Y.m.d', strtotime($songs->single->date)) }}<br>
-                    @endif
-                @endif
-                @if (isset($songs->album->title))
                     @if (isset($songs->album->title))
-                        Album : <a href="{{ route('albums.show', $songs->album_id) }}">{{ $songs->album->title }}</a>
-                        </td>
+                        @if (isset($songs->album->title))
+                            Album : <a href="{{ route('albums.show', $songs->album_id) }}">{{ $songs->album->title }}</a>
+                            </td>
+                        @endif
+                        <br>
+                        @if (isset($songs->album->date))
+                            Release Date : {{ date('Y.m.d', strtotime($songs->album->date)) }}
+                        @endif
+                    @else
+                        アルバム未収録
                     @endif
-                    <br>
-                    @if (isset($songs->album->date))
-                        Release Date : {{ date('Y.m.d', strtotime($songs->album->date)) }}
-                    @endif
-                @else
-                    アルバム未収録
-                @endif
-                {{ $songs->text }}
+                    {{ $songs->text }}
+                </div>
+                <select name="select" onChange="location.href=value;">
+                    <option value="" disabled selected>Search songs</option>
+                    @foreach ($allSongs as $song)
+                        <option value="{{ url('songs/' . $song->id) }}">{{ $song->title }}</option>
+                    @endforeach
+                </select>
             </div>
             @if (!$tours->isEmpty())
                 <br>

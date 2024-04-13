@@ -57,6 +57,8 @@ class SongController extends Controller
     public function show($id)
     {
         $songs = Song::find($id);
+        $allSongs = Song::orderBy('id', 'asc')
+        ->get();
         $albums = Album::orderBy('id', 'asc')
         ->get();
         $singles = Single::orderBy('id', 'asc')
@@ -69,7 +71,7 @@ class SongController extends Controller
         $previous = Song::where('id', '<', $songs->id)->orderBy('id', 'desc')->first();
         $next = Song::where('id', '>', $songs->id)->orderBy('id')->first();
         
-        return view('songs.show', compact('songs', 'previous', 'next', 'albums', 'singles', 'tours'));
+        return view('songs.show', compact('songs', 'allSongs', 'previous', 'next', 'albums', 'singles', 'tours'));
     }
 
     /**
