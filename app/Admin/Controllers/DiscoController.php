@@ -85,7 +85,6 @@ class DiscoController extends AdminController
         $form->table('tracklist', __('収録曲'), function ($table) {
             $table->text('#');
             $table->select('id', __('ID'))->options(Lyric::all()->pluck('title', 'id'));
-            $table->select('title', __('タイトル'))->options(Lyric::all()->pluck('title', 'title'));
         });
         $form->textarea('text', __('テキスト'));
         $form->image('image', __('画像'))->uniqueName();

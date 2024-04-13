@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Disco;
+use App\Models\Lyric;
 
 class DiscoController extends Controller
 {
@@ -49,10 +50,13 @@ class DiscoController extends Controller
     public function show($id)
     {
         $discos = Disco::find($id);
+        dd($discos);
+        $lyrics = Lyric::orderBy('id', 'asc')
+        ->get();
         $previous = Disco::where('id', '<', $discos->id)->orderBy('id', 'desc')->first();
         $next = Disco::where('id', '>', $discos->id)->orderBy('id')->first();
 
-        return view('music.show', compact('discos', 'previous', 'next'));
+        return view('music.show', compact('discos','lyrics', 'previous', 'next'));
         
     }
 
