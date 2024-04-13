@@ -83,8 +83,8 @@ class DiscoController extends AdminController
                 1 =>'アルバム',
             ]);
         $form->table('tracklist', __('収録曲'), function ($table) {
-            $table->text('#');
             $table->select('id', __('ID'))->options(Lyric::all()->pluck('title', 'id'));
+            $table->text('exception');
         });
         $form->textarea('text', __('テキスト'));
         $form->image('image', __('画像'))->uniqueName();
