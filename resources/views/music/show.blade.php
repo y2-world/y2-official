@@ -24,7 +24,7 @@
                                     @if(isset($data['#']) && isset($data['id']))
                                     <li><a href="{{ url('lyrics', $data['id'])}}">{{ $lyrics[$data['id'] - 1]['title'] }}</a></li>
                                     @elseif(isset($data['#']))
-                                    <li>{{ $data['#'] }}</li><br>
+                                    <li>{{ $data['#'] }}</li>
                                     @endif
                                 @endforeach
                                     </ol>
