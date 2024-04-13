@@ -16,7 +16,7 @@
                                     <img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $discos->image) }} class="disco-image" width="100%"> 
                                 </div>
                             </div>
-                            @if(!empty($discos))
+                            @if(!empty($discos->tracklist))
                             <div class="col-xl-6">
                                 <div class=track-list>
                                 @foreach ($discos->tracklist as $data) 
