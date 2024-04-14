@@ -833,7 +833,7 @@ table {
 
 select {
     /* 初期化 */
-    /* appearance: none; */
+    appearance: none;
     -moz-appearance: none;
     /* -webkit-appearance: none; */
     background: none;
