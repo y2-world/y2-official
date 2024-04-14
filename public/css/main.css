@@ -883,10 +883,6 @@ nav {
     font-size: 9px;
 }
 
-.show_button {
-    padding-top: 30px;
-}
-
 .cover-wrapper {
     display: flex;
     flex-wrap: nowrap;
