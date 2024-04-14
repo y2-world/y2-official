@@ -21,7 +21,9 @@
                                 <div class=track-list>
                                     <ol>
                                 @foreach ($discos->tracklist as $data) 
-                                    @if(isset($data['id']))
+                                    @if(isset($data['id']) && isset($data['exception']))
+                                    <li><a href="{{ url('lyrics', $data['id'])}}">{{ $lyrics[$data['id'] - 1]['exception'] }}</a></li>
+                                    @elseif(isset($data['id']))
                                     <li><a href="{{ url('lyrics', $data['id'])}}">{{ $lyrics[$data['id'] - 1]['title'] }}</a></li>
                                     @elseif(isset($data['exception']))
                                     <li>{{ $data['exception'] }}</li>
