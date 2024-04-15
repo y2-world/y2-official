@@ -23,8 +23,8 @@ class SearchController extends Controller
         if (!empty($keyword)) {
             $setlists = $query->where('artist_id', $artist_id)
                 ->where(function ($query) use ($keyword) {
-                    $query->whereRaw("JSON_EXTRACT(setlist, '$.*.song') REGEXP '\"$keyword\"'")
-                        ->orWhereRaw("JSON_EXTRACT(encore, '$.*.song') REGEXP '\"$keyword\"'");
+                    $query->where('setlist', 'like', "%{$keyword}%")
+                           ->orWhere('encore', 'like', "%{$keyword}%");
                 })
                 ->orWhere(function ($query) use ($keyword, $artist_id) {
                     $query->whereNull('artist_id')
