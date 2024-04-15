@@ -27,9 +27,10 @@ class SearchController extends Controller
                            ->orWhere('encore', 'like', "%{$keyword}%");
                 })
                 ->orWhere(function ($query) use ($keyword, $artist_id) {
-                    $query->where(function ($query) use ($artist_id, $keyword) {
-                            $query->whereRaw("JSON_EXTRACT(setlist, '$.*.artist') REGEXP '\"$artist_id\"'")
-                                ->whereRaw("JSON_EXTRACT(setlist, '$.*.song') REGEXP '\"$keyword\"'");
+                    $query->whereNull('artist_id')
+                        ->where(function ($query) use ($artist_id, $keyword) {
+                            $query->whereRaw("JSON_EXTRACT(fes_setlist, '$.*.artist') REGEXP '\"$artist_id\"'")
+                                ->whereRaw("JSON_EXTRACT(fes_encore, '$.*.song') REGEXP '\"$keyword\"'");
                         });
                 });
         }
