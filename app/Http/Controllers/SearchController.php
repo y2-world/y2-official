@@ -14,28 +14,54 @@ class SearchController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {   
+    {
         $artist_id = $request->input('artist_id');
         $query = Setlist::query();
         $keyword = $request->input('keyword');
- 
+
+        // キーワードが空でない場合のみ、検索条件を追加
         if (!empty($keyword)) {
-            $setlists = $query->where('artist_id', "$artist_id") 
-            ->where(function($query) use ($keyword) {
-                $query->where('setlist', 'like', "%{$keyword}%")
-                ->orWhere('encore', 'like', "%{$keyword}%");
-            })->orWhere(function($query) use ($keyword) {
-                $query->where('fes_setlist', 'like', "%{$keyword}%")
-                ->orWhere('fes_encore', 'like', "%{$keyword}%");
-            });
-        };
+            $setlists = $query->where('artist_id', $artist_id)
+                ->where(function ($query) use ($keyword) {
+                    $query->whereRaw("JSON_EXTRACT(setlist, '$.*.song') REGEXP '\"$keyword\"'")
+                        ->orWhereRaw("JSON_EXTRACT(encore, '$.*.song') REGEXP '\"$keyword\"'");
+                })
+                ->orWhere(function ($query) use ($keyword, $artist_id) {
+                    $query->whereNull('artist_id')
+                        ->where(function ($query) use ($artist_id, $keyword) {
+                            $query->whereRaw("JSON_EXTRACT(setlist, '$.*.artist') REGEXP '\"$artist_id\"'")
+                                ->whereRaw("JSON_EXTRACT(setlist, '$.*.song') REGEXP '\"$keyword\"'");
+                        });
+                });
+        }
 
-        $data = $query->orderBy('date','desc')->get();
+        $data = $query->orderBy('date', 'desc')->get();
 
-        $artists = Artist::orderBy('id', 'asc')
-        ->get();
- 
+        $artists = Artist::orderBy('id', 'asc')->get();
+
         return view('search', compact('data', 'keyword', 'artist_id', 'artists'));
+
+        // $artist_id = $request->input('artist_id');
+        // $query = Setlist::query();
+        // $keyword = $request->input('keyword');
+ 
+        // if (!empty($keyword)) {
+        //     $setlists = $query->where('artist_id', "$artist_id") 
+        //     ->where(function($query) use ($keyword) {
+        //         $query->where('setlist', 'like', "%{$keyword}%")
+        //         ->orWhere('encore', 'like', "%{$keyword}%");
+        //     })->orWhere(function($query) use ($keyword) {
+        //         $query->where('fes_setlist', 'like', "%{$keyword}%")
+        //         ->orWhere('fes_encore', 'like', "%{$keyword}%");
+        //     });
+        // };
+
+        // $data = $query->orderBy('date','desc')->get();
+
+        // $artists = Artist::orderBy('id', 'asc')
+        // ->get();
+ 
+        // return view('search', compact('data', 'keyword', 'artist_id', 'artists'));
     }
 
     /**

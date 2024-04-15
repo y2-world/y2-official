@@ -27,7 +27,7 @@
           <div class="mb_dropdown">
             <select name="artist_id" required data-toggle="select"> 
               <option value="" disabled selected>Artists</option>
-                @foreach ($artists as $artist)
+                @foreach ($allArtists as $artist)
                     <option value="{{ $artist->id }}" required>{{$artist->name}}</option>
                 @endforeach
             </select>

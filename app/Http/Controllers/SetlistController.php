@@ -20,9 +20,11 @@ class SetlistController extends Controller
         ->paginate(10);
         $artists = Artist::where('visible', 0)->orderBy('id', 'asc')
         ->get();
+        $allArtists = Artist::orderBy('id', 'asc')
+        ->get();
         $years = Year::orderBy('year', 'asc')
         ->get();
-        return view('setlists.index', compact('artists', 'setlists', 'years'));
+        return view('setlists.index', compact('artists', 'allArtists', 'setlists', 'years'));
     }
 
     /**
