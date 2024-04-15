@@ -30,7 +30,6 @@
                                     @endif
                                 @endforeach
                                     </ol>
-                                <br>
                                 </div>
                             </div>
                             @endif
