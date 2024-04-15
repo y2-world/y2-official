@@ -49,7 +49,6 @@
             {!! nl2br(e($albums->text)) !!}
             @endif
           </div>
-          <br>
           <div class="show_button">
             @if(isset($previous))
             <a class="btn btn-outline-dark" href="{{ route('albums.show', $previous->id)}}" rel="prev" role="button"><</a>

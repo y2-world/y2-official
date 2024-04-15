@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 <select name="select" onChange="location.href=value;">
-                    <option value="" disabled selected>Search songs</option>
+                    <option value="" disabled selected>Select song</option>
                     @foreach ($allSongs as $song)
                     <option value="{{ url('songs/' . $song->id) }}">{{ $song->title }}</option>
                     @endforeach

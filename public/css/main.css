@@ -790,7 +790,8 @@ table {
 }
 
 .show_button {
-    padding-bottom: 20px;
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 
 .setlist_title {

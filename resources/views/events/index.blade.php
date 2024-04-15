@@ -20,7 +20,7 @@
       </select>
     </div>
     <select name="select" onChange="location.href=value;">
-      <option value="" disabled selected>Search songs</option>
+      <option value="" disabled selected></option>
       @foreach ($songs as $song)
       <option value="{{ url('songs/' . $song->id) }}">{{ $song->title }}</option>
       @endforeach
@@ -67,7 +67,6 @@
   <div class=”pagination”>
     {!! $tours->links() !!}
   </div>
-  <br>
 </div>
 <script>
   const searchInput = document.getElementById('searchInput');
