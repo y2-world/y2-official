@@ -60,6 +60,7 @@
                     @endif
                     @if(request('live_type') == 2)
                     <th class="sp">タイトル</th>
+                    <th class="pc_list"></th>
                     @else
                     <th class="pc_list">タイトル</th>
                     @endif
