@@ -54,8 +54,10 @@
                 <tr>
                     <th class="mb_list">#</th>
                     <th class="mb_list">開催日</th>
+                    @if(request('live_type') != 2)
                     <th class="sp">アーティスト / タイトル</th>
                     <th class="pc_list">アーティスト</th>
+                    @endif
                     <th class="pc_list">タイトル</th>
                     <th class="pc_list">会場</th>
                 </tr>
@@ -66,6 +68,7 @@
                         <tr>
                             <td>{{ $setlist->id }}</td>
                             <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
+                            @if(request('live_type') != 2)
                             @if (isset($setlist->artist_id))
                                 <td class="pc_list">
                                     <a href="{{ url('artists', $setlist->artist_id) }}">{{ $setlist->artist->name }}</a>
@@ -78,6 +81,7 @@
                                 <td class="pc_list"></td>
                                 <td class="sp"><a
                                         href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
+                            @endif
                             @endif
                             <td class="pc_list"><a
                                     href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
