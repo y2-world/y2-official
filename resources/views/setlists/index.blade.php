@@ -58,7 +58,11 @@
                     <th class="sp">アーティスト / タイトル</th>
                     <th class="pc_list">アーティスト</th>
                     @endif
+                    @if(request('live_type') != 2)
+                    <th class="sp">タイトル</th>
+                    @else
                     <th class="pc_list">タイトル</th>
+                    @endif
                     <th class="pc_list">会場</th>
                 </tr>
             </thead>
