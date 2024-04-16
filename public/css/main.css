@@ -1072,6 +1072,11 @@ table.count > tbody > tr > td:first-child::before {
         flex-direction: column-reverse;
         align-items: center;
     }
+
+    body {
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
 }
 
 @media screen and (max-width: 992px) {
