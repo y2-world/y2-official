@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <br>
-<div class="container-lg">
+<div class="container">
   <h2>Live</h2>
   <div class="parts-wrapper">
     <div class="dropdown-wrapper">

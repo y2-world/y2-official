@@ -1215,14 +1215,6 @@ pre code {
     max-width: 66.6666666667%;
   }
 
-  @media (max-width: 767px) {
-    .col-md-8 {
-      width: 100%;
-      max-width: 100%;
-      flex: 0 0 100%;
-    }
-  }
-
   .col-md-9 {
     flex: 0 0 75%;
     max-width: 75%;

@@ -2,9 +2,9 @@
 @section('content')
 <div class="mt-4"></div>
 <div class="disco">
-    {{-- <div class="container"> --}}
-        <div class="row justify-content-center">
-            <div class="col-md-8">
+    <div class="container-lg">
+        {{-- <div class="row justify-content-center"> --}}
+            <div class="col-md-12">
                 <h2 class="music-header">Music</h2>
                 <ul class="music-menu">
                     <li><a href="{{ url('/music') }}" >All</a></li>
@@ -26,7 +26,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-    {{-- </div> --}}
+        {{-- </div> --}}
+    </div>
 </div>
 @endsection

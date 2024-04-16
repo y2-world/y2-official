@@ -2,7 +2,7 @@
 @section('content')
 <div class="mt-4"></div>
 <div class="news">
-    <div class="container">
+    <div class="container-lg">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="element js-fadein">
