@@ -59,8 +59,9 @@
                     <th class="pc_list">アーティスト</th>
                     @endif
                     @if(request('live_type') == 2)
-                    <th class="sp">タイトル</th>
                     <th class="pc_list"></th>
+                    <th class="sp">タイトル</th>
+                    <th class="pc_list">タイトル</th>
                     @else
                     <th class="pc_list">タイトル</th>
                     @endif
