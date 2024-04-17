@@ -65,7 +65,7 @@ $today = strtotime(date('Y-m-d'));
     </div>
 </div>
 
-<div class="index-wrapper" id="profile">
+<div class="index-wrapper" id="profile" style="padding-top:70px">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-11">
@@ -97,7 +97,7 @@ $today = strtotime(date('Y-m-d'));
     </div>
 </div>
 
-<div class="index-wrapper" id="radio">
+<div class="index-wrapper" id="radio" style="padding-top:70px">>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-11">
