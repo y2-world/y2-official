@@ -24,7 +24,7 @@ class LiveController extends Controller
     
         if ($liveType === '1') {
             // live_typeが1の場合はfesカラムが0のセットリストを取得する
-            $liveQuery->where('type', 1);
+            $liveQuery->whereIn('type', [0, 1]);
         } elseif ($liveType === '2') {
             // live_typeが2の場合はfesカラムが1か2のセットリストを取得する
             $liveQuery->where('type', 2);
