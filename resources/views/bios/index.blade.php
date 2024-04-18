@@ -40,28 +40,12 @@
                     </div>
                 </form>
             </div> --}}
-            <div>
-                <select name="select" onChange="location.href=value;">
-                    <option value="" disabled selected>Select song</option>
-                    @foreach ($songs as $song)
-                    <option value="{{ url('songs/' . $song->id) }}">{{ $song->title }}</option>
-                    @endforeach
-                </select>
-                <div class="row">
-                    <div class="col-md-3">
-                      <div class="form-check">
-                        <input class="form-check-input" type="radio" name="include" id="allRadio" value="1" checked>
-                        <label class="form-check-label" for="allRadio">All</label>
-                      </div>
-                    </div>
-                    <div class="col-md-9">
-                      <div class="form-check">
-                        <input class="form-check-input" type="radio" name="include" id="includeSoloRadio" value="2">
-                        <label class="form-check-label" for="includeSoloRadio">Not Include Solo</label>
-                    </div>
-                    </div>
-                  </div>
-            </div>
+            <select name="select" onChange="location.href=value;">
+                <option value="" disabled selected>Select song</option>
+                @foreach ($songs as $song)
+                <option value="{{ url('songs/' . $song->id) }}">{{ $song->title }}</option>
+                @endforeach
+            </select>
         </div>
         <hr>
         <h4 class="bio">Discography</h4>
