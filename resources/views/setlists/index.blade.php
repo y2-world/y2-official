@@ -43,22 +43,22 @@
             </div>
         </div>
         <ul class="music-menu">
-            <li><a href="{{ url('/setlists') }}" class="{{ request('live_type') ? '' : 'active' }}">All</a></li>
-            <li><a href="{{ url('/setlists?live_type=1') }}"
-                    class="{{ request('live_type') == '1' ? 'active' : '' }}">Live</a></li>
-            <li><a href="{{ url('/setlists?live_type=2') }}"
-                    class="{{ request('live_type') == '2' ? 'active' : '' }}">Fes</a></li>
+            <li><a href="{{ url('/setlists') }}" class="{{ request('type') ? '' : 'active' }}">All</a></li>
+            <li><a href="{{ url('/setlists?type=1') }}"
+                    class="{{ request('type') == '1' ? 'active' : '' }}">Live</a></li>
+            <li><a href="{{ url('/setlists?type=2') }}"
+                    class="{{ request('type') == '2' ? 'active' : '' }}">Fes</a></li>
         </ul>
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th class="mb_list">#</th>
                     <th class="mb_list">開催日</th>
-                    @if(request('live_type') != 2)
+                    @if(request('type') != 2)
                     <th class="sp">アーティスト / タイトル</th>
                     <th class="pc_list">アーティスト</th>
                     @endif
-                    @if(request('live_type') == 2)
+                    @if(request('type') == 2)
                     <th class="pc_list"></th>
                     <th class="sp">タイトル</th>
                     <th class="pc_list">タイトル</th>

@@ -26,7 +26,7 @@ class SetlistController extends Controller
         // ->get();
         // return view('setlists.index', compact('artists', 'allArtists', 'setlists', 'years'));
 
-        $liveType = request()->input('live_type');
+        $liveType = request()->input('type');
 
         // クエリビルダーを生成し、セットリストを取得する
         $setlistsQuery = Setlist::orderBy('date', 'desc');

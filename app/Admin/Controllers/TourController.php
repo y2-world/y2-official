@@ -41,6 +41,7 @@ class TourController extends AdminController
                 1    => '単発ライブ',
                 2    => 'イベント',
                 3    => 'ap bank fes',
+                4    => 'ソロ',
             ]);
             
             $filter->year('year', '年');
@@ -65,6 +66,7 @@ class TourController extends AdminController
         $show->field('tour_id', __('ツアーID'));
         $show->field('event_id', __('イベントID'));
         $show->field('ap_id', __('ap ID'));
+        $show->field('solo_id', __('ソロ ID'));
         $show->field('date1', __('開始日'));
         $show->field('date2', __('終了日'));
         $show->field('year', __('年'));
@@ -92,6 +94,7 @@ class TourController extends AdminController
                 1 =>'単発ライブ',
                 2 =>'イベント',
                 3 =>'ap bank fes',
+                4 =>'ソロ',
             ])->when(0, function (Form $form) {
                 $form->text('tour_id', __('ID'));
                 $form->dateRange('date1', 'date2', '開催期間');
@@ -104,6 +107,10 @@ class TourController extends AdminController
                 $form->text('venue', __('会場'));
             })->when(3, function (Form $form) {
                 $form->text('ap_id', __('ID'));
+                $form->dateRange('date1', 'date2', '開催期間');
+                $form->text('venue', __('会場'));
+            })->when(4, function (Form $form) {
+                $form->text('solo_id', __('ID'));
                 $form->dateRange('date1', 'date2', '開催期間');
                 $form->text('venue', __('会場'));
             });

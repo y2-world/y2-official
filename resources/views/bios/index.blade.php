@@ -67,9 +67,10 @@
                 <div class="year-wrapper">
                     <div class="year-padding">
                         <a class="btn btn-outline-dark btn-sm" href="{{ url('/live') }}" role="button">All</a>
-                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/tours') }}" role="button">Tours</a>
-                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/events') }}" role="button">Events</a>
-                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/apbankfes') }}" role="button">ap bank fes</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/live?type=1') }}" role="button">Tours</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/live?type=2') }}" role="button">Events</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/live?type=3') }}" role="button">ap bank fes</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/live?type=4') }}" role="button">Solo</a>
                     </div>
                 </div>
             </div>

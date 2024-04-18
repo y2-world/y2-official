@@ -16,9 +16,34 @@ class LiveController extends Controller
      */
     public function index()
     {
-        $tours = Tour::query()
-        ->orderBy('id', 'desc')
-        ->paginate(10);
+
+        $liveType = request()->input('type');
+
+        // クエリビルダーを生成し、セットリストを取得する
+        $liveQuery = Tour::orderBy('date1', 'desc');
+    
+        if ($liveType === '1') {
+            // live_typeが1の場合はfesカラムが0のセットリストを取得する
+            $liveQuery->where('type', 1);
+        } elseif ($liveType === '2') {
+            // live_typeが2の場合はfesカラムが1か2のセットリストを取得する
+            $liveQuery->where('type', 2);
+        } elseif ($liveType === '3') {
+            // live_typeが2の場合はfesカラムが1か2のセットリストを取得する
+            $liveQuery->where('type', 3);
+        } elseif ($liveType === '4') {
+            // live_typeが2の場合はfesカラムが1か2のセットリストを取得する
+            $liveQuery->where('type', 4);
+        }
+
+        $bios = Bio::orderBy('id', 'asc')
+        ->get();
+        $songs = Song::orderBy('id', 'asc')
+        ->get();
+    
+        // ページネーションを適用してセットリストを取得する
+        $tours = $liveQuery->paginate(10);
+    
         $bios = Bio::orderBy('id', 'asc')
         ->get();
         $songs = Song::orderBy('id', 'asc')
@@ -55,7 +80,13 @@ class LiveController extends Controller
      */
     public function show($id)
     {
-        //
+        $tours = Tour::find($id);
+        $songs = Song::orderBy('id', 'asc')
+        ->get();
+        $previous = Tour::where('id', '<', $tours->id)->orderBy('id', 'desc')->first();
+        $next = Tour::where('id', '>', $tours->id)->orderBy('id')->first();
+        
+        return view('tours.show', compact('songs', 'previous', 'next', 'tours'));
     }
 
     /**
