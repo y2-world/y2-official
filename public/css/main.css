@@ -800,7 +800,7 @@ table {
     text-align: left;
 }
 
-.parts-wrapper {
+.parts-wrapper, .database-wrapper {
     display: flex;
     justify-content: space-between;
     flex-direction: row;
@@ -1080,6 +1080,14 @@ table.count > tbody > tr > td:first-child::before {
         flex-direction: column-reverse;
         align-items: center;
     }
+
+    .database-wrapper {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        align-items: center;
+    }
+    
 }
 
 @media screen and (max-width: 992px) {
