@@ -929,6 +929,14 @@ table.count > tbody > tr > td:first-child::before {
     font-size: 12px;
 }
 
+.td_date {
+    width: 15%;
+}
+
+.td_title {
+    width: 60%;
+}
+
 @media (min-width: 1024px) {
     .column1,
     .column2-tour,
