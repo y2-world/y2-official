@@ -41,6 +41,12 @@
                 </form>
             </div> --}}
             <div>
+                <select name="select" onChange="location.href=value;">
+                    <option value="" disabled selected>Select song</option>
+                    @foreach ($songs as $song)
+                    <option value="{{ url('songs/' . $song->id) }}">{{ $song->title }}</option>
+                    @endforeach
+                </select>
                 <div class="row">
                     <div class="col-md-3">
                       <div class="form-check">
@@ -55,12 +61,6 @@
                     </div>
                     </div>
                   </div>
-                <select name="select" onChange="location.href=value;">
-                    <option value="" disabled selected>Select song</option>
-                    @foreach ($songs as $song)
-                    <option value="{{ url('songs/' . $song->id) }}">{{ $song->title }}</option>
-                    @endforeach
-                </select>
             </div>
         </div>
         <hr>
