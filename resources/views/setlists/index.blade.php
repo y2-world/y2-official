@@ -96,7 +96,7 @@
             </div>
         </table>
         <div class=”pagination”>
-            {!! $setlists->links() !!}
+            {!! $setlists->appends(['type' => $type])->links() !!}
         </div>
         <br>
     </div>

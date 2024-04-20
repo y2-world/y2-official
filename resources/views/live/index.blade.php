@@ -88,7 +88,7 @@
             </div>
         </table>
         <div class=”pagination”>
-            {!! $tours->links() !!}
+          {!! $tours->appends(['type' => $type])->links() !!}
         </div>
         <br>
     </div>
