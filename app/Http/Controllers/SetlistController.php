@@ -26,15 +26,15 @@ class SetlistController extends Controller
         // ->get();
         // return view('setlists.index', compact('artists', 'allArtists', 'setlists', 'years'));
 
-        $liveType = request()->input('type');
+        $type = request()->input('type');
 
         // クエリビルダーを生成し、セットリストを取得する
         $setlistsQuery = Setlist::orderBy('date', 'desc');
     
-        if ($liveType === '1') {
+        if ($type === '1') {
             // live_typeが1の場合はfesカラムが0のセットリストを取得する
             $setlistsQuery->where('fes', 0);
-        } elseif ($liveType === '2') {
+        } elseif ($type === '2') {
             // live_typeが2の場合はfesカラムが1か2のセットリストを取得する
             $setlistsQuery->whereIn('fes', [1, 2]);
         }
@@ -48,7 +48,7 @@ class SetlistController extends Controller
         $years = Year::orderBy('year', 'asc')->get();
     
         // ビューにデータを渡して表示する
-        return view('setlists.index', compact('artists', 'allArtists', 'setlists', 'years'));
+        return view('setlists.index', compact('artists', 'allArtists', 'setlists', 'years', 'type'));
     }
 
     /**

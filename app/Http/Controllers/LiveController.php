@@ -17,21 +17,21 @@ class LiveController extends Controller
     public function index()
     {
 
-        $liveType = request()->input('type');
+        $type = request()->input('type');
 
         // クエリビルダーを生成し、セットリストを取得する
         $liveQuery = Tour::orderBy('date1', 'desc');
     
-        if ($liveType === '1') {
+        if ($type === '1') {
             // live_typeが1の場合はfesカラムが0のセットリストを取得する
             $liveQuery->whereIn('type', [0, 1]);
-        } elseif ($liveType === '2') {
+        } elseif ($type === '2') {
             // live_typeが2の場合はfesカラムが1か2のセットリストを取得する
             $liveQuery->where('type', 2);
-        } elseif ($liveType === '3') {
+        } elseif ($type === '3') {
             // live_typeが2の場合はfesカラムが1か2のセットリストを取得する
             $liveQuery->where('type', 3);
-        } elseif ($liveType === '4') {
+        } elseif ($type === '4') {
             // live_typeが2の場合はfesカラムが1か2のセットリストを取得する
             $liveQuery->where('type', 4);
         }
@@ -48,7 +48,7 @@ class LiveController extends Controller
         ->get();
         $songs = Song::orderBy('id', 'asc')
         ->get();
-        return view('live.index', compact('tours', 'bios', 'songs'));
+        return view('live.index', compact('tours', 'bios', 'songs', 'type'));
     }
 
     /**
