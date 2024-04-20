@@ -7,14 +7,12 @@
             <div class="dropdown-wrapper">
                 <select name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Artists</option>
-                    <option value="{{ url('/artists') }}">All Artists</option>
                     @foreach ($artists as $artist)
                         <option value="{{ url('/artists', $artist->id) }}">{{ $artist->name }}</option>
                     @endforeach
                 </select>
                 <select name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Years</option>
-                    <option value="{{ url('/years') }}">All Years</option>
                     @foreach ($years as $year)
                         <option value="{{ url('/years', $year->id) }}">{{ $year->year }}</option>
                     @endforeach

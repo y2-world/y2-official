@@ -5,7 +5,6 @@
   <h2>All Years</h2>
   <select name="select" onChange="location.href=value;">
     <option value="" disabled selected>Artists</option>
-    <option value="{{ url('/artists')}}">All Artists</option>
     @foreach ($artists as $artist)
     <option value="{{ url('/artists', $artist->id)}}">{{ $artist->name }}</option>
     @endforeach
