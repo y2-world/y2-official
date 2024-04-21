@@ -86,7 +86,7 @@ class LiveController extends Controller
         $previous = Tour::where('id', '<', $tours->id)->orderBy('id', 'desc')->first();
         $next = Tour::where('id', '>', $tours->id)->orderBy('id')->first();
         
-        return view('tours.show', compact('songs', 'previous', 'next', 'tours'));
+        return view('live.show', compact('songs', 'previous', 'next', 'tours'));
     }
 
     /**

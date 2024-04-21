@@ -79,7 +79,7 @@
                             @elseif(isset($tour->date1) && !isset($tour->date2))
                                 <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
                             @endif
-                            <td class="td_title"><a href="{{ route('tours.show', $tour->id) }}">{{ $tour->title }}</a>
+                            <td class="td_title"><a href="{{ route('live.show', $tour->id) }}">{{ $tour->title }}</a>
                             </td>
                             <td class="pc_list">{{ $tour->venue }}</td>
                         </tr>
