@@ -136,12 +136,12 @@
                 </div>
                 <div class="show_button">
                     @if (isset($previous))
-                        <a class="btn btn-outline-dark" href="{{ route('tours.show', $previous->id) }}" rel="prev"
+                        <a class="btn btn-outline-dark" href="{{ route('live.show', $previous->id) }}" rel="prev"
                             role="button">
                             <</a>
                     @endif
                     @if (isset($next))
-                        <a class="btn btn-outline-dark" href="{{ route('tours.show', $next->id) }}"rel="next"
+                        <a class="btn btn-outline-dark" href="{{ route('live.show', $next->id) }}"rel="next"
                             role="button">></a>
                     @endif
                 </div>

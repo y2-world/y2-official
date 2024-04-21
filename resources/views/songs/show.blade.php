@@ -74,7 +74,7 @@
                                     <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
                                 @endif
                                 <td class="td_title"><a
-                                        href="{{ route('tours.show', $tour->id) }}">{{ $tour->title }}</a></td>
+                                        href="{{ route('live.show', $tour->id) }}">{{ $tour->title }}</a></td>
                             </tr>
                         @endforeach
                     </tbody>
