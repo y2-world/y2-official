@@ -42,9 +42,9 @@
     </div>
     <div class="error">
         @if($data->isEmpty())
-        <p>検索結果がありません。</p>
+        <small>検索結果がありません。</small>
         @else
-        <p>全{{count($data)}}件</p>
+        <small>全{{count($data)}}件</small>
         @endif 
     </div>
     @if(!$data->isEmpty())
