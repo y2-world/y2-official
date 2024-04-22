@@ -25,13 +25,8 @@
                   {{ $data['#'] }}. {{ $data['exception'] }}<br>
                 @endif
               @endforeach
-              <br>
-            @endif
-            @if(!is_null($singles->text))
-            {!! nl2br(e($singles->text)) !!}
             @endif
           </div>
-          <br>
           <div class="show_button">
             @if(isset($previous))
             <a class="btn btn-outline-dark" href="{{ route('singles.show', $previous->id)}}" rel="prev" role="button"><</a>
