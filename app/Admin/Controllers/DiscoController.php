@@ -51,8 +51,8 @@ class DiscoController extends AdminController
         $show->field('date', __('リリース日'));
         $show->field('tracklist', __('収録曲'))->unescape()->as(function ($tracklist) {
             $result = [];
-            foreach($tracklist as $data) {
-                $result[] = $data['#'].'. '.$data['title'];
+            foreach ($tracklist as $data) {
+                $result[] = $data['#'] . '. ' . $data['title'];
             }
             return implode('<br>', $result);
         });
@@ -77,15 +77,20 @@ class DiscoController extends AdminController
         $form->text('title', __('タイトル'));
         $form->text('subtitle', __('サブタイトル'));
         $form->date('date', __('リリース日'));
-        $form->radio('type','タイプ')
+        $form->radio('type', 'タイプ')
             ->options([
-                0 =>'シングル',
-                1 =>'アルバム',
+                0 => 'シングル',
+                1 => 'アルバム',
             ]);
         $form->table('tracklist', __('収録曲'), function ($table) {
             $table->select('id', __('ID'))->options(Lyric::all()->pluck('title', 'id'));
             $table->text('exception');
         });
+        $form->radio('visible', '公開')
+            ->options([
+                0 => '公開',
+                1 => '非公開',
+            ]);
         $form->textarea('text', __('テキスト'));
         $form->image('image', __('画像'))->uniqueName();
 

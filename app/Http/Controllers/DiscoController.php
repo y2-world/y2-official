@@ -15,7 +15,7 @@ class DiscoController extends Controller
      */
     public function index()
     {
-        $discos = Disco::orderBy('date', 'desc')
+        $discos = Disco::where('visible', 0)->orderBy('date', 'desc')
         ->get();
         return view('music.index', compact('discos'));
     }

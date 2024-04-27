@@ -45,9 +45,6 @@
               @endforeach
               <br>
             @endif
-            @if(!is_null($albums->text))
-            {!! nl2br(e($albums->text)) !!}
-            @endif
           </div>
           <div class="show_button">
             @if(isset($previous))
