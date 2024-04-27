@@ -10,7 +10,6 @@
                         <hr>
                         @if(isset($lyrics->lyrics))
                             <p class="text"> {!! nl2br(e($lyrics->lyrics)) !!}</p>
-                            <br>
                         @endif
                         <div class="show_button">
                             {{-- @if(isset($previous))
