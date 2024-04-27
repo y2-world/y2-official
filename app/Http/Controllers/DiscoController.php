@@ -23,11 +23,13 @@ class DiscoController extends Controller
             // live_typeが1の場合はfesカラムが0のセットリストを取得する
             $discos = Disco::orderBy('date', 'desc')
                 ->where('type', '=', "0")
+                ->where('visible', '=', "0")
                 ->get();
         } elseif ($type === '2') {
             // live_typeが2の場合はfesカラムが1か2のセットリストを取得する
             $discos = Disco::orderBy('date', 'desc')
                 ->where('type', '=', "1")
+                ->where('visible', '=', "0")
                 ->get();
         }
 
