@@ -17,7 +17,7 @@ class DiscoController extends Controller
     {
         $type = request()->input('type');
 
-        $discos = Disco::orderBy('date', 'desc')->get();
+        $discos = Disco::orderBy('date', 'desc')->where('visible', '=', "0")->get();
 
         if ($type === '1') {
             // live_typeが1の場合はfesカラムが0のセットリストを取得する
