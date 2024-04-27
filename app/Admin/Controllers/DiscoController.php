@@ -82,16 +82,15 @@ class DiscoController extends AdminController
                 0 => 'シングル',
                 1 => 'アルバム',
             ]);
-        $form->table('tracklist', __('収録曲'), function ($table) {
-            $table->select('id', __('ID'))->options(Lyric::all()->pluck('title', 'id'));
-            $table->text('exception');
-        });
         $form->radio('visible', '公開')
             ->options([
                 0 => '公開',
                 1 => '非公開',
             ]);
-        $form->textarea('text', __('テキスト'));
+        $form->table('tracklist', __('収録曲'), function ($table) {
+            $table->select('id', __('ID'))->options(Lyric::all()->pluck('title', 'id'));
+            $table->text('exception');
+        });
         $form->image('image', __('画像'))->uniqueName();
 
         return $form;
