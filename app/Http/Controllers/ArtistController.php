@@ -53,7 +53,7 @@ class ArtistController extends Controller
     public function show(Artist $artist)
     {
         $artist = Artist::find($artist->id); //idが、リクエストされた$userのidと一致するuserを取得
-        $artists = Artist::orderBy('id', 'asc')->where('visible', 0)
+        $artists = Artist::orderBy('id', 'asc')
         ->get();
         $years = Year::orderBy('year', 'asc')
         ->get();
