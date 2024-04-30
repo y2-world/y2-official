@@ -13,8 +13,8 @@
             <div class="mb_dropdown">
                 @if (isset($artist_id)) 
                     <select name="artist_id" data-toggle="select">
-                        <?php $artist_name = $allArtists[$artist_id - 1]['name']; ?>
-                        @foreach ($allArtists as $artist)
+                        <?php $artist_name = $artists[$artist_id - 1]['name']; ?>
+                        @foreach ($artists as $artist)
                             @if($artist->name !== $artist_name)
                             <option value="{{ $artist->id }}">{{$artist->name}}</option>
                             @else
