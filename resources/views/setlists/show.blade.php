@@ -21,18 +21,18 @@
                         @foreach ($setlists->setlist as $data)
                             @if (isset($data['#']))
                                 @if ($data['#'] === '-')
-                                    {{ $data['#'] }} <b>{{ $data['song'] }}</b><br>
+                                    {{ $data['#'] }} {{ $data['song'] }}<br>
                                 @else
-                                    <li> {{ $data['song'] }}</li>
+                                <li><a href="{{ url('/search?artist_id='.$setlists->artist_id.'&keyword='.$data['song']) }}">{{ $data['song'] }}</a></li>
                                 @endif
                             @else
-                                <li> {{ $data['song'] }}</li>
+                                <li><a href="{{ url('/search?artist_id='.$setlists->artist_id.'&keyword='.$data['song']) }}">{{ $data['song'] }}</a></li>
                             @endif
                         @endforeach
                         @if (isset($setlists->encore))
                             <hr width="250">
                             @foreach ((array) $setlists->encore as $data)
-                                <li> {{ $data['song'] }}</li>
+                            <li><a href="{{ url('/search?artist_id='.$setlists->artist_id.'&keyword='.$data['song']) }}">{{ $data['song'] }}</a></li>
                             @endforeach
                         @endif
                     </ol>

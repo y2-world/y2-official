@@ -698,7 +698,7 @@ img {
 
 .music-menu a {
     padding-right: 30px;
-    font-size: 15px;
+    font-size: 13px;
 }
 
 li .active {
@@ -1014,7 +1014,7 @@ table.count > tbody > tr > td:first-child::before {
     font-feature-settings: "liga";
 }
 
-@media(min-width: 1080px) {
+@media(min-width: 768px) {
     .sp {
         display: none;
     }
@@ -1058,14 +1058,14 @@ table.count > tbody > tr > td:first-child::before {
     .profile-info {
         text-align: center;
     }
+}
 
+@media screen and (max-width: 768px) {
     .pc_list,
     .bios_pc_list {
         display: none;
     }
-}
 
-@media screen and (max-width: 768px) {
     #album-modal4,
     #album-modal3,
     #album-modal2,
