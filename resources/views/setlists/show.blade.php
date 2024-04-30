@@ -21,7 +21,7 @@
                         @foreach ($setlists->setlist as $data)
                             @if (isset($data['#']))
                                 @if ($data['#'] === '-')
-                                    {{ $data['#'] }} {{ $data['song'] }}<br>
+                                    {{ $data['#'] }} <a href="{{ url('/search?artist_id='.$setlists->artist_id.'&keyword='.$data['song']) }}">{{ $data['song'] }}</a><br>
                                 @else
                                 <li><a href="{{ url('/search?artist_id='.$setlists->artist_id.'&keyword='.$data['song']) }}">{{ $data['song'] }}</a></li>
                                 @endif
