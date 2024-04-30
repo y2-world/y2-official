@@ -40,8 +40,9 @@ class SearchController extends Controller
         $data = $query->orderBy('date', 'desc')->get();
 
         $artists = Artist::where('visible', 0)->orderBy('id', 'asc')->get();
+        $allArtists = Artist::where('visible', 0)->orderBy('id', 'asc')->get();
 
-        return view('search', compact('data', 'keyword', 'artist_id', 'artists'));
+        return view('search', compact('data', 'keyword', 'artist_id', 'artists', 'allArtists'));
 
         // $artist_id = $request->input('artist_id');
         // $query = Setlist::query();
