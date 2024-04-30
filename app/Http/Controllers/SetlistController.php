@@ -44,7 +44,7 @@ class SetlistController extends Controller
     
         // アーティスト、全てのアーティスト、年のデータを取得する
         $artists = Artist::where('visible', 0)->orderBy('id', 'asc')->get();
-        $allArtists = Artist::where('visible', 0)->orderBy('id', 'asc')->get();
+        $allArtists = Artist::orderBy('id', 'asc')->get();
         $years = Year::orderBy('year', 'asc')->get();
     
         // ビューにデータを渡して表示する
