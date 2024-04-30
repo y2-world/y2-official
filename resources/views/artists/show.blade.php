@@ -24,10 +24,10 @@
       <div class="search">
         <form action="{{url('/search')}}" method="GET">
           <input type="hidden" id="id" name="artist_id" value="{{$artist_id}}">
-          <div class="input-group mb-3">
+          <div class="input-group mb-3" style="width: 350px;">
               <input type="search" class="form-control" aria-label="Search" value="{{request('keyword')}}" name="keyword" required>
               <div class="input-group-append">
-                  <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+                  <button class="btn btn-outline-secondary" type="submit" id="button-addon2"><i class="fa-solid fa-magnifying-glass"></i></button>
               </div>
           </div>
         </form>
