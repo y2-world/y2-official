@@ -21,18 +21,18 @@
                         @foreach ($setlists->setlist as $data)
                             @if (isset($data['#']))
                                 @if ($data['#'] === '-')
-                                    {{ $data['#'] }} <a href="{{ url('/search?artist_id='.$setlists->artist_id.'&keyword='.$data['song']) }}">{{ $data['song'] }}</a><br>
+                                    {{ $data['#'] }} <a href="{{ url('/search?artist_id='.$setlists->artist_id.'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a><br>
                                 @else
-                                <li><a href="{{ url('/search?artist_id='.$setlists->artist_id.'&keyword='.$data['song']) }}">{{ $data['song'] }}</a></li>
+                                <li><a href="{{ url('/search?artist_id='.$setlists->artist_id.'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li>
                                 @endif
                             @else
-                                <li><a href="{{ url('/search?artist_id='.$setlists->artist_id.'&keyword='.$data['song']) }}">{{ $data['song'] }}</a></li>
+                                <li><a href="{{ url('/search?artist_id='.$setlists->artist_id.'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li>
                             @endif
                         @endforeach
                         @if (isset($setlists->encore))
                             <hr width="250">
                             @foreach ((array) $setlists->encore as $data)
-                            <li><a href="{{ url('/search?artist_id='.$setlists->artist_id.'&keyword='.$data['song']) }}">{{ $data['song'] }}</a></li>
+                            <li><a href="{{ url('/search?artist_id='.$setlists->artist_id.'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li>
                             @endforeach
                         @endif
                     </ol>
