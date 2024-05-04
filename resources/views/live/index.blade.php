@@ -71,7 +71,7 @@
                             @elseif(request('type') == 4)
                                 <td>{{ $tour->solo_id }}</td>
                             @else
-                                <td>{{ $tour->id }}</td>
+                                <td></td>
                             @endif
                             @if (isset($tour->date1) && isset($tour->date2))
                                 <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }} -
