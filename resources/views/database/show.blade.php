@@ -95,7 +95,7 @@
                     @endphp
 
                     @foreach ($tours as $tour)
-                        @if ($tour->type != 4)
+                        @if ($tour->type == 0 || $tour->type == 4)
                             @php $hasTourEvent = true; @endphp
                         @else
                             @php $hasSolo = true; @endphp
@@ -105,7 +105,7 @@
                     @if ($hasTourEvent)
                         <h6>Tour / Event</h6>
                         @foreach ($tours as $tour)
-                            @if ($tour->type != 4)
+                            @if ($tour->type == 0 || $tour->type == 4)
                                 <tr>
                                     <td></td>
                                     @if (isset($tour->date1) && isset($tour->date2))
