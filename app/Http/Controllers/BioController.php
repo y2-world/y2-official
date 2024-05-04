@@ -22,7 +22,7 @@ class BioController extends Controller
         ->get();
         $songs = Song::orderBy('id', 'asc')
         ->get();
-        return view('bios.index', compact('bios', 'songs'));
+        return view('database.index', compact('bios', 'songs'));
     }
 
     /**
@@ -52,24 +52,26 @@ class BioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Bio $bio)
+    public function show($year)
     {
-        $bio = Bio::find($bio->id); //idが、リクエストされた$userのidと一致するuserを取得
-        $singles = Single::orderBy('id', 'asc')
-        ->get();
-        $albums = Album::orderBy('id', 'asc')
-        ->get();
-        $bios = Bio::orderBy('year', 'asc')
-        ->get();
-        $songs = Song::where('year', $bio->year)
-            ->orderBy('id', 'asc') //$userによる投稿を取得
-            ->get(); // 投稿作成日が新しい順に並べる
-        $tours = Tour::where('year', $bio->year)
-            ->orderBy('id', 'asc') //$userによる投稿を取得
-            ->get(); // 投稿作成日が新しい順に並べる
-        return view('bios.show', [
+        // 指定された年の Bio を取得
+        $bio = Bio::where('year', $year)->first();
+    
+        // 指定された年の Bio が存在しない場合は、404 エラーを返す
+        if (!$bio) {
+            abort(404);
+        }
+    
+        // その年の他のデータを取得
+        $singles = Single::orderBy('id', 'asc')->get();
+        $albums = Album::orderBy('id', 'asc')->get();
+        $bios = Bio::orderBy('year', 'asc')->get();
+        $songs = Song::where('year', $bio->year)->orderBy('id', 'asc')->get(); 
+        $tours = Tour::where('year', $bio->year)->orderBy('id', 'asc')->get();
+    
+        return view('database.show', [
             'bio' => $bio,
-            'singles' => $singles, // $userの書いた記事をviewへ渡す
+            'singles' => $singles,
             'albums' => $albums,
             'bios' => $bios,
             'songs' => $songs,

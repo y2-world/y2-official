@@ -43,7 +43,7 @@
             <select name="select" onChange="location.href=value;">
                 <option value="" disabled selected>Select song</option>
                 @foreach ($songs as $song)
-                <option value="{{ url('songs/' . $song->id) }}">{{ $song->title }}</option>
+                <option value="{{ url('/database/songs/' . $song->id) }}">{{ $song->title }}</option>
                 @endforeach
             </select>
         </div>
@@ -53,9 +53,9 @@
             <div class="col-md-6">
                 <div class="year-wrapper">
                     <div class="year-padding">
-                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/songs') }}" role="button">Songs</a>
-                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/singles') }}" role="button">Singles</a>
-                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/albums') }}" role="button">Albums</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/songs') }}" role="button">Songs</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/singles') }}" role="button">Singles</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/albums') }}" role="button">Albums</a>
                     </div>
                 </div>
             </div>
@@ -66,11 +66,11 @@
             <div class="col-md-6">
                 <div class="year-wrapper">
                     <div class="year-padding">
-                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/live') }}" role="button">All</a>
-                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/live?type=1') }}" role="button">Tours</a>
-                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/live?type=2') }}" role="button">Events</a>
-                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/live?type=3') }}" role="button">ap bank fes</a>
-                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/live?type=4') }}" role="button">Solo</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/live') }}" role="button">All</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/live?type=1') }}" role="button">Tours</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/live?type=2') }}" role="button">Events</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/live?type=3') }}" role="button">ap bank fes</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/live?type=4') }}" role="button">Solo</a>
                     </div>
                 </div>
             </div>
@@ -82,7 +82,7 @@
                 <div class="year-wrapper">
                     @foreach ($bios as $bio)
                         <div class="year-padding">
-                            <a class="btn btn-outline-dark btn-sm" href="{{ url('bios', $bio->id) }}"
+                            <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/years', $bio->year) }}"
                                 role="button">{{ $bio->year }}</a>
                         </div>
                     @endforeach

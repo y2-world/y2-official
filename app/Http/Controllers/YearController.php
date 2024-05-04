@@ -50,19 +50,26 @@ class YearController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Year $year)
+    public function show($year)
     {
-        $year = Year::find($year->id); //idが、リクエストされた$userのidと一致するuserを取得
-        $artists = Artist::orderBy('id', 'asc')->where('visible', 0)
-        ->get();
-        $years = Year::orderBy('year', 'asc')
-        ->get();
-        $setlists = Setlist::where('year', $year->year)
-            ->orderBy('date', 'asc') //$userによる投稿を取得
-            ->get(); // 投稿作成日が新しい順に並べる
+        // 指定された年の Year レコードを取得
+        $year = Year::where('year', $year)->first();
+    
+        // 指定された年の Year レコードが存在しない場合は、404 エラーを返す
+        if (!$year) {
+            abort(404);
+        }
+    
+        // アーティストと年のデータを取得
+        $artists = Artist::orderBy('id', 'asc')->where('visible', 0)->get();
+        $years = Year::orderBy('year', 'asc')->get();
+    
+        // 指定された年の Setlist を取得
+        $setlists = Setlist::where('year', $year->year)->orderBy('date', 'asc')->get();
+    
         return view('years.show', [
             'setlists' => $setlists,
-            'year' => $year, // $userの書いた記事をviewへ渡す
+            'year' => $year,
             'artists' => $artists,
             'years' => $years
         ]);

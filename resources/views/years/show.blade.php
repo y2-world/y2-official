@@ -8,13 +8,13 @@
                 <select name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Artists</option>
                     @foreach ($artists as $artist)
-                        <option value="{{ url('/artists', $artist->id) }}">{{ $artist->name }}</option>
+                        <option value="{{ url('/setlists/artists', $artist->id) }}">{{ $artist->name }}</option>
                     @endforeach
                 </select>
                 <select name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Years</option>
                     @foreach ($years as $year)
-                        <option value="{{ url('/years', $year->id) }}">{{ $year->year }}</option>
+                        <option value="{{ url('/setlists/years', $year->year) }}">{{ $year->year }}</option>
                     @endforeach
                 </select>
             </div>
@@ -58,10 +58,10 @@
                         <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
                         @if (isset($setlist->artist_id))
                             <td class="pc_list">
-                                <a href="{{ url('artists', $setlist->artist_id) }}">{{ $setlist->artist->name }}</a>
+                                <a href="{{ url('/setlists/artists', $setlist->artist_id) }}">{{ $setlist->artist->name }}</a>
                             </td>
                             <td class="sp">
-                                <a href="{{ url('artists', $setlist->artist_id) }}">{{ $setlist->artist->name }}</a> /
+                                <a href="{{ url('/setlists/artists', $setlist->artist_id) }}">{{ $setlist->artist->name }}</a> /
                                 <a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a>
                             </td>
                         @else

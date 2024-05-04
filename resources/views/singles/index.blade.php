@@ -5,13 +5,13 @@
   <h2>Singles</h2>
   <div class="parts-wrapper">
     <div class="dropdown-wrapper">
-      <a class="btn btn-outline-dark btn-sm" href="{{ url('/songs') }}" role="button">Songs</a>
-      <a class="btn btn-outline-dark btn-sm" href="{{ url('/albums') }}" role="button">Albums</a>
-      <a class="btn btn-outline-dark btn-sm" href="{{ url('/live') }}" role="button">Live</a>
+      <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/songs') }}" role="button">Songs</a>
+      <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/albums') }}" role="button">Albums</a>
+      <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/live') }}" role="button">Live</a>
       <select name="select" onChange="location.href=value;">
         <option value="" disabled selected>Years</option>
         @foreach ($bios as $bio)
-        <option value="{{ url('/bios', $bio->id)}}">{{ $bio->year }}</option>
+        <option value="{{ url('/database/years', $bio->year)}}">{{ $bio->year }}</option>
         @endforeach
       </select>
     </div>

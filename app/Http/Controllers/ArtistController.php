@@ -17,9 +17,9 @@ class ArtistController extends Controller
     public function index()
     {
         $artists = Artist::orderBy('id', 'asc')
-        ->paginate(10);
+            ->paginate(10);
         $years = Year::orderBy('id', 'asc')
-        ->get();
+            ->get();
         return view('artists.index', compact('artists', 'years'));
     }
 
@@ -50,19 +50,26 @@ class ArtistController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Artist $artist)
+    public function show($artistId)
     {
-        $artist = Artist::find($artist->id); //idが、リクエストされた$userのidと一致するuserを取得
-        $artists = Artist::orderBy('id', 'asc')->where('visible', 0)
-        ->get();
-        $years = Year::orderBy('year', 'asc')
-        ->get();
-        $setlists = Setlist::where('artist_id', $artist->id)
-            ->orderBy('date', 'asc') //$userによる投稿を取得
-            ->paginate(100); // 投稿作成日が新しい順に並べる
+        // 指定されたアーティストのレコードを取得
+        $artist = Artist::find($artistId);
+
+        // 指定されたアーティストのレコードが存在しない場合は、404 エラーを返す
+        if (!$artist) {
+            abort(404);
+        }
+
+        // アーティスト一覧と年のデータを取得
+        $artists = Artist::orderBy('id', 'asc')->where('visible', 0)->get();
+        $years = Year::orderBy('year', 'asc')->get();
+
+        // 指定されたアーティストのセットリストを取得
+        $setlists = Setlist::where('artist_id', $artist->id)->orderBy('date', 'asc')->paginate(100);
+
         return view('artists.show', [
             'setlists' => $setlists,
-            'artist' => $artist, // $userの書いた記事をviewへ渡す
+            'artist' => $artist,
             'artists' => $artists,
             'years' => $years
         ]);

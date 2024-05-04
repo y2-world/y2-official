@@ -26,18 +26,18 @@
                                         @if (isset($data['exception']))
                                             @if ($data['#'] == '-')
                                                 {{ $data['#'] }} <a
-                                                    href="{{ url('songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
+                                                    href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                             @else
                                                 {{ $data['#'] }}. <a
-                                                    href="{{ url('songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
+                                                    href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                             @endif
                                         @else
                                             @if ($data['#'] !== '-')
                                                 {{ $data['#'] }}. <a
-                                                    href="{{ url('songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
+                                                    href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
                                             @elseif($data['#'] == '-')
                                                 {{ $data['#'] }} <a
-                                                    href="{{ url('songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
+                                                    href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
                                             @endif
                                         @endif
                                     @else
@@ -45,10 +45,10 @@
                                             @if (isset($data['id']))
                                                 @if ($data['#'] == '-')
                                                     {{ $data['#'] }} <a
-                                                        href="{{ url('songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
+                                                        href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                                 @else
                                                     {{ $data['#'] }}. <a
-                                                        href="{{ url('songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
+                                                        href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                                 @endif
                                             @else
                                                 @if ($data['#'] == '-')
@@ -78,18 +78,18 @@
                                             @if (isset($data['exception']))
                                                 @if ($data['#'] == '-')
                                                     {{ $data['#'] }} <a
-                                                        href="{{ url('songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
+                                                        href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                                 @else
                                                     {{ $data['#'] }}. <a
-                                                        href="{{ url('songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
+                                                        href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                                 @endif
                                             @else
                                                 @if ($data['#'] !== '-')
                                                     {{ $data['#'] }}. <a
-                                                        href="{{ url('songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
+                                                        href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
                                                 @elseif($data['#'] == '-')
                                                     {{ $data['#'] }} <a
-                                                        href="{{ url('songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
+                                                        href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
                                                 @endif
                                             @endif
                                         @else
@@ -97,10 +97,10 @@
                                                 @if (isset($data['id']))
                                                     @if ($data['#'] == '-')
                                                         {{ $data['#'] }} <a
-                                                            href="{{ url('songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
+                                                            href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                                     @else
                                                         {{ $data['#'] }}. <a
-                                                            href="{{ url('songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
+                                                            href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                                     @endif
                                                 @else
                                                     @if ($data['#'] == '-')

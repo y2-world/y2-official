@@ -10,13 +10,13 @@
           <select name="select" onChange="location.href=value;">
             <option value="" disabled selected>Artists</option>
             @foreach ($artists as $artist)
-            <option value="{{ url('/artists', $artist->id)}}">{{ $artist->name }}</option>
+            <option value="{{ url('/setlists/artists', $artist->id)}}">{{ $artist->name }}</option>
             @endforeach
           </select>
           <select name="select" onChange="location.href=value;">
             <option value="" disabled selected>Years</option>
             @foreach ($years as $year)
-            <option value="{{ url('/years', $year->id)}}">{{ $year->year }}</option>
+            <option value="{{ url('/setlists/years', $year->year)}}">{{ $year->year }}</option>
             @endforeach
           </select>
         </div>

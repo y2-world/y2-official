@@ -17,16 +17,16 @@
             <div class="dropdown-wrapper">
                 <select name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Live</option>
-                    <option value="{{ url('/live') }}">All</option>
-                    <option value="{{ url('/live?type=1') }}">Tours</option>
-                    <option value="{{ url('/live?type=2') }}">Events</option>
-                    <option value="{{ url('/live?type=3') }}">ap bank fes</option>
-                    <option value="{{ url('/live?type=4') }}">Solo</option>
+                    <option value="{{ url('/database/live') }}">All</option>
+                    <option value="{{ url('/database/live?type=1') }}">Tours</option>
+                    <option value="{{ url('/database/live?type=2') }}">Events</option>
+                    <option value="{{ url('/database/live?type=3') }}">ap bank fes</option>
+                    <option value="{{ url('/database/live?type=4') }}">Solo</option>
                 </select>
                 <select name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Years</option>
                     @foreach ($bios as $bio)
-                        <option value="{{ url('/bios', $bio->id) }}">{{ $bio->year }}</option>
+                        <option value="{{ url('/database/years', $bio->year) }}">{{ $bio->year }}</option>
                     @endforeach
                 </select>
             </div>
@@ -45,7 +45,7 @@
             <select name="select" onChange="location.href=value;">
                 <option value="" disabled selected>Select song</option>
                 @foreach ($songs as $song)
-                    <option value="{{ url('songs/' . $song->id) }}">{{ $song->title }}</option>
+                    <option value="{{ url('/database/songs/' . $song->id) }}">{{ $song->title }}</option>
                 @endforeach
             </select>
         </div>
