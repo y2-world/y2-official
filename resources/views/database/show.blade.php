@@ -97,9 +97,9 @@
             <table class="table table-striped count">
                 <thead>
                     <tr>
-                        <th class="bios_list">#</th>
-                        <th class="bios_list">開催日</th>
-                        <th class="bios_list">タイトル</th>
+                        <th class="mb_list">#</th>
+                        <th class="mb_list">開催日</th>
+                        <th class="mb_list">タイトル</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -126,9 +126,9 @@
             <table class="table table-striped count">
                 <thead>
                     <tr>
-                        <th class="bios_list">#</th>
-                        <th class="bios_list">開催日</th>
-                        <th class="bios_list">タイトル</th>
+                        <th class="mb_list">#</th>
+                        <th class="mb_list">開催日</th>
+                        <th class="mb_list">タイトル</th>
                     </tr>
                 </thead>
                 <tbody>
