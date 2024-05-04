@@ -1014,7 +1014,7 @@ table.count > tbody > tr > td:first-child::before {
     font-feature-settings: "liga";
 }
 
-@media(min-width: 768px) {
+@media(min-width: 835px) {
     .sp {
         display: none;
     }
