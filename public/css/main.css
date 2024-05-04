@@ -1235,7 +1235,7 @@ table.count > tbody > tr > td:first-child::before {
     }
 
     .mb_list, .sp {
-        font-size: 9px;
+        font-size: 10px;
     }
 
     .error {
