@@ -24,18 +24,18 @@
                       {{ $data['#'] }}. <a href="{{ url('/database/songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
                     @elseif(isset($data['id']) && !isset($data['exception']))
                       {{ $data['disc'] }}<br>
-                      {{ $data['#'] }}. <a href="{{ url('/database/songs', $data['id'])}}">{{ $data['song'] }}</a><br>
+                      {{ $data['#'] }}. <a  href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
                     @endif
                   @elseif($data['disc'] == 'END')
                     @if(isset($data['id']) && !isset($data['song']))
                         {{ $data['#'] }}. <a href="{{ url('/database/songs', $data['id'])}}">{{ $data['exception'] }}</a><br><br>
                     @elseif(isset($data['id']) && !isset($data['exception']))
-                        {{ $data['#'] }}. <a href="{{ url('/database/songs', $data['id'])}}">{{ $data['song'] }}</a><br><br>
+                      {{ $data['#'] }}. <a  href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
                     @endif
                   @endif
                 @else
                   @if(isset($data['song']))
-                  {{ $data['#'] }}. <a href="{{ url('/database/songs', $data['id'])}}">{{ $data['song'] }}</a><br>
+                  {{ $data['#'] }}. <a  href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
                   @elseif(isset($data['id']) && isset($data['exception']))
                   {{ $data['#'] }}. <a href="{{ url('/database/songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
                   @elseif(!isset($data['id']) && isset($data['exception']))

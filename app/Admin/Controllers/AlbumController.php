@@ -82,7 +82,6 @@ class AlbumController extends AdminController
             $table->text('disc');
             $table->number('#')->rules('required');
             $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
-            $table->select('song', __('楽曲'))->options(Song::all()->pluck('title', 'title'));
             $table->text('exception', __('例外'));
         });
         $form->textarea('text', __('コメント'));
