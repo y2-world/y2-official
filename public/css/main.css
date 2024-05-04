@@ -1060,7 +1060,7 @@ table.count > tbody > tr > td:first-child::before {
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 834px) {
     .pc_list,
     .bios_pc_list {
         display: none;
