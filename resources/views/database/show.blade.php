@@ -90,8 +90,8 @@
                 <h5>Live</h5>
                 <tbody>
                     @foreach ($tours as $tour)
-                    @if ($tour->type != 4)
                             <tr>
+                              @if ($tour->type != 4)
                                 <td></td>
                                 @if (isset($tour->date1) && isset($tour->date2))
                                     <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }} -
@@ -101,15 +101,15 @@
                                 @endif
                                 <td class="td_title"><a href="{{ route('live.show', $tour->id) }}">{{ $tour->title }}</a>
                                 </td>
+                                @endif
                             </tr>
-                            @endif
                         @endforeach
                 </tbody>
                 <h5>Solo</h5>
                 <tbody>
                     @foreach ($tours as $tour)
-                        @if ($tour->type == 4)
                             <tr>
+                              @if ($tour->type == 4)
                                 <td></td>
                                 @if (isset($tour->date1) && isset($tour->date2))
                                     <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }} -
@@ -119,8 +119,8 @@
                                 @endif
                                 <td class="td_title"><a href="{{ route('live.show', $tour->id) }}">{{ $tour->title }}</a>
                                 </td>
+                                @endif
                             </tr>
-                    @endif
                     @endforeach
                 </tbody>
             </table>
