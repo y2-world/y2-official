@@ -31,10 +31,10 @@
       @endif
           <thead>
             <tr>
-              <th class="bios_list">#</th>
-              <th class="bios_list">タイトル</th>
-              <th class="bios_list">シングル / アルバム</th>
-              <th class="bios_pc_list">リリース日</th>
+              <th class="mb_list">#</th>
+              <th class="mb_list">タイトル</th>
+              <th class="mb_list">シングル / アルバム</th>
+              <th class="pc_list">リリース日</th>
             </tr>
           </thead>
           <h5>Songs</h5>

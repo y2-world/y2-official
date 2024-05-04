@@ -880,11 +880,6 @@ nav {
     flex-wrap: wrap;
 }
 
-.bios_list,
-.bios_pc_list {
-    font-size: 9px;
-}
-
 .cover-wrapper {
     display: flex;
     flex-wrap: nowrap;
