@@ -132,7 +132,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <h5>Solo</h5>
+                    <h5>Solo / Bank Band</h5>
                     @foreach ($tours as $tour)
                         @if ($tour->type == 4)
                             <tr>
