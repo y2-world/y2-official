@@ -17,10 +17,8 @@
             <hr>
             @if(isset($singles->tracklist))
               @foreach ($singles->tracklist as $data)
-                @if(isset($data['song']))
+                @if(isset($data['id']))
                 {{ $data['#'] }}. <a href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
-                @elseif(isset($data['id']) && isset($data['exception']))
-                  {{ $data['#'] }}. <a href="{{ url('/database/songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
                 @elseif(!isset($data['id']) && isset($data['exception']))
                   {{ $data['#'] }}. {{ $data['exception'] }}<br>
                 @endif
