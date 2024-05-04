@@ -70,7 +70,7 @@
                         <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/live?type=1') }}" role="button">Tours</a>
                         <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/live?type=2') }}" role="button">Events</a>
                         <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/live?type=3') }}" role="button">ap bank fes</a>
-                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/live?type=4') }}" role="button">Solo/Bank Band</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/live?type=4') }}" role="button">Solo</a>
                     </div>
                 </div>
             </div>
