@@ -52,9 +52,7 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    @if (!request('type'))
                     <th class="mb_list">#</th>
-                    @endif
                     <th class="mb_list">開催日</th>
                     <th class="mb_list">タイトル</th>
                     <th class="pc_list">会場</th>
