@@ -21,7 +21,13 @@ $today = strtotime(date('Y-m-d'));
                     <div class="disc-block">
                         <a href="{{ route('music.show', $disco->id) }}"><img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $disco->image) }} class="top-image"></a>
                         <br><br>
-                        <div class="topic"><a href="{{ route('music.show', $disco->id) }}">{{$disco->title}}</a></div>
+                        <div class="topic">
+                            @if(isset($disco->url))
+                                <a href="{{ $disco->url }}">{{ $disco->title }}</a>
+                            @else
+                                <a href="{{ route('music.show', $disco->id) }}">{{ $disco->title }}</a>
+                            @endif
+                        </div>
                         <p class="topic">{{ date('Y.m.d', strtotime($disco->date)) }} - {{$disco->subtitle}}</p>
                     </div>
                     @endforeach
