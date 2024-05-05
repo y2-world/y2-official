@@ -804,7 +804,7 @@ table {
     display: flex;
     justify-content: space-between;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .dropdown-wrapper {
@@ -1068,7 +1068,7 @@ th {
         flex-wrap: wrap;
         justify-content: center;
         flex-direction: column-reverse;
-        align-items: center;
+        align-items: flex-start;
     }
 
     .database-wrapper {
