@@ -19,9 +19,9 @@
   <table class="table table-striped">
       <thead>
         <tr>
-          <th class="mb_list">#</th>
-          <th class="mb_list">タイトル</th>
-          <th class="mb_list">リリース日</th>
+          <th class="mobile">#</th>
+          <th class="mobile">タイトル</th>
+          <th class="mobile">リリース日</th>
         </tr>
       </thead>
       <div class="all-setlist">

@@ -21,9 +21,9 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th class="mb_list">#</th>
-        <th class="mb_list">タイトル</th>
-        <th class="mb_list">アルバム</th>
+        <th class="mobile">#</th>
+        <th class="mobile">タイトル</th>
+        <th class="mobile">アルバム</th>
       </tr>
     </thead>
     <tbody>

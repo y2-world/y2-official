@@ -3,7 +3,7 @@
 <br>
 <div class="container-lg">
     <div class="parts-wrapper">
-        <div class="pc_list">
+        <div class="pc">
             @if (isset($artist_id)) 
             <small>検索結果</small><h4>{{$keyword}}</h4>
             @endif
@@ -51,10 +51,10 @@
         <table class="table table-striped count">
             <thead>
             <tr>
-                <th class="mb_list">#</th>
-                <th class="mb_list">開催日</th>
-                <th class="mb_list">タイトル</th>
-                <th class="pc_list">会場</th>
+                <th class="mobile">#</th>
+                <th class="mobile">開催日</th>
+                <th class="mobile">タイトル</th>
+                <th class="pc">会場</th>
             </tr>
             </thead>
             <tbody>
@@ -63,7 +63,7 @@
                     <td></td>
                     <td class="td_search_date">{{ date('Y.m.d', strtotime($result->date)) }}</td>
                     <td class="td_search_title"><a href="{{ route('setlists.show', $result->id) }}">{{ $result->title }}</a></td>
-                    <td class="pc_list">{{ $result->venue }}</td>
+                    <td class="pc">{{ $result->venue }}</td>
                 </tr>
                 @endforeach
             </tbody>

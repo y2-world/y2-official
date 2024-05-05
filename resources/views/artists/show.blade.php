@@ -5,7 +5,7 @@
     <h2>{{ $artist->name  }}</h2>
     <?php $artist_id = $artist->id; ?>
     <div class="parts-wrapper">
-      <div class="pc_list">
+      <div class="pc">
         <div class="dropdown-wrapper">
           <select name="select" onChange="location.href=value;">
             <option value="" disabled selected>Artists</option>
@@ -36,10 +36,10 @@
     <table class="table table-striped count">
       <thead>
         <tr>
-          <th class="mb_list">#</th>
-          <th class="mb_list">開催日</th>
-          <th class="mb_list">タイトル</th>
-          <th class="pc_list">会場</th>
+          <th class="mobile">#</th>
+          <th class="mobile">開催日</th>
+          <th class="mobile">タイトル</th>
+          <th class="pc">会場</th>
         </tr>
       </thead>
       <tbody>
@@ -48,7 +48,7 @@
           <td></td>
           <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
           <td><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
-          <td class="pc_list">{{ $setlist->venue }}</td>
+          <td class="pc">{{ $setlist->venue }}</td>
         </tr>
         @endforeach
       </tbody>

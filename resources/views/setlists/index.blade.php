@@ -18,7 +18,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="pc_list">
+            <div class="pc">
                 <div class="search">
                     <form action="{{ url('/search') }}" method="GET">
                         <div class="mb_dropdown">
@@ -50,20 +50,20 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th class="mb_list">#</th>
-                    <th class="mb_list">開催日</th>
+                    <th class="mobile">#</th>
+                    <th class="mobile">開催日</th>
                     @if(request('type') != 2)
                     <th class="sp">アーティスト / タイトル</th>
-                    <th class="pc_list">アーティスト</th>
+                    <th class="pc">アーティスト</th>
                     @endif
                     @if(request('type') == 2)
-                    <th class="pc_list"></th>
+                    <th class="pc"></th>
                     <th class="sp">タイトル</th>
-                    <th class="pc_list">タイトル</th>
+                    <th class="pc">タイトル</th>
                     @else
-                    <th class="pc_list">タイトル</th>
+                    <th class="pc">タイトル</th>
                     @endif
-                    <th class="pc_list">会場</th>
+                    <th class="pc">会場</th>
                 </tr>
             </thead>
             <div class="all-setlist">
@@ -73,7 +73,7 @@
                             <td>{{ $setlist->id }}</td>
                             <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
                             @if (isset($setlist->artist_id))
-                                <td class="pc_list">
+                                <td class="pc">
                                     <a href="{{ url('/setlists/artists', $setlist->artist_id) }}">{{ $setlist->artist->name }}</a>
                                 </td>
                                 <td class="sp">
@@ -81,13 +81,13 @@
                                     <a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a>
                                 </td>
                             @else
-                                <td class="pc_list"></td>
+                                <td class="pc"></td>
                                 <td class="sp"><a
                                         href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
                             @endif
-                            <td class="pc_list"><a
+                            <td class="pc"><a
                                     href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
-                            <td class="pc_list">{{ $setlist->venue }}</td>
+                            <td class="pc">{{ $setlist->venue }}</td>
                         </tr>
                     @endforeach
                 </tbody>

@@ -31,10 +31,10 @@
                 @endif
                 <thead>
                     <tr>
-                        <th class="mb_list">#</th>
-                        <th class="mb_list">タイトル</th>
-                        <th class="mb_list">シングル / アルバム</th>
-                        <th class="pc_list">リリース日</th>
+                        <th class="mobile">#</th>
+                        <th class="mobile">タイトル</th>
+                        <th class="mobile">シングル / アルバム</th>
+                        <th class="pc">リリース日</th>
                     </tr>
                 </thead>
                 <h5>Songs</h5>
@@ -47,24 +47,24 @@
                                 @if ($song->single->date > $song->album->date)
                                     <td><a href="{{ route('albums.show', $song->album_id) }}">{{ $song->album->title }}</a>
                                     </td>
-                                    <td class="pc_list">{{ date('Y.m.d', strtotime($song->album->date)) }}</td>
+                                    <td class="pc">{{ date('Y.m.d', strtotime($song->album->date)) }}</td>
                                 @else
                                     <td><a
                                             href="{{ route('singles.show', $song->single_id) }}">{{ $song->single->title }}</a>
                                     </td>
-                                    <td class="pc_list">{{ date('Y.m.d', strtotime($song->single->date)) }}</td>
+                                    <td class="pc">{{ date('Y.m.d', strtotime($song->single->date)) }}</td>
                                 @endif
                             @elseif(isset($song->album_id))
                                 <td><a href="{{ route('albums.show', $song->album_id) }}">{{ $song->album->title }}</a>
                                 </td>
-                                <td class="pc_list">{{ date('Y.m.d', strtotime($song->album->date)) }}</td>
+                                <td class="pc">{{ date('Y.m.d', strtotime($song->album->date)) }}</td>
                             @elseif(isset($song->single_id))
                                 <td><a href="{{ route('singles.show', $song->single_id) }}">{{ $song->single->title }}</a>
                                 </td>
-                                <td class="pc_list">{{ date('Y.m.d', strtotime($song->single->date)) }}</td>
+                                <td class="pc">{{ date('Y.m.d', strtotime($song->single->date)) }}</td>
                             @else
                                 <td></td>
-                                <td class="pc_list"></td>
+                                <td class="pc"></td>
                             @endif
 
                         </tr>
@@ -97,9 +97,9 @@
             <table class="table table-striped count">
                 <thead>
                     <tr>
-                        <th class="mb_list">#</th>
-                        <th class="mb_list">開催日</th>
-                        <th class="mb_list">タイトル</th>
+                        <th class="mobile">#</th>
+                        <th class="mobile">開催日</th>
+                        <th class="mobile">タイトル</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -126,9 +126,9 @@
             <table class="table table-striped count">
                 <thead>
                     <tr>
-                        <th class="mb_list">#</th>
-                        <th class="mb_list">開催日</th>
-                        <th class="mb_list">タイトル</th>
+                        <th class="mobile">#</th>
+                        <th class="mobile">開催日</th>
+                        <th class="mobile">タイトル</th>
                     </tr>
                 </thead>
                 <tbody>

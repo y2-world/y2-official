@@ -924,13 +924,9 @@ table.count > tbody > tr > td:first-child::before {
     font-size: 12px;
 }
 
-/* .td_date {
-    width: 15%;
+th {
+    font-size: 10px;
 }
-
-.td_title {
-    width: 60%;
-} */
 
 @media (min-width: 1024px) {
     .column1,
@@ -1056,8 +1052,7 @@ table.count > tbody > tr > td:first-child::before {
 }
 
 @media screen and (max-width: 1080px) {
-    .pc_list,
-    .bios_pc_list {
+    .pc {
         display: none;
     }
 
@@ -1229,7 +1224,7 @@ table.count > tbody > tr > td:first-child::before {
         width: 85%;
     }
 
-    .mb_list, .sp {
+    .mobile, .sp {
         font-size: 10px;
     }
 

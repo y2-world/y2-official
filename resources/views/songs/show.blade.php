@@ -58,9 +58,9 @@
                 <table class="table table-striped count">
                     <thead>
                         <tr>
-                            <th class="mb_list">#</th>
-                            <th class="mb_list">開催日</th>
-                            <th class="mb_list">タイトル</th>
+                            <th class="mobile">#</th>
+                            <th class="mobile">開催日</th>
+                            <th class="mobile">タイトル</th>
                         </tr>
                     </thead>
                     <tbody>

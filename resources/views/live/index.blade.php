@@ -52,10 +52,10 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th class="mb_list">#</th>
-                    <th class="mb_list">開催日</th>
-                    <th class="mb_list">タイトル</th>
-                    <th class="pc_list">会場</th>
+                    <th class="mobile">#</th>
+                    <th class="mobile">開催日</th>
+                    <th class="mobile">タイトル</th>
+                    <th class="pc">会場</th>
                 </tr>
             </thead>
             <div class="all-setlist">
@@ -81,7 +81,7 @@
                             @endif
                             <td class="td_title"><a href="{{ route('live.show', $tour->id) }}">{{ $tour->title }}</a>
                             </td>
-                            <td class="pc_list">{{ $tour->venue }}</td>
+                            <td class="pc">{{ $tour->venue }}</td>
                         </tr>
                     @endforeach
                 </tbody>
