@@ -22,7 +22,7 @@ $today = strtotime(date('Y-m-d'));
                         <a href="{{ route('music.show', $disco->id) }}"><img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $disco->image) }} class="top-image"></a>
                         <br><br>
                         <div class="topic">
-                            @if(isset($disco->url))
+                            @if(!Empty($disco->url))
                                 <a href="{{ $disco->url }}">{{ $disco->title }}</a>
                             @else
                                 <a href="{{ route('music.show', $disco->id) }}">{{ $disco->title }}</a>
