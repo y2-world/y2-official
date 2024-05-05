@@ -91,6 +91,7 @@ class DiscoController extends AdminController
             $table->select('id', __('ID'))->options(Lyric::all()->pluck('title', 'id'));
             $table->text('exception');
         });
+        $form->text('url', __('URL'));
         $form->image('image', __('画像'))->uniqueName();
 
         return $form;
