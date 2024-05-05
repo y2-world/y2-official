@@ -21,6 +21,7 @@
                     <div class="setlist-row">
                         <div class="column1">
                             @if (isset($tours->setlist1))
+                            <ol>
                                 @foreach ($tours->setlist1 as $data)
                                     @if (isset($data['id']))
                                         @if (isset($data['exception']))
@@ -28,13 +29,13 @@
                                                 {{ $data['#'] }} <a
                                                     href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                             @else
-                                                {{ $data['#'] }}. <a
-                                                    href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
+                                                <li><a
+                                                    href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a></li>
                                             @endif
                                         @else
                                             @if ($data['#'] !== '-')
-                                                {{ $data['#'] }}. <a
-                                                    href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
+                                                <li> <a
+                                                    href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a></li>
                                             @elseif($data['#'] == '-')
                                                 {{ $data['#'] }} <a
                                                     href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
@@ -47,14 +48,14 @@
                                                     {{ $data['#'] }} <a
                                                         href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                                 @else
-                                                    {{ $data['#'] }}. <a
-                                                        href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
+                                                <li><a
+                                                        href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><li>
                                                 @endif
                                             @else
                                                 @if ($data['#'] == '-')
                                                     {{ $data['#'] }} {{ $data['exception'] }}<br>
                                                 @else
-                                                    {{ $data['#'] }}. {{ $data['exception'] }}<br>
+                                                    <li> {{ $data['exception'] }}</li>
                                                 @endif
                                             @endif
                                         @else
@@ -68,11 +69,13 @@
                                         @endif
                                     @endif
                                 @endforeach
+                            </ol>
                             @endif
                         </div>
                         @if (isset($tours->setlist2))
                             <div class="column2-tour">
                                 @if (isset($tours->setlist2))
+                                <ol>
                                     @foreach ($tours->setlist2 as $data)
                                         @if (isset($data['id']))
                                             @if (isset($data['exception']))
@@ -80,13 +83,13 @@
                                                     {{ $data['#'] }} <a
                                                         href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                                 @else
-                                                    {{ $data['#'] }}. <a
-                                                        href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
+                                                    <li> <a
+                                                        href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a></li>
                                                 @endif
                                             @else
                                                 @if ($data['#'] !== '-')
-                                                    {{ $data['#'] }}. <a
-                                                        href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
+                                                <li> <a
+                                                        href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a></li>
                                                 @elseif($data['#'] == '-')
                                                     {{ $data['#'] }} <a
                                                         href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
@@ -99,14 +102,14 @@
                                                         {{ $data['#'] }} <a
                                                             href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                                     @else
-                                                        {{ $data['#'] }}. <a
-                                                            href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
+                                                    <li> <a
+                                                            href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a></li>
                                                     @endif
                                                 @else
                                                     @if ($data['#'] == '-')
                                                         {{ $data['#'] }} {{ $data['exception'] }}<br>
                                                     @else
-                                                        {{ $data['#'] }}. {{ $data['exception'] }}<br>
+                                                    <li> {{ $data['exception'] }}</li>
                                                     @endif
                                                 @endif
                                             @else
@@ -120,6 +123,7 @@
                                             @endif
                                         @endif
                                     @endforeach
+                                </ol>
                                 @endif
                             </div>
                         @endif
