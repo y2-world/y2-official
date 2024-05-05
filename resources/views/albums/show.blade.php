@@ -16,34 +16,37 @@
             Release Date : {{ date('Y.m.d', strtotime($albums->date)) }}
             <hr>
             @if(isset($albums->tracklist))
+            <ol>
               @foreach ($albums->tracklist as $data)
                 @if(isset($data['disc']))
                   @if($data['disc'] !== 'END')
-                    @if(isset($data['id']) && !isset($data['song']))
+                    @if(isset($data['exception']))
+                      {{ $data['disc'] }}
+                      <li> <a href="{{ url('/database/songs', $data['id'])}}">{{ $data['exception'] }}</a></li>
+                    @else
                       {{ $data['disc'] }}<br>
-                      {{ $data['#'] }}. <a href="{{ url('/database/songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
-                    @elseif(isset($data['id']) && !isset($data['exception']))
-                      {{ $data['disc'] }}<br>
-                      {{ $data['#'] }}. <a  href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
+                      <li><a  href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a></li>
                     @endif
                   @elseif($data['disc'] == 'END')
-                    @if(isset($data['id']) && !isset($data['song']))
-                        {{ $data['#'] }}. <a href="{{ url('/database/songs', $data['id'])}}">{{ $data['exception'] }}</a><br><br>
-                    @elseif(isset($data['id']) && !isset($data['exception']))
-                      {{ $data['#'] }}. <a  href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
+                    @if(isset($data['exception']))
+                    <li> <a href="{{ url('/database/songs', $data['id'])}}">{{ $data['exception'] }}</a></li>
+                    @else
+                    <li> <a  href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a></li>
+                    </ol>
+                    <ol>
                     @endif
                   @endif
                 @else
-                  @if(isset($data['song']))
-                  {{ $data['#'] }}. <a  href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
-                  @elseif(isset($data['id']) && isset($data['exception']))
-                  {{ $data['#'] }}. <a href="{{ url('/database/songs', $data['id'])}}">{{ $data['exception'] }}</a><br>
-                  @elseif(!isset($data['id']) && isset($data['exception']))
-                  {{ $data['#'] }}. {{ $data['exception'] }}<br>
+                  @if(!isset($data['id']))
+                  <li> {{ $data['exception'] }}</li>
+                  @elseif(isset($data['exception']) && isset($data['id']))
+                  <li>  <a href="{{ url('/database/songs', $data['id'])}}">{{ $data['exception'] }}</a></li>
+                  @else
+                  <li> <a  href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a></li>
                   @endif
                 @endif
               @endforeach
-              <br>
+            </ol>
             @endif
           </div>
           <div class="show_button">

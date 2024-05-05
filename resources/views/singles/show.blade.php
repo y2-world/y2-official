@@ -16,13 +16,15 @@
             Release Date : {{ date('Y.m.d', strtotime($singles->date)) }}
             <hr>
             @if(isset($singles->tracklist))
+            <ol>
               @foreach ($singles->tracklist as $data)
                 @if(isset($data['id']))
-                {{ $data['#'] }}. <a href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
+                <li> <a href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a></li>
                 @elseif(!isset($data['id']) && isset($data['exception']))
-                  {{ $data['#'] }}. {{ $data['exception'] }}<br>
+                <li>{{ $data['exception'] }}</li>
                 @endif
               @endforeach
+                </ol>
             @endif
           </div>
           <div class="show_button">
