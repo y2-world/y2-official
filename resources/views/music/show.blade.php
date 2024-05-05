@@ -14,7 +14,7 @@
                             <div class="col-xl-6">
                                 <div class="modal-img">
                                     @if (!empty($discos->url))
-                                        <a href="{{ $disco->url }}"><img
+                                        <a href="{{ $discos->url }}"><img
                                                 src={{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $discos->image) }}
                                                 class="top-image" width="100%"></a>
                                     @else
