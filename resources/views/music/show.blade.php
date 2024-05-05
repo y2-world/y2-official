@@ -15,11 +15,11 @@
                                 <div class="modal-img">
                                     @if (!empty($discos->url))
                                         <a href="{{ $discos->url }}"><img
-                                                src={{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $discos->image) }}
-                                                class="top-image" width="100%"></a>
+                                                src="{{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $discos->image) }}"
+                                                class="disco-image" style="width: 100%;"></a>
                                     @else
-                                        <img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $discos->image) }}
-                                            class="disco-image" width="100%">
+                                        <img src="{{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $discos->image) }}"
+                                            class="disco-image" style="width: 100%;">
                                     @endif
                                 </div>
                             </div>
