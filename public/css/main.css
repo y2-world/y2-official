@@ -800,7 +800,8 @@ table {
     text-align: left;
 }
 
-.parts-wrapper, .database-wrapper {
+.parts-wrapper,
+.database-wrapper {
     display: flex;
     justify-content: space-between;
     flex-direction: row;
@@ -920,7 +921,8 @@ table.count > tbody > tr > td:first-child::before {
     content: counter(rowCount);
 }
 
-.news p, .news li {
+.news p,
+.news li {
     font-size: 12px;
 }
 
@@ -948,6 +950,14 @@ th {
 @media (min-width: 992px) {
     .mb-sns-nav {
         display: none;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    table.songs,
+    table.tour,
+    table.solo {
+        font-size: 11px;
     }
 }
 
@@ -1005,11 +1015,10 @@ th {
     font-feature-settings: "liga";
 }
 
-@media(min-width: 1080px) {
+@media (min-width: 1080px) {
     .sp {
         display: none;
     }
-
 }
 
 @media screen and (max-width: 1080px) {
@@ -1077,7 +1086,6 @@ th {
         flex-direction: column;
         align-items: center;
     }
-    
 }
 
 @media screen and (max-width: 992px) {
@@ -1224,7 +1232,8 @@ th {
         width: 85%;
     }
 
-    .mobile, .sp {
+    .mobile,
+    .sp {
         font-size: 10px;
     }
 
