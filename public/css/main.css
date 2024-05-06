@@ -930,6 +930,14 @@ th {
     font-size: 10px;
 }
 
+.td_date {
+    width: 30%;
+}
+
+.td_title {
+    width: 70%;
+}
+
 @media (min-width: 1024px) {
     .column1,
     .column2-tour,
@@ -958,14 +966,6 @@ th {
     table.tour,
     table.solo {
         font-size: 11px;
-    }
-
-    .td_date {
-        width: 40%;
-    }
-
-    .td_title {
-        width: 60%;
     }
 }
 
