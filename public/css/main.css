@@ -934,6 +934,10 @@ th {
     white-space:nowrap
 }
 
+.pc_venue {
+    white-space:nowrap
+}
+
 @media (min-width: 1024px) {
     .column1,
     .column2-tour,
@@ -1065,7 +1069,7 @@ th {
 }
 
 @media screen and (max-width: 1080px) {
-    .pc {
+    .pc, .pc_venue {
         display: none;
     }
 
