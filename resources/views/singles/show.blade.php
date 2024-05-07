@@ -19,12 +19,13 @@
             <ol>
               @foreach ($singles->tracklist as $data)
                 @if(isset($data['id']))
-                <li> <a href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a></li>
                   @if(isset($data['exception']))
                   <li> <a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception']}}</a></li>
+                  @else
+                  <li> <a href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a></li>
                   @endif
                 @else
-                <li>{{ $data['exception'] }}</li>
+                  <li>{{ $data['exception'] }}</li>
                 @endif
               @endforeach
                 </ol>
