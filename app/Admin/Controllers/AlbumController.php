@@ -80,7 +80,6 @@ class AlbumController extends AdminController
         $form->switch('best', __('ベスト'));
         $form->table('tracklist', __('収録曲'), function ($table) {
             $table->text('disc');
-            $table->number('#')->rules('required');
             $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
             $table->text('exception', __('例外'));
         });

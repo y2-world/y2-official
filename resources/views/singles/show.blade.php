@@ -21,6 +21,8 @@
                 @if(isset($data['id']))
                 <li> <a href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a></li>
                 @elseif(!isset($data['id']) && isset($data['exception']))
+                <li> <a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception']}}</a></li>
+                @else
                 <li>{{ $data['exception'] }}</li>
                 @endif
               @endforeach

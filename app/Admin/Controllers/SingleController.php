@@ -79,7 +79,6 @@ class SingleController extends AdminController
         $form->date('date', __('リリース日'));
         $form->switch('download', __('配信シングル'));
         $form->table('tracklist', __('収録曲'), function ($table) {
-            $table->number('#')->rules('required');
             $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
             $table->text('exception', __('例外'));
         });
