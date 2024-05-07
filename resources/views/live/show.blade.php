@@ -89,7 +89,7 @@
                                                         href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a></li>
                                                 @endif
                                             @else
-                                                @if (!empty($data['#']) && $data['#'] !== '-')
+                                                @if ($data['#'] !== '-')
                                                 <li> <a
                                                         href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a></li>
                                                 @elseif(!empty($data['#']) && $data['#'] == '-')
