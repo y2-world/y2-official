@@ -5,8 +5,11 @@
   <h2>Singles</h2>
   <div class="database-wrapper">
     <div class="dropdown-wrapper">
-      <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/songs') }}" role="button">Songs</a>
-      <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/albums') }}" role="button">Albums</a>
+      <select name="select" onChange="location.href=value;">
+        <option value="" disabled selected>Discography</option>
+        <option value="{{ url('/database/songs') }}">Songs</option>
+        <option value="{{ url('/database/albums') }}">Albums</option>
+    </select>
       <select name="select" onChange="location.href=value;">
         <option value="" disabled selected>Live</option>
         <option value="{{ url('/database/live') }}">All</option>
