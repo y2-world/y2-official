@@ -23,8 +23,8 @@
                             @if (isset($tours->setlist1))
                             <ol>
                                 @foreach ($tours->setlist1 as $data)
-                                    @if (isset($data['id']))
-                                        @if (isset($data['exception']))
+                                    @if (!empty($data['id']))
+                                        @if (!empty($data['exception']))
                                             @if ($data['#'] == '-')
                                                 {{ $data['#'] }} <a
                                                     href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
@@ -42,8 +42,8 @@
                                             @endif
                                         @endif
                                     @else
-                                        @if (isset($data['exception']))
-                                            @if (isset($data['id']))
+                                        @if (!empty($data['exception']))
+                                            @if (!empty($data['id']))
                                                 @if ($data['#'] == '-')
                                                     {{ $data['#'] }} <a
                                                         href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
