@@ -23,54 +23,54 @@
                             @if (isset($tours->setlist1))
                             <ol>
                                 @foreach ($tours->setlist1 as $data)
-                                @if (isset($data['id']))
-                                    @if (isset($data['exception']))
-                                        @if (!empty($data['#']) && $data['#'] == '-')
-                                            {{ $data['#'] }} <a
-                                                href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
-                                        @else
-                                            <li> <a
-                                                href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a></li>
-                                        @endif
-                                    @else
-                                        @if (empty($data['#']))
-                                        <li> <a
-                                                href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a></li>
-                                        @elseif(!empty($data['#']) && $data['#'] == '-')
-                                            {{ $data['#'] }} <a
-                                                href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
-                                        @endif
-                                    @endif
-                                @else
-                                    @if (isset($data['exception']))
-                                        @if (isset($data['id']))
+                                    @if (isset($data['id']))
+                                        @if (isset($data['exception']))
                                             @if (!empty($data['#']) && $data['#'] == '-')
                                                 {{ $data['#'] }} <a
                                                     href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                             @else
-                                            <li> <a
+                                                <li> <a
                                                     href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a></li>
                                             @endif
                                         @else
-                                            @if (!empty($data['#']) && $data['#'] == '-')
-                                                {{ $data['#'] }} {{ $data['exception'] }}<br>
-                                            @else
-                                            <li> {{ $data['exception'] }}</li>
+                                            @if (empty($data['#']) || !empty($data['#']) && $data['#'] != '-')
+                                            <li> <a
+                                                    href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a></li>
+                                            @elseif(!empty($data['#']) && $data['#'] == '-')
+                                                {{ $data['#'] }} <a
+                                                    href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
                                             @endif
                                         @endif
                                     @else
-                                        @if (!empty($data['#']) && $data['#'] == 'ENCORE')
-                                            <hr width="250">
-                                        @elseif($data['#'] == 'hr')
-                                            </ol>
-                                            <hr width="80%">
-                                            <ol>
+                                        @if (isset($data['exception']))
+                                            @if (isset($data['id']))
+                                                @if (!empty($data['#']) && $data['#'] == '-')
+                                                    {{ $data['#'] }} <a
+                                                        href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
+                                                @else
+                                                <li> <a
+                                                        href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a></li>
+                                                @endif
+                                            @else
+                                                @if (!empty($data['#']) && $data['#'] == '-')
+                                                    {{ $data['#'] }} {{ $data['exception'] }}<br>
+                                                @else
+                                                <li> {{ $data['exception'] }}</li>
+                                                @endif
+                                            @endif
                                         @else
-                                            <h5>{{ $data['#'] }} </h5>
+                                            @if (!empty($data['#']) && $data['#'] == 'ENCORE')
+                                                <hr width="250">
+                                            @elseif($data['#'] == 'hr')
+                                                </ol>
+                                                <hr width="80%">
+                                                <ol>
+                                            @else
+                                                <h5>{{ $data['#'] }} </h5>
+                                            @endif
                                         @endif
                                     @endif
-                                @endif
-                            @endforeach
+                                @endforeach
                             </ol>
                             @endif
                         </div>
