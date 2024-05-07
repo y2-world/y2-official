@@ -119,7 +119,7 @@
                                                     <hr width="250">
                                                 @elseif($data['#'] == 'hr')
                                                     </ol>
-                                                    <hr width="80%">
+                                                    <hr width="100%">
                                                     <ol>
                                                 @else
                                                     <h5>{{ $data['#'] }} </h5>
