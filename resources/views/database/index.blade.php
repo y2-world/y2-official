@@ -31,7 +31,7 @@
     </style> --}}
     <br>
     <div class="container">
-        <div class="database-wrapper">
+        <div class="parts-wrapper">
             <h2>Mr.Children Database</h2>
             {{-- <div class="search">
                 <form action="{{ url('/find') }}" method="GET">

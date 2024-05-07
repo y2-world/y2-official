@@ -800,8 +800,7 @@ table {
     text-align: left;
 }
 
-.parts-wrapper,
-.database-wrapper {
+.parts-wrapper {
     display: flex;
     justify-content: space-between;
     flex-direction: row;
@@ -1082,14 +1081,6 @@ th {
     }
 
     .parts-wrapper {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        flex-direction: column-reverse;
-        align-items: flex-start;
-    }
-
-    .database-wrapper {
         display: flex;
         justify-content: space-between;
         flex-direction: column;
