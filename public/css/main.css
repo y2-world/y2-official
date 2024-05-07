@@ -1086,6 +1086,13 @@ th {
         flex-direction: column;
         align-items: flex-start;
     }
+
+    .database-wrapper {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        align-items: center;
+    }
 }
 
 @media screen and (max-width: 992px) {
