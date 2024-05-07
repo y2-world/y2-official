@@ -3,7 +3,7 @@
     <br>
     <div class="container-lg">
        
-            <div class="parts-wrapper">
+            <div class="song-wrapper">
                 {{-- <div class="search">
                     <form action="{{ url('/find') }}" method="GET">
                         <div class="input-group mb-3">
