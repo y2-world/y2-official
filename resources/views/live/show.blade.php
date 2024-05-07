@@ -44,7 +44,7 @@
                                     @else
                                         @if (!empty($data['exception']))
                                             @if (!empty($data['id']))
-                                                @if ($data['#'] == '-')
+                                                @if (!empty($data['#']) && $data['#'] == '-')
                                                     {{ $data['#'] }} <a
                                                         href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                                 @else
@@ -52,16 +52,16 @@
                                                         href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><li>
                                                 @endif
                                             @else
-                                                @if ($data['#'] == '-')
+                                                @if (!empty($data['#']) && $data['#'] == '-')
                                                     {{ $data['#'] }} {{ $data['exception'] }}<br>
                                                 @else
                                                     <li> {{ $data['exception'] }}</li>
                                                 @endif
                                             @endif
                                         @else
-                                            @if ($data['#'] == 'ENCORE')
+                                            @if (!empty($data['#']) && $data['#'] == 'ENCORE')
                                                 <hr width="250">
-                                            @elseif($data['#'] == 'hr')
+                                            @elseif(!empty($data['#']) && $data['#'] == 'hr')
                                                 </ol>
                                                 <hr width="80%">
                                                 <ol>
