@@ -7,7 +7,14 @@
             <div class="dropdown-wrapper">
                 <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/singles') }}" role="button">Singles</a>
                 <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/albums') }}" role="button">Albums</a>
-                <a class="btn btn-outline-dark btn-sm" href="{{ url('/database/live') }}" role="button">Live</a>
+                <select name="select" onChange="location.href=value;">
+                    <option value="" disabled selected>Live</option>
+                    <option value="{{ url('/database/live') }}">All</option>
+                    <option value="{{ url('/database/live?type=1') }}">Tours</option>
+                    <option value="{{ url('/database/live?type=2') }}">Events</option>
+                    <option value="{{ url('/database/live?type=3') }}">ap bank fes</option>
+                    <option value="{{ url('/database/live?type=4') }}">Solo</option>
+                </select>
                 <select name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Years</option>
                     @foreach ($bios as $bio)
@@ -134,7 +141,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <h5>Solo / Bank Band</h5>
+                        <h5>Solo</h5>
                         @foreach ($tours as $tour)
                             @if ($tour->type == 4)
                                 <tr>

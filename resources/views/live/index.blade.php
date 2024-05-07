@@ -9,7 +9,7 @@
         @elseif(request('type') == 3)
             <h2>ap bank fes</h2>
         @elseif(request('type') == 4)
-            <h2>Solo / Bank Band</h2>
+            <h2>Solo</h2>
         @else
             <h2>Live</h2>
         @endif
@@ -21,7 +21,7 @@
                     <option value="{{ url('/database/live?type=1') }}">Tours</option>
                     <option value="{{ url('/database/live?type=2') }}">Events</option>
                     <option value="{{ url('/database/live?type=3') }}">ap bank fes</option>
-                    <option value="{{ url('/database/live?type=4') }}">Solo / Bank Band</option>
+                    <option value="{{ url('/database/live?type=4') }}">Solo</option>
                 </select>
                 <select name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Years</option>

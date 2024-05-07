@@ -931,11 +931,7 @@ th {
 }
 
 .td_date {
-    width: 35%;
-}
-
-.td_title {
-    width: 70%;
+    white-space:nowrap
 }
 
 @media (min-width: 1024px) {
