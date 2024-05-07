@@ -36,7 +36,7 @@
                                             @if (!empty($data['#']) && $data['#'] !== '-')
                                                 <li> <a
                                                     href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a></li>
-                                            @elseif($data['#'] == '-')
+                                            @elseif(!empty($data['#']) && $data['#'] == '-')
                                                 {{ $data['#'] }} <a
                                                     href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
                                             @endif
