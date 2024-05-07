@@ -25,7 +25,7 @@
                                 @foreach ($tours->setlist1 as $data)
                                     @if (!empty($data['id']))
                                         @if (!empty($data['exception']))
-                                            @if ($data['#'] == '-')
+                                            @if (!empty($data['#']) && $data['#'] == '-')
                                                 {{ $data['#'] }} <a
                                                     href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                             @else
@@ -33,7 +33,7 @@
                                                     href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a></li>
                                             @endif
                                         @else
-                                            @if ($data['#'] !== '-')
+                                            @if (!empty($data['#']) && $data['#'] !== '-')
                                                 <li> <a
                                                     href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a></li>
                                             @elseif($data['#'] == '-')
@@ -81,7 +81,7 @@
                                     @foreach ($tours->setlist2 as $data)
                                         @if (isset($data['id']))
                                             @if (isset($data['exception']))
-                                                @if ($data['#'] == '-')
+                                                @if (!empty($data['#']) && $data['#'] == '-')
                                                     {{ $data['#'] }} <a
                                                         href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                                 @else
@@ -89,10 +89,10 @@
                                                         href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a></li>
                                                 @endif
                                             @else
-                                                @if ($data['#'] !== '-')
+                                                @if (!empty($data['#']) && $data['#'] !== '-')
                                                 <li> <a
                                                         href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a></li>
-                                                @elseif($data['#'] == '-')
+                                                @elseif(!empty($data['#']) && $data['#'] == '-')
                                                     {{ $data['#'] }} <a
                                                         href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
                                                 @endif
@@ -100,7 +100,7 @@
                                         @else
                                             @if (isset($data['exception']))
                                                 @if (isset($data['id']))
-                                                    @if ($data['#'] == '-')
+                                                    @if (!empty($data['#']) && $data['#'] == '-')
                                                         {{ $data['#'] }} <a
                                                             href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                                     @else
@@ -115,7 +115,7 @@
                                                     @endif
                                                 @endif
                                             @else
-                                                @if ($data['#'] == 'ENCORE')
+                                                @if (!empty($data['#']) && $data['#'] == 'ENCORE')
                                                     <hr width="250">
                                                 @elseif($data['#'] == 'hr')
                                                     </ol>
