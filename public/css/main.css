@@ -849,6 +849,10 @@ select {
     height: 100%;
     /* padding: 0 10px; */
 }
+.dropdown-wrapper select {
+    margin-right: 40px;
+}
+
 nav {
     overflow-x: scroll;
 }
@@ -1086,7 +1090,7 @@ th {
         display: flex;
         justify-content: space-between;
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
     }
 
     .database-wrapper {
