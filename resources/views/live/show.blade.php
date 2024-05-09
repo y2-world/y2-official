@@ -26,11 +26,11 @@
                                     @if (isset($data['id']))
                                         @if (isset($data['exception']))
                                             @if (!empty($data['#']) && $data['#'] == '-')
-                                                {{ $data['#'] }} <a
-                                                    href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
+                                            {{ $data['#'] }} <a
+                                            href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }} {{ $data['exception'] }}</a><br>
                                             @else
-                                                <li> <a
-                                                    href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a></li>
+                                            <li> <a
+                                                href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }} {{ $data['exception'] }}</a></li>
                                             @endif
                                         @else
                                             @if (empty($data['#']) || !empty($data['#']) && $data['#'] != '-')
