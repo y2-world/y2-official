@@ -131,6 +131,7 @@
                                 @endif
                             </div>
                         @endif
+                    </div>
                     @if (!is_null($tours->schedule))
                         <hr>
                         <h5>SCHEDULE</h5>
