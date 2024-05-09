@@ -114,7 +114,7 @@ class TourController extends AdminController
                 $form->dateRange('date1', 'date2', '開催期間');
                 $form->text('venue', __('会場'));
             });
-            $form->multipleSelect('year', __('年'))->options(Bio::pluck('year', 'year'));
+            $form->select('year', __('年'))->options(Bio::pluck('year', 'year'));
         })->tab('セットリスト1',function($form) {
             $form->table('setlist1', __('セットリスト1'), function ($table) {
                 $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
@@ -123,12 +123,6 @@ class TourController extends AdminController
             });
         })->tab('セットリスト2',function($form) {
             $form->table('setlist2', __('セットリスト2'), function ($table) {
-                $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
-                $table->number('#');
-                $table->text('exception', __('例外'));
-            });
-        })->tab('セットリスト3',function($form) {
-            $form->table('setlist3', __('セットリスト2'), function ($table) {
                 $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
                 $table->number('#');
                 $table->text('exception', __('例外'));

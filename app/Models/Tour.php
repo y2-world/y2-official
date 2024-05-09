@@ -32,11 +32,6 @@ class Tour extends Model
         $this->attributes['setlist2'] = json_encode(array_values($value));
     }
 
-    public function setSetlist3Attribute($value)
-    {
-        $this->attributes['setlist3'] = json_encode(array_values($value));
-    }
-
 
     // public function setYearAttribute($value)
     // {
