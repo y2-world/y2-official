@@ -127,6 +127,12 @@ class TourController extends AdminController
                 $table->number('#');
                 $table->text('exception', __('例外'));
             });
+        })->tab('セットリスト3',function($form) {
+            $form->table('setlist3', __('セットリスト2'), function ($table) {
+                $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
+                $table->number('#');
+                $table->text('exception', __('例外'));
+            });
         })->tab('コメント',function($form) {
             $form->textarea('schedule', __('スケジュール'))->rows(15);
             $form->textarea('text', __('コメント'))->rows(15);
