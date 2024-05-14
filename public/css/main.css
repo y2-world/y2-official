@@ -949,8 +949,14 @@ h5 {
     padding-top: 10px;
 }
 
-@media (min-width: 1024px) {
 
+
+@media (min-width: 1024px) {
+    .column1,
+    .column2-tour,
+    .column2-bio {
+        width: 50%;
+    }
 
     .column {
         width: 100%;
@@ -1266,7 +1272,6 @@ h5 {
     .setlist-row {
         display: column;
         flex-wrap: wrap;
-        justify-content: flex-start;
     }
 
     .app-wrapper {
