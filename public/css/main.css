@@ -1272,6 +1272,7 @@ h5 {
 
     .setlist-row {
         display: column;
+        flex-direction: column;
         flex-wrap: wrap;
     }
 
