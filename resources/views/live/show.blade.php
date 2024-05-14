@@ -19,7 +19,7 @@
                         <hr>
                     @endif
                     <div class="setlist-row">
-                        <div class="column1">
+                        <div class="column-live">
                             @if (isset($tours->setlist1))
                             <ol>
                                 @foreach ($tours->setlist1 as $data)
@@ -75,7 +75,7 @@
                             @endif
                         </div>
                         @if (isset($tours->setlist2))
-                            <div class="column2-tour">
+                            <div class="column-live">
                                 @if (isset($tours->setlist2))
                                 <ol>
                                     @foreach ($tours->setlist2 as $data)
@@ -132,7 +132,7 @@
                             </div>
                         @endif
                         @if (isset($tours->setlist3))
-                            <div class="column-3">
+                            <div class="column-live">
                                 @if (isset($tours->setlist3))
                                 <ol>
                                     @foreach ($tours->setlist3 as $data)

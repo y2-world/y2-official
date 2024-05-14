@@ -952,11 +952,15 @@ h5 {
 
 
 @media (min-width: 1024px) {
-    .column1,
+    .column-database {
+        width: 50%;
+    }
+
+    /* .column1,
     .column2-tour,
     .column2-bio {
         width: 50%;
-    }
+    } */
 
     .column {
         width: 100%;
