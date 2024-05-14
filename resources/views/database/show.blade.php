@@ -32,7 +32,7 @@
                 @if ($tours->isEmpty())
                     <div class="column">
                     @else
-                        <div class="column-database">
+                        <div class="column1">
                 @endif
                 @if ($tours->isEmpty())
                     <table class="table table-striped">
