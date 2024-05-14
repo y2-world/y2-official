@@ -1,11 +1,8 @@
-{{-- <!-- Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Typeahead.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.3.1/typeahead.bundle.min.js"></script>
-
 <!-- スクリプトファイルの追加 -->
-<script src="{{ asset('js/search.js') }}"></script> --}}
+{{-- <script src="{{ asset('js/search.js') }}"></script>  --}}
+
+{{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
 
 @extends('layouts.app')
 @section('content')
@@ -46,6 +43,18 @@
                 <option value="{{ url('/database/songs/' . $song->id) }}">{{ $song->title }}</option>
                 @endforeach
             </select>
+            {{-- <div class="search">
+                <form action="{{ url('/find') }}" method="GET">
+                    <div class="input-group mb-3">
+                        <select id="searchInput" class="form-control"></select>
+                    </div>
+                </form>
+            </div> --}}
+            {{-- <select class="js-example-basic-multiple" name="states[]" multiple="multiple">
+                <option value="AL">Alabama</option>
+                  ...
+                <option value="WY">Wyoming</option>
+              </select> --}}
         </div>
         <hr>
         <h4 class="bio">Discography</h4>
@@ -91,4 +100,9 @@
         </div>
         <br>
     </div>
+    {{-- <script>
+   $(document).ready(function() {
+        $('.js-example-basic-single').select2();
+    });
+    </script> --}}
 @endsection

@@ -698,7 +698,7 @@ img {
 
 .music-menu a {
     padding-right: 30px;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 li .active {
@@ -885,6 +885,7 @@ nav {
 .setlist-row {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-around;
 }
 
 .cover-wrapper {
@@ -944,12 +945,12 @@ th {
     white-space:nowrap
 }
 
+h5 {
+    padding-top: 10px;
+}
+
 @media (min-width: 1024px) {
-    .column1,
-    .column2-tour,
-    .column2-bio {
-        width: 50%;
-    }
+
 
     .column {
         width: 100%;

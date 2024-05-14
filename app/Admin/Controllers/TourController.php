@@ -115,14 +115,18 @@ class TourController extends AdminController
                 $form->text('venue', __('会場'));
             });
             $form->select('year', __('年'))->options(Bio::pluck('year', 'year'));
-        })->tab('セットリスト1',function($form) {
+        })->tab('セットリスト',function($form) {
             $form->table('setlist1', __('セットリスト1'), function ($table) {
                 $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
                 $table->number('#');
                 $table->text('exception', __('例外'));
             });
-        })->tab('セットリスト2',function($form) {
             $form->table('setlist2', __('セットリスト2'), function ($table) {
+                $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
+                $table->number('#');
+                $table->text('exception', __('例外'));
+            });
+            $form->table('setlist3', __('セットリスト3'), function ($table) {
                 $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
                 $table->number('#');
                 $table->text('exception', __('例外'));
