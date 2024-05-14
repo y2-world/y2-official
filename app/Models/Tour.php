@@ -10,6 +10,7 @@ class Tour extends Model
         // 'year' =>'json',
         'setlist1' =>'json',
         'setlist2' =>'json',
+        'setlist3' =>'json',
     ];
 
     public function songs()
