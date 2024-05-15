@@ -660,6 +660,42 @@ img {
     padding: 10px 30px 30px 30px;
 }
 
+.modal-img {
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-img img {
+    width: 100%;
+    transition: opacity 0.3s ease;
+}
+
+.no-hover {
+    pointer-events: none; /* URLが存在しない場合にホバーエフェクトを無効にする */
+}
+
+.modal-img:hover img {
+    opacity: 0.5;
+}
+
+.listen-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: black;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.modal-img:hover .listen-text {
+    opacity: 1;
+}
+
+
 .single img {
     margin-bottom: 20px;
     transition: box-shadow 0.5s;

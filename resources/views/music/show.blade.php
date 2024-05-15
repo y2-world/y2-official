@@ -14,15 +14,15 @@
                             <div class="col-xl-6">
                                 <div class="modal-img">
                                     @if (!empty($discos->url))
-                                        <a href="{{ $discos->url }}"><img
-                                                src="{{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $discos->image) }}"
-                                                class="disco-image" style="width: 100%;"></a>
-                                    @else
-                                        <img src="{{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $discos->image) }}"
-                                            class="disco-image" style="width: 100%;">
+                                        <a href="{{ $discos->url }}">
+                                            <img src="{{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $discos->image) }}" class="disco-image" style="width: 100%;">
+                                            <div class="listen-text">LISTEN</div>
+                                        </a>
+                                    @elseif (!empty($discos->image))
+                                        <img src="{{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $discos->image) }}" class="disco-image no-hover" style="width: 100%;">
                                     @endif
                                 </div>
-                            </div>
+                            </div>                            
                             @if (!empty($discos->tracklist))
                                 <div class="col-xl-6">
                                     <div class=track-list>
