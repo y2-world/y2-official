@@ -60,7 +60,7 @@
                                             @endif
                                         @else
                                             @if (!empty($data['#']) && $data['#'] == 'ENCORE')
-                                                <hr width="250">
+                                                <hr width="95%">
                                             @elseif($data['#'] == 'hr')
                                                 </ol>
                                                 <hr width="95%">
@@ -116,7 +116,7 @@
                                                 @endif
                                             @else
                                                 @if (!empty($data['#']) && $data['#'] == 'ENCORE')
-                                                    <hr width="250">
+                                                    <hr width="95%">
                                                 @elseif($data['#'] == 'hr')
                                                     </ol>
                                                     <hr width="95%">
@@ -173,7 +173,7 @@
                                                 @endif
                                             @else
                                                 @if (!empty($data['#']) && $data['#'] == 'ENCORE')
-                                                    <hr width="250">
+                                                    <hr width="95%">
                                                 @elseif($data['#'] == 'hr')
                                                     </ol>
                                                     <hr width="95%">
