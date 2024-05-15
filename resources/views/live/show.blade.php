@@ -3,7 +3,7 @@
     <br>
     <div class="container">
         <div class="row justify-content-center"> 
-            <div class="col-md-8">
+            <div class="col-md-9">
                 <div class="setlist_title">{{ $tours->title }}</div>
                 <div class="setlist_info">
                     @if (isset($tours->date1) && isset($tours->date2))
