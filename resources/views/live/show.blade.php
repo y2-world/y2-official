@@ -63,7 +63,7 @@
                                                 <hr width="250">
                                             @elseif($data['#'] == 'hr')
                                                 </ol>
-                                                <hr width="100%">
+                                                <hr width="95%">
                                                 <ol>
                                             @else
                                                 <h5>{{ $data['#'] }} </h5>
@@ -119,7 +119,7 @@
                                                     <hr width="250">
                                                 @elseif($data['#'] == 'hr')
                                                     </ol>
-                                                    <hr width="100%">
+                                                    <hr width="95%">
                                                     <ol>
                                                 @else
                                                     <h5>{{ $data['#'] }} </h5>
@@ -176,7 +176,7 @@
                                                     <hr width="250">
                                                 @elseif($data['#'] == 'hr')
                                                     </ol>
-                                                    <hr width="100%">
+                                                    <hr width="95%">
                                                     <ol>
                                                 @else
                                                     <h5>{{ $data['#'] }} </h5>
