@@ -1001,6 +1001,12 @@ h5 {
     table.solo {
         font-size: 11px;
     }
+
+    .setlist-row {
+        display: column;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
 }
 
 @media screen and (max-width: 1024px) {
@@ -1143,12 +1149,6 @@ h5 {
 
     .mb-sns-nav a {
         padding: 5px;
-    }
-
-    .setlist-row {
-        display: column;
-        flex-direction: column;
-        flex-wrap: wrap;
     }
 }
 
