@@ -882,10 +882,30 @@ nav {
     text-align: center;
 }
 
+/* By default, let .justify-content-center center align elements */
+.justify-content-center {
+    justify-content: center !important; /* Add !important to ensure it overrides other styles */
+}
+
+/* .justify-content-space-around will change the justification to space-around */
+.justify-content-space-around {
+    justify-content: space-around !important; /* Add !important to ensure it overrides other styles */
+}
+
+/* Define .setlist-row to use flex layout */
 .setlist-row {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+}
+
+/* Justify content flex-start */
+.justify-content-flex-start {
+    justify-content: flex-start !important; /* 他のスタイルを上書きするために !important を追加 */
+}
+
+/* Justify content space-around */
+.justify-content-space-around {
+    justify-content: space-around !important; /* 他のスタイルを上書きするために !important を追加 */
 }
 
 .cover-wrapper {
