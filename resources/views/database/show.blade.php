@@ -27,7 +27,7 @@
             </div>
         </div>
         <br>
-        <div class="setlist-row">
+        <div class="database-row">
             @if (!$songs->isEmpty())
                 @if ($tours->isEmpty())
                     <div class="column">
