@@ -12,7 +12,10 @@
                 }
             }
 
-            $colClass = $hrCount >= 2 ? 'col-md-10' : 'col-md-8';
+            $colClass = $hrCount == 0 ? 'col-md-8' : 'col-md-10';
+            $flexDirectionClass = $hrCount == 0 ? 'flex-start' : 'space-around';
+
+
         @endphp
         <div class="row justify-content-center">
             <div class="{{ $colClass }}">
@@ -29,7 +32,7 @@
                 <div class="setlist">
                     @if (isset($tours->setlist1))
                         <hr>
-                        <div class="setlist-row">
+                        <div class="setlist-row" style="justify-content:{{ $flexDirectionClass }}">
                             <ol class="live-column">
                                 @foreach ($tours->setlist1 as $data)
                                     @if (isset($data['id']))
