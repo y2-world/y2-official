@@ -922,23 +922,13 @@ nav {
 .setlist-row {
     display: flex;
     flex-wrap: nowrap; /* Prevent wrapping */
-    overflow-x: auto; /* Enable horizontal scrolling */
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on touch devices */
+    overflow-x: scroll; /* Enable horizontal scrolling */
 }
 
 .live-column {
     flex: 0 0 auto; /* Prevent columns from shrinking */
     margin: 10px;
     min-width: 350px; /* Adjust the width based on your needs */
-}
-  
-.justify-content-center {
-    justify-content: center !important; /* Add !important to ensure it overrides other styles */
-}
-
-/* .justify-content-space-around will change the justification to space-around */
-.justify-content-space-around {
-    justify-content: space-around !important; /* Add !important to ensure it overrides other styles */
 }
 
 /* Define .setlist-row to use flex layout */
@@ -1004,9 +994,9 @@ th {
     white-space:nowrap
 }
 
-h5 {
+/* h5 {
     padding-top: 10px;
-}
+} */
 
 
 
