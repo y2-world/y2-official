@@ -922,7 +922,7 @@ nav {
 .setlist-row {
     display: flex;
     flex-wrap: nowrap; /* Prevent wrapping */
-    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-x: scroll; /* Enable horizontal scrolling */
     -webkit-overflow-scrolling: touch; /* Smooth scrolling on touch devices */
 }
 
@@ -945,16 +945,6 @@ nav {
 .database-row {
     display: flex;
     flex-wrap: wrap;
-}
-
-/* Justify content flex-start */
-.justify-content-flex-start {
-    justify-content: flex-start !important; /* 他のスタイルを上書きするために !important を追加 */
-}
-
-/* Justify content space-around */
-.justify-content-space-around {
-    justify-content: space-around !important; /* 他のスタイルを上書きするために !important を追加 */
 }
 
 .cover-wrapper {
