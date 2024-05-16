@@ -3,18 +3,18 @@
     <br>
     <div class="container">
         @php
-            $colClass = 'col-md-8';
-            $olCount = isset($tours->setlist1) ? 1 : 0;
-
-            foreach([$tours->setlist2, $tours->setlist3] as $setlist) {
-                if(isset($setlist) && is_array($setlist) && count($setlist) > 0) {
-                    $olCount++;
+            $hrCount = 0;
+            if (isset($tours->setlist1)) {
+                foreach ($tours->setlist1 as $data) {
+                    if (isset($data['#']) && $data['#'] === 'hr') {
+                        $hrCount++;
+                    }
                 }
             }
 
-            $flexDirectionClass = $olCount <= 1 ? 'flex-start' : 'space-around';
+            $colClass = $hrCount >= 2 ? 'col-md-10' : 'col-md-8';
         @endphp
-        <div class="row justify-content-center"> <!-- ここで中央寄せに設定 -->
+        <div class="row justify-content-center">
             <div class="{{ $colClass }}">
                 <div class="setlist_title">{{ $tours->title }}</div>
                 <div class="setlist_info">
@@ -29,8 +29,7 @@
                 <div class="setlist">
                     @if (isset($tours->setlist1))
                         <hr>
-                        <div class="setlist-row justify-content-{{ $flexDirectionClass }}">
-                            <!-- Content for setlist1 -->
+                        <div class="setlist-row">
                             <ol class="live-column">
                                 @foreach ($tours->setlist1 as $data)
                                     @if (isset($data['id']))
