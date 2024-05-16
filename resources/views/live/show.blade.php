@@ -3,13 +3,18 @@
     <br>
     <div class="container">
         @php
-            $hasSetlist2Or3 = !empty($tours->setlist2) || !empty($tours->setlist3);
-            $justifyClass = $hasSetlist2Or3 ? 'justify-content-space-around' : 'justify-content-center';
-            $hasSetlist3 = !empty($tours->setlist3);
-            $colClass = $hasSetlist3 ? 'col-md-10' : 'col-md-8';
-            $flexDirectionClass = $hasSetlist2Or3 ? 'justify-content-space-around' : (!empty($tours->setlist1) ? 'justify-content-flex-start' : '');
+            $colClass = 'col-md-8';
+            $olCount = isset($tours->setlist1) ? 1 : 0;
+
+            foreach([$tours->setlist2, $tours->setlist3] as $setlist) {
+                if(isset($setlist) && is_array($setlist) && count($setlist) > 0) {
+                    $olCount++;
+                }
+            }
+
+            $flexDirectionClass = $olCount <= 1 ? 'flex-start' : 'space-around';
         @endphp
-        <div class="row {{ $justifyClass }}"> 
+        <div class="row justify-content-center"> <!-- ここで中央寄せに設定 -->
             <div class="{{ $colClass }}">
                 <div class="setlist_title">{{ $tours->title }}</div>
                 <div class="setlist_info">
@@ -24,181 +29,74 @@
                 <div class="setlist">
                     @if (isset($tours->setlist1))
                         <hr>
+                        <div class="setlist-row justify-content-{{ $flexDirectionClass }}">
+                            <!-- Content for setlist1 -->
+                            <ol class="live-column">
+                                @foreach ($tours->setlist1 as $data)
+                                    @if (isset($data['id']))
+                                        @if (isset($data['exception']))
+                                            @if (!empty($data['#']) && $data['#'] == '-')
+                                                {{ $data['#'] }} <a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
+                                            @else
+                                                <li><a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a></li>
+                                            @endif
+                                        @else
+                                            @if (empty($data['#']) || !empty($data['#']) && $data['#'] != '-')
+                                                <li><a href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a></li>
+                                            @elseif(!empty($data['#']) && $data['#'] == '-')
+                                                {{ $data['#'] }} <a href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
+                                            @endif
+                                        @endif
+                                    @else
+                                        @if (isset($data['exception']))
+                                            @if (isset($data['id']))
+                                                @if (!empty($data['#']) && $data['#'] == '-')
+                                                    {{ $data['#'] }} <a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
+                                                @else
+                                                    <li><a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a></li>
+                                                @endif
+                                            @else
+                                                @if (!empty($data['#']) && $data['#'] == '-')
+                                                    {{ $data['#'] }} {{ $data['exception'] }}<br>
+                                                @else
+                                                    <li>{{ $data['exception'] }}</li>
+                                                @endif
+                                            @endif
+                                        @else
+                                            @if (!empty($data['#']) && $data['#'] == 'ENCORE')
+                                                <hr width="95%">
+                                            @elseif($data['#'] == 'hr')
+                                                </ol>
+                                                <ol class="live-column">
+                                            @else
+                                                <h5>{{ $data['#'] }}</h5>
+                                            @endif
+                                        @endif
+                                    @endif
+                                @endforeach
+                            </ol>
+                        </div>
                     @endif
-                    <div class="setlist-row {{ $flexDirectionClass }}">
-                        @if (isset($tours->setlist1))
-                            {{-- <div class="column-live"> --}}
-                                <!-- Content for setlist1 -->
-                                <ol class="column-live">
-                                    @foreach ($tours->setlist1 as $data)
-                                        @if (isset($data['id']))
-                                            @if (isset($data['exception']))
-                                                @if (!empty($data['#']) && $data['#'] == '-')
-                                                    {{ $data['#'] }} <a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
-                                                @else
-                                                    <li><a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a></li>
-                                                @endif
-                                            @else
-                                                @if (empty($data['#']) || !empty($data['#']) && $data['#'] != '-')
-                                                    <li><a href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a></li>
-                                                @elseif(!empty($data['#']) && $data['#'] == '-')
-                                                    {{ $data['#'] }} <a href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
-                                                @endif
-                                            @endif
-                                        @else
-                                            @if (isset($data['exception']))
-                                                @if (isset($data['id']))
-                                                    @if (!empty($data['#']) && $data['#'] == '-')
-                                                        {{ $data['#'] }} <a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
-                                                    @else
-                                                        <li><a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a></li>
-                                                    @endif
-                                                @else
-                                                    @if (!empty($data['#']) && $data['#'] == '-')
-                                                        {{ $data['#'] }} {{ $data['exception'] }}<br>
-                                                    @else
-                                                        <li>{{ $data['exception'] }}</li>
-                                                    @endif
-                                                @endif
-                                            @else
-                                                @if (!empty($data['#']) && $data['#'] == 'ENCORE')
-                                                    <hr width="95%">
-                                                @elseif($data['#'] == 'hr')
-                                                    </ol>
-                                                    <hr width="95%">
-                                                    <ol class="column-live">
-                                                @else
-                                                    <h5>{{ $data['#'] }}</h5>
-                                                @endif
-                                            @endif
-                                        @endif
-                                    @endforeach
-                                </ol>
-                            {{-- </div> --}}
-                        @endif
-
-                        @if (isset($tours->setlist2))
-                            {{-- <div class="column-live"> --}}
-                                <!-- Content for setlist2 -->
-                                <ol class="column-live">
-                                    @foreach ($tours->setlist2 as $data)
-                                        @if (isset($data['id']))
-                                            @if (isset($data['exception']))
-                                                @if (!empty($data['#']) && $data['#'] == '-')
-                                                    {{ $data['#'] }} <a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
-                                                @else
-                                                    <li><a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a></li>
-                                                @endif
-                                            @else
-                                                @if (empty($data['#']) || !empty($data['#']) && $data['#'] != '-')
-                                                    <li><a href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a></li>
-                                                @elseif(!empty($data['#']) && $data['#'] == '-')
-                                                    {{ $data['#'] }} <a href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
-                                                @endif
-                                            @endif
-                                        @else
-                                            @if (isset($data['exception']))
-                                                @if (isset($data['id']))
-                                                    @if (!empty($data['#']) && $data['#'] == '-')
-                                                        {{ $data['#'] }} <a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
-                                                    @else
-                                                        <li><a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a></li>
-                                                    @endif
-                                                @else
-                                                    @if (!empty($data['#']) && $data['#'] == '-')
-                                                        {{ $data['#'] }} {{ $data['exception'] }}<br>
-                                                    @else
-                                                        <li>{{ $data['exception'] }}</li>
-                                                    @endif
-                                                @endif
-                                            @else
-                                                @if (!empty($data['#']) && $data['#'] == 'ENCORE')
-                                                    <hr width="95%">
-                                                @elseif($data['#'] == 'hr')
-                                                    </ol>
-                                                    <hr width="95%">
-                                                    <ol class="column-live">
-                                                @else
-                                                    <h5>{{ $data['#'] }}</h5>
-                                                @endif
-                                            @endif
-                                        @endif
-                                    @endforeach
-                                </ol>
-                            {{-- </div> --}}
-                        @endif
-
-                        @if (isset($tours->setlist3))
-                            {{-- <div class="column-live"> --}}
-                                <!-- Content for setlist3 -->
-                                <ol class="column-live">
-                                    @foreach ($tours->setlist3 as $data)
-                                        @if (isset($data['id']))
-                                            @if (isset($data['exception']))
-                                                @if (!empty($data['#']) && $data['#'] == '-')
-                                                    {{ $data['#'] }} <a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
-                                                @else
-                                                    <li><a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a></li>
-                                                @endif
-                                            @else
-                                                @if (empty($data['#']) || !empty($data['#']) && $data['#'] != '-')
-                                                    <li><a href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a></li>
-                                                @elseif(!empty($data['#']) && $data['#'] == '-')
-                                                    {{ $data['#'] }} <a href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] }}</a><br>
-                                                @endif
-                                            @endif
-                                        @else
-                                            @if (isset($data['exception']))
-                                                @if (isset($data['id']))
-                                                    @if (!empty($data['#']) && $data['#'] == '-')
-                                                        {{ $data['#'] }} <a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
-                                                    @else
-                                                        <li><a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a></li>
-                                                    @endif
-                                                @else
-                                                    @if (!empty($data['#']) && $data['#'] == '-')
-                                                        {{ $data['#'] }} {{ $data['exception'] }}<br>
-                                                    @else
-                                                        <li>{{ $data['exception'] }}</li>
-                                                    @endif
-                                                @endif
-                                            @else
-                                                @if (!empty($data['#']) && $data['#'] == 'ENCORE')
-                                                    <hr width="95%">
-                                                @elseif($data['#'] == 'hr')
-                                                    </ol>
-                                                    <hr width="95%">
-                                                    <ol class="column-live">
-                                                @else
-                                                    <h5>{{ $data['#'] }}</h5>
-                                                @endif
-                                            @endif
-                                        @endif
-                                    @endforeach
-                                </ol>
-                            {{-- </div> --}}
-                        @endif
-                    </div>
                      <!-- Additional content -->
                      @if (!is_null($tours->schedule))
-                     <hr>
-                     <h5>SCHEDULE</h5>
-                     {!! nl2br(e($tours->schedule)) !!}
-                 @endif
-                 @if (!is_null($tours->text))
-                     <hr>
-                     {!! nl2br(e($tours->text)) !!}
-                 @endif
+                         <hr>
+                         <h5>SCHEDULE</h5>
+                         {!! nl2br(e($tours->schedule)) !!}
+                     @endif
+                     @if (!is_null($tours->text))
+                         <hr>
+                         {!! nl2br(e($tours->text)) !!}
+                     @endif
                 </div>
                 <div class="show_button text-center">
                     <!-- Buttons for navigation -->
                     @if (isset($previous))
-                    <a class="btn btn-outline-dark" href="{{ route('live.show', $previous->id) }}" rel="prev" role="button">
-                        <</a>
-                @endif
-                @if (isset($next))
-                    <a class="btn btn-outline-dark" href="{{ route('live.show', $next->id) }}"rel="next" role="button">></a>
-                @endif
+                        <a class="btn btn-outline-dark" href="{{ route('live.show', $previous->id) }}" rel="prev" role="button">
+                            <</a>
+                    @endif
+                    @if (isset($next))
+                        <a class="btn btn-outline-dark" href="{{ route('live.show', $next->id) }}"rel="next" role="button">></a>
+                    @endif
                 </div>
             </div>
         </div>
