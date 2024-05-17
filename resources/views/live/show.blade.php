@@ -183,7 +183,7 @@
                         </div>
                     @endif
                 </div>
-                <div class="schedule-text">
+                <div class="schedule-text" style="font-size: 13px;">
                     <!-- Additional content -->
                     @if (!is_null($tours->schedule))
                         <hr>
