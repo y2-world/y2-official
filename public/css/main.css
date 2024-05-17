@@ -993,6 +993,10 @@ th {
     white-space:nowrap
 }
 
+.schedule-text {
+    font-size: 13px;
+}
+
 @media (min-width: 1024px) {
 
     .column1,

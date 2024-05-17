@@ -183,16 +183,18 @@
                         </div>
                     @endif
                 </div>
-                <!-- Additional content -->
-                @if (!is_null($tours->schedule))
-                    <hr>
-                    <h5>SCHEDULE</h5>
-                    {!! nl2br(e($tours->schedule)) !!}
-                @endif
-                @if (!is_null($tours->text))
-                    <hr>
-                    {!! nl2br(e($tours->text)) !!}
-                @endif
+                <div class="schedule-text">
+                    <!-- Additional content -->
+                    @if (!is_null($tours->schedule))
+                        <hr>
+                        <h5>SCHEDULE</h5>
+                        {!! nl2br(e($tours->schedule)) !!}
+                    @endif
+                    @if (!is_null($tours->text))
+                        <hr>
+                        {!! nl2br(e($tours->text)) !!}
+                    @endif
+                </div>
                 <div class="show_button text-center">
                     <!-- Buttons for navigation -->
                     @if (isset($previous))
