@@ -43,7 +43,7 @@
                 <div class="setlist">
                     @if (isset($tours->setlist1))
                         <hr>
-                        <div class="setlist-row" style="justify-content:{{ $flexDirectionClass }}">
+                        <div class="setlist-row justify-content-{{ $flexDirectionClass }}">
                             <ol class="live-column">
                                 @foreach ($tours->setlist1 as $data)
                                     @if (isset($data['id']))

@@ -921,7 +921,8 @@ nav {
 .setlist-row {
     display: flex;
     flex-wrap: nowrap; /* Prevent wrapping */
-    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-x: scroll; /* Enable horizontal scrolling */
+    justify-content: flex-start;
 }
 
 .live-column {
