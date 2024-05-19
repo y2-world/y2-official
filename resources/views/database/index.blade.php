@@ -1,25 +1,5 @@
 @extends('layouts.app')
 @section('content')
-    {{-- <style>
-        /* Typeaheadのドロップダウンのスタイル */
-        .tt-menu {
-            background-color: white;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 4px 0;
-            z-index: 9999;
-            /* ドロップダウンのz-indexを上に設定 */
-        }
-
-        .tt-suggestion {
-            padding: 8px;
-            cursor: pointer;
-        }
-
-        .tt-suggestion:hover {
-            background-color: #f2f2f2;
-        }
-    </style> --}}
     <br>
     <div class="container">
         <div class="parts-wrapper">
@@ -31,25 +11,6 @@
                     </div>
                 </form>
             </div>
-            {{-- <select name="select" onChange="location.href=value;">
-                <option value="" disabled selected>Select song</option>
-                @foreach ($songs as $song)
-                    <option value="{{ url('/database/songs/' . $song->id) }}">{{ $song->title }}</option>
-                @endforeach
-            </select> --}}
-
-            {{-- <div class="search">
-                <form action="{{ url('/find') }}" method="GET">
-                    <div class="input-group mb-3">
-                        <select id="searchInput" class="form-control"></select>
-                    </div>
-                </form>
-            </div> --}}
-            {{-- <select class="js-example-basic-multiple" name="states[]" multiple="multiple">
-                <option value="AL">Alabama</option>
-                  ...
-                <option value="WY">Wyoming</option>
-              </select> --}}
         </div>
         <hr>
         <h4 class="bio">Discography</h4>

@@ -4,18 +4,6 @@
     <div class="container-lg">
        
             <div class="song-wrapper">
-                {{-- <div class="search">
-                    <form action="{{ url('/find') }}" method="GET">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" id="searchInput" aria-label="Search" value="{{request('keyword')}}" name="keyword"
-                                list="suggestions" required>
-                            <datalist id="suggestions"></datalist>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
-                            </div>
-                        </div>
-                    </form>
-                </div> --}}
                 <div class="dropdown-wrapper">
                     <div class="setlist"># {{ $songs->id }}</div>
                     <h3> {{ $songs->title }}</h3>
@@ -45,12 +33,13 @@
                         {{ $songs->text }}
                     </div>
                 </div>
-                <select name="select" onChange="location.href=value;">
-                    <option value="" disabled selected>Select song</option>
-                    @foreach ($allSongs as $song)
-                    <option value="{{ url('/database/songs/' . $song->id) }}">{{ $song->title }}</option>
-                    @endforeach
-                </select>
+                <div class="search">
+                    <form action="" method="GET">
+                        <div class="input-group">
+                            <input type="text" id="searchInput" class="form-control typeahead" placeholder="Search" style="width: 300px;" required>
+                        </div>
+                    </form>
+                </div>
             </div>
 
             @if (!$tours->isEmpty())
