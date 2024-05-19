@@ -9,21 +9,21 @@ $(document).ready(function(){
         }
     });
 
-    $('.typeahead').typeahead({
+    $('#searchInput').typeahead({
         minLength: 1,
         highlight: true
     },
     {
         name: 'songs',
-        display: 'name',
+        display: 'title',
         source: songs,
         matcher: function(item) {
             // 入力されたテキストが候補の中に存在するかチェック
             var query = new RegExp('^' + $.fn.typeahead.escapeRegExChars(this.query) + '$', 'i');
-            return query.test(item.name);
+            return query.test(item.title);
         }
     }).on('typeahead:selected', function(event, data) {
         // 選択された曲の詳細ページにリダイレクト
-        window.location.href = '/songs/' + data.id;
+        window.location.href = '/database/songs/' + data.id;
     });
 });

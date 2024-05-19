@@ -108,4 +108,12 @@ class SongController extends Controller
     {
         //
     }
+
+    public function search(Request $request)
+    {   
+        $query = $request->input('q');
+        $songs = Song::where('title', 'LIKE', "%{$query}%")->get(['id', 'title']);
+        
+        return response()->json($songs);
+    }
 }

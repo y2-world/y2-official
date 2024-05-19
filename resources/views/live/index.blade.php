@@ -30,18 +30,6 @@
                     @endforeach
                 </select>
             </div>
-            {{-- <div class="search">
-      <form action="{{url('/find')}}" method="GET">
-          <div class="input-group mb-3">
-              <input type="text" class="form-control" id="searchInput" aria-label="Search" value="{{request('keyword')}}" name="keyword"
-                  list="suggestions" required>
-              <datalist id="suggestions"></datalist>
-              <div class="input-group-append">
-                  <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
-              </div>
-          </div>
-      </form>
-    </div> --}}
             <select name="select" onChange="location.href=value;">
                 <option value="" disabled selected>Select song</option>
                 @foreach ($songs as $song)
@@ -88,28 +76,8 @@
             </div>
         </table>
         <div class=”pagination”>
-          {!! $tours->appends(['type' => $type])->links() !!}
+            {!! $tours->appends(['type' => $type])->links() !!}
         </div>
         <br>
     </div>
-    <script>
-        const searchInput = document.getElementById('searchInput');
-        const suggestionsList = document.getElementById('suggestions');
-
-        searchInput.addEventListener('input', function() {
-            const query = this.value.toLowerCase();
-            suggestionsList.innerHTML = '';
-
-            fetch(`/find/suggestions?query=${query}`)
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(song => {
-                        const option = document.createElement('option');
-                        option.value = song;
-                        suggestionsList.appendChild(option);
-                    });
-                })
-                .catch(error => console.error('Error:', error));
-        });
-    </script>
 @endsection
