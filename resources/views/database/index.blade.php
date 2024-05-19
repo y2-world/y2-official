@@ -28,11 +28,6 @@
                 <form action="" method="GET">
                     <div class="input-group">
                         <input type="text" id="searchInput" class="form-control typeahead" placeholder="Search" style="width: 300px;" required>
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </button>
-                        </div>
                     </div>
                 </form>
             </div>
