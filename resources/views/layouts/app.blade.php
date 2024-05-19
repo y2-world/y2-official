@@ -67,7 +67,7 @@
                         <a href="https://music.apple.com/jp/artist/yuki-yoshida/1448865361?itsct=music_box_badge&itscg=30200&ct=artists_yuki_yoshida&app=music&ls=1" target="_blank"><i class="fab fa-apple fa-2x"></i></a>
                         <a href="https://open.spotify.com/artist/5x6TjqB9xXXjY4Xn5y2oJm" target="_blank"><i class="fab fa-spotify fa-2x"> </i></a>
                         <a href="https://www.youtube.com/user/yuki92496" target="_blank"><i class="fab fa-youtube fa-2x"></i></a>
-                        <a href="https://open.spotify.com/show/5uQQnvpk9DSuY4rBwptQkZ" target="_blank"><i class="fas fa-podcast fa-xl"></i></a>
+                        <a href="https://open.spotify.com/show/5uQQnvpk9DSuY4rBwptQkZ" target="_blank"><i class="fas fa-podcast fa-2X"></i></a>
                     </div>   
                 </li>
             </ul>
