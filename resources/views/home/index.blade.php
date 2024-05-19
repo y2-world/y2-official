@@ -114,12 +114,7 @@
                     <div class="element js-fadein">
                         <h2>Radio</h2>
                         <div class="radio-wrapper">
-                            <iframe
-                                src="https://embed.podcasts.apple.com/us/podcast/y2-radio/id1555086566?itsct=podcast_box_player&amp;itscg=30200&amp;ls=1&amp;theme=light"
-                                height="450px" frameborder="0"
-                                sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
-                                allow="autoplay *; encrypted-media *; clipboard-write"
-                                style="width: 100%; max-width: 1080px; overflow: hidden; border-radius: 10px; background: transparent;"></iframe>
+                            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/show/5uQQnvpk9DSuY4rBwptQkZ?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
                         </div>
                     </div>
                 </div>
