@@ -1147,9 +1147,7 @@ th {
     .profile-info {
         text-align: center;
     }
-}
 
-@media screen and (max-width: 1080px) {
     .pc, .pc_venue {
         display: none;
     }
@@ -1174,13 +1172,6 @@ th {
         flex-direction: column;
         align-items: center;
     }
-
-    .song-wrapper {
-        display: flex;
-        justify-content: space-between;
-        flex-direction: column-reverse;
-        align-items: flex-start;
-    }
 }
 
 @media screen and (max-width: 992px) {
@@ -1190,6 +1181,15 @@ th {
 
     .mb-sns-nav a {
         padding: 5px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .song-wrapper {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column-reverse;
+        align-items: flex-start;
     }
 }
 

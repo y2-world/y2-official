@@ -36,7 +36,7 @@
                 <div class="search">
                     <form action="" method="GET">
                         <div class="input-group">
-                            <input type="text" id="searchInput" class="form-control typeahead" placeholder="Search" style="width: 300px;" required>
+                            <input type="text" id="searchInput" class="form-control typeahead" placeholder="Search" style="width: 350px;" required>
                         </div>
                     </form>
                 </div>
