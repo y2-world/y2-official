@@ -33,12 +33,14 @@
                         {{ $songs->text }}
                     </div>
                 </div>
-                <div class="search">
-                    <form action="" method="GET">
-                        <div class="input-group">
-                            <input type="text" id="searchInput" class="form-control typeahead" placeholder="Search" style="width: 350px;" required>
-                        </div>
-                    </form>
+                <div class="pc">
+                    <div class="search">
+                        <form action="" method="GET">
+                            <div class="input-group">
+                                <input type="text" id="searchInput" class="form-control typeahead" placeholder="Search" style="width: 350px;" required>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
 
