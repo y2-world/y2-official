@@ -71,4 +71,4 @@ Route::resource('music', 'DiscoController');
 Route::resource('lyrics', 'LyricController');
 Route::resource('/', 'HomeController');
 // Route::resource('/home', 'HomeController');
-Route::get('/search', [SongController::class, 'search']);
+Route::get('/find', [SongController::class, 'search']);
