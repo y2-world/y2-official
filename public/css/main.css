@@ -350,8 +350,8 @@ video {
 .cover p {
     font-family: "Nanum Myeongjo", serif;
     position: absolute;
-    font-size: 25px;
-    top: 15%;
+    font-size: 1.5rem;
+    top: 20%;
     left: 50%;
     -ms-transform: translate(-50%, -50%);
     -webkit-transform: translate(-50%, -50%);
@@ -1066,6 +1066,10 @@ th {
     .show_button {
         text-align: center;
     }
+
+    .cover img {
+        height: 45vh;
+    }
 }
 
 @font-face {
@@ -1184,14 +1188,18 @@ th {
     }
 }
 
-/* @media screen and (max-width: 768px) {
-    .song-wrapper {
+@media screen and (max-width: 768px) {
+    /* .song-wrapper {
         display: flex;
         justify-content: space-between;
         flex-direction: column-reverse;
         align-items: flex-start;
+    } */
+
+    .cover p {
+        font-size: 14px;
     }
-} */
+}
 
 @media screen and (max-width: 480px) {
     .top-image {
@@ -1253,10 +1261,6 @@ th {
 
     .single-header {
         text-align: center;
-    }
-
-    .cover p {
-        font-size: 14px;
     }
 
     #album-modal4,
