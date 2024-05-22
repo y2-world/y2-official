@@ -656,11 +656,11 @@ img {
     font-size: 10px;
 }
 
-.modal-img {
+.music .modal-img {
     padding: 10px 30px 30px 30px;
 }
 
-.modal-img {
+.music .music .modal-img {
     position: relative;
     overflow: hidden;
 }
@@ -670,15 +670,15 @@ img {
     transition: opacity 0.3s ease;
 }
 
-.no-hover {
+.music .no-hover {
     pointer-events: none; /* URLが存在しない場合にホバーエフェクトを無効にする */
 }
 
-.modal-img:hover img {
+.music .modal-img:hover img {
     opacity: 0.5;
 }
 
-.listen-text {
+.music .listen-text {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -691,7 +691,7 @@ img {
     transition: opacity 0.5s ease;
 }
 
-.modal-img:hover .listen-text {
+.music .modal-img:hover .listen-text {
     opacity: 1;
 }
 
