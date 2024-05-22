@@ -20,6 +20,7 @@
                                         </a>
                                     @elseif (!empty($discos->image))
                                         <img src="{{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $discos->image) }}" class="disco-image no-hover" style="width: 100%;">
+                                        <div class="listen-text">COMING SOON</div>
                                     @endif
                                 </div>
                             </div>                            
