@@ -15,7 +15,7 @@
                             <?= html_entity_decode($news->text); ?>
                         </div>
                         <div class="col-xl-6">
-                            <div class="modal-img">
+                            <div class="news-img">
                                 <img src={{ asset('https://res.cloudinary.com/hqrgbxuiv/'. $news->image) }} class="news-image" width="100%">
                             </div>
                         </div>

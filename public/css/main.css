@@ -656,11 +656,11 @@ img {
     font-size: 10px;
 }
 
-.music .modal-img {
+.modal-img {
     padding: 10px 30px 30px 30px;
 }
 
-.music .music .modal-img {
+.modal-img {
     position: relative;
     overflow: hidden;
 }
@@ -670,15 +670,15 @@ img {
     transition: opacity 0.3s ease;
 }
 
-.music .no-hover {
+.no-hover {
     pointer-events: none; /* URLが存在しない場合にホバーエフェクトを無効にする */
 }
 
-.music .modal-img:hover img {
+.modal-img:hover img {
     opacity: 0.5;
 }
 
-.music .listen-text {
+.listen-text {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -691,7 +691,7 @@ img {
     transition: opacity 0.5s ease;
 }
 
-.music .modal-img:hover .listen-text {
+.modal-img:hover .listen-text {
     opacity: 1;
 }
 
@@ -977,8 +977,8 @@ table.count > tbody > tr > td:first-child::before {
     content: counter(rowCount);
 }
 
-.news p, .music p,
-.news li, .music li {
+.news p,
+.news li {
     font-size: 12px;
 }
 
