@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Setlist;
 use App\Artist;
+use App\Year;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -124,7 +125,7 @@ class SetlistController extends AdminController
         $form->select('artist_id', __('アーティスト'))->options(Artist::all()->pluck('name', 'id'));
         $form->text('title', __('ツアータイトル'))->rules('required');
         $form->date('date', __('公演日'))->default(date('Y-m-d'))->rules('required');
-        $form->text('year', __('年'))->rules('required');
+        $form->select('year', __('年'))->options(Year::pluck('year', 'year'))->rules('required');
         $form->text('venue', __('会場'))->rules('required');
         $form->radio('fes','ライブ形態')
         ->options([
