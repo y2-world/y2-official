@@ -107,7 +107,7 @@
     </div>
     </div>
 
-    <div class="index-wrapper" id="radio" style="padding-top:70px">>
+    <div class="index-wrapper" id="radio" style="padding-top:70px">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-xl-11">
