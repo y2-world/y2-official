@@ -748,12 +748,12 @@ nav {
 }
 
 .cover-wrapper img {
-    margin-bottom: 20px;
+    margin: 10px;
     transition: box-shadow 0.5s;
 }
 
 .cover-wrapper img:hover {
-    box-shadow: 5px 5px 50px gray;
+    box-shadow: 3px 3px 15px gray;
 }
 
 .top-image {
