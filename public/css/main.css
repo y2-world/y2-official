@@ -336,13 +336,15 @@ video {
     font-family: "Nanum Myeongjo", serif;
     position: absolute;
     font-size: 1.5rem;
-    top: 20%;
+    /* top: 20%; */
+    top: 75%;
     left: 50%;
     -ms-transform: translate(-50%, -50%);
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     margin: 0;
     padding: 0;
+    color: white;
 }
 
 .cover {
