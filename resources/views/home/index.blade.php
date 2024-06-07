@@ -15,7 +15,7 @@
             <div class="row justify-content-center">
                 <div class="col-xl-11">
                     <!-- <div class="element js-fadein"> -->
-                    <h2 class="news-title">New Release</h2>
+                    <h3 class="news-title">New Release</h3>
                     <div class="cover-wrapper">
                         @foreach ($discos as $disco)
                             <div class="disc-block">
