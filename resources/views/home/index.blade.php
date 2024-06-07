@@ -10,7 +10,7 @@
         </div>
     </div>
 
-    <div class="disco-wrapper">
+    <div class="home-disco-wrapper">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-xl-11">
