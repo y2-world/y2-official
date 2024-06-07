@@ -337,7 +337,7 @@ video {
     position: absolute;
     font-size: 1.5rem;
     /* top: 20%; */
-    top: 75%;
+    top: 65%;
     left: 50%;
     -ms-transform: translate(-50%, -50%);
     -webkit-transform: translate(-50%, -50%);
@@ -868,7 +868,7 @@ th {
     }
 
     .cover img {
-        height: 80vh;
+        height: 75vh;
         width: 100vw;
         margin: auto;
     }
