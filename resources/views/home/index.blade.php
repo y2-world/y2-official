@@ -14,32 +14,34 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-xl-11">
-                    <!-- <div class="element js-fadein"> -->
-                    <h3 class="news-title">New Release</h3>
-                    <div class="cover-wrapper">
-                        @foreach ($discos as $disco)
-                            <div class="disc-block">
-                                @if (!empty($disco->url))
-                                    <a href="{{ $disco->url }}"><img
-                                        src={{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $disco->image) }}
-                                        class="top-image"></a>
-                                @else
-                                    <a href="{{ route('music.show', $disco->id) }}"><img
-                                        src={{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $disco->image) }}
-                                        class="top-image"></a>
-                                @endif
-                                <br><br>
-                                <div class="topic"><a href="{{ route('music.show', $disco->id) }}">{{ $disco->title }}</a>
+                    <div class="element js-fadein">
+                        <h2 class="news-title">New Release</h2>
+                        <div class="cover-wrapper">
+                            @foreach ($discos as $disco)
+                                <div class="disc-block">
+                                    @if (!empty($disco->url))
+                                        <a href="{{ $disco->url }}"><img
+                                                src={{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $disco->image) }}
+                                                class="top-image"></a>
+                                    @else
+                                        <a href="{{ route('music.show', $disco->id) }}"><img
+                                                src={{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $disco->image) }}
+                                                class="top-image"></a>
+                                    @endif
+                                    <br><br>
+                                    <div class="topic"><a
+                                            href="{{ route('music.show', $disco->id) }}">{{ $disco->title }}</a>
+                                    </div>
+                                    <p class="topic">{{ date('Y.m.d', strtotime($disco->date)) }} - {{ $disco->subtitle }}
+                                    </p>
                                 </div>
-                                <p class="topic">{{ date('Y.m.d', strtotime($disco->date)) }} - {{ $disco->subtitle }}</p>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="topic-more">
+                        <a href="{{ url('/music') }}">View All</a>
                     </div>
                 </div>
-                <div class="topic-more">
-                    <a href="{{ url('/music') }}">View All</a>
-                </div>
-                <!-- </div> -->
             </div>
             <br>
         </div>
@@ -114,7 +116,11 @@
                     <div class="element js-fadein">
                         <h2>Radio</h2>
                         <div class="radio-wrapper">
-                            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/show/5uQQnvpk9DSuY4rBwptQkZ?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                            <iframe style="border-radius:12px"
+                                src="https://open.spotify.com/embed/show/5uQQnvpk9DSuY4rBwptQkZ?utm_source=generator&theme=0"
+                                width="100%" height="352" frameBorder="0" allowfullscreen=""
+                                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                                loading="lazy"></iframe>
                         </div>
                     </div>
                 </div>
@@ -137,7 +143,7 @@
                         <a href="{{ url('/#radio') }}">Radio</a>・
                         <a href="{{ url('https://ameblo.jp/y2-world') }}" target="_blank">Blog</a>
                         <br>
-                        <div class="footer-copyright">©2024 y2_record inc.</div>
+                        <div class="footer-copyright">©2024 y2 records inc.</div>
                     </div>
                 </div>
                 <br>
