@@ -831,11 +831,6 @@ th {
     background-color: #f2f2f2;
 }
 
-h2 {
-    padding-top: 30px;
-    padding-right: 20px;
-}
-
 @media (min-width: 1024px) {
 
     .column1,
@@ -850,6 +845,11 @@ h2 {
     table.bios,
     table.songs {
         width: 95%;
+    }
+
+    h2 {
+        padding-top: 30px;
+        padding-right: 20px;
     }
 }
 
