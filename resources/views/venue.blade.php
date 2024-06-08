@@ -33,9 +33,8 @@
                     <tr>
                         <th class="mobile">#</th>
                         <th class="mobile">開催日</th>
-                        <th class="sp">アーティスト / タイトル</th>
                         <th class="pc">アーティスト</th>
-                        <th class="mobile">タイトル</th>
+                        <th class="sp">アーティスト / タイトル</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,23 +43,20 @@
                             <td></td>
                             <td class="td_search_date">{{ date('Y.m.d', strtotime($result->date)) }}</td>
                             @if (isset($result->artist_id))
-                                <td class="pc">
-                                    <a
-                                        href="{{ url('/setlists/artists', $result->artist_id) }}">{{ $result->artist->name }}</a>
-                                </td>
-                                <td class="sp">
-                                    <a
-                                        href="{{ url('/setlists/artists', $result->artist_id) }}">{{ $result->artist->name }}</a>
-                                    /
-                                    <a href="{{ route('setlists.show', $result->id) }}">{{ $result->title }}</a>
-                                </td>
-                            @else
-                                <td class="pc"></td>
-                                <td class="sp"><a
-                                        href="{{ route('setlists.show', $result->id) }}">{{ $result->title }}</a></td>
-                            @endif
-                            <td class="td_search_title"><a
+                            <td class="pc">
+                                <a href="{{ url('/setlists/artists', $result->artist_id) }}">{{ $result->artist->name }}</a>
+                            </td>
+                            <td class="sp">
+                                <a href="{{ url('/setlists/artists', $result->artist_id) }}">{{ $result->artist->name }}</a> /
+                                <a href="{{ route('setlists.show', $result->id) }}">{{ $result->title }}</a>
+                            </td>
+                        @else
+                            <td class="pc"></td>
+                            <td class="sp"><a
                                     href="{{ route('setlists.show', $result->id) }}">{{ $result->title }}</a></td>
+                        @endif
+                        <td class="pc"><a href="{{ route('setlists.show', $result->id) }}">{{ $result->title }}</a>
+                        </td>
                         </tr>
                     @endforeach
                 </tbody>
