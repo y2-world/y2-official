@@ -5,7 +5,7 @@
     <div class="parts-wrapper">
         <div class="pc">
             @if (isset($artist_id)) 
-            <small>検索結果</small><h4>{{$keyword}}</h4>
+            <small>楽曲検索結果</small><h4>{{$keyword}}</h4>
             @endif
         </div>
         <div class="search">

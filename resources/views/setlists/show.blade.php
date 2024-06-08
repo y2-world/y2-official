@@ -13,7 +13,7 @@
                 <div class="setlist_info">
                     {{ date('Y.m.d', strtotime($setlists->date)) }}
                     <br>
-                    {{ $setlists->venue }}
+                    <a href="{{ url('/venue?keyword='.urlencode($setlists->venue)) }}">{{ $setlists->venue }}</a>
                 </div>
                 <hr>
                     @if ($setlists->fes == 0)
