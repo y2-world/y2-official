@@ -63,7 +63,7 @@
                     <td></td>
                     <td class="td_search_date">{{ date('Y.m.d', strtotime($result->date)) }}</td>
                     <td class="td_search_title"><a href="{{ route('setlists.show', $result->id) }}">{{ $result->title }}</a></td>
-                    <td class="pc">{{ $result->venue }}</td>
+                    <td class="pc"><a href="{{ url('/venue?keyword='.urlencode($result->venue)) }}">{{ $result->venue }}</a></td>
                 </tr>
                 @endforeach
             </tbody>

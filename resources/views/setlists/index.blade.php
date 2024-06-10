@@ -87,7 +87,7 @@
                             @endif
                             <td class="pc"><a
                                     href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
-                            <td class="pc">{{ $setlist->venue }}</td>
+                            <td class="pc"><a href="{{ url('/venue?keyword='.urlencode($setlist->venue)) }}">{{ $setlist->venue }}</a></td>
                         </tr>
                     @endforeach
                 </tbody>

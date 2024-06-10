@@ -76,7 +76,7 @@
         </div>
     </div>
 
-    <div class="index-wrapper" id="profile" style="padding-top:70px">
+    <div class="index-wrapper" id="profile" style="padding-top:55px">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-xl-11">
