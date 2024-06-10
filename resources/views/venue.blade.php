@@ -35,7 +35,7 @@
                         <th class="mobile">開催日</th>
                         <th class="pc">アーティスト</th>
                         <th class="sp">アーティスト / タイトル</th>
-                        <th class="mobile">タイトル</th>
+                        <th class="pc">タイトル</th>
                     </tr>
                 </thead>
                 <tbody>
