@@ -43,14 +43,15 @@
                                     @if ($setlists->fes_setlist[$key]['artist'] != $setlists->fes_setlist[$key - 1]['artist'])
                                     </ol>
                                     <ol class="setlist">
-                                        {{ $artists[$data['artist'] - 1]['name'] }}<br>
+                                        {{-- {{ $artists[$data['artist'] - 1]['name'] }}<br> --}}
+                                        <a href="{{ url('/setlists/artists', $data['artist']) }}">{{ $artists[$data['artist'] - 1]['name'] }}</a><br>
                                         <li> {{ $data['song'] }}</li>
                                     @else
                                         <li> {{ $data['song'] }}</li>
                                     @endif
                                 @else
                                 <ol class="setlist">
-                                    {{ $artists[$data['artist'] - 1]['name'] }}<br>
+                                    <a href="{{ url('/setlists/artists', $data['artist']) }}">{{ $artists[$data['artist'] - 1]['name'] }}</a><br>
                                     <li> {{ $data['song'] }}</li>
                                 @endif
                             @else
@@ -68,14 +69,14 @@
                                         @if ($setlists->fes_encore[$key]['artist'] != $setlists->fes_encore[$key - 1]['artist'])
                                             </ol>
                                             <ol class="setlist">
-                                            {{ $artists[$data['artist'] - 1]['name'] }}<br>
+                                                <a href="{{ url('/setlists/artists', $data['artist']) }}">{{ $artists[$data['artist'] - 1]['name'] }}</a><br>
                                             <li> {{ $data['song'] }}</li>
                                         @else
                                             <li> {{ $data['song'] }}</li>
                                         @endif
                                     @else
                                         <ol class="setlist">
-                                        {{ $artists[$data['artist'] - 1]['name'] }}<br>
+                                            <a href="{{ url('/setlists/artists', $data['artist']) }}">{{ $artists[$data['artist'] - 1]['name'] }}</a><br>
                                         <li> {{ $data['song'] }}</li>
                                     @endif
                                 @else
@@ -127,7 +128,7 @@
                                             <li> {{ $data['song'] }}</li>
                                         @endif
                                     @else
-                                        {{ $artists[$data['artist'] - 1]['name'] }}<br>
+                                    <a href="{{ url('/setlists/artists', $data['artist'] - 1) }}">{{ $artists[$data['artist'] - 1]['name'] }}</a><br><br>
                                         <li> {{ $data['song'] }}</li>
                                     @endif
                                 @else
