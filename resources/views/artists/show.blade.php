@@ -35,30 +35,37 @@
                 </form>
             </div>
         </div>
-        @if(!$setlists->isEmpty())
-            <table class="table table-striped count">
-                <thead>
+    </div>
+    @if (!$setlists->isEmpty())
+        <table class="table table-striped count">
+            <thead>
+                <tr>
+                    <th class="mobile">#</th>
+                    <th class="mobile">開催日</th>
+                    <th class="mobile">タイトル</th>
+                    <th class="pc">会場</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($setlists as $setlist)
                     <tr>
-                        <th class="mobile">#</th>
-                        <th class="mobile">開催日</th>
-                        <th class="mobile">タイトル</th>
-                        <th class="pc">会場</th>
+                        <td></td>
+                        <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
+                        <td><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
+                        <td class="pc"><a
+                                href="{{ url('/venue?keyword=' . urlencode($setlist->venue)) }}">{{ $setlist->venue }}</a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach ($setlists as $setlist)
-                        <tr>
-                            <td></td>
-                            <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
-                            <td><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
-                            <td class="pc"><a
-                                    href="{{ url('/venue?keyword=' . urlencode($setlist->venue)) }}">{{ $setlist->venue }}</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
-        <br>
+                @endforeach
+            </tbody>
+        </table>
+    @else
+        <div class="error">
+            @if ($setlists->isEmpty())
+                <small>セットリストがありません。</small>
+            @endif
+        </div>
+    @endif
+    <br>
     </div>
 @endsection
