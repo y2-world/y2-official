@@ -35,7 +35,7 @@
                 </form>
             </div>
         </div>
-        @if (!emoty($setlists))
+        @if (!is_null($setlists))
             <table class="table table-striped count">
                 <thead>
                     <tr>
