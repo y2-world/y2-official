@@ -64,11 +64,6 @@
                 </tbody>
             </table>
         @else
-        <div class="error">
-          @if($setlists->isEmpty())
-          <small>セットリストがありません。</small>
-          @endif 
-      </div>
         @endif
         <br>
     </div>
