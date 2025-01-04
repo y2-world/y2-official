@@ -40,7 +40,10 @@ class SetlistController extends Controller
         }
     
         // ページネーションを適用してセットリストを取得する
-        $setlists = $setlistsQuery->paginate(10);
+        $setlists = Setlist::orderBy('date', 'desc')->paginate(10); // 1ページに10件
+
+         // 全体のアイテム数を取得（ナンバリングの基点に使用）
+        $totalCount = $setlists->total();
     
         // アーティスト、全てのアーティスト、年のデータを取得する
         $artists = Artist::where('visible', 0)->orderBy('id', 'asc')->get();
@@ -48,7 +51,7 @@ class SetlistController extends Controller
         $years = Year::orderBy('year', 'asc')->get();
     
         // ビューにデータを渡して表示する
-        return view('setlists.index', compact('artists', 'allArtists', 'setlists', 'years', 'type'));
+        return view('setlists.index', compact('artists', 'allArtists', 'setlists', 'years', 'type', 'totalCount'));
     }
 
     /**
