@@ -24,15 +24,16 @@ class SearchController extends Controller
             $setlists = $query->where('artist_id', $artist_id)
                 ->where(function ($query) use ($keyword) {
                     $query->where('setlist', 'like', "%{$keyword}%")
-                           ->orWhere('encore', 'like', "%{$keyword}%");
+                        ->orWhere('encore', 'like', "%{$keyword}%");
                     //  $query->whereRaw("JSON_EXTRACT(setlist, '$.*.song') REGEXP '\"$keyword\"'")
                     //             ->whereRaw("JSON_EXTRACT(encore, '$.*.song') REGEXP '\"$keyword\"'");
                 })
                 ->orWhere(function ($query) use ($keyword, $artist_id) {
-                    $query->whereNull('artist_id')
-                        ->where(function ($query) use ($artist_id, $keyword) {
-                            $query->whereRaw("JSON_EXTRACT(fes_setlist, '$.*.artist') REGEXP '\"$artist_id\"'")
-                                ->whereRaw("JSON_EXTRACT(fes_encore, '$.*.song') REGEXP '\"$keyword\"'");
+                    $query->whereRaw("JSON_CONTAINS(JSON_EXTRACT(fes_setlist, '$[*].artist'), '\"$artist_id\"')")
+                        ->whereRaw("JSON_CONTAINS(JSON_EXTRACT(fes_setlist, '$[*].song'), '\"$keyword\"')")
+                        ->orWhere(function ($query) use ($artist_id, $keyword) {
+                            $query->whereRaw("JSON_CONTAINS(JSON_EXTRACT(fes_encore, '$[*].artist'), '\"$keyword\"')")
+                                ->whereRaw("JSON_CONTAINS(JSON_EXTRACT(fes_encore, '$[*].song'), '\"$keyword\"')");
                         });
                 });
         }
@@ -46,7 +47,7 @@ class SearchController extends Controller
         // $artist_id = $request->input('artist_id');
         // $query = Setlist::query();
         // $keyword = $request->input('keyword');
- 
+
         // if (!empty($keyword)) {
         //     $setlists = $query->where('artist_id', "$artist_id") 
         //     ->where(function($query) use ($keyword) {
@@ -62,7 +63,7 @@ class SearchController extends Controller
 
         // $artists = Artist::orderBy('id', 'asc')
         // ->get();
- 
+
         // return view('search', compact('data', 'keyword', 'artist_id', 'artists'));
     }
 

@@ -45,17 +45,17 @@
                                     <ol class="setlist">
                                         {{-- {{ $artists[$data['artist'] - 1]['name'] }}<br> --}}
                                         <a href="{{ url('/setlists/artists', $data['artist']) }}">{{ $artists[$data['artist'] - 1]['name'] }}</a><br>
-                                        <li> {{ $data['song'] }}</li>
+                                        <li><a href="{{ url('/search?artist_id='.$data['artist'].'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li>
                                     @else
-                                        <li> {{ $data['song'] }}</li>
+                                    <li><a href="{{ url('/search?artist_id='.$data['artist'].'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li>
                                     @endif
                                 @else
                                 <ol class="setlist">
                                     <a href="{{ url('/setlists/artists', $data['artist']) }}">{{ $artists[$data['artist'] - 1]['name'] }}</a><br>
-                                    <li> {{ $data['song'] }}</li>
+                                    <li><a href="{{ url('/search?artist_id='.$data['artist'].'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li>
                                 @endif
                             @else
-                                <li> {{ $data['song'] }}</li>
+                            <li><a href="{{ url('/search?artist_id='.$data['artist'].'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li>
                                 </ol>
                             @endif
                         @endforeach
@@ -70,17 +70,17 @@
                                             </ol>
                                             <ol class="setlist">
                                                 <a href="{{ url('/setlists/artists', $data['artist']) }}">{{ $artists[$data['artist'] - 1]['name'] }}</a><br>
-                                            <li> {{ $data['song'] }}</li>
+                                                <li><a href="{{ url('/search?artist_id='.$data['artist'].'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li>
                                         @else
-                                            <li> {{ $data['song'] }}</li>
+                                        <li><a href="{{ url('/search?artist_id='.$data['artist'].'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li>
                                         @endif
                                     @else
                                         <ol class="setlist">
                                             <a href="{{ url('/setlists/artists', $data['artist']) }}">{{ $artists[$data['artist'] - 1]['name'] }}</a><br>
-                                        <li> {{ $data['song'] }}</li>
+                                            <li><a href="{{ url('/search?artist_id='.$data['artist'].'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li>
                                     @endif
                                 @else
-                                    <li> {{ $data['song'] }}</li>
+                                <li><a href="{{ url('/search?artist_id='.$data['artist'].'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li> 
                                     </ol>
                                 @endif
                             @endforeach
