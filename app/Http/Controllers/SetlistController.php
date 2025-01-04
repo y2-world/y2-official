@@ -40,7 +40,7 @@ class SetlistController extends Controller
         }
     
         // ページネーションを適用してセットリストを取得する
-        $setlists = Setlist::orderBy('date', 'desc')->paginate(10); // 1ページに10件
+        $setlists = $setlistsQuery->paginate(10); // 1ページに10件
 
          // 全体のアイテム数を取得（ナンバリングの基点に使用）
         $totalCount = $setlists->total();
