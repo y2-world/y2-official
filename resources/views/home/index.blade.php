@@ -142,7 +142,7 @@
                         <a href="{{ url('/#profile') }}">Profile</a>・
                         <a href="{{ url('/#radio') }}">Radio</a>・
                         <a href="{{ url('https://ameblo.jp/y2-world') }}" target="_blank">Blog</a>・
-                        <a href="{{ url('/admin') }}">Admin</a>
+                        <a href="{{ url('/admin') }}" target="_blank">Admin</a>
                         <br>
                         <div class="footer-copyright">©2024 y2 records inc.</div>
                     </div>
