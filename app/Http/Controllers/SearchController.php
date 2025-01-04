@@ -29,12 +29,14 @@ class SearchController extends Controller
                     //             ->whereRaw("JSON_EXTRACT(encore, '$.*.song') REGEXP '\"$keyword\"'");
                 })
                 ->orWhere(function ($query) use ($keyword, $artist_id) {
-                    $query->whereRaw("JSON_CONTAINS(JSON_EXTRACT(fes_setlist, '$[*].artist'), '\"$artist_id\"')")
-                        ->whereRaw("JSON_CONTAINS(JSON_EXTRACT(fes_setlist, '$[*].song'), '\"$keyword\"')")
-                        ->orWhere(function ($query) use ($artist_id, $keyword) {
-                            $query->whereRaw("JSON_CONTAINS(JSON_EXTRACT(fes_encore, '$[*].artist'), '\"$artist_id\"')")
-                                ->whereRaw("JSON_CONTAINS(JSON_EXTRACT(fes_encore, '$[*].song'), '\"$keyword\"')");
-                        });
+                    $query->where(function ($query) use ($artist_id, $keyword) {
+                        $query->whereRaw("JSON_CONTAINS(JSON_EXTRACT(fes_setlist, '$[*].artist'), '\"$artist_id\"')")
+                              ->whereRaw("JSON_CONTAINS(JSON_EXTRACT(fes_setlist, '$[*].song'), '\"$keyword\"')");
+                    })
+                    ->orWhere(function ($query) use ($artist_id, $keyword) {
+                        $query->whereRaw("JSON_CONTAINS(JSON_EXTRACT(fes_encore, '$[*].artist'), '\"$artist_id\"')")
+                              ->whereRaw("JSON_CONTAINS(JSON_EXTRACT(fes_encore, '$[*].song'), '\"$keyword\"')");
+                    });
                 });
         }
 
