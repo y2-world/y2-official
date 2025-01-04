@@ -65,7 +65,11 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('https://ameblo.jp/y2-world') }}"
-                            target="_blank">&emsp;Blog&emsp;</a>
+                            target="_blank">&emsp;Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/admin') }}"
+                            target="_blank">&emsp;Admin&emsp;</a>
                     </li>
                     <li class="nav-item">
                         <div class="mb-sns-nav">
