@@ -16,61 +16,62 @@ class SearchController extends Controller
     public function index(Request $request)
     {
         $artist_id = $request->input('artist_id');
-        $query = Setlist::query();
         $keyword = $request->input('keyword');
+
+        // Setlistクエリの初期化
+        $query = Setlist::query();
 
         // キーワードが空でない場合のみ、検索条件を追加
         if (!empty($keyword)) {
-            $setlists = $query->where('artist_id', $artist_id)
-                ->where(function ($query) use ($keyword) {
+            $query->where(function ($query) use ($artist_id, $keyword) {
+                if (!empty($artist_id)) {
+                    // artist_idが指定されている場合
+                    $query->where('artist_id', $artist_id)
+                        ->where(function ($query) use ($keyword) {
+                            $query->where('setlist', 'like', "%{$keyword}%")
+                                ->orWhere('encore', 'like', "%{$keyword}%");
+                        })
+                        ->orWhere(function ($query) use ($artist_id, $keyword) {
+                            $query->whereRaw("
+                                JSON_CONTAINS(
+                                    fes_setlist,
+                                    JSON_OBJECT('song', ?, 'artist', ?)
+                                )
+                            ", [$keyword, $artist_id])
+                            ->orWhereRaw("
+                                JSON_CONTAINS(
+                                    fes_encore,
+                                    JSON_OBJECT('song', ?, 'artist', ?)
+                                )
+                            ", [$keyword, $artist_id]);
+                        });
+                } else {
+                    // artist_idが指定されていない場合
                     $query->where('setlist', 'like', "%{$keyword}%")
-                        ->orWhere('encore', 'like', "%{$keyword}%");
-                    //  $query->whereRaw("JSON_EXTRACT(setlist, '$.*.song') REGEXP '\"$keyword\"'")
-                    //             ->whereRaw("JSON_EXTRACT(encore, '$.*.song') REGEXP '\"$keyword\"'");
-                })
-                ->orWhere(function ($query) use ($artist_id, $keyword) {
-                    $query->whereRaw("
-                        JSON_CONTAINS(
-                            fes_setlist,
-                            JSON_OBJECT('song', ?, 'artist', ?)
-                        )
-                    ", [$keyword, $artist_id])
-                    ->orWhereRaw("
-                        JSON_CONTAINS(
-                            fes_encore,
-                            JSON_OBJECT('song', ?, 'artist', ?)
-                        )
-                    ", [$keyword, $artist_id]);
-                });
+                        ->orWhere('encore', 'like', "%{$keyword}%")
+                        ->orWhereRaw("
+                            JSON_CONTAINS(
+                                fes_setlist,
+                                JSON_OBJECT('song', ?)
+                            )
+                        ", [$keyword])
+                        ->orWhereRaw("
+                            JSON_CONTAINS(
+                                fes_encore,
+                                JSON_OBJECT('song', ?)
+                            )
+                        ", [$keyword]);
+                }
+            });
         }
 
+        // 結果を日付順に並べる
         $data = $query->orderBy('date', 'desc')->get();
 
+        // アーティスト情報を取得
         $artists = Artist::orderBy('id', 'asc')->get();
 
         return view('search', compact('data', 'keyword', 'artist_id', 'artists'));
-
-        // $artist_id = $request->input('artist_id');
-        // $query = Setlist::query();
-        // $keyword = $request->input('keyword');
-
-        // if (!empty($keyword)) {
-        //     $setlists = $query->where('artist_id', "$artist_id") 
-        //     ->where(function($query) use ($keyword) {
-        //         $query->where('setlist', 'like', "%{$keyword}%")
-        //         ->orWhere('encore', 'like', "%{$keyword}%");
-        //     })->orWhere(function($query) use ($keyword) {
-        //         $query->where('fes_setlist', 'like', "%{$keyword}%")
-        //         ->orWhere('fes_encore', 'like', "%{$keyword}%");
-        //     });
-        // };
-
-        // $data = $query->orderBy('date','desc')->get();
-
-        // $artists = Artist::orderBy('id', 'asc')
-        // ->get();
-
-        // return view('search', compact('data', 'keyword', 'artist_id', 'artists'));
     }
 
     /**

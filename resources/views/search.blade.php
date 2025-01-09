@@ -4,7 +4,7 @@
 <div class="container-lg">
     <div class="parts-wrapper">
         <div class="pc">
-            @if (isset($artist_id)) 
+            @if(!$data->isEmpty())
             <small>楽曲検索結果</small><h4>{{$keyword}}</h4>
             @endif
         </div>
@@ -13,6 +13,7 @@
             <div class="mb_dropdown">
                 @if (isset($artist_id)) 
                     <select name="artist_id" data-toggle="select">
+                        <option value="">アーティスト指定なし</option>
                         <?php $artist_name = $artists[$artist_id - 1]['name']; ?>
                         @foreach ($artists as $artist)
                             @if($artist->name !== $artist_name)
@@ -24,7 +25,7 @@
                     </select>
                 @else
                     <select name="artist_id" data-toggle="select">
-                        <option hidden>Artists</option>
+                        <option value="">アーティスト指定なし</option>
                         @foreach ($artists as $artist)
                             <option value="{{ $artist->id }}">{{$artist->name}}</option>
                         @endforeach
