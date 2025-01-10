@@ -4,9 +4,7 @@
 <div class="container-lg">
     <div class="parts-wrapper">
         <div class="pc">
-            @if(!$data->isEmpty())
             <small>楽曲検索結果</small><h4>{{$keyword}}</h4>
-            @endif
         </div>
         <div class="search">
             <form action="{{url('/search')}}" method="GET">
