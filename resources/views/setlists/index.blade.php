@@ -11,6 +11,7 @@
             <div class="dropdown-wrapper">
                 <select name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Artists</option>
+                    <option value="">アーティスト指定なし</option>
                     @foreach ($artists as $artist)
                         <option value="{{ url('/setlists/artists', $artist->id) }}">{{ $artist->name }}</option>
                     @endforeach
@@ -28,6 +29,7 @@
                         <div class="mb_dropdown">
                             <select name="artist_id" required data-toggle="select">
                                 <option value="" disabled selected>Artists</option>
+                                <option value="">アーティスト指定なし</option>
                                 @foreach ($allArtists as $artist)
                                     <option value="{{ $artist->id }}" required>{{ $artist->name }}</option>
                                 @endforeach
