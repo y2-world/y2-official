@@ -22,36 +22,40 @@ class SearchController extends Controller
         $query = Setlist::query();
 
         // キーワードが空でない場合のみ、検索条件を追加
-        if (!empty($keyword)) {
-            $query->where(function ($query) use ($artist_id, $keyword) {
-                if (!empty($artist_id)) {
-                    // artist_idが指定されている場合
-                    $query->where('artist_id', $artist_id)
-                        ->where(function ($query) use ($keyword) {
-                            $query->where('setlist', 'like', "%{$keyword}%")
-                                ->orWhere('encore', 'like', "%{$keyword}%");
-                        })
-                        ->orWhere(function ($query) use ($artist_id, $keyword) {
-                            $query->whereRaw("
-                                JSON_CONTAINS(fes_setlist, JSON_OBJECT('song', ?, 'artist', ?))
-                            ", [$keyword, $artist_id])
-                            ->orWhereRaw("
-                                JSON_CONTAINS(fes_encore, JSON_OBJECT('song', ?, 'artist', ?))
-                            ", [$keyword, $artist_id]);
-                        });
-                } else {
-                    // artist_idが指定されていない場合（songのみ一致）
-                    $query->where('setlist', 'like', "%{$keyword}%")
-                        ->orWhere('encore', 'like', "%{$keyword}%")
+        $query->where(function ($query) use ($artist_id, $keyword) {
+            if (!empty($artist_id)) {
+                // artist_idが指定されている場合
+                $query->where('artist_id', $artist_id)
+                    ->where(function ($query) use ($keyword) {
+                        $query->where('setlist', 'like', "%{$keyword}%")
+                            ->orWhere('encore', 'like', "%{$keyword}%");
+                    })
+                    ->orWhere(function ($query) use ($artist_id, $keyword) {
+                        $query->whereRaw("
+                            JSON_UNQUOTE(JSON_EXTRACT(fes_setlist, '$[*].song')) LIKE ?
+                        ", ["%{$keyword}%"])
+                        ->whereRaw("
+                            JSON_UNQUOTE(JSON_EXTRACT(fes_setlist, '$[*].artist')) LIKE ?
+                        ", ["%{$artist_id}%"])
                         ->orWhereRaw("
-                            JSON_CONTAINS(fes_setlist, JSON_OBJECT('song', ?))
-                        ", [$keyword])
-                        ->orWhereRaw("
-                            JSON_CONTAINS(fes_encore, JSON_OBJECT('song', ?))
-                        ", [$keyword]);
-                }
-            });
-        }
+                            JSON_UNQUOTE(JSON_EXTRACT(fes_encore, '$[*].song')) LIKE ?
+                        ", ["%{$keyword}%"])
+                        ->whereRaw("
+                            JSON_UNQUOTE(JSON_EXTRACT(fes_encore, '$[*].artist')) LIKE ?
+                        ", ["%{$artist_id}%"]);
+                    });
+            } else {
+                // artist_idが指定されていない場合（songのみ部分一致）
+                $query->where('setlist', 'like', "%{$keyword}%")
+                    ->orWhere('encore', 'like', "%{$keyword}%")
+                    ->orWhereRaw("
+                        JSON_UNQUOTE(JSON_EXTRACT(fes_setlist, '$[*].song')) LIKE ?
+                    ", ["%{$keyword}%"])
+                    ->orWhereRaw("
+                        JSON_UNQUOTE(JSON_EXTRACT(fes_encore, '$[*].song')) LIKE ?
+                    ", ["%{$keyword}%"]);
+            }
+        });
 
         // 結果を日付順に並べる
         $data = $query->orderBy('date', 'desc')->get();
