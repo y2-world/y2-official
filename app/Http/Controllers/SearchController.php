@@ -33,22 +33,22 @@ class SearchController extends Controller
                         })
                         ->orWhere(function ($query) use ($artist_id, $keyword) {
                             $query->whereRaw("
-                                JSON_UNQUOTE(JSON_EXTRACT(fes_setlist, '$[*].song')) LIKE ?
-                            ", ["%{$keyword}%"])
+                                JSON_CONTAINS(fes_setlist, JSON_OBJECT('song', ?, 'artist', ?))
+                            ", [$keyword, $artist_id])
                             ->orWhereRaw("
-                                JSON_UNQUOTE(JSON_EXTRACT(fes_encore, '$[*].song')) LIKE ?
-                            ", ["%{$keyword}%"]);
+                                JSON_CONTAINS(fes_encore, JSON_OBJECT('song', ?, 'artist', ?))
+                            ", [$keyword, $artist_id]);
                         });
                 } else {
-                    // artist_idが指定されていない場合
+                    // artist_idが指定されていない場合（songのみ一致）
                     $query->where('setlist', 'like', "%{$keyword}%")
                         ->orWhere('encore', 'like', "%{$keyword}%")
                         ->orWhereRaw("
-                            JSON_UNQUOTE(JSON_EXTRACT(fes_setlist, '$[*].song')) LIKE ?
-                        ", ["%{$keyword}%"])
+                            JSON_CONTAINS(fes_setlist, JSON_OBJECT('song', ?))
+                        ", [$keyword])
                         ->orWhereRaw("
-                            JSON_UNQUOTE(JSON_EXTRACT(fes_encore, '$[*].song')) LIKE ?
-                        ", ["%{$keyword}%"]);
+                            JSON_CONTAINS(fes_encore, JSON_OBJECT('song', ?))
+                        ", [$keyword]);
                 }
             });
         }
