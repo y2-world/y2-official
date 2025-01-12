@@ -25,7 +25,7 @@ class SearchController extends Controller
         $query->where(function ($query) use ($artist_id, $keyword) {
             if (!empty($artist_id)) {
                 // artist_idが指定されている場合
-                $query->where('artist', $artist_id)
+                $query->where('artist_id', $artist_id)
                     ->where(function ($query) use ($keyword) {
                         $query->whereRaw("
                             JSON_CONTAINS(setlist, JSON_OBJECT('song', ?))
