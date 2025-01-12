@@ -25,10 +25,14 @@ class SearchController extends Controller
         $query->where(function ($query) use ($artist_id, $keyword) {
             if (!empty($artist_id)) {
                 // artist_idが指定されている場合
-                $query->where('artist_id', $artist_id)
+                $query->where('artist', $artist_id)
                     ->where(function ($query) use ($keyword) {
-                        $query->where('setlist', $keyword)
-                            ->orWhere('encore', $keyword);
+                        $query->whereRaw("
+                            JSON_CONTAINS(setlist, JSON_OBJECT('song', ?))
+                        ", [$keyword])
+                        ->orWhereRaw("
+                            JSON_CONTAINS(encore, JSON_OBJECT('song', ?))
+                        ", [$keyword]);
                     })
                     ->orWhere(function ($query) use ($artist_id, $keyword) {
                         $query->whereRaw("
@@ -40,17 +44,22 @@ class SearchController extends Controller
                     });
             } else {
                 // artist_idが指定されていない場合（songのみ完全一致）
-                $query->where('setlist', $keyword)
-                    ->orWhere('encore', $keyword)
+                $query->where(function ($query) use ($keyword) {
+                    $query->whereRaw("
+                        JSON_CONTAINS(setlist, JSON_OBJECT('song', ?))
+                    ", [$keyword])
+                    ->orWhereRaw("
+                        JSON_CONTAINS(encore, JSON_OBJECT('song', ?))
+                    ", [$keyword])
                     ->orWhereRaw("
                         JSON_CONTAINS(fes_setlist, JSON_OBJECT('song', ?))
                     ", [$keyword])
                     ->orWhereRaw("
                         JSON_CONTAINS(fes_encore, JSON_OBJECT('song', ?))
                     ", [$keyword]);
+                });
             }
         });
-
         // 結果を日付順に並べる
         $data = $query->orderBy('date', 'desc')->get();
 
