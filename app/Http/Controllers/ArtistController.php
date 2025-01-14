@@ -65,7 +65,17 @@ class ArtistController extends Controller
         $years = Year::orderBy('year', 'asc')->get();
 
         // 指定されたアーティストのセットリストを取得
-        $setlists = Setlist::where('artist_id', $artist->id)->orderBy('date', 'asc')->paginate(100);
+        $setlists = Setlist::where('artist_id', $artist->id)
+        ->orWhere(function ($query) use ($artistId) {
+            $query->whereRaw("
+                JSON_CONTAINS(fes_setlist, JSON_OBJECT('artist', ?))
+            ", [$artistId])
+            ->orWhereRaw("
+                JSON_CONTAINS(fes_encore, JSON_OBJECT('artist', ?))
+            ", [$artistId]);
+        })
+        ->orderBy('date', 'asc')
+        ->paginate(100);
 
         return view('artists.show', [
             'setlists' => $setlists,
