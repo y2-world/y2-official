@@ -37,7 +37,7 @@
         </div>
         <div class="error">
           @if($setlists->isEmpty())
-          <small>単独ライブのセットリストがありません。</small>
+          <small>セットリストがありません。</small>
           @endif 
       </div>
         @if(!$setlists->isEmpty())
