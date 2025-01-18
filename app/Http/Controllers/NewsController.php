@@ -15,7 +15,7 @@ class NewsController extends Controller
     public function index()
     {
         $news = News::where('visible', 0)->orderBy('date', 'desc')
-        ->paginate(5);
+        ->paginate(10);
         return view('news.index', compact('news'));
     }
 

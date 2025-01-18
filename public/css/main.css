@@ -925,7 +925,7 @@ h2 {
 
     .cover img {
         height: 85vh;
-        width: 100vw;
+        /* width: 100vw; */
         margin: auto;
     }
 }
