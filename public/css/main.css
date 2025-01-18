@@ -852,10 +852,6 @@ h2 {
     color: inherit; /* 文字色を継承 */
 }
 
-.news-link:hover {
-    color: #007bff; /* ホバー時の文字色 */
-}
-
 /* デフォルトスタイル */
 .news-link {
     text-decoration: none; /* 下線を削除 */
@@ -869,7 +865,7 @@ h2 {
 /* マウスホバー時 */
 .news-link:hover {
     border-color: #ccc; /* 枠の色を指定 */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* ふわっとした影を追加 */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* ふわっとした影を追加 */
     border-radius: 5px; /* 角を丸める（必要なら） */
     background-color: #f9f9f9; /* 背景色を少し変える */
     color: inherit; /* 文字色を継承 */
@@ -1153,7 +1149,7 @@ h2 {
         display: flex;
         padding-left: 0;
         list-style: none;
-        justify-content: left;
+        justify-content: center;
     }
 
     .listen-text {
