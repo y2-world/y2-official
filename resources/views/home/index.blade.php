@@ -56,16 +56,16 @@
                         <h2 class="news-title">News</h2>
                         @foreach ($news as $new)
                             @if ($new->visible != 1)
-                                <a href="{{ route('news.show', $new->id) }}">
-                                    <div class="topic-title">
-                                        <hr>
-                                        <div class="date">{{ date('Y.m.d', strtotime($new->date)) }}</div>
-                                        {{ $new->title }}
-                                    </div>
-                                </a>
+                                <div class="news-item">
+                                    <a href="{{ route('news.show', $new->id) }}" class="news-link">
+                                        <div class="topic-title">
+                                            <div class="date">{{ date('Y.m.d', strtotime($new->date)) }}</div>
+                                            {{ $new->title }}
+                                        </div>
+                                    </a>
+                                </div>
                             @endif
                         @endforeach
-                        <hr>
                         <div class="topic-more">
                             <a href="{{ url('/news') }}">View All</a>
                         </div>

@@ -835,6 +835,46 @@ h2 {
     padding-top: 1rem;
 }
 
+/* 各ニュースアイテムのスタイル */
+.news-item {
+    /* padding: 15px 0; 上下の余白 */
+    border-bottom: 1px solid #ddd; /* 下に区切り線 */
+}
+
+/* 最後のニュースアイテムの区切り線を非表示 */
+.news-item:last-child {
+    border-bottom: none;
+}
+
+/* リンクのスタイル（必要に応じて追加） */
+.news-link {
+    text-decoration: none; /* 下線を削除 */
+    color: inherit; /* 文字色を継承 */
+}
+
+.news-link:hover {
+    color: #007bff; /* ホバー時の文字色 */
+}
+
+/* デフォルトスタイル */
+.news-link {
+    text-decoration: none; /* 下線を削除 */
+    color: inherit; /* 文字色を継承 */
+    display: block; /* リンク全体をクリック可能に */
+    padding: 10px; /* 枠内の余白 */
+    border: 1px solid transparent; /* 初期状態で枠を透明に */
+    transition: border-color 0.3s, box-shadow 0.3s; /* スムーズな変化 */
+}
+
+/* マウスホバー時 */
+.news-link:hover {
+    border-color: #ccc; /* 枠の色を指定 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* ふわっとした影を追加 */
+    border-radius: 5px; /* 角を丸める（必要なら） */
+    background-color: #f9f9f9; /* 背景色を少し変える */
+    color: inherit; /* 文字色を継承 */
+}
+
 @media (min-width: 1024px) {
 
     .column1,
