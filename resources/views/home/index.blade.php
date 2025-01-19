@@ -142,8 +142,8 @@
                         <div class="footer-title">
                             Yuki Yoshida Official Website
                         </div>
-                        <a href="{{ url('/#news') }}">News</a>・
                         <a href="{{ url('/music') }}">Music</a>・
+                        <a href="{{ url('/#news') }}">News</a>・
                         <a href="{{ url('/#profile') }}">Profile</a>・
                         <a href="{{ url('/#radio') }}">Radio</a>・
                         <a href="{{ url('https://ameblo.jp/y2-world') }}" target="_blank">Blog</a>・
