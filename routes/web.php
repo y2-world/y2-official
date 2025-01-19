@@ -8,6 +8,7 @@ use App\Http\Controllers\SingleController;
 use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\LiveController;
 use App\Http\Controllers\BioController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,3 +74,6 @@ Route::resource('lyrics', 'LyricController');
 Route::resource('/', 'HomeController');
 // Route::resource('/home', 'HomeController');
 Route::get('/find', [SongController::class, 'search']);
+
+// routes/web.php
+Route::get('/top/all', [HomeController::class, 'getAllNews'])->name('news.all');

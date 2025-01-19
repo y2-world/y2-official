@@ -60,3 +60,60 @@
         $("body").css("padding-top", height);
     });
 }
+
+// document.addEventListener('DOMContentLoaded', function () {
+//     const viewAllBtn = document.getElementById('view-all-btn');
+//     const newsContainer = document.getElementById('news-container');
+
+//     if (viewAllBtn) {
+//         viewAllBtn.addEventListener('click', function () {
+//             viewAllBtn.textContent = 'Loading...';
+//             viewAllBtn.disabled = true;
+
+//             fetch("/news/all")
+//                 .then(response => {
+//                     if (!response.ok) throw new Error('Network response was not ok');
+//                     return response.json();
+//                 })
+//                 .then(data => {
+//                     if (data.news && data.news.length > 0) {
+//                         let newsHTML = '';
+//                         data.news.forEach(newsItem => {
+//                             newsHTML += `
+//                                 <div class="news-item">
+//                                     <a href="/news/${newsItem.id}" class="news-link">
+//                                         <div class="topic-title">
+//                                             <div class="date">${newsItem.date}</div>
+//                                             ${newsItem.title}
+//                                         </div>
+//                                     </a>
+//                                 </div>`;
+//                         });
+//                         newsContainer.innerHTML = newsHTML;
+//                     } else {
+//                         alert('No more news to display.');
+//                     }
+//                 })
+//                 .catch(error => {
+//                     console.error('Error fetching news:', error);
+//                     alert('Failed to load news. Please try again later.');
+//                 })
+//                 .finally(() => {
+//                     viewAllBtn.textContent = 'View All';
+//                     viewAllBtn.disabled = false;
+//                 });
+//         });
+//     }
+// });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const viewAllBtn = document.getElementById('view-all-btn');
+
+    if (viewAllBtn) {
+        viewAllBtn.addEventListener('click', function () {
+            console.log('View All button clicked!');
+        });
+    } else {
+        console.log('View All button not found!');
+    }
+});

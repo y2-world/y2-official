@@ -11,7 +11,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/e47a10189c.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ asset('/css/main.css?time=' . time()) }}">
 </head>
@@ -68,8 +69,7 @@
                             target="_blank">&emsp;Blog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/admin') }}"
-                            target="_blank">&emsp;Admin&emsp;</a>
+                        <a class="nav-link" href="{{ url('/admin') }}" target="_blank">&emsp;Admin&emsp;</a>
                     </li>
                     <li class="nav-item">
                         <div class="mb-sns-nav">
@@ -127,12 +127,20 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
- <!-- スクリプトの読み込み -->
- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
- <script src="{{ asset('/js/search.js') }}"></script>
+<!-- スクリプトの読み込み -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+<script src="{{ asset('/js/search.js') }}"></script>
 
- <!-- Bootstrap scripts -->
- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
- 
+<!-- スクリプトの読み込み -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+<script src="{{ asset('/js/top.js') }}"></script>
+
+<!-- Bootstrap scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+</script>

@@ -54,24 +54,29 @@
                 <div class="col-xl-9">
                     <div class="element js-fadein">
                         <h2 class="news-title">News</h2>
-                        @foreach ($news as $new)
-                            @if ($new->visible != 1)
-                                <div class="news-item">
-                                    <a href="{{ route('news.show', $new->id) }}" class="news-link">
-                                        <div class="topic-title">
-                                            <div class="date">{{ date('Y.m.d', strtotime($new->date)) }}</div>
-                                            {{ $new->title }}
-                                        </div>
-                                    </a>
-                                </div>
-                            @endif
-                        @endforeach
+                        
+                        <!-- ニュースリストを格納するコンテナ -->
+                        <div id="news-container">
+                            @foreach ($news as $new)
+                                @if ($new->visible != 1)
+                                    <div class="news-item">
+                                        <a href="{{ route('news.show', $new->id) }}" class="news-link">
+                                            <div class="topic-title">
+                                                <div class="date">{{ date('Y.m.d', strtotime($new->date)) }}</div>
+                                                {{ $new->title }}
+                                            </div>
+                                        </a>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                        
+                        <!-- View Allボタン -->
                         <div class="topic-more">
-                            <a href="{{ url('/news') }}">View All</a>
+                            <a href="javascript:void(0);" id="view-all-btn">View All</a>
                         </div>
                     </div>
                 </div>
-                <br>
             </div>
         </div>
     </div>

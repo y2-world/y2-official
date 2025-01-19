@@ -847,7 +847,7 @@ h2 {
     text-decoration: none; /* 下線を削除 */
     color: inherit; /* 文字色を継承 */
     display: block; /* リンク全体をクリック可能に */
-    padding: 20px; /* 枠内の余白 */
+    padding: 15px; /* 枠内の余白 */
     border: 1px solid transparent; /* 初期状態で枠を透明に */
     transition: border-color 0.3s, box-shadow 0.3s; /* スムーズな変化 */
 }
@@ -859,6 +859,10 @@ h2 {
     border-radius: 5px; /* 角を丸める（必要なら） */
     background-color: #f9f9f9; /* 背景色を少し変える */
     color: inherit; /* 文字色を継承 */
+}
+#view-all-btn[disabled] {
+    pointer-events: none;
+    opacity: 0.6;
 }
 
 @media (min-width: 1024px) {
