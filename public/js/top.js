@@ -1,5 +1,3 @@
-"use strict";
-
 document.addEventListener("DOMContentLoaded", function () {
     const viewAllBtn = document.getElementById("view-all-btn");
     const newsContainer = document.getElementById("news-container");
@@ -29,12 +27,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (data.top && data.top.length > 0) {
                         let newsHTML = '';
                         data.top.forEach(newsItem => {
+                            // 日付をyyyy.mm.dd形式にフォーマット
+                            const formattedDate = formatDate(newsItem.date);
+
                             // HTMLコンテンツを作成
                             newsHTML += `
                                 <div class="news-item">
                                     <a href="/news/${newsItem.id}" class="news-link">
                                         <div class="topic-title">
-                                            <div class="date">${newsItem.date}</div>
+                                            <div class="date">${formattedDate}</div>
                                             ${newsItem.title}
                                         </div>
                                     </a>
@@ -59,16 +60,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
         });
     }
+
+    // 日付をyyyy.mm.dd形式に変換する関数
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // 1月は0なので+1
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}.${month}.${day}`;
+    }
 });
-
-// document.addEventListener('DOMContentLoaded', function () {
-//     const viewAllBtn = document.getElementById('view-all-btn');
-
-//     if (viewAllBtn) {
-//         viewAllBtn.addEventListener('click', function () {
-//             console.log('View All button clicked!');
-//         });
-//     } else {
-//         console.log('View All button not found!');
-//     }
-// });
