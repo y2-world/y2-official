@@ -110,7 +110,7 @@
                 </tbody>
             </div>
         </table>
-        <div class=”pagination”>
+        <div class=”pagination-setlists”>
             {!! $setlists->appends(['type' => $type])->links() !!}
         </div>
         <br>
