@@ -48,7 +48,7 @@
     </div>
     </div>
 
-    <div class="index-wrapper">
+    <div class="index-wrapper" id="news" style="padding-top:55px">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-xl-9">

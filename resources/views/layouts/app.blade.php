@@ -46,7 +46,7 @@
                     <a class="nav-link" href="{{ url('/') }}">&emsp;Home</a>
                 </li> --}}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/news') }}">&emsp;News</a>
+                        <a class="nav-link" href="{{ url('/#news') }}">&emsp;News</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('/music') }}">&emsp;Music</a>
