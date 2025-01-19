@@ -595,9 +595,8 @@ li .active {
 .topic-more {
     color: gray;
     font-size: 14px;
-    text-align: right;
-    padding-top: 10px;
-    padding-right: 50px;
+    text-align: center;
+    padding-top: 30px;
 }
 
 .topic-more a:hover {
