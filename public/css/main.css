@@ -603,11 +603,6 @@ li .active {
     color: black;
 }
 
-
-
-
-
-
 nav {
     font-size: 11px;
 }
@@ -702,10 +697,6 @@ select {
 
 .dropdown-wrapper select {
     margin-right: 30px;
-}
-
-nav {
-    overflow-x: scroll;
 }
 
 .pagination a {
