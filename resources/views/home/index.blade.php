@@ -13,7 +13,7 @@
     <div class="home-disco-wrapper">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-xl-11">
+                <div class="col-xl-9">
                     <div class="element js-fadein">
                         <h2 class="news-title">New Release</h2>
                         <div class="cover-wrapper">
@@ -51,7 +51,7 @@
     <div class="index-wrapper">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-xl-11">
+                <div class="col-xl-9">
                     <div class="element js-fadein">
                         <h2 class="news-title">News</h2>
                         @foreach ($news as $new)
@@ -79,7 +79,7 @@
     <div class="index-wrapper" id="profile" style="padding-top:55px">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-xl-11">
+                <div class="col-xl-9">
                     <div class="element js-fadein">
                         <h2>Profile</h2>
                         <div class="row">
@@ -112,7 +112,7 @@
     <div class="index-wrapper" id="radio" style="padding-top:70px">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-xl-11">
+                <div class="col-xl-9">
                     <div class="element js-fadein">
                         <h2>Radio</h2>
                         <div class="radio-wrapper">
@@ -132,7 +132,7 @@
     <div class="footer-wrapper">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-xl-11">
+                <div class="col-xl-9">
                     <div class="footer">
                         <div class="footer-title">
                             Yuki Yoshida Official Website
