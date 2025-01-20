@@ -76,4 +76,5 @@ Route::resource('/', 'HomeController');
 Route::get('/find', [SongController::class, 'search']);
 
 // routes/web.php
-Route::get('/top/all', [HomeController::class, 'getAllNews'])->name('news.all');
+Route::get('/top/news', [HomeController::class, 'getAllNews'])->name('news.all');
+Route::get('/top/music', [HomeController::class, 'getAllMusic'])->name('music.all');

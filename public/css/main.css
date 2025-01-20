@@ -861,7 +861,7 @@ h2 {
     background-color: #f9f9f9; /* 背景色を少し変える */
     color: inherit; /* 文字色を継承 */
 }
-#view-all-btn[disabled] {
+#view-all-news-btn[disabled], #view-all-music-btn[disabled] {
     pointer-events: none;
     opacity: 0.6;
 }

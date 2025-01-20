@@ -62,7 +62,7 @@
 }
 
 // document.addEventListener('DOMContentLoaded', function () {
-//     const viewAllBtn = document.getElementById('view-all-btn');
+//     const viewAllBtn = document.getElementById('view-all-news-btn');
 //     const newsContainer = document.getElementById('news-container');
 
 //     if (viewAllBtn) {
@@ -105,15 +105,3 @@
 //         });
 //     }
 // });
-
-document.addEventListener('DOMContentLoaded', function () {
-    const viewAllBtn = document.getElementById('view-all-btn');
-
-    if (viewAllBtn) {
-        viewAllBtn.addEventListener('click', function () {
-            console.log('View All button clicked!');
-        });
-    } else {
-        console.log('View All button not found!');
-    }
-});

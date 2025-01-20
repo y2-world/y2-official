@@ -19,7 +19,7 @@ class HomeController extends Controller
         $news = News::where('visible', 0)->orderBy('date', 'desc')
             ->paginate(5);
         $discos = Disco::where('visible', 0)->orderBy('date', 'desc')
-            ->paginate(5);
+            ->paginate(4);
         $profiles = Profile::orderBy('created_at', 'desc')
             ->get();
         return view('home.index', compact('news', 'discos', 'profiles'));
@@ -40,6 +40,22 @@ class HomeController extends Controller
 
         return response()->json([
             'top' => $news,
+        ]);
+    }
+
+    // 全ミュージックを取得して返す
+    public function getAllMusic()
+    {
+        // ミュージックを取得するクエリを確認
+        $discos = Disco::where('visible', 0)->orderBy('date', 'desc')->get();
+
+        if ($discos->isEmpty()) {
+            // コレクションが空の場合の処理
+            return response()->json(['message' => 'No music found'], 404);
+        }
+
+        return response()->json([
+            'top' => $discos,
         ]);
     }
 
