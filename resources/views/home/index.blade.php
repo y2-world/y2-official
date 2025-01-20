@@ -10,7 +10,7 @@
         </div>
     </div>
 
-    <div class="index-wrapper" id="news" style="padding-top:55px">
+    <div class="index-wrapper" id="news" style="padding-top:100px">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-xl-9">
@@ -44,7 +44,7 @@
     </div>
 
 
-    <div class="index-wrapper" id="music" style="padding-top:55px">
+    <div class="index-wrapper" id="music" style="padding-top:100px">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-9">
@@ -88,7 +88,7 @@
     </div>
     </div>
 
-    <div class="index-wrapper" id="profile" style="padding-top:55px">
+    <div class="index-wrapper" id="profile" style="padding-top:100px">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-xl-9">
@@ -121,7 +121,7 @@
     </div>
     </div>
 
-    <div class="index-wrapper" id="radio" style="padding-top:70px">
+    <div class="index-wrapper" id="radio" style="padding-top:100px">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-xl-9">

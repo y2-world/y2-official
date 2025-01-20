@@ -13,28 +13,10 @@ class DiscoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    // public function index()
-    // {
-    //     $type = request()->input('type');
-
-    //     $discos = Disco::orderBy('date', 'desc')->where('visible', '=', "0")->get();
-
-    //     if ($type === '1') {
-    //         // live_typeが1の場合はfesカラムが0のセットリストを取得する
-    //         $discos = Disco::orderBy('date', 'desc')
-    //             ->where('type', '=', "0")
-    //             ->where('visible', '=', "0")
-    //             ->get();
-    //     } elseif ($type === '2') {
-    //         // live_typeが2の場合はfesカラムが1か2のセットリストを取得する
-    //         $discos = Disco::orderBy('date', 'desc')
-    //             ->where('type', '=', "1")
-    //             ->where('visible', '=', "0")
-    //             ->get();
-    //     }
-
-    //     return view('music.index', compact('discos'));
-    // }
+    public function index()
+    {
+        //
+    }
 
     /**
      * Show the form for creating a new resource.
