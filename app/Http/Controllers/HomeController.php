@@ -19,7 +19,7 @@ class HomeController extends Controller
         $news = News::where('visible', 0)->orderBy('date', 'desc')
             ->paginate(5);
         $discos = Disco::where('visible', 0)->orderBy('date', 'desc')
-            ->paginate(4);
+            ->paginate(8);
         $profiles = Profile::orderBy('created_at', 'desc')
             ->get();
         return view('home.index', compact('news', 'discos', 'profiles'));
