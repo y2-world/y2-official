@@ -70,6 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return `${year}.${month}.${day}`;
     }
 });
+
 document.addEventListener("DOMContentLoaded", function () {
     const viewAllBtn = document.getElementById("view-all-music-btn");
     const musicContainer = document.getElementById("music-container");
@@ -79,6 +80,30 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Error: 'music-container' element is not found in the DOM.");
         return; // エラーがあれば処理を中断
     }
+
+    // 初期表示を制御する関数
+    function limitMusicDisplay() {
+        const musicItems = musicContainer.querySelectorAll(".single");
+        if (window.innerWidth <= 1200) {
+            musicItems.forEach((item, index) => {
+                if (index >= 2) {
+                    item.style.display = "none"; // 3件目以降を非表示
+                } else {
+                    item.style.display = "block"; // 最初の2件を表示
+                }
+            });
+        } else {
+            musicItems.forEach((item) => {
+                item.style.display = "block"; // 全件表示
+            });
+        }
+    }
+
+    // 初期表示の制限を実行
+    limitMusicDisplay();
+
+    // ウィンドウサイズが変更されたときにも制限を適用
+    window.addEventListener("resize", limitMusicDisplay);
 
     if (viewAllBtn) {
         viewAllBtn.addEventListener("click", function () {
@@ -111,6 +136,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                 </div>`;
                         });
                         musicContainer.innerHTML = musicHTML;
+
+                        // 初期表示制限を再適用
+                        limitMusicDisplay();
+
                         viewAllBtn.style.display = "none";
                     } else {
                         alert("No more music to display.");

@@ -62,17 +62,21 @@
                         </ul> --}}
                         <div class="disco-wrapper">
                             <div class="album-wrapper" id="music-container">
-                                @foreach ($discos as $disc)
-                                    <div class="single">
-                                        <a href="{{ route('music.show', $disc->id) }}"><img
-                                                src={{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $disc->image) }}
-                                                class="single-image"></a>
-                                        <div class="topic"><a
-                                                href="{{ route('music.show', $disc->id) }}">{{ $disc->title }}</a></div>
-                                        <p class="topic">
-                                            {{ $disc->subtitle }}<br>{{ date('Y.m.d', strtotime($disc->date)) }}
-                                        </p>
-                                    </div>
+                                @foreach ($discos as $index => $disc)
+                                    @if (!$isMobile || $index < 2)
+                                        <div class="single">
+                                            <a href="{{ route('music.show', $disc->id) }}">
+                                                <img src="{{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $disc->image) }}"
+                                                    class="single-image">
+                                            </a>
+                                            <div class="topic">
+                                                <a href="{{ route('music.show', $disc->id) }}">{{ $disc->title }}</a>
+                                            </div>
+                                            <p class="topic">
+                                                {{ $disc->subtitle }}<br>{{ date('Y.m.d', strtotime($disc->date)) }}
+                                            </p>
+                                        </div>
+                                    @endif
                                 @endforeach
                             </div>
                         </div>
