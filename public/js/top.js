@@ -75,34 +75,31 @@ document.addEventListener("DOMContentLoaded", function () {
     const viewAllBtn = document.getElementById("view-all-music-btn");
     const musicContainer = document.getElementById("music-container");
 
-    // デバッグ用: 要素の存在を確認
     if (!musicContainer) {
         console.error("Error: 'music-container' element is not found in the DOM.");
-        return; // エラーがあれば処理を中断
+        return;
     }
 
-    // 初期表示を制御する関数
+    const newsUrl = "/top/music"; // 必ず正しいURLを設定
+
     function limitMusicDisplay() {
         const musicItems = musicContainer.querySelectorAll(".album-container");
         if (window.innerWidth <= 1200) {
             musicItems.forEach((item, index) => {
                 if (index >= 2) {
-                    item.style.display = "none"; // 3件目以降を非表示
+                    item.style.display = "none";
                 } else {
-                    item.style.display = "block"; // 最初の2件を表示
+                    item.style.display = "block";
                 }
             });
         } else {
             musicItems.forEach((item) => {
-                item.style.display = "block"; // 全件表示
+                item.style.display = "block";
             });
         }
     }
 
-    // 初期表示の制限を実行
     limitMusicDisplay();
-
-    // ウィンドウサイズが変更されたときにも制限を適用
     window.addEventListener("resize", limitMusicDisplay);
 
     if (viewAllBtn) {
@@ -112,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
             viewAllBtn.textContent = "Loading...";
             viewAllBtn.disabled = true;
 
-            fetch("top/music")
+            fetch(newsUrl)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error("Network response was not ok");
@@ -120,6 +117,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     return response.json();
                 })
                 .then((data) => {
+                    console.log("Fetched data:", data);
+
                     if (data.top && data.top.length > 0) {
                         let musicHTML = "";
                         data.top.forEach((musicItem) => {
@@ -135,10 +134,12 @@ document.addEventListener("DOMContentLoaded", function () {
                                     <p class="topic">${musicItem.subtitle}<br>${formattedDate}</p>
                                 </div>`;
                         });
-                        musicContainer.innerHTML = musicHTML;
 
-                        // 初期表示制限を再適用
-                        limitMusicDisplay();
+                        // 新しいデータを追記
+                        musicContainer.insertAdjacentHTML('beforeend', musicHTML);
+
+                        // 初期制限を無効化
+                        window.removeEventListener("resize", limitMusicDisplay);
 
                         viewAllBtn.style.display = "none";
                     } else {
