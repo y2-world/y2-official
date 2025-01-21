@@ -118,9 +118,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
                 .then((data) => {
                     console.log("Fetched data:", data);
-
+                
                     if (data.top && data.top.length > 0) {
                         let musicHTML = "";
+                
                         data.top.forEach((musicItem) => {
                             const formattedDate = formatDate(musicItem.date);
                             musicHTML += `
@@ -131,17 +132,15 @@ document.addEventListener("DOMContentLoaded", function () {
                                     <div class="topic">
                                         <a href="/music/${musicItem.id}">${musicItem.title}</a>
                                     </div>
-                                    <p class="topic">${musicItem.subtitle}<br>${formattedDate}</p>
+                                    <p class="topic">
+                                        ${musicItem.subtitle}<br>${formattedDate}
+                                    </p>
                                 </div>`;
                         });
-
-                        // 新しいデータを追記
-                        musicContainer.insertAdjacentHTML('beforeend', musicHTML);
-
-                        // 初期制限を無効化
-                        window.removeEventListener("resize", limitMusicDisplay);
-
-                        viewAllBtn.style.display = "none";
+                
+                        musicContainer.innerHTML = musicHTML; // 初期データを削除し、新しいデータを上書き
+                
+                        viewAllBtn.style.display = "none"; // 全て表示済みの場合は非表示
                     } else {
                         alert("No more music to display.");
                     }
