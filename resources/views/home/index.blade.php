@@ -60,14 +60,14 @@
                                     class="{{ request('type') == '2' ? 'active' : '' }}">Album</a>
                             </li>
                         </ul> --}}
-                        <div class="disco-wrapper">
+                        <div class="music-wrapper">
                             <div class="album-wrapper" id="music-container">
                                 @foreach ($discos as $index => $disc)
                                     @if (!$isMobile || $index < 2)
-                                        <div class="single">
+                                        <div class="album-container">
                                             <a href="{{ route('music.show', $disc->id) }}">
                                                 <img src="{{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $disc->image) }}"
-                                                    class="single-image">
+                                                    class="album-image">
                                             </a>
                                             <div class="topic">
                                                 <a href="{{ route('music.show', $disc->id) }}">{{ $disc->title }}</a>

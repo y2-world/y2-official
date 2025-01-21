@@ -306,16 +306,6 @@ video {
     padding-bottom: 40px;
 }
 
-.home-disco-wrapper {
-    background-color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    padding-top: 100px;
-    padding-bottom: 100px;
-}
-
 .footer-wrapper {
     background-color: rgb(53, 52, 52);
     height: 100px;
@@ -493,13 +483,13 @@ img {
     gap: 16px;
 }
 
-.single-image {
+.album-image {
     width: 250px;
     height: 250px;
     cursor: pointer;
 }
 
-.disco-wrapper {
+.music-wrapper {
     position: relative;
 }
 
@@ -551,21 +541,21 @@ img {
     opacity: 1;
 }
 
-.single img {
+.album-container img {
     margin-bottom: 20px;
     transition: box-shadow 0.5s;
 }
 
-.single img:hover {
+.album-container img:hover {
     box-shadow: 5px 5px 50px gray;
 }
 
-.single .text,
-.single .topic {
+.album-container .text,
+.album-container .topic {
     text-align: center;
 }
 
-.single-header {
+.album-container-header {
     padding-top: 10px;
 }
 
@@ -1056,7 +1046,7 @@ h2 {
     .radio,
     .news-title,
     .profile,
-    .single,
+    .album-container,
     .album,
     .form,
     .comments {
@@ -1068,12 +1058,12 @@ h2 {
         padding: 5px;
     }
 
-    .single-image {
+    .album-image {
         width: 160px;
         height: 160px;
     }
 
-    .single .text {
+    .album-container .text {
         padding-top: 5px;
         font-size: 7px;
     }

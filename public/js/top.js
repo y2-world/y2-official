@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 初期表示を制御する関数
     function limitMusicDisplay() {
-        const musicItems = musicContainer.querySelectorAll(".single");
+        const musicItems = musicContainer.querySelectorAll(".album-container");
         if (window.innerWidth <= 1200) {
             musicItems.forEach((item, index) => {
                 if (index >= 2) {
@@ -125,9 +125,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         data.top.forEach((musicItem) => {
                             const formattedDate = formatDate(musicItem.date);
                             musicHTML += `
-                                <div class="single">
+                                <div class="album-container">
                                     <a href="/music/${musicItem.id}">
-                                        <img src="https://res.cloudinary.com/hqrgbxuiv/${musicItem.image}" class="single-image">
+                                        <img src="https://res.cloudinary.com/hqrgbxuiv/${musicItem.image}" class="album-image">
                                     </a>
                                     <div class="topic">
                                         <a href="/music/${musicItem.id}">${musicItem.title}</a>
