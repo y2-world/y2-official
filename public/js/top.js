@@ -82,9 +82,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const newsUrl = "/top/music"; // 必ず正しいURLを設定
 
+    // Media query を設定
+    const mediaQuery = window.matchMedia("(max-width: 1200px)");
+
+    // 初期表示を制御する関数
     function limitMusicDisplay() {
         const musicItems = musicContainer.querySelectorAll(".album-container");
-        if (window.innerWidth <= 1200) {
+
+        // メディアクエリを使用して条件分岐
+        if (mediaQuery.matches) {
             musicItems.forEach((item, index) => {
                 if (index >= 2) {
                     item.style.display = "none";
@@ -100,7 +106,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     limitMusicDisplay();
-    window.addEventListener("resize", limitMusicDisplay);
+
+    // ウィンドウサイズが変更されるたびにメディアクエリを再評価
+    mediaQuery.addEventListener("change", limitMusicDisplay);
 
     if (viewAllBtn) {
         viewAllBtn.addEventListener("click", function () {
