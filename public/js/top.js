@@ -174,3 +174,52 @@ document.addEventListener("DOMContentLoaded", function () {
         return `${year}.${month}.${day}`;
     }
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const overlay = document.getElementById('overlay');
+    const popup = document.getElementById('news-popup');
+    const popupTitle = document.getElementById('popup-title');
+    const popupDate = document.getElementById('popup-date');
+    const popupDescription = document.getElementById('popup-text');
+    const closeBtn = document.querySelector('.close-btn');
+
+    // ニュースリンクにクリックイベントを追加
+    document.querySelectorAll('.news-link').forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const newsId = this.getAttribute('data-id'); // ニュースIDを取得
+
+            // ニュースデータを取得
+            fetch(`/news/${newsId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+
+                    // ポップアップにデータをセット
+                    popupTitle.textContent = data.title;
+                    popupDate.textContent = new Date(data.date).toLocaleDateString();
+                    popupDescription.innerHTML = data.text;
+
+                    // ポップアップを表示
+                    overlay.classList.add('open');
+                    popup.classList.add('open');
+                })
+                .catch(error => {
+                    console.error('エラーが発生しました:', error);
+                });
+        });
+    });
+
+    // ポップアップを閉じる
+    closeBtn.addEventListener('click', closePopup);
+    overlay.addEventListener('click', closePopup);
+
+    function closePopup() {
+        popup.classList.remove('open');
+        overlay.classList.remove('open');
+    }
+});

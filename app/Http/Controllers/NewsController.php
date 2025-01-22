@@ -46,11 +46,17 @@ class NewsController extends Controller
      */
     public function show($id)
     {
-        $news = News::find($id);
-        $previous = News::where('id', '<', $news->id)->orderBy('id', 'desc')->first();
-        $next = News::where('id', '>', $news->id)->orderBy('id')->first();
+        // $news = News::find($id);
+        // $previous = News::where('id', '<', $news->id)->orderBy('id', 'desc')->first();
+        // $next = News::where('id', '>', $news->id)->orderBy('id')->first();
 
-        return view('news.show', compact('news', 'previous', 'next'));
+        // return view('news.show', compact('news', 'previous', 'next'));
+        $news = News::findOrFail($id);
+        return response()->json([
+            'title' => $news->title,
+            'date' => $news->date,
+            'text' => $news->text,
+        ]);
     }
 
     /**

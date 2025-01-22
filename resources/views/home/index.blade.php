@@ -22,7 +22,7 @@
                             @foreach ($news as $new)
                                 @if ($new->visible != 1)
                                     <div class="news-item">
-                                        <a href="{{ route('news.show', $new->id) }}" class="news-link">
+                                        <a href="javascript:void(0);" class="news-link" data-id="{{ $new->id }}">
                                             <div class="news-item__title">
                                                 <div class="date">{{ date('Y.m.d', strtotime($new->date)) }}</div>
                                                 {{ $new->title }}
@@ -43,6 +43,15 @@
         </div>
     </div>
 
+    <div id="overlay" class="overlay"></div>
+    <div id="news-popup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn">&times;</span>
+            <h3 id="popup-title"></h3>
+            <p id="popup-date"></p>
+            <div id="popup-text"></div>
+        </div>
+    </div>
 
     <div class="index-wrapper" id="music" style="padding-top:100px">
         <div class="container">

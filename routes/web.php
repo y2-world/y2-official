@@ -9,6 +9,7 @@ use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\LiveController;
 use App\Http\Controllers\BioController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NewsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,3 +79,4 @@ Route::get('/find', [SongController::class, 'search']);
 // routes/web.php
 Route::get('/top/news', [HomeController::class, 'getAllNews'])->name('news.all');
 Route::get('/top/music', [HomeController::class, 'getAllMusic'])->name('music.all');
+Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
