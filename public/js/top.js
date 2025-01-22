@@ -76,7 +76,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const musicContainer = document.getElementById("music-container");
 
     if (!musicContainer) {
-        console.error("Error: 'music-container' element is not found in the DOM.");
+        console.error(
+            "Error: 'music-container' element is not found in the DOM."
+        );
         return;
     }
 
@@ -126,10 +128,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
                 .then((data) => {
                     console.log("Fetched data:", data);
-                
+
                     if (data.top && data.top.length > 0) {
                         let musicHTML = "";
-                
+
                         data.top.forEach((musicItem) => {
                             const formattedDate = formatDate(musicItem.date);
                             musicHTML += `
@@ -137,17 +139,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                     <a href="/music/${musicItem.id}">
                                         <img src="https://res.cloudinary.com/hqrgbxuiv/${musicItem.image}" class="album-image">
                                     </a>
-                                    <div class="top">
+                                    <div class="music-item__gray">
                                         <a href="/music/${musicItem.id}">${musicItem.title}</a>
+                                        <p>
+                                            ${musicItem.subtitle}<br>${formattedDate}
+                                        </p>
                                     </div>
-                                    <p class="top">
-                                        ${musicItem.subtitle}<br>${formattedDate}
-                                    </p>
                                 </div>`;
                         });
-                
+
                         musicContainer.innerHTML = musicHTML; // 初期データを削除し、新しいデータを上書き
-                
+
                         viewAllBtn.style.display = "none"; // 全て表示済みの場合は非表示
                     } else {
                         alert("No more music to display.");

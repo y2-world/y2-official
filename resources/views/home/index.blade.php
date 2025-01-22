@@ -23,7 +23,7 @@
                                 @if ($new->visible != 1)
                                     <div class="news-item">
                                         <a href="{{ route('news.show', $new->id) }}" class="news-link">
-                                            <div class="top-title">
+                                            <div class="news-item__title">
                                                 <div class="date">{{ date('Y.m.d', strtotime($new->date)) }}</div>
                                                 {{ $new->title }}
                                             </div>
@@ -34,7 +34,7 @@
                         </div>
 
                         <!-- View Allボタン -->
-                        <div class="top-more">
+                        <div class="more">
                             <a href="javascript:void(0);" id="view-all-news-btn">View All</a>
                         </div>
                     </div>
@@ -69,12 +69,12 @@
                                                 <img src="{{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $disc->image) }}"
                                                     class="album-image">
                                             </a>
-                                            <div class="top">
+                                            <div class="music-item__gray">
                                                 <a href="{{ route('music.show', $disc->id) }}">{{ $disc->title }}</a>
+                                                <p>
+                                                    {{ $disc->subtitle }}<br>{{ date('Y.m.d', strtotime($disc->date)) }}
+                                                </p>
                                             </div>
-                                            <p class="top">
-                                                {{ $disc->subtitle }}<br>{{ date('Y.m.d', strtotime($disc->date)) }}
-                                            </p>
                                         </div>
                                     @endif
                                 @endforeach
@@ -82,7 +82,7 @@
                         </div>
 
                         <!-- View Allボタン -->
-                        <div class="top-more">
+                        <div class="more">
                             <a href="javascript:void(0);" id="view-all-music-btn">View All</a>
                         </div>
                     </div>

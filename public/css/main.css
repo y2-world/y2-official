@@ -374,18 +374,14 @@ body {
     color: gray;
 }
 
-.top {
+.music-item__gray {
     font-size: 11px;
     color: gray;
+    text-align: center;
 }
 
-.top-title {
+.news-item__title{
     font-size: 13px;
-}
-
-.home-radio .top {
-    font-size: 11px;
-    color: black;
 }
 
 a:hover {
@@ -550,11 +546,6 @@ img {
     box-shadow: 5px 5px 50px gray;
 }
 
-.album-container .text,
-.album-container .top {
-    text-align: center;
-}
-
 .album-container-header {
     padding-top: 10px;
 }
@@ -575,22 +566,14 @@ li .active {
     opacity: 0.4;
 }
 
-.top-menu {
-    display: flex;
-    justify-content: flex-start;
-    list-style: none;
-}
-
-
-.top-more {
-    color: gray;
+.more {
     font-size: 14px;
     text-align: center;
     padding-top: 30px;
 }
 
-.top-more a:hover {
-    color: black;
+.more a:hover {
+    color: gray;
 }
 
 nav {
@@ -748,12 +731,6 @@ select {
 
 .cover-wrapper img:hover {
     box-shadow: 3px 3px 15px gray;
-}
-
-.top-image {
-    width: 300px;
-    height: 300px;
-    cursor: pointer;
 }
 
 .disc-block {
@@ -962,17 +939,6 @@ h2 {
         display: none;
     }
 
-    .top-header {
-        text-align: center;
-    }
-
-    .top-list {
-        flex-direction: row;
-        flex-wrap: nowrap;
-        padding-left: 0px;
-    }
-
-
     .cover p {
         font-size: 20px;
     }
@@ -1019,11 +985,6 @@ h2 {
 }
 
 @media screen and (max-width: 480px) {
-    .top-image {
-        width: 200px;
-        height: 200px;
-    }
-
     .prof_img {
         width: 80%;
         margin: 0 auto;
@@ -1073,12 +1034,12 @@ h2 {
         text-align: center;
     }
 
-    .top {
+    .music-item__gray {
         font-size: 11px;
         /* padding: 0px 25px; */
     }
 
-    .top-more {
+    .more {
         font-size: 11px;
         text-align: center;
         padding-right: 0px;
