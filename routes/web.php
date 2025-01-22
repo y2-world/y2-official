@@ -65,7 +65,7 @@ Route::prefix('database')->group(function () {
 // Route::resource('apbankfes', 'ApbankController');
 // Route::resource('events', 'EventController');
 // Route::resource('live', 'LiveController');
-Route::resource('news', 'NewsController');
+// Route::resource('news', 'NewsController');
 Route::resource('profile', 'ProfileController');
 Route::resource('music', 'DiscoController');
 // Route::resource('single', 'DiscoSingleController');

@@ -47,9 +47,12 @@
     <div id="news-popup" class="popup">
         <div class="popup-content">
             <span class="close-btn">&times;</span>
-            <h3 id="popup-title"></h3>
-            <p id="popup-date"></p>
-            <div id="popup-text"></div>
+            <div class="news-item">
+                <h4 id="popup-title"></h4>
+                <small class="date" id="popup-date"></small>
+                <hr>
+                <div class="text" id="popup-text"></div>
+            </div>
         </div>
     </div>
 

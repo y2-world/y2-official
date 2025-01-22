@@ -33,8 +33,8 @@ document.addEventListener("DOMContentLoaded", function () {
                             // HTMLコンテンツを作成
                             newsHTML += `
                                 <div class="news-item">
-                                    <a href="/news/${newsItem.id}" class="news-link">
-                                        <div class="topic-title">
+                                    <a href="javascript:void(0);" class="news-link" data-id="${newsItem.id}>
+                                        <div class="news-item__title">
                                             <div class="date">${formattedDate}</div>
                                             ${newsItem.title}
                                         </div>
@@ -180,17 +180,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const popup = document.getElementById('news-popup');
     const popupTitle = document.getElementById('popup-title');
     const popupDate = document.getElementById('popup-date');
-    const popupDescription = document.getElementById('popup-text');
+    const popupText = document.getElementById('popup-text');
     const closeBtn = document.querySelector('.close-btn');
 
-    // ニュースリンクにクリックイベントを追加
     document.querySelectorAll('.news-link').forEach(link => {
         link.addEventListener('click', function (e) {
             e.preventDefault();
 
-            const newsId = this.getAttribute('data-id'); // ニュースIDを取得
+            const newsId = this.getAttribute('data-id');
 
-            // ニュースデータを取得
             fetch(`/news/${newsId}`)
                 .then(response => response.json())
                 .then(data => {
@@ -199,10 +197,14 @@ document.addEventListener('DOMContentLoaded', function () {
                         return;
                     }
 
-                    // ポップアップにデータをセット
+                    // 日付を整形
+                    const date = new Date(data.date);
+                    const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+
+                    // データをポップアップにセット
                     popupTitle.textContent = data.title;
-                    popupDate.textContent = new Date(data.date).toLocaleDateString();
-                    popupDescription.innerHTML = data.text;
+                    popupDate.textContent = formattedDate; // 整形した日付をセット
+                    popupText.innerHTML = data.text;
 
                     // ポップアップを表示
                     overlay.classList.add('open');
@@ -214,7 +216,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // ポップアップを閉じる
     closeBtn.addEventListener('click', closePopup);
     overlay.addEventListener('click', closePopup);
 
