@@ -135,7 +135,7 @@
 <!-- スクリプトの読み込み -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
-<script src="{{ asset('/js/top.js?q=12345') }}"></script>
+<script src="{{ asset('/js/top.js?q=20250122') }}"></script>
 
 <!-- Bootstrap scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
