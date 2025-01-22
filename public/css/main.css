@@ -845,7 +845,7 @@ h2 {
     padding: 20px;
     max-width: 500px;
     width: 90%;
-    max-height: 90vh; /* 全体の高さを90%に制限 */
+    max-height: 80vh; /* 全体の高さを80%に制限 */
     overflow: hidden; /* 内容があふれた場合に隠す */
     opacity: 0;
     visibility: hidden;
