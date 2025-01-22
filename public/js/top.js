@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             // HTMLコンテンツを作成
                             newsHTML += `
                                 <div class="news-item">
-                                    <a href="javascript:void(0);" class="news-link" data-id="${newsItem.id}>
+                                    <a href="javascript:void(0);" class="news-link" data-id="${newsItem.id}">
                                         <div class="news-item__title">
                                             <div class="date">${formattedDate}</div>
                                             ${newsItem.title}
