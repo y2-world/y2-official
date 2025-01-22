@@ -374,16 +374,16 @@ body {
     color: gray;
 }
 
-.topic {
+.top {
     font-size: 11px;
     color: gray;
 }
 
-.topic-title {
+.top-title {
     font-size: 13px;
 }
 
-.home-radio .topic {
+.home-radio .top {
     font-size: 11px;
     color: black;
 }
@@ -551,7 +551,7 @@ img {
 }
 
 .album-container .text,
-.album-container .topic {
+.album-container .top {
     text-align: center;
 }
 
@@ -575,21 +575,21 @@ li .active {
     opacity: 0.4;
 }
 
-.topic-menu {
+.top-menu {
     display: flex;
     justify-content: flex-start;
     list-style: none;
 }
 
 
-.topic-more {
+.top-more {
     color: gray;
     font-size: 14px;
     text-align: center;
     padding-top: 30px;
 }
 
-.topic-more a:hover {
+.top-more a:hover {
     color: black;
 }
 
@@ -966,7 +966,7 @@ h2 {
         text-align: center;
     }
 
-    .topic-list {
+    .top-list {
         flex-direction: row;
         flex-wrap: nowrap;
         padding-left: 0px;
@@ -1073,12 +1073,12 @@ h2 {
         text-align: center;
     }
 
-    .topic {
+    .top {
         font-size: 11px;
         /* padding: 0px 25px; */
     }
 
-    .topic-more {
+    .top-more {
         font-size: 11px;
         text-align: center;
         padding-right: 0px;
