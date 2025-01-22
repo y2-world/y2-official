@@ -48,10 +48,10 @@
         <div class="popup-content">
             <span class="close-btn">&times;</span>
             <div class="news-item">
-                <div id="popup-title" style="padding-right: 10px;"><div>
-                <small class="date" id="popup-date"></small>
+                <div id="popup-title" style="padding-right: 10px;"></div> <!-- タグを修正 -->
+                <small class="date" id="popup-date"></small> <!-- 日付を表示 -->
                 <hr>
-                <div class="text" id="popup-text"></div>
+                <div class="text" id="popup-text"></div> <!-- テキストを表示 -->
             </div>
         </div>
     </div>
