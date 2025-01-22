@@ -353,7 +353,7 @@ video {
 
 .cover img {
     height: 120vh;
-    width: 100vw;
+    width: 100%;
 }
 
 body {
@@ -367,11 +367,6 @@ body {
 .text {
     font-size: 12px;
     color: black;
-}
-
-.music_date {
-    font-size: 10px;
-    color: gray;
 }
 
 .music-item__gray {
@@ -388,15 +383,10 @@ a:hover {
     color: gray;
 }
 
-
 .date {
     color: gray;
     font-size: 11px;
     padding-left: 0px;
-}
-
-.hour {
-    font-size: 12px;
 }
 
 .prof_img {
@@ -494,9 +484,6 @@ img {
     font-size: 13px;
     padding: 10px;
 }
-
-
-
 
 .modal-img {
     padding: 10px 30px 30px 30px;

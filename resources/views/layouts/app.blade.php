@@ -20,7 +20,7 @@
     <div class="nav">
         <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
             <a class="navbar-brand" href="{{ url('/') }}">Yuki Official
-                <span class="logo">Yuki Yoshida Official Website</a>
+                <span class="logo">Yuki Yoshida Official Website</span></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <div class="navbar-toggler-icon"></div>
@@ -56,7 +56,6 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('/#radio') }}">&emsp;Radio</a>
-                    </li>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('/setlists') }}">&emsp;Set Lists</a>
@@ -99,6 +98,7 @@
 </div>
 <div class="header_space"></div>
 @yield('content')
+</html>
 {{-- <footer id='footer'>
     <footer class="text-left bg-dark text-white">
         <div class="footer-main">
