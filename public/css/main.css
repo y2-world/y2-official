@@ -858,6 +858,10 @@ h2 {
     transform: translate(-50%, -50%) scale(1);
 }
 
+.popup-title {
+    padding-right: 5px;
+}
+
 .popup-content {
     position: relative; /* 子要素（クローズボタン）の位置調整用 */
     max-height: 80vh; /* スクロール可能領域を維持 */
