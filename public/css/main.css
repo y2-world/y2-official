@@ -858,7 +858,7 @@ h2 {
     transform: translate(-50%, -50%) scale(1);
 }
 
-.popup-title {
+h4 .news-item {
     padding-right: 5px;
 }
 
