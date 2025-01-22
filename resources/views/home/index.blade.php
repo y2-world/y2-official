@@ -90,7 +90,6 @@
             </div>
         </div>
     </div>
-    </div>
 
     <div class="index-wrapper" id="profile" style="padding-top:100px">
         <div class="container">
@@ -114,6 +113,7 @@
                                         <hr>
                                         <p class="profile-text">{!! nl2br(e($profile->text)) !!}</p>
                                         <hr>
+                                    </div>
                                 @endforeach
                             @endif
                         </div>
@@ -122,7 +122,6 @@
             </div>
             <br>
         </div>
-    </div>
     </div>
 
     <div class="index-wrapper" id="radio" style="padding-top:100px">
