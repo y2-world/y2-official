@@ -48,7 +48,7 @@
         <div class="popup-content">
             <span class="close-btn">&times;</span>
             <div class="news-item">
-                <div id="popup-title" style="padding-right: 10px;"></h4>
+                <div id="popup-title" style="padding-right: 10px;"><div>
                 <small class="date" id="popup-date"></small>
                 <hr>
                 <div class="text" id="popup-text"></div>
