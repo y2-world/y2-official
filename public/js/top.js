@@ -137,10 +137,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                     <a href="/music/${musicItem.id}">
                                         <img src="https://res.cloudinary.com/hqrgbxuiv/${musicItem.image}" class="album-image">
                                     </a>
-                                    <div class="topic">
+                                    <div class="top">
                                         <a href="/music/${musicItem.id}">${musicItem.title}</a>
                                     </div>
-                                    <p class="topic">
+                                    <p class="top">
                                         ${musicItem.subtitle}<br>${formattedDate}
                                     </p>
                                 </div>`;
