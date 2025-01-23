@@ -15,27 +15,31 @@
                                 <div class="modal-img">
                                     @if (!empty($discos->url))
                                         <a href="{{ $discos->url }}">
-                                            <img src="{{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $discos->image) }}" class="disco-image" style="width: 100%;">
+                                            <img src="{{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $discos->image) }}"
+                                                class="disco-image" style="width: 100%;">
                                             <div class="listen-text">LISTEN</div>
                                         </a>
                                     @elseif (!empty($discos->image))
-                                        <img src="{{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $discos->image) }}" class="disco-image no-hover" style="width: 100%;">
+                                        <img src="{{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $discos->image) }}"
+                                            class="disco-image no-hover" style="width: 100%;">
                                         <div class="listen-text">COMING SOON</div>
                                     @endif
                                 </div>
-                            </div>                            
+                            </div>
                             @if (!empty($discos->tracklist))
                                 <div class="col-xl-6">
-                                    <div class=track-list>
+                                    <div class=track-list id="music-container">
                                         <ol>
                                             @foreach ($discos->tracklist as $data)
                                                 @if (isset($data['id']) && isset($data['exception']))
-                                                    <li><a
-                                                            href="{{ url('lyrics', $data['id']) }}">{{ $data['exception'] }}</a>
+                                                    <li>
+                                                        <a href="javascript:void(0);" class="music-link"
+                                                            data-id="{{ $data['id'] }}">{{ $data['exception'] }}</a>
                                                     </li>
                                                 @elseif(isset($data['id']))
-                                                    <li><a
-                                                            href="{{ url('lyrics', $data['id']) }}">{{ $lyrics[$data['id'] - 1]['title'] }}</a>
+                                                    <li>
+                                                        <a href="javascript:void(0);" class="music-link"
+                                                            data-id="{{ $data['id'] }}">{{ $lyrics[$data['id'] - 1]['title'] }}</a>
                                                     </li>
                                                 @elseif(isset($data['exception']))
                                                     <li>{{ $data['exception'] }}</li>
@@ -62,5 +66,16 @@
             </div>
         </div>
     </div>
+
+    <div id="overlay" class="overlay"></div>
+    <div id="lyrics-popup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn">&times;</span>
+            <div class="lyrics-item">
+                <h4 id="popup-title" style="padding-right: 10px;"></h4> <!-- タグを修正 -->
+                <hr>
+                <p class="text" id="popup-lyrics"></p> <!-- テキストを表示 -->
+            </div>
+        </div>
     </div>
 @endsection

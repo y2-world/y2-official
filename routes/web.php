@@ -10,6 +10,7 @@ use App\Http\Controllers\LiveController;
 use App\Http\Controllers\BioController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\LyricController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,7 +72,7 @@ Route::resource('music', 'DiscoController');
 // Route::resource('single', 'DiscoSingleController');
 // Route::resource('album', 'DiscoAlbumController');
 // Route::resource('radio', 'RadioController');
-Route::resource('lyrics', 'LyricController');
+// Route::resource('lyrics', 'LyricController');
 Route::resource('/', 'HomeController');
 // Route::resource('/home', 'HomeController');
 Route::get('/find', [SongController::class, 'search']);
@@ -80,3 +81,4 @@ Route::get('/find', [SongController::class, 'search']);
 Route::get('/top/news', [HomeController::class, 'getAllNews'])->name('news.all');
 Route::get('/top/music', [HomeController::class, 'getAllMusic'])->name('music.all');
 Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
+Route::get('/lyrics/{id}', [LyricController::class, 'show'])->name('lyric.show');

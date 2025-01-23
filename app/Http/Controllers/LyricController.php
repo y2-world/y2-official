@@ -15,11 +15,11 @@ class LyricController extends Controller
      */
     public function index()
     {
-        $lyrics = Lyric::orderBy('id', 'asc')
-        ->paginate(10);
-        $discos = Disco::orderBy('id', 'asc')
-        ->get();
-        return view('lyrics.index', compact('lyrics','discos'));
+        // $lyrics = Lyric::orderBy('id', 'asc')
+        // ->paginate(10);
+        // $discos = Disco::orderBy('id', 'asc')
+        // ->get();
+        // return view('lyrics.index', compact('lyrics','discos'));
     }
 
     /**
@@ -51,11 +51,17 @@ class LyricController extends Controller
      */
     public function show($id)
     {
-        $lyrics = Lyric::find($id);
-        $previous = Lyric::where('id', '<', $lyrics->id)->orderBy('id', 'desc')->first();
-        $next = Lyric::where('id', '>', $lyrics->id)->orderBy('id')->first();
+        // $lyrics = Lyric::find($id);
+        // $previous = Lyric::where('id', '<', $lyrics->id)->orderBy('id', 'desc')->first();
+        // $next = Lyric::where('id', '>', $lyrics->id)->orderBy('id')->first();
         
-        return view('lyrics.show', compact('lyrics', 'previous', 'next'));
+        // return view('lyrics.show', compact('lyrics', 'previous', 'next'));
+
+        $lyrics = Lyric::findOrFail($id);
+        return response()->json([
+            'title' => $lyrics->title,
+            'lyrics' => nl2br(e($lyrics->lyrics)), // 改行を <br> に変換して HTML エスケープ
+        ]);
     }
 
     /**
