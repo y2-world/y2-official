@@ -842,11 +842,11 @@ h2 {
     border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     z-index: 1000;
-    padding: 20px;
+    /* padding: 20px; */
     max-width: 500px;
     width: 90%;
-    max-height: 80vh; /* 全体の高さを80%に制限 */
-    overflow: hidden; /* 内容があふれた場合に隠す */
+    max-height: 70vh; /* 全体の高さを80%に制限 */
+    overflow: auto; /* 内容があふれた場合に隠す */
     opacity: 0;
     visibility: hidden;
     transition: transform 0.3s ease, opacity 0.3s ease;
