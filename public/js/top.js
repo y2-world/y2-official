@@ -182,12 +182,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const popupDate = document.getElementById('popup-date');
     const popupText = document.getElementById('popup-text');
     const closeBtn = document.querySelector('.close-btn');
+    const newsContainer = document.getElementById('news-container');
 
-    document.querySelectorAll('.news-link').forEach(link => {
-        link.addEventListener('click', function (e) {
+    // 動的要素にも適用するためのイベントデリゲーション
+    newsContainer.addEventListener('click', function (e) {
+        if (e.target.closest('.news-link')) {
             e.preventDefault();
-
-            const newsId = this.getAttribute('data-id');
+            const newsLink = e.target.closest('.news-link');
+            const newsId = newsLink.getAttribute('data-id');
 
             fetch(`/news/${newsId}`)
                 .then(response => response.json())
@@ -203,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     // データをポップアップにセット
                     popupTitle.textContent = data.title;
-                    popupDate.textContent = formattedDate; // 整形した日付をセット
+                    popupDate.textContent = formattedDate;
                     popupText.innerHTML = data.text;
 
                     // ポップアップを表示
@@ -213,9 +215,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 .catch(error => {
                     console.error('エラーが発生しました:', error);
                 });
-        });
+        }
     });
 
+    // ポップアップを閉じる
     closeBtn.addEventListener('click', closePopup);
     overlay.addEventListener('click', closePopup);
 
