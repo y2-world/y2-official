@@ -345,7 +345,6 @@ video {
     margin: 0;
     padding: 0;
     color: white;
-    z-index: 1200; /* ヘッダーより大きい値を設定 */
 }
 
 .cover {
@@ -843,7 +842,7 @@ h2 {
     border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     z-index: 1000;
-    padding: 20px;
+    /* padding: 20px; */
     max-width: 500px;
     width: 90%;
     max-height: 90vh;
@@ -851,6 +850,7 @@ h2 {
     opacity: 0;
     visibility: hidden;
     transition: transform 0.3s ease, opacity 0.3s ease;
+    z-index: 1200; /* ヘッダーより大きい値を設定 */
 }
 
 .popup.open {
