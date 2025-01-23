@@ -74,14 +74,6 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
     const viewAllBtn = document.getElementById("view-all-music-btn");
     const musicContainer = document.getElementById("music-container");
-
-    if (!musicContainer) {
-        console.error(
-            "Error: 'music-container' element is not found in the DOM."
-        );
-        return;
-    }
-
     const newsUrl = "/top/music"; // 必ず正しいURLを設定
 
     // Media query を設定
