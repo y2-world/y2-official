@@ -903,6 +903,10 @@ h2 {
     table.songs {
         width: 95%;
     }
+
+    .album-detail {
+        padding-top: 30px;
+    }
 }
 
 @media (min-width: 992px) {
