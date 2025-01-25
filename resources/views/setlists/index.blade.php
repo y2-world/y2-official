@@ -11,7 +11,6 @@
             <div class="dropdown-wrapper">
                 <select name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Artists</option>
-                    <option value="">アーティスト指定なし</option>
                     @foreach ($artists as $artist)
                         <option value="{{ url('/setlists/artists', $artist->id) }}">{{ $artist->name }}</option>
                     @endforeach
