@@ -13,17 +13,8 @@
                         <div class="row">
                             <div class="col-xl-6">
                                 <div class="modal-img">
-                                    @if (!empty($discos->url))
-                                        <a href="{{ $discos->url }}">
-                                            <img src="{{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $discos->image) }}"
-                                                class="disco-image" style="width: 100%;">
-                                            <div class="listen-text">LISTEN</div>
-                                        </a>
-                                    @elseif (!empty($discos->image))
-                                        <img src="{{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $discos->image) }}"
-                                            class="disco-image no-hover" style="width: 100%;">
-                                        <div class="listen-text">COMING SOON</div>
-                                    @endif
+                                    <img src="{{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $discos->image) }}"
+                                        style="width: 100%;">
                                 </div>
                             </div>
                             @if (!empty($discos->tracklist))
@@ -46,6 +37,11 @@
                                                 @endif
                                             @endforeach
                                         </ol>
+                                        @if (!empty($discos->url))
+                                            <div class="show_button">
+                                                <a class="btn btn-outline-dark" href="{{ $discos->url }}">Streaming</a>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             @endif
@@ -54,8 +50,7 @@
                             {{-- @if (isset($previous))
                             <a class="btn btn-outline-dark" href="{{ route('music.show', $previous->id)}}" rel="prev" role="button"><</a>
                             @endif --}}
-                            <a class="btn btn-outline-dark"　href="#"
-                                onclick="window.history.back(); return false;">BACK</a>
+                            <a href="#" onclick="window.history.back(); return false;"> <i class="fa-solid fa-arrow-left fa-lg"></i></a>
                             {{-- <a class="btn btn-outline-dark" href="{{ route('music.index')}}" rel="prev" role="button">BACK</a> --}}
                             {{-- @if (isset($next))
                             <a class="btn btn-outline-dark" href="{{ route('music.show', $next->id)}}"rel="next" role="button">></a>

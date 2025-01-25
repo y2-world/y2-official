@@ -489,17 +489,8 @@ img {
     overflow: hidden;
 }
 
-.modal-img img {
-    width: 100%;
-    transition: opacity 0.3s ease;
-}
-
 .no-hover {
     pointer-events: none; /* URLが存在しない場合にホバーエフェクトを無効にする */
-}
-
-.modal-img:hover img {
-    opacity: 0.5;
 }
 
 .listen-text {
