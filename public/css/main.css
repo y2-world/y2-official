@@ -790,7 +790,7 @@ h2 {
     display: block; /* リンク全体をクリック可能に */
     padding: 15px; /* 枠内の余白 */
     border: 1px solid transparent; /* 初期状態で枠を透明に */
-    transition: border-color 0.3s, box-shadow 0.3s; /* スムーズな変化 */
+    transition: border-color 0.2s, box-shadow 0.2s; /* スムーズな変化 */
 }
 
 /* マウスホバー時 */
