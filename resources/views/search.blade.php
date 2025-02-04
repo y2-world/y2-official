@@ -11,7 +11,7 @@
             <div class="mb_dropdown">
                 @if (isset($artist_id)) 
                     <select name="artist_id" data-toggle="select">
-                        <option value="">アーティスト指定なし</option>
+                        <option value="">(No Artist Selected)</option>
                         <?php $artist_name = $artists[$artist_id - 1]['name']; ?>
                         @foreach ($artists as $artist)
                             @if($artist->name !== $artist_name)
@@ -23,7 +23,7 @@
                     </select>
                 @else
                     <select name="artist_id" data-toggle="select">
-                        <option value="">アーティスト指定なし</option>
+                        <option value="">(No Artist Selected)</option>
                         @foreach ($artists as $artist)
                             <option value="{{ $artist->id }}">{{$artist->name}}</option>
                         @endforeach
