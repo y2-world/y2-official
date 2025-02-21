@@ -181,7 +181,7 @@
                     @if (isset($previous))
                         <a class="btn btn-outline-dark" href="{{ route('setlists.show', $previous->id) }}" rel="prev"
                             role="button">
-                            << /a>
+                            <</a>
                     @endif
                     @if (isset($next))
                         <a class="btn btn-outline-dark" href="{{ route('setlists.show', $next->id) }}"rel="next"
