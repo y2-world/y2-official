@@ -13,80 +13,118 @@
                 <div class="setlist_info">
                     {{ date('Y.m.d', strtotime($setlists->date)) }}
                     <br>
-                    <a href="{{ url('/venue?keyword='.urlencode($setlists->venue)) }}">{{ $setlists->venue }}</a>
+                    <a href="{{ url('/venue?keyword=' . urlencode($setlists->venue)) }}">{{ $setlists->venue }}</a>
                 </div>
                 <hr>
-                    @if ($setlists->fes == 0)
+                @if ($setlists->fes == 0)
                     <ol class="setlist">
                         @foreach ($setlists->setlist as $data)
                             @if (isset($data['#']))
                                 @if ($data['#'] === '-')
-                                    {{ $data['#'] }} <a href="{{ url('/search?artist_id='.$setlists->artist_id.'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a><br>
+                                    {{ $data['#'] }} <a
+                                        href="{{ url('/search?artist_id=' . $setlists->artist_id . '&keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a><br>
                                 @else
-                                <li><a href="{{ url('/search?artist_id='.$setlists->artist_id.'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li>
+                                    <li><a
+                                            href="{{ url('/search?artist_id=' . $setlists->artist_id . '&keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a>
+                                    </li>
                                 @endif
                             @else
-                                <li><a href="{{ url('/search?artist_id='.$setlists->artist_id.'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li>
+                                <li><a
+                                        href="{{ url('/search?artist_id=' . $setlists->artist_id . '&keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a>
+                                </li>
                             @endif
                         @endforeach
                         @if (isset($setlists->encore))
                             <hr width="250">
                             @foreach ((array) $setlists->encore as $data)
-                            <li><a href="{{ url('/search?artist_id='.$setlists->artist_id.'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li>
+                                @if (isset($data['#']))
+                                    @if ($data['#'] === '-')
+                                        {{ $data['#'] }} <a
+                                            href="{{ url('/search?artist_id=' . $setlists->artist_id . '&keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a><br>
+                                    @else
+                                        <li><a
+                                                href="{{ url('/search?artist_id=' . $setlists->artist_id . '&keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a>
+                                        </li>
+                                    @endif
+                                @else
+                                    <li><a
+                                            href="{{ url('/search?artist_id=' . $setlists->artist_id . '&keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a>
+                                    </li>
+                                @endif
                             @endforeach
                         @endif
                     </ol>
-                    @elseif($setlists->fes == 1)
-                        @foreach ((array) $setlists->fes_setlist as $key => $data)
-                            @if (isset($data['artist']))
-                                @if ($key != 0)
-                                    @if ($setlists->fes_setlist[$key]['artist'] != $setlists->fes_setlist[$key - 1]['artist'])
+                @elseif($setlists->fes == 1)
+                    @foreach ((array) $setlists->fes_setlist as $key => $data)
+                        @if (isset($data['artist']))
+                            @if ($key != 0)
+                                @if ($setlists->fes_setlist[$key]['artist'] != $setlists->fes_setlist[$key - 1]['artist'])
                                     </ol>
                                     <ol class="setlist">
                                         {{-- {{ $artists[$data['artist'] - 1]['name'] }}<br> --}}
-                                        <a href="{{ url('/setlists/artists', $data['artist']) }}">{{ $artists[$data['artist'] - 1]['name'] }}</a><br>
-                                        <li><a href="{{ url('/search?artist_id='.$data['artist'].'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li>
+                                        <a
+                                            href="{{ url('/setlists/artists', $data['artist']) }}">{{ $artists[$data['artist'] - 1]['name'] }}</a><br>
+                                        <li><a
+                                                href="{{ url('/search?artist_id=' . $data['artist'] . '&keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a>
+                                        </li>
                                     @else
-                                    <li><a href="{{ url('/search?artist_id='.$data['artist'].'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li>
-                                    @endif
-                                @else
-                                <ol class="setlist">
-                                    <a href="{{ url('/setlists/artists', $data['artist']) }}">{{ $artists[$data['artist'] - 1]['name'] }}</a><br>
-                                    <li><a href="{{ url('/search?artist_id='.$data['artist'].'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li>
+                                        <li><a
+                                                href="{{ url('/search?artist_id=' . $data['artist'] . '&keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a>
+                                        </li>
                                 @endif
                             @else
-                            <li><a href="{{ url('/search?artist_id='.$data['artist'].'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li>
+                                <ol class="setlist">
+                                    <a
+                                        href="{{ url('/setlists/artists', $data['artist']) }}">{{ $artists[$data['artist'] - 1]['name'] }}</a><br>
+                                    <li><a
+                                            href="{{ url('/search?artist_id=' . $data['artist'] . '&keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a>
+                                    </li>
+                            @endif
+                        @else
+                            <li><a
+                                    href="{{ url('/search?artist_id=' . $data['artist'] . '&keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a>
+                            </li>
+                            </ol>
+                        @endif
+                    @endforeach
+                    </ol>
+
+                    @if (isset($setlists->fes_encore))
+                        <hr width="250">
+                        @foreach ((array) $setlists->fes_encore as $key => $data)
+                            @if (isset($data['artist']))
+                                @if ($key != 0)
+                                    @if ($setlists->fes_encore[$key]['artist'] != $setlists->fes_encore[$key - 1]['artist'])
+                                        </ol>
+                                        <ol class="setlist">
+                                            <a
+                                                href="{{ url('/setlists/artists', $data['artist']) }}">{{ $artists[$data['artist'] - 1]['name'] }}</a><br>
+                                            <li><a
+                                                    href="{{ url('/search?artist_id=' . $data['artist'] . '&keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a>
+                                            </li>
+                                        @else
+                                            <li><a
+                                                    href="{{ url('/search?artist_id=' . $data['artist'] . '&keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a>
+                                            </li>
+                                    @endif
+                                @else
+                                    <ol class="setlist">
+                                        <a
+                                            href="{{ url('/setlists/artists', $data['artist']) }}">{{ $artists[$data['artist'] - 1]['name'] }}</a><br>
+                                        <li><a
+                                                href="{{ url('/search?artist_id=' . $data['artist'] . '&keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a>
+                                        </li>
+                                @endif
+                            @else
+                                <li><a
+                                        href="{{ url('/search?artist_id=' . $data['artist'] . '&keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a>
+                                </li>
                                 </ol>
                             @endif
                         @endforeach
-                        </ol>
-                    
-                        @if (isset($setlists->fes_encore))
-                            <hr width="250">
-                            @foreach ((array) $setlists->fes_encore as $key => $data)
-                                @if (isset($data['artist']))
-                                    @if ($key != 0)
-                                        @if ($setlists->fes_encore[$key]['artist'] != $setlists->fes_encore[$key - 1]['artist'])
-                                            </ol>
-                                            <ol class="setlist">
-                                                <a href="{{ url('/setlists/artists', $data['artist']) }}">{{ $artists[$data['artist'] - 1]['name'] }}</a><br>
-                                                <li><a href="{{ url('/search?artist_id='.$data['artist'].'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li>
-                                        @else
-                                        <li><a href="{{ url('/search?artist_id='.$data['artist'].'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li>
-                                        @endif
-                                    @else
-                                        <ol class="setlist">
-                                            <a href="{{ url('/setlists/artists', $data['artist']) }}">{{ $artists[$data['artist'] - 1]['name'] }}</a><br>
-                                            <li><a href="{{ url('/search?artist_id='.$data['artist'].'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li>
-                                    @endif
-                                @else
-                                <li><a href="{{ url('/search?artist_id='.$data['artist'].'&keyword='.urlencode($data['song'])) }}">{{ $data['song'] }}</a></li> 
-                                    </ol>
-                                @endif
-                            @endforeach
-                        @endif
-                        @elseif($setlists->fes == 2)
-                        <ol class="setlist">
+                    @endif
+                @elseif($setlists->fes == 2)
+                    <ol class="setlist">
                         @foreach ((array) $setlists->fes_setlist as $key => $data)
                             @if (isset($data['corner']))
                                 @if ($key != 0)
@@ -128,7 +166,8 @@
                                             <li> {{ $data['song'] }}</li>
                                         @endif
                                     @else
-                                    <a href="{{ url('/setlists/artists', $data['artist'] - 1) }}">{{ $artists[$data['artist'] - 1]['name'] }}</a><br><br>
+                                        <a
+                                            href="{{ url('/setlists/artists', $data['artist'] - 1) }}">{{ $artists[$data['artist'] - 1]['name'] }}</a><br><br>
                                         <li> {{ $data['song'] }}</li>
                                     @endif
                                 @else
@@ -136,13 +175,13 @@
                                 @endif
                             @endforeach
                         @endif
-                        </ol>
-                    @endif
+                    </ol>
+                @endif
                 <div class="show_button">
                     @if (isset($previous))
-                        <a class="btn btn-outline-dark" href="{{ route('setlists.show', $previous->id) }}"
-                            rel="prev" role="button">
-                            <</a>
+                        <a class="btn btn-outline-dark" href="{{ route('setlists.show', $previous->id) }}" rel="prev"
+                            role="button">
+                            << /a>
                     @endif
                     @if (isset($next))
                         <a class="btn btn-outline-dark" href="{{ route('setlists.show', $next->id) }}"rel="next"
