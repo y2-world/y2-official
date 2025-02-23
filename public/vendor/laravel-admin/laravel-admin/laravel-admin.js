@@ -12,7 +12,7 @@ $.fn.editable.defaults.error = function (data) {
             msg += v + "\n";
         });
     }
-    return msg
+    return msg;
 };
 
 toastr.options = {
@@ -24,24 +24,30 @@ toastr.options = {
 
 $.pjax.defaults.timeout = 5000;
 $.pjax.defaults.maxCacheLength = 0;
+$.pjax.defaults.push = false; // pushStateを無効化
+
 $(document).pjax('a:not(a[target="_blank"])', {
     container: '#pjax-container'
 });
 
-NProgress.configure({parent: '#app'});
+// HTTP → HTTPS の問題を修正
+$(document).on('pjax:send', function (event, xhr, options) {
+    options.url = options.url.replace(/^http:/, 'https:');
+});
+
+NProgress.configure({ parent: '#app' });
 
 $(document).on('pjax:timeout', function (event) {
     event.preventDefault();
-})
-
-$(document).on('submit', 'form[pjax-container]', function (event) {
-    $.pjax.submit(event, '#pjax-container')
 });
 
-$(document).on("pjax:popstate", function () {
+$(document).on('submit', 'form[pjax-container]', function (event) {
+    $.pjax.submit(event, '#pjax-container');
+});
 
-    $(document).one("pjax:end", function (event) {
-        $(event.target).find("script[data-exec-on-popstate]").each(function () {
+$(document).on('pjax:popstate', function () {
+    $(document).one('pjax:end', function (event) {
+        $(event.target).find('script[data-exec-on-popstate]').each(function () {
             $.globalEval(this.text || this.textContent || this.innerHTML || '');
         });
     });
@@ -51,7 +57,7 @@ $(document).on('pjax:send', function (xhr) {
     if (xhr.relatedTarget && xhr.relatedTarget.tagName && xhr.relatedTarget.tagName.toLowerCase() === 'form') {
         $submit_btn = $('form[pjax-container] :submit');
         if ($submit_btn) {
-            $submit_btn.button('loading')
+            $submit_btn.button('loading');
         }
     }
     NProgress.start();
@@ -61,11 +67,18 @@ $(document).on('pjax:complete', function (xhr) {
     if (xhr.relatedTarget && xhr.relatedTarget.tagName && xhr.relatedTarget.tagName.toLowerCase() === 'form') {
         $submit_btn = $('form[pjax-container] :submit');
         if ($submit_btn) {
-            $submit_btn.button('reset')
+            $submit_btn.button('reset');
         }
     }
     NProgress.done();
     $.admin.grid.selects = {};
+});
+
+// 404エラー時にリダイレクト
+$(document).on('pjax:error', function (event, xhr, textStatus, errorThrown, options) {
+    if (xhr.status === 404) {
+        window.location.href = options.url;
+    }
 });
 
 $(document).click(function () {
@@ -84,7 +97,6 @@ $(function () {
 
     $('[data-toggle="popover"]').popover();
 
-    // Sidebar form autocomplete
     $('.sidebar-form .autocomplete').on('keyup focus', function () {
         var $menu = $('.sidebar-form .dropdown-menu');
         var text = $(this).val();
@@ -109,16 +121,16 @@ $(function () {
         if (matched) {
             $menu.show();
         }
-    }).click(function(event){
+    }).click(function (event) {
         event.stopPropagation();
     });
 
-    $('.sidebar-form .dropdown-menu li a').click(function (){
+    $('.sidebar-form .dropdown-menu li a').click(function () {
         $('.sidebar-form .autocomplete').val($(this).text());
     });
 });
 
-$(window).scroll(function() {
+$(window).scroll(function () {
     if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
         $('#totop').fadeIn(500);
     } else {
@@ -128,11 +140,10 @@ $(window).scroll(function() {
 
 $('#totop').on('click', function (e) {
     e.preventDefault();
-    $('html,body').animate({scrollTop: 0}, 500);
+    $('html,body').animate({ scrollTop: 0 }, 500);
 });
 
 (function ($) {
-
     var Grid = function () {
         this.selects = {};
     };
@@ -150,7 +161,6 @@ $('#totop').on('click', function (e) {
         $.each(this.selects, function (key, val) {
             rows.push(key);
         });
-
         return rows;
     };
 
@@ -166,7 +176,7 @@ $('#totop').on('click', function (e) {
     };
 
     $.admin.redirect = function (url) {
-        $.pjax({container:'#pjax-container', url: url });
+        $.pjax({ container: '#pjax-container', url: url });
         $.admin.grid = new Grid();
     };
 
@@ -176,23 +186,20 @@ $('#totop').on('click', function (e) {
 
     $.admin.loadedScripts = [];
 
-    $.admin.loadScripts = function(arr) {
-        var _arr = $.map(arr, function(src) {
-
+    $.admin.loadScripts = function (arr) {
+        var _arr = $.map(arr, function (src) {
             if ($.inArray(src, $.admin.loadedScripts)) {
                 return;
             }
-
             $.admin.loadedScripts.push(src);
-
             return $.getScript(src);
         });
 
-        _arr.push($.Deferred(function(deferred){
+        _arr.push($.Deferred(function (deferred) {
             $(deferred.resolve);
         }));
 
         return $.when.apply($, _arr);
-    }
-
+    };
 })(jQuery);
+
