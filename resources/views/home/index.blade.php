@@ -48,10 +48,11 @@
         <div class="popup-content">
             <span class="close-btn">&times;</span>
             <div class="news-item">
-                <div id="popup-title" style="padding-right: 10px;"></div> <!-- タグを修正 -->
-                <small class="date" id="popup-date"></small> <!-- 日付を表示 -->
+                <div id="popup-title" style="padding-right: 10px; display: inline-block;"></div> <!-- タイトル -->
+                <small class="date" id="popup-date"></small> <!-- 日付 -->
                 <hr>
-                <div class="text" id="popup-text"></div> <!-- テキストを表示 -->
+                <div class="text" id="popup-text"></div> <!-- テキスト -->
+                <img class="image" width="100%"  style="padding-top: 10px;" id="popup-img"> <!-- 画像 -->
             </div>
         </div>
     </div>
@@ -179,3 +180,8 @@
         </div>
     </div>
 @endsection
+
+<!-- スクリプトの読み込み -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+<script src="{{ asset('/js/top.js?time=' . time()) }}"></script>

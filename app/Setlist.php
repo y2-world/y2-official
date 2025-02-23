@@ -44,4 +44,17 @@ class Setlist extends Model
     {   
         return $this->belongsTo(Artist::class, 'artist_id');
     }
+
+    protected $fillable = [
+        'artist_id', // ここに追加
+        'name',
+        'title',
+        'date',
+        'venue',
+        'setlist',
+        'encore',
+        'fes_setlist',
+        'fes_encore',
+        // 他のフィールドも必要に応じて追加
+    ];
 }

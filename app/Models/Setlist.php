@@ -11,5 +11,17 @@ class Setlist extends Model
     ];
 
     protected $dates = ['date'];
+
+     // 追加: 'name' を fillable プロパティに設定
+     protected $fillable = [
+        'artist_id', // ここに追加
+        'name',
+        'title',
+        'date',
+        'venue',
+        'setlist',
+        'encore',
+        // 他のフィールドも必要に応じて追加
+    ];
     
 }

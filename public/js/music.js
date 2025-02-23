@@ -37,10 +37,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ポップアップを閉じる
-    closeBtn.addEventListener('click', closePopup);
-    overlay.addEventListener('click', closePopup);
+    closeBtn.addEventListener('click', closeMusicPopup);
+    overlay.addEventListener('click', closeMusicPopup);
 
-    function closePopup() {
+    function closeMusicPopup() {
         popup.classList.remove('open');
         overlay.classList.remove('open');
     }

@@ -2,36 +2,31 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": [
-        "framework",
-        "laravel"
-    ],
+    "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^7.4",
-        "cloudinary-labs/cloudinary-laravel": "^1.0",
-        "doctrine/dbal": "2.*",
+        "php": "^8.2",
+        "cloudinary-labs/cloudinary-laravel": "^2.0",
         "encore/laravel-admin": "^1.8",
-        "fideloper/proxy": "^4.4",
-        "fruitcake/laravel-cors": "^2.0",
-        "guzzlehttp/guzzle": "^6.3.1|^7.0.1",
-        "jxlwqq/wang-editor2": "^1.0",
-        "laravel-admin-ext/wang-editor": "1.*",
-        "laravel/framework": "^7.29",
+        "filament/actions": "^3.2",
+        "filament/filament": "^3.2",
+        "fruitcake/laravel-cors": "dev-develop",
+        "illuminate/contracts": "^10.0",
+        "illuminate/support": "^10.0",
+        "laravel/framework": "^10.0",
         "laravel/tinker": "^2.5",
-        "laravel/ui": "^2.5"
+        "spatie/laravel-ignition": "^2.0"
     },
     "require-dev": {
-        "facade/ignition": "^2.0",
         "fakerphp/faker": "^1.9.1",
         "mockery/mockery": "^1.3.1",
-        "nunomaduro/collision": "^4.3",
         "phpunit/phpunit": "^8.5.8|^9.3.3"
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": []
     },
     "extra": {
         "laravel": {
@@ -60,6 +55,9 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "post-autoload-dump": [
+            "@php artisan filament:upgrade"
         ]
     }
 }

@@ -68,7 +68,7 @@
                             target="_blank">&emsp;Blog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/admin') }}" target="_blank">&emsp;Admin&emsp;</a>
+                        <a class="nav-link" href="{{ url('/filament') }}" target="_blank">&emsp;Admin&emsp;</a>
                     </li>
                     <li class="nav-item">
                         <div class="mb-sns-nav">
@@ -131,16 +131,6 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
 <script src="{{ asset('/js/search.js') }}"></script>
-
-<!-- スクリプトの読み込み -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
-<script src="{{ asset('/js/top.js?time=' . time()) }}"></script>
-
-<!-- スクリプトの読み込み -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
-<script src="{{ asset('/js/music.js?time=' . time()) }}"></script>
 
 <!-- Bootstrap scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"

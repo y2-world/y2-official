@@ -56,6 +56,7 @@ class NewsController extends Controller
             'title' => $news->title,
             'date' => $news->date,
             'text' => $news->text,
+            'image' => $news->image,
         ]);
     }
 
