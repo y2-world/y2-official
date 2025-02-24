@@ -32,7 +32,9 @@ $(document).pjax('a:not(a[target="_blank"])', {
 
 // HTTP → HTTPS の問題を修正
 $(document).on('pjax:send', function (event, xhr, options) {
-    options.url = options.url.replace(/^http:/, 'https:');
+    if (options.url.startsWith('http://')) {
+        options.url = options.url.replace(/^http:/, 'https:');
+    }
 });
 
 NProgress.configure({ parent: '#app' });
