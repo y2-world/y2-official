@@ -44,6 +44,13 @@ $(document).on('pjax:timeout', function (event) {
 });
 
 $(document).on('submit', 'form[pjax-container]', function (event) {
+    var form = $(this);
+    var action = form.attr('action');
+
+    if (action && action.startsWith('http://')) {
+        form.attr('action', action.replace(/^http:/, 'https:'));
+    }
+
     $.pjax.submit(event, '#pjax-container');
 });
 
