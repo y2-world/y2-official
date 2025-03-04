@@ -1,12 +1,4 @@
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
-@font-face {
-    font-family: "Noto Serif JP";
-    src: url("https://fonts.gstatic.com/s/notoserifjp/v25/-F6pfjptAgt5VM-kVkqdyU8n3kwuk6vx.woff2")
-        format("woff2");
-    font-weight: 400;
-    font-style: normal;
-}
-
 html {
     line-height: 1.15;
     -webkit-text-size-adjust: 100%;
@@ -383,7 +375,7 @@ body {
     text-align: center;
 }
 
-.news-item__title {
+.news-item__title{
     font-size: 13px;
 }
 
@@ -437,6 +429,7 @@ footer {
     transform: translateY(0px);
 }
 
+
 .sns a {
     padding-right: 5px;
     color: white;
@@ -480,6 +473,7 @@ img {
 .music-wrapper {
     position: relative;
 }
+
 
 .track-list {
     font-size: 13px;
@@ -528,6 +522,7 @@ img {
 .album-container-header {
     padding-top: 10px;
 }
+
 
 .music-menu {
     display: flex;
@@ -585,6 +580,8 @@ table {
 .setlist {
     font-size: 13px;
 }
+
+
 
 .show_button {
     padding-top: 30px;
@@ -737,11 +734,11 @@ th {
 }
 
 .td_date {
-    white-space: nowrap;
+    white-space:nowrap
 }
 
 .pc_venue {
-    white-space: nowrap;
+    white-space:nowrap
 }
 
 .schedule-text {
@@ -804,8 +801,7 @@ h2 {
     background-color: #f9f9f9; /* 背景色を少し変える */
     color: inherit; /* 文字色を継承 */
 }
-#view-all-news-btn[disabled],
-#view-all-music-btn[disabled] {
+#view-all-news-btn[disabled], #view-all-music-btn[disabled] {
     pointer-events: none;
     opacity: 0.6;
 }
@@ -893,6 +889,7 @@ h2 {
 }
 
 @media (min-width: 1024px) {
+
     .column1,
     .column2-bio {
         width: 50%;
@@ -1005,14 +1002,15 @@ h2 {
         font-size: 20px;
     }
 
+
     .profile-info {
         text-align: center;
     }
 
-    .pc,
-    .pc_venue {
+    .pc, .pc_venue {
         display: none;
     }
+
 
     .parts-wrapper {
         display: flex;
@@ -1051,6 +1049,7 @@ h2 {
         margin: 0 auto;
     }
 
+
     .text {
         padding-top: 10px;
         font-size: 10px;
@@ -1074,6 +1073,7 @@ h2 {
         text-align: center;
     }
 
+
     .sns a {
         padding: 5px;
     }
@@ -1087,6 +1087,7 @@ h2 {
         padding-top: 5px;
         font-size: 7px;
     }
+
 
     .music-header {
         text-align: center;
@@ -1102,6 +1103,7 @@ h2 {
         text-align: center;
         padding-right: 0px;
     }
+
 
     .setlist {
         font-size: 13px;

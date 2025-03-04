@@ -8,11 +8,9 @@
     <title>Yuki Official</title>
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Oswald&family=Shippori+Mincho&display=swap"
-        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Oswald&family=Shippori+Mincho&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/e47a10189c.js" crossorigin="anonymous"></script>
