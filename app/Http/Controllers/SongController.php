@@ -19,11 +19,11 @@ class SongController extends Controller
     public function index()
     {
         $songs = Song::orderBy('id', 'asc')
-        ->paginate(10);
+            ->paginate(10);
         $albums = Album::orderBy('id', 'asc')
-        ->get();
+            ->get();
         $bios = Bio::orderBy('id', 'asc')
-        ->get();
+            ->get();
         return view('songs.index', compact('albums', 'songs', 'bios'));
     }
 
@@ -58,20 +58,29 @@ class SongController extends Controller
     {
         $songs = Song::find($id);
         $allSongs = Song::orderBy('id', 'asc')
-        ->get();
+            ->get();
         $albums = Album::orderBy('id', 'asc')
-        ->get();
+            ->get();
         $singles = Single::orderBy('id', 'asc')
-        ->get();
-        $tours = Tour::whereRaw("JSON_EXTRACT(setlist1, '$.*.id') REGEXP '\"$id\"'")
-        ->orWhereRaw("JSON_EXTRACT(setlist2, '$.*.id') REGEXP '\"$id\"'")
-        ->orWhereRaw("JSON_EXTRACT(setlist3, '$.*.id') REGEXP '\"$id\"'")
-        ->orderBy('date1', 'desc')
-        ->get();
+            ->get();
+        $tours = Tour::whereRaw("
+        JSON_EXTRACT(setlist1, '$.*.id') REGEXP '\"$id\"' 
+        OR JSON_SEARCH(setlist1, 'one', ?, '$[*].id') IS NOT NULL
+    ", [$id])
+            ->orWhereRaw("
+        JSON_EXTRACT(setlist2, '$.*.id') REGEXP '\"$id\"' 
+        OR JSON_SEARCH(setlist2, 'one', ?, '$[*].id') IS NOT NULL
+    ", [$id])
+            ->orWhereRaw("
+        JSON_EXTRACT(setlist3, '$.*.id') REGEXP '\"$id\"' 
+        OR JSON_SEARCH(setlist3, 'one', ?, '$[*].id') IS NOT NULL
+    ", [$id])
+            ->orderBy('date1', 'desc')
+            ->get();
 
         $previous = Song::where('id', '<', $songs->id)->orderBy('id', 'desc')->first();
         $next = Song::where('id', '>', $songs->id)->orderBy('id')->first();
-        
+
         return view('songs.show', compact('songs', 'allSongs', 'previous', 'next', 'albums', 'singles', 'tours'));
     }
 
@@ -110,10 +119,10 @@ class SongController extends Controller
     }
 
     public function search(Request $request)
-    {   
+    {
         $query = $request->input('q');
         $songs = Song::where('title', 'LIKE', "%{$query}%")->get(['id', 'title']);
-        
+
         return response()->json($songs);
     }
 }
