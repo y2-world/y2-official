@@ -64,17 +64,14 @@ class SongController extends Controller
         $singles = Single::orderBy('id', 'asc')
             ->get();
         $tours = Tour::whereRaw("
-            JSON_CONTAINS(setlist1, CAST(? AS JSON), '$[*].id')
-            OR JSON_CONTAINS(setlist1, CAST(? AS JSON), '$.*.id')
-        ", [json_encode($id), json_encode($id)])
+            JSON_EXTRACT(setlist1, '$[*].id') REGEXP ?
+        ", ['"' . $id . '"'])
             ->orWhereRaw("
-            JSON_CONTAINS(setlist2, CAST(? AS JSON), '$[*].id')
-            OR JSON_CONTAINS(setlist2, CAST(? AS JSON), '$.*.id')
-        ", [json_encode($id), json_encode($id)])
+            JSON_EXTRACT(setlist2, '$[*].id') REGEXP ?
+        ", ['"' . $id . '"'])
             ->orWhereRaw("
-            JSON_CONTAINS(setlist3, CAST(? AS JSON), '$[*].id')
-            OR JSON_CONTAINS(setlist3, CAST(? AS JSON), '$.*.id')
-        ", [json_encode($id), json_encode($id)])
+            JSON_EXTRACT(setlist3, '$[*].id') REGEXP ?
+        ", ['"' . $id . '"'])
             ->orderBy('date1', 'desc')
             ->get();
 
