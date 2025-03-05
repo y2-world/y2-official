@@ -42,7 +42,6 @@ class SetlistController extends AdminController
         $grid->filter(function($filter){
             $filter->like('artist', 'アーティスト');
             $filter->like('title', 'ツアータイトル');
-            $filter->year('date', '年');
             $filter->equal('fes', 'フェス')->radio([
                 ''   => 'All',
                 0    => 'ライブ',
@@ -75,7 +74,6 @@ class SetlistController extends AdminController
         });
         $show->field('title', __('ツアータイトル'));
         $show->field('date', __('公演日'));
-        $show->field('year', __('年'));
         $show->field('venue', __('会場'));
         $show->field('setlist', __('本編'))->unescape()->as(function ($setlist) {
             $result1 = [];
@@ -125,7 +123,6 @@ class SetlistController extends AdminController
         $form->select('artist_id', __('アーティスト'))->options(Artist::all()->pluck('name', 'id'));
         $form->text('title', __('ツアータイトル'))->rules('required');
         $form->date('date', __('公演日'))->default(date('Y-m-d'))->rules('required');
-        $form->select('year', __('年'))->options(Year::pluck('year', 'year'))->rules('required');
         $form->text('venue', __('会場'))->rules('required');
         $form->radio('fes','ライブ形態')
         ->options([
