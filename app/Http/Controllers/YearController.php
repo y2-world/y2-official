@@ -17,9 +17,9 @@ class YearController extends Controller
     public function index()
     {
         $years = Year::orderBy('id', 'asc')
-        ->paginate(10);
+            ->paginate(10);
         $artists = Artist::orderBy('id', 'asc')->where('visible', 0)
-        ->get();
+            ->get();
         return view('years.index', compact('artists', 'years'));
     }
 
@@ -54,19 +54,21 @@ class YearController extends Controller
     {
         // 指定された年の Year レコードを取得
         $year = Year::where('year', $year)->first();
-    
+
         // 指定された年の Year レコードが存在しない場合は、404 エラーを返す
         if (!$year) {
             abort(404);
         }
-    
+
         // アーティストと年のデータを取得
         $artists = Artist::orderBy('id', 'asc')->where('visible', 0)->get();
         $years = Year::orderBy('year', 'asc')->get();
-    
-        // 指定された年の Setlist を取得
-        $setlists = Setlist::where('year', $year->year)->orderBy('date', 'asc')->get();
-    
+
+        // 指定された年の Setlist を取得（date カラムから年部分を取り出して比較）
+        $setlists = Setlist::whereRaw('YEAR(date) = ?', [$year->year])
+            ->orderBy('date', 'asc')
+            ->get();
+
         return view('years.show', [
             'setlists' => $setlists,
             'year' => $year,
