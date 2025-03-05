@@ -66,15 +66,15 @@ class SongController extends Controller
         $tours = Tour::whereRaw("
             JSON_EXTRACT(setlist1, '$.*.id') REGEXP ? 
             OR JSON_SEARCH(setlist1, 'one', ?, '$[*].id') IS NOT NULL
-        ", ["$id", (string)$id])
+        ", ["'" . $id . "'", (string)$id])
             ->orWhereRaw("
             JSON_EXTRACT(setlist2, '$.*.id') REGEXP ? 
             OR JSON_SEARCH(setlist2, 'one', ?, '$[*].id') IS NOT NULL
-        ", ["$id", (string)$id])
+        ", ["'" . $id . "'", (string)$id])
             ->orWhereRaw("
             JSON_EXTRACT(setlist3, '$.*.id') REGEXP ? 
             OR JSON_SEARCH(setlist3, 'one', ?, '$[*].id') IS NOT NULL
-        ", ["$id", (string)$id])
+        ", ["'" . $id . "'", (string)$id])
             ->orderBy('date1', 'desc')
             ->get();
 
