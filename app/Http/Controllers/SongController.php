@@ -64,17 +64,17 @@ class SongController extends Controller
         $singles = Single::orderBy('id', 'asc')
             ->get();
         $tours = Tour::whereRaw("
-            JSON_EXTRACT(setlist1, '$.*.id') REGEXP ? 
-            OR JSON_SEARCH(setlist1, 'one', ?, '$[*].id') IS NOT NULL
-        ", ["'" . $id . "'", (string)$id])
+            JSON_CONTAINS(setlist1, CAST(? AS JSON), '$[*].id')
+            OR JSON_CONTAINS(setlist1, CAST(? AS JSON), '$.*.id')
+        ", [json_encode($id), json_encode($id)])
             ->orWhereRaw("
-            JSON_EXTRACT(setlist2, '$.*.id') REGEXP ? 
-            OR JSON_SEARCH(setlist2, 'one', ?, '$[*].id') IS NOT NULL
-        ", ["'" . $id . "'", (string)$id])
+            JSON_CONTAINS(setlist2, CAST(? AS JSON), '$[*].id')
+            OR JSON_CONTAINS(setlist2, CAST(? AS JSON), '$.*.id')
+        ", [json_encode($id), json_encode($id)])
             ->orWhereRaw("
-            JSON_EXTRACT(setlist3, '$.*.id') REGEXP ? 
-            OR JSON_SEARCH(setlist3, 'one', ?, '$[*].id') IS NOT NULL
-        ", ["'" . $id . "'", (string)$id])
+            JSON_CONTAINS(setlist3, CAST(? AS JSON), '$[*].id')
+            OR JSON_CONTAINS(setlist3, CAST(? AS JSON), '$.*.id')
+        ", [json_encode($id), json_encode($id)])
             ->orderBy('date1', 'desc')
             ->get();
 
