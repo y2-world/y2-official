@@ -53,33 +53,35 @@ class BioController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($year)
-    {
-        // 指定された年の Bio を取得
-        $bio = Bio::where('year', $year)->first();
+{
+    // 指定された年の Bio を取得
+    $bio = Bio::where('year', $year)->first();
 
-        // 指定された年の Bio が存在しない場合は、404 エラーを返す
-        if (!$bio) {
-            abort(404);
-        }
-
-        // その年の他のデータを取得
-        $singles = Single::orderBy('id', 'asc')->get();
-        $albums = Album::orderBy('id', 'asc')->get();
-        $bios = Bio::orderBy('year', 'asc')->get();
-        $songs = Song::where('year', $bio->year)->orderBy('id', 'asc')->get();
-        $tours = Tour::whereRaw('YEAR(date1) = ? OR YEAR(date2) = ?', [$year->year, $year->year])
-            ->orderBy('date1', 'asc')  // または、日付順で並べる場合は date1 または date2 に基づいて並べ替え
-            ->get();
-
-        return view('database.show', [
-            'bio' => $bio,
-            'singles' => $singles,
-            'albums' => $albums,
-            'bios' => $bios,
-            'songs' => $songs,
-            'tours' => $tours,
-        ]);
+    // 指定された年の Bio が存在しない場合は、404 エラーを返す
+    if (!$bio) {
+        abort(404);
     }
+
+    // その年の他のデータを取得
+    $singles = Single::orderBy('id', 'asc')->get();
+    $albums = Album::orderBy('id', 'asc')->get();
+    $bios = Bio::orderBy('year', 'asc')->get();
+    $songs = Song::where('year', $bio->year)->orderBy('id', 'asc')->get();
+    
+    // $year をそのまま使う
+    $tours = Tour::whereRaw('YEAR(date1) = ? OR YEAR(date2) = ?', [$year, $year])
+        ->orderBy('date1', 'asc')  // または、日付順で並べる場合は date1 または date2 に基づいて並べ替え
+        ->get();
+
+    return view('database.show', [
+        'bio' => $bio,
+        'singles' => $singles,
+        'albums' => $albums,
+        'bios' => $bios,
+        'songs' => $songs,
+        'tours' => $tours,
+    ]);
+}
 
     /**
      * Show the form for editing the specified resource.
