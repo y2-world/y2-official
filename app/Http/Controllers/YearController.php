@@ -50,10 +50,10 @@ class YearController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($year)
+    public function show($yearParam)
     {
         // 指定された年の Year レコードを取得
-        $year = Year::where('year', $year)->first();
+        $year = Year::where('year', $yearParam)->first();
 
         // 指定された年の Year レコードが存在しない場合は、404 エラーを返す
         if (!$year) {
@@ -69,6 +69,13 @@ class YearController extends Controller
             ->orderBy('date', 'asc')
             ->get();
 
+        // Setlist が存在しない場合、メッセージを表示
+        if ($setlists->isEmpty()) {
+            // 必要に応じてエラーメッセージや適切なレスポンスを設定する
+            session()->flash('error', '指定された年に関連するセットリストは存在しません。');
+        }
+
+        // ビューにデータを渡す
         return view('years.show', [
             'setlists' => $setlists,
             'year' => $year,
