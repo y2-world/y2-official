@@ -337,7 +337,6 @@ video {
 }
 
 .cover p {
-    font-family: "Nanum Myeongjo", serif;
     position: absolute;
     font-size: 1.5rem;
     /* top: 20%; */
@@ -358,10 +357,6 @@ video {
 .cover img {
     height: 120vh;
     width: 100%;
-}
-
-body {
-    font-family: "Nanum Myeongjo", serif;
 }
 
 .image {
