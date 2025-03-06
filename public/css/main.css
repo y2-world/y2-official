@@ -7,9 +7,9 @@ html {
 body {
     margin: 0;
     padding-top: 55px;
-    font-family: "Cormorant Garamond", serif;
+    font-family: "Noto Serif JP", serif;
     font-optical-sizing: auto;
-    font-weight: 400;
+    font-weight: 200;
     font-style: normal;
 }
 a {
