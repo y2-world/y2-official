@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Yuki Official</title>
+    <title>@yield('title', 'Yuki Official')</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -59,7 +59,7 @@
                         <a class="nav-link" href="{{ url('/#radio') }}">&emsp;Radio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/setlists') }}">&emsp;Set Lists</a>
+                        <a class="nav-link" href="{{ url('/setlists') }}">&emsp;Setlists</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('/database') }}">&emsp;Database</a>

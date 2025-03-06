@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Yuki Official - ' . $songs->title)
 @section('content')
     <br>
     <div class="container-lg">

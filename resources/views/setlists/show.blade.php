@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Yuki Official - ' . $setlists->title)
 @section('content')
     <br>
     <div class="container">
