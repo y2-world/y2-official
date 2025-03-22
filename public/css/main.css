@@ -593,6 +593,7 @@ table {
     flex-direction: row;
     align-items: center;
     align-content: center;
+    padding-bottom: 1em;
 }
 
 .dropdown-wrapper {
