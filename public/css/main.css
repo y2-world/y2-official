@@ -724,7 +724,7 @@ table.count > tbody > tr > td:first-child::before {
 }
 
 th {
-    font-size: 10px;
+    font-size: 11px;
 }
 
 .td_date {
