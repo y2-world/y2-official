@@ -69,8 +69,11 @@
                             target="_blank">&emsp;Blog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/filament') }}" target="_blank">&emsp;Admin&emsp;</a>
+                        <a class="nav-link" href="{{ url('/admin') }}" target="_blank">&emsp;Admin&emsp;</a>
                     </li>
+                    {{-- <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/filament') }}" target="_blank">&emsp;Admin&emsp;</a>
+                    </li> --}}
                     <li class="nav-item">
                         <div class="mb-sns-nav">
                             <a href="https://music.apple.com/jp/artist/yuki-yoshida/1448865361?itsct=music_box_badge&itscg=30200&ct=artists_yuki_yoshida&app=music&ls=1"
