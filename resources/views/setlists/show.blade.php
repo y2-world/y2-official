@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Yuki Official - ' . $setlists->title)
 @section('content')
     <br>
     <div class="container">
@@ -180,12 +181,11 @@
                 <div class="show_button">
                     @if (!empty($previous))
                         <a class="btn btn-outline-dark" href="{{ route('setlists.show', $previous->id) }}" rel="prev"
-                            role="button">
-                            <i class="fa-solid fa-arrow-left"></i></a>
+                            role="button"><</a>
                     @endif
                     @if (!empty($next))
                         <a class="btn btn-outline-dark" href="{{ route('setlists.show', $next->id) }}"rel="next"
-                            role="button"><i class="fa-solid fa-arrow-right"></i></a>
+                            role="button">></a>
                     @endif
                 </div>
             </div>

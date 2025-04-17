@@ -5,12 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Yuki Official</title>
+    <title>@yield('title', 'Yuki Official')</title>
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho&display=swap" rel="stylesheet">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/e47a10189c.js" crossorigin="anonymous"></script>
@@ -58,7 +59,7 @@
                         <a class="nav-link" href="{{ url('/#radio') }}">&emsp;Radio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/setlists') }}">&emsp;Set Lists</a>
+                        <a class="nav-link" href="{{ url('/setlists') }}">&emsp;Setlists</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('/database') }}">&emsp;Database</a>
@@ -131,6 +132,8 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
 <script src="{{ asset('/js/search.js') }}"></script>
+<script src="{{ asset('/js/top.js?time=' . time()) }}"></script>
+<script src="{{ asset('/js/music.js?time=' . time()) }}"></script>
 
 <!-- Bootstrap scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"

@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Yuki Official - ' . $year->year)
 @section('content')
     <br>
     <div class="container-lg">
@@ -54,14 +55,17 @@
             <tbody>
                 @foreach ($setlists as $setlist)
                     <tr>
-                         <td></td>
+                        <td></td>
                         <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
                         @if (isset($setlist->artist_id))
                             <td class="pc">
-                                <a href="{{ url('/setlists/artists', $setlist->artist_id) }}">{{ $setlist->artist->name }}</a>
+                                <a
+                                    href="{{ url('/setlists/artists', $setlist->artist_id) }}">{{ $setlist->artist->name }}</a>
                             </td>
                             <td class="sp">
-                                <a href="{{ url('/setlists/artists', $setlist->artist_id) }}">{{ $setlist->artist->name }}</a> /
+                                <a
+                                    href="{{ url('/setlists/artists', $setlist->artist_id) }}">{{ $setlist->artist->name }}</a>
+                                /
                                 <a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a>
                             </td>
                         @else
@@ -71,11 +75,15 @@
                         @endif
                         <td class="pc"><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a>
                         </td>
-                        <td class="pc"><a href="{{ url('/venue?keyword='.urlencode($setlist->venue)) }}">{{ $setlist->venue }}</a></td>
+                        <td class="pc"><a
+                                href="{{ url('/venue?keyword=' . urlencode($setlist->venue)) }}">{{ $setlist->venue }}</a>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-        <br>
+    </div>
+    <br>
+    </div>
     </div>
 @endsection

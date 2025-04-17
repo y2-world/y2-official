@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Yuki Official - ' . $tours->title)
 @section('content')
     <br>
     <div class="container">

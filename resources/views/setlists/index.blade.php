@@ -3,10 +3,11 @@
     $startNumber = ($setlists->currentPage() - 1) * $setlists->perPage() + 1;
 @endphp
 @extends('layouts.app')
+@section('title', 'Yuki Official - Setlists')
 @section('content')
     <br>
     <div class="container-lg">
-        <h2>Set Lists</h2>
+        <h2>Setlists</h2>
         <div class="parts-wrapper">
             <div class="dropdown-wrapper">
                 <select name="select" onChange="location.href=value;">

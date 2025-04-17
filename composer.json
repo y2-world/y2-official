@@ -10,7 +10,6 @@
         "encore/laravel-admin": "^1.8",
         "filament/actions": "^3.2",
         "filament/filament": "^3.2",
-        "fruitcake/laravel-cors": "dev-develop",
         "illuminate/contracts": "^10.0",
         "illuminate/support": "^10.0",
         "laravel/framework": "^10.0",
@@ -25,8 +24,7 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true,
-        "platform": []
+        "sort-packages": true
     },
     "extra": {
         "laravel": {

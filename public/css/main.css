@@ -7,6 +7,9 @@ html {
 body {
     margin: 0;
     padding-top: 55px;
+    font-family: "Zen Old Mincho", serif;
+    font-weight: 400;
+    font-style: normal;
 }
 a {
     background-color: transparent;
@@ -333,7 +336,6 @@ video {
 }
 
 .cover p {
-    font-family: "Nanum Myeongjo", serif;
     position: absolute;
     font-size: 1.5rem;
     /* top: 20%; */
@@ -356,10 +358,6 @@ video {
     width: 100%;
 }
 
-body {
-    font-family: "Nanum Myeongjo", serif;
-}
-
 .image {
     height: auto;
 }
@@ -375,7 +373,7 @@ body {
     text-align: center;
 }
 
-.news-item__title{
+.news-item__title {
     font-size: 13px;
 }
 
@@ -429,7 +427,6 @@ footer {
     transform: translateY(0px);
 }
 
-
 .sns a {
     padding-right: 5px;
     color: white;
@@ -473,7 +470,6 @@ img {
 .music-wrapper {
     position: relative;
 }
-
 
 .track-list {
     font-size: 13px;
@@ -522,7 +518,6 @@ img {
 .album-container-header {
     padding-top: 10px;
 }
-
 
 .music-menu {
     display: flex;
@@ -581,8 +576,6 @@ table {
     font-size: 13px;
 }
 
-
-
 .show_button {
     padding-top: 30px;
     padding-bottom: 30px;
@@ -600,6 +593,7 @@ table {
     flex-direction: row;
     align-items: center;
     align-content: center;
+    padding-bottom: 1em;
 }
 
 .dropdown-wrapper {
@@ -730,15 +724,15 @@ table.count > tbody > tr > td:first-child::before {
 }
 
 th {
-    font-size: 10px;
+    font-size: 11px;
 }
 
 .td_date {
-    white-space:nowrap
+    white-space: nowrap;
 }
 
 .pc_venue {
-    white-space:nowrap
+    white-space: nowrap;
 }
 
 .schedule-text {
@@ -801,7 +795,8 @@ h2 {
     background-color: #f9f9f9; /* 背景色を少し変える */
     color: inherit; /* 文字色を継承 */
 }
-#view-all-news-btn[disabled], #view-all-music-btn[disabled] {
+#view-all-news-btn[disabled],
+#view-all-music-btn[disabled] {
     pointer-events: none;
     opacity: 0.6;
 }
@@ -889,7 +884,6 @@ h2 {
 }
 
 @media (min-width: 1024px) {
-
     .column1,
     .column2-bio {
         width: 50%;
@@ -1002,21 +996,21 @@ h2 {
         font-size: 20px;
     }
 
-
     .profile-info {
         text-align: center;
     }
 
-    .pc, .pc_venue {
+    .pc,
+    .pc_venue {
         display: none;
     }
-
 
     .parts-wrapper {
         display: flex;
         justify-content: space-between;
         flex-direction: column;
         align-items: center;
+        padding-bottom: 0em;
     }
 
     .database-wrapper {
@@ -1049,7 +1043,6 @@ h2 {
         margin: 0 auto;
     }
 
-
     .text {
         padding-top: 10px;
         font-size: 10px;
@@ -1073,7 +1066,6 @@ h2 {
         text-align: center;
     }
 
-
     .sns a {
         padding: 5px;
     }
@@ -1087,7 +1079,6 @@ h2 {
         padding-top: 5px;
         font-size: 7px;
     }
-
 
     .music-header {
         text-align: center;
@@ -1103,7 +1094,6 @@ h2 {
         text-align: center;
         padding-right: 0px;
     }
-
 
     .setlist {
         font-size: 13px;

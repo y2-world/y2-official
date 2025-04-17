@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Yuki Official - Venue : ' . $keyword)
 @section('content')
     <br>
     <div class="container-lg">

@@ -43,8 +43,6 @@ class TourController extends AdminController
                 3    => 'ap bank fes',
                 4    => 'ソロ',
             ]);
-            
-            $filter->year('year', '年');
         });
 
         return $grid;
@@ -69,7 +67,6 @@ class TourController extends AdminController
         $show->field('solo_id', __('ソロ ID'));
         $show->field('date1', __('開始日'));
         $show->field('date2', __('終了日'));
-        $show->field('year', __('年'));
         $show->field('text', __('コメント'));
         $show->field('created_at', __('作成日時'));
         $show->field('updated_at', __('更新日時'));
@@ -114,7 +111,6 @@ class TourController extends AdminController
                 $form->dateRange('date1', 'date2', '開催期間');
                 $form->text('venue', __('会場'));
             });
-            $form->select('year', __('年'))->options(Bio::pluck('year', 'year'));
         })->tab('セットリスト',function($form) {
             $form->table('setlist1', __('セットリスト1'), function ($table) {
                 $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));

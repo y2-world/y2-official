@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Yuki Official - ' . $discos->title)
 @section('content')
     <div class="mt-4"></div>
     <div class="album-detail">
