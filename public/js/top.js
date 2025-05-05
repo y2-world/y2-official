@@ -7,8 +7,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (viewAllBtn) {
         viewAllBtn.addEventListener("click", function () {
-            console.log("View All button clicked!");
-
             // ボタンの状態変更
             viewAllBtn.textContent = "Loading...";
             viewAllBtn.disabled = true;
@@ -104,7 +102,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (viewAllBtn) {
         viewAllBtn.addEventListener("click", function () {
-            console.log("View All button clicked!");
 
             viewAllBtn.textContent = "Loading...";
             viewAllBtn.disabled = true;
@@ -117,7 +114,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     return response.json();
                 })
                 .then((data) => {
-                    console.log("Fetched data:", data);
 
                     if (data.top && data.top.length > 0) {
                         let musicHTML = "";
