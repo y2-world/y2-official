@@ -76,7 +76,6 @@
     </div>
 @endsection
 
-<!-- スクリプトの読み込み -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+@section('page-script')
 <script src="{{ asset('/js/music.js?time=' . time()) }}"></script>
+@endsection

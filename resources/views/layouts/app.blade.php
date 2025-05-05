@@ -134,9 +134,9 @@
 <!-- スクリプトの読み込み -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
-<script src="{{ asset('/js/search.js') }}"></script>
-<script src="{{ asset('/js/top.js?time=' . time()) }}"></script>
-<script src="{{ asset('/js/music.js?time=' . time()) }}"></script>
+
+<!-- ページごとのスクリプト -->
+@yield('page-script')
 
 <!-- Bootstrap scripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"

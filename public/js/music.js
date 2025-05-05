@@ -37,8 +37,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ポップアップを閉じる
-    closeBtn.addEventListener('click', closeMusicPopup);
-    overlay.addEventListener('click', closeMusicPopup);
+    closeBtn.addEventListener('click', closeMusicPopup); // 閉じるボタンをクリックしたらポップアップを閉じる
+    overlay.addEventListener('click', closeMusicPopup); // オーバーレイをクリックしたらポップアップを閉じる
 
     function closeMusicPopup() {
         popup.classList.remove('open');

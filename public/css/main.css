@@ -630,7 +630,7 @@ select {
     background: none;
     border: none;
     color: #333;
-    font-size: 12px;
+    font-size: 16px;
     /* width: 25%; */
     height: 100%;
     /* padding: 0 10px; */
@@ -938,6 +938,10 @@ h2 {
         height: 85vh;
         /* width: 100vw; */
         margin: auto;
+    }
+
+    select {
+        font-size: 12px;
     }
 }
 

@@ -85,3 +85,7 @@
             </div>
     </div>
 @endsection
+
+@section('page-script')
+<script src="{{ asset('/js/search.js?time=' . time()) }}"></script>
+@endsection
