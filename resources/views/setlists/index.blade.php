@@ -10,6 +10,12 @@
         <h2>Setlists</h2>
         <div class="parts-wrapper">
             <div class="dropdown-wrapper">
+                <select name="select" onchange="if (this.value) window.location.href=this.value;">
+                    <option value="" disabled selected>Live Type</option>
+                    <option value="{{ url('/setlists') }}" {{ request('type') ? '' : 'selected' }}>All</option>
+                    <option value="{{ url('/setlists?type=1') }}" {{ request('type') == '1' ? 'selected' : '' }}>Live</option>
+                    <option value="{{ url('/setlists?type=2') }}" {{ request('type') == '2' ? 'selected' : '' }}>Fes</option>
+                </select>
                 <select name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Artists</option>
                     @foreach ($artists as $artist)
@@ -47,11 +53,6 @@
                 </div>
             </div>
         </div>
-        <ul class="music-menu">
-            <li><a href="{{ url('/setlists') }}" class="{{ request('type') ? '' : 'active' }}">All</a></li>
-            <li><a href="{{ url('/setlists?type=1') }}" class="{{ request('type') == '1' ? 'active' : '' }}">Live</a></li>
-            <li><a href="{{ url('/setlists?type=2') }}" class="{{ request('type') == '2' ? 'active' : '' }}">Fes</a></li>
-        </ul>
         <table class="table table-striped">
             <thead>
                 <tr>
