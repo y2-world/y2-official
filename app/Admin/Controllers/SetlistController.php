@@ -136,9 +136,17 @@ class SetlistController extends AdminController
 
                 $form->table('setlist', __('本編'), function ($table) {
                     $table->text('song', __(''))->rules('required');
+                    $table->switch('medley', '')->states([
+                        'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
+                        'off' => ['value' => 0, 'text' => '',   'color' => 'default'],
+                    ])->default(0);
                 });
                 $form->table('encore', __('アンコール'), function ($table) {
                     $table->text('song', __(''))->rules('required');
+                    $table->switch('medley', '')->states([
+                        'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
+                        'off' => ['value' => 0, 'text' => '',   'color' => 'default'],
+                    ])->default(0);
                 });
             })->when(1, function (Form $form) {
 
