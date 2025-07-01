@@ -4,11 +4,6 @@
     width: 130%;
 }
 
-/* .has-many-fes_setlist-form.fields-group .form-group,
-.has-many-fes_encore-form.fields-group .form-group {
-    margin-bottom: 12px;
-} */
-
 .has-many-fes_setlist-form .form-group,
 .has-many-fes_encore-form .form-group,
 .has-many-fes_setlist-form .select2-container,
@@ -56,13 +51,11 @@
     padding: 6px 8px;
     line-height: 1;
     white-space: nowrap;
-    text-align: right;
 }
 .has-many-fes_setlist-form .remove i,
 .has-many-fes_encore-form .remove i {
     font-size: 16px !important;
     margin-right: 0 !important;
-    text-align: right;
 }
 
 /* 共通：フォーム幅調整 */
@@ -121,4 +114,17 @@
 .has-many-fes_encore-form.fields-group .btn {
     display: inline-block;
     float: none;
+}
+
+.table .remove {
+    float: left !important;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+  .table .remove {
+    float: left !important;
+    display: inline-block;
+  }
 }
