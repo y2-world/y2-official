@@ -81,17 +81,15 @@
                                     </li>
                             @endif
                         @else
-                            @if (!empty($data['artist']))
-                            <ol class="setlist">
-                                <li><a
-                                        href="{{ url('/search?artist_id=' . $data['artist'] . '&keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a>
-                                </li>
-                                </ol>
-                            @else
+                            @if ($key != 0)
                                 <li><a
                                         href="{{ url('/search?keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a>
                                 </li>
-                                </ol>
+                            @else
+                                <ol class="setlist">
+                                    <li><a
+                                            href="{{ url('/search?keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a>
+                                    </li>
                             @endif
                         @endif
                     @endforeach
@@ -124,16 +122,15 @@
                                         </li>
                                 @endif
                             @else
-                                @if (!empty($data['artist']))
-                                    <li><a
-                                            href="{{ url('/search?artist_id=' . $data['artist'] . '&keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a>
-                                    </li>
-                                    </ol>
-                                @else
+                                @if ($key != 0)
                                     <li><a
                                             href="{{ url('/search?keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a>
                                     </li>
-                                    </ol>
+                                @else
+                                    <ol class="setlist">
+                                        <li><a
+                                                href="{{ url('/search?keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a>
+                                        </li>
                                 @endif
                             @endif
                         @endforeach
