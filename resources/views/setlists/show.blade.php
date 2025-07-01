@@ -20,9 +20,9 @@
                 @if ($setlists->fes == 0)
                     <ol class="setlist">
                         @foreach ($setlists->setlist as $data)
-                            @if (!empty($data['#']))
-                                @if ($data['#'] === '-')
-                                    {{ $data['#'] }} <a
+                             @if (!empty($data['medley']))
+                                    @if ($data['medley'] == 1)
+                                        - <a
                                         href="{{ url('/search?artist_id=' . $setlists->artist_id . '&keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a><br>
                                 @else
                                     <li><a
@@ -38,9 +38,9 @@
                         @if (!empty($setlists->encore))
                             <hr width="250">
                             @foreach ((array) $setlists->encore as $data)
-                                @if (!empty($data['#']))
-                                    @if ($data['#'] === '-')
-                                        {{ $data['#'] }} <a
+                                @if (!empty($data['medley']))
+                                    @if ($data['medley'] == 1)
+                                        - <a
                                             href="{{ url('/search?artist_id=' . $setlists->artist_id . '&keyword=' . urlencode($data['song'])) }}">{{ $data['song'] }}</a><br>
                                     @else
                                         <li><a
