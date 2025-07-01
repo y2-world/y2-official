@@ -1,5 +1,7 @@
 <?php
 
+use Encore\Admin\Facades\Admin;
+
 /**
  * Laravel-admin - admin builder based on Laravel.
  * @author z-song <https://github.com/z-song>
@@ -20,3 +22,5 @@
 
 // Encore\Admin\Form::forget(['map', 'editor']);
 Encore\Admin\Form::extend('editor', Encore\Admin\Form\Field\Editor::class);
+Admin::css('/css/admin-custom.css');
+Admin::js('/js/admin-custom.js');
