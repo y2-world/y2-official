@@ -103,19 +103,6 @@
     }
 }
 
-/* 削除ボタン（ゴミ箱）を右寄せ */
-.has-many-fes_setlist-form.fields-group > td:last-child,
-.has-many-fes_encore-form.fields-group > td:last-child {
-    text-align: right;
-}
-
-/* 削除ボタンを含むボタンの表示を調整 */
-.has-many-fes_setlist-form.fields-group .btn,
-.has-many-fes_encore-form.fields-group .btn {
-    display: inline-block;
-    float: none;
-}
-
 .table .remove {
     float: left !important;
     display: inline-block;
