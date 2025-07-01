@@ -8,7 +8,7 @@
 .has-many-fes_encore-form.fields-group .form-group {
     margin-bottom: 12px;
 } */
- 
+
 .has-many-fes_setlist-form .form-group,
 .has-many-fes_encore-form .form-group,
 .has-many-fes_setlist-form .select2-container,
@@ -56,11 +56,13 @@
     padding: 6px 8px;
     line-height: 1;
     white-space: nowrap;
+    text-align: right;
 }
 .has-many-fes_setlist-form .remove i,
 .has-many-fes_encore-form .remove i {
     font-size: 16px !important;
     margin-right: 0 !important;
+    text-align: right;
 }
 
 /* 共通：フォーム幅調整 */
@@ -90,22 +92,6 @@
     display: none !important;
 }
 
-/* アーティストと楽曲の両方のフォームを100%に */
-/* .has-many-fes_setlist-form .form-group,
-.has-many-fes_setlist-form .col-sm-12,
-.has-many-fes_setlist-form .input-group,
-.has-many-fes_setlist-form .input-group .form-control,
-.has-many-fes_setlist-form input[type="text"],
-.has-many-fes_setlist-form select,
-.has-many-fes_setlist-form .select2-container {
-    width: 130% !important;
-    display: block;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    margin-bottom: 10px;
-    border-radius: 4px;
-} */
-
 /* アイコンが不要な場合 */
 .has-many-fes_setlist-form .input-group-addon {
     display: none !important;
@@ -124,4 +110,15 @@
     }
 }
 
+/* 削除ボタン（ゴミ箱）を右寄せ */
+.has-many-fes_setlist-form.fields-group > td:last-child,
+.has-many-fes_encore-form.fields-group > td:last-child {
+    text-align: right;
+}
 
+/* 削除ボタンを含むボタンの表示を調整 */
+.has-many-fes_setlist-form.fields-group .btn,
+.has-many-fes_encore-form.fields-group .btn {
+    display: inline-block;
+    float: none;
+}

@@ -9,6 +9,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Carbon\Carbon;
 
 class SetlistController extends AdminController
 {
@@ -31,25 +32,29 @@ class SetlistController extends AdminController
         $grid->column('id', __('ID'));
         $grid->column('artist_id', __('アーティスト'))->display(function ($id) {
             $artist = optional(Artist::find($id));
-            if ($artist) {
-                return $artist->name;
-            }
+            return $artist ? $artist->name : '';
         });
         $grid->column('title', __('ツアータイトル'));
-        $grid->column('date', __('公演日'))->default(date('Y.m.d'));
         $grid->column('venue', __('会場'));
 
-        $grid->filter(function ($filter) {
+        // 年リストを作成（例：2000年〜今年まで）
+        $years = range(date('Y'), 2000);
+        $years = array_combine($years, $years); // [2025 => 2025, 2024 => 2024, ...]
+
+        $grid->filter(function ($filter) use ($years) {
             $filter->like('artist', 'アーティスト');
             $filter->like('title', 'ツアータイトル');
             $filter->equal('fes', 'フェス')->radio([
-                ''   => 'All',
-                0    => 'ライブ',
-                1    => 'フェス',
-                2    => '混合フェス',
+                '' => 'All',
+                0  => 'ライブ',
+                1  => 'フェス',
             ]);
-
             $filter->like('venue', __('会場'));
+
+            // 年セレクトフィルター追加
+            $filter->where(function ($query) {
+                $query->whereYear('date', $this->input);
+            }, '年（西暦）')->select($years);
         });
 
         return $grid;
@@ -128,7 +133,6 @@ class SetlistController extends AdminController
             ->options([
                 0 => '単独ライブ',
                 1 => 'フェス',
-                2 => '混在フェス',
             ])->when(0, function (Form $form) {
 
                 $form->table('setlist', __('本編'), function ($table) {
@@ -144,18 +148,6 @@ class SetlistController extends AdminController
                     $table->text('song', __(''))->rules('required');
                 });
                 $form->table('fes_encore', __('アンコール'), function ($table) {
-                    $table->select('artist', __(''))->options(Artist::all()->pluck('name', 'id'))->attribute(['class' => 'artist-select']);
-                    $table->text('song', __(''))->rules('required');
-                });
-            })->when(2, function (Form $form) {
-
-                $form->table('fes_setlist', __('本編'), function ($table) {
-                    $table->text('corner', __(''));
-                    $table->select('artist', __(''))->options(Artist::all()->pluck('name', 'id'))->attribute(['class' => 'artist-select']);
-                    $table->text('song', __(''))->rules('required');
-                });
-                $form->table('fes_encore', __('アンコール'), function ($table) {
-                    $table->text('corner', __(''));
                     $table->select('artist', __(''))->options(Artist::all()->pluck('name', 'id'))->attribute(['class' => 'artist-select']);
                     $table->text('song', __(''))->rules('required');
                 });
