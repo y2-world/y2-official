@@ -106,7 +106,7 @@
 .table .remove {
     float: left !important;
     display: inline-block;
-    margin-top: 5px;
+    /* margin-top: 5px; */
 }
 
 @media (max-width: 768px) {
@@ -114,4 +114,8 @@
     float: left !important;
     display: inline-block;
   }
+}
+
+.form-horizontal .form-group {
+    margin-right: 5px !important;
 }

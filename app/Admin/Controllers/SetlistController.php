@@ -93,7 +93,6 @@ class SetlistController extends AdminController
             }
             return implode('<br>', $result2);
         });
-        $show->field('fes', __('フェス'));
         $show->field('fes_setlist', __('本編'))->unescape()->as(function ($fes_setlist) {
             $result3 = [];
             foreach ((array)$fes_setlist as $data3) {
