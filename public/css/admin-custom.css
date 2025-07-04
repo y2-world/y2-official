@@ -119,3 +119,11 @@
 .form-horizontal .form-group {
     margin-right: 5px !important;
 }
+
+.remove.btn i {
+    font-size: 14px; /* アイコンの大きさを維持 */
+}
+
+.remove.btn {
+    font-size: 0; /* テキストを非表示にする */
+}
