@@ -27,6 +27,7 @@ class SetlistController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Setlist());
+        $grid->model()->orderBy('date', 'desc');
 
         $grid->column('id', __('ID'));
         $grid->column('artist_id', __('アーティスト'))->display(function ($id) {
