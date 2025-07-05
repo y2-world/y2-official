@@ -1,23 +1,42 @@
+/* 共通：テーブルセルをブロック化し幅拡大 */
 .has-many-fes_setlist-form.fields-group > td,
-.has-many-fes_encore-form.fields-group > td {
+.has-many-fes_encore-form.fields-group > td,
+.has-many-setlist1-form.fields-group > td,
+.has-many-setlist2-form.fields-group > td,
+.has-many-setlist3-form.fields-group > td {
     display: block;
     width: 130%;
 }
 
+/* 入力エリア・セレクトの幅調整 */
 .has-many-fes_setlist-form .form-group,
 .has-many-fes_encore-form .form-group,
+.has-many-setlist1-form .form-group,
+.has-many-setlist2-form .form-group,
+.has-many-setlist3-form .form-group,
 .has-many-fes_setlist-form .select2-container,
-.has-many-fes_encore-form .select2-container {
+.has-many-fes_encore-form .select2-container,
+.has-many-setlist1-form .select2-container,
+.has-many-setlist2-form .select2-container,
+.has-many-setlist3-form .select2-container {
     width: 130% !important;
 }
 
+/* テキスト入力幅調整 */
 .has-many-fes_setlist-form input[type="text"],
-.has-many-fes_encore-form input[type="text"] {
+.has-many-fes_encore-form input[type="text"],
+.has-many-setlist1-form input[type="text"],
+.has-many-setlist2-form input[type="text"],
+.has-many-setlist3-form input[type="text"] {
     width: 130% !important;
 }
 
+/* tdのパディング調整 */
 .has-many-fes_setlist-form td,
-.has-many-fes_encore-form td {
+.has-many-fes_encore-form td,
+.has-many-setlist1-form td,
+.has-many-setlist2-form td,
+.has-many-setlist3-form td {
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
@@ -25,6 +44,9 @@
 /* 鉛筆アイコン削除 */
 .has-many-fes_setlist-form .input-group-addon,
 .has-many-fes_encore-form .input-group-addon,
+.has-many-setlist1-form .input-group-addon,
+.has-many-setlist2-form .input-group-addon,
+.has-many-setlist3-form .input-group-addon,
 .input-group-addon,
 .fa-pencil {
     display: none !important;
@@ -33,6 +55,9 @@
 /* 入力欄をフル幅に */
 .has-many-fes_setlist-form .input-group input,
 .has-many-fes_encore-form .input-group input,
+.has-many-setlist1-form .input-group input,
+.has-many-setlist2-form .input-group input,
+.has-many-setlist3-form .input-group input,
 .input-group input {
     width: 100%;
     border-radius: 4px;
@@ -46,14 +71,21 @@
 
 /* 削除ボタン（アイコンのみ） */
 .has-many-fes_setlist-form .remove,
-.has-many-fes_encore-form .remove {
+.has-many-fes_encore-form .remove,
+.has-many-setlist1-form .remove,
+.has-many-setlist2-form .remove,
+.has-many-setlist3-form .remove {
     font-size: 0 !important;
     padding: 6px 8px;
     line-height: 1;
     white-space: nowrap;
 }
+
 .has-many-fes_setlist-form .remove i,
-.has-many-fes_encore-form .remove i {
+.has-many-fes_encore-form .remove i,
+.has-many-setlist1-form .remove i,
+.has-many-setlist2-form .remove i,
+.has-many-setlist3-form .remove i {
     font-size: 16px !important;
     margin-right: 0 !important;
 }
@@ -62,6 +94,15 @@
 .has-many-setlist-form td,
 .has-many-setlist-form .form-group,
 .has-many-setlist-form .col-sm-12,
+.has-many-setlist1-form td,
+.has-many-setlist1-form .form-group,
+.has-many-setlist1-form .col-sm-12,
+.has-many-setlist2-form td,
+.has-many-setlist2-form .form-group,
+.has-many-setlist2-form .col-sm-12,
+.has-many-setlist3-form td,
+.has-many-setlist3-form .form-group,
+.has-many-setlist3-form .col-sm-12,
 .has-many-encore-form td,
 .has-many-encore-form .form-group,
 .has-many-encore-form .col-sm-12,
@@ -77,43 +118,45 @@
     max-width: 100% !important;
 }
 
-/* thラベル（アーティスト・楽曲など）非表示 */
+/* thラベル非表示 */
 .table.has-many-setlist-form thead th,
+.table.has-many-setlist1-form thead th,
+.table.has-many-setlist2-form thead th,
+.table.has-many-setlist3-form thead th,
 .table.has-many-encore-form thead th,
 .table.has-many-fes_setlist-form thead th,
 .table.has-many-fes_encore-form thead th {
     display: none !important;
 }
 
-/* アイコンが不要な場合 */
-.has-many-fes_setlist-form .input-group-addon {
-    display: none !important;
-}
-
-/* スマホ対応：tdを縦並びに */
+/* スマホ対応：td縦並び */
 @media (max-width: 768px) {
-    .has-many-fes_setlist-form.fields-group > td {
+    .has-many-fes_setlist-form.fields-group > td,
+    .has-many-setlist1-form.fields-group > td,
+    .has-many-setlist2-form.fields-group > td,
+    .has-many-setlist3-form.fields-group > td {
         display: block;
         width: 100%;
     }
 
-    .has-many-fes_setlist-form td {
+    .has-many-fes_setlist-form td,
+    .has-many-setlist1-form td,
+    .has-many-setlist2-form td,
+    .has-many-setlist3-form td {
         padding-left: 0 !important;
         padding-right: 0 !important;
     }
+
+    .table .remove {
+        float: left !important;
+        display: inline-block;
+    }
 }
 
+/* その他調整 */
 .table .remove {
     float: left !important;
     display: inline-block;
-    /* margin-top: 5px; */
-}
-
-@media (max-width: 768px) {
-  .table .remove {
-    float: left !important;
-    display: inline-block;
-  }
 }
 
 .form-horizontal .form-group {
