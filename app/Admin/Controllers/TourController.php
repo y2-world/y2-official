@@ -114,7 +114,8 @@ class TourController extends AdminController
                 });
         })->tab('セットリスト1', function ($form) {
             $form->table('setlist1', 'セットリスト', function ($table) {
-                $table->text('#', '日付');
+                $table->text('#', '#');
+                $table->text('date', '日付');
                 $table->select('id', '曲')->options(Song::all()->pluck('title', 'id'));
                 $table->switch('is_daily', '')->states([
                     'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
@@ -128,7 +129,8 @@ class TourController extends AdminController
             });
         })->tab('セットリスト2', function ($form) {
             $form->table('setlist2', 'セットリスト', function ($table) {
-                $table->text('#', '日付');
+                $table->text('#', '#');
+                $table->text('date', '日付');
                 $table->select('id', '曲')->options(Song::all()->pluck('title', 'id'));
                 $table->switch('is_daily', '')->states([
                     'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
@@ -142,7 +144,8 @@ class TourController extends AdminController
             });
         })->tab('セットリスト3', function ($form) {
             $form->table('setlist3', 'セットリスト', function ($table) {
-                $table->text('#', '日付');
+                $table->text('#', '#');
+                $table->text('date', '日付');
                 $table->select('id', '曲')->options(Song::all()->pluck('title', 'id'));
                 $table->switch('is_daily', '')->states([
                     'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
