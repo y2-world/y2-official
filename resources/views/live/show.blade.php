@@ -75,7 +75,10 @@
                                     @endunless
                                     <ol class="live-column">
                                         <h5>{{ $data['date'] }}</h5>
-                                        @php $isFirst = false; @endphp
+                                        @php
+                                            $isFirst = false;
+                                            $encore_started = false; // ←★ここでリセット
+                                        @endphp
                                         @continue
                                 @endif
 
@@ -153,7 +156,10 @@
                                 @endunless
                                 <ol class="live-column">
                                     <h5>{{ $data['date'] }}</h5>
-                                    @php $isFirst = false; @endphp
+                                    @php
+                                        $isFirst = false;
+                                        $encore_started = false; // ←★ここでリセット
+                                    @endphp
                                     @continue
                             @endif
 
@@ -229,7 +235,10 @@
                                 @endunless
                                 <ol class="live-column">
                                     <h5>{{ $data['date'] }}</h5>
-                                    @php $isFirst = false; @endphp
+                                    @php
+                                        $isFirst = false;
+                                        $encore_started = false; // ←★ここでリセット
+                                    @endphp
                                     @continue
                             @endif
 
