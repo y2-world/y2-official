@@ -27,6 +27,7 @@ class TourController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Tour());
+        $grid->model()->orderBy('date1', 'desc');
 
         $grid->column('id', __('ID'));
         $grid->column('tour_id', __('ツアーID'));
@@ -34,7 +35,7 @@ class TourController extends AdminController
         $grid->column('date1', __('開始日'));
         $grid->column('date2', __('終了日'));
 
-        $grid->filter(function($filter){
+        $grid->filter(function ($filter) {
             $filter->equal('type')->radio([
                 ''   => 'All',
                 0    => 'ツアー',
@@ -83,51 +84,77 @@ class TourController extends AdminController
     {
         $form = new Form(new Tour());
 
-        $form->tab('データ',function($form) {
+        $form->tab('データ', function ($form) {
             $form->text('title', __('タイトル'));
-            $form->radio('type','ライブタイプ')
-            ->options([
-                0 =>'ツアー',
-                1 =>'単発ライブ',
-                2 =>'イベント',
-                3 =>'ap bank fes',
-                4 =>'ソロ',
-            ])->when(0, function (Form $form) {
-                $form->text('tour_id', __('ID'));
-                $form->dateRange('date1', 'date2', '開催期間');
-            })->when(1, function (Form $form) {
-                $form->dateRange('date1', 'date2', '開催期間');
-                $form->text('venue', __('会場'));
-            })->when(2, function (Form $form) {
-                $form->text('event_id', __('ID'));
-                $form->dateRange('date1', 'date2', '開催期間');
-                $form->text('venue', __('会場'));
-            })->when(3, function (Form $form) {
-                $form->text('ap_id', __('ID'));
-                $form->dateRange('date1', 'date2', '開催期間');
-                $form->text('venue', __('会場'));
-            })->when(4, function (Form $form) {
-                $form->text('solo_id', __('ID'));
-                $form->dateRange('date1', 'date2', '開催期間');
-                $form->text('venue', __('会場'));
+            $form->radio('type', 'ライブタイプ')
+                ->options([
+                    0 => 'ツアー',
+                    1 => '単発ライブ',
+                    2 => 'イベント',
+                    3 => 'ap bank fes',
+                    4 => 'ソロ',
+                ])->when(0, function (Form $form) {
+                    $form->text('tour_id', __('ID'));
+                    $form->dateRange('date1', 'date2', '開催期間');
+                })->when(1, function (Form $form) {
+                    $form->dateRange('date1', 'date2', '開催期間');
+                    $form->text('venue', __('会場'));
+                })->when(2, function (Form $form) {
+                    $form->text('event_id', __('ID'));
+                    $form->dateRange('date1', 'date2', '開催期間');
+                    $form->text('venue', __('会場'));
+                })->when(3, function (Form $form) {
+                    $form->text('ap_id', __('ID'));
+                    $form->dateRange('date1', 'date2', '開催期間');
+                    $form->text('venue', __('会場'));
+                })->when(4, function (Form $form) {
+                    $form->text('solo_id', __('ID'));
+                    $form->dateRange('date1', 'date2', '開催期間');
+                    $form->text('venue', __('会場'));
+                });
+        })->tab('セットリスト1', function ($form) {
+            $form->table('setlist1', 'セットリスト', function ($table) {
+                $table->text('#', '日付');
+                $table->select('id', '曲')->options(Song::all()->pluck('title', 'id'));
+                $table->switch('is_daily', '')->states([
+                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
+                    'off' => ['value' => 0, 'text' => '日替わり',   'color' => 'default'],
+                ])->default(0);
+                $table->switch('is_encore', '')->states([
+                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
+                    'off' => ['value' => 0, 'text' => 'アンコール',   'color' => 'default'],
+                ])->default(0);
+                $table->text('exception', '例外');
             });
-        })->tab('セットリスト',function($form) {
-            $form->table('setlist1', __('セットリスト1'), function ($table) {
-                $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
-                $table->number('#');
-                $table->text('exception', __('例外'));
+        })->tab('セットリスト2', function ($form) {
+            $form->table('setlist2', 'セットリスト', function ($table) {
+                $table->text('#', '日付');
+                $table->select('id', '曲')->options(Song::all()->pluck('title', 'id'));
+                $table->switch('is_daily', '')->states([
+                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
+                    'off' => ['value' => 0, 'text' => '日替わり',   'color' => 'default'],
+                ])->default(0);
+                $table->switch('is_encore', '')->states([
+                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
+                    'off' => ['value' => 0, 'text' => 'アンコール',   'color' => 'default'],
+                ])->default(0);
+                $table->text('exception', '例外');
             });
-            $form->table('setlist2', __('セットリスト2'), function ($table) {
-                $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
-                $table->number('#');
-                $table->text('exception', __('例外'));
+        })->tab('セットリスト3', function ($form) {
+            $form->table('setlist3', 'セットリスト', function ($table) {
+                $table->text('#', '日付');
+                $table->select('id', '曲')->options(Song::all()->pluck('title', 'id'));
+                $table->switch('is_daily', '')->states([
+                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
+                    'off' => ['value' => 0, 'text' => '日替わり',   'color' => 'default'],
+                ])->default(0);
+                $table->switch('is_encore', '')->states([
+                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
+                    'off' => ['value' => 0, 'text' => 'アンコール',   'color' => 'default'],
+                ])->default(0);
+                $table->text('exception', '例外');
             });
-            $form->table('setlist3', __('セットリスト3'), function ($table) {
-                $table->select('id', __('ID'))->options(Song::all()->pluck('title', 'id'));
-                $table->number('#');
-                $table->text('exception', __('例外'));
-            });
-        })->tab('コメント',function($form) {
+        })->tab('コメント', function ($form) {
             $form->textarea('schedule', __('スケジュール'))->rows(15);
             $form->textarea('text', __('コメント'))->rows(15);
         });
