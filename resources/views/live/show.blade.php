@@ -46,220 +46,234 @@
                     @if (isset($tours->setlist1))
                         <hr>
                         <div class="setlist-row justify-content-{{ $flexDirectionClass }}">
-                            <ol class="live-column">
+                            @php
+                                $encore_started = false;
+                                $isFirst = true;
+                            @endphp
+
+                            @foreach ($tours->setlist1 as $data)
                                 @php
-                                    $encore_started = false;
-                                    $isFirst = true;
-                                    $previousWasDate = false;
+                                    $hasId = isset($data['id']);
+                                    $hasException = isset($data['exception']);
+                                    $isDaily = !empty($data['is_daily']);
+                                    $isEncore = !empty($data['is_encore']);
+                                    $isDate = isset($data['date']);
                                 @endphp
 
-                                @foreach ($tours->setlist1 as $data)
-                                    @php
-                                        $hasId = isset($data['id']);
-                                        $hasException = isset($data['exception']);
-                                        $isDaily = !empty($data['is_daily']);
-                                        $isEncore = !empty($data['is_encore']);
-                                        $isDate = isset($data['date']);
-                                    @endphp
+                                {{-- アンコール最初の位置にだけ <hr> --}}
+                                @if ($isEncore && !$encore_started && !$isFirst)
+                                    <hr width="95%">
+                                    @php $encore_started = true; @endphp
+                                @elseif ($isEncore && !$encore_started)
+                                    @php $encore_started = true; @endphp
+                                @endif
 
-                                    {{-- アンコールフラグが立っていて、まだ<hr>出してなくて、先頭でも直前が日付でもない場合 --}}
-                                    @if ($isEncore && !$encore_started && !$isFirst && !$previousWasDate)
-                                        <hr width="95%">
-                                        @php $encore_started = true; @endphp
-                                    @elseif ($isEncore && !$encore_started)
-                                        @php $encore_started = true; @endphp
-                                    @endif
-
-                                    @if ($isDate)
+                                {{-- 日付がある場合は <ol> を閉じて開き直す --}}
+                                @if ($isDate)
+                                    @unless ($isFirst)
+                                        </ol>
+                                    @endunless
+                                    <ol class="live-column">
                                         <h5>{{ $data['date'] }}</h5>
-                                        @php
-                                            $previousWasDate = true;
-                                            $isFirst = false;
-                                        @endphp
+                                        @php $isFirst = false; @endphp
+                                        @continue
+                                @endif
+
+                                {{-- 最初だけ <ol> を開く --}}
+                                @if ($isFirst)
+                                    <ol class="live-column">
+                                        @php $isFirst = false; @endphp
+                                @endif
+
+                                {{-- ID + 例外あり --}}
+                                @if ($hasId && $hasException)
+                                    @if ($isDaily)
+                                        - <a
+                                            href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                     @else
-                                        {{-- セットリストIDと例外がある場合 --}}
-                                        @if ($hasId && $hasException)
-                                            @if ($isDaily)
-                                                - <a
-                                                    href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
-                                            @else
-                                                <li><a
-                                                        href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a>
-                                                </li>
-                                            @endif
-
-                                            {{-- セットリストIDがあり、例外がない場合 --}}
-                                        @elseif ($hasId)
-                                            @if ($isDaily)
-                                                <li><a
-                                                        href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] ?? '不明' }}</a>
-                                                </li>
-                                            @else
-                                                <li><a
-                                                        href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] ?? '不明' }}</a>
-                                                </li>
-                                            @endif
-
-                                            {{-- IDがなくて例外がある場合 --}}
-                                        @elseif ($hasException)
-                                            @if ($isDaily)
-                                                - {{ $data['exception'] }}<br>
-                                            @else
-                                                <li>{{ $data['exception'] }}</li>
-                                            @endif
-                                        @endif
-
-                                        @php
-                                            $previousWasDate = false;
-                                            $isFirst = false;
-                                        @endphp
+                                        <li><a
+                                                href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a>
+                                        </li>
                                     @endif
-                                @endforeach
-                            </ol>
+
+                                    {{-- IDのみ --}}
+                                @elseif ($hasId)
+                                    @if ($isDaily)
+                                        <li><a
+                                                href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] ?? '不明' }}</a>
+                                        </li>
+                                    @else
+                                        <li><a
+                                                href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] ?? '不明' }}</a>
+                                        </li>
+                                    @endif
+
+                                    {{-- 例外のみ --}}
+                                @elseif ($hasException)
+                                    @if ($isDaily)
+                                        - {{ $data['exception'] }}<br>
+                                    @else
+                                        <li>{{ $data['exception'] }}</li>
+                                    @endif
+                                @endif
+                            @endforeach
+
+                            {{-- 最後に開いている <ol> を閉じる --}}
+                            @if (!$isFirst)
+                                </ol>
+                            @endif
                     @endif
                     @if (isset($tours->setlist2))
-                        <ol class="live-column">
+                        @php
+                            $encore_started = false;
+                            $isFirst = true;
+                        @endphp
+
+                        @foreach ($tours->setlist2 as $data)
                             @php
-                                $encore_started = false;
-                                $isFirst = true;
-                                $previousWasDate = false;
+                                $hasId = isset($data['id']);
+                                $hasException = isset($data['exception']);
+                                $isDaily = !empty($data['is_daily']);
+                                $isEncore = !empty($data['is_encore']);
+                                $isDate = isset($data['date']);
                             @endphp
 
-                            @foreach ($tours->setlist2 as $data)
-                                @php
-                                    $hasId = isset($data['id']);
-                                    $hasException = isset($data['exception']);
-                                    $isDaily = !empty($data['is_daily']);
-                                    $isEncore = !empty($data['is_encore']);
-                                    $isDate = isset($data['date']);
-                                @endphp
+                            {{-- アンコール最初の位置にだけ <hr> --}}
+                            @if ($isEncore && !$encore_started && !$isFirst)
+                                <hr width="95%">
+                                @php $encore_started = true; @endphp
+                            @elseif ($isEncore && !$encore_started)
+                                @php $encore_started = true; @endphp
+                            @endif
 
-                                {{-- アンコールフラグが立っていて、まだ<hr>出してなくて、先頭でも直前が日付でもない場合 --}}
-                                @if ($isEncore && !$encore_started && !$isFirst && !$previousWasDate)
-                                    <hr width="95%">
-                                    @php $encore_started = true; @endphp
-                                @elseif ($isEncore && !$encore_started)
-                                    @php $encore_started = true; @endphp
-                                @endif
-
-                                @if ($isDate)
+                            {{-- 日付がある場合は <ol> を閉じて開き直す --}}
+                            @if ($isDate)
+                                @unless ($isFirst)
+                                    </ol>
+                                @endunless
+                                <ol class="live-column">
                                     <h5>{{ $data['date'] }}</h5>
-                                    @php
-                                        $previousWasDate = true;
-                                        $isFirst = false;
-                                    @endphp
+                                    @php $isFirst = false; @endphp
+                                    @continue
+                            @endif
+
+                            {{-- 最初だけ <ol> を開く --}}
+                            @if ($isFirst)
+                                <ol class="live-column">
+                                    @php $isFirst = false; @endphp
+                            @endif
+
+                            {{-- ID + 例外あり --}}
+                            @if ($hasId && $hasException)
+                                @if ($isDaily)
+                                    - <a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                 @else
-                                    {{-- セットリストIDと例外がある場合 --}}
-                                    @if ($hasId && $hasException)
-                                        @if ($isDaily)
-                                            - <a
-                                                href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
-                                        @else
-                                            <li><a
-                                                    href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a>
-                                            </li>
-                                        @endif
-
-                                        {{-- セットリストIDがあり、例外がない場合 --}}
-                                    @elseif ($hasId)
-                                        @if ($isDaily)
-                                            <li><a
-                                                    href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] ?? '不明' }}</a>
-                                            </li>
-                                        @else
-                                            <li><a
-                                                    href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] ?? '不明' }}</a>
-                                            </li>
-                                        @endif
-
-                                        {{-- IDがなくて例外がある場合 --}}
-                                    @elseif ($hasException)
-                                        @if ($isDaily)
-                                            - {{ $data['exception'] }}<br>
-                                        @else
-                                            <li>{{ $data['exception'] }}</li>
-                                        @endif
-                                    @endif
-
-                                    @php
-                                        $previousWasDate = false;
-                                        $isFirst = false;
-                                    @endphp
+                                    <li><a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a>
+                                    </li>
                                 @endif
-                            @endforeach
-                        </ol>
+
+                                {{-- IDのみ --}}
+                            @elseif ($hasId)
+                                @if ($isDaily)
+                                    <li><a
+                                            href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] ?? '不明' }}</a>
+                                    </li>
+                                @else
+                                    <li><a
+                                            href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] ?? '不明' }}</a>
+                                    </li>
+                                @endif
+
+                                {{-- 例外のみ --}}
+                            @elseif ($hasException)
+                                @if ($isDaily)
+                                    - {{ $data['exception'] }}<br>
+                                @else
+                                    <li>{{ $data['exception'] }}</li>
+                                @endif
+                            @endif
+                        @endforeach
+
+                        {{-- 最後に開いている <ol> を閉じる --}}
+                        @if (!$isFirst)
+                            </ol>
+                        @endif
                     @endif
                     @if (isset($tours->setlist3))
-                        <ol class="live-column">
+                        @php
+                            $encore_started = false;
+                            $isFirst = true;
+                        @endphp
+
+                        @foreach ($tours->setlist3 as $data)
                             @php
-                                $encore_started = false;
-                                $isFirst = true;
-                                $previousWasDate = false;
+                                $hasId = isset($data['id']);
+                                $hasException = isset($data['exception']);
+                                $isDaily = !empty($data['is_daily']);
+                                $isEncore = !empty($data['is_encore']);
+                                $isDate = isset($data['date']);
                             @endphp
 
-                            @foreach ($tours->setlist3 as $data)
-                                @php
-                                    $hasId = isset($data['id']);
-                                    $hasException = isset($data['exception']);
-                                    $isDaily = !empty($data['is_daily']);
-                                    $isEncore = !empty($data['is_encore']);
-                                    $isDate = isset($data['date']);
-                                @endphp
+                            {{-- アンコール最初の位置にだけ <hr> --}}
+                            @if ($isEncore && !$encore_started && !$isFirst)
+                                <hr width="95%">
+                                @php $encore_started = true; @endphp
+                            @elseif ($isEncore && !$encore_started)
+                                @php $encore_started = true; @endphp
+                            @endif
 
-                                {{-- アンコールフラグが立っていて、まだ<hr>出してなくて、先頭でも直前が日付でもない場合 --}}
-                                @if ($isEncore && !$encore_started && !$isFirst && !$previousWasDate)
-                                    <hr width="95%">
-                                    @php $encore_started = true; @endphp
-                                @elseif ($isEncore && !$encore_started)
-                                    @php $encore_started = true; @endphp
-                                @endif
-
-                                @if ($isDate)
+                            {{-- 日付がある場合は <ol> を閉じて開き直す --}}
+                            @if ($isDate)
+                                @unless ($isFirst)
+                                    </ol>
+                                @endunless
+                                <ol class="live-column">
                                     <h5>{{ $data['date'] }}</h5>
-                                    @php
-                                        $previousWasDate = true;
-                                        $isFirst = false;
-                                    @endphp
+                                    @php $isFirst = false; @endphp
+                                    @continue
+                            @endif
+
+                            {{-- 最初だけ <ol> を開く --}}
+                            @if ($isFirst)
+                                <ol class="live-column">
+                                    @php $isFirst = false; @endphp
+                            @endif
+
+                            {{-- ID + 例外あり --}}
+                            @if ($hasId && $hasException)
+                                @if ($isDaily)
+                                    - <a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
                                 @else
-                                    {{-- セットリストIDと例外がある場合 --}}
-                                    @if ($hasId && $hasException)
-                                        @if ($isDaily)
-                                            - <a
-                                                href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
-                                        @else
-                                            <li><a
-                                                    href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a>
-                                            </li>
-                                        @endif
-
-                                        {{-- セットリストIDがあり、例外がない場合 --}}
-                                    @elseif ($hasId)
-                                        @if ($isDaily)
-                                            <li><a
-                                                    href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] ?? '不明' }}</a>
-                                            </li>
-                                        @else
-                                            <li><a
-                                                    href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] ?? '不明' }}</a>
-                                            </li>
-                                        @endif
-
-                                        {{-- IDがなくて例外がある場合 --}}
-                                    @elseif ($hasException)
-                                        @if ($isDaily)
-                                            - {{ $data['exception'] }}<br>
-                                        @else
-                                            <li>{{ $data['exception'] }}</li>
-                                        @endif
-                                    @endif
-
-                                    @php
-                                        $previousWasDate = false;
-                                        $isFirst = false;
-                                    @endphp
+                                    <li><a href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a>
+                                    </li>
                                 @endif
-                            @endforeach
-                        </ol>
+
+                                {{-- IDのみ --}}
+                            @elseif ($hasId)
+                                @if ($isDaily)
+                                    <li><a
+                                            href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] ?? '不明' }}</a>
+                                    </li>
+                                @else
+                                    <li><a
+                                            href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] ?? '不明' }}</a>
+                                    </li>
+                                @endif
+
+                                {{-- 例外のみ --}}
+                            @elseif ($hasException)
+                                @if ($isDaily)
+                                    - {{ $data['exception'] }}<br>
+                                @else
+                                    <li>{{ $data['exception'] }}</li>
+                                @endif
+                            @endif
+                        @endforeach
+
+                        {{-- 最後に開いている <ol> を閉じる --}}
+                        @if (!$isFirst)
+                            </ol>
+                        @endif
                 </div>
                 @endif
             </div>
@@ -283,8 +297,8 @@
                         <i class="fa-solid fa-arrow-left fa-lg"></i></a>
                 @endif
                 @if (isset($next))
-                    <a class="btn btn-outline-dark" href="{{ route('live.show', $next->id) }}"rel="next"
-                        role="button"><i class="fa-solid fa-arrow-right fa-lg"></i></a>
+                    <a class="btn btn-outline-dark" href="{{ route('live.show', $next->id) }}"rel="next" role="button"><i
+                            class="fa-solid fa-arrow-right fa-lg"></i></a>
                 @endif
             </div>
         </div>
