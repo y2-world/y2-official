@@ -75,6 +75,37 @@
                                     @endunless
                                     <ol class="live-column">
                                         <h5>{{ $data['date'] }}</h5>
+                                        {{-- ID + 例外あり --}}
+                                        @if ($hasId && $hasException)
+                                            @if ($isDaily)
+                                                - <a
+                                                    href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a><br>
+                                            @else
+                                                <li><a
+                                                        href="{{ url('/database/songs', $data['id']) }}">{{ $data['exception'] }}</a>
+                                                </li>
+                                            @endif
+
+                                            {{-- IDのみ --}}
+                                        @elseif ($hasId)
+                                            @if ($isDaily)
+                                                <li><a
+                                                        href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] ?? '不明' }}</a>
+                                                </li>
+                                            @else
+                                                <li><a
+                                                        href="{{ url('/database/songs', $data['id']) }}">{{ $songs[$data['id'] - 1]['title'] ?? '不明' }}</a>
+                                                </li>
+                                            @endif
+
+                                            {{-- 例外のみ --}}
+                                        @elseif ($hasException)
+                                            @if ($isDaily)
+                                                - {{ $data['exception'] }}<br>
+                                            @else
+                                                <li>{{ $data['exception'] }}</li>
+                                            @endif
+                                        @endif
                                         @php
                                             $isFirst = false;
                                             $encore_started = false; // ←★ここでリセット
