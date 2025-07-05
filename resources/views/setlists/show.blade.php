@@ -140,11 +140,11 @@
                     @if (!empty($previous))
                         <a class="btn btn-outline-dark" href="{{ route('setlists.show', $previous->id) }}" rel="prev"
                             role="button">
-                            <</a>
+                            <i class="fa-solid fa-arrow-left fa-lg"></i></a>
                     @endif
                     @if (!empty($next))
                         <a class="btn btn-outline-dark" href="{{ route('setlists.show', $next->id) }}"rel="next"
-                            role="button">></a>
+                            role="button"><i class="fa-solid fa-arrow-right fa-lg"></i></a>
                     @endif
                 </div>
             </div>

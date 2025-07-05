@@ -52,10 +52,10 @@
           </div>
           <div class="show_button">
             @if(isset($previous))
-            <a class="btn btn-outline-dark" href="{{ route('albums.show', $previous->id)}}" rel="prev" role="button"><</a>
+            <a class="btn btn-outline-dark" href="{{ route('albums.show', $previous->id)}}" rel="prev" role="button"><i class="fa-solid fa-arrow-left fa-lg"></i></a>
             @endif
             @if(isset($next))
-            <a class="btn btn-outline-dark" href="{{ route('albums.show', $next->id)}}"rel="next" role="button">></a>
+            <a class="btn btn-outline-dark" href="{{ route('albums.show', $next->id)}}"rel="next" role="button"><i class="fa-solid fa-arrow-right fa-lg"></i></a>
             @endif
           </div> 
         </div>

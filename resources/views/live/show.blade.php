@@ -280,11 +280,11 @@
                 @if (isset($previous))
                     <a class="btn btn-outline-dark" href="{{ route('live.show', $previous->id) }}" rel="prev"
                         role="button">
-                        << /a>
+                        <i class="fa-solid fa-arrow-left fa-lg"></i></a>
                 @endif
                 @if (isset($next))
                     <a class="btn btn-outline-dark" href="{{ route('live.show', $next->id) }}"rel="next"
-                        role="button">></a>
+                        role="button"><i class="fa-solid fa-arrow-right fa-lg"></i></a>
                 @endif
             </div>
         </div>
