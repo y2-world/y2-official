@@ -43,7 +43,7 @@
             ]);
 
             // レイアウト用クラスを調整
-            $colClass = $totalOlCount <= 2 ? 'col-md-8' : 'col-md-12';
+            $colClass = $totalOlCount <= 2 ? 'col-md-8' : 'col-md-10';
             $flexDirectionClass = $totalOlCount <= 1 ? 'flex-start' : 'space-around';
         @endphp
         <div class="row justify-content-center">
