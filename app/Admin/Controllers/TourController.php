@@ -29,6 +29,8 @@ class TourController extends AdminController
         $grid = new Grid(new Tour());
         $grid->model()->orderBy('date1', 'desc');
 
+        $grid->column('id', __('ID'));
+        $grid->column('tour_id', __('ツアーID'));
         $grid->column('title', __('ツアータイトル'));
         $grid->column('date1', __('開始日'));
         $grid->column('date2', __('終了日'));
