@@ -29,13 +29,15 @@ class TourController extends AdminController
         $grid = new Grid(new Tour());
         $grid->model()->orderBy('date1', 'desc');
 
-        $grid->column('id', __('ID'));
-        $grid->column('tour_id', __('ツアーID'));
         $grid->column('title', __('ツアータイトル'));
         $grid->column('date1', __('開始日'));
         $grid->column('date2', __('終了日'));
 
-        $grid->filter(function ($filter) {
+         // 年リストを作成（例：2000年〜今年まで）
+        $years = range(date('Y'), 2000);
+        $years = array_combine($years, $years); // [2025 => 2025, 2024 => 2024, ...]
+
+        $grid->filter(function ($filter) use ($years) {
             $filter->equal('type')->radio([
                 ''   => 'All',
                 0    => 'ツアー',
@@ -44,6 +46,11 @@ class TourController extends AdminController
                 3    => 'ap bank fes',
                 4    => 'ソロ',
             ]);
+
+            // 年セレクトフィルター追加
+            $filter->where(function ($query) {
+                $query->whereYear('date1', $this->input);
+            }, '年（西暦）')->select($years);
         });
 
         return $grid;
