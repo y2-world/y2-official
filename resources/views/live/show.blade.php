@@ -8,17 +8,25 @@
             function getTotalOlCount($setlists)
             {
                 $totalOlCount = 0;
+
                 foreach ($setlists as $setlist) {
-                    if (isset($setlist)) {
+                    if (!empty($setlist)) {
+                        $hasDate = false;
+
                         foreach ($setlist as $data) {
-                            if (isset($data['#']) && $data['#'] === 'hr') {
+                            if (isset($data['date'])) {
                                 $totalOlCount++;
+                                $hasDate = true;
                             }
                         }
-                        // Each non-empty setlist starts with an <ol>
-                        $totalOlCount++;
+
+                        // date がない場合でも <ol> は1つ必要
+                        if (!$hasDate) {
+                            $totalOlCount++;
+                        }
                     }
                 }
+
                 return $totalOlCount;
             }
 
