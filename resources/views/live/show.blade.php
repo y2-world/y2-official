@@ -34,7 +34,7 @@
             $totalOlCount = getTotalOlCount([$tours->setlist1, $tours->setlist2, $tours->setlist3]);
 
             // クラスを設定
-            $colClass = $totalOlCount <= 2 ? 'col-md-8' : 'col-md-10';
+            $colClass = $totalOlCount <= 2 ? 'col-md-8' : 'col-md-12';
             $flexDirectionClass = $totalOlCount <= 1 ? 'flex-start' : 'space-around';
 
         @endphp
