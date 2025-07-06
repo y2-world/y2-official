@@ -113,7 +113,7 @@ class TourController extends AdminController
                     $form->text('venue', __('会場'));
                 });
         })->tab('セットリスト1', function ($form) {
-            $form->table('setlist1', 'セットリスト', function ($table) {
+            $form->table('setlist1', 'セットリスト1', function ($table) {
                 $table->text('#', '#');
                 $table->text('date', '日付');
                 $table->select('id', '曲')->options(Song::all()->pluck('title', 'id'));
@@ -128,7 +128,7 @@ class TourController extends AdminController
                 $table->text('exception', '例外');
             });
         })->tab('セットリスト2', function ($form) {
-            $form->table('setlist2', 'セットリスト', function ($table) {
+            $form->table('setlist2', 'セットリスト2', function ($table) {
                 $table->text('#', '#');
                 $table->text('date', '日付');
                 $table->select('id', '曲')->options(Song::all()->pluck('title', 'id'));
@@ -143,7 +143,52 @@ class TourController extends AdminController
                 $table->text('exception', '例外');
             });
         })->tab('セットリスト3', function ($form) {
-            $form->table('setlist3', 'セットリスト', function ($table) {
+            $form->table('setlist3', 'セットリスト3', function ($table) {
+                $table->text('#', '#');
+                $table->text('date', '日付');
+                $table->select('id', '曲')->options(Song::all()->pluck('title', 'id'));
+                $table->switch('is_daily', '')->states([
+                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
+                    'off' => ['value' => 0, 'text' => '日替わり',   'color' => 'default'],
+                ])->default(0);
+                $table->switch('is_encore', '')->states([
+                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
+                    'off' => ['value' => 0, 'text' => 'アンコール',   'color' => 'default'],
+                ])->default(0);
+                $table->text('exception', '例外');
+            });
+        })->tab('セットリスト4', function ($form) {
+            $form->table('setlist4', 'セットリスト4', function ($table) {
+                $table->text('#', '#');
+                $table->text('date', '日付');
+                $table->select('id', '曲')->options(Song::all()->pluck('title', 'id'));
+                $table->switch('is_daily', '')->states([
+                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
+                    'off' => ['value' => 0, 'text' => '日替わり',   'color' => 'default'],
+                ])->default(0);
+                $table->switch('is_encore', '')->states([
+                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
+                    'off' => ['value' => 0, 'text' => 'アンコール',   'color' => 'default'],
+                ])->default(0);
+                $table->text('exception', '例外');
+            });
+        })->tab('セットリスト5', function ($form) {
+            $form->table('setlist5', 'セットリスト5', function ($table) {
+                $table->text('#', '#');
+                $table->text('date', '日付');
+                $table->select('id', '曲')->options(Song::all()->pluck('title', 'id'));
+                $table->switch('is_daily', '')->states([
+                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
+                    'off' => ['value' => 0, 'text' => '日替わり',   'color' => 'default'],
+                ])->default(0);
+                $table->switch('is_encore', '')->states([
+                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
+                    'off' => ['value' => 0, 'text' => 'アンコール',   'color' => 'default'],
+                ])->default(0);
+                $table->text('exception', '例外');
+            });
+        })->tab('セットリスト6', function ($form) {
+            $form->table('setlist6', 'セットリスト6', function ($table) {
                 $table->text('#', '#');
                 $table->text('date', '日付');
                 $table->select('id', '曲')->options(Song::all()->pluck('title', 'id'));
