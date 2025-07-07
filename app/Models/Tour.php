@@ -11,6 +11,9 @@ class Tour extends Model
         'setlist1' =>'json',
         'setlist2' =>'json',
         'setlist3' =>'json',
+        'setlist4' =>'json',
+        'setlist5' =>'json',
+        'setlist6' =>'json',
     ];
 
     public function songs()
@@ -36,6 +39,21 @@ class Tour extends Model
     public function setSetlist3Attribute($value)
     {
         $this->attributes['setlist3'] = json_encode(array_values($value));
+    }
+    
+    public function setSetlist4Attribute($value)
+    {
+        $this->attributes['setlist4'] = json_encode(array_values($value));
+    }
+
+    public function setSetlist5Attribute($value)
+    {
+        $this->attributes['setlist5'] = json_encode(array_values($value));
+    }
+
+    public function setSetlist6Attribute($value)
+    {
+        $this->attributes['setlist6'] = json_encode(array_values($value));
     }
 
 
