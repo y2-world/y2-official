@@ -133,9 +133,8 @@ class SetlistController extends AdminController
                 0 => '単独ライブ',
                 1 => 'フェス',
             ])->when(0, function (Form $form) {
-
                 $form->table('setlist', __('本編'), function ($table) {
-                    $table->text('song', __(''))->rules('required');
+                    $table->text('song', '曲')->rules('required');
                     $table->switch('medley', 'Medley')->states([
                         'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
                         'off' => ['value' => 0, 'text' => '',   'color' => 'default'],
