@@ -24,3 +24,5 @@ use Encore\Admin\Facades\Admin;
 Encore\Admin\Form::extend('editor', Encore\Admin\Form\Field\Editor::class);
 Admin::css('/css/admin-custom.css');
 Admin::js('/js/admin-custom.js');
+
+Admin::disablePjax();
