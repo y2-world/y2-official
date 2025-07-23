@@ -5,13 +5,11 @@ function insertNumberLabels(prefix, labelClass) {
         const inputGroup = input.closest('.input-group');
         if (!inputGroup) return;
 
-        // 既存の番号ラベルがあれば削除
         const existing = inputGroup.previousElementSibling;
         if (existing && existing.classList.contains(labelClass)) {
             existing.remove();
         }
 
-        // ラベル要素を作成して挿入
         const label = document.createElement('div');
         label.textContent = `${index + 1}.`;
         label.className = labelClass;
@@ -31,8 +29,8 @@ function updateAllNumberLabels() {
     insertNumberLabels('fes_encore', 'fes-encore-number-label');
 }
 
-// 初回実行と動的追加に対応
-document.addEventListener('DOMContentLoaded', () => {
+// 初回実行とクリック追加に対応
+function initNumbering() {
     updateAllNumberLabels();
 
     ['.has-many-setlist', '.has-many-encore', '.has-many-fes_setlist', '.has-many-fes_encore'].forEach(selector => {
@@ -43,4 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
-});
+}
+
+// 初回ロード
+document.addEventListener('DOMContentLoaded', initNumbering);
+
+// pjax遷移後にも対応
+$(document).on('pjax:end', initNumbering);
