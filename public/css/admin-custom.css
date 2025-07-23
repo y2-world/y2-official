@@ -215,3 +215,32 @@
 .remove.btn {
     font-size: 0;
 }
+
+/* input-groupをflexで横並びに */
+.input-group {
+  display: flex !important;      /* Bootstrapや他CSSで上書きされている可能性があるため !important */
+  align-items: center;
+}
+
+/* 番号ラベル */
+.setlist-number-label {
+  white-space: nowrap;
+  font-weight: bold;
+  color: #666;
+  font-size: 13px;
+  margin: 0;                   /* margin-bottomやmargin-rightはgapで調整 */
+}
+
+/* pencilアイコンのspanをflexアイテムとして調整 */
+.input-group-addon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 8px;            /* Bootstrapのデフォルトpaddingに合わせて調整 */
+}
+
+/* 入力欄が伸びるように */
+.input-group input.form-control {
+  flex-grow: 1;
+  min-width: 0;                /* 幅制約の調整 */
+}

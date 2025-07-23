@@ -1,50 +1,66 @@
 function insertNumberLabels(prefix, labelClass) {
-    const inputs = document.querySelectorAll(`input[name^="${prefix}["][name$="[song]"]`);
+  const inputs = document.querySelectorAll(
+    `input[name^="${prefix}["][name$="[song]"]`
+  );
 
-    inputs.forEach((input, index) => {
-        const inputGroup = input.closest('.input-group');
-        if (!inputGroup) return;
+  inputs.forEach((input, index) => {
+    const inputGroup = input.closest(".input-group");
+    if (!inputGroup) return;
 
-        const existing = inputGroup.previousElementSibling;
-        if (existing && existing.classList.contains(labelClass)) {
-            existing.remove();
-        }
+    // 既存ラベルがあれば削除
+    const existing = inputGroup.querySelector(`.${labelClass}`);
+    if (existing) existing.remove();
 
-        const label = document.createElement('div');
-        label.textContent = `${index + 1}.`;
-        label.className = labelClass;
-        label.style.marginBottom = '4px';
-        label.style.fontWeight = 'bold';
-        label.style.fontSize = '13px';
-        label.style.color = '#666';
+    // 新しく番号ラベル作成
+    const label = document.createElement("div");
+    label.textContent = `${index + 1}.`;
+    label.className = labelClass;
 
-        inputGroup.parentNode.insertBefore(label, inputGroup);
-    });
+    // スタイル設定（JSでCSSも設定）
+    label.style.fontWeight = "bold";
+    label.style.color = "#666";
+    label.style.fontSize = "13px";
+    label.style.marginRight = "8px";
+    label.style.whiteSpace = "nowrap";
+
+    // inputGroupの先頭に挿入
+    inputGroup.prepend(label);
+  });
 }
 
 function updateAllNumberLabels() {
-    insertNumberLabels('setlist', 'setlist-number-label');
-    insertNumberLabels('encore', 'encore-number-label');
-    insertNumberLabels('fes_setlist', 'fes-setlist-number-label');
-    insertNumberLabels('fes_encore', 'fes-encore-number-label');
+  insertNumberLabels("setlist", "setlist-number-label");
+  insertNumberLabels("fes_setlist", "fes-setlist-number-label");
+  insertNumberLabels("encore", "encore-number-label");
+  insertNumberLabels("fes_encore", "fes-encore-number-label");
 }
 
-// 初回実行とクリック追加に対応
 function initNumbering() {
-    updateAllNumberLabels();
+  updateAllNumberLabels();
 
-    ['.has-many-setlist', '.has-many-encore', '.has-many-fes_setlist', '.has-many-fes_encore'].forEach(selector => {
-        const container = document.querySelector(selector);
-        if (container) {
-            container.addEventListener('click', () => {
-                setTimeout(updateAllNumberLabels, 100);
-            });
-        }
-    });
+  [
+    ".has-many-setlist",
+    ".has-many-encore",
+    ".has-many-fes_setlist",
+    ".has-many-fes_encore",
+  ].forEach((selector) => {
+    const container = document.querySelector(selector);
+    if (container) {
+      container.addEventListener("click", () => {
+        setTimeout(updateAllNumberLabels, 100);
+      });
+    }
+  });
 }
 
-// 初回ロード
-document.addEventListener('DOMContentLoaded', initNumbering);
+document.addEventListener("DOMContentLoaded", initNumbering);
+$(document).on("pjax:end", initNumbering);
 
-// pjax遷移後にも対応
-$(document).on('pjax:end', initNumbering);
+document.addEventListener("DOMContentLoaded", () => {
+  // 新規ボタンが押されたときに番号を即更新
+  document.querySelectorAll('.add.btn').forEach(button => {
+    button.addEventListener('click', () => {
+      setTimeout(updateAllNumberLabels, 10); // 追加DOMが反映されるタイミングに合わせて遅延実行
+    });
+  });
+});
