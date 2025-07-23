@@ -8,7 +8,7 @@
 .has-many-setlist5-form.fields-group > td,
 .has-many-setlist6-form.fields-group > td {
     display: block;
-    width: 130%;
+    width: 100%;
 }
 
 /* 入力エリア・セレクトの幅調整 */
@@ -28,7 +28,7 @@
 .has-many-setlist4-form .select2-container,
 .has-many-setlist5-form .select2-container,
 .has-many-setlist6-form .select2-container {
-    width: 130% !important;
+    width: 100% !important;
 }
 
 /* テキスト入力幅調整 */
@@ -40,7 +40,7 @@
 .has-many-setlist4-form input[type="text"],
 .has-many-setlist5-form input[type="text"],
 .has-many-setlist6-form input[type="text"] {
-    width: 130% !important;
+    width: 100% !important;
 }
 
 /* tdのパディング調整 */
@@ -217,7 +217,8 @@
 }
 
 /* input-groupをflexで横並びに */
-.input-group {
+.has-many-setlist-forms .input-group,
+.has-many-encore-forms .input-group {
   display: flex !important;      /* Bootstrapや他CSSで上書きされている可能性があるため !important */
   align-items: center;
 }
