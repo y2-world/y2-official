@@ -28,11 +28,44 @@ function insertNumberLabels(prefix, labelClass) {
   });
 }
 
+function insertSelectNumberLabels(prefix, labelClass) {
+  const selects = document.querySelectorAll(
+    `select[name^="${prefix}["][name$="[song]"]`
+  );
+
+  selects.forEach((select, index) => {
+    const formGroup = select.closest(".form-group");
+    if (!formGroup) return;
+
+    // 既存ラベルがあれば削除
+    const existing = formGroup.querySelector(`.${labelClass}`);
+    if (existing) existing.remove();
+
+    // 新しく番号ラベル作成
+    const label = document.createElement("div");
+    label.textContent = `${index + 1}.`;
+    label.className = labelClass;
+
+    // スタイル設定
+    label.style.fontWeight = "bold";
+    label.style.color = "#666";
+    label.style.fontSize = "13px";
+    label.style.marginRight = "8px";
+    label.style.whiteSpace = "nowrap";
+
+    // 先頭に挿入
+    formGroup.prepend(label);
+  });
+}
+
 function updateAllNumberLabels() {
   insertNumberLabels("setlist", "setlist-number-label");
   insertNumberLabels("fes_setlist", "fes-setlist-number-label");
   insertNumberLabels("encore", "encore-number-label");
   insertNumberLabels("fes_encore", "fes-encore-number-label");
+
+  insertSelectNumberLabels("setlist", "setlist-number-label");
+  insertSelectNumberLabels("encore", "encore-number-label");
 }
 
 function initNumbering() {
