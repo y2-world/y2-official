@@ -28,7 +28,6 @@ class TourSetlistController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new TourSetlist());
-        $grid->model()->orderBy('date1', 'desc');
 
         $grid->column('id', __('ID'));
         $grid->column('tour_id', __('ツアー'))->display(function ($id) {
@@ -37,10 +36,11 @@ class TourSetlistController extends AdminController
         });
         $grid->column('order_no', __('順番'));
         $grid->column('date1', __('日付1'))->display(function ($value) {
-            return \Carbon\Carbon::parse($value)->format('Y-m-d');
+            return $value ? \Carbon\Carbon::parse($value)->format('Y-m-d') : '';
         });
+
         $grid->column('date2', __('日付2'))->display(function ($value) {
-            return \Carbon\Carbon::parse($value)->format('Y-m-d');
+            return $value ? \Carbon\Carbon::parse($value)->format('Y-m-d') : '';
         });
         $grid->column('subtitle', __('サブタイトル'));
 
@@ -128,6 +128,14 @@ class TourSetlistController extends AdminController
         $form->number('order_no', __('順番'))->default(1);
         $form->date('date1', __('日付1'))->default(null);
         $form->date('date2', __('日付2'))->default(null);
+        $form->saving(function (Form $form) {
+            if ($form->date1 === '') {
+                $form->date1 = null;
+            }
+            if ($form->date2 === '') {
+                $form->date2 = null;
+            }
+        });
         $form->text('subtitle', __('サブタイトル'));
         $form->table('setlist', '本編', function ($table) {
             $table->select('song', '曲')
