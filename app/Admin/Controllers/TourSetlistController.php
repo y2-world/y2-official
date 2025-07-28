@@ -126,8 +126,8 @@ class TourSetlistController extends AdminController
 
         $form->select('tour_id', __('ツアー'))->options(Tour::all()->pluck('title', 'id'));
         $form->number('order_no', __('順番'))->default(1);
-        $form->date('date1', __('日付1'))->default(date('Y-m-d'));
-        $form->date('date2', __('日付2'))->default(date('Y-m-d'));
+        $form->date('date1', __('日付1'))->default(null);
+        $form->date('date2', __('日付2'))->default(null);
         $form->text('subtitle', __('サブタイトル'));
         $form->table('setlist', '本編', function ($table) {
             $table->select('song', '曲')
