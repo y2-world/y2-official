@@ -72,6 +72,10 @@ class DiscoController extends AdminController
     protected function form()
     {
         $form = new Form(new Disco());
+        $form->saved(function (Form $form) {
+            admin_toastr('保存しました！', 'success');
+            return redirect(admin_url('discos'));
+        });
 
         $form->text('id', __('ID'));
         $form->text('title', __('タイトル'));

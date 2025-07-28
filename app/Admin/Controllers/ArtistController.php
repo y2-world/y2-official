@@ -61,6 +61,10 @@ class ArtistController extends AdminController
     protected function form()
     {
         $form = new Form(new Artist());
+        $form->saved(function (Form $form) {
+            admin_toastr('保存しました！', 'success');
+            return redirect(admin_url('artists'));
+        });
 
         $form->text('id', __('ID'))->rules('required');
         $form->radio('visible','公開')

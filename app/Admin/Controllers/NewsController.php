@@ -65,6 +65,10 @@ class NewsController extends AdminController
     protected function form()
     {
         $form = new Form(new News());
+        $form->saved(function (Form $form) {
+            admin_toastr('保存しました！', 'success');
+            return redirect(admin_url('news'));
+        });
 
         $form->text('title', __('タイトル'));
         $form->radio('visible','公開')

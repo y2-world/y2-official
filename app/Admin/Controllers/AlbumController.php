@@ -72,6 +72,10 @@ class AlbumController extends AdminController
     protected function form()
     {
         $form = new Form(new Album());
+        $form->saved(function (Form $form) {
+            admin_toastr('保存しました！', 'success');
+            return redirect(admin_url('albums'));
+        });
 
         $form->text('id', __('ID'))->rules('required');
         $form->text('album_id', __('Album ID'));

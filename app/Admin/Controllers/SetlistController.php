@@ -122,6 +122,10 @@ class SetlistController extends AdminController
     protected function form()
     {
         $form = new Form(new Setlist());
+        $form->saved(function (Form $form) {
+            admin_toastr('保存しました！', 'success');
+            return redirect(admin_url('setlists'));
+        });
 
         $form->text('id', __('ID'))->rules('required');
         $form->select('artist_id', __('アーティスト'))->options(Artist::all()->pluck('name', 'id'));
@@ -150,11 +154,39 @@ class SetlistController extends AdminController
             })->when(1, function (Form $form) {
 
                 $form->table('fes_setlist', __('本編'), function ($table) {
-                    $table->select('artist', __(''))->options(Artist::all()->pluck('name', 'id'))->attribute(['class' => 'artist-select']);
+                    $table->select('artist', '')
+                        ->options(function ($value) {
+                            $artists = \App\Artist::all()->pluck('name', 'id');
+
+                            // 入力値が数値でない＝手入力（自由入力）だった場合
+                            if (!is_numeric($value) && $value) {
+                                return $artists->prepend($value, $value);
+                            }
+
+                            return $artists;
+                        })
+                        ->attribute([
+                            'data-tags' => 'true',
+                            'data-placeholder' => 'アーティストを選択または入力',
+                        ]);
                     $table->text('song', __(''))->rules('required');
                 });
                 $form->table('fes_encore', __('アンコール'), function ($table) {
-                    $table->select('artist', __(''))->options(Artist::all()->pluck('name', 'id'))->attribute(['class' => 'artist-select']);
+                    $table->select('artist', '')
+                        ->options(function ($value) {
+                            $artists = \App\Artist::all()->pluck('name', 'id');
+
+                            // 入力値が数値でない＝手入力（自由入力）だった場合
+                            if (!is_numeric($value) && $value) {
+                                return $artists->prepend($value, $value);
+                            }
+
+                            return $artists;
+                        })
+                        ->attribute([
+                            'data-tags' => 'true',
+                            'data-placeholder' => 'アーティストを選択または入力',
+                        ]);
                     $table->text('song', __(''))->rules('required');
                 });
             });

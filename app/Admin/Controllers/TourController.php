@@ -92,6 +92,10 @@ class TourController extends AdminController
     protected function form()
     {
         $form = new Form(new Tour());
+        $form->saved(function (Form $form) {
+            admin_toastr('保存しました！', 'success');
+            return redirect(admin_url('tours'));
+        });
 
         $form->tab('データ', function ($form) {
             $form->text('title', __('タイトル'));

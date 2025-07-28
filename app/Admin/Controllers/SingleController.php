@@ -72,6 +72,10 @@ class SingleController extends AdminController
     protected function form()
     {
         $form = new Form(new Single());
+        $form->saved(function (Form $form) {
+            admin_toastr('保存しました！', 'success');
+            return redirect(admin_url('singles'));
+        });
 
         $form->text('id', __('ID'))->rules('required');
         $form->text('single_id', __('Single ID'));

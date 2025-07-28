@@ -60,6 +60,10 @@ class YearController extends AdminController
     protected function form()
     {
         $form = new Form(new Year());
+        $form->saved(function (Form $form) {
+            admin_toastr('保存しました！', 'success');
+            return redirect(admin_url('years'));
+        });
 
         $form->text('year', __('年'));
 

@@ -61,6 +61,10 @@ class BioController extends AdminController
     protected function form()
     {
         $form = new Form(new Bio());
+        $form->saved(function (Form $form) {
+            admin_toastr('保存しました！', 'success');
+            return redirect(admin_url('bios'));
+        });
 
         $form->text('year', __('年'));
         $form->textarea('text', __('コメント'));

@@ -18,7 +18,7 @@ class TourSetlistController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Tour Setlist';
+    protected $title = 'Tour Setlists';
 
     /**
      * Make a grid builder.
@@ -72,10 +72,39 @@ class TourSetlistController extends AdminController
             return $tour ? $tour->title : '';
         });
         $show->field('order_no', __('順番'));
-        $show->field('date1', __('日付1'));
-        $show->field('date2', __('日付2'));
+        $show->field('date1', __('日付1'))->as(function ($value) {
+            return \Carbon\Carbon::parse($value)->format('Y-m-d');
+        });
+        $show->field('date2', __('日付2'))->as(function ($value) {
+            return \Carbon\Carbon::parse($value)->format('Y-m-d');
+        });
         $show->field('subtitle', __('サブタイトル'));
-        $show->field('setlist', __('セットリスト'));
+        $show->field('setlist', __('本編'))->unescape()->as(function ($setlist) {
+            $result1 = [];
+            $i = 1;
+            foreach ((array)$setlist as $data1) {
+                if (is_array($data1) && isset($data1['song'])) {
+                    $song = \App\Models\Song::find($data1['song']);
+                    $title = $song ? $song->title : $data1['song'];
+                    $result1[] = $i . '. ' . $title;
+                    $i++;
+                }
+            }
+            return implode('<br>', $result1);
+        });
+        $show->field('encore', __('アンコール'))->unescape()->as(function ($encore) {
+            $result2 = [];
+            $i = 1;
+            foreach ((array)$encore as $data2) {
+                if (is_array($data2) && isset($data2['song'])) {
+                    $song = \App\Models\Song::find($data2['song']);
+                    $title = $song ? $song->title : $data2['song'];
+                    $result2[] = $i . '. ' . $title;
+                    $i++;
+                }
+            }
+            return implode('<br>', $result2);
+        });
         $show->field('created_at', __('作成日時'));
         $show->field('updated_at', __('更新日時'));
 
@@ -90,6 +119,10 @@ class TourSetlistController extends AdminController
     protected function form()
     {
         $form = new Form(new TourSetlist());
+        $form->saved(function (Form $form) {
+            admin_toastr('保存しました！', 'success');
+            return redirect(admin_url('tour-setlists'));
+        });
 
         $form->select('tour_id', __('ツアー'))->options(Tour::all()->pluck('title', 'id'));
         $form->number('order_no', __('順番'))->default(1);

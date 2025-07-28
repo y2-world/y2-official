@@ -59,6 +59,10 @@ class ProfileController extends AdminController
     protected function form()
     {
         $form = new Form(new Profile());
+        $form->saved(function (Form $form) {
+            admin_toastr('保存しました！', 'success');
+            return redirect(admin_url('profiles'));
+        });
 
         $form->text('name', __('名前'));
         $form->text('info', __('情報'));

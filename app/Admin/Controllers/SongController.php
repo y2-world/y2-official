@@ -86,6 +86,10 @@ class SongController extends AdminController
     protected function form()
     {
         $form = new Form(new Song());
+        $form->saved(function (Form $form) {
+            admin_toastr('保存しました！', 'success');
+            return redirect(admin_url('songs'));
+        });
 
         $form->text('id', __('ID'))->rules('required');
         $form->text('title', __('タイトル'))->rules('required');

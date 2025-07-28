@@ -62,6 +62,10 @@ class LyricController extends AdminController
     protected function form()
     {
         $form = new Form(new Lyric());
+        $form->saved(function (Form $form) {
+            admin_toastr('保存しました！', 'success');
+            return redirect(admin_url('lyrics'));
+        });
 
         $form->text('id', __('ID'));
         $form->text('title', __('タイトル'));
