@@ -73,10 +73,10 @@ class TourSetlistController extends AdminController
         });
         $show->field('order_no', __('順番'));
         $show->field('date1', __('日付1'))->as(function ($value) {
-            return \Carbon\Carbon::parse($value)->format('Y-m-d');
+            return $value ? \Carbon\Carbon::parse($value)->format('Y-m-d') : '';
         });
         $show->field('date2', __('日付2'))->as(function ($value) {
-            return \Carbon\Carbon::parse($value)->format('Y-m-d');
+            return $value ? \Carbon\Carbon::parse($value)->format('Y-m-d') : '';
         });
         $show->field('subtitle', __('サブタイトル'));
         $show->field('setlist', __('本編'))->unescape()->as(function ($setlist) {
