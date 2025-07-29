@@ -219,16 +219,49 @@
 .has-many-encore-forms .input-group,
 .has-many-setlist-forms .form-group,
 .has-many-encore-forms .form-group {
-  display: flex !important;      /* Bootstrapや他CSSで上書きされている可能性があるため !important */
-  align-items: center;
+    display: flex !important; /* Bootstrapや他CSSで上書きされている可能性があるため !important */
+    align-items: center;
 }
 
 /* 番号ラベル */
 .setlist-number-label {
-  white-space: nowrap;
-  font-weight: bold;
-  color: #666;
-  font-size: 13px;
-  margin: 0;                   /* margin-bottomやmargin-rightはgapで調整 */
+    white-space: nowrap;
+    font-weight: bold;
+    color: #666;
+    font-size: 13px;
+    margin: 0; /* margin-bottomやmargin-rightはgapで調整 */
 }
 
+.table-form .form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.table-form .form-group .col-sm-8 {
+    flex: 1 !important;
+    max-width: 100% !important;
+}
+
+.table-form .form-group select {
+    width: 100% !important;
+}
+
+.table-form .form-group .switch {
+    min-width: 50px;
+    margin-left: 10px;
+}
+
+.select2-container--default .select2-selection--single {
+    max-width: 100%;
+    width: 100% !important;
+    display: block;
+}
+
+.select2-selection__rendered {
+    display: block;
+    white-space: wrap !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}

@@ -138,11 +138,10 @@ class TourSetlistController extends AdminController
         });
         $form->text('subtitle', __('サブタイトル'));
         $form->table('setlist', '本編', function ($table) {
-            $table->select('song', '曲')
+            $table->select('song', ' ')
                 ->options(function ($value) {
                     $songs = \App\Models\Song::all()->pluck('title', 'id');
 
-                    // 入力値が数値でない＝手入力（自由入力）だった場合
                     if (!is_numeric($value) && $value) {
                         return $songs->prepend($value, $value);
                     }
@@ -152,11 +151,15 @@ class TourSetlistController extends AdminController
                 ->attribute([
                     'data-tags' => 'true',
                     'data-placeholder' => '曲を選択または入力',
+                    'style' => 'width: 100%;',
                 ]);
-            $table->switch('is_daily', '//daily//')->states([
-                'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
-                'off' => ['value' => 0, 'text' => '',   'color' => 'default'],
-            ])->default(0);
+
+            $table->switch('is_daily', '//daily//')
+                ->states([
+                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
+                    'off' => ['value' => 0, 'text' => '',   'color' => 'default'],
+                ])
+                ->default(0);
         });
         $form->table('encore', 'アンコール', function ($table) {
             $table->select('song', '曲')
