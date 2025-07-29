@@ -82,31 +82,55 @@ class SetlistController extends AdminController
         $show->field('venue', __('会場'));
         $show->field('setlist', __('本編'))->unescape()->as(function ($setlist) {
             $result1 = [];
-            foreach ($setlist as $data1) {
-                $result1[] = $data1['song'];
+            $i = 1;
+            foreach ((array)$setlist as $data1) {
+                if (is_array($data1) && isset($data1['song'])) {
+                    $song = \App\Models\Song::find($data1['song']);
+                    $title = $song ? $song->title : $data1['song'];
+                    $result1[] = $i . '. ' . $title;
+                    $i++;
+                }
             }
             return implode('<br>', $result1);
         });
         $show->field('encore', __('アンコール'))->unescape()->as(function ($encore) {
             $result2 = [];
+            $i = 1;
             foreach ((array)$encore as $data2) {
-                $result2[] = $data2['song'];
+                if (is_array($data2) && isset($data2['song'])) {
+                    $song = \App\Models\Song::find($data2['song']);
+                    $title = $song ? $song->title : $data2['song'];
+                    $result2[] = $i . '. ' . $title;
+                    $i++;
+                }
             }
             return implode('<br>', $result2);
         });
-        $show->field('fes_setlist', __('本編'))->unescape()->as(function ($fes_setlist) {
-            $result3 = [];
-            foreach ((array)$fes_setlist as $data3) {
-                $result3[] = $data3['song'];
+        $show->field('setlist', __('本編'))->unescape()->as(function ($setlist) {
+            $result1 = [];
+            $i = 1;
+            foreach ((array)$setlist as $data1) {
+                if (is_array($data1) && isset($data1['song'])) {
+                    $song = \App\Models\Song::find($data1['song']);
+                    $title = $song ? $song->title : $data1['song'];
+                    $result1[] = $i . '. ' . $title;
+                    $i++;
+                }
             }
-            return implode('<br>', $result3);
+            return implode('<br>', $result1);
         });
-        $show->field('fes_encore', __('アンコール'))->unescape()->as(function ($fes_encore) {
-            $result4 = [];
-            foreach ((array)$fes_encore as $data4) {
-                $result4[] = $data4['song'];
+        $show->field('encore', __('アンコール'))->unescape()->as(function ($encore) {
+            $result2 = [];
+            $i = 1;
+            foreach ((array)$encore as $data2) {
+                if (is_array($data2) && isset($data2['song'])) {
+                    $song = \App\Models\Song::find($data2['song']);
+                    $title = $song ? $song->title : $data2['song'];
+                    $result2[] = $i . '. ' . $title;
+                    $i++;
+                }
             }
-            return implode('<br>', $result4);
+            return implode('<br>', $result2);
         });
         $show->field('created_at', __('作成日時'));
         $show->field('updated_at', __('更新日時'));
