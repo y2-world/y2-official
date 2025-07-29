@@ -154,7 +154,7 @@ class TourSetlistController extends AdminController
                     'style' => 'width: 100%;',
                 ]);
 
-            $table->switch('is_daily', '//daily//')
+            $table->switch('is_daily', '<daily>')
                 ->states([
                     'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
                     'off' => ['value' => 0, 'text' => '',   'color' => 'default'],
@@ -177,7 +177,7 @@ class TourSetlistController extends AdminController
                     'data-tags' => 'true',
                     'data-placeholder' => '曲を選択または入力',
                 ]);
-            $table->switch('is_daily', '//daily//')->states([
+            $table->switch('is_daily', '<daily>')->states([
                 'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
                 'off' => ['value' => 0, 'text' => '',   'color' => 'default'],
             ])->default(0);

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Song;
 use App\Models\Bio;
 use App\Models\Tour;
+use App\Models\TourSetlist;
 
 class LiveController extends Controller
 {
@@ -83,10 +84,11 @@ class LiveController extends Controller
         $tours = Tour::find($id);
         $songs = Song::orderBy('id', 'asc')
         ->get();
+        $tourSetlists = TourSetlist::where('tour_id', $id)->orderBy('order_no', 'asc')->get();
         $previous = Tour::where('id', '<', $tours->id)->orderBy('id', 'desc')->first();
         $next = Tour::where('id', '>', $tours->id)->orderBy('id')->first();
         
-        return view('live.show', compact('songs', 'previous', 'next', 'tours'));
+        return view('live.show', compact('songs', 'previous', 'next', 'tours', 'tourSetlists'));
     }
 
     /**
