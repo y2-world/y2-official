@@ -106,7 +106,7 @@ class SetlistController extends AdminController
             }
             return implode('<br>', $result2);
         });
-        $show->field('setlist', __('本編'))->unescape()->as(function ($setlist) {
+        $show->field('fes_setlist', __('本編'))->unescape()->as(function ($setlist) {
             $result1 = [];
             $i = 1;
             foreach ((array)$setlist as $data1) {
@@ -119,7 +119,7 @@ class SetlistController extends AdminController
             }
             return implode('<br>', $result1);
         });
-        $show->field('encore', __('アンコール'))->unescape()->as(function ($encore) {
+        $show->field('fes_encore', __('アンコール'))->unescape()->as(function ($encore) {
             $result2 = [];
             $i = 1;
             foreach ((array)$encore as $data2) {
