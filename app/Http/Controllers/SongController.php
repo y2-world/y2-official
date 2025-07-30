@@ -8,6 +8,7 @@ use App\Models\Single;
 use App\Models\Bio;
 use App\Models\Tour;
 use Illuminate\Http\Request;
+use App\Models\TourSetlist;
 
 class SongController extends Controller
 {
@@ -56,29 +57,62 @@ class SongController extends Controller
      */
     public function show($id)
     {
-        $songs = Song::find($id);
-        $allSongs = Song::orderBy('id', 'asc')
-            ->get();
-        $albums = Album::orderBy('id', 'asc')
-            ->get();
-        $singles = Single::orderBy('id', 'asc')
-            ->get();
-        $tours = Tour::whereRaw("JSON_EXTRACT(setlist1, '$.*.id') REGEXP '\"$id\"'")
-            ->orWhereRaw("JSON_EXTRACT(setlist2, '$.*.id') REGEXP '\"$id\"'")
-            ->orWhereRaw("JSON_EXTRACT(setlist3, '$.*.id') REGEXP '\"$id\"'")
-            ->orWhereRaw(" JSON_CONTAINS(setlist1, JSON_OBJECT('id', ?))
-                        ", [$id])
-            ->orWhereRaw(" JSON_CONTAINS(setlist2, JSON_OBJECT('id', ?))
-                        ", [$id])
-            ->orWhereRaw(" JSON_CONTAINS(setlist3, JSON_OBJECT('id', ?))
-                        ", [$id])
-            ->orderBy('date1', 'desc')
-            ->get();
+        $songs = Song::findOrFail($id);
+        $title = $songs->title;
 
+        // 関連する TourSetlist を tour 付きで取得してフィルター
+        $tourSetlists = TourSetlist::with('tour')->get()->filter(function ($setlistModel) use ($id, $title) {
+            // JSONカラムが文字列か配列か判別して配列化
+            $setlistArr = is_array($setlistModel->setlist)
+                ? $setlistModel->setlist
+                : json_decode($setlistModel->setlist ?? '[]', true);
+
+            $encoreArr = is_array($setlistModel->encore)
+                ? $setlistModel->encore
+                : json_decode($setlistModel->encore ?? '[]', true);
+
+            $lists = array_merge($setlistArr, $encoreArr);
+
+            foreach ($lists as $entry) {
+                // 数字IDで一致
+                if (is_numeric($entry['song']) && (int)$entry['song'] === (int)$id) {
+                    return true;
+                }
+
+                // 注釈付きタイトルの場合：括弧部分を除いて一致
+                if (!is_numeric($entry['song'])) {
+                    // 丸括弧の数字注釈は残す（丸括弧は曲名の一部と扱う）
+                    // 角括弧の注釈はすべて除去（数字以外でもOK）
+                    $entryTitle = preg_replace('/\s*\[[^\]]+\]/u', '', $entry['song']);
+                    if (trim($entryTitle) === $title) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        });
+
+        // 関連ツアー一覧（重複除去）
+        $tours = $tourSetlists->pluck('tour')->filter()->unique('id')->values();
+
+        // その他データ
+        $allSongs = Song::orderBy('id')->get();
+        $albums = Album::orderBy('id')->get();
+        $singles = Single::orderBy('id')->get();
         $previous = Song::where('id', '<', $songs->id)->orderBy('id', 'desc')->first();
         $next = Song::where('id', '>', $songs->id)->orderBy('id')->first();
 
-        return view('songs.show', compact('songs', 'allSongs', 'previous', 'next', 'albums', 'singles', 'tours'));
+        return view('songs.show', compact(
+            'songs',
+            'allSongs',
+            'albums',
+            'singles',
+            'previous',
+            'next',
+            'tourSetlists',
+            'tours'
+        ));
     }
 
     /**

@@ -61,4 +61,9 @@ class Tour extends Model
     // {
     //     $this->attributes['year'] = json_encode(array_values($value));
     // }
+
+    public function tourSetlists()
+    {
+        return $this->hasMany(TourSetlist::class);
+    }
 }

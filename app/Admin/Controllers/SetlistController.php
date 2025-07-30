@@ -38,7 +38,7 @@ class SetlistController extends AdminController
         $grid->column('venue', __('会場'));
 
         // 年リストを作成（例：2000年〜今年まで）
-        $years = range(date('Y'), 2000);
+        $years = range(date('Y'), 2003);
         $years = array_combine($years, $years); // [2025 => 2025, 2024 => 2024, ...]
 
         $grid->filter(function ($filter) use ($years) {

@@ -946,7 +946,7 @@ h2 {
     }
 
     select {
-        font-size: 12px;
+        font-size: 0.8rem; /* 小さくする */
     }
 }
 

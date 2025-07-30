@@ -32,4 +32,9 @@ class TourSetlist extends Model
     {
         $this->attributes['encore'] = json_encode(array_values($value));
     }
+
+    public function tour()
+    {
+        return $this->belongsTo(Tour::class);
+    }
 }
