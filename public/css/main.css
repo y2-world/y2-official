@@ -883,6 +883,11 @@ h2 {
     background-color: rgba(0, 0, 0, 0.7); /* ホバー時の色 */
 }
 
+.small-label {
+    font-size: 0.8rem; /* お好みで調整 */
+    cursor: pointer;   /* クリックしやすく */
+}
+
 @media (min-width: 1024px) {
     .column1,
     .column2-bio {

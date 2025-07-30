@@ -13,7 +13,8 @@
                 <select name="select" onchange="if (this.value) window.location.href=this.value;">
                     <option value="" disabled selected>Live Type</option>
                     <option value="{{ url('/setlists') }}" {{ request('type') ? '' : 'selected' }}>All</option>
-                    <option value="{{ url('/setlists?type=1') }}" {{ request('type') == '1' ? 'selected' : '' }}>Live</option>
+                    <option value="{{ url('/setlists?type=1') }}" {{ request('type') == '1' ? 'selected' : '' }}>Live
+                    </option>
                     <option value="{{ url('/setlists?type=2') }}" {{ request('type') == '2' ? 'selected' : '' }}>Fes</option>
                 </select>
                 <select name="select" onChange="location.href=value;">
@@ -37,16 +38,34 @@
                                 <option value="" disabled selected>Artists</option>
                                 <option value="">(No Artist Selected)</option>
                                 @foreach ($allArtists as $artist)
-                                    <option value="{{ $artist->id }}" required>{{ $artist->name }}</option>
+                                    <option value="{{ $artist->id }}"
+                                        {{ request('artist_id') == $artist->id ? 'selected' : '' }}>
+                                        {{ $artist->name }}
+                                    </option>
                                 @endforeach
                             </select>
+                        </div>
+
+                        {{-- 一致タイプ選択 --}}
+                        <div class="mb_dropdown">
+                            <label class="small-label">
+                                <input type="radio" name="match_type" value="exact"
+                                    {{ request('match_type', 'exact') === 'exact' ? 'checked' : '' }}>
+                                完全一致
+                            </label>
+                            <label class="small-label" style="margin-left: 20px;">
+                                <input type="radio" name="match_type" value="partial"
+                                    {{ request('match_type') === 'partial' ? 'checked' : '' }}>
+                                部分一致
+                            </label>
                         </div>
                         <div class="input-group mb-3" style="width: 400px;">
                             <input type="search" class="form-control" aria-label="Search" value="{{ request('keyword') }}"
                                 name="keyword" required>
                             <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="submit" id="button-addon2"><i
-                                        class="fa-solid fa-magnifying-glass"></i></button>
+                                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -119,5 +138,5 @@
 @endsection
 
 @section('page-script')
-<script src="{{ asset('/js/search.js?time=' . time()) }}"></script>
+    <script src="{{ asset('/js/search.js?time=' . time()) }}"></script>
 @endsection

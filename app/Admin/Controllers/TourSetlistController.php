@@ -35,13 +35,6 @@ class TourSetlistController extends AdminController
             return $tour ? $tour->title : '';
         });
         $grid->column('order_no', __('順番'));
-        $grid->column('date1', __('日付1'))->display(function ($value) {
-            return $value ? \Carbon\Carbon::parse($value)->format('Y-m-d') : '';
-        });
-
-        $grid->column('date2', __('日付2'))->display(function ($value) {
-            return $value ? \Carbon\Carbon::parse($value)->format('Y-m-d') : '';
-        });
         $grid->column('subtitle', __('サブタイトル'));
 
         // 年リストを作成（例：2000年〜今年まで）
@@ -72,12 +65,6 @@ class TourSetlistController extends AdminController
             return $tour ? $tour->title : '';
         });
         $show->field('order_no', __('順番'));
-        $show->field('date1', __('日付1'))->as(function ($value) {
-            return $value ? \Carbon\Carbon::parse($value)->format('Y-m-d') : '';
-        });
-        $show->field('date2', __('日付2'))->as(function ($value) {
-            return $value ? \Carbon\Carbon::parse($value)->format('Y-m-d') : '';
-        });
         $show->field('subtitle', __('サブタイトル'));
         $show->field('setlist', __('本編'))->unescape()->as(function ($setlist) {
             $result1 = [];
@@ -126,19 +113,9 @@ class TourSetlistController extends AdminController
 
         $form->select('tour_id', __('ツアー'))->options(Tour::all()->pluck('title', 'id'));
         $form->number('order_no', __('順番'))->default(1);
-        $form->date('date1', __('日付1'))->default(null);
-        $form->date('date2', __('日付2'))->default(null);
-        $form->saving(function (Form $form) {
-            if ($form->date1 === '') {
-                $form->date1 = null;
-            }
-            if ($form->date2 === '') {
-                $form->date2 = null;
-            }
-        });
         $form->text('subtitle', __('サブタイトル'));
         $form->table('setlist', '本編', function ($table) {
-            $table->select('song', ' ')
+            $table->select('song', ' 曲')
                 ->options(function ($value) {
                     $songs = \App\Models\Song::all()->pluck('title', 'id');
 
