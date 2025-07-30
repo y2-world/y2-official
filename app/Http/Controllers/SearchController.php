@@ -38,13 +38,8 @@ class SearchController extends Controller
                             $query->whereRaw("JSON_CONTAINS(fes_setlist, JSON_OBJECT('song', ?, 'artist', ?))", [$keyword, $artist_id])
                                 ->orWhereRaw("JSON_CONTAINS(fes_encore, JSON_OBJECT('song', ?, 'artist', ?))", [$keyword, $artist_id]);
                         } else {
-                            $query->where(function ($query) use ($keyword, $artist_id) {
-                                $query->where('fes_setlist', 'like', "%$keyword%")
-                                    ->where('fes_setlist', 'like', "%\"artist\":$artist_id%");
-                            })->orWhere(function ($query) use ($keyword, $artist_id) {
-                                $query->where('fes_encore', 'like', "%$keyword%")
-                                    ->where('fes_encore', 'like', "%\"artist\":$artist_id%");
-                            });
+                            $query->where('fes_setlist', 'like', "%$keyword%")
+                                ->orWhere('fes_encore', 'like', "%$keyword%");
                         }
                     });
             } else {
