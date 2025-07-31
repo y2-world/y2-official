@@ -38,8 +38,14 @@ class SearchController extends Controller
                             $query->whereRaw("JSON_CONTAINS(fes_setlist, JSON_OBJECT('song', ?, 'artist', ?))", [$keyword, $artist_id])
                                 ->orWhereRaw("JSON_CONTAINS(fes_encore, JSON_OBJECT('song', ?, 'artist', ?))", [$keyword, $artist_id]);
                         } else {
-                            $query->where('fes_setlist', 'like', "%$keyword%")
-                                ->orWhere('fes_encore', 'like', "%$keyword%");
+                            // ここを修正。artist_id もlike条件に含めるためには、JSON内のartistはlikeで部分検索しかないので、 fes_setlist, fes_encore共にartist_idが入っているかどうかを文字列likeでチェックする条件を追加
+                            $query->where(function ($q) use ($keyword, $artist_id) {
+                                $q->where('fes_setlist', 'like', "%$keyword%")
+                                    ->where('fes_setlist', 'like', "%$artist_id%");
+                            })->orWhere(function ($q) use ($keyword, $artist_id) {
+                                $q->where('fes_encore', 'like', "%$keyword%")
+                                    ->where('fes_encore', 'like', "%$artist_id%");
+                            });
                         }
                     });
             } else {

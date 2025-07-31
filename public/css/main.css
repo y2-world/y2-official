@@ -945,8 +945,8 @@ h2 {
         margin: auto;
     }
 
-    select {
-        font-size: 0.8rem; /* 小さくする */
+    select, .small-label {
+        font-size: 12px;
     }
 }
 
