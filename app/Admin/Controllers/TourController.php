@@ -71,13 +71,23 @@ class TourController extends AdminController
         $show->field('id', __('ID'));
         $show->field('type', __('タイプ'));
         $show->field('title', __('タイトル'));
-        $show->field('tour_id', __('ツアーID'));
-        $show->field('event_id', __('イベントID'));
-        $show->field('ap_id', __('ap ID'));
-        $show->field('solo_id', __('ソロ ID'));
+        if(!empty($show->getModel()->getAttribute('tour_id'))) {
+            $show->field('tour_id', __('ツアーID'));
+        }
+         if(!empty($show->getModel()->getAttribute('event_id'))) {
+            $show->field('event_id', __('イベントID'));
+        }
+         if(!empty($show->getModel()->getAttribute('ap_id'))) {
+            $show->field('ap_id', __('ap ID'));
+        }
+         if(!empty($show->getModel()->getAttribute('solo_id'))) {
+            $show->field('solo_id', __('ソロID'));
+        }
         $show->field('date1', __('開始日'));
         $show->field('date2', __('終了日'));
-        $show->field('text', __('コメント'));
+        if (!empty($show->getModel()->getAttribute('text'))) {
+            $show->field('text', __('テキスト'));
+        }
         $show->field('created_at', __('作成日時'));
         $show->field('updated_at', __('更新日時'));
 
@@ -209,9 +219,9 @@ class TourController extends AdminController
                 ])->default(0);
                 $table->text('exception', '例外');
             });
-        })->tab('コメント', function ($form) {
+        })->tab('概要', function ($form) {
             $form->textarea('schedule', __('スケジュール'))->rows(15);
-            $form->textarea('text', __('コメント'))->rows(15);
+            $form->textarea('text', __('テキスト'))->rows(15);
         });
 
         return $form;

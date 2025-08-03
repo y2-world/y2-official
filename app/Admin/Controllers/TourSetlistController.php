@@ -36,16 +36,13 @@ class TourSetlistController extends AdminController
         });
         $grid->column('order_no', __('順番'));
         $grid->column('subtitle', __('サブタイトル'));
+    
+        // ツアー名リストをID順で作成
+        $tourOptions = Tour::orderBy('id')->pluck('title', 'id')->toArray();
 
-        // 年リストを作成（例：2000年〜今年まで）
-        $years = range(date('Y'), 1992);
-        $years = array_combine($years, $years); // [2025 => 2025, 2024 => 2024, ...]
-
-        $grid->filter(function ($filter) use ($years) {
-            // 年セレクトフィルター追加
-            $filter->where(function ($query) {
-                $query->whereYear('date', $this->input);
-            }, '年（西暦）')->select($years);
+        $grid->filter(function ($filter) use ($tourOptions) {
+            // ツアー名セレクトフィルター追加
+            $filter->equal('tour_id', 'ツアー名')->select($tourOptions);
         });
 
         return $grid;
@@ -65,33 +62,40 @@ class TourSetlistController extends AdminController
             return $tour ? $tour->title : '';
         });
         $show->field('order_no', __('順番'));
-        $show->field('subtitle', __('サブタイトル'));
-        $show->field('setlist', __('本編'))->unescape()->as(function ($setlist) {
-            $result1 = [];
-            $i = 1;
-            foreach ((array)$setlist as $data1) {
-                if (is_array($data1) && isset($data1['song'])) {
-                    $song = \App\Models\Song::find($data1['song']);
-                    $title = $song ? $song->title : $data1['song'];
-                    $result1[] = $i . '. ' . $title;
-                    $i++;
+        if (!empty($show->getModel()->getAttribute('subtitle'))) {
+            $show->field('subtitle', __('サブタイトル'));
+        }
+        if (!empty($show->getModel()->getAttribute('setlist'))) {
+            $show->field('setlist', __('本編'))->unescape()->as(function ($setlist) {
+                $result1 = [];
+                $i = 1;
+                foreach ((array)$setlist as $data1) {
+                    if (is_array($data1) && isset($data1['song'])) {
+                        $song = \App\Models\Song::find($data1['song']);
+                        $title = $song ? $song->title : $data1['song'];
+                        $result1[] = $i . '. ' . $title;
+                        $i++;
+                    }
                 }
-            }
-            return implode('<br>', $result1);
-        });
-        $show->field('encore', __('アンコール'))->unescape()->as(function ($encore) {
-            $result2 = [];
-            $i = 1;
-            foreach ((array)$encore as $data2) {
-                if (is_array($data2) && isset($data2['song'])) {
-                    $song = \App\Models\Song::find($data2['song']);
-                    $title = $song ? $song->title : $data2['song'];
-                    $result2[] = $i . '. ' . $title;
-                    $i++;
+                return implode('<br>', $result1);
+            });
+        }
+        if (!empty($show->getModel()->getAttribute('encore'))) {
+            $show->field('encore', __('アンコール'))->unescape()->as(function ($encore) {
+                $result2 = [];
+                $i = 1;
+                foreach ((array)$encore as $data2) {
+                    if (is_array($data2) && isset($data2['song'])) {
+                        $song = \App\Models\Song::find($data2['song']);
+                        $title = $song ? $song->title : $data2['song'];
+                        $result2[] = $i . '. ' . $title;
+                        $i++;
+                    }
                 }
-            }
-            return implode('<br>', $result2);
-        });
+                return implode('<br>', $result2);
+            });
+        }
+
         $show->field('created_at', __('作成日時'));
         $show->field('updated_at', __('更新日時'));
 
