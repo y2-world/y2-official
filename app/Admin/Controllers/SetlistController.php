@@ -42,8 +42,9 @@ class SetlistController extends AdminController
         $years = array_combine($years, $years); // [2025 => 2025, 2024 => 2024, ...]
 
         $grid->filter(function ($filter) use ($years) {
-            $filter->like('artist', 'アーティスト');
-            $filter->like('title', 'ツアータイトル');
+            $filter->equal('artist_id', 'アーティスト')->select(
+                Artist::where('visible', 0)->pluck('name', 'id')
+            );
             $filter->equal('fes', 'フェス')->radio([
                 '' => 'All',
                 0  => 'ライブ',
