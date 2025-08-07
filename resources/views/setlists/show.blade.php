@@ -65,7 +65,7 @@
                             @endphp
 
                             @if (!empty($data['medley']) && $data['medley'] == 1)
-                                - {{ $data['song'] }}<br>
+                                - <a href="{{ $url }}">{{ $keyword }}</a>{{ $annotation }}<br>
                             @else
                                 @php $count++; @endphp
                                 <li>
