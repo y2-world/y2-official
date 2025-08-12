@@ -72,12 +72,12 @@ class SetlistController extends AdminController
         $show = new Show(Setlist::findOrFail($id));
 
         $show->field('id', __('ID'));
-        $show->field('artist_id', __('アーティスト'))->as(function ($id) {
-            $artist = optional(Artist::find($id));
-            if ($artist) {
-                return $artist->name;
-            }
-        });
+        if (!empty($show->getModel()->getAttribute('artist_id'))) {
+            $show->field('artist_id', __('アーティスト'))->as(function ($id) {
+                $artist = optional(Artist::find($id));
+                return $artist ? $artist->name : '';
+            });
+        }
         $show->field('title', __('ツアータイトル'));
         $show->field('date', __('公演日'));
         $show->field('venue', __('会場'));
