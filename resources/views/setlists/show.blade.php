@@ -42,7 +42,7 @@
                     {{ date('Y.m.d', strtotime($setlists->date)) }}<br>
                     <a href="{{ url('/venue?keyword=' . urlencode($setlists->venue)) }}">{{ $setlists->venue }}</a>
                 </div>
-                <hr>
+                <hr
 
                 {{-- 通常ライブ --}}
                 @if (!$setlists->fes)
@@ -77,7 +77,7 @@
 
                     {{-- アンコール --}}
                     @if (!empty($setlists->encore))
-                        <hr width="250">
+                        <hr style="width: 80%">
                         <ol class="setlist" start="{{ $count + 1 }}">
                             @foreach ((array) $setlists->encore as $data)
                                 @php
@@ -155,7 +155,7 @@
 
                     {{-- フェスアンコール --}}
                     @if (!empty($setlists->fes_encore))
-                        <hr width="250">
+                        <hr style="width: 80%">
                         @php $prevArtistId = null; @endphp
                         @foreach ((array) $setlists->fes_encore as $key => $data)
                             @php

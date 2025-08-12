@@ -132,7 +132,7 @@ class TourSetlistController extends AdminController
                 ->attribute([
                     'data-tags' => 'true',
                     'data-placeholder' => '曲を選択または入力',
-                    'style' => 'width: 100%;',
+                    'style' => 'width: 100%; white-space: normal; height: auto; line-height: 1.2;'
                 ]);
 
             $table->switch('is_daily', '<daily>')

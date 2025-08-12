@@ -259,9 +259,9 @@
 }
 
 .select2-selection__rendered {
-    display: block;
-    white-space: wrap !important;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
+    white-space: normal !important; /* 折り返し許可 */
+    word-break: break-word !important; /* 単語途中でも折り返し */
+    height: auto !important; /* 高さ自動 */
+    min-height: 32px; /* 最低高さを維持（デザイン崩れ防止） */
+    line-height: 1.3em; /* 行間調整 */
 }
