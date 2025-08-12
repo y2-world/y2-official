@@ -164,23 +164,31 @@ class SetlistController extends AdminController
 
         $form->date('date', __('公演日'))->default(date('Y-m-d'))->rules('required');
 
-        // ここで既存のvenue候補を取得
+        // 既存の会場候補取得
         $venueOptions = Setlist::query()
             ->select('venue')
             ->distinct()
-            ->orderBy('venue', 'asc')  // ←ここで昇順指定
+            ->orderBy('venue', 'asc')
             ->pluck('venue')
             ->toArray();
 
-        // venueをselect＋自由入力可能にするため、data-tags属性をつける（Laravel-adminのSelectフィールドを拡張利用）
-        $form->select('venue', __('会場'))
-            ->options($venueOptions)
+        // datalistのoptionタグ生成
+        $optionsHtml = '';
+        foreach ($venueOptions as $venue) {
+            $optionsHtml .= '<option value="' . e($venue) . '"></option>';
+        }
+
+        $form->text('venue', __('会場'))
+            ->rules('required')
             ->attribute([
-                'data-tags' => 'true',
-                'data-placeholder' => '会場を選択または入力',
+                'list' => 'venue_list',
+                'autocomplete' => 'off',
             ])
-            ->default('')
-            ->rules('required');
+            ->default($form->model()->venue ?? '');
+
+        // datalistタグをhtmlで追加
+        $form->html('<datalist id="venue_list">' . $optionsHtml . '</datalist>');
+
 
         $form->radio('fes', 'ライブ形態')
             ->options([
