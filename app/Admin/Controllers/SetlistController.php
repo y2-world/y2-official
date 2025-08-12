@@ -150,16 +150,38 @@ class SetlistController extends AdminController
     protected function form()
     {
         $form = new Form(new Setlist());
+
         $form->saved(function (Form $form) {
             admin_toastr('保存しました！', 'success');
             return redirect(admin_url('setlists'));
         });
 
         $form->text('id', __('ID'))->rules('required');
+
         $form->select('artist_id', __('アーティスト'))->options(Artist::all()->pluck('name', 'id'));
+
         $form->text('title', __('ツアータイトル'))->rules('required');
+
         $form->date('date', __('公演日'))->default(date('Y-m-d'))->rules('required');
-        $form->text('venue', __('会場'))->rules('required');
+
+        // ここで既存のvenue候補を取得
+        $venueOptions = Setlist::query()
+            ->select('venue')
+            ->distinct()
+            ->orderBy('venue', 'asc')  // ←ここで昇順指定
+            ->pluck('venue')
+            ->toArray();
+
+        // venueをselect＋自由入力可能にするため、data-tags属性をつける（Laravel-adminのSelectフィールドを拡張利用）
+        $form->select('venue', __('会場'))
+            ->options($venueOptions)
+            ->attribute([
+                'data-tags' => 'true',
+                'data-placeholder' => '会場を選択または入力',
+            ])
+            ->default('')
+            ->rules('required');
+
         $form->radio('fes', 'ライブ形態')
             ->options([
                 0 => '単独ライブ',
@@ -204,7 +226,6 @@ class SetlistController extends AdminController
                         ->options(function ($value) {
                             $artists = \App\Artist::all()->pluck('name', 'id');
 
-                            // 入力値が数値でない＝手入力（自由入力）だった場合
                             if (!is_numeric($value) && $value) {
                                 return $artists->prepend($value, $value);
                             }
