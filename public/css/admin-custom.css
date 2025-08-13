@@ -199,7 +199,15 @@
         display: inline-block;
     }
 
-    .select2-selection__rendered {
+    .has-many-setlist-form .select2-selection__rendered {
+        font-size: 0.75rem; /* フォントサイズ調整 */
+    }
+
+    span#select2-tour_id-5k-container.select2-selection__rendered {
+        white-space: nowrap !important;
+    }
+
+    .setlist-number-label {
         font-size: 0.75rem; /* フォントサイズ調整 */
     }
 }
@@ -262,7 +270,7 @@
     display: block;
 }
 
-.select2-selection__rendered {
+.has-many-setlist-form .select2-selection__rendered {
     white-space: normal !important;
     word-break: break-word !important; /* 単語途中でも折り返し */
     height: auto !important; /* 高さ自動 */

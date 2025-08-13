@@ -49,7 +49,7 @@ function insertSelectNumberLabels(prefix, labelClass) {
     // スタイル設定
     label.style.fontWeight = "bold";
     label.style.color = "#666";
-    label.style.fontSize = "13px";
+    label.style.fontSize = "10px";
     label.style.marginRight = "8px";
     label.style.whiteSpace = "nowrap";
 
