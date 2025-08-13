@@ -22,7 +22,9 @@ use Encore\Admin\Facades\Admin;
 
 // Encore\Admin\Form::forget(['map', 'editor']);
 Encore\Admin\Form::extend('editor', Encore\Admin\Form\Field\Editor::class);
-Admin::css('/css/admin-custom.css');
-Admin::js('/js/admin-custom.js');
+
+// CSSに更新日時を付与してキャッシュ回避
+Admin::css('/css/admin-custom.css?v=' . filemtime(public_path('css/admin-custom.css')));
+Admin::js('/js/admin-custom.js?v=' . filemtime(public_path('js/admin-custom.js')));
 
 Admin::disablePjax();
