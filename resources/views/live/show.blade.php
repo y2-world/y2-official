@@ -75,7 +75,7 @@
 
                                         @foreach ([$setlist, $encore] as $section)
                                             @if ($loop->index === 1 && count($encore))
-                                                <hr>
+                                                <hr style="width: 80%">
                                             @endif
 
                                             @foreach ($section as $data)

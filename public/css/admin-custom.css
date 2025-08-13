@@ -198,6 +198,10 @@
         float: left !important;
         display: inline-block;
     }
+
+    .select2-selection__rendered {
+        font-size: 0.75rem; /* フォントサイズ調整 */
+    }
 }
 
 /* その他調整 */
@@ -259,7 +263,7 @@
 }
 
 .select2-selection__rendered {
-    white-space: normal !important; /* 折り返し許可 */
+    white-space: normal !important;
     word-break: break-word !important; /* 単語途中でも折り返し */
     height: auto !important; /* 高さ自動 */
     min-height: 32px; /* 最低高さを維持（デザイン崩れ防止） */
