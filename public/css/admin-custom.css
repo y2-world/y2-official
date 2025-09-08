@@ -199,7 +199,8 @@
         display: inline-block;
     }
 
-    .has-many-setlist-form .select2-selection__rendered {
+    .has-many-setlist-form .select2-selection__rendered,
+    .has-many-encore-form .select2-selection__rendered {
         font-size: 0.75rem; /* フォントサイズ調整 */
     }
 
