@@ -89,7 +89,7 @@ class SongController extends Controller
             })
             ->sortByDesc(function ($setlistModel) {
                 // tour->start_date があるものを基準に降順ソート
-                return optional($setlistModel->tour)->start_date;
+                return optional($setlistModel->tour)->date1;
             })
             ->values(); // 並べ替え後にキーを振り直す
 
