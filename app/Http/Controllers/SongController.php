@@ -61,44 +61,37 @@ class SongController extends Controller
         $title = $songs->title;
 
         // 関連する TourSetlist を tour 付きで取得してフィルター
-        $tourSetlists = TourSetlist::with('tour')->get()->filter(function ($setlistModel) use ($id, $title) {
-            // JSONカラムが文字列か配列か判別して配列化
-            $setlistArr = is_array($setlistModel->setlist)
-                ? $setlistModel->setlist
-                : json_decode($setlistModel->setlist ?? '[]', true);
+        $tourSetlists = TourSetlist::with('tour')->get()
+            ->filter(function ($setlistModel) use ($id, $title) {
+                $setlistArr = is_array($setlistModel->setlist)
+                    ? $setlistModel->setlist
+                    : json_decode($setlistModel->setlist ?? '[]', true);
 
-            $encoreArr = is_array($setlistModel->encore)
-                ? $setlistModel->encore
-                : json_decode($setlistModel->encore ?? '[]', true);
+                $encoreArr = is_array($setlistModel->encore)
+                    ? $setlistModel->encore
+                    : json_decode($setlistModel->encore ?? '[]', true);
 
-            $lists = array_merge($setlistArr, $encoreArr);
+                $lists = array_merge($setlistArr, $encoreArr);
 
-            foreach ($lists as $entry) {
-                // 数字IDで一致
-                if (is_numeric($entry['song']) && (int)$entry['song'] === (int)$id) {
-                    return true;
-                }
-
-                // 注釈付きタイトルの場合：括弧部分を除いて一致
-                if (!is_numeric($entry['song'])) {
-                    // 丸括弧の数字注釈は残す（丸括弧は曲名の一部と扱う）
-                    // 角括弧の注釈はすべて除去（数字以外でもOK）
-                    $entryTitle = preg_replace('/\s*\[[^\]]+\]/u', '', $entry['song']);
-                    if (trim($entryTitle) === $title) {
+                foreach ($lists as $entry) {
+                    if (is_numeric($entry['song']) && (int)$entry['song'] === (int)$id) {
                         return true;
                     }
-                }
-            }
 
-            return false;
-        })
-            // ↓ここで降順ソート
+                    if (!is_numeric($entry['song'])) {
+                        $entryTitle = preg_replace('/\s*\[[^\]]+\]/u', '', $entry['song']);
+                        if (trim($entryTitle) === $title) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            })
             ->sortByDesc(function ($setlistModel) {
-                // 例えば tour の start_date を基準に並び替え
+                // tour->start_date があるものを基準に降順ソート
                 return optional($setlistModel->tour)->start_date;
             })
-            ->values(); // インデックスを振り直す（view 側で扱いやすい）
-
+            ->values(); // 並べ替え後にキーを振り直す
 
         // 関連ツアー一覧（重複除去）
         $tours = $tourSetlists->pluck('tour')->filter()->unique('id')->values();
