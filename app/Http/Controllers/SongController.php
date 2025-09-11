@@ -91,7 +91,14 @@ class SongController extends Controller
             }
 
             return false;
-        });
+        })
+            // ↓ここで降順ソート
+            ->sortByDesc(function ($setlistModel) {
+                // 例えば tour の start_date を基準に並び替え
+                return optional($setlistModel->tour)->start_date;
+            })
+            ->values(); // インデックスを振り直す（view 側で扱いやすい）
+
 
         // 関連ツアー一覧（重複除去）
         $tours = $tourSetlists->pluck('tour')->filter()->unique('id')->values();
