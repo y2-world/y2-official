@@ -35,8 +35,9 @@ class TourController extends AdminController
         $grid->column('date1', __('開始日'));
         $grid->column('date2', __('終了日'));
 
-         // 年リストを作成（例：2000年〜今年まで）
+        // 年リストを作成（例：2000年〜今年まで）
         $years = range(date('Y'), 2000);
+        $years = array_reverse($years); // 並び順を降順に
         $years = array_combine($years, $years); // [2025 => 2025, 2024 => 2024, ...]
 
         $grid->filter(function ($filter) use ($years) {
@@ -71,16 +72,16 @@ class TourController extends AdminController
         $show->field('id', __('ID'));
         $show->field('type', __('タイプ'));
         $show->field('title', __('タイトル'));
-        if(!empty($show->getModel()->getAttribute('tour_id'))) {
+        if (!empty($show->getModel()->getAttribute('tour_id'))) {
             $show->field('tour_id', __('ツアーID'));
         }
-         if(!empty($show->getModel()->getAttribute('event_id'))) {
+        if (!empty($show->getModel()->getAttribute('event_id'))) {
             $show->field('event_id', __('イベントID'));
         }
-         if(!empty($show->getModel()->getAttribute('ap_id'))) {
+        if (!empty($show->getModel()->getAttribute('ap_id'))) {
             $show->field('ap_id', __('ap ID'));
         }
-         if(!empty($show->getModel()->getAttribute('solo_id'))) {
+        if (!empty($show->getModel()->getAttribute('solo_id'))) {
             $show->field('solo_id', __('ソロID'));
         }
         $show->field('date1', __('開始日'));
@@ -135,90 +136,6 @@ class TourController extends AdminController
                     $form->dateRange('date1', 'date2', '開催期間');
                     $form->text('venue', __('会場'));
                 });
-        })->tab('セットリスト1', function ($form) {
-            $form->table('setlist1', 'セットリスト1', function ($table) {
-                $table->text('date', '日付');
-                $table->select('id', '曲')->options(Song::all()->pluck('title', 'id'));
-                $table->switch('is_daily', '')->states([
-                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
-                    'off' => ['value' => 0, 'text' => '日替わり',   'color' => 'default'],
-                ])->default(0);
-                $table->switch('is_encore', '')->states([
-                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
-                    'off' => ['value' => 0, 'text' => 'アンコール',   'color' => 'default'],
-                ])->default(0);
-                $table->text('exception', '例外');
-            });
-        })->tab('セットリスト2', function ($form) {
-            $form->table('setlist2', 'セットリスト2', function ($table) {
-                $table->text('date', '日付');
-                $table->select('id', '曲')->options(Song::all()->pluck('title', 'id'));
-                $table->switch('is_daily', '')->states([
-                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
-                    'off' => ['value' => 0, 'text' => '日替わり',   'color' => 'default'],
-                ])->default(0);
-                $table->switch('is_encore', '')->states([
-                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
-                    'off' => ['value' => 0, 'text' => 'アンコール',   'color' => 'default'],
-                ])->default(0);
-                $table->text('exception', '例外');
-            });
-        })->tab('セットリスト3', function ($form) {
-            $form->table('setlist3', 'セットリスト3', function ($table) {
-                $table->text('date', '日付');
-                $table->select('id', '曲')->options(Song::all()->pluck('title', 'id'));
-                $table->switch('is_daily', '')->states([
-                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
-                    'off' => ['value' => 0, 'text' => '日替わり',   'color' => 'default'],
-                ])->default(0);
-                $table->switch('is_encore', '')->states([
-                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
-                    'off' => ['value' => 0, 'text' => 'アンコール',   'color' => 'default'],
-                ])->default(0);
-                $table->text('exception', '例外');
-            });
-        })->tab('セットリスト4', function ($form) {
-            $form->table('setlist4', 'セットリスト4', function ($table) {
-                $table->text('date', '日付');
-                $table->select('id', '曲')->options(Song::all()->pluck('title', 'id'));
-                $table->switch('is_daily', '')->states([
-                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
-                    'off' => ['value' => 0, 'text' => '日替わり',   'color' => 'default'],
-                ])->default(0);
-                $table->switch('is_encore', '')->states([
-                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
-                    'off' => ['value' => 0, 'text' => 'アンコール',   'color' => 'default'],
-                ])->default(0);
-                $table->text('exception', '例外');
-            });
-        })->tab('セットリスト5', function ($form) {
-            $form->table('setlist5', 'セットリスト5', function ($table) {
-                $table->text('date', '日付');
-                $table->select('id', '曲')->options(Song::all()->pluck('title', 'id'));
-                $table->switch('is_daily', '')->states([
-                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
-                    'off' => ['value' => 0, 'text' => '日替わり',   'color' => 'default'],
-                ])->default(0);
-                $table->switch('is_encore', '')->states([
-                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
-                    'off' => ['value' => 0, 'text' => 'アンコール',   'color' => 'default'],
-                ])->default(0);
-                $table->text('exception', '例外');
-            });
-        })->tab('セットリスト6', function ($form) {
-            $form->table('setlist6', 'セットリスト6', function ($table) {
-                $table->text('date', '日付');
-                $table->select('id', '曲')->options(Song::all()->pluck('title', 'id'));
-                $table->switch('is_daily', '')->states([
-                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
-                    'off' => ['value' => 0, 'text' => '日替わり',   'color' => 'default'],
-                ])->default(0);
-                $table->switch('is_encore', '')->states([
-                    'on'  => ['value' => 1, 'text' => '✔︎', 'color' => 'success'],
-                    'off' => ['value' => 0, 'text' => 'アンコール',   'color' => 'default'],
-                ])->default(0);
-                $table->text('exception', '例外');
-            });
         })->tab('概要', function ($form) {
             $form->textarea('schedule', __('スケジュール'))->rows(15);
             $form->textarea('text', __('テキスト'))->rows(15);

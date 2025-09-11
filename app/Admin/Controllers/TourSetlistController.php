@@ -18,7 +18,7 @@ class TourSetlistController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Tour Setlists';
+    protected $title = 'Live Setlists';
 
     /**
      * Make a grid builder.
