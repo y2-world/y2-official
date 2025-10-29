@@ -105,13 +105,7 @@
                                                 @endphp
 
                                                 @if ($isDaily)
-                                                    -
-                                                    @if ($link)
-                                                        <a href="{{ $link }}">{{ $title }}</a>
-                                                        {{ $annotation }}<br>
-                                                    @else
-                                                        {{ $title }} {{ $annotation }}<br>
-                                                    @endif
+                                                    - @if ($link)<a href="{{ $link }}">{{ $title }}</a>@else{{ $title }}@endif @if(!empty($annotation)){{ $annotation }}@endif<br>
                                                 @else
                                                     <li>
                                                         @if ($link)

@@ -24,6 +24,14 @@ class ArtistResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Setlists';
+
+    protected static ?int $navigationSort = 11;
+
+    protected static ?string $navigationLabel = 'アーティスト';
+
+    protected static ?string $modelLabel = 'アーティスト';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -43,9 +51,14 @@ class ArtistResource extends Resource
             ->columns([
                 TextColumn::make('id')->label('ID'),
                 TextColumn::make('name')->label('アーティスト'),
-                TextColumn::make('visible')
+                Tables\Columns\ToggleColumn::make('visible')
                     ->label('公開')
-                    ->formatStateUsing(fn($state) => $state == 0 ? '公開' : '非公開') // 0 → 公開, 1 → 非公開
+                    ->onColor('success')
+                    ->offColor('danger')
+                    ->beforeStateUpdated(function ($record, $state) {
+                        return $state ? 0 : 1; // Toggle時に0と1を逆にする
+                    })
+                    ->getStateUsing(fn ($record) => $record->visible == 0) // 0を公開（ON）として表示
             ])
             ->filters([
                 //

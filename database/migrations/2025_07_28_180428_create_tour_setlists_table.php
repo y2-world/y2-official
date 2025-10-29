@@ -12,17 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tour_setlists', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedInteger('tour_id');
+            $table->unsignedInteger('id')->autoIncrement();
+            $table->string('tour_id'); // varchar(255) - tourのIDを文字列で保持
             $table->integer('order_no')->nullable();
-            $table->date('date1')->nullable();
-            $table->date('date2')->nullable();
             $table->string('subtitle')->nullable();
             $table->json('setlist')->nullable();
             $table->json('encore')->nullable();
             $table->timestamps();
 
-            $table->foreign('tour_id')->references('id')->on('tours')->onDelete('cascade');
+            // ユニークキー: tour_idとorder_noの組み合わせ
+            $table->unique(['tour_id', 'order_no'], 'idx_tour_order');
         });
     }
 

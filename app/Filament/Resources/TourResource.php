@@ -3,110 +3,91 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TourResource\Pages;
-use App\Filament\Resources\TourResource\RelationManagers;
 use App\Models\Tour;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Models\Song;
-use App\Models\Bio;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\Tabs;
-use Filament\Forms\Components\Tab;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Radio;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
 
 class TourResource extends Resource
 {
     protected static ?string $model = Tour::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-calendar';
+
+    protected static ?string $navigationLabel = 'ツアー情報';
+
+    protected static ?string $modelLabel = 'ツアー情報';
+
+    protected static ?string $navigationGroup = 'Database';
+
+    protected static ?int $navigationSort = 20;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Tabs::make('Tabs')
-                    ->tabs([
-                        Tabs::make('データ')
-                            ->schema([
-                                TextInput::make('title')->label('タイトル'),
-                                Radio::make('type')
-                                    ->label('ライブタイプ')
-                                    ->options([
-                                        0 => 'ツアー',
-                                        1 => '単発ライブ',
-                                        2 => 'イベント',
-                                        3 => 'ap bank fes',
-                                        4 => 'ソロ',
-                                    ])
-                                    ->reactive()
-                                    ->afterStateUpdated(function ($state, callable $set) {
-                                        switch ($state) {
-                                            case 0:
-                                                $set('tour_id', '');
-                                                break;
-                                            case 1:
-                                                $set('venue', '');
-                                                break;
-                                            case 2:
-                                                $set('event_id', '');
-                                                break;
-                                            case 3:
-                                                $set('ap_id', '');
-                                                break;
-                                            case 4:
-                                                $set('solo_id', '');
-                                                break;
-                                            default:
-                                                // デフォルト処理
-                                                break;
-                                        }
-                                    }),
-                                Select::make('year')
-                                    ->label('年')
-                                    ->options(Bio::pluck('year', 'year')),
-                            ]),
-                        Tabs::make('セットリスト')
-                            ->schema([
-                                Repeater::make('setlist1')
-                                    ->schema([
-                                        Select::make('id')
-                                            ->label('ID')
-                                            ->options(Song::all()->pluck('title', 'id')),
-                                        TextInput::make('number')->label('#')->numeric(),
-                                        TextInput::make('exception')->label('例外'),
-                                    ]),
-                                Repeater::make('setlist2')
-                                    ->schema([
-                                        Select::make('id')
-                                            ->label('ID')
-                                            ->options(Song::all()->pluck('title', 'id')),
-                                        TextInput::make('number')->label('#')->numeric(),
-                                        TextInput::make('exception')->label('例外'),
-                                    ]),
-                                Repeater::make('setlist3')
-                                    ->schema([
-                                        Select::make('id')
-                                            ->label('ID')
-                                            ->options(Song::all()->pluck('title', 'id')),
-                                        TextInput::make('number')->label('#')->numeric(),
-                                        TextInput::make('exception')->label('例外'),
-                                    ]),
-                            ]),
-                        Tabs::make('コメント')
-                            ->schema([
-                                Textarea::make('schedule')->label('スケジュール')->rows(15),
-                                Textarea::make('text')->label('コメント')->rows(15),
-                            ]),
-                    ]),
+                Forms\Components\Section::make('基本情報')
+                    ->schema([
+                        TextInput::make('title')
+                            ->label('タイトル')
+                            ->required()
+                            ->maxLength(255)
+                            ->columnSpanFull(),
+
+                        Radio::make('type')
+                            ->label('タイプ')
+                            ->options([
+                                0 => 'ツアー',
+                                1 => '単発ライブ',
+                                2 => 'イベント',
+                                3 => 'ap bank fes',
+                                4 => 'ソロ',
+                            ])
+                            ->default(0)
+                            ->required()
+                            ->columnSpanFull(),
+
+                        Forms\Components\DatePicker::make('date1')
+                            ->label('開始日')
+                            ->required()
+                            ->native(false)
+                            ->displayFormat('Y.m.d'),
+
+                        Forms\Components\DatePicker::make('date2')
+                            ->label('終了日')
+                            ->native(false)
+                            ->displayFormat('Y.m.d'),
+
+                        TextInput::make('venue')
+                            ->label('会場')
+                            ->maxLength(255)
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2),
+
+                Forms\Components\Section::make('詳細情報')
+                    ->schema([
+                        Textarea::make('schedule')
+                            ->label('スケジュール')
+                            ->rows(10)
+                            ->columnSpanFull(),
+
+                        Textarea::make('text')
+                            ->label('コメント')
+                            ->rows(10)
+                            ->columnSpanFull(),
+                    ])
+                    ->collapsible(),
+
+                Forms\Components\Placeholder::make('setlist_note')
+                    ->label('セットリスト管理')
+                    ->content('セットリストは「ツアーセットリスト」リソースで管理してください。')
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -114,23 +95,62 @@ class TourResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id')->label('ID'),
-                TextColumn::make('tour_id')->label('ツアーID'),
-                TextColumn::make('title')->label('ツアータイトル'),
-                TextColumn::make('date1')->date('Y.m.d')->label('開始日'),
-                TextColumn::make('date2')->date('Y.m.d')->label('終了日'),
+                Tables\Columns\TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('title')
+                    ->label('タイトル')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('type')
+                    ->label('タイプ')
+                    ->formatStateUsing(fn ($state) => match($state) {
+                        0 => 'ツアー',
+                        1 => '単発ライブ',
+                        2 => 'イベント',
+                        3 => 'ap bank fes',
+                        4 => 'ソロ',
+                        default => '-',
+                    })
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('date1')
+                    ->label('開始日')
+                    ->date('Y.m.d')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('date2')
+                    ->label('終了日')
+                    ->date('Y.m.d')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('venue')
+                    ->label('会場')
+                    ->searchable()
+                    ->limit(30),
+                Tables\Columns\TextColumn::make('tourSetlists_count')
+                    ->label('パターン数')
+                    ->counts('tourSetlists')
+                    ->suffix('個'),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('type')
+                    ->label('タイプ')
+                    ->options([
+                        0 => 'ツアー',
+                        1 => '単発ライブ',
+                        2 => 'イベント',
+                        3 => 'ap bank fes',
+                        4 => 'ソロ',
+                    ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('date1', 'desc');
     }
 
     public static function getRelations(): array

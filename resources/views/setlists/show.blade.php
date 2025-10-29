@@ -44,109 +44,97 @@
                 </div>
                 <hr>
 
+                @php
+                    // メドレー表示用関数
+                    function renderSetlist($setlistItems, $artistId = null, $artistIdToName = [], $startNumber = 1) {
+                        $count = 0;
+                        if ($startNumber === 1) {
+                            echo '<ol class="setlist">';
+                        } else {
+                            echo '<ol class="setlist" start="' . $startNumber . '">';
+                        }
+                        foreach ((array) $setlistItems as $data) {
+                            $parts = splitAnnotation($data['song']);
+                            $main = $parts['main'];
+                            $annotation = $parts['annotation'];
+                            $matchType = hasAnnotation($data['song']) ? 'partial' : 'exact';
+                            $keyword = hasAnnotation($data['song']) ? $main : $data['song'];
+
+                            $urlParams = $artistId ? ['artist_id' => $artistId, 'keyword' => $keyword, 'match_type' => $matchType]
+                                                    : ['keyword' => $keyword, 'match_type' => $matchType];
+                            $url = url('/search') . '?' . http_build_query($urlParams);
+
+                            $isMedley = !empty($data['medley']) && $data['medley'] == 1;
+
+                            if ($isMedley) {
+                                echo '- <a href="' . $url . '">' . $keyword . '</a>';
+                                if (!empty($annotation)) {
+                                    echo ' ' . $annotation;
+                                }
+                                echo '<br>';
+                            } else {
+                                $count++;
+                                echo '<li><a href="' . $url . '">' . $keyword . '</a>';
+                                if (!empty($annotation)) {
+                                    echo ' ' . $annotation;
+                                }
+                                echo '</li>';
+                            }
+                        }
+                        echo '</ol>';
+                        return $count;
+                    }
+                @endphp
+
                 {{-- 通常ライブ --}}
                 @if (!$setlists->fes)
-                    @php $count = 0; @endphp
-                    <ol class="setlist">
-                        @foreach ($setlists->setlist as $data)
-                            @php
-                                $parts = splitAnnotation($data['song']);
-                                $main = $parts['main'];
-                                $annotation = $parts['annotation'];
-                                $matchType = hasAnnotation($data['song']) ? 'partial' : 'exact';
-                                $keyword = hasAnnotation($data['song']) ? $main : $data['song'];
-
-                                $params = [
-                                    'artist_id' => $setlists->artist_id,
-                                    'keyword' => $keyword,
-                                    'match_type' => $matchType,
-                                ];
-                                $url = url('/search') . '?' . http_build_query($params);
-                            @endphp
-
-                            @if (!empty($data['medley']) && $data['medley'] == 1)
-                                - <a href="{{ $url }}">{{ $keyword }}</a>{{ $annotation }}<br>
-                            @else
-                                @php $count++; @endphp
-                                <li>
-                                    <a href="{{ $url }}">{{ $keyword }}</a>{{ $annotation }}
-                                </li>
-                            @endif
-                        @endforeach
-                    </ol>
+                    @php $count = renderSetlist($setlists->setlist, $setlists->artist_id, [], 1); @endphp
 
                     {{-- アンコール --}}
                     @if (!empty($setlists->encore))
                         <hr width="250">
-                        <ol class="setlist" start="{{ $count + 1 }}">
-                            @foreach ((array) $setlists->encore as $data)
-                                @php
-                                    $parts = splitAnnotation($data['song']);
-                                    $main = $parts['main'];
-                                    $annotation = $parts['annotation'];
-                                    $matchType = hasAnnotation($data['song']) ? 'partial' : 'exact';
-                                    $keyword = hasAnnotation($data['song']) ? $main : $data['song'];
-
-                                    $params = [
-                                        'artist_id' => $setlists->artist_id,
-                                        'keyword' => $keyword,
-                                        'match_type' => $matchType,
-                                    ];
-                                    $url = url('/search') . '?' . http_build_query($params);
-                                @endphp
-
-                                @if (!empty($data['medley']) && $data['medley'] == 1)
-                                    - <a href="{{ $url }}">{{ $keyword }}</a>{{ $annotation }}<br>
-                                @else
-                                    <li>
-                                        <a href="{{ $url }}">{{ $keyword }}</a>{{ $annotation }}
-                                    </li>
-                                @endif
-                            @endforeach
-                        </ol>
+                        @php $count += renderSetlist($setlists->encore, $setlists->artist_id, [], $count + 1); @endphp
                     @endif
 
                 {{-- フェス形式 --}}
                 @elseif($setlists->fes)
                     @php
                         $prevArtistId = null;
-                        $count = 0;
                     @endphp
+
+                    {{-- フェス本編 --}}
                     @foreach ((array) $setlists->fes_setlist as $key => $data)
                         @php
-                            $artistId = isset($data['artist']) ? (is_numeric($data['artist']) ? $data['artist'] : $artistNameToId[$data['artist']] ?? null) : null;
-                            $artistName = isset($data['artist']) ? $artistIdToName[$artistId] ?? $data['artist'] : '';
+                            $artistId = isset($data['artist']) 
+                                ? (is_numeric($data['artist']) ? $data['artist'] : $artistNameToId[$data['artist']] ?? null) 
+                                : null;
+                            $artistName = $artistIdToName[$artistId] ?? ($data['artist'] ?? '');
+                        @endphp
+
+                        @if ($key == 0 || $artistId !== $prevArtistId)
+                            @if ($key != 0) </ol> @endif
+                            <ol class="setlist">
+                                @if ($artistName)
+                                    <a href="{{ url('/setlists/artists', $artistId) }}">{{ $artistName }}</a><br>
+                                @endif
+                        @endif
+
+                        @php
+                            $isMedley = !empty($data['medley']) && $data['medley'] == 1;
                             $parts = splitAnnotation($data['song']);
                             $main = $parts['main'];
                             $annotation = $parts['annotation'];
                             $matchType = hasAnnotation($data['song']) ? 'partial' : 'exact';
                             $keyword = hasAnnotation($data['song']) ? $main : $data['song'];
-                            $isNewArtistGroup = $key == 0 || $artistId !== $prevArtistId;
-
-                            $params = $artistId
-                                ? ['artist_id' => $artistId, 'keyword' => $keyword, 'match_type' => $matchType]
-                                : ['keyword' => $keyword, 'match_type' => $matchType];
-                            $url = url('/search') . '?' . http_build_query($params);
+                            $urlParams = $artistId ? ['artist_id' => $artistId, 'keyword' => $keyword, 'match_type' => $matchType]
+                                                    : ['keyword' => $keyword, 'match_type' => $matchType];
+                            $url = url('/search') . '?' . http_build_query($urlParams);
                         @endphp
 
-                        @if (!empty($data['artist']))
-                            @if ($isNewArtistGroup)
-                                @if ($key !== 0)</ol>@endif
-                                <ol class="setlist">
-                                    <a href="{{ url('/setlists/artists', $artistId) }}">{{ $artistName }}</a><br>
-                            @endif
-                            <li>
-                                @php $count++; @endphp
-                                <a href="{{ $url }}">{{ $keyword }}</a>{{ $annotation }}
-                            </li>
+                        @if ($isMedley)
+                            - <a href="{{ $url }}">{{ $keyword }}</a>@if(!empty($annotation)) {{ $annotation }}@endif<br>
                         @else
-                            @if ($key == 0)
-                                <ol class="setlist">
-                            @endif
-                            <li>
-                                @php $count++; @endphp
-                                <a href="{{ $url }}">{{ $keyword }}</a>{{ $annotation }}
-                            </li>
+                            <li><a href="{{ $url }}">{{ $keyword }}</a>@if(!empty($annotation)) {{ $annotation }}@endif</li>
                         @endif
 
                         @php $prevArtistId = $artistId; @endphp
@@ -159,31 +147,33 @@
                         @php $prevArtistId = null; @endphp
                         @foreach ((array) $setlists->fes_encore as $key => $data)
                             @php
-                                $artistId = isset($data['artist']) ? (is_numeric($data['artist']) ? $data['artist'] : $artistNameToId[$data['artist']] ?? null) : null;
-                                $artistName = isset($data['artist']) ? $artistIdToName[$artistId] ?? $data['artist'] : '';
+                                $artistId = isset($data['artist'])
+                                    ? (is_numeric($data['artist']) ? $data['artist'] : $artistNameToId[$data['artist']] ?? null)
+                                    : null;
+                                $artistName = $artistIdToName[$artistId] ?? ($data['artist'] ?? '');
+                                $isMedley = !empty($data['medley']) && $data['medley'] == 1;
                                 $parts = splitAnnotation($data['song']);
                                 $main = $parts['main'];
                                 $annotation = $parts['annotation'];
                                 $matchType = hasAnnotation($data['song']) ? 'partial' : 'exact';
                                 $keyword = hasAnnotation($data['song']) ? $main : $data['song'];
-                                $isNewArtistGroup = $key == 0 || $artistId !== $prevArtistId;
-
-                                $params = $artistId
-                                    ? ['artist_id' => $artistId, 'keyword' => $keyword, 'match_type' => $matchType]
-                                    : ['keyword' => $keyword, 'match_type' => $matchType];
-                                $url = url('/search') . '?' . http_build_query($params);
+                                $urlParams = $artistId ? ['artist_id' => $artistId, 'keyword' => $keyword, 'match_type' => $matchType]
+                                                        : ['keyword' => $keyword, 'match_type' => $matchType];
+                                $url = url('/search') . '?' . http_build_query($urlParams);
                             @endphp
 
-                            @if (!empty($data['artist']))
-                                @if ($isNewArtistGroup)
-                                    @if ($key !== 0)</ol>@endif
-                                    <ol class="setlist">
+                            @if ($key == 0 || $artistId !== $prevArtistId)
+                                @if ($key != 0) </ol> @endif
+                                <ol class="setlist">
+                                    @if ($artistName)
                                         <a href="{{ url('/setlists/artists', $artistId) }}">{{ $artistName }}</a><br>
-                                @endif
-                                <li><a href="{{ $url }}">{{ $keyword }}</a>{{ $annotation }}</li>
+                                    @endif
+                            @endif
+
+                            @if ($isMedley)
+                                - <a href="{{ $url }}">{{ $keyword }}</a>@if(!empty($annotation)) {{ $annotation }}@endif<br>
                             @else
-                                @if ($key == 0)<ol class="setlist">@endif
-                                <li><a href="{{ $url }}">{{ $keyword }}</a>{{ $annotation }}</li>
+                                <li><a href="{{ $url }}">{{ $keyword }}</a>@if(!empty($annotation)) {{ $annotation }}@endif</li>
                             @endif
 
                             @php $prevArtistId = $artistId; @endphp

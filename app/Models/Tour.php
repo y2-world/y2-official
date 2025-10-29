@@ -5,20 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class Tour extends Model
-{   
+{
     protected $casts = [
-        // 'year' =>'json',
-        'setlist1' =>'json',
-        'setlist2' =>'json',
-        'setlist3' =>'json',
-        'setlist4' =>'json',
-        'setlist5' =>'json',
-        'setlist6' =>'json',
+        // setlist1~6 は削除済み。tour_setlistsテーブルで管理
     ];
 
     public function songs()
     {
-        return $this->hasMany('App\Models\Song'); 
+        return $this->hasMany('App\Models\Song');
     }
 
     public function getTourAttribute($value)
@@ -26,44 +20,8 @@ class Tour extends Model
         return array_values(json_decode($value, true) ?: []);
     }
 
-    public function setSetlistAttribute($value)
-    {
-        $this->attributes['setlist1'] = json_encode(array_values($value));
-    }
-
-    public function setSetlist2Attribute($value)
-    {
-        $this->attributes['setlist2'] = json_encode(array_values($value));
-    }
-
-    public function setSetlist3Attribute($value)
-    {
-        $this->attributes['setlist3'] = json_encode(array_values($value));
-    }
-    
-    public function setSetlist4Attribute($value)
-    {
-        $this->attributes['setlist4'] = json_encode(array_values($value));
-    }
-
-    public function setSetlist5Attribute($value)
-    {
-        $this->attributes['setlist5'] = json_encode(array_values($value));
-    }
-
-    public function setSetlist6Attribute($value)
-    {
-        $this->attributes['setlist6'] = json_encode(array_values($value));
-    }
-
-
-    // public function setYearAttribute($value)
-    // {
-    //     $this->attributes['year'] = json_encode(array_values($value));
-    // }
-
     public function tourSetlists()
     {
-        return $this->hasMany(TourSetlist::class);
+        return $this->hasMany(TourSetlist::class, 'tour_id', 'id');
     }
 }

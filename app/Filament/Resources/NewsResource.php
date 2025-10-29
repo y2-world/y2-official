@@ -25,6 +25,14 @@ class NewsResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Official';
+
+    protected static ?int $navigationSort = 34;
+
+    protected static ?string $navigationLabel = 'ニュース';
+
+    protected static ?string $modelLabel = 'ニュース';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -60,9 +68,14 @@ class NewsResource extends Resource
                 TextColumn::make('id')->label('ID'),
                 TextColumn::make('title')->label('タイトル'),
                 TextColumn::make('date')->date('Y.m.d')->label('公開日'),
-                TextColumn::make('visible')
+                Tables\Columns\ToggleColumn::make('visible')
                     ->label('公開')
-                    ->formatStateUsing(fn($state) => $state == 0 ? '公開' : '非公開') // 0 → 公開, 1 → 非公開
+                    ->onColor('success')
+                    ->offColor('danger')
+                    ->beforeStateUpdated(function ($record, $state) {
+                        return $state ? 0 : 1; // Toggle時に0と1を逆にする
+                    })
+                    ->getStateUsing(fn ($record) => $record->visible == 0) // 0を公開（ON）として表示
             ])
             ->filters([
                 //
