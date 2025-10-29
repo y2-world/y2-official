@@ -20,8 +20,10 @@ class FilamentServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Filament::auth(function ($user) {
-            return $user->is_admin; // 例: is_admin が true の場合のみアクセス許可
+        Filament::serving(function () {
+            Filament::auth(function ($user) {
+                return true; // 一時的に全ユーザー許可
+            });
         });
     }
 }
