@@ -2,8 +2,8 @@
 
 namespace App\Admin\Controllers;
 
-use App\Setlist;
-use App\Artist;
+use App\Models\Setlist;
+use App\Models\Artist;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -213,7 +213,7 @@ class SetlistController extends AdminController
                 $form->table('fes_setlist', __('本編'), function ($table) {
                     $table->select('artist', '')
                         ->options(function ($value) {
-                            $artists = \App\Artist::all()->pluck('name', 'id');
+                            $artists = \App\Models\Artist::all()->pluck('name', 'id');
 
                             // 入力値が数値でない＝手入力（自由入力）だった場合
                             if (!is_numeric($value) && $value) {
@@ -231,7 +231,7 @@ class SetlistController extends AdminController
                 $form->table('fes_encore', __('アンコール'), function ($table) {
                     $table->select('artist', '')
                         ->options(function ($value) {
-                            $artists = \App\Artist::all()->pluck('name', 'id');
+                            $artists = \App\Models\Artist::all()->pluck('name', 'id');
 
                             if (!is_numeric($value) && $value) {
                                 return $artists->prepend($value, $value);

@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Artist;
+use App\Models\Artist;
 use Illuminate\Http\Request;
 use Encore\Admin\Controllers\AdminController;
 

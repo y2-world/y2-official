@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Album;
+use App\Models\Album;
 use Illuminate\Http\Request;
 use Encore\Admin\Controllers\AdminController;
 

@@ -5,7 +5,7 @@ namespace App\Admin\Controllers;
 use App\Models\TourSetlist;
 use App\Models\Tour;
 use App\Models\Song;
-use App\Bio;
+use App\Models\Bio;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
