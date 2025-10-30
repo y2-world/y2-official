@@ -34,6 +34,7 @@ class TourSetlistResource extends Resource
                             ->label('ツアー')
                             ->relationship('tour', 'title')
                             ->searchable()
+                            ->native(false)
                             ->preload()
                             ->required(),
 
@@ -60,6 +61,7 @@ class TourSetlistResource extends Resource
                                     ->label('曲名')
                                     ->options(fn() => \App\Models\Song::pluck('title', 'id')) // 既存曲の候補だけ
                                     ->searchable()
+                                    ->native(false)
                                     ->required()
                                     ->live()
                                     ->columnSpan(2)
@@ -130,6 +132,7 @@ class TourSetlistResource extends Resource
                                         return \App\Models\Song::pluck('title', 'id');
                                     })
                                     ->searchable()
+                                    ->native(false)
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('title')
                                             ->label('曲名')

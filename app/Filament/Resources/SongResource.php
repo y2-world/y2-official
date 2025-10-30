@@ -39,6 +39,7 @@ class SongResource extends Resource
                     ->label('アルバム')
                     ->relationship('album', 'title', fn($query) => $query->where('id', '!=', 3))
                     ->searchable()
+                    ->native(false)
                     ->preload()
                     ->nullable(),
 
@@ -46,6 +47,7 @@ class SongResource extends Resource
                     ->label('シングル')
                     ->relationship('single', 'title', fn($query) => $query->where('id', '!=', 3))
                     ->searchable()
+                    ->native(false)
                     ->preload()
                     ->nullable(),
                 // 年（year）
@@ -53,6 +55,7 @@ class SongResource extends Resource
                     ->label('年')
                     ->options(fn() => \App\Models\Song::query()->distinct()->orderBy('year')->pluck('year', 'year'))
                     ->searchable()
+                    ->native(false)
                     ->placeholder('新しい年を入力する場合は追加')
                     ->reactive()
                     ->createOptionUsing(fn(string $label) => (int) $label)

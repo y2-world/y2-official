@@ -63,9 +63,43 @@ class TourResource extends Resource
                             ->native(false)
                             ->displayFormat('Y.m.d'),
 
-                        TextInput::make('venue')
+                        Forms\Components\Select::make('venue')
                             ->label('会場')
-                            ->maxLength(255)
+                            ->searchable()
+                            ->native(false)
+                            ->options(function () {
+                                $venues = collect();
+
+                                // Setlistから会場を取得
+                                $setlistVenues = \App\Models\Setlist::query()
+                                    ->whereNotNull('venue')
+                                    ->where('venue', '!=', '')
+                                    ->distinct()
+                                    ->pluck('venue');
+
+                                // Tourから会場を取得
+                                $tourVenues = \App\Models\Tour::query()
+                                    ->whereNotNull('venue')
+                                    ->where('venue', '!=', '')
+                                    ->distinct()
+                                    ->pluck('venue');
+
+                                // マージしてソート
+                                return $venues->merge($setlistVenues)
+                                    ->merge($tourVenues)
+                                    ->unique()
+                                    ->sort()
+                                    ->mapWithKeys(fn($v) => [$v => $v]);
+                            })
+                            ->createOptionForm([
+                                Forms\Components\TextInput::make('venue')
+                                    ->label('新しい会場名')
+                                    ->required()
+                                    ->maxLength(255),
+                            ])
+                            ->createOptionUsing(function (array $data): string {
+                                return $data['venue'];
+                            })
                             ->columnSpanFull(),
                     ])
                     ->columns(2),

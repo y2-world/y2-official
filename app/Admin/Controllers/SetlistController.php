@@ -4,7 +4,6 @@ namespace App\Admin\Controllers;
 
 use App\Setlist;
 use App\Artist;
-use App\Year;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;

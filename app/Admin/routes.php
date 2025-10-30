@@ -17,7 +17,6 @@ Route::group([
     $router->resource('songs', SongController::class);
     $router->resource('albums', AlbumController::class);
     $router->resource('singles', SingleController::class);
-    $router->resource('years', YearController::class);
     $router->resource('bios', BioController::class);
     $router->resource('tours', TourController::class);
     $router->resource('events', EventController::class);

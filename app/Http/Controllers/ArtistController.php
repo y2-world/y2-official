@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Artist;
 use App\Setlist;
-use App\Models\Year;
 
 class ArtistController extends Controller
 {
@@ -18,8 +17,17 @@ class ArtistController extends Controller
     {
         $artists = Artist::orderBy('id', 'asc')
             ->paginate(10);
-        $years = Year::orderBy('id', 'asc')
-            ->get();
+
+        // Setlistから年のリストを取得
+        $years = Setlist::select('year')
+            ->whereNotNull('year')
+            ->distinct()
+            ->orderBy('year', 'asc')
+            ->pluck('year')
+            ->map(function ($year) {
+                return (object)['year' => $year];
+            });
+
         return view('artists.index', compact('artists', 'years'));
     }
 
@@ -62,7 +70,16 @@ class ArtistController extends Controller
 
         // アーティスト一覧と年のデータを取得
         $artists = Artist::orderBy('id', 'asc')->where('visible', 0)->get();
-        $years = Year::orderBy('year', 'asc')->get();
+
+        // Setlistから年のリストを取得
+        $years = Setlist::select('year')
+            ->whereNotNull('year')
+            ->distinct()
+            ->orderBy('year', 'asc')
+            ->pluck('year')
+            ->map(function ($year) {
+                return (object)['year' => $year];
+            });
 
         // 指定されたアーティストのセットリストを取得
         $setlists = Setlist::where('artist_id', $artist->id)

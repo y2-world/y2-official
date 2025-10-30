@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Artist;
 use App\Setlist;
-use App\Models\Year;
 use Illuminate\Http\Request;
 
 class SetlistController extends Controller
@@ -48,7 +47,16 @@ class SetlistController extends Controller
         // アーティスト、全てのアーティスト、年のデータを取得する
         $artists = Artist::where('visible', 0)->orderBy('id', 'asc')->get();
         $allArtists = Artist::orderBy('id', 'asc')->get();
-        $years = Year::orderBy('year', 'asc')->get();
+
+        // Setlistから年のリストを取得
+        $years = Setlist::select('year')
+            ->whereNotNull('year')
+            ->distinct()
+            ->orderBy('year', 'asc')
+            ->pluck('year')
+            ->map(function ($year) {
+                return (object)['year' => $year];
+            });
     
         // ビューにデータを渡して表示する
         return view('setlists.index', compact('artists', 'allArtists', 'setlists', 'years', 'type', 'totalCount'));

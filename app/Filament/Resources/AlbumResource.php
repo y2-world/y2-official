@@ -61,6 +61,7 @@ class AlbumResource extends Resource
                             ->label('曲名')
                             ->options(fn() => Song::pluck('title', 'id'))
                             ->searchable()
+                            ->native(false)
                             ->columnSpan(2),
 
                         // 例外（曲名と同じ長さ）

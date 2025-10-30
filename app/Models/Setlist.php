@@ -21,6 +21,7 @@ class Setlist extends Model
         'artist_id',
         'title',
         'date',
+        'year',
         'venue',
         'setlist',
         'encore',
@@ -32,6 +33,31 @@ class Setlist extends Model
     public function artist()
     {
         return $this->belongsTo(Artist::class);
+    }
+
+    // dateが設定されたら自動的にyearも設定
+    public function setDateAttribute($value)
+    {
+        $this->attributes['date'] = $value;
+        if ($value) {
+            $this->attributes['year'] = \Carbon\Carbon::parse($value)->year;
+        }
+    }
+
+    // yearのアクセサ（dateから年を取得）
+    public function getYearAttribute($value)
+    {
+        // year カラムに値があればそれを返す
+        if (!empty($value)) {
+            return $value;
+        }
+
+        // なければdateから計算
+        if (!empty($this->attributes['date'])) {
+            return \Carbon\Carbon::parse($this->attributes['date'])->year;
+        }
+
+        return null;
     }
 
     // setlistを設定する際に、UUIDが存在しない場合は追加

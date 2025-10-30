@@ -34,7 +34,8 @@ class SetlistResource extends Resource
                             ->label('アーティスト')
                             ->relationship('artist', 'name')
                             ->searchable()
-                            ->preload(),
+                            ->preload()
+                            ->native(false),
 
                         Forms\Components\TextInput::make('title')
                             ->label('タイトル')
@@ -48,10 +49,44 @@ class SetlistResource extends Resource
                             ->native(false)
                             ->displayFormat('Y.m.d'),
 
-                        Forms\Components\TextInput::make('venue')
+                        Forms\Components\Select::make('venue')
                             ->label('会場')
                             ->required()
-                            ->maxLength(255),
+                            ->searchable()
+                            ->native(false)
+                            ->options(function () {
+                                $venues = collect();
+
+                                // Setlistから会場を取得
+                                $setlistVenues = \App\Models\Setlist::query()
+                                    ->whereNotNull('venue')
+                                    ->where('venue', '!=', '')
+                                    ->distinct()
+                                    ->pluck('venue');
+
+                                // Tourから会場を取得
+                                $tourVenues = \App\Models\Tour::query()
+                                    ->whereNotNull('venue')
+                                    ->where('venue', '!=', '')
+                                    ->distinct()
+                                    ->pluck('venue');
+
+                                // マージしてソート
+                                return $venues->merge($setlistVenues)
+                                    ->merge($tourVenues)
+                                    ->unique()
+                                    ->sort()
+                                    ->mapWithKeys(fn($v) => [$v => $v]);
+                            })
+                            ->createOptionForm([
+                                Forms\Components\TextInput::make('venue')
+                                    ->label('新しい会場名')
+                                    ->required()
+                                    ->maxLength(255),
+                            ])
+                            ->createOptionUsing(function (array $data): string {
+                                return $data['venue'];
+                            }),
 
                         Forms\Components\Radio::make('fes')
                             ->label('イベント種別')
@@ -196,6 +231,7 @@ class SetlistResource extends Resource
                                     ->relationship('artist', 'name')
                                     ->searchable()
                                     ->preload()
+                                    ->native(false)
                                     ->required()
                                     ->columnSpan(2),
                                 Forms\Components\TextInput::make('song')
@@ -253,6 +289,7 @@ class SetlistResource extends Resource
                                     ->relationship('artist', 'name')
                                     ->searchable()
                                     ->preload()
+                                    ->native(false)
                                     ->required()
                                     ->columnSpan(2),
                                 Forms\Components\TextInput::make('song')
@@ -335,6 +372,10 @@ class SetlistResource extends Resource
                     ->label('公演日')
                     ->date('Y.m.d')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('year')
+                    ->label('年')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('venue')
                     ->label('会場')
                     ->searchable(),
@@ -355,6 +396,15 @@ class SetlistResource extends Resource
                     ->relationship('artist', 'name')
                     ->label('アーティスト')
                     ->searchable(),
+                Tables\Filters\SelectFilter::make('year')
+                    ->label('年')
+                    ->options(function () {
+                        return \App\Models\Setlist::query()
+                            ->whereNotNull('year')
+                            ->distinct()
+                            ->orderBy('year', 'desc')
+                            ->pluck('year', 'year');
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
