@@ -25,6 +25,7 @@ class FilamentPanelProvider extends PanelProvider
         return $panel
             ->id('filament')
             ->path('filament')
+            ->login()
             ->colors([
                 'primary' => Color::Amber,
             ])
