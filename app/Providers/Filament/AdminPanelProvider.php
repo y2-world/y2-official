@@ -26,6 +26,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName('Yuki Official')
             ->colors([
                 'primary' => Color::Amber,
             ])

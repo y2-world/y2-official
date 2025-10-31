@@ -21,11 +21,25 @@ class SongController extends Controller
     {
         $songs = Song::orderBy('id', 'asc')
             ->paginate(10);
+        $totalCount = $songs->total();
+
         $albums = Album::orderBy('id', 'asc')
             ->get();
         $bios = Bio::orderBy('id', 'asc')
             ->get();
-        return view('songs.index', compact('albums', 'songs', 'bios'));
+
+        // AJAXリクエストの場合はJSON形式で返す
+        if (request()->wantsJson() || request()->ajax()) {
+            $html = view('songs._list', compact('songs', 'totalCount'))->render();
+            return response()->json([
+                'html' => $html,
+                'next_page_url' => $songs->nextPageUrl(),
+                'current_page' => $songs->currentPage(),
+                'last_page' => $songs->lastPage(),
+            ]);
+        }
+
+        return view('songs.index', compact('albums', 'songs', 'bios', 'totalCount'));
     }
 
     /**

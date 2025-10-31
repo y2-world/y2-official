@@ -35,20 +35,26 @@
           <th class="mobile">リリース日</th>
         </tr>
       </thead>
-      <div class="all-setlist">
-        <tbody>
-            @foreach ($albums as $album)
-              <tr>
-                  <td>{{$album->album_id}}</td>
-                  <td><a href="{{ route('albums.show', $album->id) }}">{{ $album->title }}</a></td>
-                  <td>{{ date('Y.m.d', strtotime($album->date)) }}</td>
-              </tr>
-            @endforeach
-        </tbody>
-      </div>
+      <tbody id="albums-container">
+          @include('albums._list', ['albums' => $albums])
+      </tbody>
     </table>
-  <div class=”pagination”>
+  <div class="pagination" id="pagination-links">
     {!! $albums->onEachSide(5)->links() !!}
   </div>
 </div>
+@endsection
+
+@section('page-script')
+    <script src="{{ asset('/js/infinite-scroll.js?time=' . time()) }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if($albums->hasMorePages())
+                new InfiniteScroll({
+                    container: '#albums-container',
+                    nextPageUrl: '{{ $albums->nextPageUrl() }}'
+                });
+            @endif
+        });
+    </script>
 @endsection

@@ -32,23 +32,53 @@ class DiscoResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('title')
+                    ->label('タイトル')
                     ->required()
                     ->maxLength(191),
                 Forms\Components\TextInput::make('subtitle')
+                    ->label('サブタイトル')
                     ->maxLength(191),
-                Forms\Components\DatePicker::make('date'),
-                Forms\Components\TextInput::make('tracklist'),
+                Forms\Components\DatePicker::make('date')
+                    ->label('発売日')
+                    ->native(false)
+                    ->displayFormat('Y.m.d'),
+                Forms\Components\Repeater::make('tracklist')
+                    ->label('収録曲')
+                    ->schema([
+                        Forms\Components\Select::make('id')
+                            ->label('曲名')
+                            ->options(fn() => \App\Models\Lyric::pluck('title', 'id'))
+                            ->searchable()
+                            ->native(false)
+                            ->columnSpan(2),
+                        Forms\Components\TextInput::make('exception')
+                            ->label('例外')
+                            ->columnSpan(2),
+                    ])
+                    ->columns(4)
+                    ->defaultItems(1)
+                    ->columnSpanFull(),
                 Forms\Components\Textarea::make('text')
+                    ->label('テキスト')
+                    ->rows(5)
                     ->columnSpanFull(),
-                Forms\Components\Textarea::make('url')
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('image')
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('type')
-                    ->numeric(),
-                Forms\Components\TextInput::make('visible')
-                    ->numeric()
-                    ->default(0),
+                Forms\Components\TextInput::make('url')
+                    ->label('URL')
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('image')
+                    ->label('画像')
+                    ->maxLength(255),
+                Forms\Components\Toggle::make('type')
+                    ->label('アルバム')
+                    ->onColor('success')
+                    ->offColor('gray'),
+                Forms\Components\Toggle::make('visible')
+                    ->label('公開')
+                    ->onColor('success')
+                    ->offColor('gray')
+                    ->default(0)
+                    ->formatStateUsing(fn ($state) => $state == 0)
+                    ->dehydrateStateUsing(fn ($state) => $state ? 0 : 1),
             ]);
     }
 
@@ -56,36 +86,28 @@ class DiscoResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('ID')
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('title')
+                    ->label('タイトル')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('subtitle')
+                    ->label('サブタイトル')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('date')
-                    ->date()
+                    ->label('発売日')
+                    ->date('Y.m.d')
                     ->sortable(),
                 Tables\Columns\ToggleColumn::make('type')
-                    ->label('タイプ')
+                    ->label('アルバム')
                     ->onColor('success')
                     ->offColor('gray'),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('Y.m.d H:i')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime('Y.m.d H:i')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\ToggleColumn::make('visible')
                     ->label('公開')
                     ->onColor('success')
-                    ->offColor('danger')
-                    ->beforeStateUpdated(function ($record, $state) {
-                        return $state ? 0 : 1;
-                    })
-                    ->getStateUsing(fn ($record) => $record->visible == 0),
+                    ->offColor('gray')
+                    ->getStateUsing(fn ($record) => $record->visible == 0)
+                    ->afterStateUpdated(function ($record, $state) {
+                        $record->update(['visible' => $state ? 0 : 1]);
+                    }),
             ])
             ->filters([
                 //

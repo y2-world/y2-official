@@ -18,10 +18,24 @@ class AlbumController extends Controller
     public function index()
     {
         $albums = Album::orderBy('id', 'asc')
-        ->paginate(10);
+            ->paginate(10);
+        $totalCount = $albums->total();
+
         $bios = Bio::orderBy('id', 'asc')
-        ->get();
-        return view('albums.index', compact('albums', 'bios'));
+            ->get();
+
+        // AJAXリクエストの場合はJSON形式で返す
+        if (request()->wantsJson() || request()->ajax()) {
+            $html = view('albums._list', compact('albums', 'totalCount'))->render();
+            return response()->json([
+                'html' => $html,
+                'next_page_url' => $albums->nextPageUrl(),
+                'current_page' => $albums->currentPage(),
+                'last_page' => $albums->lastPage(),
+            ]);
+        }
+
+        return view('albums.index', compact('albums', 'bios', 'totalCount'));
     }
 
     /**

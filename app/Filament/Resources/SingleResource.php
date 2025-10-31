@@ -20,7 +20,7 @@ class SingleResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Database';
+    protected static ?string $navigationGroup = 'Mr.Children Database';
 
     protected static ?int $navigationSort = 23;
 
@@ -33,19 +33,24 @@ class SingleResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('single_id')
+                    ->label('シングルID')
                     ->numeric(),
                 Forms\Components\DatePicker::make('date')
+                    ->label('発売日')
                     ->required()
                     ->native(false)
                     ->displayFormat('Y.m.d'),
                 Forms\Components\TextInput::make('title')
+                    ->label('タイトル')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Toggle::make('download')
                     ->label('配信シングル')
                     ->onColor('success')
                     ->offColor('gray'),
-                Forms\Components\Textarea::make('text'),
+                Forms\Components\Textarea::make('text')
+                    ->label('テキスト')
+                    ->rows(5),
                 Forms\Components\Repeater::make('tracklist')
                     ->label('収録曲')
                     ->schema([
@@ -84,16 +89,16 @@ class SingleResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('ID')
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('single_id')
+                    ->label('シングルID')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('date')
+                    ->label('発売日')
                     ->date('Y.m.d')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('title')
+                    ->label('タイトル')
                     ->searchable(),
                 Tables\Columns\ToggleColumn::make('download')
                     ->label('配信')

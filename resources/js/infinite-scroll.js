@@ -1,0 +1,137 @@
+/**
+ * Infinite Scroll Implementation
+ * ページネーション付きのページをインフィニティスクロールに変換
+ */
+
+class InfiniteScroll {
+    constructor(options) {
+        console.log('InfiniteScroll initialized with options:', options);
+
+        this.container = document.querySelector(options.container);
+        this.nextPageUrl = options.nextPageUrl;
+        this.loading = false;
+        this.hasMore = true;
+
+        if (!this.container) {
+            console.error('Container not found:', options.container);
+            return;
+        }
+
+        console.log('Container found:', this.container);
+        console.log('Next page URL:', this.nextPageUrl);
+
+        // ページネーションを非表示
+        const pagination = document.querySelector('.pagination, #pagination-links');
+        if (pagination) {
+            console.log('Hiding pagination:', pagination);
+            pagination.style.display = 'none';
+        } else {
+            console.log('Pagination element not found');
+        }
+
+        this.init();
+    }
+
+    init() {
+        console.log('Initializing scroll listener...');
+        console.log('Document height:', document.documentElement.offsetHeight);
+        console.log('Window height:', window.innerHeight);
+        console.log('Scroll position:', window.scrollY);
+
+        // スクロールイベントをリスン
+        window.addEventListener('scroll', () => this.handleScroll());
+
+        // ローディングインジケーターを作成
+        this.createLoadingIndicator();
+
+        // 初回チェック（ページが短くてスクロールバーがない場合に対応）
+        console.log('Performing initial scroll check...');
+        this.handleScroll();
+    }
+
+    createLoadingIndicator() {
+        this.loadingEl = document.createElement('div');
+        this.loadingEl.className = 'loading-indicator';
+        this.loadingEl.style.cssText = 'text-align: center; padding: 40px 20px; display: none; width: 100%;';
+        this.loadingEl.innerHTML = `
+            <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #333; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+            <p style="margin-top: 10px; color: #666;">読み込み中...</p>
+            <style>
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            </style>
+        `;
+        // テーブルの後に追加するため、親要素（table）の親に追加
+        this.container.closest('table').parentElement.appendChild(this.loadingEl);
+    }
+
+    handleScroll() {
+        if (this.loading || !this.hasMore) {
+            console.log('handleScroll skipped - loading:', this.loading, 'hasMore:', this.hasMore);
+            return;
+        }
+
+        const scrollPosition = window.innerHeight + window.scrollY;
+        const threshold = document.documentElement.offsetHeight - 500;
+
+        console.log('Scroll check - Position:', scrollPosition, 'Threshold:', threshold);
+
+        if (scrollPosition >= threshold) {
+            console.log('Threshold reached, loading more...');
+            this.loadMore();
+        }
+    }
+
+    async loadMore() {
+        if (!this.nextPageUrl || this.loading) return;
+
+        console.log('Loading more from:', this.nextPageUrl);
+
+        this.loading = true;
+        this.loadingEl.style.display = 'block';
+
+        try {
+            const response = await fetch(this.nextPageUrl, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            });
+
+            console.log('Response status:', response.status);
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            console.log('Received data:', data);
+
+            // HTMLをコンテナに追加
+            if (data.html) {
+                // tbodyに直接appendするため、insertAdjacentHTMLを使用
+                this.container.insertAdjacentHTML('beforeend', data.html);
+            }
+
+            // 次のページURLを更新
+            this.nextPageUrl = data.next_page_url;
+            this.hasMore = data.next_page_url !== null;
+
+        } catch (error) {
+            console.error('Error loading more items:', error);
+        } finally {
+            this.loading = false;
+            this.loadingEl.style.display = 'none';
+        }
+    }
+}
+
+// 使用方法:
+// new InfiniteScroll({
+//     container: '#items-container',
+//     nextPageUrl: 'http://example.com/api/items?page=2'
+// });
+
+window.InfiniteScroll = InfiniteScroll;

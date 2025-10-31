@@ -23,7 +23,7 @@ class TourResource extends Resource
 
     protected static ?string $modelLabel = 'ツアー情報';
 
-    protected static ?string $navigationGroup = 'Database';
+    protected static ?string $navigationGroup = 'Mr.Children Database';
 
     protected static ?int $navigationSort = 20;
 
@@ -155,14 +155,6 @@ class TourResource extends Resource
                     ->label('終了日')
                     ->date('Y.m.d')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('venue')
-                    ->label('会場')
-                    ->searchable()
-                    ->limit(30),
-                Tables\Columns\TextColumn::make('tourSetlists_count')
-                    ->label('パターン数')
-                    ->counts('tourSetlists')
-                    ->suffix('個'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('type')

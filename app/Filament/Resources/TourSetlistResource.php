@@ -16,11 +16,11 @@ class TourSetlistResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-queue-list';
 
-    protected static ?string $navigationLabel = 'Mr.Children セットリスト';
+    protected static ?string $navigationLabel = 'セットリスト';
 
-    protected static ?string $modelLabel = 'Mr.Children セットリスト';
+    protected static ?string $modelLabel = 'セットリスト';
 
-    protected static ?string $navigationGroup = 'Database';
+    protected static ?string $navigationGroup = 'Mr.Children Database';
 
     protected static ?int $navigationSort = 21;
 
@@ -32,7 +32,7 @@ class TourSetlistResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('tour_id')
                             ->label('ツアー')
-                            ->relationship('tour', 'title')
+                            ->relationship('tour', 'title', fn ($query) => $query->orderBy('id', 'asc'))
                             ->searchable()
                             ->native(false)
                             ->preload()
@@ -59,11 +59,20 @@ class TourSetlistResource extends Resource
                                     ->default(fn() => \Illuminate\Support\Str::uuid()->toString()),
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
-                                    ->options(fn() => \App\Models\Song::pluck('title', 'id')) // 既存曲の候補だけ
+                                    ->options(fn() => \App\Models\Song::pluck('title', 'id'))
                                     ->searchable()
                                     ->native(false)
                                     ->required()
                                     ->live()
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('title')
+                                            ->label('曲名')
+                                            ->required(),
+                                    ])
+                                    ->createOptionUsing(function (array $data) {
+                                        // 新しい曲をsongsテーブルに追加せず、曲名を直接返す
+                                        return $data['title'];
+                                    })
                                     ->columnSpan(2)
                                     ->mutateDehydratedStateUsing(function ($state) {
                                         // 数値なら既存曲IDとして保存

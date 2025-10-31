@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ArtistResource\Pages;
 use App\Filament\Resources\ArtistResource\RelationManagers;
-use App\Artist;
+use App\Models\Artist;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Components\TextInput;
@@ -36,12 +36,14 @@ class ArtistResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')->label('タイトル'),
-                Toggle::make('visible')
+                TextInput::make('name')->label('アーティスト名'),
+                Toggle::make('hidden')
                     ->label('公開')
                     ->onColor('success')
-                    ->dehydrateStateUsing(fn($state) => $state ? 0 : 1) // 保存時に 0 と 1 を逆にする
-                    ->formatStateUsing(fn($state) => $state == 0), // 表示時に 0 を true（ON）、1 を false（OFF）にする
+                    ->offColor('gray')
+                    ->default(0)
+                    ->formatStateUsing(fn ($state) => $state == 0) // 0をON、1をOFFとして表示
+                    ->dehydrateStateUsing(fn ($state) => $state ? 0 : 1) // ONを0、OFFを1として保存
             ]);
     }
 
@@ -54,11 +56,11 @@ class ArtistResource extends Resource
                 Tables\Columns\ToggleColumn::make('visible')
                     ->label('公開')
                     ->onColor('success')
-                    ->offColor('danger')
-                    ->beforeStateUpdated(function ($record, $state) {
-                        return $state ? 0 : 1; // Toggle時に0と1を逆にする
+                    ->offColor('gray')
+                    ->getStateUsing(fn ($record) => $record->hidden == 0) // 0を公開（ON）として表示
+                    ->afterStateUpdated(function ($record, $state) {
+                        $record->update(['hidden' => $state ? 0 : 1]); // Toggle時に0と1を逆にしてhiddenカラムを更新
                     })
-                    ->getStateUsing(fn ($record) => $record->visible == 0) // 0を公開（ON）として表示
             ])
             ->filters([
                 //

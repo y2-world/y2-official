@@ -19,7 +19,7 @@ class BioResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Database';
+    protected static ?string $navigationGroup = 'Mr.Children Database';
 
     protected static ?int $navigationSort = 24;
 
@@ -32,8 +32,11 @@ class BioResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('year')
+                    ->label('年')
                     ->numeric(),
                 Forms\Components\Textarea::make('text')
+                    ->label('テキスト')
+                    ->rows(5)
                     ->columnSpanFull(),
             ]);
     }
@@ -42,12 +45,13 @@ class BioResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('ID')
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('year')
+                    ->label('年')
                     ->numeric(decimalPlaces: 0, thousandsSeparator: '')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('text')
+                    ->label('テキスト')
+                    ->limit(50),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y.m.d H:i')
                     ->sortable()

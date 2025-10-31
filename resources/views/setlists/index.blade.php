@@ -91,46 +91,11 @@
                     <th class="pc">会場</th>
                 </tr>
             </thead>
-            <div class="all-setlist">
-                <tbody>
-                    @php
-                        // 現在ページでの開始番号を計算（逆順用）
-                        $startNumber = $totalCount - ($setlists->currentPage() - 1) * $setlists->perPage();
-                    @endphp
-                    @foreach ($setlists as $index => $setlist)
-                        <tr>
-                            <td>{{ $startNumber - $index }}</td>
-                            <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
-                            @if (isset($setlist->artist_id))
-                                <td class="pc">
-                                    <a
-                                        href="{{ url('/setlists/artists', $setlist->artist_id) }}">{{ $setlist->artist->name }}</a>
-                                </td>
-                                <td class="sp">
-                                    <a
-                                        href="{{ url('/setlists/artists', $setlist->artist_id) }}">{{ $setlist->artist->name }}</a>
-                                    /
-                                    <a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a>
-                                </td>
-                            @else
-                                <td class="pc"></td>
-                                <td class="sp">
-                                    <a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a>
-                                </td>
-                            @endif
-                            <td class="pc">
-                                <a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a>
-                            </td>
-                            <td class="pc">
-                                <a
-                                    href="{{ url('/venue?keyword=' . urlencode($setlist->venue)) }}">{{ $setlist->venue }}</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </div>
+            <tbody id="setlists-container">
+                @include('setlists._list', ['setlists' => $setlists, 'totalCount' => $totalCount, 'type' => $type])
+            </tbody>
         </table>
-        <div class=”pagination”>
+        <div class="pagination" id="pagination-links">
             {!! $setlists->appends(['type' => $type])->links() !!}
         </div>
         <br>
@@ -139,4 +104,23 @@
 
 @section('page-script')
     <script src="{{ asset('/js/search.js?time=' . time()) }}"></script>
+    <script src="{{ asset('/js/infinite-scroll.js?time=' . time()) }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded');
+            console.log('Has more pages: {{ $setlists->hasMorePages() ? "true" : "false" }}');
+            console.log('InfiniteScroll class available:', typeof InfiniteScroll);
+
+            @if($setlists->hasMorePages())
+                console.log('Initializing InfiniteScroll...');
+                const infiniteScroll = new InfiniteScroll({
+                    container: '#setlists-container',
+                    nextPageUrl: '{!! $setlists->appends(['type' => $type])->nextPageUrl() !!}'
+                });
+                console.log('InfiniteScroll instance:', infiniteScroll);
+            @else
+                console.log('No more pages, skipping InfiniteScroll initialization');
+            @endif
+        });
+    </script>
 @endsection

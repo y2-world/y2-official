@@ -31,23 +31,25 @@ class ProfileResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Textarea::make('name')
+                Forms\Components\TextInput::make('name')
                     ->label('名前')
-                    ->rows(1), // 3行分の高さ
+                    ->maxLength(255),
 
-                Forms\Components\Textarea::make('info')
-                    ->label('情報')
-                    ->rows(1), // 5行分の高さ
+                Forms\Components\DatePicker::make('info')
+                    ->label('生年月日')
+                    ->native(false)
+                    ->displayFormat('Y.m.d'),
 
                 Forms\Components\Textarea::make('text')
                     ->label('本文')
-                    ->rows(10), // 10行分の高さ
+                    ->rows(10),
 
                 Forms\Components\FileUpload::make('image')
                     ->label('画像')
-                    ->image()            // 画像専用
-                    ->disk('public')     // 保存先ディスク
-                    ->directory('images'),
+                    ->image()
+                    ->disk('cloudinary')
+                    ->directory('images')
+                    ->visibility('public'),
             ]);
     }
 
@@ -90,9 +92,17 @@ class ProfileResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProfiles::route('/'),
-            'create' => Pages\CreateProfile::route('/create'),
-            'edit' => Pages\EditProfile::route('/{record}/edit'),
+            'index' => Pages\EditProfile::route('/'),
         ];
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canDelete($record): bool
+    {
+        return false;
     }
 }

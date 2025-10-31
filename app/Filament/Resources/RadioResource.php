@@ -31,16 +31,24 @@ class RadioResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Textarea::make('title')
+                Forms\Components\TextInput::make('title')
+                    ->label('タイトル')
                     ->required()
-                    ->columnSpanFull(),
+                    ->maxLength(255),
                 Forms\Components\DatePicker::make('date')
+                    ->label('公開日')
                     ->native(false)
                     ->displayFormat('Y.m.d'),
                 Forms\Components\Textarea::make('text')
+                    ->label('テキスト')
+                    ->rows(5)
                     ->columnSpanFull(),
-                Forms\Components\Textarea::make('image')
-                    ->columnSpanFull(),
+                Forms\Components\FileUpload::make('image')
+                    ->label('画像')
+                    ->image()
+                    ->disk('cloudinary')
+                    ->directory('images')
+                    ->visibility('public'),
             ]);
     }
 
@@ -86,9 +94,17 @@ class RadioResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRadios::route('/'),
-            'create' => Pages\CreateRadio::route('/create'),
-            'edit' => Pages\EditRadio::route('/{record}/edit'),
+            'index' => Pages\EditRadio::route('/'),
         ];
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canDelete($record): bool
+    {
+        return false;
     }
 }

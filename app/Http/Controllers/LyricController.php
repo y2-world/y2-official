@@ -13,14 +13,28 @@ class LyricController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        // $lyrics = Lyric::orderBy('id', 'asc')
-        // ->paginate(10);
-        // $discos = Disco::orderBy('id', 'asc')
-        // ->get();
-        // return view('lyrics.index', compact('lyrics','discos'));
-    }
+    // public function index()
+    // {
+    //     $lyrics = Lyric::orderBy('id', 'asc')
+    //         ->paginate(10);
+    //     $totalCount = $lyrics->total();
+
+    //     $discos = Disco::orderBy('id', 'asc')
+    //         ->get();
+
+    //     // AJAXリクエストの場合はJSON形式で返す
+    //     if (request()->wantsJson() || request()->ajax()) {
+    //         $html = view('lyrics._list', compact('lyrics', 'totalCount'))->render();
+    //         return response()->json([
+    //             'html' => $html,
+    //             'next_page_url' => $lyrics->nextPageUrl(),
+    //             'current_page' => $lyrics->currentPage(),
+    //             'last_page' => $lyrics->lastPage(),
+    //         ]);
+    //     }
+
+    //     return view('lyrics.index', compact('lyrics', 'discos', 'totalCount'));
+    // }
 
     /**
      * Show the form for creating a new resource.

@@ -44,12 +44,25 @@ class LiveController extends Controller
     
         // ページネーションを適用してセットリストを取得する
         $tours = $liveQuery->paginate(10);
-    
+        $totalCount = $tours->total();
+
         $bios = Bio::orderBy('id', 'asc')
         ->get();
         $songs = Song::orderBy('id', 'asc')
         ->get();
-        return view('live.index', compact('tours', 'bios', 'songs', 'type'));
+
+        // AJAXリクエストの場合はJSON形式で返す
+        if (request()->wantsJson() || request()->ajax()) {
+            $html = view('live._list', compact('tours', 'totalCount', 'type'))->render();
+            return response()->json([
+                'html' => $html,
+                'next_page_url' => $tours->appends(['type' => $type])->nextPageUrl(),
+                'current_page' => $tours->currentPage(),
+                'last_page' => $tours->lastPage(),
+            ]);
+        }
+
+        return view('live.index', compact('tours', 'bios', 'songs', 'type', 'totalCount'));
     }
 
     /**

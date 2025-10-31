@@ -58,6 +58,17 @@ class SetlistController extends Controller
                 return (object)['year' => $year];
             });
     
+        // AJAXリクエストの場合はJSON形式で返す
+        if (request()->wantsJson() || request()->ajax()) {
+            $html = view('setlists._list', compact('setlists', 'totalCount', 'type'))->render();
+            return response()->json([
+                'html' => $html,
+                'next_page_url' => $setlists->appends(['type' => $type])->nextPageUrl(),
+                'current_page' => $setlists->currentPage(),
+                'last_page' => $setlists->lastPage(),
+            ]);
+        }
+
         // ビューにデータを渡して表示する
         return view('setlists.index', compact('artists', 'allArtists', 'setlists', 'years', 'type', 'totalCount'));
     }

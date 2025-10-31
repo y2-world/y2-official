@@ -228,11 +228,23 @@ class SetlistResource extends Resource
                                     ->default(fn () => \Illuminate\Support\Str::uuid()->toString()),
                                 Forms\Components\Select::make('artist')
                                     ->label('アーティスト')
-                                    ->relationship('artist', 'name')
+                                    ->options(fn() => \App\Models\Artist::pluck('name', 'id'))
                                     ->searchable()
-                                    ->preload()
                                     ->native(false)
                                     ->required()
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('name')
+                                            ->label('アーティスト名')
+                                            ->required()
+                                            ->maxLength(255),
+                                    ])
+                                    ->createOptionUsing(function (array $data) {
+                                        $artist = \App\Models\Artist::create([
+                                            'name' => $data['name'],
+                                            'hidden' => 0,
+                                        ]);
+                                        return $artist->id;
+                                    })
                                     ->columnSpan(2),
                                 Forms\Components\TextInput::make('song')
                                     ->label('曲名')
@@ -286,11 +298,23 @@ class SetlistResource extends Resource
                                     ->default(fn () => \Illuminate\Support\Str::uuid()->toString()),
                                 Forms\Components\Select::make('artist')
                                     ->label('アーティスト')
-                                    ->relationship('artist', 'name')
+                                    ->options(fn() => \App\Models\Artist::pluck('name', 'id'))
                                     ->searchable()
-                                    ->preload()
                                     ->native(false)
                                     ->required()
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('name')
+                                            ->label('アーティスト名')
+                                            ->required()
+                                            ->maxLength(255),
+                                    ])
+                                    ->createOptionUsing(function (array $data) {
+                                        $artist = \App\Models\Artist::create([
+                                            'name' => $data['name'],
+                                            'hidden' => 0,
+                                        ]);
+                                        return $artist->id;
+                                    })
                                     ->columnSpan(2),
                                 Forms\Components\TextInput::make('song')
                                     ->label('曲名')
@@ -376,9 +400,6 @@ class SetlistResource extends Resource
                     ->label('年')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('venue')
-                    ->label('会場')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('作成日')
                     ->dateTime('Y-m-d H:i')

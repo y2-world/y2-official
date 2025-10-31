@@ -37,12 +37,16 @@ class NewsResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('title')->label('タイトル'),
-                Toggle::make('visible')
+                TextInput::make('title')
+                    ->label('タイトル')
+                    ->required(),
+                Toggle::make('hidden')
                     ->label('公開')
                     ->onColor('success')
-                    ->dehydrateStateUsing(fn($state) => $state ? 0 : 1) // 保存時に 0 と 1 を逆にする
-                    ->formatStateUsing(fn($state) => $state == 0), // 表示時に 0 を true（ON）、1 を false（OFF）にするÏ
+                    ->offColor('gray')
+                    ->default(0)
+                    ->formatStateUsing(fn ($state) => $state == 0)
+                    ->dehydrateStateUsing(fn ($state) => $state ? 0 : 1),
                 RichEditor::make('text')
                     ->label('本文')
                     ->required(),
@@ -65,23 +69,29 @@ class NewsResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id')->label('ID'),
-                TextColumn::make('title')->label('タイトル'),
-                TextColumn::make('date')->date('Y.m.d')->label('公開日'),
+                TextColumn::make('title')
+                    ->label('タイトル')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('date')
+                    ->label('公開日')
+                    ->date('Y.m.d')
+                    ->sortable(),
                 Tables\Columns\ToggleColumn::make('visible')
                     ->label('公開')
                     ->onColor('success')
-                    ->offColor('danger')
-                    ->beforeStateUpdated(function ($record, $state) {
-                        return $state ? 0 : 1; // Toggle時に0と1を逆にする
-                    })
-                    ->getStateUsing(fn ($record) => $record->visible == 0) // 0を公開（ON）として表示
+                    ->offColor('gray')
+                    ->getStateUsing(fn ($record) => $record->hidden == 0)
+                    ->afterStateUpdated(function ($record, $state) {
+                        $record->update(['hidden' => $state ? 0 : 1]);
+                    }),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -35,21 +35,27 @@
           <th class="mobile">リリース日</th>
         </tr>
       </thead>
-      <div class="all-setlist">
-        <tbody>
-            @foreach ($singles as $single)
-              <tr>
-                  <td>{{$single->single_id}}</td>
-                  <td><a href="{{ route('singles.show', $single->id) }}">{{ $single->title }}</a></td>
-                  <td>{{ date('Y.m.d', strtotime($single->date)) }}</td>
-              </tr>
-            @endforeach
-        </tbody>
-      </div>
+      <tbody id="singles-container">
+          @include('singles._list', ['singles' => $singles])
+      </tbody>
     </table>
-  <div class=”pagination”>
+  <div class="pagination" id="pagination-links">
     {!! $singles->onEachSide(5)->links() !!}
   </div>
   <br>
 </div>
+@endsection
+
+@section('page-script')
+    <script src="{{ asset('/js/infinite-scroll.js?time=' . time()) }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if($singles->hasMorePages())
+                new InfiniteScroll({
+                    container: '#singles-container',
+                    nextPageUrl: '{{ $singles->nextPageUrl() }}'
+                });
+            @endif
+        });
+    </script>
 @endsection

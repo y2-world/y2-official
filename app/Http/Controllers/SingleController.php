@@ -17,10 +17,24 @@ class SingleController extends Controller
     public function index()
     {
         $singles = Single::orderBy('id', 'asc')
-        ->paginate(10);
+            ->paginate(10);
+        $totalCount = $singles->total();
+
         $bios = Bio::orderBy('id', 'asc')
-        ->get();
-        return view('singles.index', compact('singles', 'bios'));
+            ->get();
+
+        // AJAXリクエストの場合はJSON形式で返す
+        if (request()->wantsJson() || request()->ajax()) {
+            $html = view('singles._list', compact('singles', 'totalCount'))->render();
+            return response()->json([
+                'html' => $html,
+                'next_page_url' => $singles->nextPageUrl(),
+                'current_page' => $singles->currentPage(),
+                'last_page' => $singles->lastPage(),
+            ]);
+        }
+
+        return view('singles.index', compact('singles', 'bios', 'totalCount'));
     }
 
     /**

@@ -20,7 +20,7 @@ class SongResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Database';
+    protected static ?string $navigationGroup = 'Mr.Children Database';
 
     protected static ?int $navigationSort = 25;
 
@@ -33,6 +33,7 @@ class SongResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('title')
+                    ->label('タイトル')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Select::make('album_id')
@@ -63,6 +64,8 @@ class SongResource extends Resource
                     ->columnSpan(1),
 
                 Forms\Components\Textarea::make('text')
+                    ->label('テキスト')
+                    ->rows(5)
                     ->columnSpanFull(),
             ]);
     }
@@ -71,19 +74,14 @@ class SongResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('ID')
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('title')
+                    ->label('タイトル')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('album_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('album.title')
+                    ->label('アルバム名')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('single_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('year')
-                    ->numeric(decimalPlaces: 0, thousandsSeparator: '')
+                Tables\Columns\TextColumn::make('single.title')
+                    ->label('シングル名')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y.m.d H:i')

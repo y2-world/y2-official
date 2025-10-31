@@ -32,13 +32,24 @@ class LyricResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('title')
+                    ->label('タイトル')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('album_id')
-                    ->numeric(),
-                Forms\Components\TextInput::make('single_id')
-                    ->numeric(),
+                Forms\Components\Select::make('album_id')
+                    ->label('アルバム名')
+                    ->relationship('album', 'title')
+                    ->searchable()
+                    ->native(false)
+                    ->preload(),
+                Forms\Components\Select::make('single_id')
+                    ->label('シングル名')
+                    ->relationship('single', 'title')
+                    ->searchable()
+                    ->native(false)
+                    ->preload(),
                 Forms\Components\Textarea::make('lyrics')
+                    ->label('歌詞')
+                    ->rows(20)
                     ->columnSpanFull(),
             ]);
     }
@@ -47,16 +58,14 @@ class LyricResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('ID')
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('title')
+                    ->label('タイトル')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('album_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('album.title')
+                    ->label('アルバム名')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('single_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('single.title')
+                    ->label('シングル名')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y.m.d H:i')
