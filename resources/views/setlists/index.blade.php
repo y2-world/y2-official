@@ -103,8 +103,8 @@
 @endsection
 
 @section('page-script')
-    <script src="{{ asset('/js/search.js?time=' . time()) }}"></script>
-    <script src="{{ asset('/js/infinite-scroll.js?time=' . time()) }}"></script>
+    <script src="{{ asset('/js/search.js?v=20251101') }}"></script>
+    <script src="{{ asset('/js/infinite-scroll.js?v=20251101') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM loaded');
