@@ -2,7 +2,7 @@
 @section('title', 'Yuki Official - Albums')
 @section('content')
 <br>
-<div class="container-lg">
+<div class="container-lg" style="margin-bottom: 2rem;">
   <h2>Albums</h2>
   <div class="database-wrapper">
     <div class="dropdown-wrapper">
