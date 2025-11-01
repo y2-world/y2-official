@@ -48,17 +48,6 @@ class InfiniteScroll {
             this.handleScroll();
         }, { passive: true });
 
-        // タッチデバイス用のイベント
-        window.addEventListener('touchmove', () => {
-            this.updateDebug('TouchMove event fired');
-            this.handleScroll();
-        }, { passive: true });
-
-        window.addEventListener('touchend', () => {
-            this.updateDebug('TouchEnd event fired');
-            this.handleScroll();
-        }, { passive: true });
-
         // ドキュメントのスクロールイベントも試す
         document.addEventListener('scroll', () => {
             this.updateDebug('Document scroll event');
@@ -74,7 +63,7 @@ class InfiniteScroll {
             this.handleScroll();
         }, 100);
 
-        // 定期的にチェック（デバッグ用）
+        // 定期的にチェック（モバイル対応 - 500msごと）
         setInterval(() => this.handleScroll(), 500);
     }
 
@@ -84,7 +73,7 @@ class InfiniteScroll {
         this.loadingEl.style.cssText = 'text-align: center; padding: 40px 20px; display: none; width: 100%;';
         this.loadingEl.innerHTML = `
             <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #333; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto;"></div>
-            <p style="margin-top: 10px; color: #666;">読み込み中...</p>
+            <p style="margin-top: 10px; color: #666;">Loading...</p>
             <style>
                 @keyframes spin {
                     0% { transform: rotate(0deg); }
