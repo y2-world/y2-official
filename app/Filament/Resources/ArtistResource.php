@@ -53,13 +53,14 @@ class ArtistResource extends Resource
             ->columns([
                 TextColumn::make('id')->label('ID'),
                 TextColumn::make('name')->label('アーティスト'),
-                Tables\Columns\ToggleColumn::make('visible')
+                Tables\Columns\ToggleColumn::make('hidden')
                     ->label('公開')
                     ->onColor('success')
                     ->offColor('gray')
                     ->getStateUsing(fn ($record) => $record->hidden == 0) // 0を公開（ON）として表示
-                    ->afterStateUpdated(function ($record, $state) {
+                    ->updateStateUsing(function ($record, $state) {
                         $record->update(['hidden' => $state ? 0 : 1]); // Toggle時に0と1を逆にしてhiddenカラムを更新
+                        return $state;
                     })
             ])
             ->filters([
