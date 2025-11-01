@@ -13,6 +13,7 @@ class Artist extends Model
         'name',
         'kana',
         'romaji',
+        'hidden',
     ];
 
     public function setlists()
