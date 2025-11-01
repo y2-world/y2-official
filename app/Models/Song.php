@@ -15,6 +15,21 @@ class Song extends Model
         'text',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($song) {
+            // Convert empty strings to null for foreign keys
+            if ($song->album_id === '') {
+                $song->album_id = null;
+            }
+            if ($song->single_id === '') {
+                $song->single_id = null;
+            }
+        });
+    }
+
     public function artist()
     {
         return $this->belongsTo(Artist::class);
@@ -26,7 +41,7 @@ class Song extends Model
     }
 
     public function single()
-    {   
+    {
         return $this->belongsTo(Single::class, 'single_id');
     }
 

@@ -38,20 +38,22 @@ class SongResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Select::make('album_id')
                     ->label('アルバム')
-                    ->relationship('album', 'title', fn($query) => $query->where('id', '!=', 3))
-                    ->getOptionLabelFromRecordUsing(fn($record) => $record->title ?? '(タイトルなし)')
+                    ->options(fn() => \App\Models\Album::where('id', '!=', 3)
+                        ->whereNotNull('title')
+                        ->where('title', '!=', '')
+                        ->pluck('title', 'id'))
                     ->searchable()
                     ->native(false)
-                    ->preload()
                     ->nullable(),
 
                 Forms\Components\Select::make('single_id')
                     ->label('シングル')
-                    ->relationship('single', 'title', fn($query) => $query->where('id', '!=', 3))
-                    ->getOptionLabelFromRecordUsing(fn($record) => $record->title ?? '(タイトルなし)')
+                    ->options(fn() => \App\Models\Single::where('id', '!=', 3)
+                        ->whereNotNull('title')
+                        ->where('title', '!=', '')
+                        ->pluck('title', 'id'))
                     ->searchable()
                     ->native(false)
-                    ->preload()
                     ->nullable(),
                 // 年（year）
                 Forms\Components\Select::make('year')
