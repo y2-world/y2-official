@@ -114,7 +114,21 @@ class DiscoResource extends Resource
                     }),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('type')
+                    ->label('種別')
+                    ->options([
+                        0 => 'シングル',
+                        1 => 'アルバム',
+                    ]),
+                Tables\Filters\TernaryFilter::make('visible')
+                    ->label('公開状態')
+                    ->placeholder('すべて')
+                    ->trueLabel('公開')
+                    ->falseLabel('非公開')
+                    ->queries(
+                        true: fn ($query) => $query->where('visible', 0),
+                        false: fn ($query) => $query->where('visible', 1),
+                    ),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

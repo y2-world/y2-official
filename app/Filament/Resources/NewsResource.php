@@ -91,7 +91,15 @@ class NewsResource extends Resource
                     }),
             ])
             ->filters([
-                //
+                Tables\Filters\TernaryFilter::make('hidden')
+                    ->label('公開状態')
+                    ->placeholder('すべて')
+                    ->trueLabel('公開')
+                    ->falseLabel('非公開')
+                    ->queries(
+                        true: fn ($query) => $query->where('hidden', 0),
+                        false: fn ($query) => $query->where('hidden', 1),
+                    ),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
