@@ -29,8 +29,10 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         Paginator::useBootstrap(); // ← Bootstrapで表示したい場合
 
+        // Heroku環境では常にHTTPSを強制
         if (config('app.env') === 'production') {
             URL::forceScheme('https');
+            $_SERVER['HTTPS'] = 'on';
         }
     }
 }
