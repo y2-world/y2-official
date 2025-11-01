@@ -43,16 +43,39 @@ class InfiniteScroll {
         console.log('Initializing scroll listener...');
 
         // スクロールイベントをリスン（デスクトップ用）
-        window.addEventListener('scroll', () => this.handleScroll(), { passive: true });
+        window.addEventListener('scroll', () => {
+            this.updateDebug('Scroll event fired');
+            this.handleScroll();
+        }, { passive: true });
 
-        // タッチデバイス用のスクロールイベント
-        window.addEventListener('touchmove', () => this.handleScroll(), { passive: true });
+        // タッチデバイス用のイベント
+        window.addEventListener('touchmove', () => {
+            this.updateDebug('TouchMove event fired');
+            this.handleScroll();
+        }, { passive: true });
+
+        window.addEventListener('touchend', () => {
+            this.updateDebug('TouchEnd event fired');
+            this.handleScroll();
+        }, { passive: true });
+
+        // ドキュメントのスクロールイベントも試す
+        document.addEventListener('scroll', () => {
+            this.updateDebug('Document scroll event');
+            this.handleScroll();
+        }, { passive: true });
 
         // ローディングインジケーターを作成
         this.createLoadingIndicator();
 
         // 初回チェック（ページが短くてスクロールバーがない場合に対応）
-        setTimeout(() => this.handleScroll(), 100);
+        setTimeout(() => {
+            this.updateDebug('Initial check');
+            this.handleScroll();
+        }, 100);
+
+        // 定期的にチェック（デバッグ用）
+        setInterval(() => this.handleScroll(), 500);
     }
 
     createLoadingIndicator() {
