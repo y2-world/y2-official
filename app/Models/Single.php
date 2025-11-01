@@ -6,6 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Single extends Model
 {
+    protected $fillable = [
+        'single_id',
+        'date',
+        'title',
+        'download',
+        'text',
+        'tracklist',
+    ];
+
     protected $casts = [
         'tracklist' =>'json',
     ];

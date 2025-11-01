@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Lyric extends Model
 {
+    protected $fillable = [
+        'title',
+        'album_id',
+        'single_id',
+        'lyrics',
+    ];
+
     public function disco()
     {
         return $this->belongsTo(Disco::class, 'album_id');
