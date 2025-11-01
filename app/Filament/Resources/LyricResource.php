@@ -77,7 +77,14 @@ class LyricResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('album_id')
+                    ->relationship('album', 'title')
+                    ->label('アルバム')
+                    ->searchable(),
+                Tables\Filters\SelectFilter::make('single_id')
+                    ->relationship('single', 'title')
+                    ->label('シングル')
+                    ->searchable(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -114,7 +114,11 @@ class SingleResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\TernaryFilter::make('download')
+                    ->label('種別')
+                    ->placeholder('すべて')
+                    ->trueLabel('配信中')
+                    ->falseLabel('CDシングル'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

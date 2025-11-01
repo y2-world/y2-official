@@ -121,7 +121,11 @@ class AlbumResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\TernaryFilter::make('best')
+                    ->label('ベストアルバム')
+                    ->placeholder('すべて')
+                    ->trueLabel('ベストアルバム')
+                    ->falseLabel('オリジナルアルバム'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
