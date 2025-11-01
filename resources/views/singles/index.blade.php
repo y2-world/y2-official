@@ -47,13 +47,17 @@
 @endsection
 
 @section('page-script')
-    <script src="{{ asset('/js/infinite-scroll.js?time=' . time()) }}"></script>
+    <script src="{{ asset('/js/infinite-scroll.js?v=20251101') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             @if($singles->hasMorePages())
+                let nextUrl = '{!! $singles->nextPageUrl() !!}';
+                if (window.location.protocol === 'https:') {
+                    nextUrl = nextUrl.replace('http://', 'https://');
+                }
                 new InfiniteScroll({
                     container: '#singles-container',
-                    nextPageUrl: '{{ $singles->nextPageUrl() }}'
+                    nextPageUrl: nextUrl
                 });
             @endif
         });

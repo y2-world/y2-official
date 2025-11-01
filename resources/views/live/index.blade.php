@@ -57,9 +57,13 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             @if($tours->hasMorePages())
+                let nextUrl = '{!! $tours->appends(['type' => $type])->nextPageUrl() !!}';
+                if (window.location.protocol === 'https:') {
+                    nextUrl = nextUrl.replace('http://', 'https://');
+                }
                 new InfiniteScroll({
                     container: '#tours-container',
-                    nextPageUrl: '{!! $tours->appends(['type' => $type])->nextPageUrl() !!}'
+                    nextPageUrl: nextUrl
                 });
             @endif
         });

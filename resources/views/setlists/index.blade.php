@@ -113,9 +113,14 @@
 
             @if($setlists->hasMorePages())
                 console.log('Initializing InfiniteScroll...');
+                let nextUrl = '{!! $setlists->appends(['type' => $type])->nextPageUrl() !!}';
+                // 本番環境では強制的にHTTPSにする
+                if (window.location.protocol === 'https:') {
+                    nextUrl = nextUrl.replace('http://', 'https://');
+                }
                 const infiniteScroll = new InfiniteScroll({
                     container: '#setlists-container',
-                    nextPageUrl: '{!! $setlists->appends(['type' => $type])->nextPageUrl() !!}'
+                    nextPageUrl: nextUrl
                 });
                 console.log('InfiniteScroll instance:', infiniteScroll);
             @else

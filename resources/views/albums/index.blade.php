@@ -50,9 +50,13 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             @if($albums->hasMorePages())
+                let nextUrl = '{!! $albums->nextPageUrl() !!}';
+                if (window.location.protocol === 'https:') {
+                    nextUrl = nextUrl.replace('http://', 'https://');
+                }
                 new InfiniteScroll({
                     container: '#albums-container',
-                    nextPageUrl: '{{ $albums->nextPageUrl() }}'
+                    nextPageUrl: nextUrl
                 });
             @endif
         });
