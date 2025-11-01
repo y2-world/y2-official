@@ -34,19 +34,18 @@ class InfiniteScroll {
 
     init() {
         console.log('Initializing scroll listener...');
-        console.log('Document height:', document.documentElement.offsetHeight);
-        console.log('Window height:', window.innerHeight);
-        console.log('Scroll position:', window.scrollY);
 
-        // スクロールイベントをリスン
-        window.addEventListener('scroll', () => this.handleScroll());
+        // スクロールイベントをリスン（デスクトップ用）
+        window.addEventListener('scroll', () => this.handleScroll(), { passive: true });
+
+        // タッチデバイス用のスクロールイベント
+        window.addEventListener('touchmove', () => this.handleScroll(), { passive: true });
 
         // ローディングインジケーターを作成
         this.createLoadingIndicator();
 
         // 初回チェック（ページが短くてスクロールバーがない場合に対応）
-        console.log('Performing initial scroll check...');
-        this.handleScroll();
+        setTimeout(() => this.handleScroll(), 100);
     }
 
     createLoadingIndicator() {
@@ -69,17 +68,25 @@ class InfiniteScroll {
 
     handleScroll() {
         if (this.loading || !this.hasMore) {
-            console.log('handleScroll skipped - loading:', this.loading, 'hasMore:', this.hasMore);
             return;
         }
 
-        const scrollPosition = window.innerHeight + window.scrollY;
-        const threshold = document.documentElement.offsetHeight - 500;
+        // モバイル対応：scrollHeight を使用
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+        const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+        const documentHeight = Math.max(
+            document.body.scrollHeight,
+            document.body.offsetHeight,
+            document.documentElement.clientHeight,
+            document.documentElement.scrollHeight,
+            document.documentElement.offsetHeight
+        );
 
-        console.log('Scroll check - Position:', scrollPosition, 'Threshold:', threshold);
+        const scrollPosition = scrollTop + windowHeight;
+        const threshold = documentHeight - 500;
 
         if (scrollPosition >= threshold) {
-            console.log('Threshold reached, loading more...');
+            console.log('Loading more items...');
             this.loadMore();
         }
     }
