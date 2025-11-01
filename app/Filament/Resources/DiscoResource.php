@@ -58,7 +58,15 @@ class DiscoResource extends Resource
                     ->columns(4)
                     ->defaultItems(1)
                     ->reorderable()
-                    ->itemLabel(fn ($state, $component): ?string => (string)((array_search($state, $component->getState() ?: []) ?? 0) + 1))
+                    ->itemLabel(function ($state, $component): string {
+                        $items = array_values($component->getState() ?: []);
+                        foreach ($items as $i => $item) {
+                            if ($item === $state) {
+                                return (string) ($i + 1);
+                            }
+                        }
+                        return (string) (count($items) ?: 1);
+                    })
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('text')
                     ->label('テキスト')
@@ -72,8 +80,7 @@ class DiscoResource extends Resource
                     ->image()
                     ->disk('cloudinary')
                     ->directory('images')
-                    ->visibility('public')
-                    ->maxLength(255),
+                    ->visibility('public'),
                 Forms\Components\Toggle::make('type')
                     ->label('アルバム')
                     ->onColor('success')
