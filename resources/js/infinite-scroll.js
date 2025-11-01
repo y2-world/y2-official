@@ -155,8 +155,12 @@ class InfiniteScroll {
                 this.container.insertAdjacentHTML('beforeend', data.html);
             }
 
-            // 次のページURLを更新
-            this.nextPageUrl = data.next_page_url;
+            // 次のページURLを更新（HTTPSに変換）
+            if (data.next_page_url && window.location.protocol === 'https:') {
+                this.nextPageUrl = data.next_page_url.replace('http://', 'https://');
+            } else {
+                this.nextPageUrl = data.next_page_url;
+            }
             this.hasMore = data.next_page_url !== null;
 
         } catch (error) {
