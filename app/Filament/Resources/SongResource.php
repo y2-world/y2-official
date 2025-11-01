@@ -38,9 +38,10 @@ class SongResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Select::make('album_id')
                     ->label('アルバム')
-                    ->options(fn() => \App\Models\Album::where('id', '!=', 3)
+                    ->options(fn() => \App\Models\Album::query()
                         ->whereNotNull('title')
                         ->where('title', '!=', '')
+                        ->orderBy('title')
                         ->pluck('title', 'id'))
                     ->searchable()
                     ->native(false)
@@ -48,9 +49,10 @@ class SongResource extends Resource
 
                 Forms\Components\Select::make('single_id')
                     ->label('シングル')
-                    ->options(fn() => \App\Models\Single::where('id', '!=', 3)
+                    ->options(fn() => \App\Models\Single::query()
                         ->whereNotNull('title')
                         ->where('title', '!=', '')
+                        ->orderBy('title')
                         ->pluck('title', 'id'))
                     ->searchable()
                     ->native(false)
@@ -58,7 +60,12 @@ class SongResource extends Resource
                 // 年（year）
                 Forms\Components\Select::make('year')
                     ->label('年')
-                    ->options(fn() => \App\Models\Song::query()->distinct()->orderBy('year')->pluck('year', 'year'))
+                    ->options(fn() => \App\Models\Song::query()
+                        ->distinct()
+                        ->whereNotNull('year')
+                        ->where('year', '!=', '')
+                        ->orderBy('year')
+                        ->pluck('year', 'year'))
                     ->searchable()
                     ->native(false)
                     ->placeholder('新しい年を入力する場合は追加')
@@ -68,7 +75,7 @@ class SongResource extends Resource
                     ->columnSpan(1),
 
                 Forms\Components\Textarea::make('text')
-                    ->label('テキスト')
+                    ->label('説明')
                     ->rows(5)
                     ->columnSpanFull(),
             ]);
