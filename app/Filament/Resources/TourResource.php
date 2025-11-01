@@ -19,9 +19,9 @@ class TourResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
 
-    protected static ?string $navigationLabel = 'ツアー情報';
+    protected static ?string $navigationLabel = 'ツアー・ライブ情報';
 
-    protected static ?string $modelLabel = 'ツアー情報';
+    protected static ?string $modelLabel = 'ツアー・ライブ情報';
 
     protected static ?string $navigationGroup = 'Mr.Children Database';
 

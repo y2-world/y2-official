@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tour extends Model
 {
+    protected $fillable = [
+        'title',
+    ];
+
     protected $casts = [
         // setlist1~6 は削除済み。tour_setlistsテーブルで管理
     ];
