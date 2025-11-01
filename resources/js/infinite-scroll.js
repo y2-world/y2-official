@@ -11,7 +11,7 @@ class InfiniteScroll {
         this.nextPageUrl = options.nextPageUrl;
         this.loading = false;
         this.hasMore = true;
-        this.debugMode = true; // デバッグモード
+        this.debugMode = false; // デバッグモード無効
         this.debugEl = null;
 
         if (!this.container) {
@@ -42,29 +42,22 @@ class InfiniteScroll {
     init() {
         console.log('Initializing scroll listener...');
 
-        // スクロールイベントをリスン（デスクトップ用）
-        window.addEventListener('scroll', () => {
-            this.updateDebug('Scroll event fired');
-            this.handleScroll();
-        }, { passive: true });
+        // スクロールイベントをリスン
+        const scrollHandler = () => {
+            requestAnimationFrame(() => this.handleScroll());
+        };
 
-        // ドキュメントのスクロールイベントも試す
-        document.addEventListener('scroll', () => {
-            this.updateDebug('Document scroll event');
-            this.handleScroll();
-        }, { passive: true });
+        window.addEventListener('scroll', scrollHandler, { passive: true });
+        document.addEventListener('scroll', scrollHandler, { passive: true });
 
         // ローディングインジケーターを作成
         this.createLoadingIndicator();
 
-        // 初回チェック（ページが短くてスクロールバーがない場合に対応）
-        setTimeout(() => {
-            this.updateDebug('Initial check');
-            this.handleScroll();
-        }, 100);
+        // 初回チェック
+        setTimeout(() => this.handleScroll(), 200);
 
-        // 定期的にチェック（モバイル対応 - 500msごと）
-        setInterval(() => this.handleScroll(), 500);
+        // モバイル用の定期チェック（1秒ごと）
+        setInterval(() => this.handleScroll(), 1000);
     }
 
     createLoadingIndicator() {
