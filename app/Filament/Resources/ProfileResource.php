@@ -35,10 +35,9 @@ class ProfileResource extends Resource
                     ->label('名前')
                     ->maxLength(255),
 
-                Forms\Components\DatePicker::make('info')
-                    ->label('生年月日')
-                    ->native(false)
-                    ->displayFormat('Y.m.d'),
+                Forms\Components\TextInput::make('info')
+                    ->label('生年月日・出身地')
+                    ->maxLength(255),
 
                 Forms\Components\Textarea::make('text')
                     ->label('本文')
@@ -60,6 +59,14 @@ class ProfileResource extends Resource
                 Tables\Columns\TextColumn::make('id')
                     ->label('ID')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('name')
+                    ->label('名前')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('info')
+                    ->label('生年月日・出身地')
+                    ->searchable(),
+                Tables\Columns\ImageColumn::make('image')
+                    ->label('画像'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y.m.d H:i')
                     ->sortable()
