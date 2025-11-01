@@ -11,6 +11,8 @@ class InfiniteScroll {
         this.nextPageUrl = options.nextPageUrl;
         this.loading = false;
         this.hasMore = true;
+        this.debugMode = true; // デバッグモード
+        this.debugEl = null;
 
         if (!this.container) {
             console.error('Container not found:', options.container);
@@ -27,6 +29,11 @@ class InfiniteScroll {
             pagination.style.display = 'none';
         } else {
             console.log('Pagination element not found');
+        }
+
+        // デバッグ表示を作成
+        if (this.debugMode) {
+            this.createDebugDisplay();
         }
 
         this.init();
@@ -66,6 +73,24 @@ class InfiniteScroll {
         this.container.closest('table').parentElement.appendChild(this.loadingEl);
     }
 
+    createDebugDisplay() {
+        this.debugEl = document.createElement('div');
+        this.debugEl.style.cssText = 'position: fixed; top: 0; right: 0; background: rgba(0,0,0,0.8); color: #0f0; padding: 10px; font-size: 12px; z-index: 9999; max-width: 300px; font-family: monospace;';
+        document.body.appendChild(this.debugEl);
+        this.updateDebug('Initialized');
+    }
+
+    updateDebug(message) {
+        if (!this.debugMode || !this.debugEl) return;
+        const time = new Date().toLocaleTimeString();
+        this.debugEl.innerHTML = `
+            <div>[${time}] ${message}</div>
+            <div>Loading: ${this.loading}</div>
+            <div>HasMore: ${this.hasMore}</div>
+            <div>NextURL: ${this.nextPageUrl ? 'yes' : 'no'}</div>
+        `;
+    }
+
     handleScroll() {
         if (this.loading || !this.hasMore) {
             return;
@@ -85,8 +110,11 @@ class InfiniteScroll {
         const scrollPosition = scrollTop + windowHeight;
         const threshold = documentHeight - 500;
 
+        this.updateDebug(`Scroll: ${Math.round(scrollPosition)}/${Math.round(threshold)}`);
+
         if (scrollPosition >= threshold) {
             console.log('Loading more items...');
+            this.updateDebug('Threshold reached!');
             this.loadMore();
         }
     }
