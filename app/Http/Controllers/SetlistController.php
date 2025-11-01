@@ -17,7 +17,7 @@ class SetlistController extends Controller
     {   
         // $setlists = Setlist::orderBy('date', 'desc')
         // ->paginate(10);
-        // $artists = Artist::where('visible', 0)->orderBy('id', 'asc')
+        // $artists = Artist::where('visible', 1)->orderBy('id', 'asc')
         // ->get();
         // $allArtists = Artist::orderBy('id', 'asc')
         // ->get();
@@ -45,7 +45,7 @@ class SetlistController extends Controller
         $totalCount = $setlists->total();
     
         // アーティスト、全てのアーティスト、年のデータを取得する
-        $artists = Artist::where('visible', 0)->orderBy('id', 'asc')->get();
+        $artists = Artist::where('visible', 1)->orderBy('id', 'asc')->get();
         $allArtists = Artist::orderBy('id', 'asc')->get();
 
         // Setlistから年のリストを取得

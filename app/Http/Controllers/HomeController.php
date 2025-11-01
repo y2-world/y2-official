@@ -19,8 +19,8 @@ class HomeController extends Controller
         $isMobile = request()->header('User-Agent') && preg_match('/Mobile|Android|iPhone|iPad/i', request()->header('User-Agent'));
         $limit = $isMobile ? 2 : 3;
     
-        $news = News::where('visible', 0)->orderBy('date', 'desc')->paginate(5);
-        $discos = Disco::where('visible', 0)->orderBy('date', 'desc')->paginate($limit);
+        $news = News::where('visible', 1)->orderBy('date', 'desc')->paginate(5);
+        $discos = Disco::where('visible', 1)->orderBy('date', 'desc')->paginate($limit);
         $profiles = Profile::orderBy('created_at', 'desc')->get();
     
         return view('home.index', compact('news', 'discos', 'profiles', 'isMobile'));
@@ -30,7 +30,7 @@ class HomeController extends Controller
     public function getAllNews()
     {
         // ニュースを取得するクエリを確認
-        $news = News::where('visible', '!=', 1)
+        $news = News::where('visible', 1)
             ->orderBy('date', 'desc')
             ->get(['id', 'title', 'date']); // 必要なカラムのみ取得
 
@@ -48,7 +48,7 @@ class HomeController extends Controller
     public function getAllMusic()
     {
         // ミュージックを取得するクエリを確認
-        $discos = Disco::where('visible', 0)->orderBy('date', 'desc')->get();
+        $discos = Disco::where('visible', 1)->orderBy('date', 'desc')->get();
 
         if ($discos->isEmpty()) {
             // コレクションが空の場合の処理

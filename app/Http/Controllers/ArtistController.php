@@ -69,7 +69,7 @@ class ArtistController extends Controller
         }
 
         // アーティスト一覧と年のデータを取得
-        $artists = Artist::orderBy('id', 'asc')->where('visible', 0)->get();
+        $artists = Artist::orderBy('id', 'asc')->where('visible', 1)->get();
 
         // Setlistから年のリストを取得
         $years = Setlist::select('year')
