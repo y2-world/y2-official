@@ -10,4 +10,14 @@ class Lyric extends Model
     {
         return $this->belongsTo(Disco::class, 'album_id');
     }
+
+    public function album()
+    {
+        return $this->belongsTo(Disco::class, 'album_id');
+    }
+
+    public function single()
+    {
+        return $this->belongsTo(Disco::class, 'single_id');
+    }
 }
