@@ -38,7 +38,7 @@ class SongResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Select::make('album_id')
                     ->label('アルバム')
-                    ->relationship('album', 'title', fn($query) => $query->where('id', '!=', 3))
+                    ->relationship('album', 'title', fn($query) => $query->where('id', '!=', 3)->whereNotNull('title')->where('title', '!=', ''))
                     ->searchable()
                     ->native(false)
                     ->preload()
@@ -46,7 +46,7 @@ class SongResource extends Resource
 
                 Forms\Components\Select::make('single_id')
                     ->label('シングル')
-                    ->relationship('single', 'title', fn($query) => $query->where('id', '!=', 3))
+                    ->relationship('single', 'title', fn($query) => $query->where('id', '!=', 3)->whereNotNull('title')->where('title', '!=', ''))
                     ->searchable()
                     ->native(false)
                     ->preload()
