@@ -95,7 +95,7 @@
                 @include('setlists._list', ['setlists' => $setlists, 'totalCount' => $totalCount, 'type' => $type])
             </tbody>
         </table>
-        <div class="pagination" id="pagination-links">
+        <div class="pagination" id="pagination-links" style="display: none;">
             {!! $setlists->appends(['type' => $type])->links() !!}
         </div>
         <br>
@@ -125,6 +125,11 @@
                 console.log('InfiniteScroll instance:', infiniteScroll);
             @else
                 console.log('No more pages, skipping InfiniteScroll initialization');
+                // ページがない場合はページネーションを表示
+                const pagination = document.getElementById('pagination-links');
+                if (pagination) {
+                    pagination.style.display = 'block';
+                }
             @endif
         });
     </script>

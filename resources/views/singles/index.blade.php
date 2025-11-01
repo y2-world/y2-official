@@ -39,7 +39,7 @@
           @include('singles._list', ['singles' => $singles])
       </tbody>
     </table>
-  <div class="pagination" id="pagination-links">
+  <div class="pagination" id="pagination-links" style="display: none;">
     {!! $singles->onEachSide(5)->links() !!}
   </div>
   <br>
@@ -59,6 +59,12 @@
                     container: '#singles-container',
                     nextPageUrl: nextUrl
                 });
+            @else
+                // ページがない場合はページネーションを表示
+                const pagination = document.getElementById('pagination-links');
+                if (pagination) {
+                    pagination.style.display = 'block';
+                }
             @endif
         });
     </script>

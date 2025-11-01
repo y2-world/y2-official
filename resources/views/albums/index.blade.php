@@ -39,14 +39,14 @@
           @include('albums._list', ['albums' => $albums])
       </tbody>
     </table>
-  <div class="pagination" id="pagination-links">
+  <div class="pagination" id="pagination-links" style="display: none;">
     {!! $albums->onEachSide(5)->links() !!}
   </div>
 </div>
 @endsection
 
 @section('page-script')
-    <script src="{{ asset('/js/infinite-scroll.js?time=' . time()) }}"></script>
+    <script src="{{ asset('/js/infinite-scroll.js?v=20251101') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             @if($albums->hasMorePages())
@@ -58,6 +58,12 @@
                     container: '#albums-container',
                     nextPageUrl: nextUrl
                 });
+            @else
+                // ページがない場合はページネーションを表示
+                const pagination = document.getElementById('pagination-links');
+                if (pagination) {
+                    pagination.style.display = 'block';
+                }
             @endif
         });
     </script>

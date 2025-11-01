@@ -40,7 +40,7 @@
                 @include('songs._list', ['songs' => $songs])
             </tbody>
         </table>
-        <div class="pagination" id="pagination-links">
+        <div class="pagination" id="pagination-links" style="display: none;">
             {!! $songs->links() !!}
         </div>
         <br>
@@ -60,6 +60,12 @@
                     container: '#songs-container',
                     nextPageUrl: nextUrl
                 });
+            @else
+                // ページがない場合はページネーションを表示
+                const pagination = document.getElementById('pagination-links');
+                if (pagination) {
+                    pagination.style.display = 'block';
+                }
             @endif
         });
     </script>

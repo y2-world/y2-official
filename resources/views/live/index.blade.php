@@ -45,7 +45,7 @@
                 @include('live._list', ['tours' => $tours])
             </tbody>
         </table>
-        <div class="pagination" id="pagination-links">
+        <div class="pagination" id="pagination-links" style="display: none;">
             {!! $tours->appends(['type' => $type])->links() !!}
         </div>
         <br>
@@ -65,6 +65,12 @@
                     container: '#tours-container',
                     nextPageUrl: nextUrl
                 });
+            @else
+                // ページがない場合はページネーションを表示
+                const pagination = document.getElementById('pagination-links');
+                if (pagination) {
+                    pagination.style.display = 'block';
+                }
             @endif
         });
     </script>
