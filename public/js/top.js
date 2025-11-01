@@ -5,56 +5,74 @@ document.addEventListener("DOMContentLoaded", function () {
     // Bladeテンプレートで生成されたURLを変数に格納
     const newsUrl = "top/news"; // Blade構文でURLを生成
 
+    let allNewsData = null; // 全ニュースデータを保存
+    let initialNewsHTML = newsContainer.innerHTML; // 初期表示のHTMLを保存
+    let isShowingAll = false; // 表示状態を管理
+
     if (viewAllBtn) {
         viewAllBtn.addEventListener("click", function () {
-            // ボタンの状態変更
-            viewAllBtn.textContent = "Loading...";
-            viewAllBtn.disabled = true;
+            if (isShowingAll) {
+                // Show Lessの処理：初期表示に戻す
+                newsContainer.innerHTML = initialNewsHTML;
+                viewAllBtn.textContent = "View All";
+                isShowingAll = false;
+            } else {
+                // View Allの処理
+                if (allNewsData) {
+                    // 既にデータがある場合は再利用
+                    displayAllNews(allNewsData);
+                    viewAllBtn.textContent = "Show Less";
+                    isShowingAll = true;
+                } else {
+                    // 初回はAJAXでデータを取得
+                    viewAllBtn.textContent = "Loading...";
+                    viewAllBtn.disabled = true;
 
-            // AJAXリクエストを送信
-            fetch(newsUrl)
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error("Network response was not ok");
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    if (data.top && data.top.length > 0) {
-                        let newsHTML = "";
-                        data.top.forEach((newsItem) => {
-                            // 日付をyyyy.mm.dd形式にフォーマット
-                            const formattedDate = formatDate(newsItem.date);
-
-                            // HTMLコンテンツを作成
-                            newsHTML += `
-                                <div class="news-item">
-                                    <a href="javascript:void(0);" class="news-link" data-id="${newsItem.id}">
-                                        <div class="news-item__title">
-                                            <div class="date">${formattedDate}</div>
-                                            ${newsItem.title}
-                                        </div>
-                                    </a>
-                                </div>`;
+                    fetch(newsUrl)
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error("Network response was not ok");
+                            }
+                            return response.json();
+                        })
+                        .then((data) => {
+                            if (data.top && data.top.length > 0) {
+                                allNewsData = data.top; // データを保存
+                                displayAllNews(data.top);
+                                viewAllBtn.textContent = "Show Less";
+                                isShowingAll = true;
+                            } else {
+                                alert("No more news to display.");
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Error fetching news:", error);
+                            alert("Failed to load news. Please try again later.");
+                        })
+                        .finally(() => {
+                            viewAllBtn.disabled = false;
                         });
-                        newsContainer.innerHTML = newsHTML;
-
-                        // View All ボタンを非表示にする
-                        viewAllBtn.style.display = "none";
-                    } else {
-                        alert("No more news to display.");
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error fetching news:", error);
-                    alert("Failed to load news. Please try again later.");
-                })
-                .finally(() => {
-                    // ボタンの状態を戻す
-                    viewAllBtn.textContent = "View All";
-                    viewAllBtn.disabled = false;
-                });
+                }
+            }
         });
+    }
+
+    // 全ニュースを表示する関数
+    function displayAllNews(newsData) {
+        let newsHTML = "";
+        newsData.forEach((newsItem) => {
+            const formattedDate = formatDate(newsItem.date);
+            newsHTML += `
+                <div class="news-item">
+                    <a href="javascript:void(0);" class="news-link" data-id="${newsItem.id}">
+                        <div class="news-item__title">
+                            <div class="date">${formattedDate}</div>
+                            ${newsItem.title}
+                        </div>
+                    </a>
+                </div>`;
+        });
+        newsContainer.innerHTML = newsHTML;
     }
 
     // 日付をyyyy.mm.dd形式に変換する関数
@@ -70,10 +88,14 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
     const viewAllBtn = document.getElementById("view-all-music-btn");
     const musicContainer = document.getElementById("music-container");
-    const newsUrl = "/top/music"; // 必ず正しいURLを設定
+    const musicUrl = "/top/music";
 
     // Media query を設定
     const mediaQuery = window.matchMedia("(max-width: 1200px)");
+
+    let allMusicData = null; // 全Musicデータを保存
+    let initialMusicHTML = musicContainer.innerHTML; // 初期表示のHTMLを保存
+    let isShowingAll = false; // 表示状態を管理
 
     // 初期表示を制御する関数
     function limitMusicDisplay() {
@@ -98,58 +120,80 @@ document.addEventListener("DOMContentLoaded", function () {
     limitMusicDisplay();
 
     // ウィンドウサイズが変更されるたびにメディアクエリを再評価
-    mediaQuery.addEventListener("change", limitMusicDisplay);
+    mediaQuery.addEventListener("change", function() {
+        if (!isShowingAll) {
+            limitMusicDisplay();
+        }
+    });
 
     if (viewAllBtn) {
         viewAllBtn.addEventListener("click", function () {
+            if (isShowingAll) {
+                // Show Lessの処理：初期表示に戻す
+                musicContainer.innerHTML = initialMusicHTML;
+                limitMusicDisplay(); // 初期表示の制限を再適用
+                viewAllBtn.textContent = "View All";
+                isShowingAll = false;
+            } else {
+                // View Allの処理
+                if (allMusicData) {
+                    // 既にデータがある場合は再利用
+                    displayAllMusic(allMusicData);
+                    viewAllBtn.textContent = "Show Less";
+                    isShowingAll = true;
+                } else {
+                    // 初回はAJAXでデータを取得
+                    viewAllBtn.textContent = "Loading...";
+                    viewAllBtn.disabled = true;
 
-            viewAllBtn.textContent = "Loading...";
-            viewAllBtn.disabled = true;
-
-            fetch(newsUrl)
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error("Network response was not ok");
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-
-                    if (data.top && data.top.length > 0) {
-                        let musicHTML = "";
-
-                        data.top.forEach((musicItem) => {
-                            const formattedDate = formatDate(musicItem.date);
-                            musicHTML += `
-                                <div class="album-container">
-                                    <a href="/music/${musicItem.id}">
-                                        <img src="https://res.cloudinary.com/hqrgbxuiv/${musicItem.image}" class="album-image">
-                                    </a>
-                                    <div class="music-item__gray">
-                                        <a href="/music/${musicItem.id}">${musicItem.title}</a>
-                                        <p>
-                                            ${musicItem.subtitle}<br>${formattedDate}
-                                        </p>
-                                    </div>
-                                </div>`;
+                    fetch(musicUrl)
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error("Network response was not ok");
+                            }
+                            return response.json();
+                        })
+                        .then((data) => {
+                            if (data.top && data.top.length > 0) {
+                                allMusicData = data.top; // データを保存
+                                displayAllMusic(data.top);
+                                viewAllBtn.textContent = "Show Less";
+                                isShowingAll = true;
+                            } else {
+                                alert("No more music to display.");
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Error fetching music:", error);
+                            alert("Failed to load music. Please try again later.");
+                        })
+                        .finally(() => {
+                            viewAllBtn.disabled = false;
                         });
-
-                        musicContainer.innerHTML = musicHTML; // 初期データを削除し、新しいデータを上書き
-
-                        viewAllBtn.style.display = "none"; // 全て表示済みの場合は非表示
-                    } else {
-                        alert("No more music to display.");
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error fetching music:", error);
-                    alert("Failed to load music. Please try again later.");
-                })
-                .finally(() => {
-                    viewAllBtn.textContent = "View All";
-                    viewAllBtn.disabled = false;
-                });
+                }
+            }
         });
+    }
+
+    // 全Musicを表示する関数
+    function displayAllMusic(musicData) {
+        let musicHTML = "";
+        musicData.forEach((musicItem) => {
+            const formattedDate = formatDate(musicItem.date);
+            musicHTML += `
+                <div class="album-container">
+                    <a href="/music/${musicItem.id}">
+                        <img src="https://res.cloudinary.com/hqrgbxuiv/${musicItem.image}" class="album-image">
+                    </a>
+                    <div class="music-item__gray">
+                        <a href="/music/${musicItem.id}">${musicItem.title}</a>
+                        <p>
+                            ${musicItem.subtitle}<br>${formattedDate}
+                        </p>
+                    </div>
+                </div>`;
+        });
+        musicContainer.innerHTML = musicHTML;
     }
 
     function formatDate(dateString) {
