@@ -77,13 +77,14 @@ class NewsResource extends Resource
                     ->label('公開日')
                     ->date('Y.m.d')
                     ->sortable(),
-                Tables\Columns\ToggleColumn::make('visible')
+                Tables\Columns\ToggleColumn::make('hidden')
                     ->label('公開')
                     ->onColor('success')
                     ->offColor('gray')
-                    ->getStateUsing(fn ($record) => $record->hidden == 0)
-                    ->afterStateUpdated(function ($record, $state) {
-                        $record->update(['hidden' => $state ? 0 : 1]);
+                    ->getStateUsing(fn ($record) => $record->hidden == 0) // 0を公開（ON）として表示
+                    ->updateStateUsing(function ($record, $state) {
+                        $record->update(['hidden' => $state ? 0 : 1]); // ONを0、OFFを1として保存
+                        return $state;
                     }),
             ])
             ->filters([

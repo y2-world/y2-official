@@ -6,6 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Disco extends Model
 {
+    protected $fillable = [
+        'title',
+        'subtitle',
+        'date',
+        'tracklist',
+        'text',
+        'url',
+        'image',
+        'type',
+        'visible',
+    ];
+
     protected $casts = [
         'tracklist' =>'json',
     ];
