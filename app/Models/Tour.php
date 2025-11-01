@@ -8,6 +8,12 @@ class Tour extends Model
 {
     protected $fillable = [
         'title',
+        'type',
+        'date1',
+        'date2',
+        'venue',
+        'schedule',
+        'text',
     ];
 
     protected $casts = [
