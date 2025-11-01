@@ -20,7 +20,7 @@
                         <!-- ニュースリストを格納するコンテナ -->
                         <div id="news-container">
                             @foreach ($news as $new)
-                                @if ($new->visible != 1)
+                                @if ($new->visible == 1)
                                     <div class="news-item">
                                         <a href="javascript:void(0);" class="news-link" data-id="{{ $new->id }}">
                                             <div class="news-item__title">
