@@ -40,13 +40,13 @@ class NewsResource extends Resource
                 TextInput::make('title')
                     ->label('タイトル')
                     ->required(),
-                Toggle::make('hidden')
+                Toggle::make('visible')
                     ->label('公開')
                     ->onColor('success')
                     ->offColor('gray')
-                    ->default(0)
-                    ->formatStateUsing(fn ($state) => $state == 0)
-                    ->dehydrateStateUsing(fn ($state) => $state ? 0 : 1),
+                    ->default(1)
+                    ->formatStateUsing(fn ($state) => $state == 1)
+                    ->dehydrateStateUsing(fn ($state) => $state ? 1 : 0),
                 RichEditor::make('text')
                     ->label('本文')
                     ->required(),
@@ -80,25 +80,25 @@ class NewsResource extends Resource
                     ->label('公開日')
                     ->date('Y.m.d')
                     ->sortable(),
-                Tables\Columns\ToggleColumn::make('hidden')
+                Tables\Columns\ToggleColumn::make('visible')
                     ->label('公開')
                     ->onColor('success')
                     ->offColor('gray')
-                    ->getStateUsing(fn ($record) => $record->hidden == 0) // 0を公開（ON）として表示
+                    ->getStateUsing(fn ($record) => $record->visible == 1) // 1を公開（ON）として表示
                     ->updateStateUsing(function ($record, $state) {
-                        $record->update(['hidden' => $state ? 0 : 1]); // ONを0、OFFを1として保存
+                        $record->update(['visible' => $state ? 1 : 0]); // ONを1、OFFを0として保存
                         return $state;
                     }),
             ])
             ->filters([
-                Tables\Filters\TernaryFilter::make('hidden')
+                Tables\Filters\TernaryFilter::make('visible')
                     ->label('公開状態')
                     ->placeholder('すべて')
                     ->trueLabel('公開')
                     ->falseLabel('非公開')
                     ->queries(
-                        true: fn ($query) => $query->where('hidden', 0),
-                        false: fn ($query) => $query->where('hidden', 1),
+                        true: fn ($query) => $query->where('visible', 1),
+                        false: fn ($query) => $query->where('visible', 0),
                     ),
             ])
             ->actions([

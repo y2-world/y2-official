@@ -42,6 +42,17 @@ class DiscoResource extends Resource
                     ->label('発売日')
                     ->native(false)
                     ->displayFormat('Y.m.d'),
+                 Forms\Components\Toggle::make('type')
+                    ->label('アルバム')
+                    ->onColor('success')
+                    ->offColor('gray'),
+                Forms\Components\Toggle::make('visible')
+                    ->label('公開')
+                    ->onColor('success')
+                    ->offColor('gray')
+                    ->default(0)
+                    ->formatStateUsing(fn ($state) => $state == 0)
+                    ->dehydrateStateUsing(fn ($state) => $state ? 0 : 1),
                 Forms\Components\Repeater::make('tracklist')
                     ->label('収録曲')
                     ->schema([
@@ -81,17 +92,6 @@ class DiscoResource extends Resource
                     ->disk('cloudinary')
                     ->directory('images')
                     ->visibility('public'),
-                Forms\Components\Toggle::make('type')
-                    ->label('アルバム')
-                    ->onColor('success')
-                    ->offColor('gray'),
-                Forms\Components\Toggle::make('visible')
-                    ->label('公開')
-                    ->onColor('success')
-                    ->offColor('gray')
-                    ->default(0)
-                    ->formatStateUsing(fn ($state) => $state == 0)
-                    ->dehydrateStateUsing(fn ($state) => $state ? 0 : 1),
             ]);
     }
 

@@ -31,7 +31,7 @@ class TourSetlistResource extends Resource
                 Forms\Components\Section::make('基本情報')
                     ->schema([
                         Forms\Components\Select::make('tour_id')
-                            ->label('ツアー')
+                            ->label('ツアー・ライブタイトル')
                             ->relationship('tour', 'title', fn ($query) => $query->orderBy('id', 'asc'))
                             ->searchable()
                             ->native(false)
@@ -219,7 +219,7 @@ class TourSetlistResource extends Resource
                     ->label('ID')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('tour.title')
-                    ->label('ツアー')
+                    ->label('ツアー・ライブタイトル')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('order_no')

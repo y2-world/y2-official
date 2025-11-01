@@ -112,16 +112,11 @@ class TourResource extends Resource
                             ->columnSpanFull(),
 
                         Textarea::make('text')
-                            ->label('コメント')
+                            ->label('テキスト')
                             ->rows(10)
                             ->columnSpanFull(),
                     ])
                     ->collapsible(),
-
-                Forms\Components\Placeholder::make('setlist_note')
-                    ->label('セットリスト管理')
-                    ->content('セットリストは「ツアーセットリスト」リソースで管理してください。')
-                    ->columnSpanFull(),
             ]);
     }
 
