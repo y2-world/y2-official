@@ -86,6 +86,9 @@ class DiscoResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('title')
                     ->label('タイトル')
                     ->searchable(),

@@ -69,6 +69,9 @@ class NewsResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable(),
                 TextColumn::make('title')
                     ->label('タイトル')
                     ->searchable()
