@@ -57,6 +57,8 @@ class DiscoResource extends Resource
                     ])
                     ->columns(4)
                     ->defaultItems(1)
+                    ->reorderable()
+                    ->itemLabel(fn ($state, $component): ?string => (string)((array_search($state, $component->getState() ?: []) ?? 0) + 1))
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('text')
                     ->label('テキスト')
@@ -65,8 +67,12 @@ class DiscoResource extends Resource
                 Forms\Components\TextInput::make('url')
                     ->label('URL')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('image')
+                Forms\Components\FileUpload::make('image')
                     ->label('画像')
+                    ->image()
+                    ->disk('cloudinary')
+                    ->directory('images')
+                    ->visibility('public')
                     ->maxLength(255),
                 Forms\Components\Toggle::make('type')
                     ->label('アルバム')
