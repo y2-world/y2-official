@@ -429,18 +429,6 @@ footer {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
-    animation: none; /* is-showクラスが追加されたらフォールバックアニメーションをキャンセル */
-}
-/* フォールバック: JavaScriptが無効な場合や、一定時間経過後に表示（is-showクラスがない場合のみ） */
-.js-fadein:not(.is-show) {
-    animation: fadeInFallback 0.1s 1.5s forwards;
-}
-@keyframes fadeInFallback {
-    to {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-    }
 }
 
 .sns a {

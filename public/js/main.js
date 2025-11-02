@@ -25,14 +25,26 @@
         document.addEventListener("DOMContentLoaded", () => {
             const fadeElements = document.querySelectorAll(".js-fadein");
             fadeElements.forEach((element) => {
-                fadeInObserver.observe(element);
-                // フォールバック: 2秒後に強制的に表示（Intersection Observerが動作しない場合）
-                // CSSアニメーションより前に実行するため、少し早めに設定
+                // 要素が既にビューポート内にある場合は即座に表示
+                const rect = element.getBoundingClientRect();
+                const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+                
+                if (isInViewport) {
+                    // 少し遅延を入れてから表示（アニメーション効果のため）
+                    setTimeout(() => {
+                        element.classList.add("is-show");
+                    }, 100);
+                } else {
+                    // ビューポート外の場合はIntersection Observerで監視
+                    fadeInObserver.observe(element);
+                }
+                
+                // フォールバック: 3秒後に強制的に表示（Intersection Observerが動作しない場合）
                 setTimeout(() => {
                     if (!element.classList.contains("is-show")) {
                         element.classList.add("is-show");
                     }
-                }, 2000);
+                }, 3000);
             });
         });
     } else {
