@@ -423,33 +423,28 @@ footer {
     transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
                 transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
                 visibility 0.8s;
-    will-change: opacity, transform;
 }
-/* 最初の要素はフェードインなしで即座に表示 */
-.js-fadein:first-of-type {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
+
 .js-fadein.is-show {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
 }
-/* フォールバック: JavaScriptが無効な場合、5秒後に自動表示（JavaScriptのフェードインを優先） */
-@media (prefers-reduced-motion: no-preference) {
-    .js-fadein:not(.is-show) {
-        animation: fadeInFallback 0.8s 5s forwards;
-    }
-    .js-fadein.is-show {
-        animation: none;
-    }
+
+/* JavaScriptが無効な場合のフォールバック */
+.no-js .js-fadein {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
-@keyframes fadeInFallback {
-    to {
+
+/* アニメーションを減らす設定の場合は即座に表示 */
+@media (prefers-reduced-motion: reduce) {
+    .js-fadein {
         opacity: 1;
         visibility: visible;
         transform: translateY(0);
+        transition: none;
     }
 }
 

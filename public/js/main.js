@@ -17,17 +17,21 @@
 
     function initFadeIn() {
         const fadeElements = document.querySelectorAll(".js-fadein");
-        
+
+        if (fadeElements.length === 0) return;
+
         fadeElements.forEach((element, index) => {
             // 最初の要素は即座に表示（フェードインなし）
             if (index === 0) {
                 element.classList.add("is-show");
             }
         });
-        
+
         // 初期チェック：ページロード時に表示領域内の要素をチェック
-        checkAndShowElements();
-        
+        setTimeout(() => {
+            checkAndShowElements();
+        }, 100);
+
         // Intersection Observerがサポートされている場合は使用
         if ('IntersectionObserver' in window) {
             const observer = new IntersectionObserver((entries) => {
@@ -39,10 +43,10 @@
                     }
                 });
             }, {
-                rootMargin: "0px",
-                threshold: 0.1
+                rootMargin: "200px 0px",
+                threshold: 0
             });
-            
+
             // 2番目以降の要素を監視
             fadeElements.forEach((element, index) => {
                 if (index > 0 && !element.classList.contains("is-show")) {
@@ -50,14 +54,17 @@
                 }
             });
         }
-        
-        // スクロールイベントでもチェック（Intersection Observerのフォールバック）
+
+        // スクロールイベントでもチェック（Intersection Observerのフォールバック＋iOS対応）
         let scrollTimeout;
-        window.addEventListener("scroll", () => {
+        const handleScroll = () => {
             clearTimeout(scrollTimeout);
             scrollTimeout = setTimeout(checkAndShowElements, 50);
-        }, { passive: true });
-        
+        };
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        window.addEventListener("touchmove", handleScroll, { passive: true });
+
         // リサイズ時もチェック
         window.addEventListener("resize", () => {
             checkAndShowElements();
