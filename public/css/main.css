@@ -1441,3 +1441,10 @@ h2 {
     padding: 10px 15px;
     font-size: 14px;
 }
+
+/* Adjust search icon position for PC display */
+@media (min-width: 769px) {
+    .search-icon {
+        right: 20px;
+    }
+}
