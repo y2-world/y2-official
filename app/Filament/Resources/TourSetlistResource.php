@@ -57,46 +57,13 @@ class TourSetlistResource extends Resource
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')
                                     ->default(fn() => \Illuminate\Support\Str::uuid()->toString()),
-                                Forms\Components\Hidden::make('has_daily_note')
-                                    ->default(false),
-                                Forms\Components\Hidden::make('has_featuring')
-                                    ->default(false),
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
                                     ->options(fn() => \App\Models\Song::orderBy('title')->pluck('title', 'id'))
                                     ->searchable()
                                     ->native(false)
                                     ->required()
-                                    ->live()
-                                    ->createOptionForm([
-                                        Forms\Components\TextInput::make('title')
-                                            ->label('曲名'),
-                                        Forms\Components\TextInput::make('daily_note')
-                                            ->label('日替わり説明（任意）')
-                                            ->placeholder('例: 9.30')
-                                            ->helperText('入力すると楽曲リンクの後に (説明) が表示されます')
-                                            ->maxLength(255),
-                                        Forms\Components\TextInput::make('featuring')
-                                            ->label('共演者（任意）')
-                                            ->placeholder('例: ゲスト名')
-                                            ->helperText('入力すると楽曲名の後に / 共演者名 が表示されます')
-                                            ->maxLength(255),
-                                    ])
-                                    ->createOptionUsing(function (array $data, Forms\Set $set, Forms\Get $get) {
-                                        // 日替わり説明があれば、親のRepeaterアイテムに保存
-                                        if (!empty($data['daily_note'])) {
-                                            $set('daily_note', $data['daily_note']);
-                                            $set('has_daily_note', true);
-                                        }
-                                        // 共演者があれば、親のRepeaterアイテムに保存
-                                        if (!empty($data['featuring'])) {
-                                            $set('featuring', $data['featuring']);
-                                            $set('has_featuring', true);
-                                        }
-                                        // 新しい曲をsongsテーブルに追加せず、曲名を直接返す
-                                        return $data['title'];
-                                    })
-                                    ->columnSpan(2)
+                                    ->columnSpanFull()
                                     ->mutateDehydratedStateUsing(function ($state) {
                                         // 数値なら既存曲IDとして保存
                                         if (is_numeric($state)) {
@@ -115,21 +82,21 @@ class TourSetlistResource extends Resource
                                     ->default(false)
                                     ->inline(false)
                                     ->live()
-                                    ->columnSpan(1),
+                                    ->columnSpanFull(),
                                 Forms\Components\TextInput::make('daily_note')
                                     ->label('日替わり説明')
                                     ->placeholder('例: 9.30')
                                     ->maxLength(255)
-                                    ->columnSpan(3)
-                                    ->visible(fn (Forms\Get $get): bool => $get('has_daily_note') == true),
+                                    ->columnSpanFull()
+                                    ->visible(fn (Forms\Get $get): bool => $get('is_daily') == true),
                                 Forms\Components\TextInput::make('featuring')
                                     ->label('共演者')
                                     ->placeholder('例: ゲスト名')
+                                    ->helperText('曲名の後に半角スペース / 共演者名 が表示されます')
                                     ->maxLength(255)
-                                    ->columnSpan(3)
-                                    ->visible(fn (Forms\Get $get): bool => $get('has_featuring') == true),
+                                    ->columnSpanFull(),
                             ])
-                            ->columns(3)
+                            ->columns(1)
                             ->defaultItems(0)
                             ->live()
                             ->reorderable()
@@ -170,10 +137,6 @@ class TourSetlistResource extends Resource
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')
                                     ->default(fn() => \Illuminate\Support\Str::uuid()->toString()),
-                                Forms\Components\Hidden::make('has_daily_note')
-                                    ->default(false),
-                                Forms\Components\Hidden::make('has_featuring')
-                                    ->default(false),
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
                                     ->options(function () {
@@ -181,57 +144,41 @@ class TourSetlistResource extends Resource
                                     })
                                     ->searchable()
                                     ->native(false)
-                                    ->createOptionForm([
-                                        Forms\Components\TextInput::make('title')
-                                            ->label('曲名'),
-                                        Forms\Components\TextInput::make('daily_note')
-                                            ->label('日替わり説明（任意）')
-                                            ->placeholder('例: 9.30')
-                                            ->helperText('入力すると楽曲リンクの後に (説明) が表示されます')
-                                            ->maxLength(255),
-                                        Forms\Components\TextInput::make('featuring')
-                                            ->label('共演者（任意）')
-                                            ->placeholder('例: ゲスト名')
-                                            ->helperText('入力すると楽曲名の後に / 共演者名 が表示されます')
-                                            ->maxLength(255),
-                                    ])
-                                    ->createOptionUsing(function (array $data, Forms\Set $set, Forms\Get $get) {
-                                        // 日替わり説明があれば、親のRepeaterアイテムに保存
-                                        if (!empty($data['daily_note'])) {
-                                            $set('daily_note', $data['daily_note']);
-                                            $set('has_daily_note', true);
-                                        }
-                                        // 共演者があれば、親のRepeaterアイテムに保存
-                                        if (!empty($data['featuring'])) {
-                                            $set('featuring', $data['featuring']);
-                                            $set('has_featuring', true);
-                                        }
-                                        $song = \App\Models\Song::create(['title' => $data['title']]);
-                                        return $song->id;
-                                    })
                                     ->required()
-                                    ->live()
-                                    ->columnSpan(2),
+                                    ->columnSpanFull()
+                                    ->mutateDehydratedStateUsing(function ($state) {
+                                        // 数値なら既存曲IDとして保存
+                                        if (is_numeric($state)) {
+                                            return $state;
+                                        }
+
+                                        // 文字列ならそのまま保存（songs テーブルには登録しない）
+                                        if (is_string($state) && $state !== '') {
+                                            return $state;
+                                        }
+
+                                        return null;
+                                    }),
                                 Forms\Components\Toggle::make('is_daily')
                                     ->label('日替わり')
                                     ->default(false)
                                     ->inline(false)
                                     ->live()
-                                    ->columnSpan(1),
+                                    ->columnSpanFull(),
                                 Forms\Components\TextInput::make('daily_note')
                                     ->label('日替わり説明')
                                     ->placeholder('例: 9.30')
                                     ->maxLength(255)
-                                    ->columnSpan(3)
-                                    ->visible(fn (Forms\Get $get): bool => $get('has_daily_note') == true),
+                                    ->columnSpanFull()
+                                    ->visible(fn (Forms\Get $get): bool => $get('is_daily') == true),
                                 Forms\Components\TextInput::make('featuring')
                                     ->label('共演者')
                                     ->placeholder('例: ゲスト名')
+                                    ->helperText('曲名の後に半角スペース / 共演者名 が表示されます')
                                     ->maxLength(255)
-                                    ->columnSpan(3)
-                                    ->visible(fn (Forms\Get $get): bool => $get('has_featuring') == true),
+                                    ->columnSpanFull(),
                             ])
-                            ->columns(3)
+                            ->columns(1)
                             ->defaultItems(0)
                             ->live()
                             ->reorderable()
