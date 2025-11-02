@@ -430,6 +430,20 @@ footer {
     visibility: visible;
     transform: translateY(0);
 }
+/* フォールバック: JavaScriptが無効な場合や、一定時間経過後に表示 */
+.js-fadein {
+    animation: fadeInFallback 0.1s 0.5s forwards;
+}
+.js-fadein.is-show {
+    animation: none; /* is-showクラスが追加されたらアニメーションをキャンセル */
+}
+@keyframes fadeInFallback {
+    to {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+}
 
 .sns a {
     padding-right: 5px;

@@ -1,31 +1,48 @@
 "use strict";
 // モダンなIntersection Observer APIを使用したフェードインアニメーション
 {
-    const fadeInObserver = new IntersectionObserver(
-        (entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add("is-show");
-                } else {
-                    // 上にスクロールして再度非表示にする
-                    entry.target.classList.remove("is-show");
-                }
-            });
-        },
-        {
-            // ビューポートの高さに応じて閾値を調整
-            rootMargin: window.innerHeight > 768 ? "-200px" : "-300px",
-            threshold: 0,
-        }
-    );
+    // Intersection Observerのサポート確認
+    if ('IntersectionObserver' in window) {
+        const fadeInObserver = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("is-show");
+                    } else {
+                        // 上にスクロールして再度非表示にする
+                        entry.target.classList.remove("is-show");
+                    }
+                });
+            },
+            {
+                // ビューポートの高さに応じて閾値を調整（rootMarginを緩和）
+                rootMargin: window.innerHeight > 768 ? "-100px" : "-50px",
+                threshold: 0,
+            }
+        );
 
-    // すべてのフェードイン要素を監視
-    document.addEventListener("DOMContentLoaded", () => {
-        const fadeElements = document.querySelectorAll(".js-fadein");
-        fadeElements.forEach((element) => {
-            fadeInObserver.observe(element);
+        // すべてのフェードイン要素を監視
+        document.addEventListener("DOMContentLoaded", () => {
+            const fadeElements = document.querySelectorAll(".js-fadein");
+            fadeElements.forEach((element) => {
+                fadeInObserver.observe(element);
+                // フォールバック: 3秒後に強制的に表示（Intersection Observerが動作しない場合）
+                setTimeout(() => {
+                    if (!element.classList.contains("is-show")) {
+                        element.classList.add("is-show");
+                    }
+                }, 3000);
+            });
         });
-    });
+    } else {
+        // Intersection Observerがサポートされていない場合、すぐにすべての要素を表示
+        document.addEventListener("DOMContentLoaded", () => {
+            const fadeElements = document.querySelectorAll(".js-fadein");
+            fadeElements.forEach((element) => {
+                element.classList.add("is-show");
+            });
+        });
+    }
 }
 {
     //リストのリンク要素を取得
