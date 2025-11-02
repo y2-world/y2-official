@@ -430,10 +430,10 @@ footer {
     visibility: visible;
     transform: translateY(0);
 }
-/* フォールバック: JavaScriptが無効な場合、1秒後に自動表示 */
+/* フォールバック: JavaScriptが無効な場合、5秒後に自動表示（JavaScriptのフェードインを優先） */
 @media (prefers-reduced-motion: no-preference) {
     .js-fadein:not(.is-show) {
-        animation: fadeInFallback 0.8s 1s forwards;
+        animation: fadeInFallback 0.8s 5s forwards;
     }
     .js-fadein.is-show {
         animation: none;

@@ -25,15 +25,15 @@
         document.addEventListener("DOMContentLoaded", () => {
             const fadeElements = document.querySelectorAll(".js-fadein");
             fadeElements.forEach((element) => {
-                // 要素が既にビューポート内にある場合は即座に表示
+                // 要素が既にビューポート内にある場合は少し遅延を入れてから表示（フェードイン効果のため）
                 const rect = element.getBoundingClientRect();
                 const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
                 
                 if (isInViewport) {
-                    // 少し遅延を入れてから表示（アニメーション効果のため）
+                    // フェードインアニメーションを確実に実行するため、少し遅延
                     setTimeout(() => {
                         element.classList.add("is-show");
-                    }, 100);
+                    }, 300);
                 } else {
                     // ビューポート外の場合はIntersection Observerで監視
                     fadeInObserver.observe(element);
@@ -41,13 +41,13 @@
             });
         });
         
-        // フォールバック: 500ms後にすべての要素を強制的に表示（Intersection Observerやビューポート検出が失敗した場合）
+        // フォールバック: 5秒後にすべての要素を強制的に表示（Intersection Observerやビューポート検出が失敗した場合のみ）
         setTimeout(() => {
             const fadeElements = document.querySelectorAll(".js-fadein:not(.is-show)");
             fadeElements.forEach((element) => {
                 element.classList.add("is-show");
             });
-        }, 500);
+        }, 5000);
     } else {
         // Intersection Observerがサポートされていない場合、すぐにすべての要素を表示
         document.addEventListener("DOMContentLoaded", () => {
@@ -58,13 +58,13 @@
         });
     }
     
-    // グローバルフォールバック: 1秒後にすべての要素を強制的に表示（すべてのケースに対応）
+    // グローバルフォールバック: 5秒後にすべての要素を強制的に表示（すべてのケースに対応、フェードインを優先）
     setTimeout(() => {
         const fadeElements = document.querySelectorAll(".js-fadein:not(.is-show)");
         fadeElements.forEach((element) => {
             element.classList.add("is-show");
         });
-    }, 1000);
+    }, 5000);
 }
 {
     //リストのリンク要素を取得
