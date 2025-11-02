@@ -24,19 +24,24 @@
         // すべてのフェードイン要素を監視
         document.addEventListener("DOMContentLoaded", () => {
             const fadeElements = document.querySelectorAll(".js-fadein");
-            fadeElements.forEach((element) => {
-                // 要素が既にビューポート内にある場合は少し遅延を入れてから表示（フェードイン効果のため）
-                const rect = element.getBoundingClientRect();
-                const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
-                
-                if (isInViewport) {
-                    // フェードインアニメーションを確実に実行するため、少し遅延
-                    setTimeout(() => {
-                        element.classList.add("is-show");
-                    }, 300);
+            fadeElements.forEach((element, index) => {
+                // 最初の要素（index === 0）はフェードインなしで即座に表示
+                if (index === 0) {
+                    element.classList.add("is-show");
                 } else {
-                    // ビューポート外の場合はIntersection Observerで監視
-                    fadeInObserver.observe(element);
+                    // 2番目以降の要素はフェードイン効果を適用
+                    const rect = element.getBoundingClientRect();
+                    const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+                    
+                    if (isInViewport) {
+                        // フェードインアニメーションを確実に実行するため、少し遅延
+                        setTimeout(() => {
+                            element.classList.add("is-show");
+                        }, 300);
+                    } else {
+                        // ビューポート外の場合はIntersection Observerで監視
+                        fadeInObserver.observe(element);
+                    }
                 }
             });
         });

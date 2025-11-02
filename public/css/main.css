@@ -425,6 +425,12 @@ footer {
                 visibility 0.8s;
     will-change: opacity, transform;
 }
+/* 最初の要素はフェードインなしで即座に表示 */
+.js-fadein:first-of-type {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
 .js-fadein.is-show {
     opacity: 1;
     visibility: visible;
