@@ -1,10 +1,28 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - ' . $setlists->title)
 @section('content')
-    <br>
-    <div class="container">
+    <div class="database-hero database-year-hero">
+        <div class="container">
+            @if (!$setlists->fes)
+                <p class="database-subtitle" style="margin-bottom: 10px;">
+                    <a href="{{ url('/setlists/artists', $setlists->artist_id) }}" style="color: white; text-decoration: none;">
+                        {{ $setlists->artist->name }}
+                    </a>
+                </p>
+            @endif
+            <h1 class="database-title" style="margin-bottom: 15px;">{{ $setlists->title }}</h1>
+            <p class="database-subtitle" style="margin-bottom: 0;">
+                {{ date('Y.m.d', strtotime($setlists->date)) }}<br>
+                <a href="{{ url('/venue?keyword=' . urlencode($setlists->venue)) }}" style="color: white; text-decoration: none;">
+                    {{ $setlists->venue }}
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <div class="container database-year-content">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-xl-9">
 
                 @php
                     $artistNameToId = [];
@@ -30,19 +48,6 @@
                         }
                     }
                 @endphp
-
-                <div class="setlist_artist">
-                    @if (!$setlists->fes)
-                        <a href="{{ url('/setlists/artists', $setlists->artist_id) }}">{{ $setlists->artist->name }}</a>
-                    @endif
-                </div>
-
-                <div class="setlist_title">{{ $setlists->title }}</div>
-                <div class="setlist_info">
-                    {{ date('Y.m.d', strtotime($setlists->date)) }}<br>
-                    <a href="{{ url('/venue?keyword=' . urlencode($setlists->venue)) }}">{{ $setlists->venue }}</a>
-                </div>
-                <hr>
 
                 @php
                     // メドレー表示用関数
@@ -92,7 +97,9 @@
 
                     {{-- アンコール --}}
                     @if (!empty($setlists->encore))
-                        <hr width="250">
+                        <div style="margin: 0;">
+                            <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
+                        </div>
                         @php $count += renderSetlist($setlists->encore, $setlists->artist_id, [], $count + 1); @endphp
                     @endif
 
@@ -143,7 +150,9 @@
 
                     {{-- フェスアンコール --}}
                     @if (!empty($setlists->fes_encore))
-                        <hr width="250">
+                        <div style="margin: 0;">
+                            <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
+                        </div>
                         @php $prevArtistId = null; @endphp
                         @foreach ((array) $setlists->fes_encore as $key => $data)
                             @php
@@ -183,15 +192,21 @@
                 @endif
 
                 {{-- 前後リンク --}}
-                <div class="show_button">
+                <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
                     @if (!empty($previous))
-                        <a class="btn btn-outline-dark" href="{{ route('setlists.show', $previous->id) }}" rel="prev">
-                            <i class="fa-solid fa-arrow-left fa-lg"></i>
+                        <a href="{{ route('setlists.show', $previous->id) }}" rel="prev"
+                           style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
+                            <i class="fa-solid fa-arrow-left" style="margin-right: 8px;"></i>
+                            Previous
                         </a>
+                    @else
+                        <div></div>
                     @endif
                     @if (!empty($next))
-                        <a class="btn btn-outline-dark" href="{{ route('setlists.show', $next->id) }}" rel="next">
-                            <i class="fa-solid fa-arrow-right fa-lg"></i>
+                        <a href="{{ route('setlists.show', $next->id) }}" rel="next"
+                           style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
+                            Next
+                            <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
                         </a>
                     @endif
                 </div>

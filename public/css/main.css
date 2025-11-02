@@ -468,6 +468,8 @@ img {
 .album-wrapper-scroll {
     flex-wrap: nowrap;
     overflow: hidden;
+    width: 100%;
+    margin-left: 0;
 }
 
 .album-wrapper-scroll .album-wrapper-inner {
@@ -484,6 +486,8 @@ img {
 .album-wrapper-grid {
     flex-wrap: wrap;
     justify-content: space-evenly;
+    width: auto;
+    margin-left: 0;
 }
 
 .album-wrapper-grid .album-container {
@@ -507,12 +511,6 @@ img {
 
 .music-wrapper {
     position: relative;
-}
-
-.music-wrapper-fullwidth {
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
-    overflow: hidden;
 }
 
 .track-list {
@@ -1253,11 +1251,20 @@ h2 {
     padding-top: 135px;
 }
 
+.database-hero a {
+    text-decoration: none !important;
+}
+
+.database-subtitle a {
+    text-decoration: none !important;
+}
+
 .database-title {
-    font-size: 3rem;
+    font-size: 1.8rem;
     font-weight: 700;
     margin-bottom: 15px;
-    letter-spacing: -1px;
+    letter-spacing: -0.5px;
+    line-height: 1.4;
 }
 
 .database-subtitle {
@@ -1421,12 +1428,12 @@ h2 {
 
 @media (max-width: 768px) {
     .database-hero {
-        padding: 60px 0 40px;
-        padding-top: 115px;
+        padding: 40px 0 30px;
+        padding-top: 80px;
     }
 
     .database-title {
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
 
     .database-subtitle {
@@ -1452,19 +1459,57 @@ h2 {
     }
 }
 
-/* Fix typeahead dropdown text color */
-.database-hero .tt-menu {
+/* Modern Typeahead Styles */
+.tt-menu-modern {
     background-color: white;
     color: #2d3748;
+    text-align: left;
+    border-radius: 12px;
+    margin-top: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    max-height: 400px;
+    overflow-y: auto;
 }
 
-.database-hero .tt-suggestion {
+.tt-suggestion-modern {
+    padding: 14px 20px;
+    font-size: 15px;
     color: #2d3748;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
 }
 
-.database-hero .tt-suggestion:hover {
-    background-color: #f7fafc;
-    color: #2d3748;
+.tt-suggestion-modern:last-child {
+    border-bottom: none;
+}
+
+.tt-suggestion-modern:hover,
+.tt-cursor-modern {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    transform: translateX(5px);
+}
+
+.tt-suggestion-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tt-suggestion-content i {
+    font-size: 14px;
+    opacity: 0.7;
+    min-width: 16px;
+}
+
+.tt-empty {
+    padding: 20px;
+    text-align: center;
+    color: #a0aec0;
+    font-size: 14px;
 }
 
 /* Fix search icon and typeahead styles */
@@ -1473,16 +1518,22 @@ h2 {
     right: 18px;
 }
 
-.database-hero .tt-menu {
-    text-align: left;
-    font-size: 14px;
-    border-radius: 8px;
-    margin-top: 8px;
+/* Scrollbar styling for dropdown */
+.tt-menu-modern::-webkit-scrollbar {
+    width: 6px;
 }
 
-.database-hero .tt-suggestion {
-    padding: 10px 15px;
-    font-size: 14px;
+.tt-menu-modern::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.tt-menu-modern::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.tt-menu-modern::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 /* Adjust search icon position for PC display */
@@ -1495,15 +1546,28 @@ h2 {
 /* Database Year Page Styles */
 .database-year-hero {
     margin-top: -55px;
-    padding: 135px 0 40px;
+    padding: 100px 0 40px;
+}
+
+@media (max-width: 768px) {
+    .database-year-hero {
+        padding: 95px 0 25px;
+    }
 }
 
 .year-navigation {
     display: flex;
     gap: 15px;
-    justify-content: center;
-    flex-wrap: wrap;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
     margin-top: 30px;
+    overflow-x: auto;
+}
+
+@media (min-width: 769px) {
+    .year-navigation {
+        justify-content: center;
+    }
 }
 
 .year-select {
@@ -1517,6 +1581,8 @@ h2 {
     cursor: pointer;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
+    min-width: 120px;
+    flex-shrink: 0;
 }
 
 .year-select:hover {
@@ -1530,7 +1596,7 @@ h2 {
 }
 
 .database-year-content {
-    padding: 60px 15px;
+    padding: 30px 15px;
 }
 
 .database-year-content h5 {
@@ -1538,7 +1604,7 @@ h2 {
     font-weight: 700;
     color: #2d3748;
     margin-bottom: 20px;
-    margin-top: 30px;
+    /* margin-top: 30px; */
 }
 
 .database-year-content .table {
@@ -1583,19 +1649,4 @@ h2 {
 .database-year-content .table a:hover {
     color: #764ba2;
     text-decoration: underline;
-}
-
-@media (max-width: 768px) {
-    .year-navigation {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .year-select {
-        width: 100%;
-    }
-
-    .database-year-content {
-        padding: 40px 15px;
-    }
 }

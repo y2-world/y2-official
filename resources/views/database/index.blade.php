@@ -4,7 +4,7 @@
     <div class="database-hero">
         <div class="container">
             <h1 class="database-title">Mr.Children Database</h1>
-            <p class="database-subtitle">すべての楽曲を検索できます</p>
+            <p class="database-subtitle">すべての楽曲を検索</p>
             <div class="database-search">
                 <form action="" method="GET">
                     <div class="search-wrapper">

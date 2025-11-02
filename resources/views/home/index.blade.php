@@ -60,7 +60,7 @@
     <div class="index-wrapper" id="music" style="padding-top:100px">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-md-9">
+                <div class="col-xl-9">
                     <div class="element js-fadein">
                         <h2 class="music-header">Music</h2>
                         {{-- <ul class="music-menu">

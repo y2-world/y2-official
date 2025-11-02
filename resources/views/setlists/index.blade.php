@@ -26,55 +26,27 @@
                     @endforeach
                 </select>
             </div>
-        </div>
-    </div>
 
-    <div class="container-lg database-year-content">
-        <div class="pc">
-            <div class="search" style="margin-bottom: 30px;">
+            {{-- 検索フォーム（PC表示のみ） --}}
+            <div class="database-search pc" style="margin-top: 30px;">
                 <form action="{{ url('/search') }}" method="GET">
-                    <div class="mb_dropdown">
-                        <select name="artist_id" required data-toggle="select">
-                            <option value="" disabled selected>Artists</option>
-                            <option value="">(No Artist Selected)</option>
-                            @foreach ($allArtists as $artist)
-                                <option value="{{ $artist->id }}"
-                                    {{ request('artist_id') == $artist->id ? 'selected' : '' }}>
-                                    {{ $artist->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    {{-- 一致タイプ選択 --}}
-                    <div class="mb_dropdown">
-                        <label class="small-label">
-                            <input type="radio" name="match_type" value="exact"
-                                {{ request('match_type', 'exact') === 'exact' ? 'checked' : '' }}>
-                            完全一致
-                        </label>
-                        <label class="small-label" style="margin-left: 20px;">
-                            <input type="radio" name="match_type" value="partial"
-                                {{ request('match_type') === 'partial' ? 'checked' : '' }}>
-                            部分一致
-                        </label>
-                    </div>
-                    <div class="input-group mb-3" style="width: 400px;">
-                        <input type="search" class="form-control" aria-label="Search" value="{{ request('keyword') }}"
-                            name="keyword" required>
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </button>
-                        </div>
+                    <input type="hidden" name="match_type" value="partial">
+                    <div class="search-wrapper">
+                        <input type="text" name="keyword" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}">
+                        <button type="submit" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
+                            <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none;"></i>
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
+    </div>
+
+    <div class="container-lg database-year-content">
 
         {{-- これからのライブ --}}
         @if($upcomingSetlists->count() > 0)
-            <h3 style="margin-top: 30px; margin-bottom: 15px;">Upcoming Shows</h3>
+            <h3 style="margin-top: 0; margin-bottom: 15px;">Upcoming Shows</h3>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -139,7 +111,7 @@
         @endif
 
         {{-- 今までのライブ --}}
-        <h3 style="margin-top: 30px; margin-bottom: 15px;">Past Shows</h3>
+        <h3 style="margin-top: {{ $upcomingSetlists->count() > 0 ? '30px' : '0' }}; margin-bottom: 15px;">Past Shows</h3>
         <table class="table table-striped">
             <thead>
                 <tr>

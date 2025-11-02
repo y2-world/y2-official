@@ -1,33 +1,32 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - Venue : ' . $keyword)
 @section('content')
-    <br>
-    <div class="container-lg">
-        <div class="parts-wrapper">
-            <div class="pc">
-                <small>会場検索結果</small>
-                <h4>{{ $keyword }}</h4>
-            </div>
-            <div class="search">
+    <div class="database-hero database-year-hero">
+        <div class="container">
+            <p class="database-subtitle" style="margin-bottom: 10px;">会場検索結果</p>
+            <h1 class="database-title" style="margin-bottom: 20px;">{{ $keyword }}</h1>
+
+            @if ($data->isEmpty())
+                <p class="database-subtitle" style="margin-bottom: 0;">検索結果がありません</p>
+            @else
+                <p class="database-subtitle" style="margin-bottom: 0;">全{{ count($data) }}件</p>
+            @endif
+
+            {{-- 検索フォーム（PC表示のみ） --}}
+            <div class="database-search pc" style="margin-top: 30px;">
                 <form action="{{ url('/venue') }}" method="GET">
-                    <div class="input-group mb-3" style="width: 350px;">
-                        <input type="search" class="form-control" aria-label="Search" value="{{ request('keyword') }}"
-                            name="keyword" required>
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="submit" id="button-addon2"><i
-                                    class="fa-solid fa-magnifying-glass"></i></button>
-                        </div>
+                    <div class="search-wrapper">
+                        <input type="text" name="keyword" class="database-search-input" placeholder="会場を検索..." value="{{ request('keyword') }}">
+                        <button type="submit" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
+                            <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none;"></i>
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
-        <div class="error">
-            @if ($data->isEmpty())
-                <small>検索結果がありません。</small>
-            @else
-                <small>全{{ count($data) }}件</small>
-            @endif
-        </div>
+    </div>
+
+    <div class="container-lg database-year-content">
         @if (!$data->isEmpty())
             <table class="table table-striped count">
                 <thead>

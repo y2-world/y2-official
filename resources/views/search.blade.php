@@ -1,71 +1,81 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - Search : ' . $keyword)
 @section('content')
-    <br>
-    <div class="container-lg">
-        <div class="parts-wrapper">
-            <div class="pc">
-                <small>楽曲検索結果</small>
-                <h4>{{ $keyword }}</h4>
-            </div>
-            <div class="search">
-                <form action="{{ url('/search') }}" method="GET">
-                    <div class="mb_dropdown">
-                        @if (isset($artist_id))
-                            <select name="artist_id" data-toggle="select">
-                                <option value="">(No Artist Selected)</option>
-                                <?php $artist_name = $artists[$artist_id - 1]['name']; ?>
-                                @foreach ($artists as $artist)
-                                    @if ($artist->name !== $artist_name)
-                                        <option value="{{ $artist->id }}">{{ $artist->name }}</option>
-                                    @else
-                                        <option value="{{ $artist->id }}" selected>{{ $artist->name }}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        @else
-                            <select name="artist_id" data-toggle="select">
-                                <option value="">(No Artist Selected)</option>
-                                @foreach ($artists as $artist)
-                                    <option value="{{ $artist->id }}">{{ $artist->name }}</option>
-                                @endforeach
-                            </select>
-                        @endif
-                    </div>
+    <div class="database-hero database-year-hero">
+        <div class="container">
+            <p class="database-subtitle" style="margin-bottom: 10px;">楽曲検索結果</p>
+            <h1 class="database-title sp" style="margin-bottom: 20px; cursor: pointer;" onclick="document.getElementById('spSearchForm').style.display='block'; this.style.display='none';">{{ $keyword }}</h1>
+            <h1 class="database-title pc" style="margin-bottom: 20px;">{{ $keyword }}</h1>
 
-                    {{-- 完全一致・部分一致切替 --}}
-                    <div class="mb_dropdown">
-                        <label class="small-label">
-                            <input type="radio" name="match_type" value="exact"
-                                {{ request('match_type', 'exact') === 'exact' ? 'checked' : '' }}>
-                            完全一致
-                        </label>
-                        <label class="small-label" style="margin-left: 20px;">
-                            <input type="radio" name="match_type" value="partial"
-                                {{ request('match_type') === 'partial' ? 'checked' : '' }}>
-                            部分一致
-                        </label>
-                    </div>
+            @if ($data->isEmpty())
+                <p class="database-subtitle" style="margin-bottom: 0;">検索結果がありません</p>
+            @else
+                <p class="database-subtitle" style="margin-bottom: 0;">全{{ count($data) }}件</p>
+            @endif
 
-                    <div class="input-group mb-3" style="width: 350px;">
-                        <input type="search" class="form-control" aria-label="Search" value="{{ request('keyword') }}"
-                            name="keyword" required>
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
-                                <i class="fa-solid fa-magnifying-glass"></i>
+            {{-- 検索フォーム（SP表示） --}}
+            <div class="sp" id="spSearchForm" style="margin-top: 30px; display: none;">
+                <form action="{{ url('/search') }}" method="GET" id="artistSearchFormSp">
+                    <input type="hidden" name="match_type" value="partial">
+
+                    {{-- 検索ワード編集 --}}
+                    <div style="margin-bottom: 15px;">
+                        <div class="search-wrapper">
+                            <input type="text" name="keyword" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}" style="font-size: 14px; padding: 12px 45px 12px 16px;">
+                            <button type="submit" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
+                                <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none; font-size: 16px;"></i>
                             </button>
                         </div>
+                    </div>
+
+                    {{-- アーティスト選択 --}}
+                    <select name="artist_id" class="year-select" style="width: 100%; max-width: 300px; margin: 0 auto;" onchange="document.getElementById('artistSearchFormSp').submit()">
+                        <option value="">全アーティスト</option>
+                        @foreach($artists as $artist)
+                            <option value="{{ $artist->id }}" {{ request('artist_id') == $artist->id ? 'selected' : '' }}>
+                                {{ $artist->name }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    {{-- 閉じるボタン --}}
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button type="button" onclick="document.getElementById('spSearchForm').style.display='none'; document.querySelector('.database-title.sp').style.display='block';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-size: 13px;">
+                            閉じる
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            {{-- 検索フォーム（PC表示のみ） --}}
+            <div class="database-search pc" style="margin-top: 30px;">
+                <form action="{{ url('/search') }}" method="GET">
+                    <input type="hidden" name="match_type" value="partial">
+
+                    {{-- アーティスト選択 --}}
+                    <div style="margin-bottom: 20px;">
+                        <select name="artist_id" class="year-select" style="width: 100%; max-width: 300px; margin: 0 auto;">
+                            <option value="">全アーティスト</option>
+                            @foreach($artists as $artist)
+                                <option value="{{ $artist->id }}" {{ request('artist_id') == $artist->id ? 'selected' : '' }}>
+                                    {{ $artist->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="search-wrapper">
+                        <input type="text" name="keyword" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}">
+                        <button type="submit" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
+                            <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none;"></i>
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
-        <div class="error">
-            @if ($data->isEmpty())
-                <small>検索結果がありません。</small>
-            @else
-                <small>全{{ count($data) }}件</small>
-            @endif
-        </div>
+    </div>
+
+    <div class="container-lg database-year-content">
         @if (!$data->isEmpty())
             <table class="table table-striped count">
                 <thead>

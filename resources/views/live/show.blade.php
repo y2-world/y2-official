@@ -1,54 +1,58 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - ' . $tours->title)
 @section('content')
-    <br>
-    <div class="container">
-        @php
-            // 関数の重複定義を防ぐためにチェック
-            if (!function_exists('getTotalOlCount')) {
-                function getTotalOlCount($tourSetlists)
-                {
-                    $totalOlCount = 0;
+    @php
+        // 関数の重複定義を防ぐためにチェック
+        if (!function_exists('getTotalOlCount')) {
+            function getTotalOlCount($tourSetlists)
+            {
+                $totalOlCount = 0;
 
-                    foreach ($tourSetlists as $setlist) {
-                        if (!empty($setlist)) {
-                            foreach ($setlist as $data) {
-                                $totalOlCount++;
-                                $hasDate = true;
-                            }
+                foreach ($tourSetlists as $setlist) {
+                    if (!empty($setlist)) {
+                        foreach ($setlist as $data) {
+                            $totalOlCount++;
+                            $hasDate = true;
                         }
                     }
-
-                    return $totalOlCount;
                 }
+
+                return $totalOlCount;
             }
+        }
 
-            // 各セットリストの <ol> 数を集計
-            $totalOlCount = $tourSetlists
-                ->filter(function ($model) {
-                    return is_array($model->setlist) && count($model->setlist) > 0;
-                })
-                ->count();
+        // 各セットリストの <ol> 数を集計
+        $totalOlCount = $tourSetlists
+            ->filter(function ($model) {
+                return is_array($model->setlist) && count($model->setlist) > 0;
+            })
+            ->count();
 
-            // レイアウト用クラスを調整
-            $colClass = $totalOlCount <= 2 ? 'col-md-8' : 'col-md-10';
-            $flexDirectionClass = $totalOlCount <= 1 ? 'flex-start' : 'space-around';
-        @endphp
+        // レイアウト用クラスを調整
+        $colClass = $totalOlCount <= 2 ? 'col-xl-9' : 'col-xl-10';
+        $flexDirectionClass = $totalOlCount <= 1 ? 'flex-start' : 'space-around';
+    @endphp
+
+    <div class="database-hero database-year-hero">
+        <div class="container">
+            <h1 class="database-title" style="margin-bottom: 15px;">{{ $tours->title }}</h1>
+            <p class="database-subtitle" style="margin-bottom: 0;">
+                @if (isset($tours->date1) && isset($tours->date2))
+                    {{ date('Y.m.d', strtotime($tours->date1)) }} - {{ date('Y.m.d', strtotime($tours->date2)) }}
+                @elseif(isset($tours->date1) && !isset($tours->date2))
+                    {{ date('Y.m.d', strtotime($tours->date1)) }}
+                @endif
+                <br>
+                {{ $tours->venue }}
+            </p>
+        </div>
+    </div>
+
+    <div class="container database-year-content">
         <div class="row justify-content-center">
             <div class="{{ $colClass }}">
-                <div class="setlist_title">{{ $tours->title }}</div>
-                <div class="setlist_info">
-                    @if (isset($tours->date1) && isset($tours->date2))
-                        {{ date('Y.m.d', strtotime($tours->date1)) }} - {{ date('Y.m.d', strtotime($tours->date2)) }}
-                    @elseif(isset($tours->date1) && !isset($tours->date2))
-                        {{ date('Y.m.d', strtotime($tours->date1)) }}
-                    @endif
-                    <br>
-                    {{ $tours->venue }}
-                </div>
                 <div class="setlist">
                     @if ($tourSetlists->count())
-                        <hr>
                         <div class="setlist-row justify-content-{{ $flexDirectionClass }}">
                             @foreach ($tourSetlists as $setlistModel)
                                 @php
@@ -75,13 +79,17 @@
 
                                         @foreach ([$setlist, $encore] as $section)
                                             @if ($loop->index === 1 && count($encore))
-                                                <hr style="width: 80%">
+                                                <div style="margin: 20px 0 0 0;">
+                                                    <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
+                                                </div>
                                             @endif
 
                                             @foreach ($section as $data)
                                                 @php
-                                                    $isDaily = !empty($data['is_daily']);
-                                                    $isNumericSong = is_numeric($data['song']);
+                                                    $isDaily = isset($data['is_daily']) && $data['is_daily'];
+                                                    $dailyNote = isset($data['daily_note']) ? $data['daily_note'] : '';
+                                                    $featuring = isset($data['featuring']) ? $data['featuring'] : '';
+                                                    $isNumericSong = is_numeric($data['song'] ?? '');
                                                     $title = '';
                                                     $link = null;
                                                     $annotation = '';
@@ -105,13 +113,13 @@
                                                 @endphp
 
                                                 @if ($isDaily)
-                                                    - @if ($link)<a href="{{ $link }}">{{ $title }}</a>@else{{ $title }}@endif @if(!empty($annotation)){{ $annotation }}@endif<br>
+                                                    - @if ($link)<a href="{{ $link }}">{{ $title }}</a>@else{{ $title }}@endif@if(!empty($featuring)) / {{ $featuring }}@endif @if(!empty($dailyNote))({{ $dailyNote }})@endif @if(!empty($annotation)){{ $annotation }}@endif<br>
                                                 @else
                                                     <li>
                                                         @if ($link)
-                                                            <a href="{{ $link }}">{{ $title }}</a> {{ $annotation }}
+                                                            <a href="{{ $link }}">{{ $title }}</a>@if(!empty($featuring)) / {{ $featuring }}@endif @if(!empty($dailyNote))({{ $dailyNote }})@endif {{ $annotation }}
                                                         @else
-                                                            {{ $title }} {{ $annotation }}
+                                                            {{ $title }}@if(!empty($featuring)) / {{ $featuring }}@endif @if(!empty($dailyNote))({{ $dailyNote }})@endif {{ $annotation }}
                                                         @endif
                                                     </li>
                                                 @endif
@@ -135,16 +143,23 @@
                         {!! nl2br(e($tours->text)) !!}
                     @endif
                 </div>
-                <div class="show_button text-center">
-                    <!-- Buttons for navigation -->
+                {{-- 前後リンク --}}
+                <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
                     @if (isset($previous))
-                        <a class="btn btn-outline-dark" href="{{ route('live.show', $previous->id) }}" rel="prev"
-                            role="button">
-                            <i class="fa-solid fa-arrow-left fa-lg"></i></a>
+                        <a href="{{ route('live.show', $previous->id) }}" rel="prev"
+                           style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
+                            <i class="fa-solid fa-arrow-left" style="margin-right: 8px;"></i>
+                            Previous
+                        </a>
+                    @else
+                        <div></div>
                     @endif
                     @if (isset($next))
-                        <a class="btn btn-outline-dark" href="{{ route('live.show', $next->id) }}"rel="next"
-                            role="button"><i class="fa-solid fa-arrow-right fa-lg"></i></a>
+                        <a href="{{ route('live.show', $next->id) }}" rel="next"
+                           style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
+                            Next
+                            <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
+                        </a>
                     @endif
                 </div>
             </div>

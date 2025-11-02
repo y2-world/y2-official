@@ -1,46 +1,47 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - ' . $artist->name)
 @section('content')
-    <br>
-    <div class="container-lg">
-        <h2>{{ $artist->name }}</h2>
-        <?php $artist_id = $artist->id; ?>
-        <div class="parts-wrapper">
-            <div class="pc">
-                <div class="dropdown-wrapper">
-                    <select name="select" onChange="location.href=value;">
-                        <option value="" disabled selected>Artists</option>
-                        @foreach ($artists as $artist)
-                            <option value="{{ url('/setlists/artists', $artist->id) }}">{{ $artist->name }}</option>
-                        @endforeach
-                    </select>
-                    <select name="select" onChange="location.href=value;">
-                        <option value="" disabled selected>Years</option>
-                        @foreach ($years as $year)
-                            <option value="{{ url('/setlists/years', $year->year) }}">{{ $year->year }}</option>
-                        @endforeach
-                    </select>
-                </div>
+    <?php $artist_id = $artist->id; ?>
+    <div class="database-hero database-year-hero">
+        <div class="container">
+            <h1 class="database-title">{{ $artist->name }}</h1>
+            <p class="database-subtitle">すべてのセットリスト</p>
+
+            <div class="year-navigation">
+                <select class="year-select" name="select" onChange="location.href=value;">
+                    <option value="" disabled selected>Artists</option>
+                    @foreach ($artists as $artist)
+                        <option value="{{ url('/setlists/artists', $artist->id) }}">{{ $artist->name }}</option>
+                    @endforeach
+                </select>
+                <select class="year-select" name="select" onChange="location.href=value;">
+                    <option value="" disabled selected>Years</option>
+                    @foreach ($years as $year)
+                        <option value="{{ url('/setlists/years', $year->year) }}">{{ $year->year }}</option>
+                    @endforeach
+                </select>
             </div>
-            <div class="search">
+
+            {{-- 検索フォーム（PC表示のみ） --}}
+            <div class="database-search pc" style="margin-top: 30px;">
                 <form action="{{ url('/search') }}" method="GET">
-                    <input type="hidden" id="id" name="artist_id" value="{{ $artist_id }}">
-                    <div class="input-group mb-3" style="width: 350px;">
-                        <input type="search" class="form-control" aria-label="Search" value="{{ request('keyword') }}"
-                            name="keyword" required>
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="submit" id="button-addon2"><i
-                                    class="fa-solid fa-magnifying-glass"></i></button>
-                        </div>
+                    <input type="hidden" name="artist_id" value="{{ $artist_id }}">
+                    <input type="hidden" name="match_type" value="partial">
+                    <div class="search-wrapper">
+                        <input type="text" name="keyword" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}">
+                        <button type="submit" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
+                            <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none;"></i>
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
-        <div class="error">
-          @if($setlists->isEmpty())
-          <small>セットリストがありません。</small>
-          @endif 
-      </div>
+    </div>
+
+    <div class="container-lg database-year-content">
+        @if($setlists->isEmpty())
+            <p style="text-align: center; color: #999; margin-top: 40px;">セットリストがありません。</p>
+        @endif
         @if(!$setlists->isEmpty())
             <table class="table table-striped count">
                 <thead>
@@ -64,7 +65,6 @@
                     @endforeach
                 </tbody>
             </table>
-        @else
         @endif
         <br>
     </div>

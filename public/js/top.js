@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 musicContainer.innerHTML = initialMusicHTML;
                 viewAllBtn.textContent = "View All";
                 isShowingAll = false;
-            } else {
+            } else{
                 // View Allの処理
                 if (allMusicData) {
                     // 既にデータがある場合は再利用
