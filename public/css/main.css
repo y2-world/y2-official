@@ -1200,3 +1200,226 @@ h2 {
         font-size: 20px;
     }
 }
+/* Database Page Modern Design */
+.database-hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 80px 0 60px;
+    text-align: center;
+    color: white;
+    margin-top: -55px;
+    padding-top: 135px;
+}
+
+.database-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    letter-spacing: -1px;
+}
+
+.database-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 40px;
+}
+
+.database-search {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-wrapper {
+    position: relative;
+}
+
+.database-search-input {
+    width: 100%;
+    padding: 16px 50px 16px 20px;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.database-search-input:focus {
+    outline: none;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.search-icon {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #667eea;
+    font-size: 18px;
+}
+
+.database-content {
+    padding: 60px 15px;
+}
+
+.database-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    height: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.database-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+.card-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    font-size: 30px;
+    color: white;
+}
+
+.card-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-align: center;
+    color: #2d3748;
+}
+
+.card-description {
+    font-size: 0.95rem;
+    color: #718096;
+    text-align: center;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.card-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.database-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: #f7fafc;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #2d3748;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-size: 15px;
+}
+
+.database-link:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    transform: translateX(5px);
+    text-decoration: none;
+}
+
+.database-link i {
+    transition: transform 0.3s ease;
+}
+
+.database-link:hover i {
+    transform: translateX(5px);
+}
+
+.card-links-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+.database-link-year {
+    padding: 12px;
+    background: #f7fafc;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #2d3748;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.database-link-year:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    transform: scale(1.05);
+    text-decoration: none;
+}
+
+.card-links-grid::-webkit-scrollbar {
+    width: 6px;
+}
+
+.card-links-grid::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+@media (max-width: 768px) {
+    .database-hero {
+        padding: 60px 0 40px;
+        padding-top: 115px;
+    }
+
+    .database-title {
+        font-size: 2rem;
+    }
+
+    .database-subtitle {
+        font-size: 1rem;
+        margin-bottom: 30px;
+    }
+
+    .database-content {
+        padding: 40px 15px;
+    }
+
+    .database-card {
+        padding: 30px 20px;
+        margin-bottom: 20px;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+    }
+
+    .card-links-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Fix typeahead dropdown text color */
+.database-hero .tt-menu {
+    background-color: white;
+    color: #2d3748;
+}
+
+.database-hero .tt-suggestion {
+    color: #2d3748;
+}
+
+.database-hero .tt-suggestion:hover {
+    background-color: #f7fafc;
+    color: #2d3748;
+}
