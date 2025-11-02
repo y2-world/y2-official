@@ -1,7 +1,3 @@
-@php
-    // 現在のページに基づく基点番号を計算
-    $startNumber = ($setlists->currentPage() - 1) * $setlists->perPage() + 1;
-@endphp
 @extends('layouts.app')
 @section('title', 'Yuki Official - Setlists')
 @section('content')
@@ -72,6 +68,75 @@
                 </div>
             </div>
         </div>
+
+        {{-- これからのライブ --}}
+        @if($upcomingSetlists->count() > 0)
+            <h3 style="margin-top: 30px; margin-bottom: 15px;">Upcoming Shows</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="mobile">#</th>
+                        <th class="mobile">開催日</th>
+                        @if (request('type') != 2)
+                            <th class="sp">アーティスト / タイトル</th>
+                            <th class="pc">アーティスト</th>
+                        @endif
+                        @if (request('type') == 2)
+                            <th class="pc"></th>
+                            <th class="sp">タイトル</th>
+                            <th class="pc">タイトル</th>
+                        @else
+                            <th class="pc">タイトル</th>
+                        @endif
+                        <th class="pc">会場</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($upcomingSetlists as $index => $setlist)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
+                            @if (request('type') != 2)
+                                @if (isset($setlist->artist_id))
+                                    <td class="sp">
+                                        <a href="{{ url('/setlists/artists', $setlist->artist_id) }}">{{ $setlist->artist->name }}</a>
+                                        /
+                                        <a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a>
+                                    </td>
+                                    <td class="pc">
+                                        <a href="{{ url('/setlists/artists', $setlist->artist_id) }}">{{ $setlist->artist->name }}</a>
+                                    </td>
+                                @else
+                                    <td class="sp">
+                                        <a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a>
+                                    </td>
+                                    <td class="pc"></td>
+                                @endif
+                            @endif
+                            @if (request('type') == 2)
+                                <td class="pc"></td>
+                                <td class="sp">
+                                    <a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a>
+                                </td>
+                                <td class="pc">
+                                    <a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a>
+                                </td>
+                            @else
+                                <td class="pc">
+                                    <a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a>
+                                </td>
+                            @endif
+                            <td class="pc">
+                                <a href="{{ url('/venue?keyword=' . urlencode($setlist->venue)) }}">{{ $setlist->venue }}</a>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+
+        {{-- 今までのライブ --}}
+        <h3 style="margin-top: 30px; margin-bottom: 15px;">Past Shows</h3>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -92,11 +157,11 @@
                 </tr>
             </thead>
             <tbody id="setlists-container">
-                @include('setlists._list', ['setlists' => $setlists, 'totalCount' => $totalCount, 'type' => $type])
+                @include('setlists._list', ['setlists' => $pastSetlists, 'totalCount' => $pastTotalCount, 'type' => $type])
             </tbody>
         </table>
         <div class="pagination" id="pagination-links" style="display: none;">
-            {!! $setlists->appends(['type' => $type])->links() !!}
+            {!! $pastSetlists->appends(['type' => $type])->links() !!}
         </div>
         <br>
     </div>
@@ -108,12 +173,12 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM loaded');
-            console.log('Has more pages: {{ $setlists->hasMorePages() ? "true" : "false" }}');
+            console.log('Has more pages: {{ $pastSetlists->hasMorePages() ? "true" : "false" }}');
             console.log('InfiniteScroll class available:', typeof InfiniteScroll);
 
-            @if($setlists->hasMorePages())
+            @if($pastSetlists->hasMorePages())
                 console.log('Initializing InfiniteScroll...');
-                let nextUrl = '{!! $setlists->appends(['type' => $type])->nextPageUrl() !!}';
+                let nextUrl = '{!! $pastSetlists->appends(['type' => $type])->nextPageUrl() !!}';
                 // 本番環境では強制的にHTTPSにする
                 if (window.location.protocol === 'https:') {
                     nextUrl = nextUrl.replace('http://', 'https://');

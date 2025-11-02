@@ -14,36 +14,34 @@ class SetlistController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
-        // $setlists = Setlist::orderBy('date', 'desc')
-        // ->paginate(10);
-        // $artists = Artist::where('visible', 1)->orderBy('id', 'asc')
-        // ->get();
-        // $allArtists = Artist::orderBy('id', 'asc')
-        // ->get();
-        // $years = Year::orderBy('year', 'asc')
-        // ->get();
-        // return view('setlists.index', compact('artists', 'allArtists', 'setlists', 'years'));
-
+    {
         $type = request()->input('type');
+        $today = now()->toDateString();
 
-        // クエリビルダーを生成し、セットリストを取得する
-        $setlistsQuery = Setlist::orderBy('date', 'desc');
-    
+        // これからのライブ（今日以降）
+        $upcomingQuery = Setlist::where('date', '>=', $today)->orderBy('date', 'asc');
+
         if ($type === '1') {
-            // live_typeが1の場合はfesカラムが0のセットリストを取得する
-            $setlistsQuery->where('fes', 0);
+            $upcomingQuery->where('fes', 0);
         } elseif ($type === '2') {
-            // live_typeが2の場合はfesカラムが1か2のセットリストを取得する
-            $setlistsQuery->whereIn('fes', [1, 2]);
+            $upcomingQuery->whereIn('fes', [1, 2]);
         }
-    
-        // ページネーションを適用してセットリストを取得する
-        $setlists = $setlistsQuery->paginate(10); // 1ページに10件
 
-         // 全体のアイテム数を取得（ナンバリングの基点に使用）
-        $totalCount = $setlists->total();
-    
+        $upcomingSetlists = $upcomingQuery->get();
+        $upcomingTotalCount = $upcomingSetlists->count();
+
+        // 今までのライブ（今日より前）
+        $pastQuery = Setlist::where('date', '<', $today)->orderBy('date', 'desc');
+
+        if ($type === '1') {
+            $pastQuery->where('fes', 0);
+        } elseif ($type === '2') {
+            $pastQuery->whereIn('fes', [1, 2]);
+        }
+
+        $pastSetlists = $pastQuery->paginate(10);
+        $pastTotalCount = $pastQuery->count();
+
         // アーティスト、全てのアーティスト、年のデータを取得する
         $artists = Artist::where('visible', 1)->orderBy('id', 'asc')->get();
         $allArtists = Artist::orderBy('id', 'asc')->get();
@@ -57,20 +55,24 @@ class SetlistController extends Controller
             ->map(function ($year) {
                 return (object)['year' => $year];
             });
-    
-        // AJAXリクエストの場合はJSON形式で返す
+
+        // AJAXリクエストの場合はJSON形式で返す（過去のライブのみページネーション対応）
         if (request()->wantsJson() || request()->ajax()) {
-            $html = view('setlists._list', compact('setlists', 'totalCount', 'type'))->render();
+            $html = view('setlists._list', [
+                'setlists' => $pastSetlists,
+                'totalCount' => $pastTotalCount,
+                'type' => $type
+            ])->render();
             return response()->json([
                 'html' => $html,
-                'next_page_url' => $setlists->appends(['type' => $type])->nextPageUrl(),
-                'current_page' => $setlists->currentPage(),
-                'last_page' => $setlists->lastPage(),
+                'next_page_url' => $pastSetlists->appends(['type' => $type])->nextPageUrl(),
+                'current_page' => $pastSetlists->currentPage(),
+                'last_page' => $pastSetlists->lastPage(),
             ]);
         }
 
         // ビューにデータを渡して表示する
-        return view('setlists.index', compact('artists', 'allArtists', 'setlists', 'years', 'type', 'totalCount'));
+        return view('setlists.index', compact('artists', 'allArtists', 'upcomingSetlists', 'pastSetlists', 'upcomingTotalCount', 'pastTotalCount', 'years', 'type'));
     }
 
     /**
