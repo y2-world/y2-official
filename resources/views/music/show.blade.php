@@ -14,8 +14,27 @@
                         <div class="row">
                             <div class="col-xl-6">
                                 <div class="modal-img">
-                                    <img src="https://res.cloudinary.com/hqrgbxuiv/{{ $discos->image }}"
-                                        style="width: 100%;">
+                                    @php
+                                        try {
+                                            // Cloudinaryディスクを使用してURLを取得
+                                            $imageUrl = \Illuminate\Support\Facades\Storage::disk('cloudinary')->url($discos->image);
+                                        } catch (\Exception $e) {
+                                            // フォールバック: 直接URLを構築
+                                            $imagePath = $discos->image;
+                                            if (strpos($imagePath, 'http') === 0) {
+                                                $imageUrl = $imagePath;
+                                            } elseif (strpos($imagePath, 'image/upload') !== false) {
+                                                $imageUrl = 'https://res.cloudinary.com/hqrgbxuiv/' . $imagePath;
+                                            } else {
+                                                $imageUrl = 'https://res.cloudinary.com/hqrgbxuiv/image/upload/' . $imagePath;
+                                            }
+                                        }
+                                    @endphp
+                                    <img src="{{ $imageUrl }}"
+                                        style="width: 100%;"
+                                        alt="{{ $discos->title }}"
+                                        loading="lazy"
+                                        decoding="async">
                                 </div>
                             </div>
                             @if (!empty($discos->tracklist))
