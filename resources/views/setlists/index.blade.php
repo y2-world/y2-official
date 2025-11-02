@@ -29,10 +29,15 @@
 
             {{-- 検索フォーム（PC表示のみ） --}}
             <div class="database-search pc" style="margin-top: 30px;">
-                <form action="{{ url('/search') }}" method="GET">
+                <form action="{{ url('/search') }}" method="GET" id="setlist-search-form">
                     <input type="hidden" name="match_type" value="partial">
                     <div class="search-wrapper">
-                        <input type="text" name="keyword" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}">
+                        <input type="text" name="keyword" id="keyword-setlist" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}" list="song-suggestions-setlist">
+                        <datalist id="song-suggestions-setlist">
+                            @foreach($suggestions as $suggestion)
+                                <option value="{{ $suggestion['title'] }}"></option>
+                            @endforeach
+                        </datalist>
                         <button type="submit" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
                             <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none;"></i>
                         </button>
@@ -145,6 +150,26 @@
 @section('page-script')
     <script src="{{ asset('/js/search.js?v=20251101') }}"></script>
     <script src="{{ asset('/js/infinite-scroll.js?v=20251101') }}"></script>
+    <script>
+        // 検索候補のデータマップを作成
+        const songMapSetlist = {
+            @foreach($suggestions as $suggestion)
+                "{{ $suggestion['title'] }}": {{ $suggestion['id'] }},
+            @endforeach
+        };
+
+        // 検索フォームの入力フィールド
+        const keywordInputSetlist = document.getElementById('keyword-setlist');
+        if (keywordInputSetlist) {
+            keywordInputSetlist.addEventListener('change', function(e) {
+                const selectedTitle = e.target.value;
+                if (songMapSetlist[selectedTitle]) {
+                    // 候補から選択された場合は詳細ページへ
+                    window.location.href = '/setlist-songs/' + songMapSetlist[selectedTitle];
+                }
+            });
+        }
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM loaded');

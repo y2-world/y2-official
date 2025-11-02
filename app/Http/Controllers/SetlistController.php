@@ -71,8 +71,14 @@ class SetlistController extends Controller
             ]);
         }
 
+        // 検索候補を取得（SetlistSongテーブルから）
+        $suggestions = \App\Models\SetlistSong::select('id', 'title')
+            ->orderBy('title', 'asc')
+            ->get()
+            ->toArray();
+
         // ビューにデータを渡して表示する
-        return view('setlists.index', compact('artists', 'allArtists', 'upcomingSetlists', 'pastSetlists', 'upcomingTotalCount', 'pastTotalCount', 'years', 'type'));
+        return view('setlists.index', compact('artists', 'allArtists', 'upcomingSetlists', 'pastSetlists', 'upcomingTotalCount', 'pastTotalCount', 'years', 'type', 'suggestions'));
     }
 
     /**

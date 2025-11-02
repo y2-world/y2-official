@@ -117,8 +117,7 @@ class SetlistResource extends Resource
                                     ->live()
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('title')
-                                            ->label('曲名')
-                                            ->required(),
+                                            ->label('曲名'),
                                         Forms\Components\Toggle::make('medley')
                                             ->label('メドレー')
                                             ->default(false)
@@ -129,7 +128,19 @@ class SetlistResource extends Resource
                                             ->helperText('曲名の後に半角スペース / 共演者名 が表示されます')
                                             ->maxLength(255),
                                     ])
-                                    ->createOptionUsing(function (array $data, Forms\Set $set, Forms\Get $get): int {
+                                    ->createOptionUsing(function (array $data, Forms\Set $set, Forms\Get $get): ?int {
+                                        // 曲名が空の場合は何もしない
+                                        if (empty($data['title'])) {
+                                            // メドレーと共演者だけを保存
+                                            if (!empty($data['medley'])) {
+                                                $set('medley', true);
+                                            }
+                                            if (!empty($data['featuring'])) {
+                                                $set('featuring', $data['featuring']);
+                                            }
+                                            return null;
+                                        }
+
                                         // セットリストのアーティストIDを取得
                                         $artistId = $get('../../artist_id');
 
@@ -215,8 +226,7 @@ class SetlistResource extends Resource
                                     ->live()
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('title')
-                                            ->label('曲名')
-                                            ->required(),
+                                            ->label('曲名'),
                                         Forms\Components\Toggle::make('medley')
                                             ->label('メドレー')
                                             ->default(false)
@@ -227,7 +237,19 @@ class SetlistResource extends Resource
                                             ->helperText('曲名の後に半角スペース / 共演者名 が表示されます')
                                             ->maxLength(255),
                                     ])
-                                    ->createOptionUsing(function (array $data, Forms\Set $set, Forms\Get $get): int {
+                                    ->createOptionUsing(function (array $data, Forms\Set $set, Forms\Get $get): ?int {
+                                        // 曲名が空の場合は何もしない
+                                        if (empty($data['title'])) {
+                                            // メドレーと共演者だけを保存
+                                            if (!empty($data['medley'])) {
+                                                $set('medley', true);
+                                            }
+                                            if (!empty($data['featuring'])) {
+                                                $set('featuring', $data['featuring']);
+                                            }
+                                            return null;
+                                        }
+
                                         // セットリストのアーティストIDを取得
                                         $artistId = $get('../../artist_id');
 
@@ -340,7 +362,7 @@ class SetlistResource extends Resource
                                         ]);
                                         return $artist->id;
                                     })
-                                    ->columnSpanFull(),
+                                     ->columnSpan(1), // ← フル幅をやめて1列分に変更
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
                                     ->required()
@@ -350,8 +372,7 @@ class SetlistResource extends Resource
                                     ->live()
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('title')
-                                            ->label('曲名')
-                                            ->required(),
+                                            ->label('曲名'),
                                         Forms\Components\Toggle::make('medley')
                                             ->label('メドレー')
                                             ->default(false)
@@ -383,7 +404,7 @@ class SetlistResource extends Resource
                                         // 曲IDを返す
                                         return $song->id;
                                     })
-                                    ->columnSpanFull(),
+                                     ->columnSpan(1), // ← フル幅をやめて1列分に変更
                                 Forms\Components\Toggle::make('medley')
                                     ->label('メドレー')
                                     ->default(false)
@@ -399,7 +420,7 @@ class SetlistResource extends Resource
                                     ->visible(fn (Forms\Get $get): bool => !empty($get('featuring')))
                                     ->columnSpanFull(),
                             ])
-                            ->columns(1)
+                            ->columns(2)
                             ->defaultItems(0)
                             ->live()
                             ->reorderable()
@@ -458,7 +479,7 @@ class SetlistResource extends Resource
                                         ]);
                                         return $artist->id;
                                     })
-                                    ->columnSpanFull(),
+                                     ->columnSpan(1), // ← フル幅をやめて1列分に変更
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
                                     ->required()
@@ -468,8 +489,7 @@ class SetlistResource extends Resource
                                     ->live()
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('title')
-                                            ->label('曲名')
-                                            ->required(),
+                                            ->label('曲名'),
                                         Forms\Components\Toggle::make('medley')
                                             ->label('メドレー')
                                             ->default(false)
@@ -501,7 +521,7 @@ class SetlistResource extends Resource
                                         // 曲IDを返す
                                         return $song->id;
                                     })
-                                    ->columnSpanFull(),
+                                    ->columnSpan(1), // ← フル幅をやめて1列分に変更
                                 Forms\Components\Toggle::make('medley')
                                     ->label('メドレー')
                                     ->default(false)
@@ -517,7 +537,7 @@ class SetlistResource extends Resource
                                     ->visible(fn (Forms\Get $get): bool => !empty($get('featuring')))
                                     ->columnSpanFull(),
                             ])
-                            ->columns(1)
+                            ->columns(2)
                             ->defaultItems(0)
                             ->live()
                             ->reorderable()

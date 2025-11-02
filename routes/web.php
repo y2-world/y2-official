@@ -26,6 +26,7 @@ use App\Http\Controllers\LyricController;
 Route::resource('setlists', 'SetlistController');
 Route::resource('search', 'SearchController');
 Route::resource('venue', 'VenueController');
+Route::get('setlist-songs/{id}', [App\Http\Controllers\SetlistSongController::class, 'show']);
 // Route::resource('songs', 'SongController');
 // Route::resource('singles', 'SingleController');
 Route::prefix('setlists')->group(function () {

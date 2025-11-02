@@ -85,12 +85,19 @@ class YearController extends Controller
         // 年のオブジェクトを作成（ビューで使用）
         $year = (object)['year' => $yearParam];
 
+        // 検索候補を取得（SetlistSongテーブルから）
+        $suggestions = \App\Models\SetlistSong::select('id', 'title')
+            ->orderBy('title', 'asc')
+            ->get()
+            ->toArray();
+
         // ビューにデータを渡す
         return view('years.show', [
             'setlists' => $setlists,
             'year' => $year,
             'artists' => $artists,
-            'years' => $years
+            'years' => $years,
+            'suggestions' => $suggestions
         ]);
     }
 

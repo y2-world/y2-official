@@ -21,7 +21,12 @@
                     {{-- 検索ワード編集 --}}
                     <div style="margin-bottom: 15px;">
                         <div class="search-wrapper">
-                            <input type="text" name="keyword" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}" style="font-size: 14px; padding: 12px 45px 12px 16px;">
+                            <input type="text" name="keyword" id="keyword-sp" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}" style="font-size: 14px; padding: 12px 45px 12px 16px;" list="song-suggestions-sp">
+                            <datalist id="song-suggestions-sp">
+                                @foreach($suggestions as $suggestion)
+                                    <option value="{{ $suggestion['title'] }}"></option>
+                                @endforeach
+                            </datalist>
                             <button type="submit" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
                                 <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none; font-size: 16px;"></i>
                             </button>
@@ -65,7 +70,12 @@
                     </div>
 
                     <div class="search-wrapper">
-                        <input type="text" name="keyword" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}">
+                        <input type="text" name="keyword" id="keyword-pc" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}" list="song-suggestions-pc">
+                        <datalist id="song-suggestions-pc">
+                            @foreach($suggestions as $suggestion)
+                                <option value="{{ $suggestion['title'] }}"></option>
+                            @endforeach
+                        </datalist>
                         <button type="submit" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
                             <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none;"></i>
                         </button>
@@ -110,4 +120,36 @@
 
 @section('page-script')
     <script src="{{ asset('/js/search.js?time=' . time()) }}"></script>
+    <script>
+        // 検索候補のデータマップを作成
+        const songMap = {
+            @foreach($suggestions as $suggestion)
+                "{{ $suggestion['title'] }}": {{ $suggestion['id'] }},
+            @endforeach
+        };
+
+        // SP版の入力フィールド
+        const keywordInputSp = document.getElementById('keyword-sp');
+        if (keywordInputSp) {
+            keywordInputSp.addEventListener('change', function(e) {
+                const selectedTitle = e.target.value;
+                if (songMap[selectedTitle]) {
+                    // 候補から選択された場合は詳細ページへ
+                    window.location.href = '/setlist-songs/' + songMap[selectedTitle];
+                }
+            });
+        }
+
+        // PC版の入力フィールド
+        const keywordInputPc = document.getElementById('keyword-pc');
+        if (keywordInputPc) {
+            keywordInputPc.addEventListener('change', function(e) {
+                const selectedTitle = e.target.value;
+                if (songMap[selectedTitle]) {
+                    // 候補から選択された場合は詳細ページへ
+                    window.location.href = '/setlist-songs/' + songMap[selectedTitle];
+                }
+            });
+        }
+    </script>
 @endsection

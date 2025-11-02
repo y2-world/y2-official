@@ -94,11 +94,18 @@ class ArtistController extends Controller
         ->orderBy('date', 'asc')
         ->paginate(100);
 
+        // 検索候補を取得（SetlistSongテーブルから）
+        $suggestions = \App\Models\SetlistSong::select('id', 'title')
+            ->orderBy('title', 'asc')
+            ->get()
+            ->toArray();
+
         return view('artists.show', [
             'setlists' => $setlists,
             'artist' => $artist,
             'artists' => $artists,
-            'years' => $years
+            'years' => $years,
+            'suggestions' => $suggestions
         ]);
     }
 

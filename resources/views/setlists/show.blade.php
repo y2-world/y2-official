@@ -59,20 +59,44 @@
                             echo '<ol class="setlist" start="' . $startNumber . '">';
                         }
                         foreach ((array) $setlistItems as $data) {
-                            $parts = splitAnnotation($data['song']);
+                            // songフィールドの処理：数値ならSetlistSongのID、文字列なら直接曲名
+                            $songValue = $data['song'] ?? '';
+                            $isNumericId = is_numeric($songValue);
+
+                            if ($isNumericId) {
+                                // SetlistSongテーブルから曲名を取得
+                                $song = \App\Models\SetlistSong::find($songValue);
+                                $songTitle = $song ? $song->title : $songValue;
+                                // SetlistSongの詳細ページにリンク
+                                $url = url('/setlist-songs/' . $songValue);
+                            } else {
+                                // 文字列の場合はそのまま使用（例外処理）
+                                $songTitle = $songValue;
+                                // 検索ページにリンク（移行中の対応）
+                                $parts = splitAnnotation($songTitle);
+                                $main = $parts['main'];
+                                $matchType = hasAnnotation($songTitle) ? 'partial' : 'exact';
+                                $keyword = hasAnnotation($songTitle) ? $main : $songTitle;
+                                $urlParams = $artistId ? ['artist_id' => $artistId, 'keyword' => $keyword, 'match_type' => $matchType]
+                                                        : ['keyword' => $keyword, 'match_type' => $matchType];
+                                $url = url('/search') . '?' . http_build_query($urlParams);
+                            }
+
+                            $parts = splitAnnotation($songTitle);
                             $main = $parts['main'];
                             $annotation = $parts['annotation'];
-                            $matchType = hasAnnotation($data['song']) ? 'partial' : 'exact';
-                            $keyword = hasAnnotation($data['song']) ? $main : $data['song'];
+                            $keyword = $main;
 
-                            $urlParams = $artistId ? ['artist_id' => $artistId, 'keyword' => $keyword, 'match_type' => $matchType]
-                                                    : ['keyword' => $keyword, 'match_type' => $matchType];
-                            $url = url('/search') . '?' . http_build_query($urlParams);
+                            // 共演者がある場合は曲名の後に追加
+                            $featuring = !empty($data['featuring']) ? ' / ' . $data['featuring'] : '';
 
                             $isMedley = !empty($data['medley']) && $data['medley'] == 1;
 
                             if ($isMedley) {
                                 echo '- <a href="' . $url . '">' . $keyword . '</a>';
+                                if (!empty($featuring)) {
+                                    echo $featuring;
+                                }
                                 if (!empty($annotation)) {
                                     echo ' ' . $annotation;
                                 }
@@ -80,6 +104,9 @@
                             } else {
                                 $count++;
                                 echo '<li><a href="' . $url . '">' . $keyword . '</a>';
+                                if (!empty($featuring)) {
+                                    echo $featuring;
+                                }
                                 if (!empty($annotation)) {
                                     echo ' ' . $annotation;
                                 }
@@ -102,9 +129,10 @@
                         </div>
                         @php $count += renderSetlist($setlists->encore, $setlists->artist_id, [], $count + 1); @endphp
                     @endif
+                @endif
 
                 {{-- フェス形式 --}}
-                @elseif($setlists->fes)
+                @if($setlists->fes)
                     @php
                         $prevArtistId = null;
                     @endphp
@@ -112,8 +140,8 @@
                     {{-- フェス本編 --}}
                     @foreach ((array) $setlists->fes_setlist as $key => $data)
                         @php
-                            $artistId = isset($data['artist']) 
-                                ? (is_numeric($data['artist']) ? $data['artist'] : $artistNameToId[$data['artist']] ?? null) 
+                            $artistId = isset($data['artist'])
+                                ? (is_numeric($data['artist']) ? $data['artist'] : $artistNameToId[$data['artist']] ?? null)
                                 : null;
                             $artistName = $artistIdToName[$artistId] ?? ($data['artist'] ?? '');
                         @endphp
@@ -127,21 +155,43 @@
                         @endif
 
                         @php
+                            // songフィールドの処理：数値ならSetlistSongのID、文字列なら直接曲名
+                            $songValue = $data['song'] ?? '';
+                            $isNumericId = is_numeric($songValue);
+
+                            if ($isNumericId) {
+                                // SetlistSongテーブルから曲名を取得
+                                $song = \App\Models\SetlistSong::find($songValue);
+                                $songTitle = $song ? $song->title : $songValue;
+                                // SetlistSongの詳細ページにリンク
+                                $url = url('/setlist-songs/' . $songValue);
+                            } else {
+                                // 文字列の場合はそのまま使用（例外処理）
+                                $songTitle = $songValue;
+                                // 検索ページにリンク（移行中の対応）
+                                $parts = splitAnnotation($songTitle);
+                                $main = $parts['main'];
+                                $matchType = hasAnnotation($songTitle) ? 'partial' : 'exact';
+                                $keyword = hasAnnotation($songTitle) ? $main : $songTitle;
+                                $urlParams = $artistId ? ['artist_id' => $artistId, 'keyword' => $keyword, 'match_type' => $matchType]
+                                                        : ['keyword' => $keyword, 'match_type' => $matchType];
+                                $url = url('/search') . '?' . http_build_query($urlParams);
+                            }
+
                             $isMedley = !empty($data['medley']) && $data['medley'] == 1;
-                            $parts = splitAnnotation($data['song']);
+                            $parts = splitAnnotation($songTitle);
                             $main = $parts['main'];
                             $annotation = $parts['annotation'];
-                            $matchType = hasAnnotation($data['song']) ? 'partial' : 'exact';
-                            $keyword = hasAnnotation($data['song']) ? $main : $data['song'];
-                            $urlParams = $artistId ? ['artist_id' => $artistId, 'keyword' => $keyword, 'match_type' => $matchType]
-                                                    : ['keyword' => $keyword, 'match_type' => $matchType];
-                            $url = url('/search') . '?' . http_build_query($urlParams);
+                            $keyword = $main;
+
+                            // 共演者がある場合は曲名の後に追加
+                            $featuring = !empty($data['featuring']) ? ' / ' . $data['featuring'] : '';
                         @endphp
 
                         @if ($isMedley)
-                            - <a href="{{ $url }}">{{ $keyword }}</a>@if(!empty($annotation)) {{ $annotation }}@endif<br>
+                            - <a href="{{ $url }}">{{ $keyword }}</a>{{ !empty($featuring) ? $featuring : '' }}{{ !empty($annotation) ? ' ' . $annotation : '' }}<br>
                         @else
-                            <li><a href="{{ $url }}">{{ $keyword }}</a>@if(!empty($annotation)) {{ $annotation }}@endif</li>
+                            <li><a href="{{ $url }}">{{ $keyword }}</a>{{ !empty($featuring) ? $featuring : '' }}{{ !empty($annotation) ? ' ' . $annotation : '' }}</li>
                         @endif
 
                         @php $prevArtistId = $artistId; @endphp
@@ -160,15 +210,38 @@
                                     ? (is_numeric($data['artist']) ? $data['artist'] : $artistNameToId[$data['artist']] ?? null)
                                     : null;
                                 $artistName = $artistIdToName[$artistId] ?? ($data['artist'] ?? '');
+
+                                // songフィールドの処理：数値ならSetlistSongのID、文字列なら直接曲名
+                                $songValue = $data['song'] ?? '';
+                                $isNumericId = is_numeric($songValue);
+
+                                if ($isNumericId) {
+                                    // SetlistSongテーブルから曲名を取得
+                                    $song = \App\Models\SetlistSong::find($songValue);
+                                    $songTitle = $song ? $song->title : $songValue;
+                                    // SetlistSongの詳細ページにリンク
+                                    $url = url('/setlist-songs/' . $songValue);
+                                } else {
+                                    // 文字列の場合はそのまま使用（例外処理）
+                                    $songTitle = $songValue;
+                                    // 検索ページにリンク（移行中の対応）
+                                    $parts = splitAnnotation($songTitle);
+                                    $main = $parts['main'];
+                                    $matchType = hasAnnotation($songTitle) ? 'partial' : 'exact';
+                                    $keyword = hasAnnotation($songTitle) ? $main : $songTitle;
+                                    $urlParams = $artistId ? ['artist_id' => $artistId, 'keyword' => $keyword, 'match_type' => $matchType]
+                                                            : ['keyword' => $keyword, 'match_type' => $matchType];
+                                    $url = url('/search') . '?' . http_build_query($urlParams);
+                                }
+
                                 $isMedley = !empty($data['medley']) && $data['medley'] == 1;
-                                $parts = splitAnnotation($data['song']);
+                                $parts = splitAnnotation($songTitle);
                                 $main = $parts['main'];
                                 $annotation = $parts['annotation'];
-                                $matchType = hasAnnotation($data['song']) ? 'partial' : 'exact';
-                                $keyword = hasAnnotation($data['song']) ? $main : $data['song'];
-                                $urlParams = $artistId ? ['artist_id' => $artistId, 'keyword' => $keyword, 'match_type' => $matchType]
-                                                        : ['keyword' => $keyword, 'match_type' => $matchType];
-                                $url = url('/search') . '?' . http_build_query($urlParams);
+                                $keyword = $main;
+
+                                // 共演者がある場合は曲名の後に追加
+                                $featuring = !empty($data['featuring']) ? ' / ' . $data['featuring'] : '';
                             @endphp
 
                             @if ($key == 0 || $artistId !== $prevArtistId)
@@ -180,9 +253,9 @@
                             @endif
 
                             @if ($isMedley)
-                                - <a href="{{ $url }}">{{ $keyword }}</a>@if(!empty($annotation)) {{ $annotation }}@endif<br>
+                                - <a href="{{ $url }}">{{ $keyword }}</a>{{ !empty($featuring) ? $featuring : '' }}{{ !empty($annotation) ? ' ' . $annotation : '' }}<br>
                             @else
-                                <li><a href="{{ $url }}">{{ $keyword }}</a>@if(!empty($annotation)) {{ $annotation }}@endif</li>
+                                <li><a href="{{ $url }}">{{ $keyword }}</a>{{ !empty($featuring) ? $featuring : '' }}{{ !empty($annotation) ? ' ' . $annotation : '' }}</li>
                             @endif
 
                             @php $prevArtistId = $artistId; @endphp
