@@ -268,6 +268,13 @@ document.addEventListener('DOMContentLoaded', function () {
     closeBtn.addEventListener('click', closeNewsPopup);
     overlay.addEventListener('click', closeNewsPopup);
 
+    // Escキーでポップアップを閉じる
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && popup.classList.contains('open')) {
+            closeNewsPopup();
+        }
+    });
+
     function closeNewsPopup() {
         popup.classList.remove('open');
         overlay.classList.remove('open');
