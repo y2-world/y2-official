@@ -40,7 +40,7 @@ class SetlistController extends Controller
         }
 
         $pastSetlists = $pastQuery->paginate(10);
-        $pastTotalCount = $pastQuery->count();
+        $pastTotalCount = $pastSetlists->total();
 
         // アーティスト、全てのアーティスト、年のデータを取得する
         $artists = Artist::where('visible', 1)->orderBy('id', 'asc')->get();
