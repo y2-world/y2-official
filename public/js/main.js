@@ -26,12 +26,13 @@
             const fadeElements = document.querySelectorAll(".js-fadein");
             fadeElements.forEach((element) => {
                 fadeInObserver.observe(element);
-                // フォールバック: 3秒後に強制的に表示（Intersection Observerが動作しない場合）
+                // フォールバック: 2秒後に強制的に表示（Intersection Observerが動作しない場合）
+                // CSSアニメーションより前に実行するため、少し早めに設定
                 setTimeout(() => {
                     if (!element.classList.contains("is-show")) {
                         element.classList.add("is-show");
                     }
-                }, 3000);
+                }, 2000);
             });
         });
     } else {
