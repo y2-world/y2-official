@@ -1,97 +1,76 @@
 "use strict";
-// モダンなIntersection Observer APIを使用したフェードインアニメーション
+// フェードインアニメーション
 {
-    // Intersection Observerのサポート確認
-    if ('IntersectionObserver' in window) {
-        const fadeInObserver = new IntersectionObserver(
-            (entries) => {
+    function checkAndShowElements() {
+        const fadeElements = document.querySelectorAll(".js-fadein:not(.is-show)");
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+        const triggerOffset = viewportHeight * 0.8; // ビューポートの80%の位置で発火
+        
+        fadeElements.forEach((element) => {
+            const rect = element.getBoundingClientRect();
+            // 要素の上端がビューポートの80%の位置より上にある場合に表示
+            if (rect.top < triggerOffset && rect.bottom > 0) {
+                element.classList.add("is-show");
+            }
+        });
+    }
+
+    function initFadeIn() {
+        const fadeElements = document.querySelectorAll(".js-fadein");
+        
+        fadeElements.forEach((element, index) => {
+            // 最初の要素は即座に表示（フェードインなし）
+            if (index === 0) {
+                element.classList.add("is-show");
+            }
+        });
+        
+        // 初期チェック：ページロード時に表示領域内の要素をチェック
+        checkAndShowElements();
+        
+        // Intersection Observerがサポートされている場合は使用
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add("is-show");
+                        // 一度表示したら監視を停止
+                        observer.unobserve(entry.target);
                     }
                 });
-            },
-            {
-                // rootMarginを正の値にして、要素がビューポートに入る前に発火させる
-                rootMargin: "100px",
-                threshold: 0.1,
-            }
-        );
-
-        // すべてのフェードイン要素を監視
-        function initFadeIn() {
-            const fadeElements = document.querySelectorAll(".js-fadein");
+            }, {
+                rootMargin: "0px",
+                threshold: 0.1
+            });
+            
+            // 2番目以降の要素を監視
             fadeElements.forEach((element, index) => {
-                // 最初の要素（index === 0）はフェードインなしで即座に表示
-                if (index === 0) {
-                    element.classList.add("is-show");
-                } else {
-                    // 2番目以降の要素はフェードイン効果を適用
-                    const rect = element.getBoundingClientRect();
-                    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-                    const isInViewport = rect.top < viewportHeight * 1.2 && rect.bottom > -viewportHeight * 0.2;
-                    
-                    if (isInViewport) {
-                        // フェードインアニメーションを確実に実行するため、少し遅延
-                        setTimeout(() => {
-                            element.classList.add("is-show");
-                        }, 300);
-                    } else {
-                        // ビューポート外の場合はIntersection Observerで監視
-                        fadeInObserver.observe(element);
-                    }
+                if (index > 0 && !element.classList.contains("is-show")) {
+                    observer.observe(element);
                 }
             });
         }
         
-        document.addEventListener("DOMContentLoaded", initFadeIn);
-        
-        // 全てのブラウザでスクロールイベントでもフェードインをチェック（Intersection Observerのフォールバック）
+        // スクロールイベントでもチェック（Intersection Observerのフォールバック）
         let scrollTimeout;
-        const checkFadeElements = () => {
-            const fadeElements = document.querySelectorAll(".js-fadein:not(.is-show)");
-            fadeElements.forEach((element) => {
-                const rect = element.getBoundingClientRect();
-                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-                // 要素がビューポートの120%範囲内に入ったら表示
-                if (rect.top < viewportHeight * 1.2 && rect.bottom > -viewportHeight * 0.2) {
-                    element.classList.add("is-show");
-                }
-            });
-        };
-        
         window.addEventListener("scroll", () => {
             clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(checkFadeElements, 100);
+            scrollTimeout = setTimeout(checkAndShowElements, 50);
         }, { passive: true });
         
-        // 初期チェック
-        setTimeout(checkFadeElements, 500);
-        
-        // フォールバック: 5秒後にすべての要素を強制的に表示（Intersection Observerやビューポート検出が失敗した場合のみ）
-        setTimeout(() => {
-            const fadeElements = document.querySelectorAll(".js-fadein:not(.is-show)");
-            fadeElements.forEach((element) => {
-                element.classList.add("is-show");
-            });
-        }, 5000);
-    } else {
-        // Intersection Observerがサポートされていない場合、すぐにすべての要素を表示
-        document.addEventListener("DOMContentLoaded", () => {
-            const fadeElements = document.querySelectorAll(".js-fadein");
-            fadeElements.forEach((element) => {
-                element.classList.add("is-show");
-            });
-        });
+        // リサイズ時もチェック
+        window.addEventListener("resize", () => {
+            checkAndShowElements();
+        }, { passive: true });
     }
-    
-    // グローバルフォールバック: 5秒後にすべての要素を強制的に表示（すべてのケースに対応、フェードインを優先）
-    setTimeout(() => {
-        const fadeElements = document.querySelectorAll(".js-fadein:not(.is-show)");
-        fadeElements.forEach((element) => {
-            element.classList.add("is-show");
-        });
-    }, 5000);
+
+    // DOMContentLoaded時に初期化
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initFadeIn);
+    } else {
+        // すでに読み込み済みの場合
+        initFadeIn();
+    }
 }
 {
     //リストのリンク要素を取得
