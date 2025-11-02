@@ -915,6 +915,22 @@ h2 {
     margin-bottom: 0;
 }
 
+.popup-content #popup-lyrics {
+    font-size: 12px;
+    line-height: 1.4;
+    color: #444;
+    white-space: pre-line;
+    margin: 0;
+}
+
+.popup-content #popup-lyrics p {
+    margin: 0 0 8px 0;
+}
+
+.popup-content #popup-lyrics p:last-child {
+    margin-bottom: 0;
+}
+
 .popup-content #popup-img {
     border-radius: 12px;
     margin-top: 20px;
