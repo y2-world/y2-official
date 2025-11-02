@@ -419,13 +419,16 @@ footer {
 .js-fadein {
     opacity: 0;
     visibility: hidden;
-    transform: translateY(40px);
-    transition: all 1s;
+    transform: translateY(50px);
+    transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                visibility 0.8s;
+    will-change: opacity, transform;
 }
 .js-fadein.is-show {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0px);
+    transform: translateY(0);
 }
 
 .sns a {
@@ -470,7 +473,7 @@ img {
 .album-wrapper-scroll .album-wrapper-inner {
     display: flex;
     gap: 16px;
-    animation: infinite-scroll 40s linear infinite;
+    animation: infinite-scroll 120s linear infinite;
 }
 
 .album-wrapper-scroll .album-wrapper-inner:hover {
@@ -504,6 +507,12 @@ img {
 
 .music-wrapper {
     position: relative;
+}
+
+.music-wrapper-fullwidth {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    overflow: hidden;
 }
 
 .track-list {

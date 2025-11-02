@@ -1,26 +1,31 @@
 "use strict";
+// モダンなIntersection Observer APIを使用したフェードインアニメーション
 {
-    function showElementAnimation() {
-        var element = document.getElementsByClassName("js-fadein");
-        if (!element) return; // 要素がなかったら処理をキャンセル
-
-        var showTiming = window.innerHeight > 768 ? 200 : 300; // 要素が出てくるタイミングはここで調整
-        var scrollY = window.pageYOffset; //スクロール量を取得
-        var windowH = window.innerHeight; //ブラウザウィンドウのビューポート(viewport)の高さを取得
-
-        for (var i = 0; i < element.length; i++) {
-            var elemClientRect = element[i].getBoundingClientRect();
-            var elemY = scrollY + elemClientRect.top;
-            if (scrollY + windowH - showTiming > elemY) {
-                element[i].classList.add("is-show");
-            } else if (scrollY + windowH < elemY) {
-                // 上にスクロールして再度非表示にする場合はこちらを記述
-                element[i].classList.remove("is-show");
-            }
+    const fadeInObserver = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("is-show");
+                } else {
+                    // 上にスクロールして再度非表示にする
+                    entry.target.classList.remove("is-show");
+                }
+            });
+        },
+        {
+            // ビューポートの高さに応じて閾値を調整
+            rootMargin: window.innerHeight > 768 ? "-200px" : "-300px",
+            threshold: 0,
         }
-    }
-    showElementAnimation();
-    window.addEventListener("scroll", showElementAnimation);
+    );
+
+    // すべてのフェードイン要素を監視
+    document.addEventListener("DOMContentLoaded", () => {
+        const fadeElements = document.querySelectorAll(".js-fadein");
+        fadeElements.forEach((element) => {
+            fadeInObserver.observe(element);
+        });
+    });
 }
 {
     //リストのリンク要素を取得

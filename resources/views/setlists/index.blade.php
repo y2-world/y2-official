@@ -1,71 +1,74 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - Setlists')
 @section('content')
-    <br>
-    <div class="container-lg">
-        <h2>Setlists</h2>
-        <div class="parts-wrapper">
-            <div class="dropdown-wrapper">
-                <select name="select" onchange="if (this.value) window.location.href=this.value;">
+    <div class="database-hero database-year-hero">
+        <div class="container">
+            <h1 class="database-title">Setlists</h1>
+            <p class="database-subtitle">すべてのセットリスト</p>
+
+            <div class="year-navigation">
+                <select class="year-select" name="select" onchange="if (this.value) window.location.href=this.value;">
                     <option value="" disabled selected>Live Type</option>
                     <option value="{{ url('/setlists') }}" {{ request('type') ? '' : 'selected' }}>All</option>
-                    <option value="{{ url('/setlists?type=1') }}" {{ request('type') == '1' ? 'selected' : '' }}>Live
-                    </option>
+                    <option value="{{ url('/setlists?type=1') }}" {{ request('type') == '1' ? 'selected' : '' }}>Live</option>
                     <option value="{{ url('/setlists?type=2') }}" {{ request('type') == '2' ? 'selected' : '' }}>Fes</option>
                 </select>
-                <select name="select" onChange="location.href=value;">
+                <select class="year-select" name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Artists</option>
                     @foreach ($artists as $artist)
                         <option value="{{ url('/setlists/artists', $artist->id) }}">{{ $artist->name }}</option>
                     @endforeach
                 </select>
-                <select name="select" onChange="location.href=value;">
+                <select class="year-select" name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Years</option>
                     @foreach ($years as $year)
                         <option value="{{ url('/setlists/years', $year->year) }}">{{ $year->year }}</option>
                     @endforeach
                 </select>
             </div>
-            <div class="pc">
-                <div class="search">
-                    <form action="{{ url('/search') }}" method="GET">
-                        <div class="mb_dropdown">
-                            <select name="artist_id" required data-toggle="select">
-                                <option value="" disabled selected>Artists</option>
-                                <option value="">(No Artist Selected)</option>
-                                @foreach ($allArtists as $artist)
-                                    <option value="{{ $artist->id }}"
-                                        {{ request('artist_id') == $artist->id ? 'selected' : '' }}>
-                                        {{ $artist->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+        </div>
+    </div>
 
-                        {{-- 一致タイプ選択 --}}
-                        <div class="mb_dropdown">
-                            <label class="small-label">
-                                <input type="radio" name="match_type" value="exact"
-                                    {{ request('match_type', 'exact') === 'exact' ? 'checked' : '' }}>
-                                完全一致
-                            </label>
-                            <label class="small-label" style="margin-left: 20px;">
-                                <input type="radio" name="match_type" value="partial"
-                                    {{ request('match_type') === 'partial' ? 'checked' : '' }}>
-                                部分一致
-                            </label>
+    <div class="container-lg database-year-content">
+        <div class="pc">
+            <div class="search" style="margin-bottom: 30px;">
+                <form action="{{ url('/search') }}" method="GET">
+                    <div class="mb_dropdown">
+                        <select name="artist_id" required data-toggle="select">
+                            <option value="" disabled selected>Artists</option>
+                            <option value="">(No Artist Selected)</option>
+                            @foreach ($allArtists as $artist)
+                                <option value="{{ $artist->id }}"
+                                    {{ request('artist_id') == $artist->id ? 'selected' : '' }}>
+                                    {{ $artist->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- 一致タイプ選択 --}}
+                    <div class="mb_dropdown">
+                        <label class="small-label">
+                            <input type="radio" name="match_type" value="exact"
+                                {{ request('match_type', 'exact') === 'exact' ? 'checked' : '' }}>
+                            完全一致
+                        </label>
+                        <label class="small-label" style="margin-left: 20px;">
+                            <input type="radio" name="match_type" value="partial"
+                                {{ request('match_type') === 'partial' ? 'checked' : '' }}>
+                            部分一致
+                        </label>
+                    </div>
+                    <div class="input-group mb-3" style="width: 400px;">
+                        <input type="search" class="form-control" aria-label="Search" value="{{ request('keyword') }}"
+                            name="keyword" required>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
                         </div>
-                        <div class="input-group mb-3" style="width: 400px;">
-                            <input type="search" class="form-control" aria-label="Search" value="{{ request('keyword') }}"
-                                name="keyword" required>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
-                                    <i class="fa-solid fa-magnifying-glass"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
 

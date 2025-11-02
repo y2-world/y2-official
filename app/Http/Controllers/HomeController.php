@@ -17,12 +17,11 @@ class HomeController extends Controller
     public function index()
     {
         $isMobile = request()->header('User-Agent') && preg_match('/Mobile|Android|iPhone|iPad/i', request()->header('User-Agent'));
-        $limit = $isMobile ? 2 : 3;
-    
+
         $news = News::where('visible', 1)->orderBy('date', 'desc')->paginate(5);
-        $discos = Disco::where('visible', 1)->orderBy('date', 'desc')->paginate($limit);
+        $discos = Disco::where('visible', 1)->orderBy('date', 'desc')->get();
         $profiles = Profile::orderBy('created_at', 'desc')->get();
-    
+
         return view('home.index', compact('news', 'discos', 'profiles', 'isMobile'));
     }
 
