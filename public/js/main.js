@@ -38,15 +38,16 @@
                     // ビューポート外の場合はIntersection Observerで監視
                     fadeInObserver.observe(element);
                 }
-                
-                // フォールバック: 3秒後に強制的に表示（Intersection Observerが動作しない場合）
-                setTimeout(() => {
-                    if (!element.classList.contains("is-show")) {
-                        element.classList.add("is-show");
-                    }
-                }, 3000);
             });
         });
+        
+        // フォールバック: 500ms後にすべての要素を強制的に表示（Intersection Observerやビューポート検出が失敗した場合）
+        setTimeout(() => {
+            const fadeElements = document.querySelectorAll(".js-fadein:not(.is-show)");
+            fadeElements.forEach((element) => {
+                element.classList.add("is-show");
+            });
+        }, 500);
     } else {
         // Intersection Observerがサポートされていない場合、すぐにすべての要素を表示
         document.addEventListener("DOMContentLoaded", () => {
@@ -56,6 +57,14 @@
             });
         });
     }
+    
+    // グローバルフォールバック: 1秒後にすべての要素を強制的に表示（すべてのケースに対応）
+    setTimeout(() => {
+        const fadeElements = document.querySelectorAll(".js-fadein:not(.is-show)");
+        fadeElements.forEach((element) => {
+            element.classList.add("is-show");
+        });
+    }, 1000);
 }
 {
     //リストのリンク要素を取得
