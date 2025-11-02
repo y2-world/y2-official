@@ -8,21 +8,18 @@
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add("is-show");
-                    } else {
-                        // 上にスクロールして再度非表示にする
-                        entry.target.classList.remove("is-show");
                     }
                 });
             },
             {
-                // ビューポートの高さに応じて閾値を調整（rootMarginを緩和）
-                rootMargin: window.innerHeight > 768 ? "-100px" : "-50px",
-                threshold: 0,
+                // rootMarginを正の値にして、要素がビューポートに入る前に発火させる
+                rootMargin: "100px",
+                threshold: 0.1,
             }
         );
 
         // すべてのフェードイン要素を監視
-        document.addEventListener("DOMContentLoaded", () => {
+        function initFadeIn() {
             const fadeElements = document.querySelectorAll(".js-fadein");
             fadeElements.forEach((element, index) => {
                 // 最初の要素（index === 0）はフェードインなしで即座に表示
@@ -31,7 +28,8 @@
                 } else {
                     // 2番目以降の要素はフェードイン効果を適用
                     const rect = element.getBoundingClientRect();
-                    const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+                    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                    const isInViewport = rect.top < viewportHeight * 1.2 && rect.bottom > -viewportHeight * 0.2;
                     
                     if (isInViewport) {
                         // フェードインアニメーションを確実に実行するため、少し遅延
@@ -44,7 +42,31 @@
                     }
                 }
             });
-        });
+        }
+        
+        document.addEventListener("DOMContentLoaded", initFadeIn);
+        
+        // 全てのブラウザでスクロールイベントでもフェードインをチェック（Intersection Observerのフォールバック）
+        let scrollTimeout;
+        const checkFadeElements = () => {
+            const fadeElements = document.querySelectorAll(".js-fadein:not(.is-show)");
+            fadeElements.forEach((element) => {
+                const rect = element.getBoundingClientRect();
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+                // 要素がビューポートの120%範囲内に入ったら表示
+                if (rect.top < viewportHeight * 1.2 && rect.bottom > -viewportHeight * 0.2) {
+                    element.classList.add("is-show");
+                }
+            });
+        };
+        
+        window.addEventListener("scroll", () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(checkFadeElements, 100);
+        }, { passive: true });
+        
+        // 初期チェック
+        setTimeout(checkFadeElements, 500);
         
         // フォールバック: 5秒後にすべての要素を強制的に表示（Intersection Observerやビューポート検出が失敗した場合のみ）
         setTimeout(() => {
