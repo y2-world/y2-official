@@ -90,48 +90,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const musicContainer = document.getElementById("music-container");
     const musicUrl = "/top/music";
 
-    // Media query を設定
-    const mediaQuery = window.matchMedia("(max-width: 1200px)");
-
     let allMusicData = null; // 全Musicデータを保存
     let initialMusicHTML = musicContainer.innerHTML; // 初期表示のHTMLを保存
     let isShowingAll = false; // 表示状態を管理
-
-    // 初期表示を制御する関数
-    function limitMusicDisplay() {
-        const musicItems = musicContainer.querySelectorAll(".album-container");
-
-        // メディアクエリを使用して条件分岐
-        if (mediaQuery.matches) {
-            musicItems.forEach((item, index) => {
-                if (index >= 2) {
-                    item.style.display = "none";
-                } else {
-                    item.style.display = "block";
-                }
-            });
-        } else {
-            musicItems.forEach((item) => {
-                item.style.display = "block";
-            });
-        }
-    }
-
-    limitMusicDisplay();
-
-    // ウィンドウサイズが変更されるたびにメディアクエリを再評価
-    mediaQuery.addEventListener("change", function() {
-        if (!isShowingAll) {
-            limitMusicDisplay();
-        }
-    });
 
     if (viewAllBtn) {
         viewAllBtn.addEventListener("click", function () {
             if (isShowingAll) {
                 // Show Lessの処理：初期表示に戻す
+                musicContainer.classList.remove('album-wrapper-grid');
+                musicContainer.classList.add('album-wrapper-scroll');
                 musicContainer.innerHTML = initialMusicHTML;
-                limitMusicDisplay(); // 初期表示の制限を再適用
                 viewAllBtn.textContent = "View All";
                 isShowingAll = false;
             } else {
@@ -177,6 +146,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 全Musicを表示する関数
     function displayAllMusic(musicData) {
+        // グリッド表示に切り替え
+        musicContainer.classList.remove('album-wrapper-scroll');
+        musicContainer.classList.add('album-wrapper-grid');
+
         let musicHTML = "";
         musicData.forEach((musicItem) => {
             const formattedDate = formatDate(musicItem.date);

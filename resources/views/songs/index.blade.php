@@ -1,17 +1,18 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - Songs')
 @section('content')
-    <br>
-    <div class="container-lg">
-        <h2>Songs</h2>
-        <div class="database-wrapper">
-            <div class="dropdown-wrapper">
-                <select name="select" onChange="location.href=value;">
+    <div class="database-hero database-year-hero">
+        <div class="container">
+            <h1 class="database-title">Songs</h1>
+            <p class="database-subtitle">すべての楽曲コレクション</p>
+
+            <div class="year-navigation">
+                <select class="year-select" name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Discography</option>
                     <option value="{{ url('/database/singles') }}">Singles</option>
                     <option value="{{ url('/database/albums') }}">Albums</option>
                 </select>
-                <select name="select" onChange="location.href=value;">
+                <select class="year-select" name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Live</option>
                     <option value="{{ url('/database/live') }}">All</option>
                     <option value="{{ url('/database/live?type=1') }}">Tours</option>
@@ -19,7 +20,7 @@
                     <option value="{{ url('/database/live?type=3') }}">ap bank fes</option>
                     <option value="{{ url('/database/live?type=4') }}">Solo</option>
                 </select>
-                <select name="select" onChange="location.href=value;">
+                <select class="year-select" name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Years</option>
                     @foreach ($bios as $bio)
                         <option value="{{ url('/database/years', $bio->year) }}">{{ $bio->year }}</option>
@@ -27,6 +28,9 @@
                 </select>
             </div>
         </div>
+    </div>
+
+    <div class="container-lg database-year-content">
         <table class="table table-striped">
             <thead>
                 <tr>

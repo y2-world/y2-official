@@ -1,22 +1,27 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - Live')
 @section('content')
-    <br>
-    <div class="container">
-        @if (request('type') == 1)
-            <h2>Tours</h2>
-        @elseif(request('type') == 2)
-            <h2>Events</h2>
-        @elseif(request('type') == 3)
-            <h2>ap bank fes</h2>
-        @elseif(request('type') == 4)
-            <h2>Solo</h2>
-        @else
-            <h2>Live</h2>
-        @endif
-        <div class="parts-wrapper">
-            <div class="dropdown-wrapper">
-                <select name="select" onChange="location.href=value;">
+    <div class="database-hero database-year-hero">
+        <div class="container">
+            @if (request('type') == 1)
+                <h1 class="database-title">Tours</h1>
+                <p class="database-subtitle">すべてのツアー情報</p>
+            @elseif(request('type') == 2)
+                <h1 class="database-title">Events</h1>
+                <p class="database-subtitle">すべてのイベント情報</p>
+            @elseif(request('type') == 3)
+                <h1 class="database-title">ap bank fes</h1>
+                <p class="database-subtitle">ap bank fes出演履歴</p>
+            @elseif(request('type') == 4)
+                <h1 class="database-title">Solo</h1>
+                <p class="database-subtitle">すべてのソロ活動</p>
+            @else
+                <h1 class="database-title">Live</h1>
+                <p class="database-subtitle">すべてのライブ情報</p>
+            @endif
+
+            <div class="year-navigation">
+                <select class="year-select" name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Live</option>
                     <option value="{{ url('/database/live') }}">All</option>
                     <option value="{{ url('/database/live?type=1') }}">Tours</option>
@@ -24,7 +29,7 @@
                     <option value="{{ url('/database/live?type=3') }}">ap bank fes</option>
                     <option value="{{ url('/database/live?type=4') }}">Solo</option>
                 </select>
-                <select name="select" onChange="location.href=value;">
+                <select class="year-select" name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Years</option>
                     @foreach ($bios as $bio)
                         <option value="{{ url('/database/years', $bio->year) }}">{{ $bio->year }}</option>
@@ -32,6 +37,9 @@
                 </select>
             </div>
         </div>
+    </div>
+
+    <div class="container database-year-content">
         <table class="table table-striped">
             <thead>
                 <tr>

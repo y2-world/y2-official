@@ -456,10 +456,44 @@ img {
 
 .album-wrapper {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
     padding-top: 10px;
     gap: 16px;
+    position: relative;
+}
+
+/* 無限スクロール表示用 */
+.album-wrapper-scroll {
+    flex-wrap: nowrap;
+    overflow: hidden;
+}
+
+.album-wrapper-scroll .album-wrapper-inner {
+    display: flex;
+    gap: 16px;
+    animation: infinite-scroll 40s linear infinite;
+}
+
+.album-wrapper-scroll .album-wrapper-inner:hover {
+    animation-play-state: paused;
+}
+
+/* グリッド表示用 */
+.album-wrapper-grid {
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.album-wrapper-grid .album-container {
+    display: block;
+}
+
+@keyframes infinite-scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
 }
 
 .album-image {
@@ -1446,5 +1480,113 @@ h2 {
 @media (min-width: 769px) {
     .search-icon {
         right: 20px;
+    }
+}
+
+/* Database Year Page Styles */
+.database-year-hero {
+    margin-top: -55px;
+    padding: 135px 0 40px;
+}
+
+.year-navigation {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+.year-select {
+    padding: 12px 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.year-select:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.year-select option {
+    color: #2d3748;
+    background: white;
+}
+
+.database-year-content {
+    padding: 60px 15px;
+}
+
+.database-year-content h5 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 20px;
+    margin-top: 30px;
+}
+
+.database-year-content .table {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.database-year-content .table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.database-year-content .table thead th {
+    border: none;
+    padding: 15px;
+    font-weight: 600;
+}
+
+.database-year-content .table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.database-year-content .table tbody tr:hover {
+    background-color: #f7fafc;
+    transform: scale(1.01);
+}
+
+.database-year-content .table tbody td {
+    padding: 12px 15px;
+    vertical-align: middle;
+}
+
+.database-year-content .table a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.database-year-content .table a:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .year-navigation {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .year-select {
+        width: 100%;
+    }
+
+    .database-year-content {
+        padding: 40px 15px;
     }
 }
