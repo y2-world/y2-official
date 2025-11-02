@@ -14,7 +14,7 @@
                         <div class="row">
                             <div class="col-xl-6">
                                 <div class="modal-img">
-                                    <img src="{{ asset('https://res.cloudinary.com/hqrgbxuiv/' . $discos->image) }}"
+                                    <img src="https://res.cloudinary.com/hqrgbxuiv/{{ $discos->image }}"
                                         style="width: 100%;">
                                 </div>
                             </div>
