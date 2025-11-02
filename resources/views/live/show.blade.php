@@ -113,14 +113,36 @@
                                                 @endphp
 
                                                 @if ($isDaily)
-                                                    - @if ($link)<a href="{{ $link }}">{{ $title }}</a>@else{{ $title }}@endif@if(!empty($featuring)) / {{ $featuring }}@endif @if(!empty($dailyNote))({{ $dailyNote }})@endif @if(!empty($annotation)){{ $annotation }}@endif<br>
+                                                    -
+                                                    @if ($link)
+                                                        <a href="{{ $link }}">{{ $title }}</a>
+                                                    @else
+                                                        {{ $title }}
+                                                    @endif
+                                                    @if(!empty($featuring))
+                                                        / {{ $featuring }}
+                                                    @endif
+                                                    @if(!empty($dailyNote))
+                                                        ({{ $dailyNote }})
+                                                    @endif
+                                                    @if(!empty($annotation))
+                                                        {{ $annotation }}
+                                                    @endif
+                                                    <br>
                                                 @else
                                                     <li>
                                                         @if ($link)
-                                                            <a href="{{ $link }}">{{ $title }}</a>@if(!empty($featuring)) / {{ $featuring }}@endif @if(!empty($dailyNote))({{ $dailyNote }})@endif {{ $annotation }}
+                                                            <a href="{{ $link }}">{{ $title }}</a>
                                                         @else
-                                                            {{ $title }}@if(!empty($featuring)) / {{ $featuring }}@endif @if(!empty($dailyNote))({{ $dailyNote }})@endif {{ $annotation }}
+                                                            {{ $title }}
                                                         @endif
+                                                        @if(!empty($featuring))
+                                                            / {{ $featuring }}
+                                                        @endif
+                                                        @if(!empty($dailyNote))
+                                                            ({{ $dailyNote }})
+                                                        @endif
+                                                        {{ $annotation }}
                                                     </li>
                                                 @endif
                                             @endforeach
@@ -164,6 +186,5 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
 @endsection
