@@ -394,6 +394,7 @@ a:hover {
 
 .profile-text {
     font-size: 12px;
+    text-align: center;
 }
 
 span {
@@ -829,7 +830,7 @@ h2 {
     border-radius: 16px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     z-index: 1200;
-    max-width: 600px;
+    max-width: 800px;
     width: 90%;
     max-height: 85vh;
     overflow: hidden;
@@ -850,7 +851,7 @@ h2 {
     position: relative;
     max-height: 85vh;
     overflow-y: auto;
-    padding: 40px 30px 30px 30px;
+    padding: 20px;
     box-sizing: border-box;
 }
 
@@ -882,31 +883,36 @@ h2 {
 }
 
 .popup-content #popup-title {
-    font-size: 1.5rem;
+    font-size: 13px;
     font-weight: 600;
     color: #222;
-    margin-bottom: 10px;
     line-height: 1.4;
 }
 
 .popup-content #popup-date {
     color: #999;
-    font-size: 0.9rem;
-    margin-bottom: 20px;
-    display: block;
+    font-size: 11px;
 }
 
 .popup-content hr {
     border: none;
     border-top: 1px solid #eee;
-    margin: 20px 0;
 }
 
 .popup-content #popup-text {
-    font-size: 1rem;
-    line-height: 1.8;
+    font-size: 12px;
+    line-height: 1.4;
     color: #444;
-    white-space: pre-wrap;
+    white-space: pre-line;
+    margin: 0;
+}
+
+.popup-content #popup-text p {
+    margin: 0 0 8px 0;
+}
+
+.popup-content #popup-text p:last-child {
+    margin-bottom: 0;
 }
 
 .popup-content #popup-img {
@@ -945,11 +951,11 @@ h2 {
     }
 
     .popup-content {
-        padding: 35px 20px 20px 20px;
+        padding: 20px;
     }
 
     .popup-content #popup-title {
-        font-size: 1.3rem;
+        font-size: 13px;
     }
 
     .close-btn {
