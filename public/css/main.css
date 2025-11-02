@@ -1450,8 +1450,8 @@ h2 {
 
 @media (max-width: 768px) {
     .database-hero {
-        padding: 60px 0 30px;
-        padding-top: 80px;
+        padding: 40px 0 30px;
+        padding-top: 120px;
     }
 
     .database-title {
