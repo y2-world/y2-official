@@ -53,6 +53,7 @@ class TourSetlistResource extends Resource
                 Forms\Components\Section::make('セットリスト')
                     ->schema([
                         Forms\Components\Repeater::make('setlist')
+                            ->live(debounce: 0)
                             ->label('本編')
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')
@@ -94,7 +95,34 @@ class TourSetlistResource extends Resource
                             ])
                             ->columns(1)
                             ->reorderable()
-                            ->itemLabel(fn($state, $component) => (string)(array_search($state, array_values($component->getState() ?? [])) + 1))
+                            ->itemLabel(function (array $state, $component): ?string {
+                                $items = $component->getState();
+                                if (!is_array($items)) return '1';
+
+                                $currentUuid = $state['_uuid'] ?? null;
+                                if (!$currentUuid) return '?';
+
+                                $number = 0;
+                                foreach ($items as $item) {
+                                    $isDaily = !empty($item['is_daily']);
+                                    $uuid = $item['_uuid'] ?? null;
+
+                                    if ($uuid === $currentUuid) {
+                                        if ($isDaily) {
+                                            return '';
+                                        } else {
+                                            $number++;
+                                            return (string)$number;
+                                        }
+                                    }
+
+                                    if (!$isDaily) {
+                                        $number++;
+                                    }
+                                }
+
+                                return '1';
+                            })
                             ->addActionLabel('曲を追加')
                             ->columnSpanFull(),
 
