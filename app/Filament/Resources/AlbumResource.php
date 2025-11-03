@@ -48,10 +48,6 @@ class AlbumResource extends Resource
                     ->label('ベスト')
                     ->onColor('success')
                     ->offColor('gray'),
-                Forms\Components\Textarea::make('text')
-                    ->label('テキスト')
-                    ->rows(5)
-                    ->columnSpanFull(),
                 Forms\Components\Repeater::make('tracklist')
                     ->label('収録曲')
                     ->schema([
@@ -70,7 +66,6 @@ class AlbumResource extends Resource
                             ->schema([
                                 Forms\Components\TextInput::make('disc')
                                     ->label('ディスク')
-                                    ->extraAttributes(['style' => 'width: 100px'])
                                     ->columnSpan(1),
 
                                 Forms\Components\TextInput::make('exception')
@@ -85,13 +80,44 @@ class AlbumResource extends Resource
                     ->reorderable()
                     ->itemLabel(function (array $state, $component): string {
                         $items = array_values($component->getState() ?? []);
-                        foreach ($items as $i => $item) {
+                        $discTrackCount = [];
+                        $globalTrack = 0;
+                        $currentDisc = null;
+
+                        foreach ($items as $item) {
+                            // ディスク番号（空なら前の値を引き継ぐ）
+                            if (!empty($item['disc'])) {
+                                $currentDisc = $item['disc'];
+                            }
+
+                            // ディスクが設定されていない → 通常の曲番
+                            if (empty($currentDisc)) {
+                                $globalTrack++;
+                                if ($item === $state) {
+                                    return (string)$globalTrack;
+                                }
+                                continue;
+                            }
+
+                            // ディスクごとのカウント
+                            if (!isset($discTrackCount[$currentDisc])) {
+                                $discTrackCount[$currentDisc] = 1;
+                            } else {
+                                $discTrackCount[$currentDisc]++;
+                            }
+
+                            // 現在行が対象なら返す
                             if ($item === $state) {
-                                return (string) ($i + 1);
+                                return "{$currentDisc} - {$discTrackCount[$currentDisc]}";
                             }
                         }
-                        return (string) (count($items) ?: 1);
+
+                        return '1';
                     }),
+                Forms\Components\Textarea::make('text')
+                    ->label('テキスト')
+                    ->rows(5)
+                    ->columnSpanFull(),
             ]);
     }
 
