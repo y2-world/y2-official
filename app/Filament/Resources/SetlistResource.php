@@ -107,7 +107,8 @@ class SetlistResource extends Resource
                             ->label('本編')
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')
-                                    ->default(fn () => \Illuminate\Support\Str::uuid()->toString()),
+                                    ->default(fn() => \Illuminate\Support\Str::uuid()->toString()),
+                                // 🎵 曲名セレクト
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
                                     ->required()
@@ -117,69 +118,37 @@ class SetlistResource extends Resource
                                     ->live()
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('title')
-                                            ->label('曲名'),
-                                        Forms\Components\Toggle::make('medley')
-                                            ->label('メドレー')
-                                            ->default(false)
-                                            ->inline(false),
-                                        Forms\Components\TextInput::make('featuring')
-                                            ->label('共演者')
-                                            ->placeholder('例: ゲスト名')
-                                            ->helperText('曲名の後に半角スペース / 共演者名 が表示されます')
+                                            ->label('新しい曲名')
+                                            ->required()
                                             ->maxLength(255),
                                     ])
-                                    ->createOptionUsing(function (array $data, Forms\Set $set, Forms\Get $get): ?int {
-                                        // 曲名が空の場合は何もしない
-                                        if (empty($data['title'])) {
-                                            // メドレーと共演者だけを保存
-                                            if (!empty($data['medley'])) {
-                                                $set('medley', true);
-                                            }
-                                            if (!empty($data['featuring'])) {
-                                                $set('featuring', $data['featuring']);
-                                            }
-                                            return null;
-                                        }
-
-                                        // セットリストのアーティストIDを取得
+                                    ->createOptionUsing(function (array $data, Forms\Get $get): int {
                                         $artistId = $get('../../artist_id');
 
-                                        // 新しい曲をsetlist_songsテーブルに登録
                                         $song = \App\Models\SetlistSong::create([
                                             'title' => $data['title'],
                                             'artist_id' => $artistId,
                                         ]);
 
-                                        // メドレースイッチを保存
-                                        if (!empty($data['medley'])) {
-                                            $set('medley', true);
-                                        }
-                                        // 共演者を保存
-                                        if (!empty($data['featuring'])) {
-                                            $set('featuring', $data['featuring']);
-                                        }
-                                        // 曲IDを返す
                                         return $song->id;
                                     })
                                     ->columnSpanFull(),
-                                Forms\Components\Toggle::make('medley')
-                                    ->label('メドレー')
-                                    ->default(false)
-                                    ->inline(false)
-                                    ->disabled()
-                                    ->dehydrated()
-                                    ->visible(fn (Forms\Get $get): bool => !empty($get('medley')))
-                                    ->columnSpanFull(),
-                                Forms\Components\TextInput::make('featuring')
-                                    ->label('共演者')
-                                    ->disabled()
-                                    ->dehydrated()
-                                    ->visible(fn (Forms\Get $get): bool => !empty($get('featuring')))
-                                    ->columnSpanFull(),
+
+                                // 🎤 メドレー & 共演者（横並び）
+                                Forms\Components\Group::make([
+                                    Forms\Components\Toggle::make('medley')
+                                        ->label('メドレー')
+                                        ->default(false)
+                                        ->inline(false),
+
+                                    Forms\Components\TextInput::make('featuring')
+                                        ->label('共演者')
+                                        ->placeholder('例: ゲスト名')
+                                        ->maxLength(255),
+                                ])->columns(2), // ← 横並び表示
                             ])
                             ->columns(1)
                             ->defaultItems(0)
-                            ->live()
                             ->reorderable()
                             ->itemLabel(function (array $state, $component): ?string {
                                 $items = $component->getState();
@@ -216,7 +185,9 @@ class SetlistResource extends Resource
                             ->label('アンコール')
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')
-                                    ->default(fn () => \Illuminate\Support\Str::uuid()->toString()),
+                                    ->default(fn() => \Illuminate\Support\Str::uuid()->toString()),
+
+                                // 🎵 曲名セレクト
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
                                     ->required()
@@ -226,72 +197,42 @@ class SetlistResource extends Resource
                                     ->live()
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('title')
-                                            ->label('曲名'),
-                                        Forms\Components\Toggle::make('medley')
-                                            ->label('メドレー')
-                                            ->default(false)
-                                            ->inline(false),
-                                        Forms\Components\TextInput::make('featuring')
-                                            ->label('共演者')
-                                            ->placeholder('例: ゲスト名')
-                                            ->helperText('曲名の後に半角スペース / 共演者名 が表示されます')
+                                            ->label('新しい曲名')
+                                            ->required()
                                             ->maxLength(255),
                                     ])
-                                    ->createOptionUsing(function (array $data, Forms\Set $set, Forms\Get $get): ?int {
-                                        // 曲名が空の場合は何もしない
-                                        if (empty($data['title'])) {
-                                            // メドレーと共演者だけを保存
-                                            if (!empty($data['medley'])) {
-                                                $set('medley', true);
-                                            }
-                                            if (!empty($data['featuring'])) {
-                                                $set('featuring', $data['featuring']);
-                                            }
-                                            return null;
-                                        }
-
-                                        // セットリストのアーティストIDを取得
+                                    ->createOptionUsing(function (array $data, Forms\Get $get): int {
                                         $artistId = $get('../../artist_id');
 
-                                        // 新しい曲をsetlist_songsテーブルに登録
                                         $song = \App\Models\SetlistSong::create([
                                             'title' => $data['title'],
                                             'artist_id' => $artistId,
                                         ]);
 
-                                        // メドレースイッチを保存
-                                        if (!empty($data['medley'])) {
-                                            $set('medley', true);
-                                        }
-                                        // 共演者を保存
-                                        if (!empty($data['featuring'])) {
-                                            $set('featuring', $data['featuring']);
-                                        }
-                                        // 曲IDを返す
                                         return $song->id;
                                     })
                                     ->columnSpanFull(),
-                                Forms\Components\Toggle::make('medley')
-                                    ->label('メドレー')
-                                    ->default(false)
-                                    ->inline(false)
-                                    ->disabled()
-                                    ->dehydrated()
-                                    ->visible(fn (Forms\Get $get): bool => !empty($get('medley')))
-                                    ->columnSpanFull(),
-                                Forms\Components\TextInput::make('featuring')
-                                    ->label('共演者')
-                                    ->disabled()
-                                    ->dehydrated()
-                                    ->visible(fn (Forms\Get $get): bool => !empty($get('featuring')))
-                                    ->columnSpanFull(),
+
+                                // 🎤 メドレー & 共演者（横並びに外出し）
+                                Forms\Components\Group::make([
+                                    Forms\Components\Toggle::make('medley')
+                                        ->label('メドレー')
+                                        ->default(false)
+                                        ->inline(false),
+
+                                    Forms\Components\TextInput::make('featuring')
+                                        ->label('共演者')
+                                        ->placeholder('例: ゲスト名')
+                                        ->helperText('曲名の後に半角スペース / 共演者名 が表示されます')
+                                        ->maxLength(255),
+                                ])->columns(2), // ← 横並び
                             ])
                             ->columns(1)
                             ->defaultItems(0)
                             ->live()
                             ->reorderable()
                             ->itemLabel(function (array $state, $component, Forms\Get $get): ?string {
-                                // 本編のsetlistから曲数を取得
+                                // 本編セットリストから曲数を取得
                                 $setlistItems = $get('setlist') ?? [];
                                 $setlistCount = 0;
                                 foreach ($setlistItems as $item) {
@@ -303,7 +244,6 @@ class SetlistResource extends Resource
                                 $items = $component->getState();
                                 if (!is_array($items)) return (string)($setlistCount + 1);
 
-                                // UUIDで現在のアイテムを特定
                                 $currentUuid = $state['_uuid'] ?? null;
                                 if (!$currentUuid) return '?';
 
@@ -330,6 +270,7 @@ class SetlistResource extends Resource
                             })
                             ->addActionLabel('曲を追加')
                             ->columnSpanFull(),
+
                     ])
                     ->visible(fn (Forms\Get $get) => $get('fes') == 0)
                     ->collapsible()
@@ -342,7 +283,7 @@ class SetlistResource extends Resource
                             ->label('本編')
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')
-                                    ->default(fn () => \Illuminate\Support\Str::uuid()->toString()),
+                                    ->default(fn() => \Illuminate\Support\Str::uuid()->toString()),
                                 Forms\Components\Select::make('artist')
                                     ->label('アーティスト')
                                     ->options(fn() => \App\Models\Artist::pluck('name', 'id'))
@@ -362,7 +303,8 @@ class SetlistResource extends Resource
                                         ]);
                                         return $artist->id;
                                     })
-                                     ->columnSpan(1), // ← フル幅をやめて1列分に変更
+                                    ->columnSpan(1),
+
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
                                     ->required()
@@ -371,53 +313,38 @@ class SetlistResource extends Resource
                                     ->native(false)
                                     ->live()
                                     ->createOptionForm([
+                                        // ✅ 曲名だけ入力可能に（medley / featuring は削除）
                                         Forms\Components\TextInput::make('title')
-                                            ->label('曲名'),
-                                        Forms\Components\Toggle::make('medley')
-                                            ->label('メドレー')
-                                            ->default(false)
-                                            ->inline(false),
-                                        Forms\Components\TextInput::make('featuring')
-                                            ->label('共演者')
-                                            ->placeholder('例: ゲスト名')
-                                            ->helperText('曲名の後に半角スペース / 共演者名 が表示されます')
+                                            ->label('曲名')
+                                            ->required()
                                             ->maxLength(255),
                                     ])
                                     ->createOptionUsing(function (array $data, Forms\Set $set, Forms\Get $get): int {
-                                        // フェスの場合、個別のアーティストIDを取得
                                         $artistId = $get('artist');
 
-                                        // 新しい曲をsetlist_songsテーブルに登録
                                         $song = \App\Models\SetlistSong::create([
                                             'title' => $data['title'],
                                             'artist_id' => $artistId,
                                         ]);
 
-                                        // メドレースイッチを保存
-                                        if (!empty($data['medley'])) {
-                                            $set('medley', true);
-                                        }
-                                        // 共演者を保存
-                                        if (!empty($data['featuring'])) {
-                                            $set('featuring', $data['featuring']);
-                                        }
-                                        // 曲IDを返す
                                         return $song->id;
                                     })
-                                     ->columnSpan(1), // ← フル幅をやめて1列分に変更
-                                Forms\Components\Toggle::make('medley')
-                                    ->label('メドレー')
-                                    ->default(false)
-                                    ->inline(false)
-                                    ->disabled()
-                                    ->dehydrated()
-                                    ->visible(fn (Forms\Get $get): bool => !empty($get('medley')))
-                                    ->columnSpanFull(),
-                                Forms\Components\TextInput::make('featuring')
-                                    ->label('共演者')
-                                    ->disabled()
-                                    ->dehydrated()
-                                    ->visible(fn (Forms\Get $get): bool => !empty($get('featuring')))
+                                    ->columnSpan(1),
+
+                                Forms\Components\Group::make()
+                                    ->schema([
+                                        Forms\Components\Toggle::make('medley')
+                                            ->label('メドレー')
+                                            ->inline(false)
+                                            ->default(false)
+                                            ->dehydrated(),
+                                        Forms\Components\TextInput::make('featuring')
+                                            ->label('共演者')
+                                            ->placeholder('例: ゲスト名')
+                                            ->maxLength(255)
+                                            ->dehydrated(),
+                                    ])
+                                    ->columns(2)
                                     ->columnSpanFull(),
                             ])
                             ->columns(2)
@@ -459,7 +386,8 @@ class SetlistResource extends Resource
                             ->label('アンコール')
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')
-                                    ->default(fn () => \Illuminate\Support\Str::uuid()->toString()),
+                                    ->default(fn() => \Illuminate\Support\Str::uuid()->toString()),
+
                                 Forms\Components\Select::make('artist')
                                     ->label('アーティスト')
                                     ->options(fn() => \App\Models\Artist::pluck('name', 'id'))
@@ -479,7 +407,8 @@ class SetlistResource extends Resource
                                         ]);
                                         return $artist->id;
                                     })
-                                     ->columnSpan(1), // ← フル幅をやめて1列分に変更
+                                    ->columnSpan(1),
+
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
                                     ->required()
@@ -488,53 +417,39 @@ class SetlistResource extends Resource
                                     ->native(false)
                                     ->live()
                                     ->createOptionForm([
+                                        // ✅ 曲名だけに限定（medley / featuring 除去）
                                         Forms\Components\TextInput::make('title')
-                                            ->label('曲名'),
-                                        Forms\Components\Toggle::make('medley')
-                                            ->label('メドレー')
-                                            ->default(false)
-                                            ->inline(false),
-                                        Forms\Components\TextInput::make('featuring')
-                                            ->label('共演者')
-                                            ->placeholder('例: ゲスト名')
-                                            ->helperText('曲名の後に半角スペース / 共演者名 が表示されます')
+                                            ->label('曲名')
+                                            ->required()
                                             ->maxLength(255),
                                     ])
                                     ->createOptionUsing(function (array $data, Forms\Set $set, Forms\Get $get): int {
-                                        // フェスの場合、個別のアーティストIDを取得
                                         $artistId = $get('artist');
 
-                                        // 新しい曲をsetlist_songsテーブルに登録
                                         $song = \App\Models\SetlistSong::create([
                                             'title' => $data['title'],
                                             'artist_id' => $artistId,
                                         ]);
 
-                                        // メドレースイッチを保存
-                                        if (!empty($data['medley'])) {
-                                            $set('medley', true);
-                                        }
-                                        // 共演者を保存
-                                        if (!empty($data['featuring'])) {
-                                            $set('featuring', $data['featuring']);
-                                        }
-                                        // 曲IDを返す
                                         return $song->id;
                                     })
-                                    ->columnSpan(1), // ← フル幅をやめて1列分に変更
-                                Forms\Components\Toggle::make('medley')
-                                    ->label('メドレー')
-                                    ->default(false)
-                                    ->inline(false)
-                                    ->disabled()
-                                    ->dehydrated()
-                                    ->visible(fn (Forms\Get $get): bool => !empty($get('medley')))
-                                    ->columnSpanFull(),
-                                Forms\Components\TextInput::make('featuring')
-                                    ->label('共演者')
-                                    ->disabled()
-                                    ->dehydrated()
-                                    ->visible(fn (Forms\Get $get): bool => !empty($get('featuring')))
+                                    ->columnSpan(1),
+
+                                // ✅ 「メドレー」「共演者」を常時表示
+                                Forms\Components\Group::make()
+                                    ->schema([
+                                        Forms\Components\Toggle::make('medley')
+                                            ->label('メドレー')
+                                            ->inline(false)
+                                            ->default(false)
+                                            ->dehydrated(),
+                                        Forms\Components\TextInput::make('featuring')
+                                            ->label('共演者')
+                                            ->placeholder('例: ゲスト名')
+                                            ->maxLength(255)
+                                            ->dehydrated(),
+                                    ])
+                                    ->columns(2)
                                     ->columnSpanFull(),
                             ])
                             ->columns(2)
@@ -542,7 +457,7 @@ class SetlistResource extends Resource
                             ->live()
                             ->reorderable()
                             ->itemLabel(function (array $state, $component, Forms\Get $get): ?string {
-                                // 本編のfes_setlistから曲数を取得
+                                // 本編の fes_setlist から曲数を取得
                                 $setlistItems = $get('fes_setlist') ?? [];
                                 $setlistCount = 0;
                                 foreach ($setlistItems as $item) {
@@ -584,8 +499,7 @@ class SetlistResource extends Resource
                     ->visible(fn (Forms\Get $get) => $get('fes') == 1)
                     ->collapsible()
                     ->columnSpanFull(),
-            ])
-            ->columns(1);
+            ]);
     }
 
     public static function table(Table $table): Table

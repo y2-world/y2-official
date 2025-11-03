@@ -63,7 +63,7 @@ class DiscoResource extends Resource
                             ->native(false)
                             ->columnSpan(2),
                         Forms\Components\TextInput::make('exception')
-                            ->label('例外')
+                            ->label('例外 (バージョン違いなど)')
                             ->columnSpan(2),
                     ])
                     ->columns(4)

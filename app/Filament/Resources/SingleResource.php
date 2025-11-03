@@ -64,7 +64,7 @@ class SingleResource extends Resource
 
                         // 例外
                         Forms\Components\TextInput::make('exception')
-                            ->label('例外')
+                            ->label('例外 (Instrumentalなど)')
                             ->columnSpan(2),
                     ])
                     ->columns(5) // Disc(1) + 曲名(2) + 例外(2)

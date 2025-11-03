@@ -32,7 +32,7 @@ class TourSetlistResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('tour_id')
                             ->label('タイトル')
-                            ->relationship('tour', 'title', fn ($query) => $query->orderBy('id', 'asc'))
+                            ->relationship('tour', 'title', fn($query) => $query->orderBy('id', 'asc'))
                             ->searchable()
                             ->native(false)
                             ->preload()
@@ -49,14 +49,15 @@ class TourSetlistResource extends Resource
                             ->columnSpanFull(),
                     ])
                     ->columns(2),
-
                 Forms\Components\Section::make('セットリスト')
                     ->schema([
+                        // ──────────────── 本編 ────────────────
                         Forms\Components\Repeater::make('setlist')
                             ->label('本編')
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')
                                     ->default(fn() => \Illuminate\Support\Str::uuid()->toString()),
+
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
                                     ->options(fn() => \App\Models\Song::orderBy('title')->pluck('title', 'id'))
@@ -65,35 +66,35 @@ class TourSetlistResource extends Resource
                                     ->required()
                                     ->columnSpanFull()
                                     ->mutateDehydratedStateUsing(function ($state) {
-                                        // 数値なら既存曲IDとして保存
                                         if (is_numeric($state)) {
                                             return $state;
                                         }
-
-                                        // 文字列ならそのまま保存（songs テーブルには登録しない）
                                         if (is_string($state) && $state !== '') {
                                             return $state;
                                         }
-
                                         return null;
                                     }),
-                                Forms\Components\Toggle::make('is_daily')
-                                    ->label('日替わり')
-                                    ->default(false)
-                                    ->inline(false)
-                                    ->live()
-                                    ->columnSpanFull(),
+
+                                // Toggle + 共演者 を横並び
+                                Forms\Components\Group::make([
+                                    Forms\Components\Toggle::make('is_daily')
+                                        ->label('日替わり')
+                                        ->default(false)
+                                        ->inline(false)
+                                        ->live(),
+
+                                    Forms\Components\TextInput::make('featuring')
+                                        ->label('共演者')
+                                        ->placeholder('例: ゲスト名')
+                                        ->helperText('曲名の後に半角スペース / 共演者名 が表示されます')
+                                        ->maxLength(255),
+                                ])->columns(2),
+
                                 Forms\Components\TextInput::make('daily_note')
                                     ->label('日替わり説明')
                                     ->placeholder('例: 9.30')
                                     ->maxLength(255)
-                                    ->columnSpanFull()
-                                    ->visible(fn (Forms\Get $get): bool => $get('is_daily') == true),
-                                Forms\Components\TextInput::make('featuring')
-                                    ->label('共演者')
-                                    ->placeholder('例: ゲスト名')
-                                    ->helperText('曲名の後に半角スペース / 共演者名 が表示されます')
-                                    ->maxLength(255)
+                                    ->visible(fn(Forms\Get $get): bool => $get('is_daily') == true)
                                     ->columnSpanFull(),
                             ])
                             ->columns(1)
@@ -104,7 +105,6 @@ class TourSetlistResource extends Resource
                                 $items = $component->getState();
                                 if (!is_array($items)) return '1';
 
-                                // UUIDで現在のアイテムを特定
                                 $currentUuid = $state['_uuid'] ?? null;
                                 if (!$currentUuid) return '?';
 
@@ -132,50 +132,49 @@ class TourSetlistResource extends Resource
                             ->addActionLabel('曲を追加')
                             ->columnSpanFull(),
 
+                        // ──────────────── アンコール ────────────────
                         Forms\Components\Repeater::make('encore')
                             ->label('アンコール')
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')
                                     ->default(fn() => \Illuminate\Support\Str::uuid()->toString()),
+
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
-                                    ->options(function () {
-                                        return \App\Models\Song::orderBy('title')->pluck('title', 'id');
-                                    })
+                                    ->options(fn() => \App\Models\Song::orderBy('title')->pluck('title', 'id'))
                                     ->searchable()
                                     ->native(false)
                                     ->required()
                                     ->columnSpanFull()
                                     ->mutateDehydratedStateUsing(function ($state) {
-                                        // 数値なら既存曲IDとして保存
                                         if (is_numeric($state)) {
                                             return $state;
                                         }
-
-                                        // 文字列ならそのまま保存（songs テーブルには登録しない）
                                         if (is_string($state) && $state !== '') {
                                             return $state;
                                         }
-
                                         return null;
                                     }),
-                                Forms\Components\Toggle::make('is_daily')
-                                    ->label('日替わり')
-                                    ->default(false)
-                                    ->inline(false)
-                                    ->live()
-                                    ->columnSpanFull(),
+
+                                // Toggle + 共演者 を横並び
+                                Forms\Components\Group::make([
+                                    Forms\Components\Toggle::make('is_daily')
+                                        ->label('日替わり')
+                                        ->default(false)
+                                        ->inline(false)
+                                        ->live(),
+
+                                    Forms\Components\TextInput::make('featuring')
+                                        ->label('共演者')
+                                        ->placeholder('例: ゲスト名')
+                                        ->maxLength(255),
+                                ])->columns(2),
+
                                 Forms\Components\TextInput::make('daily_note')
                                     ->label('日替わり説明')
                                     ->placeholder('例: 9.30')
                                     ->maxLength(255)
-                                    ->columnSpanFull()
-                                    ->visible(fn (Forms\Get $get): bool => $get('is_daily') == true),
-                                Forms\Components\TextInput::make('featuring')
-                                    ->label('共演者')
-                                    ->placeholder('例: ゲスト名')
-                                    ->helperText('曲名の後に半角スペース / 共演者名 が表示されます')
-                                    ->maxLength(255)
+                                    ->visible(fn(Forms\Get $get): bool => $get('is_daily') == true)
                                     ->columnSpanFull(),
                             ])
                             ->columns(1)
@@ -183,7 +182,6 @@ class TourSetlistResource extends Resource
                             ->live()
                             ->reorderable()
                             ->itemLabel(function (array $state, $component, Forms\Get $get): ?string {
-                                // 本編のsetlistから曲数を取得
                                 $setlistItems = $get('setlist') ?? [];
                                 $setlistCount = 0;
                                 foreach ($setlistItems as $item) {
@@ -195,7 +193,6 @@ class TourSetlistResource extends Resource
                                 $items = $component->getState();
                                 if (!is_array($items)) return (string)($setlistCount + 1);
 
-                                // UUIDで現在のアイテムを特定
                                 $currentUuid = $state['_uuid'] ?? null;
                                 if (!$currentUuid) return '?';
 
@@ -224,8 +221,7 @@ class TourSetlistResource extends Resource
                             ->columnSpanFull(),
                     ])
                     ->collapsible(),
-            ])
-            ->columns(1);
+            ]);
     }
 
     public static function table(Table $table): Table
