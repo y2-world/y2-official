@@ -57,7 +57,7 @@ class AlbumResource extends Resource
                     ->schema([
                         // Disc（短め）
                         Forms\Components\TextInput::make('disc')
-                            ->label('Disc')
+                            ->label('ディスク')
                             ->columnSpan(1)
                             ->extraAttributes(['style' => 'width: 80px']),
 
