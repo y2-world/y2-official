@@ -134,18 +134,24 @@ class SetlistResource extends Resource
                                     })
                                     ->columnSpanFull(),
 
-                                // 🎤 メドレー & 共演者（横並び）
-                                Forms\Components\Group::make([
-                                    Forms\Components\Toggle::make('medley')
-                                        ->label('メドレー')
-                                        ->default(false)
-                                        ->inline(false),
+                                // 🎛️ 詳細設定（折りたたみ）
+                                Forms\Components\Section::make('詳細設定')
+                                    ->schema([
+                                        Forms\Components\Grid::make(2)
+                                            ->schema([
+                                                Forms\Components\Toggle::make('medley')
+                                                    ->label('メドレー')
+                                                    ->default(false),
 
-                                    Forms\Components\TextInput::make('featuring')
-                                        ->label('共演者')
-                                        ->placeholder('例: ゲスト名')
-                                        ->maxLength(255),
-                                ])->columns(2), // ← 横並び表示
+                                                Forms\Components\TextInput::make('featuring')
+                                                    ->label('共演者')
+                                                    ->placeholder('例: ゲスト名')
+                                                    ->maxLength(255),
+                                            ]),
+                                    ])
+                                    ->collapsible() // ← 折りたたみ可能
+                                    ->collapsed()   // ← 初期は閉じる
+                                    ->columnSpanFull(),
                             ])
                             ->columns(1)
                             ->defaultItems(0)
@@ -213,19 +219,24 @@ class SetlistResource extends Resource
                                     })
                                     ->columnSpanFull(),
 
-                                // 🎤 メドレー & 共演者（横並びに外出し）
-                                Forms\Components\Group::make([
-                                    Forms\Components\Toggle::make('medley')
-                                        ->label('メドレー')
-                                        ->default(false)
-                                        ->inline(false),
+                                // 🎛️ 詳細設定（折りたたみ）
+                                Forms\Components\Section::make('詳細設定')
+                                    ->schema([
+                                        Forms\Components\Grid::make(2)
+                                            ->schema([
+                                                Forms\Components\Toggle::make('medley')
+                                                    ->label('メドレー')
+                                                    ->default(false),
 
-                                    Forms\Components\TextInput::make('featuring')
-                                        ->label('共演者')
-                                        ->placeholder('例: ゲスト名')
-                                        ->helperText('曲名の後に半角スペース / 共演者名 が表示されます')
-                                        ->maxLength(255),
-                                ])->columns(2), // ← 横並び
+                                                Forms\Components\TextInput::make('featuring')
+                                                    ->label('共演者')
+                                                    ->placeholder('例: ゲスト名')
+                                                    ->maxLength(255),
+                                            ]),
+                                    ])
+                                    ->collapsible() // ← 折りたたみ可能
+                                    ->collapsed()   // ← 初期は閉じる
+                                    ->columnSpanFull(),
                             ])
                             ->columns(1)
                             ->defaultItems(0)
@@ -272,7 +283,7 @@ class SetlistResource extends Resource
                             ->columnSpanFull(),
 
                     ])
-                    ->visible(fn (Forms\Get $get) => $get('fes') == 0)
+                    ->visible(fn(Forms\Get $get) => $get('fes') == 0)
                     ->collapsible()
                     ->columnSpanFull(),
 
@@ -313,7 +324,6 @@ class SetlistResource extends Resource
                                     ->native(false)
                                     ->live()
                                     ->createOptionForm([
-                                        // ✅ 曲名だけ入力可能に（medley / featuring は削除）
                                         Forms\Components\TextInput::make('title')
                                             ->label('曲名')
                                             ->required()
@@ -331,20 +341,26 @@ class SetlistResource extends Resource
                                     })
                                     ->columnSpan(1),
 
-                                Forms\Components\Group::make()
+                                // 🎛️ 詳細設定（アコーディオン）
+                                Forms\Components\Section::make('詳細設定')
+                                    ->collapsible()
+                                    ->collapsed() // 初期は閉じる
                                     ->schema([
-                                        Forms\Components\Toggle::make('medley')
-                                            ->label('メドレー')
-                                            ->inline(false)
-                                            ->default(false)
-                                            ->dehydrated(),
-                                        Forms\Components\TextInput::make('featuring')
-                                            ->label('共演者')
-                                            ->placeholder('例: ゲスト名')
-                                            ->maxLength(255)
-                                            ->dehydrated(),
+                                        Forms\Components\Grid::make(2)
+                                            ->schema([
+                                                Forms\Components\Toggle::make('medley')
+                                                    ->label('メドレー')
+                                                    ->inline(false)
+                                                    ->default(false)
+                                                    ->dehydrated(),
+
+                                                Forms\Components\TextInput::make('featuring')
+                                                    ->label('共演者')
+                                                    ->placeholder('例: ゲスト名')
+                                                    ->maxLength(255)
+                                                    ->dehydrated(),
+                                            ]),
                                     ])
-                                    ->columns(2)
                                     ->columnSpanFull(),
                             ])
                             ->columns(2)
@@ -417,7 +433,6 @@ class SetlistResource extends Resource
                                     ->native(false)
                                     ->live()
                                     ->createOptionForm([
-                                        // ✅ 曲名だけに限定（medley / featuring 除去）
                                         Forms\Components\TextInput::make('title')
                                             ->label('曲名')
                                             ->required()
@@ -435,21 +450,26 @@ class SetlistResource extends Resource
                                     })
                                     ->columnSpan(1),
 
-                                // ✅ 「メドレー」「共演者」を常時表示
-                                Forms\Components\Group::make()
+                                // 🎛️ 詳細設定（アコーディオン）
+                                Forms\Components\Section::make('詳細設定')
+                                    ->collapsible()
+                                    ->collapsed() // 初期は閉じる
                                     ->schema([
-                                        Forms\Components\Toggle::make('medley')
-                                            ->label('メドレー')
-                                            ->inline(false)
-                                            ->default(false)
-                                            ->dehydrated(),
-                                        Forms\Components\TextInput::make('featuring')
-                                            ->label('共演者')
-                                            ->placeholder('例: ゲスト名')
-                                            ->maxLength(255)
-                                            ->dehydrated(),
+                                        Forms\Components\Grid::make(2)
+                                            ->schema([
+                                                Forms\Components\Toggle::make('medley')
+                                                    ->label('メドレー')
+                                                    ->inline(false)
+                                                    ->default(false)
+                                                    ->dehydrated(),
+
+                                                Forms\Components\TextInput::make('featuring')
+                                                    ->label('共演者')
+                                                    ->placeholder('例: ゲスト名')
+                                                    ->maxLength(255)
+                                                    ->dehydrated(),
+                                            ]),
                                     ])
-                                    ->columns(2)
                                     ->columnSpanFull(),
                             ])
                             ->columns(2)
@@ -496,7 +516,7 @@ class SetlistResource extends Resource
                             ->addActionLabel('曲を追加')
                             ->columnSpanFull(),
                     ])
-                    ->visible(fn (Forms\Get $get) => $get('fes') == 1)
+                    ->visible(fn(Forms\Get $get) => $get('fes') == 1)
                     ->collapsible()
                     ->columnSpanFull(),
             ]);

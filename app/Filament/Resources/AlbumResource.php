@@ -55,32 +55,35 @@ class AlbumResource extends Resource
                 Forms\Components\Repeater::make('tracklist')
                     ->label('収録曲')
                     ->schema([
-                        // Disc（短め）
-                        Forms\Components\TextInput::make('disc')
-                            ->label('ディスク')
-                            ->columnSpan(1)
-                            ->extraAttributes(['style' => 'width: 80px']),
-
-                        // 曲名（中くらい）
+                        // 曲名（メイン）
                         Forms\Components\Select::make('id')
                             ->label('曲名')
-                            ->options(fn() => Song::pluck('title', 'id'))
+                            ->options(fn() => \App\Models\Song::pluck('title', 'id'))
                             ->searchable()
                             ->native(false)
-                            ->columnSpan(2),
+                            ->columnSpanFull(),
 
-                        // 例外（曲名と同じ長さ）
-                        Forms\Components\TextInput::make('exception')
-                            ->label('例外 (Instrumentalなど)')
-                            ->columnSpan(2),
+                        // アコーディオン（詳細設定）
+                        Forms\Components\Section::make('詳細設定')
+                            ->collapsible()
+                            ->collapsed() // 初期は閉じる
+                            ->schema([
+                                Forms\Components\TextInput::make('disc')
+                                    ->label('ディスク')
+                                    ->extraAttributes(['style' => 'width: 100px'])
+                                    ->columnSpan(1),
+
+                                Forms\Components\TextInput::make('exception')
+                                    ->label('例外 (Instrumentalなど)')
+                                    ->columnSpan(1),
+                            ])
+                            ->columns(2), // 横並びにする
                     ])
-                    ->columns(5) // ← Disc(1) + 曲名(2) + 例外(2)
                     ->defaultItems(1)
                     ->columnSpanFull()
                     ->live()
                     ->reorderable()
                     ->itemLabel(function (array $state, $component): string {
-                        // UUIDを使わず、配列順で確実に番号を出す
                         $items = array_values($component->getState() ?? []);
                         foreach ($items as $i => $item) {
                             if ($item === $state) {

@@ -35,45 +35,56 @@ class SingleResource extends Resource
                 Forms\Components\TextInput::make('single_id')
                     ->label('シングルID')
                     ->numeric(),
+
                 Forms\Components\DatePicker::make('date')
                     ->label('発売日')
                     ->required()
                     ->native(false)
                     ->displayFormat('Y.m.d'),
+
                 Forms\Components\TextInput::make('title')
                     ->label('タイトル')
                     ->required()
                     ->maxLength(255),
+
                 Forms\Components\Toggle::make('download')
                     ->label('配信シングル')
                     ->onColor('success')
                     ->offColor('gray'),
+
                 Forms\Components\Textarea::make('text')
                     ->label('テキスト')
-                    ->rows(5),
+                    ->rows(5)
+                    ->columnSpanFull(),
+
+                // 収録曲
                 Forms\Components\Repeater::make('tracklist')
                     ->label('収録曲')
                     ->schema([
-                        // 曲名
+                        // 曲名（常に表示）
                         Forms\Components\Select::make('id')
                             ->label('曲名')
                             ->options(fn() => Song::pluck('title', 'id'))
                             ->searchable()
                             ->native(false)
-                            ->columnSpan(2),
+                            ->columnSpanFull(),
 
-                        // 例外
-                        Forms\Components\TextInput::make('exception')
-                            ->label('例外 (Instrumentalなど)')
-                            ->columnSpan(2),
+                        // 詳細設定（折りたたみ式）
+                        Forms\Components\Section::make('詳細設定')
+                            ->collapsible()
+                            ->collapsed() // ← 初期状態で閉じる
+                            ->schema([
+                                Forms\Components\TextInput::make('exception')
+                                    ->label('例外 (Instrumentalなど)')
+                                    ->columnSpanFull(),
+                            ])
+                            ->columnSpanFull(),
                     ])
-                    ->columns(5) // Disc(1) + 曲名(2) + 例外(2)
+                    ->columns(1) // 曲名→詳細設定（縦並び）
                     ->defaultItems(1)
-                    ->columnSpanFull()
-                    ->live()
                     ->reorderable()
+                    ->columnSpanFull()
                     ->itemLabel(function (array $state, $component): string {
-                        // UUIDを使わず、配列順で確実に番号を出す
                         $items = array_values($component->getState() ?? []);
                         foreach ($items as $i => $item) {
                             if ($item === $state) {

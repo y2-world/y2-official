@@ -42,7 +42,7 @@ class DiscoResource extends Resource
                     ->label('発売日')
                     ->native(false)
                     ->displayFormat('Y.m.d'),
-                 Forms\Components\Toggle::make('type')
+                Forms\Components\Toggle::make('type')
                     ->label('アルバム')
                     ->onColor('success')
                     ->offColor('gray'),
@@ -50,23 +50,32 @@ class DiscoResource extends Resource
                     ->label('公開')
                     ->onColor('success')
                     ->offColor('gray')
-                    ->default(0)
-                    ->formatStateUsing(fn ($state) => $state == 0)
-                    ->dehydrateStateUsing(fn ($state) => $state ? 0 : 1),
+                    ->default(1)
+                    ->formatStateUsing(fn($state) => $state == 1)
+                    ->dehydrateStateUsing(fn($state) => $state ? 1 : 0),
                 Forms\Components\Repeater::make('tracklist')
                     ->label('収録曲')
                     ->schema([
+                        // 曲名（横幅いっぱい）
                         Forms\Components\Select::make('id')
                             ->label('曲名')
                             ->options(fn() => \App\Models\Lyric::pluck('title', 'id'))
                             ->searchable()
                             ->native(false)
-                            ->columnSpan(2),
-                        Forms\Components\TextInput::make('exception')
-                            ->label('例外 (バージョン違いなど)')
-                            ->columnSpan(2),
+                            ->columnSpanFull(),
+
+                        // 折りたたみ「詳細設定」に例外を入れる（横幅いっぱい）
+                        Forms\Components\Section::make('詳細設定')
+                            ->collapsible()
+                            ->collapsed() // 初期状態で閉じる
+                            ->schema([
+                                Forms\Components\TextInput::make('exception')
+                                    ->label('例外 (バージョン違いなど)')
+                                    ->columnSpanFull(),
+                            ])
+                            ->columnSpanFull(),
                     ])
-                    ->columns(4)
+                    ->columns(1) // 1列構成（曲名 → 詳細設定）
                     ->defaultItems(1)
                     ->reorderable()
                     ->itemLabel(function ($state, $component): string {
@@ -120,7 +129,7 @@ class DiscoResource extends Resource
                     ->label('公開')
                     ->onColor('success')
                     ->offColor('gray')
-                    ->getStateUsing(fn ($record) => $record->visible == 1) // 1を公開（ON）として表示
+                    ->getStateUsing(fn($record) => $record->visible == 1) // 1を公開（ON）として表示
                     ->updateStateUsing(function ($record, $state) {
                         $record->update(['visible' => $state ? 1 : 0]); // ONを1、OFFを0として保存
                         return $state;
@@ -139,8 +148,8 @@ class DiscoResource extends Resource
                     ->trueLabel('公開')
                     ->falseLabel('非公開')
                     ->queries(
-                        true: fn ($query) => $query->where('visible', 1),
-                        false: fn ($query) => $query->where('visible', 0),
+                        true: fn($query) => $query->where('visible', 1),
+                        false: fn($query) => $query->where('visible', 0),
                     ),
             ])
             ->actions([

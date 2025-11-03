@@ -45,8 +45,8 @@ class NewsResource extends Resource
                     ->onColor('success')
                     ->offColor('gray')
                     ->default(1)
-                    ->formatStateUsing(fn ($state) => $state == 1)
-                    ->dehydrateStateUsing(fn ($state) => $state ? 1 : 0),
+                    ->formatStateUsing(fn($state) => $state == 1)
+                    ->dehydrateStateUsing(fn($state) => $state ? 1 : 0),
                 RichEditor::make('text')
                     ->label('本文')
                     ->required(),
@@ -84,7 +84,7 @@ class NewsResource extends Resource
                     ->label('公開')
                     ->onColor('success')
                     ->offColor('gray')
-                    ->getStateUsing(fn ($record) => $record->visible == 1) // 1を公開（ON）として表示
+                    ->getStateUsing(fn($record) => $record->visible == 1) // 1を公開（ON）として表示
                     ->updateStateUsing(function ($record, $state) {
                         $record->update(['visible' => $state ? 1 : 0]); // ONを1、OFFを0として保存
                         return $state;
@@ -97,8 +97,8 @@ class NewsResource extends Resource
                     ->trueLabel('公開')
                     ->falseLabel('非公開')
                     ->queries(
-                        true: fn ($query) => $query->where('visible', 1),
-                        false: fn ($query) => $query->where('visible', 0),
+                        true: fn($query) => $query->where('visible', 1),
+                        false: fn($query) => $query->where('visible', 0),
                     ),
             ])
             ->actions([
