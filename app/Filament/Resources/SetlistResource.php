@@ -104,6 +104,7 @@ class SetlistResource extends Resource
                 Forms\Components\Section::make('セットリスト（単独ライブ）')
                     ->schema([
                         Forms\Components\Repeater::make('setlist')
+                            ->live(debounce: 0)
                             ->label('本編')
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')
