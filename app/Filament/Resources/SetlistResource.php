@@ -492,7 +492,25 @@ class SetlistResource extends Resource
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
                                     ->required()
-                                    ->options(fn() => \App\Models\SetlistSong::orderBy('title')->pluck('title', 'id'))
+                                    ->options(function () {
+                                        $songs = \App\Models\SetlistSong::query()
+                                            ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
+                                            ->select('setlist_songs.id', 'setlist_songs.title', 'artists.name as artist_name')
+                                            ->orderBy('setlist_songs.title')
+                                            ->get();
+                                        
+                                        // タイトルごとの出現回数をカウント
+                                        $titleCounts = $songs->groupBy('title')->map->count();
+                                        
+                                        return $songs->mapWithKeys(function ($song) use ($titleCounts) {
+                                            $label = $song->title;
+                                            // 重複している場合のみアーティスト名を追加
+                                            if ($titleCounts[$song->title] > 1 && $song->artist_name) {
+                                                $label .= ' - ' . $song->artist_name;
+                                            }
+                                            return [$song->id => $label];
+                                        });
+                                    })
                                     ->searchable()
                                     ->native(false)
                                     ->live()
