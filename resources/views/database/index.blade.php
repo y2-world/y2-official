@@ -3,9 +3,32 @@
 @section('content')
     <div class="database-hero">
         <div class="container">
-            <h1 class="database-title">Mr.Children Database</h1>
-            <p class="database-subtitle">すべての楽曲を検索</p>
-            <div class="database-search">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <h1 class="database-title" style="margin-bottom: 0;">Mr.Children Database</h1>
+                {{-- 虫眼鏡アイコン（SP表示のみ） --}}
+                <button type="button" id="spSearchButtonDatabase" class="sp" onclick="document.getElementById('spSearchFormDatabase').style.display='block'; this.style.display='none';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 12px; border-radius: 50%; cursor: pointer; width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 0;">
+                    <i class="fa-solid fa-magnifying-glass" style="font-size: 18px;"></i>
+                </button>
+            </div>
+
+            {{-- 検索フォーム（SP表示） --}}
+            <div class="sp" id="spSearchFormDatabase" style="margin-top: 30px; display: none;">
+                <div>
+                    <div class="search-wrapper">
+                        <input type="text" id="searchInputSp" class="database-search-input typeahead" placeholder="楽曲を検索..." required>
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    </div>
+                    {{-- 閉じるボタン --}}
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button type="button" onclick="document.getElementById('spSearchFormDatabase').style.display='none'; document.getElementById('spSearchButtonDatabase').style.display='block';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-size: 13px;">
+                            閉じる
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {{-- 検索フォーム（PC表示のみ） --}}
+            <div class="database-search pc">
                 <form action="" method="GET">
                     <div class="search-wrapper">
                         <input type="text" id="searchInput" class="database-search-input typeahead" placeholder="楽曲を検索..." required>
@@ -99,4 +122,71 @@
 
 @section('page-script')
 <script src="{{ asset('/js/search.js?time=' . time()) }}"></script>
+<script>
+    // SP表示用のTypeaheadも初期化
+    $(document).ready(function(){
+        // 既存のsearch.jsの初期化を待ってから、SP用の入力フィールドにも適用
+        setTimeout(function() {
+            const searchInputSp = document.getElementById('searchInputSp');
+            if (searchInputSp && !searchInputSp.hasAttribute('data-tt-initialized')) {
+                // 検索フォームが表示された時にTypeaheadを初期化
+                const spSearchForm = document.getElementById('spSearchFormDatabase');
+                if (spSearchForm) {
+                    const observer = new MutationObserver(function(mutations) {
+                        mutations.forEach(function(mutation) {
+                            if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                                if (spSearchForm.style.display === 'block') {
+                                    // Typeaheadを初期化（既存のsearch.jsのロジックを再利用）
+                                    if (typeof Bloodhound !== 'undefined' && typeof $.fn.typeahead !== 'undefined') {
+                                        if (!$(searchInputSp).data('typeahead')) {
+                                            var songs = new Bloodhound({
+                                                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
+                                                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                                remote: {
+                                                    url: '/find?q=%QUERY',
+                                                    wildcard: '%QUERY'
+                                                },
+                                                limit: 20
+                                            });
+
+                                            $(searchInputSp).typeahead({
+                                                minLength: 1,
+                                                highlight: true,
+                                                hint: true,
+                                                classNames: {
+                                                    menu: 'tt-menu-modern',
+                                                    suggestion: 'tt-suggestion-modern',
+                                                    cursor: 'tt-cursor-modern'
+                                                }
+                                            },
+                                            {
+                                                name: 'songs',
+                                                display: 'title',
+                                                source: songs,
+                                                limit: 20,
+                                                templates: {
+                                                    empty: '<div class="tt-empty">該当する曲が見つかりません</div>',
+                                                    suggestion: function(data) {
+                                                        return '<div class="tt-suggestion-content"><i class="fa-solid fa-music"></i><span>' + data.title + '</span></div>';
+                                                    }
+                                                }
+                                            }).on('typeahead:selected', function(event, data) {
+                                                // 選択された曲の詳細ページにリダイレクト
+                                                window.location.href = '/database/songs/' + data.id;
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    });
+                    observer.observe(spSearchForm, {
+                        attributes: true,
+                        attributeFilter: ['style']
+                    });
+                }
+            }
+        }, 500);
+    });
+</script>
 @endsection

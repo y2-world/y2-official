@@ -4,7 +4,10 @@
     <div class="database-hero database-year-hero">
         <div class="container">
             <p class="database-subtitle" style="margin-bottom: 10px;"># {{ $song->id }}</p>
-            <h1 class="database-title" style="margin-bottom: 20px;">{{ $song->title }}</h1>
+            <h1 class="database-title sp" style="margin-bottom: 20px; cursor: pointer;" onclick="document.getElementById('spSearchFormSetlistSong').style.display='block'; document.querySelector('.database-title.sp').style.display='none';">
+                {{ $song->title }}
+            </h1>
+            <h1 class="database-title pc" style="margin-bottom: 20px;">{{ $song->title }}</h1>
 
             <div style="font-size: 1rem; color: rgba(255, 255, 255, 0.9); line-height: 1.8;">
                 @if ($song->artist)
@@ -15,6 +18,29 @@
                         </a>
                     </div>
                 @endif
+            </div>
+
+            {{-- 検索フォーム（SP表示） --}}
+            <div class="sp" id="spSearchFormSetlistSong" style="margin-top: 30px; display: none;">
+                <div>
+                    <div class="search-wrapper">
+                        <input type="text" name="keyword" id="keyword-sp-setlist-song" class="database-search-input" placeholder="楽曲を検索..." style="font-size: 14px; padding: 12px 45px 12px 16px;" list="song-suggestions-sp-setlist-song">
+                        <datalist id="song-suggestions-sp-setlist-song">
+                            @foreach($suggestions as $suggestion)
+                                <option value="{{ $suggestion['title'] }}" label="{{ $suggestion['title'] }}{{ $suggestion['artist_name'] ? ' — ' . $suggestion['artist_name'] : '' }}"></option>
+                            @endforeach
+                        </datalist>
+                        <button type="button" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
+                            <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none; font-size: 16px;"></i>
+                        </button>
+                    </div>
+                    {{-- 閉じるボタン --}}
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button type="button" onclick="document.getElementById('spSearchFormSetlistSong').style.display='none'; document.querySelector('.database-title.sp').style.display='block';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-size: 13px;">
+                            閉じる
+                        </button>
+                    </div>
+                </div>
             </div>
 
             {{-- 検索フォーム（PC表示のみ） --}}
@@ -97,7 +123,7 @@
         @endforeach
     };
 
-    // 検索フォームの入力フィールド
+    // 検索フォームの入力フィールド（PC）
     const keywordInputSetlistSong = document.getElementById('keyword-setlist-song');
     if (keywordInputSetlistSong) {
         // フォーム送信を防ぐ
@@ -112,6 +138,29 @@
         });
         
         keywordInputSetlistSong.addEventListener('change', function(e) {
+            const selectedTitle = e.target.value;
+            if (songMapSetlistSong[selectedTitle]) {
+                // 候補から選択された場合は詳細ページへ
+                window.location.href = '/setlist-songs/' + songMapSetlistSong[selectedTitle];
+            }
+        });
+    }
+
+    // 検索フォームの入力フィールド（SP）
+    const keywordInputSpSetlistSong = document.getElementById('keyword-sp-setlist-song');
+    if (keywordInputSpSetlistSong) {
+        // フォーム送信を防ぐ
+        keywordInputSpSetlistSong.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const selectedTitle = e.target.value;
+                if (songMapSetlistSong[selectedTitle]) {
+                    window.location.href = '/setlist-songs/' + songMapSetlistSong[selectedTitle];
+                }
+            }
+        });
+        
+        keywordInputSpSetlistSong.addEventListener('change', function(e) {
             const selectedTitle = e.target.value;
             if (songMapSetlistSong[selectedTitle]) {
                 // 候補から選択された場合は詳細ページへ

@@ -192,6 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let scrollPosition = 0;
     let animationFrameId = null;
     let isPaused = false;
+    let lastScrollLeft = 0;
     
     // コンテンツが読み込まれるまで待つ
     function initAutoScroll() {
@@ -208,12 +209,37 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
+        // 初期スクロール位置を設定
+        lastScrollLeft = scrollContainer.scrollLeft;
+        
         // 自動スクロール関数
         function autoScroll() {
-            if (isUserScrolling || isPaused) {
-                // 手動スクロール中または一時停止中は自動スクロールを停止
+            if (isPaused) {
+                // 一時停止中は自動スクロールを停止
                 animationFrameId = requestAnimationFrame(autoScroll);
                 return;
+            }
+            
+            // iOS用: 手動スクロール中でも、スクロール位置が変わっていない場合は自動スクロールを再開
+            if (isUserScrolling) {
+                const currentScroll = scrollContainer.scrollLeft;
+                const scrollDelta = Math.abs(currentScroll - lastScrollLeft);
+                
+                // スクロール位置が変わっていない場合（ユーザー操作が終了した可能性）
+                if (scrollDelta < 0.1) {
+                    // 少し待ってから再開を試みる
+                    setTimeout(function() {
+                        const stillDelta = Math.abs(scrollContainer.scrollLeft - currentScroll);
+                        if (stillDelta < 0.1 && !isManuallyScrolling) {
+                            isUserScrolling = false;
+                        }
+                    }, 100);
+                }
+                
+                if (isUserScrolling) {
+                    animationFrameId = requestAnimationFrame(autoScroll);
+                    return;
+                }
             }
             
             // 現在のスクロール位置を取得（手動スクロール後の位置を保持）
@@ -230,28 +256,43 @@ document.addEventListener('DOMContentLoaded', function() {
             
             scrollPosition = nextPosition;
             scrollContainer.scrollLeft = scrollPosition;
+            lastScrollLeft = scrollPosition;
             animationFrameId = requestAnimationFrame(autoScroll);
         }
         
         // 手動スクロールの検知
         let isManuallyScrolling = false;
         let lastManualScrollPosition = 0;
+        let touchStartTime = 0;
+        let scrollCheckInterval = null;
         
         // マウスやタッチでスクロールを開始した時
         scrollContainer.addEventListener('mousedown', function() {
             isManuallyScrolling = true;
             isUserScrolling = true;
+            lastScrollLeft = scrollContainer.scrollLeft;
         });
         
-        scrollContainer.addEventListener('touchstart', function() {
+        scrollContainer.addEventListener('touchstart', function(e) {
             isManuallyScrolling = true;
             isUserScrolling = true;
+            touchStartTime = Date.now();
+            lastScrollLeft = scrollContainer.scrollLeft;
+            
+            // iOSでは、タッチ終了後も自動スクロールを再開する
+            clearTimeout(scrollTimeout);
         });
         
         // スクロールイベント
         scrollContainer.addEventListener('scroll', function() {
-            if (isManuallyScrolling) {
-                const currentScrollLeft = scrollContainer.scrollLeft;
+            const currentScrollLeft = scrollContainer.scrollLeft;
+            const scrollDelta = Math.abs(currentScrollLeft - lastScrollLeft);
+            
+            // スクロール位置が変わった場合（ユーザー操作の可能性）
+            if (scrollDelta > 1) {
+                isManuallyScrolling = true;
+                isUserScrolling = true;
+                
                 // 手動スクロール位置を記録
                 // 50%を超えた位置の場合は、無限ループのため最初のコンテンツ内の位置に調整
                 let adjustedPosition = currentScrollLeft;
@@ -272,6 +313,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     scrollContainer.scrollLeft = scrollPosition;
                 }, 1500); // 1.5秒後に自動スクロール再開
             }
+            
+            lastScrollLeft = currentScrollLeft;
         });
         
         // マウスやタッチを離した時
@@ -281,11 +324,32 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 100);
         });
         
-        scrollContainer.addEventListener('touchend', function() {
-            setTimeout(function() {
-                isManuallyScrolling = false;
-            }, 100);
+        scrollContainer.addEventListener('touchend', function(e) {
+            const touchDuration = Date.now() - touchStartTime;
+            
+            // タッチ時間が短い場合（タップのみ）は自動スクロールをすぐに再開
+            if (touchDuration < 200) {
+                setTimeout(function() {
+                    isManuallyScrolling = false;
+                    isUserScrolling = false;
+                }, 300);
+            } else {
+                // 長いタッチの場合は、スクロールイベントのタイムアウトに任せる
+                setTimeout(function() {
+                    isManuallyScrolling = false;
+                }, 100);
+            }
         });
+        
+        // iOS用: スクロールが停止しているか定期的にチェック
+        scrollCheckInterval = setInterval(function() {
+            const currentScroll = scrollContainer.scrollLeft;
+            // スクロール位置が変わっていない場合、自動スクロールを再開
+            if (Math.abs(currentScroll - lastScrollLeft) < 0.1 && isUserScrolling && !isManuallyScrolling) {
+                isUserScrolling = false;
+            }
+            lastScrollLeft = currentScroll;
+        }, 500);
         
         // マウスホバー時は一時停止
         scrollContainer.addEventListener('mouseenter', function() {

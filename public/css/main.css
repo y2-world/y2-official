@@ -1605,7 +1605,7 @@ h2 {
 }
 
 .year-select {
-    padding: 12px 20px;
+    padding: 6px 10px;
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 25px;
     background: rgba(255, 255, 255, 0.15);
@@ -1615,7 +1615,7 @@ h2 {
     cursor: pointer;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
-    min-width: 120px;
+    min-width: 100px;
     flex-shrink: 0;
 }
 
@@ -1683,4 +1683,34 @@ h2 {
 .database-year-content .table a:hover {
     color: #764ba2;
     text-decoration: underline;
+}
+
+/* SP表示用の検索フォーム表示制御 */
+.database-title.sp {
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0.3);
+}
+
+.database-title.sp:active {
+    opacity: 0.7;
+}
+
+.sp-song-link {
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 769px) {
+    .database-title.sp {
+        display: none !important;
+    }
+    
+    .sp-song-link {
+        cursor: default;
+    }
+    
+    .sp-song-link[onclick] {
+        cursor: pointer;
+    }
 }

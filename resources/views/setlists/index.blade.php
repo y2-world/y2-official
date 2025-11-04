@@ -3,8 +3,13 @@
 @section('content')
     <div class="database-hero database-year-hero">
         <div class="container">
-            <h1 class="database-title">Setlists</h1>
-            <p class="database-subtitle">すべてのセットリスト</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <h1 class="database-title" style="margin-bottom: 0;">Setlists</h1>
+                {{-- 虫眼鏡アイコン（SP表示のみ） --}}
+                <button type="button" id="spSearchButtonSetlists" class="sp" onclick="document.getElementById('spSearchFormSetlists').style.display='block'; this.style.display='none';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 12px; border-radius: 50%; cursor: pointer; width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 0;">
+                    <i class="fa-solid fa-magnifying-glass" style="font-size: 18px;"></i>
+                </button>
+            </div>
 
             <div class="year-navigation">
                 <select class="year-select" name="select" onchange="if (this.value) window.location.href=this.value;">
@@ -25,6 +30,29 @@
                         <option value="{{ url('/setlists/years', $year->year) }}">{{ $year->year }}</option>
                     @endforeach
                 </select>
+            </div>
+
+            {{-- 検索フォーム（SP表示） --}}
+            <div class="sp" id="spSearchFormSetlists" style="margin-top: 30px; display: none;">
+                <div>
+                    <div class="search-wrapper">
+                        <input type="text" name="keyword" id="keyword-sp-setlists" class="database-search-input" placeholder="楽曲を検索..." style="font-size: 14px; padding: 12px 45px 12px 16px;" list="song-suggestions-sp-setlists">
+                        <datalist id="song-suggestions-sp-setlists">
+                            @foreach($suggestions as $suggestion)
+                                <option value="{{ $suggestion['title'] }}" label="{{ $suggestion['title'] }}{{ $suggestion['artist_name'] ? ' — ' . $suggestion['artist_name'] : '' }}"></option>
+                            @endforeach
+                        </datalist>
+                        <button type="button" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
+                            <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none; font-size: 16px;"></i>
+                        </button>
+                    </div>
+                    {{-- 閉じるボタン --}}
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button type="button" onclick="document.getElementById('spSearchFormSetlists').style.display='none'; document.getElementById('spSearchButtonSetlists').style.display='block';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-size: 13px;">
+                            閉じる
+                        </button>
+                    </div>
+                </div>
             </div>
 
             {{-- 検索フォーム（PC表示のみ） --}}
@@ -157,7 +185,7 @@
             @endforeach
         };
 
-        // 検索フォームの入力フィールド
+        // 検索フォームの入力フィールド（PC）
         const keywordInputSetlist = document.getElementById('keyword-pc');
         if (keywordInputSetlist) {
             // フォーム送信を防ぐ
@@ -172,6 +200,29 @@
             });
             
             keywordInputSetlist.addEventListener('change', function(e) {
+                const selectedTitle = e.target.value;
+                if (songMapSetlist[selectedTitle]) {
+                    // 候補から選択された場合は詳細ページへ
+                    window.location.href = '/setlist-songs/' + songMapSetlist[selectedTitle];
+                }
+            });
+        }
+
+        // 検索フォームの入力フィールド（SP）
+        const keywordInputSpSetlists = document.getElementById('keyword-sp-setlists');
+        if (keywordInputSpSetlists) {
+            // フォーム送信を防ぐ
+            keywordInputSpSetlists.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const selectedTitle = e.target.value;
+                    if (songMapSetlist[selectedTitle]) {
+                        window.location.href = '/setlist-songs/' + songMapSetlist[selectedTitle];
+                    }
+                }
+            });
+            
+            keywordInputSpSetlists.addEventListener('change', function(e) {
                 const selectedTitle = e.target.value;
                 if (songMapSetlist[selectedTitle]) {
                     // 候補から選択された場合は詳細ページへ
