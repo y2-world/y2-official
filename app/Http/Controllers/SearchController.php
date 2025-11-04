@@ -31,6 +31,28 @@ class SearchController extends Controller
 
         $query = Setlist::query();
 
+        // キーワード未入力でもアーティストが選択されていればアーティストで絞り込み
+        if (empty($keyword) && !empty($artist_id)) {
+            $artistIdInt = (int) $artist_id;
+            $artistJsonInt = json_encode(['artist' => $artistIdInt], JSON_UNESCAPED_UNICODE);
+            $artistJsonStr = json_encode(['artist' => (string) $artist_id], JSON_UNESCAPED_UNICODE);
+            $artistLikeInt = '%"artist":' . $artistIdInt . '%';
+            $artistLikeStr = '%"artist":"' . $artist_id . '"%';
+            $query->where(function ($query) use ($artist_id, $artistJsonInt, $artistJsonStr, $artistLikeInt, $artistLikeStr) {
+                // 単独ライブ
+                $query->where('artist_id', $artist_id)
+                    // フェス（JSON一致 or LIKE フォールバック）
+                    ->orWhereRaw('JSON_CONTAINS(fes_setlist, ?, "$")', [$artistJsonInt])
+                    ->orWhereRaw('JSON_CONTAINS(fes_encore, ?, "$")', [$artistJsonInt])
+                    ->orWhereRaw('JSON_CONTAINS(fes_setlist, ?, "$")', [$artistJsonStr])
+                    ->orWhereRaw('JSON_CONTAINS(fes_encore, ?, "$")', [$artistJsonStr])
+                    ->orWhere('fes_setlist', 'like', $artistLikeInt)
+                    ->orWhere('fes_encore', 'like', $artistLikeInt)
+                    ->orWhere('fes_setlist', 'like', $artistLikeStr)
+                    ->orWhere('fes_encore', 'like', $artistLikeStr);
+            });
+        }
+
         if (!empty($keyword)) {
             $query->where(function ($query) use ($artist_id, $keyword, $matchType, $songIds) {
                 if (!empty($artist_id)) {
@@ -52,14 +74,24 @@ class SearchController extends Controller
                         })
                         ->orWhere(function ($query) use ($artist_id, $keyword, $matchType, $songIds) {
                             // フェスの場合
-                            foreach ($songIds as $songId) {
-                                $query->orWhereRaw("JSON_CONTAINS(fes_setlist, JSON_OBJECT('song', ?, 'artist', ?))", [$songId, $artist_id])
-                                    ->orWhereRaw("JSON_CONTAINS(fes_encore, JSON_OBJECT('song', ?, 'artist', ?))", [$songId, $artist_id]);
-                            }
+                        foreach ($songIds as $songId) {
+                            $artistIdInt = (int) $artist_id;
+                            $comboJsonInt = json_encode(['song' => (int) $songId, 'artist' => $artistIdInt], JSON_UNESCAPED_UNICODE);
+                            $comboJsonStr = json_encode(['song' => (int) $songId, 'artist' => (string) $artist_id], JSON_UNESCAPED_UNICODE);
+                            $query->orWhereRaw('JSON_CONTAINS(fes_setlist, ?, "$")', [$comboJsonInt])
+                                ->orWhereRaw('JSON_CONTAINS(fes_encore, ?, "$")', [$comboJsonInt])
+                                ->orWhereRaw('JSON_CONTAINS(fes_setlist, ?, "$")', [$comboJsonStr])
+                                ->orWhereRaw('JSON_CONTAINS(fes_encore, ?, "$")', [$comboJsonStr]);
+                        }
                             // songフィールドが文字列（例外）の場合
                             if ($matchType === 'exact') {
-                                $query->orWhereRaw("JSON_CONTAINS(fes_setlist, JSON_OBJECT('song', ?, 'artist', ?))", [$keyword, $artist_id])
-                                    ->orWhereRaw("JSON_CONTAINS(fes_encore, JSON_OBJECT('song', ?, 'artist', ?))", [$keyword, $artist_id]);
+                                $artistIdInt = (int) $artist_id;
+                                $comboKeywordJsonInt = json_encode(['song' => (string) $keyword, 'artist' => $artistIdInt], JSON_UNESCAPED_UNICODE);
+                                $comboKeywordJsonStr = json_encode(['song' => (string) $keyword, 'artist' => (string) $artist_id], JSON_UNESCAPED_UNICODE);
+                                $query->orWhereRaw('JSON_CONTAINS(fes_setlist, ?, "$")', [$comboKeywordJsonInt])
+                                    ->orWhereRaw('JSON_CONTAINS(fes_encore, ?, "$")', [$comboKeywordJsonInt])
+                                    ->orWhereRaw('JSON_CONTAINS(fes_setlist, ?, "$")', [$comboKeywordJsonStr])
+                                    ->orWhereRaw('JSON_CONTAINS(fes_encore, ?, "$")', [$comboKeywordJsonStr]);
                             } else {
                                 $query->orWhere(function ($q) use ($keyword, $artist_id) {
                                     $q->where('fes_setlist', 'like', "%$keyword%")
@@ -99,7 +131,7 @@ class SearchController extends Controller
         $data = $query->orderBy('date', 'desc')->get();
         $artists = Artist::orderBy('id', 'asc')->get();
 
-        // 検索候補を取得（SetlistSongテーブルから）
+        // 以前の候補ロジック（曲名のみ）
         $suggestions = \App\Models\SetlistSong::select('id', 'title')
             ->orderBy('title', 'asc')
             ->get()

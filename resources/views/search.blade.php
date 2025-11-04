@@ -16,17 +16,17 @@
             {{-- 検索フォーム（SP表示） --}}
             <div class="sp" id="spSearchForm" style="margin-top: 30px; display: none;">
                 <form action="{{ url('/search') }}" method="GET" id="artistSearchFormSp">
-                    <input type="hidden" name="match_type" value="partial">
+                    <input type="hidden" name="match_type" value="exact">
 
                     {{-- 検索ワード編集 --}}
                     <div style="margin-bottom: 15px;">
                         <div class="search-wrapper">
                             <input type="text" name="keyword" id="keyword-sp" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}" style="font-size: 14px; padding: 12px 45px 12px 16px;" list="song-suggestions-sp">
-                            <datalist id="song-suggestions-sp">
-                                @foreach($suggestions as $suggestion)
-                                    <option value="{{ $suggestion['title'] }}"></option>
-                                @endforeach
-                            </datalist>
+                             <datalist id="song-suggestions-sp">
+                                 @foreach($suggestions as $suggestion)
+                                     <option value="{{ $suggestion['title'] }}"></option>
+                                 @endforeach
+                             </datalist>
                             <button type="submit" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
                                 <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none; font-size: 16px;"></i>
                             </button>
@@ -55,7 +55,7 @@
             {{-- 検索フォーム（PC表示のみ） --}}
             <div class="database-search pc" style="margin-top: 30px;">
                 <form action="{{ url('/search') }}" method="GET">
-                    <input type="hidden" name="match_type" value="partial">
+                    <input type="hidden" name="match_type" value="exact">
 
                     {{-- アーティスト選択 --}}
                     <div style="margin-bottom: 20px;">
@@ -71,11 +71,11 @@
 
                     <div class="search-wrapper">
                         <input type="text" name="keyword" id="keyword-pc" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}" list="song-suggestions-pc">
-                        <datalist id="song-suggestions-pc">
-                            @foreach($suggestions as $suggestion)
-                                <option value="{{ $suggestion['title'] }}"></option>
-                            @endforeach
-                        </datalist>
+                         <datalist id="song-suggestions-pc">
+                             @foreach($suggestions as $suggestion)
+                                 <option value="{{ $suggestion['title'] }}"></option>
+                             @endforeach
+                         </datalist>
                         <button type="submit" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
                             <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none;"></i>
                         </button>

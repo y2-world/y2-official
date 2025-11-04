@@ -52,11 +52,6 @@ class SingleResource extends Resource
                     ->onColor('success')
                     ->offColor('gray'),
 
-                Forms\Components\Textarea::make('text')
-                    ->label('テキスト')
-                    ->rows(5)
-                    ->columnSpanFull(),
-
                 // 収録曲
                 Forms\Components\Repeater::make('tracklist')
                     ->label('収録曲')
@@ -93,6 +88,12 @@ class SingleResource extends Resource
                         }
                         return (string) (count($items) ?: 1);
                     }),
+
+                // コメント（収録曲の後に移動）
+                Forms\Components\Textarea::make('text')
+                    ->label('テキスト')
+                    ->rows(5)
+                    ->columnSpanFull(),
             ]);
     }
 

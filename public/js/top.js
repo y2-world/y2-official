@@ -253,3 +253,22 @@ document.addEventListener('DOMContentLoaded', function () {
         overlay.classList.remove('open');
     }
 });
+
+// Fade-in on observe
+document.addEventListener('DOMContentLoaded', function () {
+    const fadeTargets = document.querySelectorAll('.js-fadein');
+    if (!('IntersectionObserver' in window)) {
+        // fallback
+        fadeTargets.forEach(el => el.classList.add('is-show'));
+        return;
+    }
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-show');
+                io.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.2 });
+    fadeTargets.forEach(el => io.observe(el));
+});

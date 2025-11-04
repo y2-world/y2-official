@@ -30,12 +30,13 @@
             {{-- 検索フォーム（PC表示のみ） --}}
             <div class="database-search pc" style="margin-top: 30px;">
                 <form action="{{ url('/search') }}" method="GET" id="setlist-search-form">
-                    <input type="hidden" name="match_type" value="partial">
+                    <input type="hidden" name="match_type" value="exact">
+
                     <div class="search-wrapper">
-                        <input type="text" name="keyword" id="keyword-setlist" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}" list="song-suggestions-setlist">
-                        <datalist id="song-suggestions-setlist">
+                        <input type="text" name="keyword" id="keyword-pc" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}" list="song-suggestions-pc">
+                        <datalist id="song-suggestions-pc">
                             @foreach($suggestions as $suggestion)
-                                <option value="{{ $suggestion['title'] }}"></option>
+                                <option value="{{ $suggestion['title'] }}" label="{{ $suggestion['title'] }} — {{ $suggestion['artist_name'] ?? 'Unknown' }}"></option>
                             @endforeach
                         </datalist>
                         <button type="submit" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
@@ -159,7 +160,7 @@
         };
 
         // 検索フォームの入力フィールド
-        const keywordInputSetlist = document.getElementById('keyword-setlist');
+        const keywordInputSetlist = document.getElementById('keyword-pc');
         if (keywordInputSetlist) {
             keywordInputSetlist.addEventListener('change', function(e) {
                 const selectedTitle = e.target.value;

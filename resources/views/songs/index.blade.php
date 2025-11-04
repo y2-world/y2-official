@@ -6,6 +6,37 @@
             <h1 class="database-title">Songs</h1>
             <p class="database-subtitle">すべての楽曲コレクション</p>
 
+            {{-- 検索フォーム（PC表示のみ） --}}
+            <div class="database-search pc" style="margin-top: 30px;">
+                <form action="{{ url('/search') }}" method="GET" id="songs-search-form">
+                    <input type="hidden" name="match_type" value="exact">
+
+                    {{-- アーティスト選択 --}}
+                    <div style="margin-bottom: 20px;">
+                        <select name="artist_id" class="year-select" style="width: 100%; max-width: 300px; margin: 0 auto;">
+                            <option value="">全アーティスト</option>
+                            @foreach($artists as $artist)
+                                <option value="{{ $artist->id }}" {{ request('artist_id') == $artist->id ? 'selected' : '' }}>
+                                    {{ $artist->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="search-wrapper">
+                        <input type="text" name="keyword" id="keyword-pc" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}" list="song-suggestions-pc">
+                        <datalist id="song-suggestions-pc">
+                            @foreach($suggestions as $suggestion)
+                                <option value="{{ $suggestion['title'] }}" label="{{ $suggestion['title'] }} — {{ $suggestion['artist_name'] ?? 'Unknown' }}"></option>
+                            @endforeach
+                        </datalist>
+                        <button type="submit" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
+                            <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none;"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
             <div class="year-navigation">
                 <select class="year-select" name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Discography</option>
@@ -72,5 +103,24 @@
                 }
             @endif
         });
+    </script>
+    <script>
+        // 検索候補のデータマップを作成
+        const songMapSongs = {
+            @foreach($suggestions as $suggestion)
+                "{{ $suggestion['title'] }}": {{ $suggestion['id'] }},
+            @endforeach
+        };
+
+        // 入力フィールドで候補選択時に曲ページへ
+        const keywordInputSongs = document.getElementById('keyword-pc');
+        if (keywordInputSongs) {
+            keywordInputSongs.addEventListener('change', function(e) {
+                const selectedTitle = e.target.value;
+                if (songMapSongs[selectedTitle]) {
+                    window.location.href = '/setlist-songs/' + songMapSongs[selectedTitle];
+                }
+            });
+        }
     </script>
 @endsection

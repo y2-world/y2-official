@@ -71,10 +71,22 @@ class SetlistController extends Controller
             ]);
         }
 
-        // 検索候補を取得（SetlistSongテーブルから）
-        $suggestions = \App\Models\SetlistSong::select('id', 'title')
-            ->orderBy('title', 'asc')
-            ->get()
+        // 検索候補を取得（曲名 + アーティスト名）
+        $suggestions = \App\Models\SetlistSong::query()
+            ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
+            ->orderBy('setlist_songs.title', 'asc')
+            ->get([
+                'setlist_songs.id as id',
+                'setlist_songs.title as title',
+                'artists.name as artist_name',
+            ])
+            ->map(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'title' => $row->title,
+                    'artist_name' => $row->artist_name,
+                ];
+            })
             ->toArray();
 
         // ビューにデータを渡して表示する

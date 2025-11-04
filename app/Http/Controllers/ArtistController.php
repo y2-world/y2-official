@@ -94,10 +94,23 @@ class ArtistController extends Controller
         ->orderBy('date', 'asc')
         ->paginate(100);
 
-        // 検索候補を取得（SetlistSongテーブルから）
-        $suggestions = \App\Models\SetlistSong::select('id', 'title')
-            ->orderBy('title', 'asc')
-            ->get()
+        // 検索候補（曲名 + アーティスト名）
+        $suggestions = \App\Models\SetlistSong::query()
+            ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
+            ->orderBy('setlist_songs.title', 'asc')
+            ->get([
+                'setlist_songs.id as id',
+                'setlist_songs.title as title',
+                'artists.name as artist_name',
+            ])
+            ->map(function ($row) use ($artist) {
+                return [
+                    'id' => $row->id,
+                    'title' => $row->title,
+                    // アーティスト未設定の曲は、このページのアーティスト名で補完
+                    'artist_name' => $row->artist_name ?: $artist->name,
+                ];
+            })
             ->toArray();
 
         return view('artists.show', [

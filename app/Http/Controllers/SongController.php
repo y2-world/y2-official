@@ -28,6 +28,27 @@ class SongController extends Controller
         $bios = Bio::orderBy('id', 'asc')
             ->get();
 
+        // 検索用候補（曲名 + アーティスト名）
+        $suggestions = \App\Models\SetlistSong::query()
+            ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
+            ->orderBy('setlist_songs.title', 'asc')
+            ->get([
+                'setlist_songs.id as id',
+                'setlist_songs.title as title',
+                'artists.name as artist_name',
+            ])
+            ->map(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'title' => $row->title,
+                    'artist_name' => $row->artist_name,
+                ];
+            })
+            ->toArray();
+
+        // アーティスト一覧（検索フォーム用）
+        $artists = \App\Artist::orderBy('id', 'asc')->get();
+
         // AJAXリクエストの場合はJSON形式で返す
         if (request()->wantsJson() || request()->ajax()) {
             $html = view('songs._list', compact('songs', 'totalCount'))->render();
@@ -39,7 +60,7 @@ class SongController extends Controller
             ]);
         }
 
-        return view('songs.index', compact('albums', 'songs', 'bios', 'totalCount'));
+        return view('songs.index', compact('albums', 'songs', 'bios', 'totalCount', 'suggestions', 'artists'));
     }
 
     /**
@@ -166,7 +187,16 @@ class SongController extends Controller
     public function search(Request $request)
     {
         $query = $request->input('q');
-        $songs = Song::where('title', 'LIKE', "%{$query}%")->get(['id', 'title']);
+        $songs = Song::query()
+            ->leftJoin('artists', 'artists.id', '=', 'songs.artist_id')
+            ->where('songs.title', 'LIKE', "%{$query}%")
+            ->orderBy('songs.title')
+            ->limit(20)
+            ->get([
+                'songs.id as id',
+                'songs.title as title',
+                'artists.name as artist',
+            ]);
 
         return response()->json($songs);
     }

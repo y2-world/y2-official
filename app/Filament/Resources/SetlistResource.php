@@ -126,10 +126,13 @@ class SetlistResource extends Resource
                                     ->createOptionUsing(function (array $data, Forms\Get $get): int {
                                         $artistId = $get('../../artist_id');
 
-                                        $song = \App\Models\SetlistSong::create([
-                                            'title' => $data['title'],
-                                            'artist_id' => $artistId,
-                                        ]);
+                                        $song = \App\Models\SetlistSong::firstOrCreate(
+                                            [
+                                                'title' => $data['title'],
+                                                'artist_id' => $artistId,
+                                            ],
+                                            []
+                                        );
 
                                         return $song->id;
                                     })
@@ -211,10 +214,13 @@ class SetlistResource extends Resource
                                     ->createOptionUsing(function (array $data, Forms\Get $get): int {
                                         $artistId = $get('../../artist_id');
 
-                                        $song = \App\Models\SetlistSong::create([
-                                            'title' => $data['title'],
-                                            'artist_id' => $artistId,
-                                        ]);
+                                        $song = \App\Models\SetlistSong::firstOrCreate(
+                                            [
+                                                'title' => $data['title'],
+                                                'artist_id' => $artistId,
+                                            ],
+                                            []
+                                        );
 
                                         return $song->id;
                                     })
@@ -333,10 +339,13 @@ class SetlistResource extends Resource
                                     ->createOptionUsing(function (array $data, Forms\Set $set, Forms\Get $get): int {
                                         $artistId = $get('artist');
 
-                                        $song = \App\Models\SetlistSong::create([
-                                            'title' => $data['title'],
-                                            'artist_id' => $artistId,
-                                        ]);
+                                        $song = \App\Models\SetlistSong::firstOrCreate(
+                                            [
+                                                'title' => $data['title'],
+                                                'artist_id' => $artistId,
+                                            ],
+                                            []
+                                        );
 
                                         return $song->id;
                                     })
