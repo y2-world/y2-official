@@ -24,7 +24,7 @@
                             <input type="text" name="keyword" id="keyword-sp" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}" style="font-size: 14px; padding: 12px 45px 12px 16px;" list="song-suggestions-sp">
                              <datalist id="song-suggestions-sp">
                                  @foreach($suggestions as $suggestion)
-                                     <option value="{{ $suggestion['title'] }}"></option>
+                                     <option value="{{ $suggestion['title'] }}" label="{{ $suggestion['title'] }} — {{ $suggestion['artist_name'] ?? 'Unknown' }}"></option>
                                  @endforeach
                              </datalist>
                             <button type="submit" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
@@ -73,7 +73,7 @@
                         <input type="text" name="keyword" id="keyword-pc" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}" list="song-suggestions-pc">
                          <datalist id="song-suggestions-pc">
                              @foreach($suggestions as $suggestion)
-                                 <option value="{{ $suggestion['title'] }}"></option>
+                                 <option value="{{ $suggestion['title'] }}" label="{{ $suggestion['title'] }} — {{ $suggestion['artist_name'] ?? 'Unknown' }}"></option>
                              @endforeach
                          </datalist>
                         <button type="submit" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">

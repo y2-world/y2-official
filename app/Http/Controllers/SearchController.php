@@ -131,10 +131,22 @@ class SearchController extends Controller
         $data = $query->orderBy('date', 'desc')->get();
         $artists = Artist::orderBy('id', 'asc')->get();
 
-        // 以前の候補ロジック（曲名のみ）
-        $suggestions = \App\Models\SetlistSong::select('id', 'title')
-            ->orderBy('title', 'asc')
-            ->get()
+        // 検索候補（曲名 + アーティスト名）
+        $suggestions = \App\Models\SetlistSong::query()
+            ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
+            ->orderBy('setlist_songs.title', 'asc')
+            ->get([
+                'setlist_songs.id as id',
+                'setlist_songs.title as title',
+                'artists.name as artist_name',
+            ])
+            ->map(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'title' => $row->title,
+                    'artist_name' => $row->artist_name,
+                ];
+            })
             ->toArray();
 
         return view('search', compact('data', 'keyword', 'artist_id', 'artists', 'matchType', 'suggestions'));

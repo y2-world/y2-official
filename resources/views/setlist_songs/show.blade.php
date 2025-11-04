@@ -25,7 +25,7 @@
                         <input type="text" name="keyword" id="keyword-setlist-song" class="database-search-input" placeholder="楽曲を検索..." list="song-suggestions-setlist-song">
                         <datalist id="song-suggestions-setlist-song">
                             @foreach($suggestions as $suggestion)
-                                <option value="{{ $suggestion['title'] }}"></option>
+                                <option value="{{ $suggestion['title'] }}" label="{{ $suggestion['title'] }} — {{ $suggestion['artist_name'] ?? 'Unknown' }}"></option>
                             @endforeach
                         </datalist>
                         <button type="submit" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">

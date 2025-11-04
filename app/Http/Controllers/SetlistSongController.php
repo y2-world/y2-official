@@ -65,10 +65,22 @@ class SetlistSongController extends Controller
         $previous = SetlistSong::where('id', '<', $song->id)->orderBy('id', 'desc')->first();
         $next = SetlistSong::where('id', '>', $song->id)->orderBy('id')->first();
 
-        // 検索候補を取得（SetlistSongテーブルから）
-        $suggestions = SetlistSong::select('id', 'title')
-            ->orderBy('title', 'asc')
-            ->get()
+        // 検索候補（曲名 + アーティスト名）
+        $suggestions = SetlistSong::query()
+            ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
+            ->orderBy('setlist_songs.title', 'asc')
+            ->get([
+                'setlist_songs.id as id',
+                'setlist_songs.title as title',
+                'artists.name as artist_name',
+            ])
+            ->map(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'title' => $row->title,
+                    'artist_name' => $row->artist_name,
+                ];
+            })
             ->toArray();
 
         return view('setlist_songs.show', compact(
