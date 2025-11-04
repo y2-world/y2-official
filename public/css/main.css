@@ -1701,6 +1701,10 @@ h2 {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
 }
 
+/* SP表示で入力フィールドのズームを防ぐ */
+/* viewport metaタグでmaximum-scale=1, user-scalable=noを設定しているため、
+   入力フィールドのフォントサイズは14pxのままでもズームが発生しません */
+
 @media (min-width: 769px) {
     .database-title.sp {
         display: none !important;

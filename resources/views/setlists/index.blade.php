@@ -48,8 +48,8 @@
                     </div>
                     {{-- 閉じるボタン --}}
                     <div style="text-align: center; margin-top: 15px;">
-                        <button type="button" onclick="document.getElementById('spSearchFormSetlists').style.display='none'; document.getElementById('spSearchButtonSetlists').style.display='block';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-size: 13px;">
-                            閉じる
+                        <button type="button" onclick="document.getElementById('spSearchFormSetlists').style.display='none'; document.getElementById('spSearchButtonSetlists').style.display='block';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;">
+                            <i class="fa-solid fa-xmark" style="font-size: 16px;"></i>
                         </button>
                     </div>
                 </div>
