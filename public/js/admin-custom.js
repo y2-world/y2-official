@@ -97,3 +97,64 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+// 楽曲選択後のアーティスト名表示を非表示にする
+function updateSongSelectDisplay() {
+  // FilamentのSelectコンポーネント（Tom Select）を探す
+  document.querySelectorAll('select[name*="[song]"]').forEach(select => {
+    // 選択されたオプションを取得
+    const selectedOption = select.options[select.selectedIndex];
+    if (selectedOption && selectedOption.text) {
+      const text = selectedOption.text;
+      // 「 - アーティスト名」の部分を削除
+      const titleOnly = text.split(' - ')[0];
+      
+      // Tom Selectの表示要素を更新
+      const tomSelect = select.tomselect || select.tomSelect;
+      if (tomSelect) {
+        // 選択された値に対応するアイテムを更新
+        const selectedValue = select.value;
+        if (selectedValue) {
+          // 少し遅延してから更新（Livewireの更新を待つ）
+          setTimeout(() => {
+            const control = tomSelect.control;
+            if (control) {
+              const singleValue = control.querySelector('.item');
+              if (singleValue && singleValue.textContent !== titleOnly) {
+                singleValue.textContent = titleOnly;
+              }
+            }
+          }, 100);
+        }
+      } else {
+        // Tom Selectがまだ初期化されていない場合、直接オプションのテキストを更新
+        if (selectedOption.text !== titleOnly) {
+          selectedOption.text = titleOnly;
+        }
+      }
+    }
+  });
+}
+
+// DOMContentLoaded時にも実行
+document.addEventListener('DOMContentLoaded', () => {
+  // 全てのsongセレクトに変更イベントを追加
+  const observer = new MutationObserver(() => {
+    setTimeout(updateSongSelectDisplay, 100);
+  });
+  
+  // フォーム全体を監視
+  const form = document.querySelector('form');
+  if (form) {
+    observer.observe(form, {
+      childList: true,
+      subtree: true
+    });
+  }
+  
+  // 定期的にチェック（Livewire/Alpineの更新に対応）
+  setInterval(updateSongSelectDisplay, 300);
+  
+  // 初期実行
+  setTimeout(updateSongSelectDisplay, 500);
+});

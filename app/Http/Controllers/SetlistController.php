@@ -27,7 +27,7 @@ class SetlistController extends Controller
             $upcomingQuery->whereIn('fes', [1, 2]);
         }
 
-        $upcomingSetlists = $upcomingQuery->get();
+        $upcomingSetlists = $upcomingQuery->with('artist')->get();
         $upcomingTotalCount = $upcomingSetlists->count();
 
         // 今までのライブ（今日より前）
@@ -39,7 +39,7 @@ class SetlistController extends Controller
             $pastQuery->whereIn('fes', [1, 2]);
         }
 
-        $pastSetlists = $pastQuery->paginate(10);
+        $pastSetlists = $pastQuery->with('artist')->paginate(10);
         $pastTotalCount = $pastSetlists->total();
 
         // アーティスト、全てのアーティスト、年のデータを取得する
@@ -84,7 +84,7 @@ class SetlistController extends Controller
                 return [
                     'id' => $row->id,
                     'title' => $row->title,
-                    'artist_name' => $row->artist_name,
+                    'artist_name' => $row->artist_name ?? '',
                 ];
             })
             ->toArray();
@@ -122,7 +122,7 @@ class SetlistController extends Controller
      */
     public function show($id)
     {
-        $setlists = Setlist::find($id);
+        $setlists = Setlist::with('artist')->findOrFail($id);
         $artists = Artist::orderBy('id', 'asc')
         ->get();
         $previous = Setlist::where('date', '<', $setlists->date)->orderBy('date', 'desc')->first();

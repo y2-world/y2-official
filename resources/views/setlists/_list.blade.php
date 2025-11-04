@@ -7,7 +7,7 @@
         <td>{{ $startNumber - $index }}</td>
         <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
         @if (request('type') != 2)
-            @if (isset($setlist->artist_id))
+            @if (isset($setlist->artist_id) && $setlist->artist)
                 <td class="sp">
                     <a href="{{ url('/setlists/artists', $setlist->artist_id) }}">{{ $setlist->artist->name }}</a>
                     /

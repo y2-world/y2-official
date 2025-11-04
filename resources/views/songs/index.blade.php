@@ -8,33 +8,19 @@
 
             {{-- 検索フォーム（PC表示のみ） --}}
             <div class="database-search pc" style="margin-top: 30px;">
-                <form action="{{ url('/search') }}" method="GET" id="songs-search-form">
-                    <input type="hidden" name="match_type" value="exact">
-
-                    {{-- アーティスト選択 --}}
-                    <div style="margin-bottom: 20px;">
-                        <select name="artist_id" class="year-select" style="width: 100%; max-width: 300px; margin: 0 auto;">
-                            <option value="">全アーティスト</option>
-                            @foreach($artists as $artist)
-                                <option value="{{ $artist->id }}" {{ request('artist_id') == $artist->id ? 'selected' : '' }}>
-                                    {{ $artist->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
+                <div>
                     <div class="search-wrapper">
                         <input type="text" name="keyword" id="keyword-pc" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}" list="song-suggestions-pc">
                         <datalist id="song-suggestions-pc">
                             @foreach($suggestions as $suggestion)
-                                <option value="{{ $suggestion['title'] }}" label="{{ $suggestion['title'] }} — {{ $suggestion['artist_name'] ?? 'Unknown' }}"></option>
+                                <option value="{{ $suggestion['title'] }}" label="{{ $suggestion['title'] }}{{ $suggestion['artist_name'] ? ' — ' . $suggestion['artist_name'] : '' }}"></option>
                             @endforeach
                         </datalist>
-                        <button type="submit" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
+                        <button type="button" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
                             <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none;"></i>
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
 
             <div class="year-navigation">
@@ -115,6 +101,17 @@
         // 入力フィールドで候補選択時に曲ページへ
         const keywordInputSongs = document.getElementById('keyword-pc');
         if (keywordInputSongs) {
+            // フォーム送信を防ぐ
+            keywordInputSongs.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const selectedTitle = e.target.value;
+                    if (songMapSongs[selectedTitle]) {
+                        window.location.href = '/setlist-songs/' + songMapSongs[selectedTitle];
+                    }
+                }
+            });
+            
             keywordInputSongs.addEventListener('change', function(e) {
                 const selectedTitle = e.target.value;
                 if (songMapSongs[selectedTitle]) {

@@ -178,6 +178,134 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+// 自動スクロール + 手動スクロール対応
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollContainer = document.querySelector('.album-wrapper-scroll');
+    if (!scrollContainer) return;
+    
+    const inner = scrollContainer.querySelector('.album-wrapper-inner');
+    if (!inner) return;
+    
+    let isUserScrolling = false;
+    let scrollTimeout = null;
+    let autoScrollSpeed = 0.5; // ピクセル/フレーム
+    let scrollPosition = 0;
+    let animationFrameId = null;
+    let isPaused = false;
+    
+    // コンテンツが読み込まれるまで待つ
+    function initAutoScroll() {
+        // コンテナの幅とコンテンツの幅を取得
+        const containerWidth = scrollContainer.clientWidth;
+        const contentWidth = inner.scrollWidth;
+        // コンテンツが2回繰り返されているので、実際の幅は半分
+        const actualContentWidth = contentWidth / 2;
+        const maxScroll = actualContentWidth;
+        
+        if (maxScroll <= 0) {
+            // コンテンツがまだ読み込まれていない場合は再試行
+            setTimeout(initAutoScroll, 100);
+            return;
+        }
+        
+        // 自動スクロール関数
+        function autoScroll() {
+            if (isUserScrolling || isPaused) {
+                // 手動スクロール中または一時停止中は自動スクロールを停止
+                animationFrameId = requestAnimationFrame(autoScroll);
+                return;
+            }
+            
+            // 現在のスクロール位置を取得（手動スクロール後の位置を保持）
+            const currentScroll = scrollContainer.scrollLeft;
+            
+            // 50%を超えた位置にいる場合は、無限ループのため位置を調整
+            // ただし、手動スクロール後の位置は保持
+            let nextPosition = currentScroll + autoScrollSpeed;
+            
+            // 50%の位置（maxScroll）を超えた場合は、最初に戻す（無限ループ）
+            if (nextPosition >= maxScroll) {
+                nextPosition = nextPosition - maxScroll;
+            }
+            
+            scrollPosition = nextPosition;
+            scrollContainer.scrollLeft = scrollPosition;
+            animationFrameId = requestAnimationFrame(autoScroll);
+        }
+        
+        // 手動スクロールの検知
+        let isManuallyScrolling = false;
+        let lastManualScrollPosition = 0;
+        
+        // マウスやタッチでスクロールを開始した時
+        scrollContainer.addEventListener('mousedown', function() {
+            isManuallyScrolling = true;
+            isUserScrolling = true;
+        });
+        
+        scrollContainer.addEventListener('touchstart', function() {
+            isManuallyScrolling = true;
+            isUserScrolling = true;
+        });
+        
+        // スクロールイベント
+        scrollContainer.addEventListener('scroll', function() {
+            if (isManuallyScrolling) {
+                const currentScrollLeft = scrollContainer.scrollLeft;
+                // 手動スクロール位置を記録
+                // 50%を超えた位置の場合は、無限ループのため最初のコンテンツ内の位置に調整
+                let adjustedPosition = currentScrollLeft;
+                if (adjustedPosition >= maxScroll) {
+                    adjustedPosition = adjustedPosition % maxScroll;
+                }
+                lastManualScrollPosition = adjustedPosition;
+                scrollPosition = adjustedPosition;
+                
+                // スクロールが終わったら自動スクロールを再開
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(function() {
+                    isManuallyScrolling = false;
+                    isUserScrolling = false;
+                    // 手動スクロール後の位置（調整済み）から自動スクロールを継続
+                    scrollPosition = lastManualScrollPosition;
+                    // 実際のスクロール位置も調整
+                    scrollContainer.scrollLeft = scrollPosition;
+                }, 1500); // 1.5秒後に自動スクロール再開
+            }
+        });
+        
+        // マウスやタッチを離した時
+        scrollContainer.addEventListener('mouseup', function() {
+            setTimeout(function() {
+                isManuallyScrolling = false;
+            }, 100);
+        });
+        
+        scrollContainer.addEventListener('touchend', function() {
+            setTimeout(function() {
+                isManuallyScrolling = false;
+            }, 100);
+        });
+        
+        // マウスホバー時は一時停止
+        scrollContainer.addEventListener('mouseenter', function() {
+            isPaused = true;
+        });
+        
+        scrollContainer.addEventListener('mouseleave', function() {
+            setTimeout(function() {
+                isPaused = false;
+            }, 500);
+        });
+        
+        // 自動スクロール開始
+        autoScroll();
+    }
+    
+    // 初期化
+    initAutoScroll();
+});
+
 document.addEventListener('DOMContentLoaded', function () {
     const overlay = document.getElementById('overlay');
     const popup = document.getElementById('news-popup');

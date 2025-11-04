@@ -3,7 +3,7 @@
 @section('content')
     <div class="database-hero database-year-hero">
         <div class="container">
-            @if (!$setlists->fes)
+            @if (!$setlists->fes && $setlists->artist)
                 <p class="database-subtitle" style="margin-bottom: 10px;">
                     <a href="{{ url('/setlists/artists', $setlists->artist_id) }}" style="color: white; text-decoration: none;">
                         {{ $setlists->artist->name }}
@@ -70,16 +70,26 @@
                                 // SetlistSongの詳細ページにリンク
                                 $url = url('/setlist-songs/' . $songValue);
                             } else {
-                                // 文字列の場合はそのまま使用（例外処理）
+                                // 文字列の場合はSetlistSongテーブルから検索
                                 $songTitle = $songValue;
-                                // 検索ページにリンク（移行中の対応）
-                                $parts = splitAnnotation($songTitle);
-                                $main = $parts['main'];
-                                $matchType = hasAnnotation($songTitle) ? 'partial' : 'exact';
-                                $keyword = hasAnnotation($songTitle) ? $main : $songTitle;
-                                $urlParams = $artistId ? ['artist_id' => $artistId, 'keyword' => $keyword, 'match_type' => $matchType]
-                                                        : ['keyword' => $keyword, 'match_type' => $matchType];
-                                $url = url('/search') . '?' . http_build_query($urlParams);
+                                // タイトルから[xxx]の部分を削除して検索
+                                $cleanTitle = preg_replace('/\s*\[[^\]]+\]/u', '', $songTitle);
+                                $cleanTitle = trim($cleanTitle);
+                                
+                                // SetlistSongを検索（タイトルとartist_idで）
+                                $setlistSong = \App\Models\SetlistSong::where('title', $cleanTitle);
+                                if ($artistId) {
+                                    $setlistSong = $setlistSong->where('artist_id', $artistId);
+                                }
+                                $setlistSong = $setlistSong->first();
+                                
+                                if ($setlistSong) {
+                                    // 見つかった場合は詳細ページにリンク
+                                    $url = url('/setlist-songs/' . $setlistSong->id);
+                                } else {
+                                    // 見つからない場合はテキストのみ（リンクなし）
+                                    $url = '#';
+                                }
                             }
 
                             $parts = splitAnnotation($songTitle);
@@ -93,7 +103,11 @@
                             $isMedley = !empty($data['medley']) && $data['medley'] == 1;
 
                             if ($isMedley) {
-                                echo '- <a href="' . $url . '">' . $keyword . '</a>';
+                                if ($url !== '#') {
+                                    echo '- <a href="' . $url . '">' . $keyword . '</a>';
+                                } else {
+                                    echo '- ' . $keyword;
+                                }
                                 if (!empty($featuring)) {
                                     echo $featuring;
                                 }
@@ -103,7 +117,12 @@
                                 echo '<br>';
                             } else {
                                 $count++;
-                                echo '<li><a href="' . $url . '">' . $keyword . '</a>';
+                                echo '<li>';
+                                if ($url !== '#') {
+                                    echo '<a href="' . $url . '">' . $keyword . '</a>';
+                                } else {
+                                    echo $keyword;
+                                }
                                 if (!empty($featuring)) {
                                     echo $featuring;
                                 }
@@ -166,16 +185,26 @@
                                 // SetlistSongの詳細ページにリンク
                                 $url = url('/setlist-songs/' . $songValue);
                             } else {
-                                // 文字列の場合はそのまま使用（例外処理）
+                                // 文字列の場合はSetlistSongテーブルから検索
                                 $songTitle = $songValue;
-                                // 検索ページにリンク（移行中の対応）
-                                $parts = splitAnnotation($songTitle);
-                                $main = $parts['main'];
-                                $matchType = hasAnnotation($songTitle) ? 'partial' : 'exact';
-                                $keyword = hasAnnotation($songTitle) ? $main : $songTitle;
-                                $urlParams = $artistId ? ['artist_id' => $artistId, 'keyword' => $keyword, 'match_type' => $matchType]
-                                                        : ['keyword' => $keyword, 'match_type' => $matchType];
-                                $url = url('/search') . '?' . http_build_query($urlParams);
+                                // タイトルから[xxx]の部分を削除して検索
+                                $cleanTitle = preg_replace('/\s*\[[^\]]+\]/u', '', $songTitle);
+                                $cleanTitle = trim($cleanTitle);
+                                
+                                // SetlistSongを検索（タイトルとartist_idで）
+                                $setlistSong = \App\Models\SetlistSong::where('title', $cleanTitle);
+                                if ($artistId) {
+                                    $setlistSong = $setlistSong->where('artist_id', $artistId);
+                                }
+                                $setlistSong = $setlistSong->first();
+                                
+                                if ($setlistSong) {
+                                    // 見つかった場合は詳細ページにリンク
+                                    $url = url('/setlist-songs/' . $setlistSong->id);
+                                } else {
+                                    // 見つからない場合はテキストのみ（リンクなし）
+                                    $url = '#';
+                                }
                             }
 
                             $isMedley = !empty($data['medley']) && $data['medley'] == 1;
@@ -222,16 +251,26 @@
                                     // SetlistSongの詳細ページにリンク
                                     $url = url('/setlist-songs/' . $songValue);
                                 } else {
-                                    // 文字列の場合はそのまま使用（例外処理）
+                                    // 文字列の場合はSetlistSongテーブルから検索
                                     $songTitle = $songValue;
-                                    // 検索ページにリンク（移行中の対応）
-                                    $parts = splitAnnotation($songTitle);
-                                    $main = $parts['main'];
-                                    $matchType = hasAnnotation($songTitle) ? 'partial' : 'exact';
-                                    $keyword = hasAnnotation($songTitle) ? $main : $songTitle;
-                                    $urlParams = $artistId ? ['artist_id' => $artistId, 'keyword' => $keyword, 'match_type' => $matchType]
-                                                            : ['keyword' => $keyword, 'match_type' => $matchType];
-                                    $url = url('/search') . '?' . http_build_query($urlParams);
+                                    // タイトルから[xxx]の部分を削除して検索
+                                    $cleanTitle = preg_replace('/\s*\[[^\]]+\]/u', '', $songTitle);
+                                    $cleanTitle = trim($cleanTitle);
+                                    
+                                    // SetlistSongを検索（タイトルとartist_idで）
+                                    $setlistSong = \App\Models\SetlistSong::where('title', $cleanTitle);
+                                    if ($artistId) {
+                                        $setlistSong = $setlistSong->where('artist_id', $artistId);
+                                    }
+                                    $setlistSong = $setlistSong->first();
+                                    
+                                    if ($setlistSong) {
+                                        // 見つかった場合は詳細ページにリンク
+                                        $url = url('/setlist-songs/' . $setlistSong->id);
+                                    } else {
+                                        // 見つからない場合はテキストのみ（リンクなし）
+                                        $url = '#';
+                                    }
                                 }
 
                                 $isMedley = !empty($data['medley']) && $data['medley'] == 1;
@@ -253,9 +292,9 @@
                             @endif
 
                             @if ($isMedley)
-                                - <a href="{{ $url }}">{{ $keyword }}</a>{{ !empty($featuring) ? $featuring : '' }}{{ !empty($annotation) ? ' ' . $annotation : '' }}<br>
+                                - @if($url !== '#')<a href="{{ $url }}">{{ $keyword }}</a>@else{{ $keyword }}@endif{{ !empty($featuring) ? $featuring : '' }}{{ !empty($annotation) ? ' ' . $annotation : '' }}<br>
                             @else
-                                <li><a href="{{ $url }}">{{ $keyword }}</a>{{ !empty($featuring) ? $featuring : '' }}{{ !empty($annotation) ? ' ' . $annotation : '' }}</li>
+                                <li>@if($url !== '#')<a href="{{ $url }}">{{ $keyword }}</a>@else{{ $keyword }}@endif{{ !empty($featuring) ? $featuring : '' }}{{ !empty($annotation) ? ' ' . $annotation : '' }}</li>
                             @endif
 
                             @php $prevArtistId = $artistId; @endphp

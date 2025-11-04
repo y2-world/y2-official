@@ -24,21 +24,19 @@
 
             {{-- 検索フォーム（PC表示のみ） --}}
             <div class="database-search pc" style="margin-top: 30px;">
-                <form action="{{ url('/search') }}" method="GET" id="artist-search-form">
-                    <input type="hidden" name="artist_id" value="{{ $artist_id }}">
-                    <input type="hidden" name="match_type" value="exact">
+                <div>
                     <div class="search-wrapper">
                         <input type="text" name="keyword" id="keyword-pc" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}" list="song-suggestions-pc">
                         <datalist id="song-suggestions-pc">
                             @foreach($suggestions as $suggestion)
-                                <option value="{{ $suggestion['title'] }}" label="{{ $suggestion['title'] }} — {{ $suggestion['artist_name'] ?? 'Unknown' }}"></option>
+                                <option value="{{ $suggestion['title'] }}" label="{{ $suggestion['title'] }}{{ $suggestion['artist_name'] ? ' — ' . $suggestion['artist_name'] : '' }}"></option>
                             @endforeach
                         </datalist>
-                        <button type="submit" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
+                        <button type="button" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
                             <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none;"></i>
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -88,6 +86,17 @@
     // 検索フォームの入力フィールド
     const keywordInputArtist = document.getElementById('keyword-pc');
     if (keywordInputArtist) {
+        // フォーム送信を防ぐ
+        keywordInputArtist.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const selectedTitle = e.target.value;
+                if (songMapArtist[selectedTitle]) {
+                    window.location.href = '/setlist-songs/' + songMapArtist[selectedTitle];
+                }
+            }
+        });
+        
         keywordInputArtist.addEventListener('change', function(e) {
             const selectedTitle = e.target.value;
             if (songMapArtist[selectedTitle]) {

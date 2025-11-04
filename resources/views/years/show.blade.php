@@ -23,20 +23,19 @@
 
             {{-- 検索フォーム（PC表示のみ） --}}
             <div class="database-search pc" style="margin-top: 30px;">
-                <form action="{{ url('/search') }}" method="GET" id="year-search-form">
-                    <input type="hidden" name="match_type" value="partial">
+                <div>
                     <div class="search-wrapper">
                         <input type="text" name="keyword" id="keyword-year" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}" list="song-suggestions-year">
                         <datalist id="song-suggestions-year">
                             @foreach($suggestions as $suggestion)
-                                <option value="{{ $suggestion['title'] }}"></option>
+                                <option value="{{ $suggestion['title'] }}" label="{{ $suggestion['title'] }}{{ $suggestion['artist_name'] ? ' — ' . $suggestion['artist_name'] : '' }}"></option>
                             @endforeach
                         </datalist>
-                        <button type="submit" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
+                        <button type="button" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
                             <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none;"></i>
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -102,6 +101,17 @@
     // 検索フォームの入力フィールド
     const keywordInputYear = document.getElementById('keyword-year');
     if (keywordInputYear) {
+        // フォーム送信を防ぐ
+        keywordInputYear.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const selectedTitle = e.target.value;
+                if (songMapYear[selectedTitle]) {
+                    window.location.href = '/setlist-songs/' + songMapYear[selectedTitle];
+                }
+            }
+        });
+        
         keywordInputYear.addEventListener('change', function(e) {
             const selectedTitle = e.target.value;
             if (songMapYear[selectedTitle]) {

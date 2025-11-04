@@ -41,7 +41,7 @@ class SongController extends Controller
                 return [
                     'id' => $row->id,
                     'title' => $row->title,
-                    'artist_name' => $row->artist_name,
+                    'artist_name' => $row->artist_name ?? '',
                 ];
             })
             ->toArray();
