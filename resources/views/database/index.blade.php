@@ -123,70 +123,79 @@
 @section('page-script')
 <script src="{{ asset('/js/search.js?time=' . time()) }}"></script>
 <script>
-    // SP表示用のTypeaheadも初期化
+    // PC表示とSP表示の両方でTypeaheadを初期化
     $(document).ready(function(){
-        // 既存のsearch.jsの初期化を待ってから、SP用の入力フィールドにも適用
-        setTimeout(function() {
-            const searchInputSp = document.getElementById('searchInputSp');
-            if (searchInputSp && !searchInputSp.hasAttribute('data-tt-initialized')) {
-                // 検索フォームが表示された時にTypeaheadを初期化
-                const spSearchForm = document.getElementById('spSearchFormDatabase');
-                if (spSearchForm) {
-                    const observer = new MutationObserver(function(mutations) {
-                        mutations.forEach(function(mutation) {
-                            if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-                                if (spSearchForm.style.display === 'block') {
-                                    // Typeaheadを初期化（既存のsearch.jsのロジックを再利用）
-                                    if (typeof Bloodhound !== 'undefined' && typeof $.fn.typeahead !== 'undefined') {
-                                        if (!$(searchInputSp).data('typeahead')) {
-                                            var songs = new Bloodhound({
-                                                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
-                                                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                                                remote: {
-                                                    url: '/find?q=%QUERY',
-                                                    wildcard: '%QUERY'
-                                                },
-                                                limit: 20
-                                            });
+        // 検索機能を初期化する関数
+        function initTypeahead(inputId) {
+            const $input = $(inputId);
+            if ($input.length && !$input.data('typeahead')) {
+                var songs = new Bloodhound({
+                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    remote: {
+                        url: '/find?q=%QUERY',
+                        wildcard: '%QUERY'
+                    },
+                    limit: 20
+                });
 
-                                            $(searchInputSp).typeahead({
-                                                minLength: 1,
-                                                highlight: true,
-                                                hint: true,
-                                                classNames: {
-                                                    menu: 'tt-menu-modern',
-                                                    suggestion: 'tt-suggestion-modern',
-                                                    cursor: 'tt-cursor-modern'
-                                                }
-                                            },
-                                            {
-                                                name: 'songs',
-                                                display: 'title',
-                                                source: songs,
-                                                limit: 20,
-                                                templates: {
-                                                    empty: '<div class="tt-empty">該当する曲が見つかりません</div>',
-                                                    suggestion: function(data) {
-                                                        return '<div class="tt-suggestion-content"><i class="fa-solid fa-music"></i><span>' + data.title + '</span></div>';
-                                                    }
-                                                }
-                                            }).on('typeahead:selected', function(event, data) {
-                                                // 選択された曲の詳細ページにリダイレクト
-                                                window.location.href = '/database/songs/' + data.id;
-                                            });
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                    });
-                    observer.observe(spSearchForm, {
-                        attributes: true,
-                        attributeFilter: ['style']
-                    });
-                }
+                $input.typeahead({
+                    minLength: 1,
+                    highlight: true,
+                    hint: true,
+                    classNames: {
+                        menu: 'tt-menu-modern',
+                        suggestion: 'tt-suggestion-modern',
+                        cursor: 'tt-cursor-modern'
+                    }
+                },
+                {
+                    name: 'songs',
+                    display: 'title',
+                    source: songs,
+                    limit: 20,
+                    templates: {
+                        empty: '<div class="tt-empty">該当する曲が見つかりません</div>',
+                        suggestion: function(data) {
+                            return '<div class="tt-suggestion-content"><i class="fa-solid fa-music"></i><span>' + data.title + '</span></div>';
+                        }
+                    }
+                }).on('typeahead:selected', function(event, data) {
+                    // 選択された曲の詳細ページにリダイレクト
+                    window.location.href = '/database/songs/' + data.id;
+                });
+            }
+        }
+
+        // PC表示の検索フォームはsearch.jsが既に初期化しているので、重複初期化を避ける
+        // search.jsが初期化に失敗した場合のみ初期化を試みる
+        setTimeout(function() {
+            const $searchInput = $('#searchInput');
+            if ($searchInput.length && !$searchInput.data('typeahead')) {
+                initTypeahead('#searchInput');
             }
         }, 500);
+
+        // SP表示の検索フォームが表示された時にTypeaheadを初期化
+        const spSearchForm = document.getElementById('spSearchFormDatabase');
+        if (spSearchForm) {
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                        if (spSearchForm.style.display === 'block') {
+                            // 少し待ってから初期化（DOMが完全に表示されてから）
+                            setTimeout(function() {
+                                initTypeahead('#searchInputSp');
+                            }, 100);
+                        }
+                    }
+                });
+            });
+            observer.observe(spSearchForm, {
+                attributes: true,
+                attributeFilter: ['style']
+            });
+        }
     });
 </script>
 @endsection

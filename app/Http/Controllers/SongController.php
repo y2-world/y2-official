@@ -187,16 +187,22 @@ class SongController extends Controller
     public function search(Request $request)
     {
         $query = $request->input('q');
-        $songs = Song::query()
-            ->leftJoin('artists', 'artists.id', '=', 'songs.artist_id')
-            ->where('songs.title', 'LIKE', "%{$query}%")
-            ->orderBy('songs.title')
+        
+        if (empty($query)) {
+            return response()->json([]);
+        }
+        
+        $songs = Song::where('title', 'LIKE', "%{$query}%")
+            ->orderBy('title')
             ->limit(20)
-            ->get([
-                'songs.id as id',
-                'songs.title as title',
-                'artists.name as artist',
-            ]);
+            ->get()
+            ->map(function ($song) {
+                return [
+                    'id' => $song->id,
+                    'title' => $song->title,
+                    'artist' => null, // songsテーブルにはartist_idがないため
+                ];
+            });
 
         return response()->json($songs);
     }
