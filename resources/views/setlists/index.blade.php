@@ -11,6 +11,15 @@
                 </button>
             </div>
 
+            {{-- 検索フォーム（SP表示） --}}
+            <div class="sp" id="spSearchFormSetlists" style="margin-top: 20px; display: none;">
+                <div>
+                    <div class="search-wrapper">
+                        <input type="text" name="keyword" id="keyword-sp-setlists" class="database-search-input typeahead" placeholder="楽曲を検索..." style="font-size: 14px; padding: 12px 16px;" required>
+                    </div>
+                </div>
+            </div>
+
             <div class="year-navigation">
                 <select class="year-select" name="select" onchange="if (this.value) window.location.href=this.value;">
                     <option value="" disabled selected>Live Type</option>
@@ -32,26 +41,11 @@
                 </select>
             </div>
 
-            {{-- 検索フォーム（SP表示） --}}
-            <div class="sp" id="spSearchFormSetlists" style="margin-top: 30px; display: none;">
-                <div>
-                    <div class="search-wrapper">
-                        <input type="text" name="keyword" id="keyword-sp-setlists" class="database-search-input typeahead" placeholder="楽曲を検索..." style="font-size: 14px; padding: 12px 45px 12px 16px;" required>
-                        <button type="button" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
-                            <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none; font-size: 16px;"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
             {{-- 検索フォーム（PC表示のみ） --}}
             <div class="database-search pc" style="margin-top: 30px;">
                 <div>
                     <div class="search-wrapper">
                         <input type="text" name="keyword" id="keyword-pc" class="database-search-input typeahead" placeholder="楽曲を検索..." value="{{ request('keyword') }}" required>
-                        <button type="button" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
-                            <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none;"></i>
-                        </button>
                     </div>
                 </div>
             </div>

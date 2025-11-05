@@ -26,9 +26,6 @@
                 <div>
                     <div class="search-wrapper">
                         <input type="text" name="keyword" id="keyword-year" class="database-search-input typeahead" placeholder="楽曲を検索..." value="{{ request('keyword') }}" required>
-                        <button type="button" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
-                            <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none;"></i>
-                        </button>
                     </div>
                 </div>
             </div>

@@ -1313,7 +1313,7 @@ h2 {
 
 .database-search-input {
     width: 100%;
-    padding: 10px 45px 10px 14px;
+    padding: 10px 14px;
     border: 1px solid #d1d5db;
     border-radius: 6px;
     font-size: 14px;
@@ -1573,53 +1573,6 @@ h2 {
     }
 }
 
-/* Adjust search icon position for SP display */
-@media (max-width: 768px) {
-    /* search-wrapperをrelativeに確保 */
-    .search-wrapper {
-        position: relative;
-        overflow: visible;
-    }
-    
-    /* SP表示の検索入力フィールドのパディングを調整してアイコンを内側に */
-    .database-search-input {
-        padding-right: 40px !important;
-    }
-    
-    /* アイコンをフォーム内に配置 */
-    .search-icon {
-        position: absolute;
-        right: 14px;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 10;
-        pointer-events: none;
-    }
-    
-    /* button内のアイコンの場合も調整 */
-    .search-wrapper button {
-        position: absolute !important;
-        right: 0 !important;
-        top: 50% !important;
-        transform: translateY(-50%) !important;
-        z-index: 10;
-        padding: 0;
-        width: 40px;
-        height: 100%;
-        background: none !important;
-        border: none !important;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .search-wrapper button .search-icon {
-        position: static !important;
-        transform: none !important;
-        right: auto !important;
-        margin-right: 0;
-    }
-}
 
 /* Database Year Page Styles */
 .database-year-hero {

@@ -16,7 +16,6 @@
                 <div>
                     <div class="search-wrapper">
                         <input type="text" id="searchInputSp" class="database-search-input typeahead" placeholder="楽曲を検索..." required>
-                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
                     </div>
                 </div>
             </div>
@@ -26,7 +25,6 @@
                 <form action="" method="GET">
                     <div class="search-wrapper">
                         <input type="text" id="searchInput" class="database-search-input typeahead" placeholder="楽曲を検索..." required>
-                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
                     </div>
                 </form>
             </div>

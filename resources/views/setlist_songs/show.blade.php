@@ -23,10 +23,7 @@
             <div class="sp" id="spSearchFormSetlistSong" style="margin-top: 30px; display: none;">
                 <div>
                     <div class="search-wrapper">
-                        <input type="text" name="keyword" id="keyword-sp-setlist-song" class="database-search-input typeahead" placeholder="楽曲を検索..." style="font-size: 14px; padding: 12px 45px 12px 16px;" required>
-                        <button type="button" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
-                            <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none; font-size: 16px;"></i>
-                        </button>
+                        <input type="text" name="keyword" id="keyword-sp-setlist-song" class="database-search-input typeahead" placeholder="楽曲を検索..." style="font-size: 14px; padding: 12px 16px;" required>
                     </div>
                     {{-- 閉じるボタン --}}
                     <div style="text-align: center; margin-top: 15px;">
@@ -42,9 +39,6 @@
                 <div>
                     <div class="search-wrapper">
                         <input type="text" name="keyword" id="keyword-setlist-song" class="database-search-input typeahead" placeholder="楽曲を検索..." required>
-                        <button type="button" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
-                            <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none;"></i>
-                        </button>
                     </div>
                 </div>
             </div>
