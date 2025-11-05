@@ -186,24 +186,35 @@ class SongController extends Controller
 
     public function search(Request $request)
     {
-        $query = $request->input('q');
-        
-        if (empty($query)) {
+        try {
+            $query = $request->input('q');
+            
+            if (empty($query)) {
+                return response()->json([]);
+            }
+            
+            // クエリ文字列をトリムして、最小1文字以上にする
+            $query = trim($query);
+            if (mb_strlen($query) < 1) {
+                return response()->json([]);
+            }
+            
+            $songs = Song::where('title', 'LIKE', "%{$query}%")
+                ->orderBy('title')
+                ->limit(20)
+                ->get()
+                ->map(function ($song) {
+                    return [
+                        'id' => $song->id,
+                        'title' => $song->title,
+                        'artist' => null, // songsテーブルにはartist_idがないため
+                    ];
+                });
+
+            return response()->json($songs->toArray());
+        } catch (\Exception $e) {
+            \Log::error('Song search error: ' . $e->getMessage());
             return response()->json([]);
         }
-        
-        $songs = Song::where('title', 'LIKE', "%{$query}%")
-            ->orderBy('title')
-            ->limit(20)
-            ->get()
-            ->map(function ($song) {
-                return [
-                    'id' => $song->id,
-                    'title' => $song->title,
-                    'artist' => null, // songsテーブルにはartist_idがないため
-                ];
-            });
-
-        return response()->json($songs);
     }
 }

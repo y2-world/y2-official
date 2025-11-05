@@ -6,31 +6,17 @@ $(document).ready(function(){
         remote: {
             url: '/find?q=%QUERY',
             wildcard: '%QUERY'
-        },
-        limit: 20
+        }
     });
 
     $('#searchInput').typeahead({
         minLength: 1,
-        highlight: true,
-        hint: true,
-        classNames: {
-            menu: 'tt-menu-modern',
-            suggestion: 'tt-suggestion-modern',
-            cursor: 'tt-cursor-modern'
-        }
+        highlight: true
     },
     {
         name: 'songs',
         display: 'title',
-        source: songs,
-        limit: 20,
-        templates: {
-            empty: '<div class="tt-empty">該当する曲が見つかりません</div>',
-            suggestion: function(data) {
-                return '<div class="tt-suggestion-content"><span>' + data.title + '</span></div>';
-            }
-        }
+        source: songs
     }).on('typeahead:selected', function(event, data) {
         // 選択された曲の詳細ページにリダイレクト
         window.location.href = '/database/songs/' + data.id;

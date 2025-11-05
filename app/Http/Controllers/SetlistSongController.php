@@ -95,29 +95,35 @@ class SetlistSongController extends Controller
 
     public function search(Request $request)
     {
-        $query = $request->input('q');
-        
-        if (empty($query)) {
-            return response()->json([]);
-        }
-        
-        // クエリ文字列をトリムして、最小1文字以上にする
-        $query = trim($query);
-        if (mb_strlen($query) < 1) {
-            return response()->json([]);
-        }
-        
-        $songs = SetlistSong::query()
-            ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
-            ->where('setlist_songs.title', 'LIKE', "%{$query}%")
-            ->orderBy('setlist_songs.title')
-            ->limit(20)
-            ->get([
-                'setlist_songs.id as id',
-                'setlist_songs.title as title',
-                'artists.name as artist',
-            ]);
+        try {
+            $query = $request->input('q');
+            
+            if (empty($query)) {
+                return response()->json([]);
+            }
+            
+            // クエリ文字列をトリムして、最小1文字以上にする
+            $query = trim($query);
+            if (mb_strlen($query) < 1) {
+                return response()->json([]);
+            }
+            
+            $songs = SetlistSong::query()
+                ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
+                ->where('setlist_songs.title', 'LIKE', "%{$query}%")
+                ->orderBy('setlist_songs.title')
+                ->limit(20)
+                ->get([
+                    'setlist_songs.id as id',
+                    'setlist_songs.title as title',
+                    'artists.name as artist',
+                ]);
 
-        return response()->json($songs);
+            // JSON形式で返す（配列形式）
+            return response()->json($songs->toArray());
+        } catch (\Exception $e) {
+            \Log::error('SetlistSong search error: ' . $e->getMessage());
+            return response()->json([]);
+        }
     }
 }

@@ -806,15 +806,24 @@ th {
     border: 1px solid #ccc;
     border-radius: 4px;
     padding: 4px 0;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .tt-suggestion {
     padding: 8px;
     cursor: pointer;
+    color: black;
 }
 
-.tt-suggestion:hover {
+.tt-suggestion:hover,
+.tt-cursor {
     background-color: #f2f2f2;
+}
+
+.tt-suggestion .tt-highlight {
+    color: black;
+    font-weight: bold;
 }
 
 h2 {
@@ -1305,10 +1314,13 @@ h2 {
 .database-search {
     max-width: 800px;
     margin: 0 auto;
+    position: relative;
+    overflow: visible;
 }
 
 .search-wrapper {
     position: relative;
+    overflow: visible;
 }
 
 .database-search-input {
