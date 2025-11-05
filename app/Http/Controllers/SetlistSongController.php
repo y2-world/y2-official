@@ -87,8 +87,6 @@ class SetlistSongController extends Controller
         return view('setlist_songs.show', compact(
             'song',
             'setlists',
-            'previous',
-            'next',
             'suggestions'
         ));
     }

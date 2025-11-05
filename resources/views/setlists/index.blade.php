@@ -36,12 +36,7 @@
             <div class="sp" id="spSearchFormSetlists" style="margin-top: 30px; display: none;">
                 <div>
                     <div class="search-wrapper">
-                        <input type="text" name="keyword" id="keyword-sp-setlists" class="database-search-input" placeholder="楽曲を検索..." style="font-size: 14px; padding: 12px 45px 12px 16px;" list="song-suggestions-sp-setlists">
-                        <datalist id="song-suggestions-sp-setlists">
-                            @foreach($suggestions as $suggestion)
-                                <option value="{{ $suggestion['title'] }}" label="{{ $suggestion['title'] }}{{ $suggestion['artist_name'] ? ' — ' . $suggestion['artist_name'] : '' }}"></option>
-                            @endforeach
-                        </datalist>
+                        <input type="text" name="keyword" id="keyword-sp-setlists" class="database-search-input typeahead" placeholder="楽曲を検索..." style="font-size: 14px; padding: 12px 45px 12px 16px;" required>
                         <button type="button" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
                             <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none; font-size: 16px;"></i>
                         </button>
@@ -53,12 +48,7 @@
             <div class="database-search pc" style="margin-top: 30px;">
                 <div>
                     <div class="search-wrapper">
-                        <input type="text" name="keyword" id="keyword-pc" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}" list="song-suggestions-pc">
-                        <datalist id="song-suggestions-pc">
-                            @foreach($suggestions as $suggestion)
-                                <option value="{{ $suggestion['title'] }}" label="{{ $suggestion['title'] }}{{ $suggestion['artist_name'] ? ' — ' . $suggestion['artist_name'] : '' }}"></option>
-                            @endforeach
-                        </datalist>
+                        <input type="text" name="keyword" id="keyword-pc" class="database-search-input typeahead" placeholder="楽曲を検索..." value="{{ request('keyword') }}" required>
                         <button type="button" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
                             <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none;"></i>
                         </button>
@@ -172,58 +162,75 @@
     <script src="{{ asset('/js/search.js?v=20251101') }}"></script>
     <script src="{{ asset('/js/infinite-scroll.js?v=20251101') }}"></script>
     <script>
-        // 検索候補のデータマップを作成
-        const songMapSetlist = {
-            @foreach($suggestions as $suggestion)
-                "{{ $suggestion['title'] }}": {{ $suggestion['id'] }},
-            @endforeach
-        };
+        // Typeaheadの初期化関数
+        function initTypeaheadSetlist(inputId) {
+            const $input = $(inputId);
+            if ($input.length && !$input.data('typeahead')) {
+                var songs = new Bloodhound({
+                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    remote: {
+                        url: '/find-setlist-song?q=%QUERY',
+                        wildcard: '%QUERY'
+                    },
+                    limit: 20
+                });
 
-        // 検索フォームの入力フィールド（PC）
-        const keywordInputSetlist = document.getElementById('keyword-pc');
-        if (keywordInputSetlist) {
-            // フォーム送信を防ぐ
-            keywordInputSetlist.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    const selectedTitle = e.target.value;
-                    if (songMapSetlist[selectedTitle]) {
-                        window.location.href = '/setlist-songs/' + songMapSetlist[selectedTitle];
+                $input.typeahead({
+                    minLength: 1,
+                    highlight: true,
+                    hint: true,
+                    classNames: {
+                        menu: 'tt-menu-modern',
+                        suggestion: 'tt-suggestion-modern',
+                        cursor: 'tt-cursor-modern'
                     }
-                }
-            });
-            
-            keywordInputSetlist.addEventListener('change', function(e) {
-                const selectedTitle = e.target.value;
-                if (songMapSetlist[selectedTitle]) {
-                    // 候補から選択された場合は詳細ページへ
-                    window.location.href = '/setlist-songs/' + songMapSetlist[selectedTitle];
-                }
-            });
+                },
+                {
+                    name: 'songs',
+                    display: 'title',
+                    source: songs,
+                    limit: 20,
+                    templates: {
+                        empty: '<div class="tt-empty">該当する曲が見つかりません</div>',
+                        suggestion: function(data) {
+                            var artistText = data.artist ? ' - ' + data.artist : '';
+                            return '<div class="tt-suggestion-content"><span>' + data.title + artistText + '</span></div>';
+                        }
+                    }
+                }).on('typeahead:selected', function(event, data) {
+                    // 選択された曲の詳細ページにリダイレクト
+                    window.location.href = '/setlist-songs/' + data.id;
+                });
+            }
         }
 
-        // 検索フォームの入力フィールド（SP）
-        const keywordInputSpSetlists = document.getElementById('keyword-sp-setlists');
-        if (keywordInputSpSetlists) {
-            // フォーム送信を防ぐ
-            keywordInputSpSetlists.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    const selectedTitle = e.target.value;
-                    if (songMapSetlist[selectedTitle]) {
-                        window.location.href = '/setlist-songs/' + songMapSetlist[selectedTitle];
-                    }
-                }
-            });
-            
-            keywordInputSpSetlists.addEventListener('change', function(e) {
-                const selectedTitle = e.target.value;
-                if (songMapSetlist[selectedTitle]) {
-                    // 候補から選択された場合は詳細ページへ
-                    window.location.href = '/setlist-songs/' + songMapSetlist[selectedTitle];
-                }
-            });
-        }
+        // PC表示の検索フォームを初期化
+        $(document).ready(function() {
+            setTimeout(function() {
+                initTypeaheadSetlist('#keyword-pc');
+            }, 100);
+
+            // SP表示の検索フォームが表示された時にTypeaheadを初期化
+            const spSearchForm = document.getElementById('spSearchFormSetlists');
+            if (spSearchForm) {
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                            if (spSearchForm.style.display === 'block') {
+                                setTimeout(function() {
+                                    initTypeaheadSetlist('#keyword-sp-setlists');
+                                }, 100);
+                            }
+                        }
+                    });
+                });
+                observer.observe(spSearchForm, {
+                    attributes: true,
+                    attributeFilter: ['style']
+                });
+            }
+        });
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

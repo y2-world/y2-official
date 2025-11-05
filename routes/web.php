@@ -76,6 +76,7 @@ Route::resource('music', 'DiscoController');
 Route::resource('/', 'HomeController');
 // Route::resource('/home', 'HomeController');
 Route::get('/find', [SongController::class, 'search']);
+Route::get('/find-setlist-song', [App\Http\Controllers\SetlistSongController::class, 'search']);
 
 // routes/web.php
 Route::get('/top/news', [HomeController::class, 'getAllNews'])->name('news.all');

@@ -26,12 +26,7 @@
             <div class="database-search pc" style="margin-top: 30px;">
                 <div>
                     <div class="search-wrapper">
-                        <input type="text" name="keyword" id="keyword-pc" class="database-search-input" placeholder="楽曲を検索..." value="{{ request('keyword') }}" list="song-suggestions-pc">
-                        <datalist id="song-suggestions-pc">
-                            @foreach($suggestions as $suggestion)
-                                <option value="{{ $suggestion['title'] }}" label="{{ $suggestion['title'] }}{{ $suggestion['artist_name'] ? ' — ' . $suggestion['artist_name'] : '' }}"></option>
-                            @endforeach
-                        </datalist>
+                        <input type="text" name="keyword" id="keyword-pc" class="database-search-input typeahead" placeholder="楽曲を検索..." value="{{ request('keyword') }}" required>
                         <button type="button" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
                             <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none;"></i>
                         </button>
@@ -76,34 +71,52 @@
 @section('page-script')
 <script src="{{ asset('/js/search.js?time=' . time()) }}"></script>
 <script>
-    // 検索候補のデータマップを作成
-    const songMapArtist = {
-        @foreach($suggestions as $suggestion)
-            "{{ $suggestion['title'] }}": {{ $suggestion['id'] }},
-        @endforeach
-    };
+    // Typeaheadの初期化関数
+    function initTypeaheadArtist(inputId) {
+        const $input = $(inputId);
+        if ($input.length && !$input.data('typeahead')) {
+            var songs = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/find-setlist-song?q=%QUERY',
+                    wildcard: '%QUERY'
+                },
+                limit: 20
+            });
 
-    // 検索フォームの入力フィールド
-    const keywordInputArtist = document.getElementById('keyword-pc');
-    if (keywordInputArtist) {
-        // フォーム送信を防ぐ
-        keywordInputArtist.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                const selectedTitle = e.target.value;
-                if (songMapArtist[selectedTitle]) {
-                    window.location.href = '/setlist-songs/' + songMapArtist[selectedTitle];
+            $input.typeahead({
+                minLength: 1,
+                highlight: true,
+                hint: true,
+                classNames: {
+                    menu: 'tt-menu-modern',
+                    suggestion: 'tt-suggestion-modern',
+                    cursor: 'tt-cursor-modern'
                 }
-            }
-        });
-        
-        keywordInputArtist.addEventListener('change', function(e) {
-            const selectedTitle = e.target.value;
-            if (songMapArtist[selectedTitle]) {
-                // 候補から選択された場合は詳細ページへ
-                window.location.href = '/setlist-songs/' + songMapArtist[selectedTitle];
-            }
-        });
+            },
+            {
+                name: 'songs',
+                display: 'title',
+                source: songs,
+                limit: 20,
+                templates: {
+                    empty: '<div class="tt-empty">該当する曲が見つかりません</div>',
+                    suggestion: function(data) {
+                        var artistText = data.artist ? ' - ' + data.artist : '';
+                        return '<div class="tt-suggestion-content"><span>' + data.title + artistText + '</span></div>';
+                    }
+                }
+            }).on('typeahead:selected', function(event, data) {
+                window.location.href = '/setlist-songs/' + data.id;
+            });
+        }
     }
+
+    $(document).ready(function() {
+        setTimeout(function() {
+            initTypeaheadArtist('#keyword-pc');
+        }, 100);
+    });
 </script>
 @endsection

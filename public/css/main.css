@@ -1303,7 +1303,7 @@ h2 {
 }
 
 .database-search {
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
 }
 
@@ -1313,18 +1313,19 @@ h2 {
 
 .database-search-input {
     width: 100%;
-    padding: 16px 50px 16px 20px;
-    border: none;
-    border-radius: 50px;
-    font-size: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
+    padding: 10px 45px 10px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: white;
+    transition: all 0.2s ease;
 }
 
 .database-search-input:focus {
     outline: none;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-    transform: translateY(-2px);
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    transform: none;
 }
 
 .search-icon {
@@ -1332,8 +1333,9 @@ h2 {
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
-    color: #667eea;
-    font-size: 18px;
+    color: #6b7280;
+    font-size: 16px;
+    pointer-events: none;
 }
 
 .database-content {
@@ -1488,27 +1490,28 @@ h2 {
     }
 }
 
-/* Modern Typeahead Styles */
+/* Modern Typeahead Styles - Filament-like */
 .tt-menu-modern {
     background-color: white;
-    color: #2d3748;
+    color: #1f2937;
     text-align: left;
-    border-radius: 12px;
-    margin-top: 8px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 6px;
+    margin-top: 4px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e5e7eb;
     overflow: hidden;
-    max-height: 400px;
+    max-height: 300px;
     overflow-y: auto;
+    z-index: 1000;
 }
 
 .tt-suggestion-modern {
-    padding: 14px 20px;
-    font-size: 15px;
-    color: #2d3748;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #1f2937;
     cursor: pointer;
-    transition: all 0.2s ease;
-    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.15s ease;
+    border-bottom: 1px solid #f3f4f6;
 }
 
 .tt-suggestion-modern:last-child {
@@ -1517,21 +1520,19 @@ h2 {
 
 .tt-suggestion-modern:hover,
 .tt-cursor-modern {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    transform: translateX(5px);
+    background-color: #f3f4f6;
+    color: #1f2937;
+    transform: none;
 }
 
 .tt-suggestion-content {
     display: flex;
     align-items: center;
-    gap: 12px;
 }
 
-.tt-suggestion-content i {
-    font-size: 14px;
-    opacity: 0.7;
-    min-width: 16px;
+.tt-suggestion-content span {
+    display: block;
+    width: 100%;
 }
 
 .tt-empty {

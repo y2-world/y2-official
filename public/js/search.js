@@ -28,7 +28,7 @@ $(document).ready(function(){
         templates: {
             empty: '<div class="tt-empty">該当する曲が見つかりません</div>',
             suggestion: function(data) {
-                return '<div class="tt-suggestion-content"><i class="fa-solid fa-music"></i><span>' + data.title + '</span></div>';
+                return '<div class="tt-suggestion-content"><span>' + data.title + '</span></div>';
             }
         }
     }).on('typeahead:selected', function(event, data) {
