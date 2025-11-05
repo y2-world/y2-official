@@ -258,7 +258,7 @@
 
                     {{-- フェスアンコール --}}
                     @if (!empty($setlists->fes_encore))
-                        <div style="margin: 0;">
+                        <div style="margin: 0; margin-top: 20px;">
                             <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
                         </div>
                         @foreach ((array) $setlists->fes_encore as $key => $data)
