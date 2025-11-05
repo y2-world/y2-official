@@ -3,32 +3,26 @@
 @section('content')
     <div class="database-hero">
         <div class="container">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-                <h1 class="database-title" style="margin-bottom: 0;">Mr.Children Database</h1>
+            <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 15px;">
+                <h1 class="database-title" style="margin-bottom: 0; text-align: center;">Mr.Children Database</h1>
                 {{-- 虫眼鏡アイコン（SP表示のみ） --}}
-                <button type="button" id="spSearchButtonDatabase" class="sp" onclick="document.getElementById('spSearchFormDatabase').style.display='block'; this.style.display='none';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 12px; border-radius: 50%; cursor: pointer; width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 0;">
-                    <i class="fa-solid fa-magnifying-glass" style="font-size: 18px;"></i>
+                <button type="button" id="spSearchButtonDatabase" class="sp sp-search-button" onclick="var form = document.getElementById('spSearchFormDatabase'); var icon = this.querySelector('i'); if (form.style.display === 'none' || form.style.display === '') { form.style.display='block'; icon.className='fa-solid fa-xmark'; } else { form.style.display='none'; icon.className='fa-solid fa-magnifying-glass'; }" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; align-items: center; justify-content: center; margin-bottom: 0;">
+                    <i class="fa-solid fa-magnifying-glass" style="font-size: 14px;"></i>
                 </button>
             </div>
 
             {{-- 検索フォーム（SP表示） --}}
-            <div class="sp" id="spSearchFormDatabase" style="margin-top: 30px; display: none;">
+            <div class="sp" id="spSearchFormDatabase" style="margin-top: 40px; display: none;">
                 <div>
                     <div class="search-wrapper">
                         <input type="text" id="searchInputSp" class="database-search-input typeahead" placeholder="楽曲を検索..." required>
                         <i class="fa-solid fa-magnifying-glass search-icon"></i>
                     </div>
-                    {{-- 閉じるボタン --}}
-                    <div style="text-align: center; margin-top: 15px;">
-                        <button type="button" onclick="document.getElementById('spSearchFormDatabase').style.display='none'; document.getElementById('spSearchButtonDatabase').style.display='block';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;">
-                            <i class="fa-solid fa-xmark" style="font-size: 16px;"></i>
-                        </button>
-                    </div>
                 </div>
             </div>
 
             {{-- 検索フォーム（PC表示のみ） --}}
-            <div class="database-search pc">
+            <div class="database-search pc" style="margin-top: 40px;">
                 <form action="" method="GET">
                     <div class="search-wrapper">
                         <input type="text" id="searchInput" class="database-search-input typeahead" placeholder="楽曲を検索..." required>
@@ -41,31 +35,6 @@
 
     <div class="container database-content">
         <div class="row">
-            <!-- Discography Card -->
-            <div class="col-md-4 mb-4">
-                <div class="database-card">
-                    <div class="card-icon">
-                        <i class="fa-solid fa-music"></i>
-                    </div>
-                    <h3 class="card-title">Discography</h3>
-                    <p class="card-description">すべての楽曲、シングル、アルバムを閲覧</p>
-                    <div class="card-links">
-                        <a href="{{ url('/database/songs') }}" class="database-link">
-                            <span>Songs</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                        <a href="{{ url('/database/singles') }}" class="database-link">
-                            <span>Singles</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                        <a href="{{ url('/database/albums') }}" class="database-link">
-                            <span>Albums</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
             <!-- Live Card -->
             <div class="col-md-4 mb-4">
                 <div class="database-card">
@@ -93,6 +62,31 @@
                         </a>
                         <a href="{{ url('/database/live?type=4') }}" class="database-link">
                             <span>Solo</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Discography Card -->
+            <div class="col-md-4 mb-4">
+                <div class="database-card">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-music"></i>
+                    </div>
+                    <h3 class="card-title">Discography</h3>
+                    <p class="card-description">すべての楽曲、シングル、アルバムを閲覧</p>
+                    <div class="card-links">
+                        <a href="{{ url('/database/songs') }}" class="database-link">
+                            <span>Songs</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <a href="{{ url('/database/singles') }}" class="database-link">
+                            <span>Singles</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <a href="{{ url('/database/albums') }}" class="database-link">
+                            <span>Albums</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>

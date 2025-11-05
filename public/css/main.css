@@ -1102,7 +1102,17 @@ h2 {
 
 @media (min-width: 1080px) {
     .sp {
-        display: none;
+        display: none !important;
+    }
+}
+
+.sp-search-button {
+    display: inline-flex;
+}
+
+@media (min-width: 1080px) {
+    .sp-search-button {
+        display: none !important;
     }
 }
 
@@ -1671,6 +1681,13 @@ h2 {
 .database-year-content .table tbody td {
     padding: 12px 15px;
     vertical-align: middle;
+}
+
+.database-year-content .table tbody td.td_title {
+    word-wrap: break-word;
+    word-break: break-word;
+    min-width: 150px;
+    max-width: 100%;
 }
 
 .database-year-content .table a {

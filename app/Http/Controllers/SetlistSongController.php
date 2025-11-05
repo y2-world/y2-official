@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SetlistSong;
 use App\Models\Setlist;
+use Illuminate\Http\Request;
 
 class SetlistSongController extends Controller
 {
@@ -90,5 +91,33 @@ class SetlistSongController extends Controller
             'next',
             'suggestions'
         ));
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('q');
+        
+        if (empty($query)) {
+            return response()->json([]);
+        }
+        
+        // クエリ文字列をトリムして、最小1文字以上にする
+        $query = trim($query);
+        if (mb_strlen($query) < 1) {
+            return response()->json([]);
+        }
+        
+        $songs = SetlistSong::query()
+            ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
+            ->where('setlist_songs.title', 'LIKE', "%{$query}%")
+            ->orderBy('setlist_songs.title')
+            ->limit(20)
+            ->get([
+                'setlist_songs.id as id',
+                'setlist_songs.title as title',
+                'artists.name as artist',
+            ]);
+
+        return response()->json($songs);
     }
 }

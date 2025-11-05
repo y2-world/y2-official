@@ -154,24 +154,34 @@
                 @if($setlists->fes)
                     @php
                         $prevArtistId = null;
+                        $songNumber = 0; // ナンバリング用カウンター
                     @endphp
 
                     {{-- フェス本編 --}}
+                    <ol class="setlist">
                     @foreach ((array) $setlists->fes_setlist as $key => $data)
                         @php
-                            $artistId = isset($data['artist'])
-                                ? (is_numeric($data['artist']) ? $data['artist'] : $artistNameToId[$data['artist']] ?? null)
-                                : null;
+                            // アーティストIDを取得（数値IDまたは名前から変換）
+                            $artistId = null;
+                            if (isset($data['artist'])) {
+                                if (is_numeric($data['artist'])) {
+                                    $artistId = (int)$data['artist'];
+                                } else {
+                                    $artistId = $artistNameToId[$data['artist']] ?? null;
+                                }
+                            }
+                            
                             $artistName = $artistIdToName[$artistId] ?? ($data['artist'] ?? '');
+                            
+                            // 桜井ソロ apの時は櫻井に変換
+                            if (stripos($setlists->title, 'ap') !== false && stripos($artistName, '桜井') !== false) {
+                                $artistName = str_ireplace('桜井', '櫻井', $artistName);
+                            }
+                            
+                            // 型を統一して比較
+                            $currentArtistId = $artistId ? (is_numeric($artistId) ? (int)$artistId : $artistId) : null;
+                            $prevArtistIdInt = $prevArtistId ? (is_numeric($prevArtistId) ? (int)$prevArtistId : $prevArtistId) : null;
                         @endphp
-
-                        @if ($key == 0 || $artistId !== $prevArtistId)
-                            @if ($key != 0) </ol> @endif
-                            <ol class="setlist">
-                                @if ($artistName)
-                                    <a href="{{ url('/setlists/artists', $artistId) }}">{{ $artistName }}</a><br>
-                                @endif
-                        @endif
 
                         @php
                             // songフィールドの処理：数値ならSetlistSongのID、文字列なら直接曲名
@@ -208,37 +218,66 @@
                             }
 
                             $isMedley = !empty($data['medley']) && $data['medley'] == 1;
+                            
+                            // メドレー以外の曲のみナンバリング
+                            if (!$isMedley) {
+                                $songNumber++;
+                            }
                             $parts = splitAnnotation($songTitle);
                             $main = $parts['main'];
                             $annotation = $parts['annotation'];
                             $keyword = $main;
 
-                            // 共演者がある場合は曲名の後に追加
-                            $featuring = !empty($data['featuring']) ? ' / ' . $data['featuring'] : '';
+                            // アーティスト名の表示（リンク付き）
+                            $artistDisplay = '';
+                            if ($artistName && $artistId) {
+                                $artistDisplay = ' / <a href="' . url('/setlists/artists', $artistId) . '">' . htmlspecialchars($artistName, ENT_QUOTES, 'UTF-8') . '</a>';
+                            } elseif ($artistName) {
+                                $artistDisplay = ' / ' . htmlspecialchars($artistName, ENT_QUOTES, 'UTF-8');
+                            }
+
+                            // 共演者がある場合はアーティスト名の後に追加
+                            if (!empty($data['featuring'])) {
+                                $artistDisplay .= ' ' . htmlspecialchars($data['featuring'], ENT_QUOTES, 'UTF-8');
+                            }
                         @endphp
 
                         @if ($isMedley)
-                            - <a href="{{ $url }}">{{ $keyword }}</a>{{ !empty($featuring) ? $featuring : '' }}{{ !empty($annotation) ? ' ' . $annotation : '' }}<br>
+                            <li>@if($url !== '#')<a href="{{ $url }}">{{ $keyword }}</a>@else{{ $keyword }}@endif{!! $artistDisplay !!}{{ !empty($annotation) ? ' ' . $annotation : '' }}</li>
                         @else
-                            <li><a href="{{ $url }}">{{ $keyword }}</a>{{ !empty($featuring) ? $featuring : '' }}{{ !empty($annotation) ? ' ' . $annotation : '' }}</li>
+                            <li>@if($url !== '#')<a href="{{ $url }}">{{ $keyword }}</a>@else{{ $keyword }}@endif{!! $artistDisplay !!}{{ !empty($annotation) ? ' ' . $annotation : '' }}</li>
                         @endif
 
-                        @php $prevArtistId = $artistId; @endphp
+                        @php $prevArtistId = $currentArtistId; @endphp
                     @endforeach
-                    </ol>
 
                     {{-- フェスアンコール --}}
                     @if (!empty($setlists->fes_encore))
                         <div style="margin: 0;">
                             <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
                         </div>
-                        @php $prevArtistId = null; @endphp
                         @foreach ((array) $setlists->fes_encore as $key => $data)
                             @php
-                                $artistId = isset($data['artist'])
-                                    ? (is_numeric($data['artist']) ? $data['artist'] : $artistNameToId[$data['artist']] ?? null)
-                                    : null;
+                                // アーティストIDを取得（数値IDまたは名前から変換）
+                                $artistId = null;
+                                if (isset($data['artist'])) {
+                                    if (is_numeric($data['artist'])) {
+                                        $artistId = (int)$data['artist'];
+                                    } else {
+                                        $artistId = $artistNameToId[$data['artist']] ?? null;
+                                    }
+                                }
+                                
                                 $artistName = $artistIdToName[$artistId] ?? ($data['artist'] ?? '');
+                                
+                                // 桜井ソロ apの時は櫻井に変換
+                                if (stripos($setlists->title, 'ap') !== false && stripos($artistName, '桜井') !== false) {
+                                    $artistName = str_ireplace('桜井', '櫻井', $artistName);
+                                }
+                                
+                                // 型を統一して比較
+                                $currentEncoreArtistId = $artistId ? (is_numeric($artistId) ? (int)$artistId : $artistId) : null;
+                                $prevEncoreArtistIdInt = $prevArtistId ? (is_numeric($prevArtistId) ? (int)$prevArtistId : $prevArtistId) : null;
 
                                 // songフィールドの処理：数値ならSetlistSongのID、文字列なら直接曲名
                                 $songValue = $data['song'] ?? '';
@@ -274,33 +313,45 @@
                                 }
 
                                 $isMedley = !empty($data['medley']) && $data['medley'] == 1;
+                                
+                                // メドレー以外の曲のみナンバリング
+                                if (!$isMedley) {
+                                    $songNumber++;
+                                }
+                                
                                 $parts = splitAnnotation($songTitle);
                                 $main = $parts['main'];
                                 $annotation = $parts['annotation'];
                                 $keyword = $main;
 
-                                // 共演者がある場合は曲名の後に追加
-                                $featuring = !empty($data['featuring']) ? ' / ' . $data['featuring'] : '';
                             @endphp
 
-                            @if ($key == 0 || $artistId !== $prevArtistId)
-                                @if ($key != 0) </ol> @endif
-                                <ol class="setlist">
-                                    @if ($artistName)
-                                        <a href="{{ url('/setlists/artists', $artistId) }}">{{ $artistName }}</a><br>
-                                    @endif
-                            @endif
+                            @php
+
+                                // アーティスト名の表示（リンク付き）
+                                $encoreArtistDisplay = '';
+                                if ($artistName && $artistId) {
+                                    $encoreArtistDisplay = ' / <a href="' . url('/setlists/artists', $artistId) . '">' . htmlspecialchars($artistName, ENT_QUOTES, 'UTF-8') . '</a>';
+                                } elseif ($artistName) {
+                                    $encoreArtistDisplay = ' / ' . htmlspecialchars($artistName, ENT_QUOTES, 'UTF-8');
+                                }
+
+                                // 共演者がある場合はアーティスト名の後に追加
+                                if (!empty($data['featuring'])) {
+                                    $encoreArtistDisplay .= ' ' . htmlspecialchars($data['featuring'], ENT_QUOTES, 'UTF-8');
+                                }
+                            @endphp
 
                             @if ($isMedley)
-                                - @if($url !== '#')<a href="{{ $url }}">{{ $keyword }}</a>@else{{ $keyword }}@endif{{ !empty($featuring) ? $featuring : '' }}{{ !empty($annotation) ? ' ' . $annotation : '' }}<br>
+                                <li>@if($url !== '#')<a href="{{ $url }}">{{ $keyword }}</a>@else{{ $keyword }}@endif{!! $encoreArtistDisplay !!}{{ !empty($annotation) ? ' ' . $annotation : '' }}</li>
                             @else
-                                <li>@if($url !== '#')<a href="{{ $url }}">{{ $keyword }}</a>@else{{ $keyword }}@endif{{ !empty($featuring) ? $featuring : '' }}{{ !empty($annotation) ? ' ' . $annotation : '' }}</li>
+                                <li>@if($url !== '#')<a href="{{ $url }}">{{ $keyword }}</a>@else{{ $keyword }}@endif{!! $encoreArtistDisplay !!}{{ !empty($annotation) ? ' ' . $annotation : '' }}</li>
                             @endif
 
-                            @php $prevArtistId = $artistId; @endphp
+                            @php $prevArtistId = $currentEncoreArtistId; @endphp
                         @endforeach
-                        </ol>
                     @endif
+                    </ol>
                 @endif
 
                 {{-- 前後リンク --}}
@@ -322,7 +373,6 @@
                         </a>
                     @endif
                 </div>
-
             </div>
         </div>
     </div>

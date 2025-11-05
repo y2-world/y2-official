@@ -343,7 +343,7 @@ class SetlistResource extends Resource
                                     ->options(fn() => \App\Models\Artist::pluck('name', 'id'))
                                     ->searchable()
                                     ->native(false)
-                                    ->required()
+                                    ->nullable()
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('name')
                                             ->label('アーティスト名')

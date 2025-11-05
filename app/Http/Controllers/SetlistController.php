@@ -122,9 +122,12 @@ class SetlistController extends Controller
      */
     public function show($id)
     {
+        // メモリリミットを増やす
+        ini_set('memory_limit', '256M');
+        
         $setlists = Setlist::with('artist')->findOrFail($id);
         $artists = Artist::orderBy('id', 'asc')
-        ->get();
+        ->get(['id', 'name']); // 必要なカラムのみ取得
         $previous = Setlist::where('date', '<', $setlists->date)->orderBy('date', 'desc')->first();
         $next = Setlist::where('date', '>', $setlists->date)->orderBy('date')->first();
         

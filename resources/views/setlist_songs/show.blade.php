@@ -3,7 +3,6 @@
 @section('content')
     <div class="database-hero database-year-hero">
         <div class="container">
-            <p class="database-subtitle" style="margin-bottom: 10px;"># {{ $song->id }}</p>
             <h1 class="database-title sp" style="margin-bottom: 20px; cursor: pointer;" onclick="document.getElementById('spSearchFormSetlistSong').style.display='block'; document.querySelector('.database-title.sp').style.display='none';">
                 {{ $song->title }}
             </h1>

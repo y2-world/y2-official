@@ -7,6 +7,9 @@
  * @author   Taylor Otwell <taylor@laravel.com>
  */
 
+// メモリリミットを増やす
+ini_set('memory_limit', '256M');
+
 define('LARAVEL_START', microtime(true));
 
 /*

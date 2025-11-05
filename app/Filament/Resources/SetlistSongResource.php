@@ -39,7 +39,7 @@ class SetlistSongResource extends Resource
                     ->searchable()
                     ->preload()
                     ->native(false)
-                    ->required(),
+                    ->nullable(),
             ]);
     }
 

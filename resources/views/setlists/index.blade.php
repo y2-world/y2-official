@@ -3,11 +3,11 @@
 @section('content')
     <div class="database-hero database-year-hero">
         <div class="container">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-                <h1 class="database-title" style="margin-bottom: 0;">Setlists</h1>
+            <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 15px;">
+                <h1 class="database-title" style="margin-bottom: 0; text-align: center;">Setlists</h1>
                 {{-- 虫眼鏡アイコン（SP表示のみ） --}}
-                <button type="button" id="spSearchButtonSetlists" class="sp" onclick="document.getElementById('spSearchFormSetlists').style.display='block'; this.style.display='none';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 12px; border-radius: 50%; cursor: pointer; width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 0;">
-                    <i class="fa-solid fa-magnifying-glass" style="font-size: 18px;"></i>
+                <button type="button" id="spSearchButtonSetlists" class="sp sp-search-button" onclick="var form = document.getElementById('spSearchFormSetlists'); var icon = this.querySelector('i'); if (form.style.display === 'none' || form.style.display === '') { form.style.display='block'; icon.className='fa-solid fa-xmark'; } else { form.style.display='none'; icon.className='fa-solid fa-magnifying-glass'; }" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; align-items: center; justify-content: center; margin-bottom: 0;">
+                    <i class="fa-solid fa-magnifying-glass" style="font-size: 14px;"></i>
                 </button>
             </div>
 
@@ -44,12 +44,6 @@
                         </datalist>
                         <button type="button" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
                             <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none; font-size: 16px;"></i>
-                        </button>
-                    </div>
-                    {{-- 閉じるボタン --}}
-                    <div style="text-align: center; margin-top: 15px;">
-                        <button type="button" onclick="document.getElementById('spSearchFormSetlists').style.display='none'; document.getElementById('spSearchButtonSetlists').style.display='block';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;">
-                            <i class="fa-solid fa-xmark" style="font-size: 16px;"></i>
                         </button>
                     </div>
                 </div>
