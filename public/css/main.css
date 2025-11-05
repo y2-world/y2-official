@@ -481,39 +481,24 @@ img {
     position: relative;
 }
 
-/* 自動スクロール + 手動スクロール対応 */
+/* 自動スクロール（CSSアニメーション使用） */
 .album-wrapper-scroll {
     flex-wrap: nowrap;
-    overflow-x: auto;
+    overflow-x: hidden;
     overflow-y: hidden;
     width: 100%;
     margin-left: 0;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
-}
-
-.album-wrapper-scroll::-webkit-scrollbar {
-    height: 8px;
-}
-
-.album-wrapper-scroll::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.album-wrapper-scroll::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-}
-
-.album-wrapper-scroll::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .album-wrapper-scroll .album-wrapper-inner {
     display: flex;
     gap: 16px;
-    /* アニメーションはJavaScriptで制御 */
+    animation: infinite-scroll 80s linear infinite;
+    will-change: transform;
+}
+
+.album-wrapper-scroll .album-wrapper-inner.paused {
+    animation-play-state: paused;
 }
 
 /* グリッド表示用 */
