@@ -808,12 +808,14 @@ th {
     padding: 4px 0;
     max-height: 300px;
     overflow-y: auto;
+    text-align: left;
 }
 
 .tt-suggestion {
     padding: 8px;
     cursor: pointer;
     color: black;
+    text-align: left;
 }
 
 .tt-suggestion:hover,
