@@ -1576,7 +1576,18 @@ h2 {
 /* Adjust search icon position for SP display */
 @media (max-width: 768px) {
     .search-icon {
-        right: 10px;
+        right: 12px;
+    }
+    
+    /* SP表示の検索入力フィールドのパディングを調整してアイコンを内側に */
+    .database-search-input {
+        padding-right: 40px !important;
+    }
+    
+    /* search-wrapperをrelativeに確保 */
+    .search-wrapper {
+        position: relative;
+        overflow: visible;
     }
 }
 
