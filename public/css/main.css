@@ -1767,3 +1767,25 @@ h2 {
         cursor: pointer;
     }
 }
+
+/* 770px-1080pxの範囲でヘッダーの曲名が表示されるようにする */
+@media screen and (min-width: 769px) and (max-width: 1080px) {
+    .database-title.pc {
+        display: block !important;
+    }
+    
+    .database-title.sp {
+        display: none !important;
+    }
+}
+
+/* SP表示（768px以下）では.spを表示、.pcを非表示 */
+@media screen and (max-width: 768px) {
+    .database-title.pc {
+        display: none !important;
+    }
+    
+    .database-title.sp {
+        display: block !important;
+    }
+}
