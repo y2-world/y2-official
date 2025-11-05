@@ -237,8 +237,13 @@
                             }
 
                             // 共演者がある場合はアーティスト名の後に追加
+                            // アーティスト名がない場合はスラッシュを付けて共演者を表示
                             if (!empty($data['featuring'])) {
-                                $artistDisplay .= ' ' . htmlspecialchars($data['featuring'], ENT_QUOTES, 'UTF-8');
+                                if (empty($artistDisplay)) {
+                                    $artistDisplay = ' / ' . htmlspecialchars($data['featuring'], ENT_QUOTES, 'UTF-8');
+                                } else {
+                                    $artistDisplay .= ' ' . htmlspecialchars($data['featuring'], ENT_QUOTES, 'UTF-8');
+                                }
                             }
                         @endphp
 
@@ -337,8 +342,13 @@
                                 }
 
                                 // 共演者がある場合はアーティスト名の後に追加
+                                // アーティスト名がない場合はスラッシュを付けて共演者を表示
                                 if (!empty($data['featuring'])) {
-                                    $encoreArtistDisplay .= ' ' . htmlspecialchars($data['featuring'], ENT_QUOTES, 'UTF-8');
+                                    if (empty($encoreArtistDisplay)) {
+                                        $encoreArtistDisplay = ' / ' . htmlspecialchars($data['featuring'], ENT_QUOTES, 'UTF-8');
+                                    } else {
+                                        $encoreArtistDisplay .= ' ' . htmlspecialchars($data['featuring'], ENT_QUOTES, 'UTF-8');
+                                    }
                                 }
                             @endphp
 
