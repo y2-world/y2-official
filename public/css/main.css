@@ -1576,7 +1576,7 @@ h2 {
 /* Adjust search icon position for SP display */
 @media (max-width: 768px) {
     .search-icon {
-        right: 14px;
+        right: 10px;
     }
 }
 
