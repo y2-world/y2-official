@@ -187,21 +187,35 @@ class SongController extends Controller
     public function search(Request $request)
     {
         try {
-            $query = $request->input('q');
+            $query = $request->input('q', '');
+            $rawQuery = $request->input('q', '');
             
-            if (empty($query)) {
-                return response()->json([]);
-            }
+            // デバッグ: リクエスト情報をログに記録
+            \Log::info('=== Song Search API Called ===');
+            \Log::info('Raw query: "' . $rawQuery . '"');
+            \Log::info('Query length: ' . mb_strlen($rawQuery));
+            \Log::info('Request method: ' . $request->method());
+            \Log::info('Request URL: ' . $request->fullUrl());
+            \Log::info('Request IP: ' . $request->ip());
             
-            // クエリ文字列をトリムして、最小1文字以上にする
+            // クエリ文字列をトリム
             $query = trim($query);
-            if (mb_strlen($query) < 1) {
+            
+            // 空文字列の場合は空配列を返す
+            if ($query === '') {
+                \Log::info('Query is empty, returning empty array');
                 return response()->json([]);
             }
             
-            $songs = Song::where('title', 'LIKE', "%{$query}%")
+            // 前方一致検索（utf8mb4_unicode_ciは大文字小文字を区別しない）
+            // エスケープ処理を追加
+            $escapedQuery = str_replace(['%', '_'], ['\%', '\_'], $query);
+            \Log::info('Escaped query: "' . $escapedQuery . '"');
+            \Log::info('Search pattern: "' . $escapedQuery . '%"');
+            
+            $songs = Song::where('title', 'LIKE', $escapedQuery . '%')
                 ->orderBy('title')
-                ->limit(20)
+                ->limit(10)
                 ->get()
                 ->map(function ($song) {
                     return [
@@ -211,9 +225,28 @@ class SongController extends Controller
                     ];
                 });
 
-            return response()->json($songs->toArray());
+            // デバッグ: 検索結果をログに記録
+            \Log::info('Search results count: ' . $songs->count());
+            if ($songs->count() > 0) {
+                \Log::info('First 3 results:');
+                foreach ($songs->take(3) as $index => $song) {
+                    \Log::info('  [' . ($index + 1) . '] ID: ' . $song['id'] . ', Title: "' . $song['title'] . '"');
+                }
+            } else {
+                \Log::info('No results found');
+            }
+            
+            $response = $songs->toArray();
+            \Log::info('Response JSON length: ' . strlen(json_encode($response)) . ' bytes');
+            \Log::info('=== Song Search API End ===');
+
+            return response()->json($response);
         } catch (\Exception $e) {
-            \Log::error('Song search error: ' . $e->getMessage());
+            \Log::error('=== Song Search API Error ===');
+            \Log::error('Error message: ' . $e->getMessage());
+            \Log::error('Error file: ' . $e->getFile() . ':' . $e->getLine());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            \Log::error('=== Song Search API Error End ===');
             return response()->json([]);
         }
     }

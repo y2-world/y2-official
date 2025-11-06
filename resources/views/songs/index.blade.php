@@ -102,7 +102,8 @@
 
             $input.typeahead({
                 minLength: 1,
-                highlight: true
+                highlight: true,
+                hint: false
             },
             {
                 name: 'songs',

@@ -135,12 +135,18 @@
 
             $input.typeahead({
                 minLength: 1,
-                highlight: true
+                highlight: true,
+                hint: false
             },
             {
                 name: 'songs',
                 display: 'title',
-                source: songs
+                source: songs,
+                templates: {
+                    suggestion: function(data) {
+                        return '<div>' + data.title + '</div>';
+                    }
+                }
             }).on('typeahead:selected', function(event, data) {
                 window.location.href = '/database/songs/' + data.id;
             });
