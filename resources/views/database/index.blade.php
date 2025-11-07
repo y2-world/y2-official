@@ -125,8 +125,15 @@
             }
 
             var songs = new Bloodhound({
-                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                datumTokenizer: function(datum) {
+                    // クライアント側のフィルタリングを無効化するため、常に空文字を含むトークンを返す
+                    return [''];
+                },
+                queryTokenizer: function(query) {
+                    // クエリも常に空文字を返すことで、すべてのデータがマッチする
+                    return [''];
+                },
+                identify: function(obj) { return obj.id; },
                 remote: {
                     url: '/find?q=%QUERY',
                     wildcard: '%QUERY'
@@ -142,6 +149,7 @@
                 name: 'songs',
                 display: 'title',
                 source: songs,
+                limit: 10,
                 templates: {
                     suggestion: function(data) {
                         return '<div>' + data.title + '</div>';

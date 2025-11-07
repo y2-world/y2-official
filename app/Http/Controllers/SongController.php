@@ -207,13 +207,13 @@ class SongController extends Controller
                 return response()->json([]);
             }
             
-            // 前方一致検索（utf8mb4_unicode_ciは大文字小文字を区別しない）
+            // 前方一致検索（大文字小文字を区別しない）
             // エスケープ処理を追加
             $escapedQuery = str_replace(['%', '_'], ['\%', '\_'], $query);
             \Log::info('Escaped query: "' . $escapedQuery . '"');
             \Log::info('Search pattern: "' . $escapedQuery . '%"');
-            
-            $songs = Song::where('title', 'LIKE', $escapedQuery . '%')
+
+            $songs = Song::whereRaw('LOWER(title) LIKE LOWER(?)', [$escapedQuery . '%'])
                 ->orderBy('title')
                 ->limit(10)
                 ->get()

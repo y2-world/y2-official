@@ -153,8 +153,8 @@
 @endsection
 
 @section('page-script')
-    <script src="{{ asset('/js/search.js?v=20251101') }}"></script>
-    <script src="{{ asset('/js/infinite-scroll.js?v=20251101') }}"></script>
+    <script src="{{ asset('/js/search.js?v=20251107f') }}"></script>
+    <script src="{{ asset('/js/infinite-scroll.js?v=20251107f') }}"></script>
     <script>
         // Typeaheadの初期化関数
         function initTypeaheadSetlist(inputId) {
@@ -182,46 +182,13 @@
                 name: 'songs',
                 display: 'title',
                 source: songs,
+                limit: 10,
                 templates: {
                     suggestion: function(data) {
-                        console.log('=== Template Function Called ===');
-                        console.log('Data:', data);
                         var artistText = data.artist ? ' - ' + data.artist : '';
                         return '<div style="color: black;">' + data.title + artistText + '</div>';
                     }
                 }
-            }).on('typeahead:asyncrequest', function(event, query) {
-                console.log('=== Typeahead Async Request (Setlists) ===');
-                console.log('Query:', query);
-            }).on('typeahead:asyncreceive', function(event, query, suggestions) {
-                console.log('=== Typeahead Async Receive (Setlists) ===');
-                console.log('Query:', query);
-                console.log('Suggestions:', suggestions);
-                console.log('Suggestions length:', suggestions ? suggestions.length : 0);
-            }).on('typeahead:render', function(event, suggestions, dataset) {
-                console.log('=== Typeahead Render (Setlists) ===');
-                console.log('Event:', event);
-                console.log('Suggestions:', suggestions);
-                console.log('Dataset:', dataset);
-                console.log('Arguments count:', arguments.length);
-                
-                // DOMから実際の候補数を確認
-                var menu = $input.siblings('.tt-menu');
-                var suggestionsInDOM = menu.find('.tt-suggestion');
-                console.log('Suggestions in DOM:', suggestionsInDOM.length);
-                console.log('Menu visible:', menu.is(':visible'));
-                console.log('Menu display:', menu.css('display'));
-                
-                // メニューが表示されていない場合、強制的に表示を試みる
-                if (suggestionsInDOM.length === 0 && suggestions && suggestions.length > 0) {
-                    console.log('=== Force showing menu ===');
-                    menu.css('display', 'block');
-                }
-            }).on('typeahead:opened', function(event) {
-                console.log('=== Typeahead Opened (Setlists) ===');
-                var menu = $input.siblings('.tt-menu');
-                var suggestionsInDOM = menu.find('.tt-suggestion');
-                console.log('Suggestions in DOM after opened:', suggestionsInDOM.length);
             }).on('typeahead:selected', function(event, data) {
                 window.location.href = '/setlist-songs/' + data.id;
             });

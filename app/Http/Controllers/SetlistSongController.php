@@ -116,15 +116,15 @@ class SetlistSongController extends Controller
                 return response()->json([]);
             }
             
-            // 前方一致検索（utf8mb4_unicode_ciは大文字小文字を区別しない）
+            // 前方一致検索（大文字小文字を区別しない）
             // エスケープ処理を追加
             $escapedQuery = str_replace(['%', '_'], ['\%', '\_'], $query);
             \Log::info('Escaped query: "' . $escapedQuery . '"');
             \Log::info('Search pattern: "' . $escapedQuery . '%"');
-            
+
             $songs = SetlistSong::query()
                 ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
-                ->where('setlist_songs.title', 'LIKE', $escapedQuery . '%')
+                ->whereRaw('LOWER(setlist_songs.title) LIKE LOWER(?)', [$escapedQuery . '%'])
                 ->orderBy('setlist_songs.title')
                 ->limit(10)
                 ->get([

@@ -51,7 +51,7 @@
 
                 @php
                     // メドレー表示用関数
-                    function renderSetlist($setlistItems, $artistId = null, $artistIdToName = [], $startNumber = 1) {
+                    function renderSetlist($setlistItems, $artistId = null, $artistIdToName = [], $startNumber = 1, $closeOl = true) {
                         $count = 0;
                         if ($startNumber === 1) {
                             echo '<ol class="setlist">';
@@ -75,14 +75,14 @@
                                 // タイトルから[xxx]の部分を削除して検索
                                 $cleanTitle = preg_replace('/\s*\[[^\]]+\]/u', '', $songTitle);
                                 $cleanTitle = trim($cleanTitle);
-                                
+
                                 // SetlistSongを検索（タイトルとartist_idで）
                                 $setlistSong = \App\Models\SetlistSong::where('title', $cleanTitle);
                                 if ($artistId) {
                                     $setlistSong = $setlistSong->where('artist_id', $artistId);
                                 }
                                 $setlistSong = $setlistSong->first();
-                                
+
                                 if ($setlistSong) {
                                     // 見つかった場合は詳細ページにリンク
                                     $url = url('/setlist-songs/' . $setlistSong->id);
@@ -132,21 +132,106 @@
                                 echo '</li>';
                             }
                         }
-                        echo '</ol>';
+                        if ($closeOl) {
+                            echo '</ol>';
+                        }
+                        return $count;
+                    }
+
+                    // アンコールのみをレンダリングする関数（<ol>タグを開かない）
+                    function renderEncoreSetlist($setlistItems, $artistId = null) {
+                        $count = 0;
+                        foreach ((array) $setlistItems as $data) {
+                            // songフィールドの処理：数値ならSetlistSongのID、文字列なら直接曲名
+                            $songValue = $data['song'] ?? '';
+                            $isNumericId = is_numeric($songValue);
+
+                            if ($isNumericId) {
+                                // SetlistSongテーブルから曲名を取得
+                                $song = \App\Models\SetlistSong::find($songValue);
+                                $songTitle = $song ? $song->title : $songValue;
+                                // SetlistSongの詳細ページにリンク
+                                $url = url('/setlist-songs/' . $songValue);
+                            } else {
+                                // 文字列の場合はSetlistSongテーブルから検索
+                                $songTitle = $songValue;
+                                // タイトルから[xxx]の部分を削除して検索
+                                $cleanTitle = preg_replace('/\s*\[[^\]]+\]/u', '', $songTitle);
+                                $cleanTitle = trim($cleanTitle);
+
+                                // SetlistSongを検索（タイトルとartist_idで）
+                                $setlistSong = \App\Models\SetlistSong::where('title', $cleanTitle);
+                                if ($artistId) {
+                                    $setlistSong = $setlistSong->where('artist_id', $artistId);
+                                }
+                                $setlistSong = $setlistSong->first();
+
+                                if ($setlistSong) {
+                                    // 見つかった場合は詳細ページにリンク
+                                    $url = url('/setlist-songs/' . $setlistSong->id);
+                                } else {
+                                    // 見つからない場合はテキストのみ（リンクなし）
+                                    $url = '#';
+                                }
+                            }
+
+                            $parts = splitAnnotation($songTitle);
+                            $main = $parts['main'];
+                            $annotation = $parts['annotation'];
+                            $keyword = $main;
+
+                            // 共演者がある場合は曲名の後に追加
+                            $featuring = !empty($data['featuring']) ? ' / ' . $data['featuring'] : '';
+
+                            $isMedley = !empty($data['medley']) && $data['medley'] == 1;
+
+                            if ($isMedley) {
+                                if ($url !== '#') {
+                                    echo '- <a href="' . $url . '">' . $keyword . '</a>';
+                                } else {
+                                    echo '- ' . $keyword;
+                                }
+                                if (!empty($featuring)) {
+                                    echo $featuring;
+                                }
+                                if (!empty($annotation)) {
+                                    echo ' ' . $annotation;
+                                }
+                                echo '<br>';
+                            } else {
+                                $count++;
+                                echo '<li>';
+                                if ($url !== '#') {
+                                    echo '<a href="' . $url . '">' . $keyword . '</a>';
+                                } else {
+                                    echo $keyword;
+                                }
+                                if (!empty($featuring)) {
+                                    echo $featuring;
+                                }
+                                if (!empty($annotation)) {
+                                    echo ' ' . $annotation;
+                                }
+                                echo '</li>';
+                            }
+                        }
                         return $count;
                     }
                 @endphp
 
                 {{-- 通常ライブ --}}
                 @if (!$setlists->fes)
-                    @php $count = renderSetlist($setlists->setlist, $setlists->artist_id, [], 1); @endphp
+                    @php $count = renderSetlist($setlists->setlist, $setlists->artist_id, [], 1, empty($setlists->encore)); @endphp
 
                     {{-- アンコール --}}
                     @if (!empty($setlists->encore))
                         <div style="margin: 0;">
                             <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
                         </div>
-                        @php $count += renderSetlist($setlists->encore, $setlists->artist_id, [], $count + 1); @endphp
+                        @php
+                            $count += renderEncoreSetlist($setlists->encore, $setlists->artist_id);
+                            echo '</ol>';
+                        @endphp
                     @endif
                 @endif
 
@@ -258,7 +343,7 @@
 
                     {{-- フェスアンコール --}}
                     @if (!empty($setlists->fes_encore))
-                        <div style="margin: 0; margin-top: 20px;">
+                        <div style="margin: 0;">
                             <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
                         </div>
                         @foreach ((array) $setlists->fes_encore as $key => $data)

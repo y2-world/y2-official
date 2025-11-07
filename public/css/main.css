@@ -1325,6 +1325,12 @@ h2 {
     overflow: visible;
 }
 
+/* Typeahead.jsが生成するラッパー要素のスタイル */
+.twitter-typeahead {
+    display: block !important;
+    width: 100% !important;
+}
+
 .database-search-input {
     width: 100%;
     padding: 10px 14px;
