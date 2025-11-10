@@ -1,19 +1,25 @@
 <div x-data="{
     open: false,
     selectedIndex: -1,
-    songs: $wire.entangle('songs'),
+    songs: @entangle('songs'),
     init() {
-        this.$watch('open', value => {
-            if (value) {
-                this.selectedIndex = -1;
-            }
-        });
+        try {
+            this.$watch('open', value => {
+                if (value) {
+                    this.selectedIndex = -1;
+                }
+            });
+        } catch (e) {
+            console.error('Alpine.js watch error:', e);
+        }
     },
     selectSong(songId) {
-        window.location.href = '/database/songs/' + songId;
+        if (songId) {
+            window.location.href = '/database/songs/' + songId;
+        }
     },
     navigateDown() {
-        if (this.selectedIndex < this.songs.length - 1) {
+        if (this.songs && this.selectedIndex < this.songs.length - 1) {
             this.selectedIndex++;
         }
     },
@@ -23,7 +29,7 @@
         }
     },
     selectCurrent() {
-        if (this.selectedIndex >= 0 && this.selectedIndex < this.songs.length) {
+        if (this.songs && this.selectedIndex >= 0 && this.selectedIndex < this.songs.length) {
             this.selectSong(this.songs[this.selectedIndex].id);
         }
     }
@@ -41,10 +47,10 @@
         autocomplete="off">
 
     <div
-        x-show="open && songs.length > 0"
+        x-show="open && Array.isArray(songs) && songs.length > 0"
         x-transition
-        style="position: absolute; top: 100%; left: 0; width: auto; min-width: 300px; background: white; border: 1px solid #ddd; border-radius: 4px; margin-top: 4px; max-height: 150px; overflow-y: auto; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-        <template x-for="(song, index) in songs" :key="song.id">
+        style="position: absolute; top: 100%; left: 0; width: auto; min-width: 300px; background: white; border: 1px solid #ddd; border-radius: 4px; margin-top: 4px; max-height: 190px; overflow-y: auto; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <template x-for="(song, index) in (Array.isArray(songs) ? songs : [])" :key="song.id || index">
             <div
                 @click="selectSong(song.id)"
                 :class="{ 'bg-gray-100': index === selectedIndex }"
