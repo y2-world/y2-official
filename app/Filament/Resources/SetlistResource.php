@@ -170,6 +170,10 @@ class SetlistResource extends Resource
                                                     ->placeholder('例: ゲスト名')
                                                     ->maxLength(255),
                                             ]),
+                                        Forms\Components\TextInput::make('version')
+                                            ->label('バージョン')
+                                            ->placeholder('例: (Acoustic Version)')
+                                            ->maxLength(255),
                                     ])
                                     ->collapsible() // ← 折りたたみ可能
                                     ->collapsed()   // ← 初期は閉じる
@@ -276,6 +280,10 @@ class SetlistResource extends Resource
                                                     ->placeholder('例: ゲスト名')
                                                     ->maxLength(255),
                                             ]),
+                                        Forms\Components\TextInput::make('version')
+                                            ->label('バージョン')
+                                            ->placeholder('例: (Acoustic Version)')
+                                            ->maxLength(255),
                                     ])
                                     ->collapsible() // ← 折りたたみ可能
                                     ->collapsed()   // ← 初期は閉じる
@@ -424,6 +432,11 @@ class SetlistResource extends Resource
                                                     ->maxLength(255)
                                                     ->dehydrated(),
                                             ]),
+                                        Forms\Components\TextInput::make('version')
+                                            ->label('バージョン')
+                                            ->placeholder('例: (Acoustic Version)')
+                                            ->maxLength(255)
+                                            ->dehydrated(),
                                     ])
                                     ->columnSpanFull(),
                             ])
@@ -551,6 +564,11 @@ class SetlistResource extends Resource
                                                     ->maxLength(255)
                                                     ->dehydrated(),
                                             ]),
+                                        Forms\Components\TextInput::make('version')
+                                            ->label('バージョン')
+                                            ->placeholder('例: (Acoustic Version)')
+                                            ->maxLength(255)
+                                            ->dehydrated(),
                                     ])
                                     ->columnSpanFull(),
                             ])

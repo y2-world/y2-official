@@ -22,7 +22,7 @@ class SongSearch extends Component
         $this->songs = SetlistSong::query()
             ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
             ->orderBy('setlist_songs.title')
-            ->limit(5)
+            ->limit(10)
             ->get([
                 'setlist_songs.id as id',
                 'setlist_songs.title as title',

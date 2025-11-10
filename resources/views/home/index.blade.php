@@ -183,6 +183,5 @@
 @endsection
 
 @section('page-script')
-    <script src="{{ asset('/js/search.js?time=' . time()) }}"></script>
     <script src="{{ asset('/js/top.js?time=' . time()) }}"></script>
 @endsection

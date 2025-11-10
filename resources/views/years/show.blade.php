@@ -81,48 +81,4 @@
 @endsection
 
 @section('page-script')
-<script src="{{ asset('/js/search.js?time=' . time()) }}"></script>
-<script>
-    // Typeaheadの初期化関数
-    function initTypeaheadYear(inputId) {
-        const $input = $(inputId);
-        if (!$input.length || $input.data('typeahead')) {
-            return;
-        }
-
-        var songs = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            remote: {
-                url: '/find-setlist-song?q=%QUERY',
-                wildcard: '%QUERY'
-            }
-        });
-
-        $input.typeahead({
-            minLength: 1,
-            highlight: true,
-            hint: false
-        },
-        {
-            name: 'songs',
-            display: 'title',
-            source: songs,
-            templates: {
-                suggestion: function(data) {
-                    var artistText = data.artist ? ' - ' + data.artist : '';
-                    return '<div style="color: black;">' + data.title + artistText + '</div>';
-                }
-            }
-        }).on('typeahead:selected', function(event, data) {
-            window.location.href = '/setlist-songs/' + data.id;
-        });
-    }
-
-    $(document).ready(function() {
-        setTimeout(function() {
-            initTypeaheadYear('#keyword-year');
-        }, 100);
-    });
-</script>
 @endsection

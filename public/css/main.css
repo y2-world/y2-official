@@ -1113,6 +1113,7 @@ h2 {
 }
 
 @media screen and (max-width: 1080px) {
+
     h2 {
         text-align: center;
     }
@@ -1336,7 +1337,7 @@ h2 {
     padding: 10px 14px;
     border: 1px solid #d1d5db;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 13px;
     background-color: white;
     transition: all 0.2s ease;
 }

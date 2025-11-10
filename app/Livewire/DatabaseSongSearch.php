@@ -18,7 +18,7 @@ class DatabaseSongSearch extends Component
     public function loadInitialSongs()
     {
         $this->songs = Song::orderBy('title')
-            ->limit(5)
+            ->limit(10)
             ->get()
             ->map(function ($song) {
                 return [
