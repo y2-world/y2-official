@@ -100,6 +100,9 @@
                             // 共演者がある場合は曲名の後に追加
                             $featuring = !empty($data['featuring']) ? ' / ' . $data['featuring'] : '';
 
+                            // バージョン違いがある場合は共演者の後に追加
+                            $version = !empty($data['version']) ? ' ' . $data['version'] : '';
+
                             $isMedley = !empty($data['medley']) && $data['medley'] == 1;
 
                             if ($isMedley) {
@@ -110,6 +113,9 @@
                                 }
                                 if (!empty($featuring)) {
                                     echo $featuring;
+                                }
+                                if (!empty($version)) {
+                                    echo $version;
                                 }
                                 if (!empty($annotation)) {
                                     echo ' ' . $annotation;
@@ -125,6 +131,9 @@
                                 }
                                 if (!empty($featuring)) {
                                     echo $featuring;
+                                }
+                                if (!empty($version)) {
+                                    echo $version;
                                 }
                                 if (!empty($annotation)) {
                                     echo ' ' . $annotation;
@@ -183,6 +192,9 @@
                             // 共演者がある場合は曲名の後に追加
                             $featuring = !empty($data['featuring']) ? ' / ' . $data['featuring'] : '';
 
+                            // バージョン違いがある場合は共演者の後に追加
+                            $version = !empty($data['version']) ? ' ' . $data['version'] : '';
+
                             $isMedley = !empty($data['medley']) && $data['medley'] == 1;
 
                             if ($isMedley) {
@@ -193,6 +205,9 @@
                                 }
                                 if (!empty($featuring)) {
                                     echo $featuring;
+                                }
+                                if (!empty($version)) {
+                                    echo $version;
                                 }
                                 if (!empty($annotation)) {
                                     echo ' ' . $annotation;
@@ -208,6 +223,9 @@
                                 }
                                 if (!empty($featuring)) {
                                     echo $featuring;
+                                }
+                                if (!empty($version)) {
+                                    echo $version;
                                 }
                                 if (!empty($annotation)) {
                                     echo ' ' . $annotation;
@@ -225,6 +243,7 @@
 
                     {{-- アンコール --}}
                     @if (!empty($setlists->encore))
+                        <br>
                         <div style="margin: 0;">
                             <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
                         </div>
@@ -343,6 +362,7 @@
 
                     {{-- フェスアンコール --}}
                     @if (!empty($setlists->fes_encore))
+                        <br>
                         <div style="margin: 0;">
                             <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
                         </div>

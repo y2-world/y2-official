@@ -200,13 +200,23 @@ class SongController extends Controller
             
             // クエリ文字列をトリム
             $query = trim($query);
-            
-            // 空文字列の場合は空配列を返す
+
+            // 空文字列の場合はA-Z順に最初の10件を返す
             if ($query === '') {
-                \Log::info('Query is empty, returning empty array');
-                return response()->json([]);
+                \Log::info('Query is empty, returning songs in alphabetical order');
+                $songs = Song::orderBy('title')
+                    ->limit(10)
+                    ->get()
+                    ->map(function ($song) {
+                        return [
+                            'id' => $song->id,
+                            'title' => $song->title,
+                            'artist' => null,
+                        ];
+                    });
+                return response()->json($songs->toArray());
             }
-            
+
             // 前方一致検索（大文字小文字を区別しない）
             // エスケープ処理を追加
             $escapedQuery = str_replace(['%', '_'], ['\%', '\_'], $query);

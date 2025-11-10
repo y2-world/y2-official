@@ -14,19 +14,13 @@
             {{-- 検索フォーム（SP表示） --}}
             <div class="sp" id="spSearchFormDatabase" style="margin-top: 40px; display: none;">
                 <div>
-                    <div class="search-wrapper">
-                        <input type="text" id="searchInputSp" class="database-search-input typeahead" placeholder="楽曲を検索..." required>
-                    </div>
+                    @livewire('database-song-search')
                 </div>
             </div>
 
             {{-- 検索フォーム（PC表示のみ） --}}
             <div class="database-search pc" style="margin-top: 40px;">
-                <form action="" method="GET">
-                    <div class="search-wrapper">
-                        <input type="text" id="searchInput" class="database-search-input typeahead" placeholder="楽曲を検索..." required>
-                    </div>
-                </form>
+                @livewire('database-song-search')
             </div>
         </div>
     </div>
@@ -113,82 +107,4 @@
 @endsection
 
 @section('page-script')
-<script src="{{ asset('/js/search.js?time=' . time()) }}"></script>
-<script>
-    // PC表示とSP表示の両方でTypeaheadを初期化
-    $(document).ready(function(){
-        // 検索機能を初期化する関数
-        function initTypeahead(inputId) {
-            const $input = $(inputId);
-            if (!$input.length || $input.data('typeahead')) {
-                return;
-            }
-
-            var songs = new Bloodhound({
-                datumTokenizer: function(datum) {
-                    // クライアント側のフィルタリングを無効化するため、常に空文字を含むトークンを返す
-                    return [''];
-                },
-                queryTokenizer: function(query) {
-                    // クエリも常に空文字を返すことで、すべてのデータがマッチする
-                    return [''];
-                },
-                identify: function(obj) { return obj.id; },
-                remote: {
-                    url: '/find?q=%QUERY',
-                    wildcard: '%QUERY'
-                }
-            });
-
-            $input.typeahead({
-                minLength: 1,
-                highlight: true,
-                hint: false
-            },
-            {
-                name: 'songs',
-                display: 'title',
-                source: songs,
-                limit: 10,
-                templates: {
-                    suggestion: function(data) {
-                        return '<div>' + data.title + '</div>';
-                    }
-                }
-            }).on('typeahead:selected', function(event, data) {
-                window.location.href = '/database/songs/' + data.id;
-            });
-        }
-
-        // PC表示の検索フォームはsearch.jsが既に初期化しているので、重複初期化を避ける
-        // search.jsが初期化に失敗した場合のみ初期化を試みる
-        setTimeout(function() {
-            const $searchInput = $('#searchInput');
-            if ($searchInput.length && !$searchInput.data('typeahead')) {
-                initTypeahead('#searchInput');
-            }
-        }, 500);
-
-        // SP表示の検索フォームが表示された時にTypeaheadを初期化
-        const spSearchForm = document.getElementById('spSearchFormDatabase');
-        if (spSearchForm) {
-            const observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-                        if (spSearchForm.style.display === 'block') {
-                            // 少し待ってから初期化（DOMが完全に表示されてから）
-                            setTimeout(function() {
-                                initTypeahead('#searchInputSp');
-                            }, 100);
-                        }
-                    }
-                });
-            });
-            observer.observe(spSearchForm, {
-                attributes: true,
-                attributeFilter: ['style']
-            });
-        }
-    });
-</script>
 @endsection

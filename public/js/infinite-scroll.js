@@ -1,2 +1,212 @@
-/*! For license information please see infinite-scroll.js.LICENSE.txt */
-(()=>{function t(e){return t="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},t(e)}function e(){"use strict";e=function(){return n};var n={},r=Object.prototype,o=r.hasOwnProperty,i=Object.defineProperty||function(t,e,n){t[e]=n.value},a="function"==typeof Symbol?Symbol:{},c=a.iterator||"@@iterator",l=a.asyncIterator||"@@asyncIterator",s=a.toStringTag||"@@toStringTag";function u(t,e,n){return Object.defineProperty(t,e,{value:n,enumerable:!0,configurable:!0,writable:!0}),t[e]}try{u({},"")}catch(t){u=function(t,e,n){return t[e]=n}}function h(t,e,n,r){var o=e&&e.prototype instanceof p?e:p,a=Object.create(o.prototype),c=new _(r||[]);return i(a,"_invoke",{value:L(t,n,c)}),a}function d(t,e,n){try{return{type:"normal",arg:t.call(e,n)}}catch(t){return{type:"throw",arg:t}}}n.wrap=h;var f={};function p(){}function g(){}function v(){}var y={};u(y,c,(function(){return this}));var m=Object.getPrototypeOf,b=m&&m(m(j([])));b&&b!==r&&o.call(b,c)&&(y=b);var w=v.prototype=p.prototype=Object.create(y);function x(t){["next","throw","return"].forEach((function(e){u(t,e,(function(t){return this._invoke(e,t)}))}))}function E(e,n){function r(i,a,c,l){var s=d(e[i],e,a);if("throw"!==s.type){var u=s.arg,h=u.value;return h&&"object"==t(h)&&o.call(h,"__await")?n.resolve(h.__await).then((function(t){r("next",t,c,l)}),(function(t){r("throw",t,c,l)})):n.resolve(h).then((function(t){u.value=t,c(u)}),(function(t){return r("throw",t,c,l)}))}l(s.arg)}var a;i(this,"_invoke",{value:function(t,e){function o(){return new n((function(n,o){r(t,e,n,o)}))}return a=a?a.then(o,o):o()}})}function L(t,e,n){var r="suspendedStart";return function(o,i){if("executing"===r)throw new Error("Generator is already running");if("completed"===r){if("throw"===o)throw i;return M()}for(n.method=o,n.arg=i;;){var a=n.delegate;if(a){var c=k(a,n);if(c){if(c===f)continue;return c}}if("next"===n.method)n.sent=n._sent=n.arg;else if("throw"===n.method){if("suspendedStart"===r)throw r="completed",n.arg;n.dispatchException(n.arg)}else"return"===n.method&&n.abrupt("return",n.arg);r="executing";var l=d(t,e,n);if("normal"===l.type){if(r=n.done?"completed":"suspendedYield",l.arg===f)continue;return{value:l.arg,done:n.done}}"throw"===l.type&&(r="completed",n.method="throw",n.arg=l.arg)}}}function k(t,e){var n=e.method,r=t.iterator[n];if(void 0===r)return e.delegate=null,"throw"===n&&t.iterator.return&&(e.method="return",e.arg=void 0,k(t,e),"throw"===e.method)||"return"!==n&&(e.method="throw",e.arg=new TypeError("The iterator does not provide a '"+n+"' method")),f;var o=d(r,t.iterator,e.arg);if("throw"===o.type)return e.method="throw",e.arg=o.arg,e.delegate=null,f;var i=o.arg;return i?i.done?(e[t.resultName]=i.value,e.next=t.nextLoc,"return"!==e.method&&(e.method="next",e.arg=void 0),e.delegate=null,f):i:(e.method="throw",e.arg=new TypeError("iterator result is not an object"),e.delegate=null,f)}function S(t){var e={tryLoc:t[0]};1 in t&&(e.catchLoc=t[1]),2 in t&&(e.finallyLoc=t[2],e.afterLoc=t[3]),this.tryEntries.push(e)}function P(t){var e=t.completion||{};e.type="normal",delete e.arg,t.completion=e}function _(t){this.tryEntries=[{tryLoc:"root"}],t.forEach(S,this),this.reset(!0)}function j(t){if(t){var e=t[c];if(e)return e.call(t);if("function"==typeof t.next)return t;if(!isNaN(t.length)){var n=-1,r=function e(){for(;++n<t.length;)if(o.call(t,n))return e.value=t[n],e.done=!1,e;return e.value=void 0,e.done=!0,e};return r.next=r}}return{next:M}}function M(){return{value:void 0,done:!0}}return g.prototype=v,i(w,"constructor",{value:v,configurable:!0}),i(v,"constructor",{value:g,configurable:!0}),g.displayName=u(v,s,"GeneratorFunction"),n.isGeneratorFunction=function(t){var e="function"==typeof t&&t.constructor;return!!e&&(e===g||"GeneratorFunction"===(e.displayName||e.name))},n.mark=function(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,v):(t.__proto__=v,u(t,s,"GeneratorFunction")),t.prototype=Object.create(w),t},n.awrap=function(t){return{__await:t}},x(E.prototype),u(E.prototype,l,(function(){return this})),n.AsyncIterator=E,n.async=function(t,e,r,o,i){void 0===i&&(i=Promise);var a=new E(h(t,e,r,o),i);return n.isGeneratorFunction(e)?a:a.next().then((function(t){return t.done?t.value:a.next()}))},x(w),u(w,s,"Generator"),u(w,c,(function(){return this})),u(w,"toString",(function(){return"[object Generator]"})),n.keys=function(t){var e=Object(t),n=[];for(var r in e)n.push(r);return n.reverse(),function t(){for(;n.length;){var r=n.pop();if(r in e)return t.value=r,t.done=!1,t}return t.done=!0,t}},n.values=j,_.prototype={constructor:_,reset:function(t){if(this.prev=0,this.next=0,this.sent=this._sent=void 0,this.done=!1,this.delegate=null,this.method="next",this.arg=void 0,this.tryEntries.forEach(P),!t)for(var e in this)"t"===e.charAt(0)&&o.call(this,e)&&!isNaN(+e.slice(1))&&(this[e]=void 0)},stop:function(){this.done=!0;var t=this.tryEntries[0].completion;if("throw"===t.type)throw t.arg;return this.rval},dispatchException:function(t){if(this.done)throw t;var e=this;function n(n,r){return a.type="throw",a.arg=t,e.next=n,r&&(e.method="next",e.arg=void 0),!!r}for(var r=this.tryEntries.length-1;r>=0;--r){var i=this.tryEntries[r],a=i.completion;if("root"===i.tryLoc)return n("end");if(i.tryLoc<=this.prev){var c=o.call(i,"catchLoc"),l=o.call(i,"finallyLoc");if(c&&l){if(this.prev<i.catchLoc)return n(i.catchLoc,!0);if(this.prev<i.finallyLoc)return n(i.finallyLoc)}else if(c){if(this.prev<i.catchLoc)return n(i.catchLoc,!0)}else{if(!l)throw new Error("try statement without catch or finally");if(this.prev<i.finallyLoc)return n(i.finallyLoc)}}}},abrupt:function(t,e){for(var n=this.tryEntries.length-1;n>=0;--n){var r=this.tryEntries[n];if(r.tryLoc<=this.prev&&o.call(r,"finallyLoc")&&this.prev<r.finallyLoc){var i=r;break}}i&&("break"===t||"continue"===t)&&i.tryLoc<=e&&e<=i.finallyLoc&&(i=null);var a=i?i.completion:{};return a.type=t,a.arg=e,i?(this.method="next",this.next=i.finallyLoc,f):this.complete(a)},complete:function(t,e){if("throw"===t.type)throw t.arg;return"break"===t.type||"continue"===t.type?this.next=t.arg:"return"===t.type?(this.rval=this.arg=t.arg,this.method="return",this.next="end"):"normal"===t.type&&e&&(this.next=e),f},finish:function(t){for(var e=this.tryEntries.length-1;e>=0;--e){var n=this.tryEntries[e];if(n.finallyLoc===t)return this.complete(n.completion,n.afterLoc),P(n),f}},catch:function(t){for(var e=this.tryEntries.length-1;e>=0;--e){var n=this.tryEntries[e];if(n.tryLoc===t){var r=n.completion;if("throw"===r.type){var o=r.arg;P(n)}return o}}throw new Error("illegal catch attempt")},delegateYield:function(t,e,n){return this.delegate={iterator:j(t),resultName:e,nextLoc:n},"next"===this.method&&(this.arg=void 0),f}},n}function n(t,e,n,r,o,i,a){try{var c=t[i](a),l=c.value}catch(t){return void n(t)}c.done?e(l):Promise.resolve(l).then(r,o)}function r(e,n){for(var r=0;r<n.length;r++){var o=n[r];o.enumerable=o.enumerable||!1,o.configurable=!0,"value"in o&&(o.writable=!0),Object.defineProperty(e,(i=o.key,a=void 0,a=function(e,n){if("object"!==t(e)||null===e)return e;var r=e[Symbol.toPrimitive];if(void 0!==r){var o=r.call(e,n||"default");if("object"!==t(o))return o;throw new TypeError("@@toPrimitive must return a primitive value.")}return("string"===n?String:Number)(e)}(i,"string"),"symbol"===t(a)?a:String(a)),o)}var i,a}var o=function(){function t(e){if(function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}(this,t),console.log("InfiniteScroll initialized with options:",e),this.container=document.querySelector(e.container),this.nextPageUrl=e.nextPageUrl,this.loading=!1,this.hasMore=!0,this.debugMode=!1,this.debugEl=null,this.container){console.log("Container found:",this.container),console.log("Next page URL:",this.nextPageUrl);var n=document.querySelector(".pagination, #pagination-links");n?(console.log("Hiding pagination:",n),n.style.display="none"):console.log("Pagination element not found"),this.debugMode&&this.createDebugDisplay(),this.init()}else console.error("Container not found:",e.container)}var o,i,a,c,l;return o=t,i=[{key:"init",value:function(){var t=this;console.log("Initializing scroll listener...");var e=function(){requestAnimationFrame((function(){return t.handleScroll()}))};window.addEventListener("scroll",e,{passive:!0}),document.addEventListener("scroll",e,{passive:!0}),this.createLoadingIndicator(),setTimeout((function(){return t.handleScroll()}),200),setInterval((function(){return t.handleScroll()}),1e3)}},{key:"createLoadingIndicator",value:function(){this.loadingEl=document.createElement("div"),this.loadingEl.className="loading-indicator",this.loadingEl.style.cssText="text-align: center; padding: 40px 20px; display: none; width: 100%;",this.loadingEl.innerHTML='\n            <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #333; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto;"></div>\n            <p style="margin-top: 10px; color: #666;">Loading...</p>\n            <style>\n                @keyframes spin {\n                    0% { transform: rotate(0deg); }\n                    100% { transform: rotate(360deg); }\n                }\n            </style>\n        ',this.container.closest("table").parentElement.appendChild(this.loadingEl)}},{key:"createDebugDisplay",value:function(){this.debugEl=document.createElement("div"),this.debugEl.style.cssText="position: fixed; top: 0; right: 0; background: rgba(0,0,0,0.8); color: #0f0; padding: 10px; font-size: 12px; z-index: 9999; max-width: 300px; font-family: monospace;",document.body.appendChild(this.debugEl),this.updateDebug("Initialized")}},{key:"updateDebug",value:function(t){if(this.debugMode&&this.debugEl){var e=(new Date).toLocaleTimeString();this.debugEl.innerHTML="\n            <div>[".concat(e,"] ").concat(t,"</div>\n            <div>Loading: ").concat(this.loading,"</div>\n            <div>HasMore: ").concat(this.hasMore,"</div>\n            <div>NextURL: ").concat(this.nextPageUrl?"yes":"no","</div>\n        ")}}},{key:"handleScroll",value:function(){if(!this.loading&&this.hasMore){var t=(window.pageYOffset||document.documentElement.scrollTop||document.body.scrollTop||0)+(window.innerHeight||document.documentElement.clientHeight),e=Math.max(document.body.scrollHeight,document.body.offsetHeight,document.documentElement.clientHeight,document.documentElement.scrollHeight,document.documentElement.offsetHeight)-500;this.updateDebug("Scroll: ".concat(Math.round(t),"/").concat(Math.round(e))),t>=e&&(console.log("Loading more items..."),this.updateDebug("Threshold reached!"),this.loadMore())}}},{key:"loadMore",value:(c=e().mark((function t(){var n,r;return e().wrap((function(t){for(;;)switch(t.prev=t.next){case 0:if(this.nextPageUrl&&!this.loading){t.next=2;break}return t.abrupt("return");case 2:return console.log("Loading more from:",this.nextPageUrl),this.loading=!0,this.loadingEl.style.display="block",t.prev=5,t.next=8,fetch(this.nextPageUrl,{headers:{"X-Requested-With":"XMLHttpRequest",Accept:"application/json"}});case 8:if(n=t.sent,console.log("Response status:",n.status),n.ok){t.next=12;break}throw new Error("Network response was not ok");case 12:return t.next=14,n.json();case 14:r=t.sent,console.log("Received data:",r),r.html&&this.container.insertAdjacentHTML("beforeend",r.html),r.next_page_url&&"https:"===window.location.protocol?this.nextPageUrl=r.next_page_url.replace("http://","https://"):this.nextPageUrl=r.next_page_url,this.hasMore=null!==r.next_page_url,t.next=24;break;case 21:t.prev=21,t.t0=t.catch(5),console.error("Error loading more items:",t.t0);case 24:return t.prev=24,this.loading=!1,this.loadingEl.style.display="none",t.finish(24);case 28:case"end":return t.stop()}}),t,this,[[5,21,24,28]])})),l=function(){var t=this,e=arguments;return new Promise((function(r,o){var i=c.apply(t,e);function a(t){n(i,r,o,a,l,"next",t)}function l(t){n(i,r,o,a,l,"throw",t)}a(void 0)}))},function(){return l.apply(this,arguments)})}],i&&r(o.prototype,i),a&&r(o,a),Object.defineProperty(o,"prototype",{writable:!1}),t}();window.InfiniteScroll=o})();
+/******/ (() => { // webpackBootstrap
+var __webpack_exports__ = {};
+/*!*****************************************!*\
+  !*** ./resources/js/infinite-scroll.js ***!
+  \*****************************************/
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+/**
+ * Infinite Scroll Implementation
+ * ページネーション付きのページをインフィニティスクロールに変換
+ */
+var InfiniteScroll = /*#__PURE__*/function () {
+  function InfiniteScroll(options) {
+    _classCallCheck(this, InfiniteScroll);
+    console.log('InfiniteScroll initialized with options:', options);
+    this.container = document.querySelector(options.container);
+    this.nextPageUrl = options.nextPageUrl;
+    this.loading = false;
+    this.hasMore = true;
+    this.debugMode = false; // デバッグモード無効
+    this.debugEl = null;
+    if (!this.container) {
+      console.error('Container not found:', options.container);
+      return;
+    }
+    console.log('Container found:', this.container);
+    console.log('Next page URL:', this.nextPageUrl);
+
+    // ページネーションを非表示
+    var pagination = document.querySelector('.pagination, #pagination-links');
+    if (pagination) {
+      console.log('Hiding pagination:', pagination);
+      pagination.style.display = 'none';
+    } else {
+      console.log('Pagination element not found');
+    }
+
+    // デバッグ表示を作成
+    if (this.debugMode) {
+      this.createDebugDisplay();
+    }
+    this.init();
+  }
+  _createClass(InfiniteScroll, [{
+    key: "init",
+    value: function init() {
+      var _this = this;
+      console.log('Initializing scroll listener...');
+
+      // スクロールイベントをリスン
+      var scrollHandler = function scrollHandler() {
+        requestAnimationFrame(function () {
+          return _this.handleScroll();
+        });
+      };
+      window.addEventListener('scroll', scrollHandler, {
+        passive: true
+      });
+      document.addEventListener('scroll', scrollHandler, {
+        passive: true
+      });
+
+      // ローディングインジケーターを作成
+      this.createLoadingIndicator();
+
+      // 初回チェック
+      setTimeout(function () {
+        return _this.handleScroll();
+      }, 200);
+
+      // モバイル用の定期チェック（1秒ごと）
+      setInterval(function () {
+        return _this.handleScroll();
+      }, 1000);
+    }
+  }, {
+    key: "createLoadingIndicator",
+    value: function createLoadingIndicator() {
+      this.loadingEl = document.createElement('div');
+      this.loadingEl.className = 'loading-indicator';
+      this.loadingEl.style.cssText = 'text-align: center; padding: 40px 20px; display: none; width: 100%;';
+      this.loadingEl.innerHTML = "\n            <div class=\"spinner\" style=\"border: 4px solid #f3f3f3; border-top: 4px solid #333; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto;\"></div>\n            <p style=\"margin-top: 10px; color: #666;\">Loading...</p>\n            <style>\n                @keyframes spin {\n                    0% { transform: rotate(0deg); }\n                    100% { transform: rotate(360deg); }\n                }\n            </style>\n        ";
+      // テーブルの後に追加するため、親要素（table）の親に追加
+      this.container.closest('table').parentElement.appendChild(this.loadingEl);
+    }
+  }, {
+    key: "createDebugDisplay",
+    value: function createDebugDisplay() {
+      this.debugEl = document.createElement('div');
+      this.debugEl.style.cssText = 'position: fixed; top: 0; right: 0; background: rgba(0,0,0,0.8); color: #0f0; padding: 10px; font-size: 12px; z-index: 9999; max-width: 300px; font-family: monospace;';
+      document.body.appendChild(this.debugEl);
+      this.updateDebug('Initialized');
+    }
+  }, {
+    key: "updateDebug",
+    value: function updateDebug(message) {
+      if (!this.debugMode || !this.debugEl) return;
+      var time = new Date().toLocaleTimeString();
+      this.debugEl.innerHTML = "\n            <div>[".concat(time, "] ").concat(message, "</div>\n            <div>Loading: ").concat(this.loading, "</div>\n            <div>HasMore: ").concat(this.hasMore, "</div>\n            <div>NextURL: ").concat(this.nextPageUrl ? 'yes' : 'no', "</div>\n        ");
+    }
+  }, {
+    key: "handleScroll",
+    value: function handleScroll() {
+      if (this.loading || !this.hasMore) {
+        return;
+      }
+
+      // モバイル対応：scrollHeight を使用
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      var windowHeight = window.innerHeight || document.documentElement.clientHeight;
+      var documentHeight = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+      var scrollPosition = scrollTop + windowHeight;
+      var threshold = documentHeight - 500;
+      this.updateDebug("Scroll: ".concat(Math.round(scrollPosition), "/").concat(Math.round(threshold)));
+      if (scrollPosition >= threshold) {
+        console.log('Loading more items...');
+        this.updateDebug('Threshold reached!');
+        this.loadMore();
+      }
+    }
+  }, {
+    key: "loadMore",
+    value: function () {
+      var _loadMore = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+        var response, data;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              if (!(!this.nextPageUrl || this.loading)) {
+                _context.next = 2;
+                break;
+              }
+              return _context.abrupt("return");
+            case 2:
+              console.log('Loading more from:', this.nextPageUrl);
+              this.loading = true;
+              this.loadingEl.style.display = 'block';
+              _context.prev = 5;
+              _context.next = 8;
+              return fetch(this.nextPageUrl, {
+                headers: {
+                  'X-Requested-With': 'XMLHttpRequest',
+                  'Accept': 'application/json'
+                }
+              });
+            case 8:
+              response = _context.sent;
+              console.log('Response status:', response.status);
+              if (response.ok) {
+                _context.next = 12;
+                break;
+              }
+              throw new Error('Network response was not ok');
+            case 12:
+              _context.next = 14;
+              return response.json();
+            case 14:
+              data = _context.sent;
+              console.log('Received data:', data);
+
+              // HTMLをコンテナに追加
+              if (data.html) {
+                // tbodyに直接appendするため、insertAdjacentHTMLを使用
+                this.container.insertAdjacentHTML('beforeend', data.html);
+              }
+
+              // 次のページURLを更新（HTTPSに変換）
+              if (data.next_page_url && window.location.protocol === 'https:') {
+                this.nextPageUrl = data.next_page_url.replace('http://', 'https://');
+              } else {
+                this.nextPageUrl = data.next_page_url;
+              }
+              this.hasMore = data.next_page_url !== null;
+              _context.next = 24;
+              break;
+            case 21:
+              _context.prev = 21;
+              _context.t0 = _context["catch"](5);
+              console.error('Error loading more items:', _context.t0);
+            case 24:
+              _context.prev = 24;
+              this.loading = false;
+              this.loadingEl.style.display = 'none';
+              return _context.finish(24);
+            case 28:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee, this, [[5, 21, 24, 28]]);
+      }));
+      function loadMore() {
+        return _loadMore.apply(this, arguments);
+      }
+      return loadMore;
+    }()
+  }]);
+  return InfiniteScroll;
+}(); // 使用方法:
+// new InfiniteScroll({
+//     container: '#items-container',
+//     nextPageUrl: 'http://example.com/api/items?page=2'
+// });
+window.InfiniteScroll = InfiniteScroll;
+/******/ })()
+;

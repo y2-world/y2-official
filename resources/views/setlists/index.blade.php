@@ -14,9 +14,7 @@
             {{-- 検索フォーム（SP表示） --}}
             <div class="sp" id="spSearchFormSetlists" style="margin-top: 20px; display: none;">
                 <div>
-                    <div class="search-wrapper">
-                        <input type="text" name="keyword" id="keyword-sp-setlists" class="database-search-input typeahead" placeholder="楽曲を検索..." style="font-size: 14px; padding: 12px 16px;" required>
-                    </div>
+                    @livewire('song-search')
                 </div>
             </div>
 
@@ -44,9 +42,7 @@
             {{-- 検索フォーム（PC表示のみ） --}}
             <div class="database-search pc" style="margin-top: 30px;">
                 <div>
-                    <div class="search-wrapper">
-                        <input type="text" name="keyword" id="keyword-pc" class="database-search-input typeahead" placeholder="楽曲を検索..." value="{{ request('keyword') }}" required>
-                    </div>
+                    @livewire('song-search')
                 </div>
             </div>
         </div>
@@ -153,74 +149,7 @@
 @endsection
 
 @section('page-script')
-    <script src="{{ asset('/js/search.js?v=20251107f') }}"></script>
-    <script src="{{ asset('/js/infinite-scroll.js?v=20251107f') }}"></script>
-    <script>
-        // Typeaheadの初期化関数
-        function initTypeaheadSetlist(inputId) {
-            const $input = $(inputId);
-            if (!$input.length || $input.data('typeahead')) {
-                return;
-            }
-
-            // Bloodhoundの設定
-            var songs = new Bloodhound({
-                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                remote: {
-                    url: '/find-setlist-song?q=%QUERY',
-                    wildcard: '%QUERY'
-                }
-            });
-
-            $input.typeahead({
-                minLength: 1,
-                highlight: true,
-                hint: false
-            },
-            {
-                name: 'songs',
-                display: 'title',
-                source: songs,
-                limit: 10,
-                templates: {
-                    suggestion: function(data) {
-                        var artistText = data.artist ? ' - ' + data.artist : '';
-                        return '<div style="color: black;">' + data.title + artistText + '</div>';
-                    }
-                }
-            }).on('typeahead:selected', function(event, data) {
-                window.location.href = '/setlist-songs/' + data.id;
-            });
-        }
-
-        // PC表示の検索フォームを初期化
-        $(document).ready(function() {
-            setTimeout(function() {
-                initTypeaheadSetlist('#keyword-pc');
-            }, 200);
-
-            // SP表示の検索フォームが表示された時にTypeaheadを初期化
-            const spSearchForm = document.getElementById('spSearchFormSetlists');
-            if (spSearchForm) {
-                const observer = new MutationObserver(function(mutations) {
-                    mutations.forEach(function(mutation) {
-                        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-                            if (spSearchForm.style.display === 'block') {
-                                setTimeout(function() {
-                                    initTypeaheadSetlist('#keyword-sp-setlists');
-                                }, 200);
-                            }
-                        }
-                    });
-                });
-                observer.observe(spSearchForm, {
-                    attributes: true,
-                    attributeFilter: ['style']
-                });
-            }
-        });
-    </script>
+    <script src="{{ asset('/js/infinite-scroll.js?v=20251110e') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM loaded');

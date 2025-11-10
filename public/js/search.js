@@ -22,7 +22,7 @@ $(document).ready(function(){
     });
 
     $('#searchInput').typeahead({
-        minLength: 1,
+        minLength: 0,
         highlight: true,
         hint: false
     },
@@ -63,6 +63,16 @@ $(document).ready(function(){
         console.log('Suggestions count:', suggestions ? suggestions.length : 0);
         if (suggestions && suggestions.length > 0) {
             console.log('First suggestion:', suggestions[0]);
+        }
+    });
+
+    // フォーカス時に候補を表示
+    $('#searchInput').on('focus click', function() {
+        var $this = $(this);
+        if ($this.val() === '') {
+            // 一時的にスペースを設定して即座にクリア（検索をトリガー）
+            $this.typeahead('val', ' ');
+            $this.typeahead('val', '');
         }
     });
 });

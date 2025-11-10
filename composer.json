@@ -13,6 +13,7 @@
         "illuminate/support": "^10.0",
         "laravel/framework": "^10.0",
         "laravel/tinker": "^2.5",
+        "livewire/livewire": "^3.5",
         "spatie/laravel-ignition": "^2.0"
     },
     "require-dev": {

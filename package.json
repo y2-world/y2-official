@@ -20,9 +20,7 @@
         "vue-template-compiler": "^2.7.14"
     },
     "dependencies": {
-        "corejs-typeahead": "^1.3.4",
-        "jquery": "^3.7.1",
-        "jquery-ui-dist": "^1.13.2",
-        "typeahead.js": "^0.11.1"
+        "alpinejs": "^3.13.3",
+        "jquery": "^3.7.1"
     }
 }

@@ -109,13 +109,22 @@ class SetlistSongController extends Controller
             
             // クエリ文字列をトリム
             $query = trim($query);
-            
-            // 空文字列の場合は空配列を返す
+
+            // 空文字列の場合はA-Z順に最初の10件を返す
             if ($query === '') {
-                \Log::info('Query is empty, returning empty array');
-                return response()->json([]);
+                \Log::info('Query is empty, returning songs in alphabetical order');
+                $songs = SetlistSong::query()
+                    ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
+                    ->orderBy('setlist_songs.title')
+                    ->limit(10)
+                    ->get([
+                        'setlist_songs.id as id',
+                        'setlist_songs.title as title',
+                        'artists.name as artist',
+                    ]);
+                return response()->json($songs->toArray());
             }
-            
+
             // 前方一致検索（大文字小文字を区別しない）
             // エスケープ処理を追加
             $escapedQuery = str_replace(['%', '_'], ['\%', '\_'], $query);
