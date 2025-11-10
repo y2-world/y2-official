@@ -22,9 +22,7 @@
             {{-- 検索フォーム（SP表示） --}}
             <div class="sp" id="spSearchFormSetlistSong" style="margin-top: 30px; display: none;">
                 <div>
-                    <div class="search-wrapper">
-                        <input type="text" name="keyword" id="keyword-sp-setlist-song" class="database-search-input typeahead" placeholder="楽曲を検索..." style="font-size: 14px; padding: 12px 16px;" required>
-                    </div>
+                    @livewire('song-search')
                     {{-- 閉じるボタン --}}
                     <div style="text-align: center; margin-top: 15px;">
                         <button type="button" onclick="document.getElementById('spSearchFormSetlistSong').style.display='none'; document.querySelector('.database-title.sp').style.display='block';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;">
@@ -37,9 +35,7 @@
             {{-- 検索フォーム（PC表示のみ） --}}
             <div class="database-search pc" style="margin-top: 30px;">
                 <div>
-                    <div class="search-wrapper">
-                        <input type="text" name="keyword" id="keyword-setlist-song" class="database-search-input typeahead" placeholder="楽曲を検索..." required>
-                    </div>
+                    @livewire('song-search')
                 </div>
             </div>
         </div>
@@ -97,4 +93,21 @@
 @endsection
 
 @section('page-script')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('=== Setlist Songs Page Script Loaded ===');
+        console.log('Livewire available:', typeof Livewire !== 'undefined');
+        console.log('Alpine available:', typeof Alpine !== 'undefined');
+        
+        // Livewireコンポーネントが読み込まれたか確認
+        setTimeout(function() {
+            const searchInputs = document.querySelectorAll('.database-search-input');
+            console.log('Search inputs found:', searchInputs.length);
+            searchInputs.forEach(function(input, index) {
+                console.log('Input ' + index + ':', input);
+                console.log('Input has x-data:', input.closest('[x-data]') !== null);
+            });
+        }, 1000);
+    });
+</script>
 @endsection
