@@ -1596,12 +1596,12 @@ h2 {
 
 /* Song search suggestion font sizes */
 .song-search-suggestion {
-    font-size: 10px;
+    font-size: 13px;
 }
 
 @media (min-width: 1080px) {
     .song-search-suggestion {
-        font-size: 13px;
+        font-size: 14px;
     }
 }
 
