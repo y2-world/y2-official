@@ -1,7 +1,7 @@
 <div x-data="{
     open: false,
     selectedIndex: -1,
-    songs: @entangle('songs').live,
+    songs: $wire.entangle('songs'),
     init() {
         this.$watch('open', value => {
             if (value) {
@@ -48,7 +48,8 @@
             <div
                 @click="selectSong(song.id)"
                 :class="{ 'bg-gray-100': index === selectedIndex }"
-                style="padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #eee; color: black; text-align: left; font-size: 8px;"
+                class="song-search-suggestion"
+                style="padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #eee; color: black; text-align: left;"
                 @mouseenter="selectedIndex = index">
                 <span x-text="song.title"></span>
             </div>
