@@ -14,14 +14,9 @@
 
             {{-- 検索フォーム（PC表示のみ） --}}
             <div class="database-search pc" style="margin-top: 30px;">
-                <form action="{{ url('/venue') }}" method="GET">
-                    <div class="search-wrapper">
-                        <input type="text" name="keyword" class="database-search-input" placeholder="会場を検索..." value="{{ request('keyword') }}">
-                        <button type="submit" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
-                            <i class="fa-solid fa-magnifying-glass search-icon" style="position: static; transform: none;"></i>
-                        </button>
-                    </div>
-                </form>
+                <div>
+                    @livewire('venue-search')
+                </div>
             </div>
         </div>
     </div>
