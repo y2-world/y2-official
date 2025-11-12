@@ -166,7 +166,7 @@ class SetlistResource extends Resource
                                                     ->default(false),
 
                                                 Forms\Components\TextInput::make('featuring')
-                                                    ->label('共演者')
+                                                    ->label('共演者・歌唱アーティスト')
                                                     ->placeholder('例: ゲスト名')
                                                     ->maxLength(255),
                                             ]),
@@ -276,7 +276,7 @@ class SetlistResource extends Resource
                                                     ->default(false),
 
                                                 Forms\Components\TextInput::make('featuring')
-                                                    ->label('共演者')
+                                                    ->label('共演者・歌唱アーティスト')
                                                     ->placeholder('例: ゲスト名')
                                                     ->maxLength(255),
                                             ]),
