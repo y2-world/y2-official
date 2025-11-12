@@ -3,22 +3,13 @@
 @section('content')
     <div class="database-hero database-year-hero">
         <div class="container">
-            <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 15px;">
-                <h1 class="database-title" style="margin-bottom: 0; text-align: center;">Setlists</h1>
-                {{-- 虫眼鏡アイコン（SP表示のみ） --}}
-                <button type="button" id="spSearchButtonSetlists" class="sp sp-search-button" onclick="var form = document.getElementById('spSearchFormSetlists'); var icon = this.querySelector('i'); if (form.style.display === 'none' || form.style.display === '') { form.style.display='block'; icon.className='fa-solid fa-xmark'; } else { form.style.display='none'; icon.className='fa-solid fa-magnifying-glass'; }" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; align-items: center; justify-content: center; margin-bottom: 0;">
+            <h1 class="database-title" style="margin-bottom: 0; text-align: center;">Setlists</h1>
+
+            <div class="year-navigation" style="display: flex; align-items: center; gap: 10px;">
+                {{-- 虫眼鏡アイコン（SP表示のみ・ドロップダウンの左端） --}}
+                <button type="button" id="spSearchButtonSetlists" class="sp" onclick="var form = document.getElementById('spSearchFormSetlists'); var icon = this.querySelector('i'); if (form.style.display === 'none' || form.style.display === '') { form.style.display='block'; icon.className='fa-solid fa-xmark'; } else { form.style.display='none'; icon.className='fa-solid fa-magnifying-glass'; }" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <i class="fa-solid fa-magnifying-glass" style="font-size: 14px;"></i>
                 </button>
-            </div>
-
-            {{-- 検索フォーム（SP表示） --}}
-            <div class="sp" id="spSearchFormSetlists" style="margin-top: 20px; display: none;">
-                <div>
-                    @livewire('song-search')
-                </div>
-            </div>
-
-            <div class="year-navigation">
                 <select class="year-select" name="select" onchange="if (this.value) window.location.href=this.value;">
                     <option value="" disabled selected>Live Type</option>
                     <option value="{{ url('/setlists') }}" {{ request('type') ? '' : 'selected' }}>All</option>
@@ -37,6 +28,13 @@
                         <option value="{{ url('/setlists/years', $year->year) }}">{{ $year->year }}</option>
                     @endforeach
                 </select>
+            </div>
+
+            {{-- 検索フォーム（SP表示） --}}
+            <div class="sp" id="spSearchFormSetlists" style="margin-top: 20px; display: none;">
+                <div>
+                    @livewire('song-search')
+                </div>
             </div>
 
             {{-- 検索フォーム（PC表示のみ） --}}
