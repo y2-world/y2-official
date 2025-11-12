@@ -3,7 +3,8 @@
 @section('content')
     <div class="database-hero database-year-hero">
         <div class="container">
-            <h1 class="database-title sp" style="margin-bottom: 20px; cursor: pointer;" onclick="document.getElementById('spSearchFormSetlistSong').style.display='block'; document.querySelector('.database-title.sp').style.display='none';">
+            <h1 class="database-title sp" style="margin-bottom: 20px; cursor: pointer;"
+                onclick="document.getElementById('spSearchFormSetlistSong').style.display='block'; document.querySelector('.database-title.sp').style.display='none';">
                 {{ $song->title }}
             </h1>
             <h1 class="database-title pc" style="margin-bottom: 20px;">{{ $song->title }}</h1>
@@ -12,7 +13,8 @@
                 @if ($song->artist)
                     <div style="margin-bottom: 8px;">
                         <strong>Artist:</strong>
-                        <a href="{{ url('/setlists/artists', $song->artist_id) }}" style="color: white; text-decoration: underline;">
+                        <a href="{{ url('/setlists/artists', $song->artist_id) }}"
+                            style="color: white; text-decoration: underline;">
                             {{ $song->artist->name }}
                         </a>
                     </div>
@@ -20,7 +22,7 @@
             </div>
 
             {{-- 検索フォーム（SP表示） --}}
-            <div class="sp" id="spSearchFormSetlistSong" style="margin-top: 30px; display: none;">
+            <div class="sp" id="spSearchFormSetlistSong" style="margin-top: 10px; display: none;">
                 <div>
                     @livewire('song-search')
                     {{-- 閉じるボタン --}}
@@ -74,7 +76,7 @@
         <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
             @if (isset($previous))
                 <a href="{{ url('/setlist-songs', $previous->id) }}" rel="prev"
-                   style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
+                    style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
                     <i class="fa-solid fa-arrow-left" style="margin-right: 8px;"></i>
                     Previous
                 </a>
@@ -83,7 +85,7 @@
             @endif
             @if (isset($next))
                 <a href="{{ url('/setlist-songs', $next->id) }}" rel="next"
-                   style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
+                    style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
                     Next
                     <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
                 </a>
@@ -93,21 +95,21 @@
 @endsection
 
 @section('page-script')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('=== Setlist Songs Page Script Loaded ===');
-        console.log('Livewire available:', typeof Livewire !== 'undefined');
-        console.log('Alpine available:', typeof Alpine !== 'undefined');
-        
-        // Livewireコンポーネントが読み込まれたか確認
-        setTimeout(function() {
-            const searchInputs = document.querySelectorAll('.database-search-input');
-            console.log('Search inputs found:', searchInputs.length);
-            searchInputs.forEach(function(input, index) {
-                console.log('Input ' + index + ':', input);
-                console.log('Input has x-data:', input.closest('[x-data]') !== null);
-            });
-        }, 1000);
-    });
-</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('=== Setlist Songs Page Script Loaded ===');
+            console.log('Livewire available:', typeof Livewire !== 'undefined');
+            console.log('Alpine available:', typeof Alpine !== 'undefined');
+
+            // Livewireコンポーネントが読み込まれたか確認
+            setTimeout(function() {
+                const searchInputs = document.querySelectorAll('.database-search-input');
+                console.log('Search inputs found:', searchInputs.length);
+                searchInputs.forEach(function(input, index) {
+                    console.log('Input ' + index + ':', input);
+                    console.log('Input has x-data:', input.closest('[x-data]') !== null);
+                });
+            }, 1000);
+        });
+    </script>
 @endsection

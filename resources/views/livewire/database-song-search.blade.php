@@ -1,7 +1,7 @@
 <div x-data="{
     open: false,
     selectedIndex: -1,
-    songs: @entangle('songs'),
+    songs: $wire.entangle('songs'),
     init() {
         try {
             this.$watch('open', value => {

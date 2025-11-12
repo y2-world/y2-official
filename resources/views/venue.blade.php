@@ -6,14 +6,14 @@
             <p class="database-subtitle sp" style="margin-bottom: 10px;">会場検索結果</p>
             <p class="database-subtitle pc" style="margin-bottom: 10px;">会場検索結果</p>
             <h1 class="database-title sp" style="margin-bottom: 20px; cursor: pointer;" onclick="document.getElementById('spSearchFormVenue').style.display='block'; this.style.display='none'; document.querySelectorAll('.database-subtitle.sp').forEach(el => el.style.display='none');">{{ $keyword }}</h1>
-            <h1 class="database-title pc" style="margin-bottom: 20px;">{{ $keyword }}</h1>
+            <h1 class="database-title pc" style="margin-bottom: 10px;">{{ $keyword }}</h1>
 
             @if ($data->isEmpty())
-                <p class="database-subtitle sp" style="margin-bottom: 0;">検索結果がありません</p>
-                <p class="database-subtitle pc" style="margin-bottom: 0;">検索結果がありません</p>
+                <p class="database-subtitle sp" style="margin-bottom: 20px;">検索結果がありません</p>
+                <p class="database-subtitle pc" style="margin-bottom: 10px;">検索結果がありません</p>
             @else
-                <p class="database-subtitle sp" style="margin-bottom: 0;">全{{ count($data) }}件</p>
-                <p class="database-subtitle pc" style="margin-bottom: 0;">全{{ count($data) }}件</p>
+                <p class="database-subtitle sp" style="margin-bottom: 20px;">全{{ count($data) }}件</p>
+                <p class="database-subtitle pc" style="margin-bottom: 10px;">全{{ count($data) }}件</p>
             @endif
 
             {{-- 検索フォーム（SP表示） --}}

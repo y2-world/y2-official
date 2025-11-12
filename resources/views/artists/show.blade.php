@@ -4,27 +4,14 @@
     <?php $artist_id = $artist->id; ?>
     <div class="database-hero database-year-hero">
         <div class="container">
-            <h1 class="database-title sp" style="margin-bottom: 20px; cursor: pointer;" onclick="document.getElementById('spSearchFormArtist').style.display='block'; this.style.display='none'; document.querySelector('.database-subtitle.sp').style.display='none';">
-                {{ $artist->name }}
-            </h1>
-            <h1 class="database-title pc" style="margin-bottom: 20px;">{{ $artist->name }}</h1>
-            <p class="database-subtitle sp">すべてのセットリスト</p>
-            <p class="database-subtitle pc">すべてのセットリスト</p>
+            <h1 class="database-title">{{ $artist->name }}</h1>
+            <p class="database-subtitle">すべてのセットリスト</p>
 
-            {{-- 検索フォーム（SP表示） --}}
-            <div class="sp" id="spSearchFormArtist" style="margin-top: 30px; display: none;">
-                <div>
-                    @livewire('song-search')
-                    {{-- 閉じるボタン --}}
-                    <div style="text-align: center; margin-top: 15px;">
-                        <button type="button" onclick="document.getElementById('spSearchFormArtist').style.display='none'; document.querySelector('.database-title.sp').style.display='block'; document.querySelector('.database-subtitle.sp').style.display='block';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;">
-                            <i class="fa-solid fa-xmark" style="font-size: 16px;"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="year-navigation">
+            <div class="year-navigation" style="display: flex; align-items: center; gap: 10px;">
+                {{-- 虫眼鏡アイコン（SP表示のみ・ドロップダウンの左端） --}}
+                <button type="button" id="spSearchButtonArtist" class="sp" onclick="var form = document.getElementById('spSearchFormArtist'); var icon = this.querySelector('i'); if (form.style.display === 'none' || form.style.display === '') { form.style.display='block'; icon.className='fa-solid fa-xmark'; } else { form.style.display='none'; icon.className='fa-solid fa-magnifying-glass'; }" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class="fa-solid fa-magnifying-glass" style="font-size: 14px;"></i>
+                </button>
                 <select class="year-select" name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Artists</option>
                     @foreach ($artists as $artist)
@@ -37,6 +24,13 @@
                         <option value="{{ url('/setlists/years', $year->year) }}">{{ $year->year }}</option>
                     @endforeach
                 </select>
+            </div>
+
+            {{-- 検索フォーム（SP表示） --}}
+            <div class="sp" id="spSearchFormArtist" style="margin-top: 20px; display: none;">
+                <div>
+                    @livewire('song-search')
+                </div>
             </div>
 
             {{-- 検索フォーム（PC表示のみ） --}}

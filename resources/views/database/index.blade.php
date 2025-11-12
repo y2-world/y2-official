@@ -3,16 +3,17 @@
 @section('content')
     <div class="database-hero">
         <div class="container">
-            <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 15px;">
-                <h1 class="database-title" style="margin-bottom: 0; text-align: center;">Mr.Children Database</h1>
-                {{-- 虫眼鏡アイコン（SP表示のみ） --}}
-                <button type="button" id="spSearchButtonDatabase" class="sp sp-search-button" onclick="var form = document.getElementById('spSearchFormDatabase'); var icon = this.querySelector('i'); if (form.style.display === 'none' || form.style.display === '') { form.style.display='block'; icon.className='fa-solid fa-xmark'; } else { form.style.display='none'; icon.className='fa-solid fa-magnifying-glass'; }" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; align-items: center; justify-content: center; margin-bottom: 0;">
+            <h1 class="database-title" style="margin-bottom: 20px; text-align: center;">Mr.Children Database</h1>
+
+            {{-- 虫眼鏡アイコン（SP表示のみ・タイトルの下） --}}
+            <div class="sp" style="text-align: center;">
+                <button type="button" id="spSearchButtonDatabase" onclick="var form = document.getElementById('spSearchFormDatabase'); var icon = this.querySelector('i'); if (form.style.display === 'none' || form.style.display === '') { form.style.display='block'; icon.className='fa-solid fa-xmark'; } else { form.style.display='none'; icon.className='fa-solid fa-magnifying-glass'; }" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;">
                     <i class="fa-solid fa-magnifying-glass" style="font-size: 14px;"></i>
                 </button>
             </div>
 
             {{-- 検索フォーム（SP表示） --}}
-            <div class="sp" id="spSearchFormDatabase" style="margin-top: 40px; display: none;">
+            <div class="sp" id="spSearchFormDatabase" style="margin-top: 10px; display: none;">
                 <div>
                     @livewire('database-song-search')
                 </div>
