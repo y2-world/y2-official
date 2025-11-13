@@ -58,17 +58,6 @@
                                 @php
                                     $setlist = is_array($setlistModel->setlist) ? $setlistModel->setlist : [];
                                     $encore = is_array($setlistModel->encore) ? $setlistModel->encore : [];
-
-                                    if (!function_exists('normalizeTitleWithAnnotation')) {
-                                        function normalizeTitleWithAnnotation($title)
-                                        {
-                                            preg_match('/^(.*?)\s*(\[[^\]]+\])?$/u', $title, $matches);
-                                            return [
-                                                'main' => trim($matches[1] ?? $title),
-                                                'annotation' => $matches[2] ?? '', // [9.25] など
-                                            ];
-                                        }
-                                    }
                                 @endphp
 
                                 @if (count($setlist) || count($encore))
@@ -92,7 +81,6 @@
                                                     $isNumericSong = is_numeric($data['song'] ?? '');
                                                     $title = '';
                                                     $link = null;
-                                                    $annotation = '';
 
                                                     if ($isNumericSong) {
                                                         $songModel = $songs->find($data['song']);
@@ -101,14 +89,9 @@
                                                             ? url('/database/songs', $data['song'])
                                                             : null;
                                                     } else {
-                                                        $original = $data['song'];
-                                                        $normalized = normalizeTitleWithAnnotation($original);
-                                                        $title = $normalized['main'];
-                                                        $annotation = $normalized['annotation'];
-                                                        $matchedSong = $songs->firstWhere('title', $title);
-                                                        $link = $matchedSong
-                                                            ? url('/database/songs', $matchedSong->id)
-                                                            : null;
+                                                        // 文字列の場合はそのまま表示
+                                                        $title = $data['song'];
+                                                        $link = null;
                                                     }
                                                 @endphp
 
@@ -125,9 +108,6 @@
                                                     @if(!empty($dailyNote))
                                                         ({{ $dailyNote }})
                                                     @endif
-                                                    @if(!empty($annotation))
-                                                        {{ $annotation }}
-                                                    @endif
                                                     <br>
                                                 @else
                                                     <li>
@@ -142,7 +122,6 @@
                                                         @if(!empty($dailyNote))
                                                             ({{ $dailyNote }})
                                                         @endif
-                                                        {{ $annotation }}
                                                     </li>
                                                 @endif
                                             @endforeach
