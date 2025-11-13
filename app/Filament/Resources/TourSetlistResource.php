@@ -62,11 +62,24 @@ class TourSetlistResource extends Resource
                                 // 曲名（横いっぱい）
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
-                                    ->options(fn() => \App\Models\Song::orderBy('title')->pluck('title', 'title'))
+                                    ->options(fn() => \App\Models\Song::orderBy('title')->pluck('title', 'id'))
                                     ->searchable()
                                     ->native(false)
                                     ->required()
                                     ->allowHtml()
+                                    ->getSearchResultsUsing(function (string $search) {
+                                        return \App\Models\Song::where('title', 'like', "%{$search}%")
+                                            ->orderBy('title')
+                                            ->limit(50)
+                                            ->pluck('title', 'id');
+                                    })
+                                    ->getOptionLabelUsing(function ($value) {
+                                        if (is_numeric($value)) {
+                                            $song = \App\Models\Song::find($value);
+                                            return $song ? $song->title : $value;
+                                        }
+                                        return $value;
+                                    })
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('title')
                                             ->label('曲名')
@@ -75,15 +88,6 @@ class TourSetlistResource extends Resource
                                     ])
                                     ->createOptionUsing(function (array $data): string {
                                         return $data['title'];
-                                    })
-                                    ->afterStateHydrated(function ($state, $set) {
-                                        // 数字（ID）の場合は曲名に変換
-                                        if (is_numeric($state)) {
-                                            $song = \App\Models\Song::find($state);
-                                            if ($song) {
-                                                $set('song', $song->title);
-                                            }
-                                        }
                                     })
                                     ->columnSpanFull(),
 
@@ -155,11 +159,24 @@ class TourSetlistResource extends Resource
                                 // 曲名
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
-                                    ->options(fn() => \App\Models\Song::orderBy('title')->pluck('title', 'title'))
+                                    ->options(fn() => \App\Models\Song::orderBy('title')->pluck('title', 'id'))
                                     ->searchable()
                                     ->native(false)
                                     ->required()
                                     ->allowHtml()
+                                    ->getSearchResultsUsing(function (string $search) {
+                                        return \App\Models\Song::where('title', 'like', "%{$search}%")
+                                            ->orderBy('title')
+                                            ->limit(50)
+                                            ->pluck('title', 'id');
+                                    })
+                                    ->getOptionLabelUsing(function ($value) {
+                                        if (is_numeric($value)) {
+                                            $song = \App\Models\Song::find($value);
+                                            return $song ? $song->title : $value;
+                                        }
+                                        return $value;
+                                    })
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('title')
                                             ->label('曲名')
@@ -168,15 +185,6 @@ class TourSetlistResource extends Resource
                                     ])
                                     ->createOptionUsing(function (array $data): string {
                                         return $data['title'];
-                                    })
-                                    ->afterStateHydrated(function ($state, $set) {
-                                        // 数字（ID）の場合は曲名に変換
-                                        if (is_numeric($state)) {
-                                            $song = \App\Models\Song::find($state);
-                                            if ($song) {
-                                                $set('song', $song->title);
-                                            }
-                                        }
                                     })
                                     ->columnSpanFull(),
 
