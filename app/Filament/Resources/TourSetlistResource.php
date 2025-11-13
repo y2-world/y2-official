@@ -62,10 +62,20 @@ class TourSetlistResource extends Resource
                                 // 曲名（横いっぱい）
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
-                                    ->options(fn() => \App\Models\Song::orderBy('title')->pluck('title', 'id'))
+                                    ->options(fn() => \App\Models\Song::orderBy('title')->pluck('title', 'title'))
                                     ->searchable()
                                     ->native(false)
                                     ->required()
+                                    ->allowHtml()
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('title')
+                                            ->label('曲名')
+                                            ->required()
+                                            ->maxLength(255),
+                                    ])
+                                    ->createOptionUsing(function (array $data): string {
+                                        return $data['title'];
+                                    })
                                     ->columnSpanFull(),
 
                                 // ⬇️ 詳細設定を折りたたみ
@@ -136,20 +146,21 @@ class TourSetlistResource extends Resource
                                 // 曲名
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
-                                    ->options(fn() => \App\Models\Song::orderBy('title')->pluck('title', 'id'))
+                                    ->options(fn() => \App\Models\Song::orderBy('title')->pluck('title', 'title'))
                                     ->searchable()
                                     ->native(false)
                                     ->required()
-                                    ->columnSpanFull()
-                                    ->mutateDehydratedStateUsing(function ($state) {
-                                        if (is_numeric($state)) {
-                                            return $state;
-                                        }
-                                        if (is_string($state) && $state !== '') {
-                                            return $state;
-                                        }
-                                        return null;
-                                    }),
+                                    ->allowHtml()
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('title')
+                                            ->label('曲名')
+                                            ->required()
+                                            ->maxLength(255),
+                                    ])
+                                    ->createOptionUsing(function (array $data): string {
+                                        return $data['title'];
+                                    })
+                                    ->columnSpanFull(),
 
                                 // 詳細設定（折りたたみ）
                                 Forms\Components\Section::make('詳細設定')
