@@ -78,15 +78,14 @@ class TourSetlistResource extends Resource
                                             ->live(),
 
                                         Forms\Components\TextInput::make('featuring')
-                                            ->label('共演者・歌唱アーティスト')
+                                            ->label('共演者・アーティスト')
                                             ->placeholder('例: ゲスト名')
                                             ->maxLength(255),
 
                                         Forms\Components\TextInput::make('daily_note')
                                             ->label('日替わり説明')
                                             ->placeholder('例: 9.30')
-                                            ->maxLength(255)
-                                            ->visible(fn(Forms\Get $get): bool => $get('is_daily') == true),
+                                            ->maxLength(255),
                                     ])
                                     ->columns(2)
                                     ->collapsible() // 👈 折りたたみ可能に
@@ -164,15 +163,14 @@ class TourSetlistResource extends Resource
                                             ->live(),
 
                                         Forms\Components\TextInput::make('featuring')
-                                            ->label('共演者・歌唱アーティスト')
+                                            ->label('共演者・アーティスト')
                                             ->placeholder('例: ゲスト名')
                                             ->maxLength(255),
 
                                         Forms\Components\TextInput::make('daily_note')
                                             ->label('日替わり説明')
                                             ->placeholder('例: 9.30')
-                                            ->maxLength(255)
-                                            ->visible(fn(Forms\Get $get): bool => $get('is_daily') == true),
+                                            ->maxLength(255),
                                     ])
                                     ->columns(2)
                                     ->columnSpanFull(),
