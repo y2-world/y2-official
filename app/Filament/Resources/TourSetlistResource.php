@@ -76,6 +76,15 @@ class TourSetlistResource extends Resource
                                     ->createOptionUsing(function (array $data): string {
                                         return $data['title'];
                                     })
+                                    ->afterStateHydrated(function ($state, $set) {
+                                        // 数字（ID）の場合は曲名に変換
+                                        if (is_numeric($state)) {
+                                            $song = \App\Models\Song::find($state);
+                                            if ($song) {
+                                                $set('song', $song->title);
+                                            }
+                                        }
+                                    })
                                     ->columnSpanFull(),
 
                                 // ⬇️ 詳細設定を折りたたみ
@@ -159,6 +168,15 @@ class TourSetlistResource extends Resource
                                     ])
                                     ->createOptionUsing(function (array $data): string {
                                         return $data['title'];
+                                    })
+                                    ->afterStateHydrated(function ($state, $set) {
+                                        // 数字（ID）の場合は曲名に変換
+                                        if (is_numeric($state)) {
+                                            $song = \App\Models\Song::find($state);
+                                            if ($song) {
+                                                $set('song', $song->title);
+                                            }
+                                        }
                                     })
                                     ->columnSpanFull(),
 
