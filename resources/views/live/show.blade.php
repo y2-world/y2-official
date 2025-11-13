@@ -78,19 +78,21 @@
                                                     $isDaily = isset($data['is_daily']) && $data['is_daily'];
                                                     $dailyNote = isset($data['daily_note']) ? $data['daily_note'] : '';
                                                     $featuring = isset($data['featuring']) ? $data['featuring'] : '';
+                                                    $alternativeTitle = isset($data['alternative_title']) ? $data['alternative_title'] : '';
                                                     $isNumericSong = is_numeric($data['song'] ?? '');
                                                     $title = '';
                                                     $link = null;
 
                                                     if ($isNumericSong) {
                                                         $songModel = $songs->find($data['song']);
-                                                        $title = $songModel->title ?? 'Unknown Song';
+                                                        // 別表記がある場合はそれを使用、なければ元のタイトル
+                                                        $title = !empty($alternativeTitle) ? $alternativeTitle : ($songModel->title ?? 'Unknown Song');
                                                         $link = $songModel
                                                             ? url('/database/songs', $data['song'])
                                                             : null;
                                                     } else {
-                                                        // 文字列の場合はそのまま表示
-                                                        $title = $data['song'];
+                                                        // 文字列の場合はそのまま表示（別表記があればそれを使用）
+                                                        $title = !empty($alternativeTitle) ? $alternativeTitle : $data['song'];
                                                         $link = null;
                                                     }
                                                 @endphp

@@ -109,6 +109,11 @@ class TourSetlistResource extends Resource
                                             ->label('日替わり説明')
                                             ->placeholder('例: 9.30')
                                             ->maxLength(255),
+
+                                        Forms\Components\TextInput::make('alternative_title')
+                                            ->label('別表記')
+                                            ->placeholder('例: I\'LL BE')
+                                            ->maxLength(255),
                                     ])
                                     ->columns(2)
                                     ->collapsible() // 👈 折りたたみ可能に
@@ -207,6 +212,11 @@ class TourSetlistResource extends Resource
                                         Forms\Components\TextInput::make('daily_note')
                                             ->label('日替わり説明')
                                             ->placeholder('例: 9.30')
+                                            ->maxLength(255),
+
+                                        Forms\Components\TextInput::make('alternative_title')
+                                            ->label('別表記')
+                                            ->placeholder('例: I\'LL BE')
                                             ->maxLength(255),
                                     ])
                                     ->columns(2)
