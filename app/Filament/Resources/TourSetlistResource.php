@@ -100,14 +100,14 @@ class TourSetlistResource extends Resource
                                             ->inline(false)
                                             ->live(),
 
-                                        Forms\Components\TextInput::make('featuring')
-                                            ->label('共演者・アーティスト')
-                                            ->placeholder('例: ゲスト名')
-                                            ->maxLength(255),
-
                                         Forms\Components\TextInput::make('daily_note')
                                             ->label('日替わり説明')
                                             ->placeholder('例: 9.30')
+                                            ->maxLength(255),
+
+                                        Forms\Components\TextInput::make('featuring')
+                                            ->label('共演者・アーティスト')
+                                            ->placeholder('例: ゲスト名')
                                             ->maxLength(255),
 
                                         Forms\Components\TextInput::make('alternative_title')
@@ -204,14 +204,14 @@ class TourSetlistResource extends Resource
                                             ->inline(false)
                                             ->live(),
 
-                                        Forms\Components\TextInput::make('featuring')
-                                            ->label('共演者・アーティスト')
-                                            ->placeholder('例: ゲスト名')
-                                            ->maxLength(255),
-
                                         Forms\Components\TextInput::make('daily_note')
                                             ->label('日替わり説明')
                                             ->placeholder('例: 9.30')
+                                            ->maxLength(255),
+
+                                        Forms\Components\TextInput::make('featuring')
+                                            ->label('共演者・アーティスト')
+                                            ->placeholder('例: ゲスト名')
                                             ->maxLength(255),
 
                                         Forms\Components\TextInput::make('alternative_title')
