@@ -91,7 +91,7 @@ class TourSetlistResource extends Resource
                                     })
                                     ->columnSpanFull(),
 
-                                // ⬇️ 詳細設定を折りたたみ
+                                // ⬇️ 詳細設定
                                 Forms\Components\Section::make('詳細設定')
                                     ->schema([
                                         Forms\Components\Toggle::make('is_daily')
@@ -116,8 +116,6 @@ class TourSetlistResource extends Resource
                                             ->maxLength(255),
                                     ])
                                     ->columns(2)
-                                    ->collapsible() // 👈 折りたたみ可能に
-                                    ->collapsed()   // 👈 初期状態で閉じておく
                                     ->columnSpanFull(),
                             ])
                             ->columns(1)
