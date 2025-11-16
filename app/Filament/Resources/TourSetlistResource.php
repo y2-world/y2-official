@@ -116,6 +116,8 @@ class TourSetlistResource extends Resource
                                             ->maxLength(255),
                                     ])
                                     ->columns(2)
+                                    ->collapsible()
+                                    ->collapsed()
                                     ->columnSpanFull(),
                             ])
                             ->columns(1)
