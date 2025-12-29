@@ -31,4 +31,16 @@ class Disco extends Model
     {
         $this->attributes['tracklist'] = json_encode(array_values($value));
     }
+
+    // スコープ: アルバムのみ取得
+    public function scopeAlbums($query)
+    {
+        return $query->where('type', 'album');
+    }
+
+    // スコープ: シングルのみ取得
+    public function scopeSingles($query)
+    {
+        return $query->where('type', 'single');
+    }
 }
