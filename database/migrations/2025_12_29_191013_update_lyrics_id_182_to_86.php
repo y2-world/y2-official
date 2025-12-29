@@ -20,13 +20,9 @@ return new class extends Migration
             DB::table('lyrics')->where('id', 182)->delete();
 
             // ID 86としてレコードを再挿入
-            DB::table('lyrics')->insert([
-                'id' => 86,
-                'title' => $lyric->title,
-                'lyric' => $lyric->lyric,
-                'created_at' => $lyric->created_at,
-                'updated_at' => $lyric->updated_at,
-            ]);
+            $data = (array) $lyric;
+            $data['id'] = 86;
+            DB::table('lyrics')->insert($data);
 
             // オートインクリメントを適切な値に設定
             $maxId = DB::table('lyrics')->max('id');
@@ -47,13 +43,9 @@ return new class extends Migration
             DB::table('lyrics')->where('id', 86)->delete();
 
             // ID 182としてレコードを復元
-            DB::table('lyrics')->insert([
-                'id' => 182,
-                'title' => $lyric->title,
-                'lyric' => $lyric->lyric,
-                'created_at' => $lyric->created_at,
-                'updated_at' => $lyric->updated_at,
-            ]);
+            $data = (array) $lyric;
+            $data['id'] = 182;
+            DB::table('lyrics')->insert($data);
 
             // オートインクリメントを適切な値に設定
             $maxId = DB::table('lyrics')->max('id');
