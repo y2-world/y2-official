@@ -1,5 +1,10 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - Setlists')
+
+@section('og_title', 'Setlists - Yuki Official')
+@section('og_description', 'Browse all setlists from Yuki Yoshida performances')
+@section('og_type', 'website')
+
 @section('content')
     <div class="database-hero database-year-hero">
         <div class="container">

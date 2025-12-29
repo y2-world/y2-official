@@ -1,5 +1,10 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - ' . $songs->title)
+
+@section('og_title', $songs->title . ' - Yuki Official')
+@section('og_description', 'Song ID: ' . $songs->id . ' - ' . $songs->title)
+@section('og_type', 'music.song')
+
 @section('content')
     <div class="database-hero database-year-hero">
         <div class="container">

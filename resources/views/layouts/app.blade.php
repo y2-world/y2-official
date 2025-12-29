@@ -8,8 +8,8 @@
     <title>@yield('title', 'Yuki Official')</title>
 
     <!-- OGP Meta Tags -->
-    <meta property="og:title" content="@yield('og_title', 'Yuki Official')">
-    <meta property="og:description" content="@yield('og_description', 'Yuki Yoshida Official Website')">
+    <meta property="og:title" content="@yield('og_title', @yield('title', 'Yuki Official'))">
+    <meta property="og:description" content="@yield('og_description', 'Yuki Yoshida Official Website - News, Tours, Discography, and Setlists')">
     <meta property="og:image" content="@yield('og_image', asset('/images/default-ogp.jpg'))">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:type" content="@yield('og_type', 'website')">
@@ -17,8 +17,8 @@
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="@yield('og_title', 'Yuki Official')">
-    <meta name="twitter:description" content="@yield('og_description', 'Yuki Yoshida Official Website')">
+    <meta name="twitter:title" content="@yield('og_title', @yield('title', 'Yuki Official'))">
+    <meta name="twitter:description" content="@yield('og_description', 'Yuki Yoshida Official Website - News, Tours, Discography, and Setlists')">
     <meta name="twitter:image" content="@yield('og_image', asset('/images/default-ogp.jpg'))">
 
     <!-- Fonts -->

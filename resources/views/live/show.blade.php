@@ -1,5 +1,10 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - ' . $tours->title)
+
+@section('og_title', $tours->title . ' - Yuki Official')
+@section('og_description', 'Tour: ' . $tours->title . ' (' . date('Y', strtotime($tours->date_start)) . ')')
+@section('og_type', 'article')
+
 @section('content')
     @php
         // 関数の重複定義を防ぐためにチェック

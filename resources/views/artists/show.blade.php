@@ -1,5 +1,10 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - ' . $artist->name)
+
+@section('og_title', $artist->name . ' - Yuki Official')
+@section('og_description', 'All setlists featuring ' . $artist->name)
+@section('og_type', 'profile')
+
 @section('content')
     <?php $artist_id = $artist->id; ?>
     <div class="database-hero database-year-hero">

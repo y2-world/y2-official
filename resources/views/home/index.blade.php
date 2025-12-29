@@ -1,4 +1,9 @@
 @extends('layouts.app')
+
+@section('og_title', 'Yuki Official')
+@section('og_description', 'Yuki Yoshida Official Website - News, Tours, Discography, and Setlists')
+@section('og_type', 'website')
+
 @section('content')
     <?php
     $today = strtotime(date('Y-m-d'));

@@ -1,5 +1,10 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - ' . $setlists->title)
+
+@section('og_title', $setlists->title)
+@section('og_description', date('Y.m.d', strtotime($setlists->date)) . ' - ' . $setlists->venue)
+@section('og_type', 'article')
+
 @section('content')
     <div class="database-hero database-year-hero">
         <div class="container">
