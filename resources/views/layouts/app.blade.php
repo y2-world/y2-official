@@ -7,19 +7,26 @@
 
     <title>@yield('title', 'Yuki Official')</title>
 
+    @php
+        $ogTitle = trim($__env->yieldContent('og_title')) ?: (trim($__env->yieldContent('title')) ?: 'Yuki Official');
+        $ogDescription = trim($__env->yieldContent('og_description')) ?: 'Yuki Yoshida Official Website - News, Tours, Discography, and Setlists';
+        $ogImage = trim($__env->yieldContent('og_image')) ?: asset('/images/default-ogp.jpg');
+        $ogType = trim($__env->yieldContent('og_type')) ?: 'website';
+    @endphp
+
     <!-- OGP Meta Tags -->
-    <meta property="og:title" content="@yield('og_title', @yield('title', 'Yuki Official'))">
-    <meta property="og:description" content="@yield('og_description', 'Yuki Yoshida Official Website - News, Tours, Discography, and Setlists')">
-    <meta property="og:image" content="@yield('og_image', asset('/images/default-ogp.jpg'))">
+    <meta property="og:title" content="{{ $ogTitle }}">
+    <meta property="og:description" content="{{ $ogDescription }}">
+    <meta property="og:image" content="{{ $ogImage }}">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:type" content="@yield('og_type', 'website')">
+    <meta property="og:type" content="{{ $ogType }}">
     <meta property="og:site_name" content="Yuki Official">
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="@yield('og_title', @yield('title', 'Yuki Official'))">
-    <meta name="twitter:description" content="@yield('og_description', 'Yuki Yoshida Official Website - News, Tours, Discography, and Setlists')">
-    <meta name="twitter:image" content="@yield('og_image', asset('/images/default-ogp.jpg'))">
+    <meta name="twitter:title" content="{{ $ogTitle }}">
+    <meta name="twitter:description" content="{{ $ogDescription }}">
+    <meta name="twitter:image" content="{{ $ogImage }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
