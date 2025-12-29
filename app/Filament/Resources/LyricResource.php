@@ -37,12 +37,12 @@ class LyricResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Select::make('album_id')
                     ->label('アルバム名')
-                    ->options(fn() => \App\Models\Disco::where('type', 'album')->orderBy('date', 'asc')->pluck('title', 'id'))
+                    ->options(fn() => \App\Models\Disco::where('type', 0)->orderBy('date', 'asc')->pluck('title', 'id'))
                     ->searchable()
                     ->native(false),
                 Forms\Components\Select::make('single_id')
                     ->label('シングル名')
-                    ->options(fn() => \App\Models\Disco::where('type', 'single')->orderBy('date', 'asc')->pluck('title', 'id'))
+                    ->options(fn() => \App\Models\Disco::where('type', 1)->orderBy('date', 'asc')->pluck('title', 'id'))
                     ->searchable()
                     ->native(false),
                 Forms\Components\Textarea::make('lyrics')
@@ -80,11 +80,11 @@ class LyricResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('album_id')
                     ->label('アルバム')
-                    ->options(fn() => \App\Models\Disco::where('type', 'album')->orderBy('date', 'asc')->pluck('title', 'id'))
+                    ->options(fn() => \App\Models\Disco::where('type', 0)->orderBy('date', 'asc')->pluck('title', 'id'))
                     ->searchable(),
                 Tables\Filters\SelectFilter::make('single_id')
                     ->label('シングル')
-                    ->options(fn() => \App\Models\Disco::where('type', 'single')->orderBy('date', 'asc')->pluck('title', 'id'))
+                    ->options(fn() => \App\Models\Disco::where('type', 1)->orderBy('date', 'asc')->pluck('title', 'id'))
                     ->searchable(),
             ])
             ->actions([
