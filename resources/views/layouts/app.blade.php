@@ -10,7 +10,7 @@
     @php
         $ogTitle = trim($__env->yieldContent('og_title')) ?: (trim($__env->yieldContent('title')) ?: 'Yuki Official');
         $ogDescription = trim($__env->yieldContent('og_description')) ?: 'Yuki Yoshida Official Website - News, Tours, Discography, and Setlists';
-        $ogImage = trim($__env->yieldContent('og_image')) ?: asset('/images/default-ogp.jpg');
+        $ogImage = trim($__env->yieldContent('og_image')) ?: asset('/images/top_image.jpg');
         $ogType = trim($__env->yieldContent('og_type')) ?: 'website';
     @endphp
 
