@@ -37,16 +37,14 @@ class LyricResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Select::make('album_id')
                     ->label('アルバム名')
-                    ->options(\App\Models\Disco::where('type', 'album')->orderBy('date', 'asc')->pluck('title', 'id'))
+                    ->options(fn() => \App\Models\Disco::where('type', 'album')->orderBy('date', 'asc')->pluck('title', 'id'))
                     ->searchable()
-                    ->native(false)
-                    ->preload(),
+                    ->native(false),
                 Forms\Components\Select::make('single_id')
                     ->label('シングル名')
-                    ->options(\App\Models\Disco::where('type', 'single')->orderBy('date', 'asc')->pluck('title', 'id'))
+                    ->options(fn() => \App\Models\Disco::where('type', 'single')->orderBy('date', 'asc')->pluck('title', 'id'))
                     ->searchable()
-                    ->native(false)
-                    ->preload(),
+                    ->native(false),
                 Forms\Components\Textarea::make('lyrics')
                     ->label('歌詞')
                     ->rows(20)
