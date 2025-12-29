@@ -1,5 +1,26 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - ' . $discos->title)
+
+@php
+    try {
+        $imageUrl = \Illuminate\Support\Facades\Storage::disk('cloudinary')->url($discos->image);
+    } catch (\Exception $e) {
+        $imagePath = $discos->image;
+        if (strpos($imagePath, 'http') === 0) {
+            $imageUrl = $imagePath;
+        } elseif (strpos($imagePath, 'image/upload') !== false) {
+            $imageUrl = 'https://res.cloudinary.com/hqrgbxuiv/' . $imagePath;
+        } else {
+            $imageUrl = 'https://res.cloudinary.com/hqrgbxuiv/image/upload/' . $imagePath;
+        }
+    }
+@endphp
+
+@section('og_title', $discos->title)
+@section('og_description', $discos->subtitle . ' - ' . date('Y.m.d', strtotime($discos->date)))
+@section('og_image', $imageUrl)
+@section('og_type', 'music.album')
+
 @section('content')
     <div class="mt-4"></div>
     <div class="album-detail">
@@ -48,10 +69,17 @@
                                                             data-id="{{ $data['id'] }}">{{ $data['exception'] }}</a>
                                                     </li>
                                                 @elseif(isset($data['id']))
-                                                    <li>
-                                                        <a href="javascript:void(0);" class="music-link"
-                                                            data-id="{{ $data['id'] }}">{{ $lyrics[$data['id'] - 1]['title'] }}</a>
-                                                    </li>
+                                                    @php
+                                                        $lyric = $lyrics->firstWhere('id', $data['id']);
+                                                    @endphp
+                                                    @if($lyric)
+                                                        <li>
+                                                            <a href="javascript:void(0);" class="music-link"
+                                                                data-id="{{ $data['id'] }}">{{ $lyric->title }}</a>
+                                                        </li>
+                                                    @else
+                                                        <li>Unknown Song (ID: {{ $data['id'] }})</li>
+                                                    @endif
                                                 @elseif(isset($data['exception']))
                                                     <li>{{ $data['exception'] }}</li>
                                                 @endif

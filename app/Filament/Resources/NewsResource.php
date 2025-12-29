@@ -18,6 +18,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\DateTimePicker;
 
 class NewsResource extends Resource
 {
@@ -55,6 +56,12 @@ class NewsResource extends Resource
                     ->native(false)
                     ->displayFormat('Y.m.d')
                     ->required(),
+                DateTimePicker::make('published_at')
+                    ->label('投稿日時')
+                    ->native(false)
+                    ->displayFormat('Y.m.d H:i')
+                    ->seconds(false)
+                    ->default(now()),
                 FileUpload::make('image')
                     ->label('画像')
                     ->image()
@@ -79,6 +86,10 @@ class NewsResource extends Resource
                 TextColumn::make('date')
                     ->label('公開日')
                     ->date('Y.m.d')
+                    ->sortable(),
+                TextColumn::make('published_at')
+                    ->label('投稿日時')
+                    ->dateTime('Y.m.d H:i')
                     ->sortable(),
                 Tables\Columns\ToggleColumn::make('visible')
                     ->label('公開')
