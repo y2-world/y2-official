@@ -48,6 +48,9 @@ class NewsResource extends Resource
                     ->seconds(false)
                     ->default(now())
                     ->required(),
+                RichEditor::make('text')
+                    ->label('本文')
+                    ->required(),
                 Toggle::make('visible')
                     ->label('公開')
                     ->onColor('success')
@@ -55,9 +58,6 @@ class NewsResource extends Resource
                     ->default(1)
                     ->formatStateUsing(fn($state) => $state == 1)
                     ->dehydrateStateUsing(fn($state) => $state ? 1 : 0),
-                RichEditor::make('text')
-                    ->label('本文')
-                    ->required(),
                 FileUpload::make('image')
                     ->label('画像')
                     ->image()
@@ -93,6 +93,7 @@ class NewsResource extends Resource
                         return $state;
                     }),
             ])
+            ->defaultSort('published_at', 'desc')
             ->filters([
                 Tables\Filters\TernaryFilter::make('visible')
                     ->label('公開状態')

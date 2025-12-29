@@ -18,7 +18,10 @@ class HomeController extends Controller
     {
         $isMobile = request()->header('User-Agent') && preg_match('/Mobile|Android|iPhone|iPad/i', request()->header('User-Agent'));
 
-        $news = News::where('visible', 1)->orderBy('date', 'desc')->paginate(5);
+        $news = News::where('visible', 1)
+            ->where('published_at', '<=', now())
+            ->orderBy('published_at', 'desc')
+            ->paginate(5);
         $discos = Disco::where('visible', 1)->orderBy('date', 'desc')->get();
         $profiles = Profile::orderBy('created_at', 'desc')->get();
 
@@ -30,8 +33,9 @@ class HomeController extends Controller
     {
         // ニュースを取得するクエリを確認
         $news = News::where('visible', 1)
-            ->orderBy('date', 'desc')
-            ->get(['id', 'title', 'date']); // 必要なカラムのみ取得
+            ->where('published_at', '<=', now())
+            ->orderBy('published_at', 'desc')
+            ->get(['id', 'title', 'published_at', 'date']); // 必要なカラムのみ取得
 
         // デバッグ用ログ
         if ($news->isEmpty()) {

@@ -55,6 +55,7 @@ class NewsController extends Controller
         return response()->json([
             'title' => $news->title,
             'date' => $news->date,
+            'published_at' => $news->published_at,
             'text' => $news->text,
             'image' => $news->image,
         ]);
