@@ -20,11 +20,11 @@ class Lyric extends Model
 
     public function album()
     {
-        return $this->belongsTo(Disco::class, 'album_id');
+        return $this->belongsTo(Disco::class, 'album_id')->where('type', 'album');
     }
 
     public function single()
     {
-        return $this->belongsTo(Disco::class, 'single_id');
+        return $this->belongsTo(Disco::class, 'single_id')->where('type', 'single');
     }
 }
