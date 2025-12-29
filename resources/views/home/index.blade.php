@@ -23,7 +23,7 @@
                                     <div class="news-item">
                                         <a href="javascript:void(0);" class="news-link" data-id="{{ $new->id }}">
                                             <div class="news-item__title">
-                                                <div class="date">{{ date('Y.m.d', strtotime($new->date)) }}</div>
+                                                <div class="date">{{ $new->published_at ? $new->published_at->format('Y.m.d') : date('Y.m.d', strtotime($new->date)) }}</div>
                                                 {{ $new->title }}
                                             </div>
                                         </a>
@@ -46,7 +46,7 @@
         <div class="popup-content">
             <span class="close-btn">&times;</span>
             <div class="news-item">
-                <div id="popup-title" style="padding-right: 10px; display: inline-block;"></div>
+                <h4 id="popup-title"></h4>
                 <small class="date" id="popup-date"></small>
                 <hr>
                 <div class="text" id="popup-text"></div>

@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function displayAllNews(newsData) {
         let newsHTML = "";
         newsData.forEach((newsItem) => {
-            const formattedDate = formatDate(newsItem.date);
+            const formattedDate = formatDate(newsItem.published_at || newsItem.date);
             newsHTML += `
                 <div class="news-item">
                     <a href="javascript:void(0);" class="news-link" data-id="${newsItem.id}">
@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
 
                     // 日付を整形
-                    const date = new Date(data.date);
+                    const date = new Date(data.published_at || data.date);
                     const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
 
                     // データをポップアップにセット
