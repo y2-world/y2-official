@@ -37,13 +37,13 @@ class LyricResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Select::make('album_id')
                     ->label('アルバム名')
-                    ->relationship('album', 'title', fn($query) => $query->where('type', 'album')->orderBy('date', 'asc'))
+                    ->options(\App\Models\Disco::where('type', 'album')->orderBy('date', 'asc')->pluck('title', 'id'))
                     ->searchable()
                     ->native(false)
                     ->preload(),
                 Forms\Components\Select::make('single_id')
                     ->label('シングル名')
-                    ->relationship('single', 'title', fn($query) => $query->where('type', 'single')->orderBy('date', 'asc'))
+                    ->options(\App\Models\Disco::where('type', 'single')->orderBy('date', 'asc')->pluck('title', 'id'))
                     ->searchable()
                     ->native(false)
                     ->preload(),
