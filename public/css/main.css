@@ -834,7 +834,7 @@ h2 {
     border-bottom: 1px solid #ddd; /* 下に区切り線 */
 }
 
-.news-item a {
+.popup-text a {
     color: #0563c1;
     text-decoration: underline;
 }
