@@ -271,6 +271,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     // ポップアップを表示
                     overlay.classList.add('open');
                     popup.classList.add('open');
+                    document.body.style.overflow = 'hidden';
                 })
                 .catch(error => {
                     console.error('エラーが発生しました:', error);
@@ -292,6 +293,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function closeNewsPopup() {
         popup.classList.remove('open');
         overlay.classList.remove('open');
+        document.body.style.overflow = '';
     }
 });
 
