@@ -217,6 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const popupDate = document.getElementById('popup-date');
     const popupText = document.getElementById('popup-text');
     const popupImg = document.getElementById('popup-img');
+    const popupOpenLink = document.getElementById('popup-open-link');
     const closeBtn = document.querySelector('.close-btn');
     const newsContainer = document.getElementById('news-container');
 
@@ -258,6 +259,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     } else {
                         popupImg.style.display = 'none'; // 画像がない場合は非表示にする
                     }
+
+                    // 個別ページのリンクを設定
+                    popupOpenLink.href = `/news/${newsId}`;
 
                     // ポップアップを表示
                     overlay.classList.add('open');
