@@ -46,19 +46,21 @@ class NewsController extends Controller
      */
     public function show($id)
     {
-        // $news = News::find($id);
-        // $previous = News::where('id', '<', $news->id)->orderBy('id', 'desc')->first();
-        // $next = News::where('id', '>', $news->id)->orderBy('id')->first();
-
-        // return view('news.show', compact('news', 'previous', 'next'));
         $news = News::findOrFail($id);
-        return response()->json([
-            'title' => $news->title,
-            'date' => $news->date,
-            'published_at' => $news->published_at,
-            'text' => $news->text,
-            'image' => $news->image,
-        ]);
+
+        // JSONリクエストの場合はJSONを返す（既存のポップアップ機能用）
+        if (request()->wantsJson() || request()->ajax()) {
+            return response()->json([
+                'title' => $news->title,
+                'date' => $news->date,
+                'published_at' => $news->published_at,
+                'text' => $news->text,
+                'image' => $news->image,
+            ]);
+        }
+
+        // 通常のリクエストの場合はビューを返す
+        return view('news.show', compact('news'));
     }
 
     /**

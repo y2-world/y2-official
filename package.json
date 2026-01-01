@@ -1,4 +1,7 @@
 {
+    "name": "y2-official",
+    "description": "Yuki Yoshida Official Website",
+    "version": "1.0.0",
     "private": true,
     "scripts": {
         "dev": "npm run development",

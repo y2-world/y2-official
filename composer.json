@@ -1,8 +1,8 @@
 {
-    "name": "laravel/laravel",
+    "name": "y2-official/y2-official",
     "type": "project",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "description": "Yuki Yoshida Official Website",
+    "keywords": ["official", "website", "yuki", "yoshida"],
     "license": "MIT",
     "require": {
         "php": "^8.2",

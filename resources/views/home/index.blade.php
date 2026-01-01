@@ -26,7 +26,7 @@
                             @foreach ($news as $new)
                                 @if ($new->visible == 1)
                                     <div class="news-item">
-                                        <a href="javascript:void(0);" class="news-link" data-id="{{ $new->id }}">
+                                        <a href="{{ route('news.show', $new->id) }}" class="news-link" data-id="{{ $new->id }}">
                                             <div class="news-item__title">
                                                 <div class="date">{{ $new->published_at ? $new->published_at->format('Y.m.d') : date('Y.m.d', strtotime($new->date)) }}</div>
                                                 {{ $new->title }}
