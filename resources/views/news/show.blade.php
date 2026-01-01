@@ -8,7 +8,7 @@
 @endif
 
 @section('content')
-<div class="news-detail-wrapper" style="padding-top: 100px;">
+<div class="news-detail-wrapper" style="padding-top: 40px;">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-9">
@@ -27,6 +27,7 @@
                         @endif
                         <div style="text-align: center; padding: 30px 0;">
                             <a href="{{ url('/#news') }}" style="color: #666; text-decoration: none; font-size: 14px;">← Back to News</a>
+                            <div onclick="window.history.back();" style="color: #666; text-decoration: none; font-size: 14px;">← Back</a>
                         </div>
                     </div>
                 </div>
