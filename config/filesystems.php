@@ -45,7 +45,8 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app'),
+            'root' => env('APP_ENV') === 'production' ? '/tmp' : storage_path('app'),
+            'throw' => false,
         ],
 
         'public' => [
