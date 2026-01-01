@@ -851,8 +851,8 @@ h2 {
 
 /* デフォルトスタイル */
 .news-link {
-    text-decoration: none; /* 下線を削除 */
-    color: inherit; /* 文字色を継承 */
+    /* text-decoration: none; */
+    /* color: inherit;  */
     display: block; /* リンク全体をクリック可能に */
     padding: 15px; /* 枠内の余白 */
     border: 1px solid transparent; /* 初期状態で枠を透明に */
