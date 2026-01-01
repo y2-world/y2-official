@@ -834,6 +834,11 @@ h2 {
     border-bottom: 1px solid #ddd; /* 下に区切り線 */
 }
 
+.news-item a {
+    color: #0563c1;
+    text-decoration: underline;
+}
+
 /* 最後のニュースアイテムの区切り線を非表示 */
 .news-item:last-child {
     border-bottom: none;
@@ -841,6 +846,8 @@ h2 {
 
 /* デフォルトスタイル */
 .news-link {
+    text-decoration: none; /* 下線を削除 */
+    color: inherit; /* 文字色を継承 */
     display: block; /* リンク全体をクリック可能に */
     padding: 15px; /* 枠内の余白 */
     border: 1px solid transparent; /* 初期状態で枠を透明に */
