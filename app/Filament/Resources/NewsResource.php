@@ -62,7 +62,10 @@ class NewsResource extends Resource
                     ->label('画像')
                     ->image()
                     ->disk('cloudinary')
-                    ->directory('images'),
+                    ->directory('images')
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                    ->maxSize(10240)
+                    ->downloadable(),
             ]);
     }
 
