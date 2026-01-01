@@ -63,7 +63,7 @@
                     </a>
                 </div>
                 <hr>
-                <div class="text" id="popup-text"></div>
+                <div class="news-text" id="popup-text"></div>
                 <img class="image" width="100%" style="padding-top: 10px;" id="popup-img">
             </div>
         </div>

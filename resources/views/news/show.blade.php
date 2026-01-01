@@ -19,7 +19,7 @@
                             {{ $news->published_at ? $news->published_at->format('Y.m.d') : ($news->date ? date('Y.m.d', strtotime($news->date)) : '') }}
                         </small>
                         <hr>
-                        <div class="text">
+                        <div class="news-text">
                             {!! $news->text !!}
                         </div>
                         @if($news->image)
