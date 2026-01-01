@@ -25,9 +25,8 @@
                         @if($news->image)
                         <img src="https://res.cloudinary.com/hqrgbxuiv/{{ $news->image }}" alt="{{ $news->title }}" class="image" width="100%" style="padding-top: 10px;">
                         @endif
-                        <div style="text-align: center; padding: 30px 0;">
-                            <a href="{{ url('/#news') }}" style="color: #666; text-decoration: none; font-size: 14px;">← Back to News</a>
-                            <div onclick="window.history.back();" style="color: #666; text-decoration: none; font-size: 14px;">← Back</a>
+                         <div class="show_button">
+                            <a href="#" onclick="window.history.back(); return false;"> <i class="fa-solid fa-arrow-left fa-lg"></i></a>
                         </div>
                     </div>
                 </div>
