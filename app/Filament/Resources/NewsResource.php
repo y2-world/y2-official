@@ -61,10 +61,8 @@ class NewsResource extends Resource
                 FileUpload::make('image')
                     ->label('画像')
                     ->image()
-                    ->preserveFilenames(false) // Cloudinary にアップロードするときは false 推奨
-                    ->disk('cloudinary') // Cloudinary を指定
-                    ->directory('images') // Cloudinary のフォルダ名
-                    ->visibility('public'), // 画像を公開
+                    ->disk('cloudinary')
+                    ->directory('images'),
             ]);
     }
 

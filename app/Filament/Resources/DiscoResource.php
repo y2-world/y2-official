@@ -99,8 +99,7 @@ class DiscoResource extends Resource
                     ->label('画像')
                     ->image()
                     ->disk('cloudinary')
-                    ->directory('images')
-                    ->visibility('public'),
+                    ->directory('images'),
             ]);
     }
 
