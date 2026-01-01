@@ -843,16 +843,8 @@ h2 {
     border-bottom: none;
 }
 
-/* リンクのスタイル（必要に応じて追加） */
-.news-link {
-    text-decoration: none; /* 下線を削除 */
-    color: inherit; /* 文字色を継承 */
-}
-
 /* デフォルトスタイル */
 .news-link {
-    /* text-decoration: none; */
-    /* color: inherit;  */
     display: block; /* リンク全体をクリック可能に */
     padding: 15px; /* 枠内の余白 */
     border: 1px solid transparent; /* 初期状態で枠を透明に */
