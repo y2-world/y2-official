@@ -25,7 +25,6 @@
                         @if($news->image)
                         <img src="https://res.cloudinary.com/hqrgbxuiv/{{ $news->image }}" alt="{{ $news->title }}" class="image" width="100%" style="padding-top: 10px;">
                         @endif
-                        <hr>
                         <div style="text-align: center;">
                             <a href="{{ url('/#news') }}" style="color: #666; text-decoration: none; font-size: 14px;">← Back to News</a>
                         </div>
