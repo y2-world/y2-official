@@ -13,26 +13,23 @@
         <div class="row justify-content-center">
             <div class="col-xl-9">
                 <div class="element js-fadein">
-                    <div class="news-detail">
-                        <div class="news-detail__header">
-                            <h1 class="news-detail__title">{{ $news->title }}</h1>
-                            <p class="news-detail__date">
-                                {{ $news->published_at ? $news->published_at->format('Y.m.d') : ($news->date ? date('Y.m.d', strtotime($news->date)) : '') }}
-                            </p>
-                        </div>
+                    <div class="news-item">
+                        <h4>{{ $news->title }}</h4>
+                        <small class="date">
+                            {{ $news->published_at ? $news->published_at->format('Y.m.d') : ($news->date ? date('Y.m.d', strtotime($news->date)) : '') }}
+                        </small>
                         <hr>
-                        @if($news->image)
-                        <div class="news-detail__image">
-                            <img src="https://res.cloudinary.com/hqrgbxuiv/{{ $news->image }}" alt="{{ $news->title }}" class="img-fluid">
-                        </div>
-                        @endif
-                        <div class="news-detail__content">
+                        <div class="text">
                             {!! $news->text !!}
                         </div>
+                        @if($news->image)
+                        <img src="https://res.cloudinary.com/hqrgbxuiv/{{ $news->image }}" alt="{{ $news->title }}" class="image" width="100%" style="padding-top: 10px;">
+                        @endif
                         <hr>
-                        <div class="news-detail__footer">
-                            <a href="{{ url('/#news') }}" class="btn-back">← Back to News</a>
+                        <div style="text-align: center;">
+                            <a href="{{ url('/#news') }}" style="color: #666; text-decoration: none; font-size: 14px;">← Back to News</a>
                         </div>
+                        <br>
                     </div>
                 </div>
             </div>
