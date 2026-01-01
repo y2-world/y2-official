@@ -228,7 +228,12 @@ document.addEventListener('DOMContentLoaded', function () {
             const newsLink = e.target.closest('.news-link');
             const newsId = newsLink.getAttribute('data-id');
 
-            fetch(`/news/${newsId}`)
+            fetch(`/news/${newsId}`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`HTTPエラー: ${response.status}`);
