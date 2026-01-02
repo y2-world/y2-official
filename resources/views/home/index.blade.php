@@ -99,7 +99,7 @@
                                                     class="album-image">
                                             </a>
                                             <div class="music-item__gray">
-                                                <a href="{{ route('music.show', $disc->id) }}">{{ $disc->title }}</a>
+                                                <a style="color: black;" href="{{ route('music.show', $disc->id) }}">{{ $disc->title }}</a>
                                                 <p>
                                                     {{ $disc->subtitle }}<br>{{ date('Y.m.d', strtotime($disc->date)) }}
                                                 </p>
