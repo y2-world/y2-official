@@ -19,11 +19,21 @@
                             {{ $news->published_at ? $news->published_at->format('Y.m.d') : ($news->date ? date('Y.m.d', strtotime($news->date)) : '') }}
                         </small>
                         <hr>
+                        @if($news->image)
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="news-text">
+                                    {!! $news->text !!}
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <img src="https://res.cloudinary.com/hqrgbxuiv/{{ $news->image }}" alt="{{ $news->title }}" class="image" style="width: 100%; height: auto;">
+                            </div>
+                        </div>
+                        @else
                         <div class="news-text">
                             {!! $news->text !!}
                         </div>
-                        @if($news->image)
-                        <img src="https://res.cloudinary.com/hqrgbxuiv/{{ $news->image }}" alt="{{ $news->title }}" class="image" width="100%" style="padding-top: 10px;">
                         @endif
                         <div style="text-align: center; padding: 30px 0;">
                             <a href="{{ url('/#news') }}" style="color: #666; text-decoration: none; font-size: 14px;">← Back to News</a>
