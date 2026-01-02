@@ -84,8 +84,8 @@
                                                 <img src="https://res.cloudinary.com/hqrgbxuiv/{{ $disc->image }}"
                                                     class="album-image">
                                             </a>
+                                            <a href="{{ route('music.show', $disc->id) }}">{{ $disc->title }}</a>
                                             <div class="music-item__gray">
-                                                <a href="{{ route('music.show', $disc->id) }}">{{ $disc->title }}</a>
                                                 <p>
                                                     {{ $disc->subtitle }}<br>{{ date('Y.m.d', strtotime($disc->date)) }}
                                                 </p>

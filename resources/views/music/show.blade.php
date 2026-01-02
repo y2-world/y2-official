@@ -95,14 +95,7 @@
                             @endif
                         </div>
                         <div class="show_button">
-                            {{-- @if (isset($previous))
-                            <a class="btn btn-outline-dark" href="{{ route('music.show', $previous->id)}}" rel="prev" role="button"><i class="fa-solid fa-arrow-left fa-lg"></i></a>
-                            @endif --}}
                             <a href="#" onclick="window.history.back(); return false;"> <i class="fa-solid fa-arrow-left fa-lg"></i></a>
-                            {{-- <a class="btn btn-outline-dark" href="{{ route('music.index')}}" rel="prev" role="button">BACK</a> --}}
-                            {{-- @if (isset($next))
-                            <a class="btn btn-outline-dark" href="{{ route('music.show', $next->id)}}"rel="next" role="button"><i class="fa-solid fa-arrow-right fa-lg"></i></a>
-                            @endif --}}
                         </div>
                     </div>
                 </div>
