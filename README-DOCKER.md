@@ -15,6 +15,7 @@
 ```
 
 アプリケーションは `http://localhost:8080` でアクセスできます。
+phpMyAdminは `http://localhost:8081` でアクセスできます。
 
 ## 手動セットアップ
 
@@ -68,6 +69,7 @@ docker-compose exec app npm run dev
 - **app**: PHP 8.2 + Nginx + Node.js (ポート: 8080)
 - **db**: MySQL 8.0 (ポート: 3306)
 - **redis**: Redis Alpine (ポート: 6379)
+- **phpmyadmin**: phpMyAdmin (ポート: 8081)
 
 ## よく使うコマンド
 
@@ -114,6 +116,14 @@ docker-compose exec app npm run watch
 
 ### データベース接続
 
+**phpMyAdmin（推奨）:**
+ブラウザで `http://localhost:8081` にアクセス
+
+- サーバー: `db`
+- ユーザー名: `root`
+- パスワード: `rootpassword`
+
+**コマンドライン:**
 ```bash
 # MySQLコンテナに接続
 docker-compose exec db mysql -u y2user -py2password y2_official

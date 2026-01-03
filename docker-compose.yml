@@ -52,6 +52,23 @@ services:
     networks:
       - y2-network
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: y2-official-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "8081:80"
+    networks:
+      - y2-network
+    depends_on:
+      - db
+
 networks:
   y2-network:
     driver: bridge
