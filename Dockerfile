@@ -13,9 +13,11 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     libzip-dev \
+    libicu-dev \
     nginx \
     supervisor \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip intl \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Composerをインストール
@@ -23,8 +25,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Node.jsとnpmをインストール (Laravel Mixのため)
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs \
-    && npm install -g npm@latest
+    && apt-get install -y nodejs
 
 # Nginxの設定をコピー
 COPY docker/nginx/default.conf /etc/nginx/sites-available/default

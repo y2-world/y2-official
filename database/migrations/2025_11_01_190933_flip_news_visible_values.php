@@ -13,9 +13,16 @@ return new class extends Migration
     public function up(): void
     {
         // Flip the visible values for all tables: 0 -> 1 (public), 1 -> 0 (private)
-        DB::statement('UPDATE news SET visible = CASE WHEN visible = 0 THEN 1 WHEN visible = 1 THEN 0 ELSE visible END');
-        DB::statement('UPDATE discos SET visible = CASE WHEN visible = 0 THEN 1 WHEN visible = 1 THEN 0 ELSE visible END');
-        DB::statement('UPDATE artists SET visible = CASE WHEN visible = 0 THEN 1 WHEN visible = 1 THEN 0 ELSE visible END');
+        // Only run if tables exist and have visible column
+        if (Schema::hasTable('news') && Schema::hasColumn('news', 'visible')) {
+            DB::statement('UPDATE news SET visible = CASE WHEN visible = 0 THEN 1 WHEN visible = 1 THEN 0 ELSE visible END');
+        }
+        if (Schema::hasTable('discos') && Schema::hasColumn('discos', 'visible')) {
+            DB::statement('UPDATE discos SET visible = CASE WHEN visible = 0 THEN 1 WHEN visible = 1 THEN 0 ELSE visible END');
+        }
+        if (Schema::hasTable('artists') && Schema::hasColumn('artists', 'visible')) {
+            DB::statement('UPDATE artists SET visible = CASE WHEN visible = 0 THEN 1 WHEN visible = 1 THEN 0 ELSE visible END');
+        }
     }
 
     /**
@@ -24,8 +31,14 @@ return new class extends Migration
     public function down(): void
     {
         // Flip back: 1 -> 0, 0 -> 1
-        DB::statement('UPDATE news SET visible = CASE WHEN visible = 0 THEN 1 WHEN visible = 1 THEN 0 ELSE visible END');
-        DB::statement('UPDATE discos SET visible = CASE WHEN visible = 0 THEN 1 WHEN visible = 1 THEN 0 ELSE visible END');
-        DB::statement('UPDATE artists SET visible = CASE WHEN visible = 0 THEN 1 WHEN visible = 1 THEN 0 ELSE visible END');
+        if (Schema::hasTable('news') && Schema::hasColumn('news', 'visible')) {
+            DB::statement('UPDATE news SET visible = CASE WHEN visible = 0 THEN 1 WHEN visible = 1 THEN 0 ELSE visible END');
+        }
+        if (Schema::hasTable('discos') && Schema::hasColumn('discos', 'visible')) {
+            DB::statement('UPDATE discos SET visible = CASE WHEN visible = 0 THEN 1 WHEN visible = 1 THEN 0 ELSE visible END');
+        }
+        if (Schema::hasTable('artists') && Schema::hasColumn('artists', 'visible')) {
+            DB::statement('UPDATE artists SET visible = CASE WHEN visible = 0 THEN 1 WHEN visible = 1 THEN 0 ELSE visible END');
+        }
     }
 };

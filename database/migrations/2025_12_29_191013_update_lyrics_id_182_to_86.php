@@ -12,6 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('lyrics')) {
+            return;
+        }
+
         // ID 182のレコードを一時的に保存
         $lyric = DB::table('lyrics')->where('id', 182)->first();
 
@@ -35,6 +39,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (!Schema::hasTable('lyrics')) {
+            return;
+        }
+
         // ID 86のレコードを一時的に保存
         $lyric = DB::table('lyrics')->where('id', 86)->first();
 

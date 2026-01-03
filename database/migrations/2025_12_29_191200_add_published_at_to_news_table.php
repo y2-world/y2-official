@@ -12,13 +12,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('news', function (Blueprint $table) {
-            // 日付と時刻を含むdatetimeカラムを追加
-            $table->dateTime('published_at')->nullable()->after('date');
-        });
+        if (Schema::hasTable('news')) {
+            Schema::table('news', function (Blueprint $table) {
+                // 日付と時刻を含むdatetimeカラムを追加
+                $table->dateTime('published_at')->nullable()->after('date');
+            });
 
-        // 既存の date カラムのデータを published_at にコピー（時刻は00:00:00）
-        DB::statement('UPDATE news SET published_at = CONCAT(date, " 00:00:00") WHERE date IS NOT NULL');
+            // 既存の date カラムのデータを published_at にコピー（時刻は00:00:00）
+            DB::statement('UPDATE news SET published_at = CONCAT(date, " 00:00:00") WHERE date IS NOT NULL');
+        }
     }
 
     /**
@@ -26,8 +28,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('news', function (Blueprint $table) {
-            $table->dropColumn('published_at');
-        });
+        if (Schema::hasTable('news')) {
+            Schema::table('news', function (Blueprint $table) {
+                $table->dropColumn('published_at');
+            });
+        }
     }
 };
