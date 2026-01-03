@@ -12,7 +12,6 @@
             <div style="font-size: 1rem; color: rgba(255, 255, 255, 0.9); line-height: 1.8;">
                 @if ($song->artist)
                     <div style="margin-bottom: 8px;">
-                        <strong>Artist:</strong>
                         <a href="{{ url('/setlists/artists', $song->artist_id) }}"
                             style="color: white; text-decoration: underline;">
                             {{ $song->artist->name }}

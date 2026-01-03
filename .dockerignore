@@ -1,0 +1,39 @@
+# Git関連
+.git
+.gitignore
+.gitattributes
+
+# 環境設定ファイル
+.env
+
+# Node modules
+node_modules
+npm-debug.log
+
+# Vendor
+vendor
+
+# IDE設定
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS関連
+.DS_Store
+Thumbs.db
+
+# テストとキャッシュ
+tests
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+bootstrap/cache/*
+
+# SQLダンプファイル
+*.sql
+
+# その他
+README.md
