@@ -1798,8 +1798,905 @@ h2 {
     .database-title.pc {
         display: none !important;
     }
-    
+
     .database-title.sp {
         display: block !important;
+    }
+}
+
+/* ============================================
+   Statistics Dashboard Styles
+   ============================================ */
+
+.stats-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding-bottom: 50px;
+}
+
+.stats-title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.stats-subtitle {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+/* Tab Navigation */
+.stats-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.stats-tab {
+    padding: 12px 30px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.stats-tab:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.stats-tab.active {
+    background: white;
+    color: #667eea;
+    border-color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.stats-tab i {
+    margin-right: 8px;
+}
+
+/* Statistics Cards */
+.stats-cards {
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+    color: #667eea;
+    margin-bottom: 10px;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Hidden rows and show more button */
+.hidden-row,
+.hidden-row-artist,
+.hidden-row-top-songs {
+    display: none;
+}
+
+/* Show more container - only display when button exists */
+.show-more-container {
+    margin-top: 20px;
+}
+
+.show-more-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.show-more-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.show-more-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.show-more-btn i {
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+}
+
+.show-more-btn.expanded i {
+    transform: rotate(180deg);
+}
+
+/* Statistics Sections */
+.stats-section {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.stats-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.section-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid #667eea;
+}
+
+.section-title i {
+    color: #667eea;
+    margin-right: 10px;
+}
+
+/* Statistics Table */
+.stats-table-container {
+    overflow-x: auto;
+}
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.stats-table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.stats-table thead th {
+    color: white;
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+/* Right align header for badge columns */
+.stats-table thead th.count-col {
+    text-align: right;
+}
+
+/* Left align header when table has bar indicators */
+.stats-table.has-bar-indicator thead th.count-col {
+    text-align: left;
+}
+
+.stats-table tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s ease;
+}
+
+.stats-table tbody tr:hover {
+    background-color: #f8f9ff;
+}
+
+.stats-table tbody td {
+    padding: 18px 15px;
+    color: #333;
+}
+
+.rank-col {
+    width: 80px;
+    text-align: center;
+}
+
+.count-col {
+    min-width: 180px;
+    text-align: right;
+    padding-right: 20px !important;
+    vertical-align: middle;
+}
+
+/* Wider column for tables with bar indicators */
+.stats-table.has-bar-indicator .count-col {
+    min-width: 450px;
+    width: 50%;
+}
+
+.rank-badge {
+    font-size: 1.5rem;
+    display: inline-block;
+}
+
+.rank-badge.gold {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.rank-number {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #666;
+}
+
+.song-title {
+    font-weight: 600;
+    color: #333;
+    font-size: 1.05rem;
+}
+
+.artist-name {
+    color: #667eea;
+    font-weight: 500;
+}
+
+.venue-name {
+    font-weight: 500;
+    color: #333;
+}
+
+.count-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.detail-link-col {
+    text-align: right;
+}
+
+.detail-link {
+    color: #667eea;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.detail-link:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* Year Stats Bar Chart */
+.year-col {
+    font-weight: 600;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+.year-bar-container {
+    position: relative;
+    width: 100%;
+    height: 30px;
+}
+
+.year-bar {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 20px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+.year-count {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 600;
+    color: #333;
+    z-index: 1;
+}
+
+/* Breadcrumb Navigation */
+.breadcrumb-nav {
+    margin-bottom: 20px;
+}
+
+.breadcrumb-nav a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb-nav a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .stats-wrapper {
+        padding: 20px 10px 50px 10px;
+    }
+
+    .stats-title {
+        font-size: 1.8rem;
+        padding-top: 0;
+    }
+
+    .stats-subtitle {
+        font-size: 0.85rem;
+    }
+
+    /* Stats pages specific padding - match setlists page */
+    .stats-wrapper .element.js-fadein {
+        padding-top: 30px;
+    }
+
+    /* Stats Tabs - Keep horizontal on mobile */
+    .stats-tabs {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+        margin-bottom: 25px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .stats-tab {
+        flex: 1;
+        min-width: 140px;
+        padding: 10px 12px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+
+    .stats-tab i {
+        margin-right: 5px;
+        font-size: 0.9rem;
+    }
+
+    /* Stats Cards - Keep horizontal grid */
+    .stats-cards {
+        margin-bottom: 0px;
+        display: flex !important;
+        flex-wrap: wrap;
+    }
+
+    .stats-cards .col-md-3,
+    .stats-cards .col-md-6,
+    .stats-cards .col-sm-6 {
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .stat-card {
+        margin-bottom: 0 !important;
+        padding: 15px;
+    }
+
+    .stats-cards .col-md-3,
+    .stats-cards .col-md-6,
+    .stats-cards .col-sm-6 {
+        margin-bottom: 10px;
+    }
+
+    .stat-icon {
+        font-size: 2rem;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+    }
+
+    /* Stats Sections */
+    .stats-section {
+        padding: 20px 15px;
+        margin-bottom: 20px;
+        border-radius: 15px;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+    }
+
+    /* Tables - No horizontal scroll */
+    .stats-table-container {
+        overflow-x: visible;
+        width: 100%;
+    }
+
+    .stats-table {
+        font-size: 0.75rem;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    .stats-table thead th {
+        padding: 8px 4px !important;
+        font-size: 0.5rem !important;
+        line-height: 1.1;
+        letter-spacing: 0;
+        word-break: break-word;
+    }
+
+    .stats-table tbody td {
+        padding: 8px 2px;
+        font-size: 0.75rem;
+        line-height: 1.3;
+        word-wrap: break-word;
+    }
+
+    .rank-col {
+        width: 35px;
+        padding: 8px 1px !important;
+    }
+
+    .count-col {
+        min-width: 70px;
+        width: 30%;
+        text-align: right;
+        padding-right: 4px !important;
+    }
+
+    /* Wider column for bar indicators on mobile */
+    .stats-table.has-bar-indicator .count-col {
+        min-width: 110px;
+        width: 80%;
+    }
+
+    .rank-badge {
+        font-size: 1rem;
+    }
+
+    .rank-number {
+        font-size: 0.75rem;
+    }
+
+    .count-badge {
+        padding: 3px 6px;
+        font-size: 0.7rem;
+        white-space: nowrap;
+    }
+
+    /* Song titles and artist names */
+    .song-title {
+        font-size: 0.75rem;
+        line-height: 1.3;
+    }
+
+    .artist-name,
+    .venue-name,
+    .year-col {
+        font-size: 0.75rem;
+        line-height: 1.3;
+    }
+
+    /* Detail link */
+    .detail-link {
+        font-size: 0.7rem;
+        padding: 4px 6px;
+        white-space: nowrap;
+    }
+
+    .detail-link-col {
+        width: 80px;
+    }
+
+    /* Year bar container */
+    .year-bar-container {
+        min-width: 70px;
+        height: 25px;
+    }
+
+    .year-bar {
+        height: 16px;
+    }
+
+    .year-count {
+        font-size: 0.75rem;
+        right: 5px;
+    }
+
+    /* Show more button */
+    .show-more-btn {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+        border-radius: 20px;
+    }
+
+    /* Breadcrumb nav */
+    .breadcrumb-nav a {
+        font-size: 0.9rem;
+        padding: 8px 15px;
+    }
+
+    /* Footer in stats pages */
+    .footer-wrapper {
+        height: auto;
+        min-height: 120px;
+        padding: 15px 10px;
+    }
+
+    .footer {
+        font-size: 0.75rem;
+        padding: 10px 5px;
+        line-height: 1.6;
+    }
+
+    .footer a {
+        font-size: 0.75rem;
+    }
+
+    .footer-copyright {
+        font-size: 0.7rem;
+        padding-top: 10px;
+    }
+
+    .footer-title {
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+    .stats-title {
+        font-size: 1.6rem;
+    }
+
+    .stats-subtitle {
+        font-size: 0.85rem;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-value {
+        font-size: 1.8rem;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+    }
+
+    .stats-section {
+        padding: 15px 10px;
+    }
+
+    .section-title {
+        font-size: 1.2rem;
+    }
+
+    .stats-table thead th {
+        padding: 8px 2px;
+        font-size: 0.65rem;
+    }
+
+    .stats-table tbody td {
+        padding: 8px 4px;
+        font-size: 0.8rem;
+    }
+
+    .rank-col {
+        width: 35px;
+    }
+
+    .count-col {
+        min-width: 100px;
+    }
+
+    .count-badge {
+        padding: 3px 6px;
+        font-size: 0.75rem;
+    }
+
+    .detail-link {
+        font-size: 0.75rem;
+        padding: 5px 8px;
+    }
+}
+
+/* Fade-in Animation */
+.element.js-fadein {
+    animation: fadeIn 0.8s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   Database Statistics Section
+   ============================================ */
+
+.database-stats-section {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 50px;
+}
+
+.stats-section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.stats-section-title i {
+    color: #667eea;
+    margin-right: 10px;
+}
+
+/* Database Stat Cards */
+.db-stat-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+}
+
+.db-stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.db-stat-icon {
+    font-size: 2rem;
+    color: #667eea;
+    margin-bottom: 15px;
+}
+
+.db-stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 10px;
+}
+
+.db-stat-label {
+    font-size: 0.85rem;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+/* Chart Cards */
+.db-chart-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    height: 100%;
+}
+
+.db-chart-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.db-chart-title i {
+    color: #667eea;
+    margin-right: 8px;
+}
+
+.db-chart-content {
+    padding: 10px 0;
+}
+
+/* Chart Bar Items */
+.db-chart-bar-item {
+    margin-bottom: 20px;
+}
+
+.db-chart-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 8px;
+}
+
+.db-chart-bar-wrapper {
+    position: relative;
+    background: #e2e8f0;
+    border-radius: 10px;
+    height: 35px;
+    overflow: hidden;
+}
+
+.db-chart-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+    transition: width 0.8s ease;
+}
+
+.db-chart-value {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #2d3748;
+    z-index: 1;
+}
+
+/* Recent Tours */
+.db-recent-tours {
+    padding: 10px 0;
+}
+
+.db-tour-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #e2e8f0;
+    transition: background-color 0.2s ease;
+}
+
+.db-tour-item:last-child {
+    border-bottom: none;
+}
+
+.db-tour-item:hover {
+    background-color: #f7fafc;
+}
+
+.db-tour-date {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #667eea;
+    min-width: 100px;
+    margin-right: 20px;
+}
+
+.db-tour-info {
+    flex: 1;
+}
+
+.db-tour-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 5px;
+}
+
+.db-tour-venue {
+    font-size: 0.85rem;
+    color: #718096;
+}
+
+.db-tour-venue i {
+    color: #667eea;
+    margin-right: 5px;
+}
+
+/* Responsive Design for Database Stats */
+@media (max-width: 768px) {
+    .database-stats-section {
+        padding: 25px 15px;
+    }
+
+    .stats-section-title {
+        font-size: 1.5rem;
+    }
+
+    .db-stat-card {
+        margin-bottom: 15px;
+    }
+
+    .db-stat-value {
+        font-size: 2rem;
+    }
+
+    .db-chart-title {
+        font-size: 1rem;
+    }
+
+    .db-chart-label {
+        font-size: 0.8rem;
+    }
+
+    .db-chart-bar-wrapper {
+        height: 30px;
+    }
+
+    .db-chart-value {
+        font-size: 0.75rem;
+        right: 5px;
+    }
+
+    .db-tour-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .db-tour-date {
+        margin-bottom: 10px;
+        margin-right: 0;
     }
 }
