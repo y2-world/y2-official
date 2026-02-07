@@ -11,24 +11,44 @@ class SongSearch extends Component
     public $songs = [];
     public $showDropdown = false;
     public $selectedIndex = -1;
+    public $artistId = null; // アーティストIDをフィルタリング用に追加
 
-    public function mount()
+    public function mount($artistId = null)
     {
+        $this->artistId = $artistId;
         $this->loadInitialSongs();
     }
 
     public function loadInitialSongs()
     {
-        $this->songs = SetlistSong::query()
-            ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
-            ->orderBy('setlist_songs.title')
-            ->limit(10)
-            ->get([
-                'setlist_songs.id as id',
-                'setlist_songs.title as title',
-                'artists.name as artist',
-            ])
-            ->toArray();
+        $query = SetlistSong::query();
+
+        // アーティストIDが指定されている場合はフィルタリング（アーティスト名は表示しない）
+        if ($this->artistId) {
+            $query->where('setlist_songs.artist_id', $this->artistId);
+
+            $this->songs = $query
+                ->orderBy('setlist_songs.title')
+                ->limit(10)
+                ->get([
+                    'setlist_songs.id as id',
+                    'setlist_songs.title as title',
+                ])
+                ->toArray();
+        } else {
+            // アーティストIDが指定されていない場合は全楽曲をアーティスト名付きで表示
+            $query->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id');
+
+            $this->songs = $query
+                ->orderBy('setlist_songs.title')
+                ->limit(10)
+                ->get([
+                    'setlist_songs.id as id',
+                    'setlist_songs.title as title',
+                    'artists.name as artist',
+                ])
+                ->toArray();
+        }
     }
 
     public function updatedSearch()
@@ -40,17 +60,35 @@ class SongSearch extends Component
 
         $escapedQuery = str_replace(['%', '_'], ['\%', '\_'], $this->search);
 
-        $this->songs = SetlistSong::query()
-            ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
-            ->whereRaw('LOWER(setlist_songs.title) LIKE LOWER(?)', [$escapedQuery . '%'])
-            ->orderBy('setlist_songs.title')
-            ->limit(10)
-            ->get([
-                'setlist_songs.id as id',
-                'setlist_songs.title as title',
-                'artists.name as artist',
-            ])
-            ->toArray();
+        $query = SetlistSong::query()
+            ->whereRaw('LOWER(setlist_songs.title) LIKE LOWER(?)', [$escapedQuery . '%']);
+
+        // アーティストIDが指定されている場合はフィルタリング（アーティスト名は表示しない）
+        if ($this->artistId) {
+            $query->where('setlist_songs.artist_id', $this->artistId);
+
+            $this->songs = $query
+                ->orderBy('setlist_songs.title')
+                ->limit(10)
+                ->get([
+                    'setlist_songs.id as id',
+                    'setlist_songs.title as title',
+                ])
+                ->toArray();
+        } else {
+            // アーティストIDが指定されていない場合は全楽曲をアーティスト名付きで表示
+            $query->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id');
+
+            $this->songs = $query
+                ->orderBy('setlist_songs.title')
+                ->limit(10)
+                ->get([
+                    'setlist_songs.id as id',
+                    'setlist_songs.title as title',
+                    'artists.name as artist',
+                ])
+                ->toArray();
+        }
 
         $this->selectedIndex = -1;
     }

@@ -19,8 +19,8 @@
                 </button>
                 <select class="year-select" name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Artists</option>
-                    @foreach ($artists as $artist)
-                        <option value="{{ url('/setlists/artists', $artist->id) }}">{{ $artist->name }}</option>
+                    @foreach ($artists as $artistItem)
+                        <option value="{{ url('/setlists/artists', $artistItem->id) }}">{{ $artistItem->name }}</option>
                     @endforeach
                 </select>
                 <select class="year-select" name="select" onChange="location.href=value;">
@@ -34,14 +34,14 @@
             {{-- 検索フォーム（SP表示） --}}
             <div class="sp" id="spSearchFormArtist" style="margin-top: 20px; display: none;">
                 <div>
-                    @livewire('song-search')
+                    @livewire('song-search', ['artistId' => $artist->id])
                 </div>
             </div>
 
             {{-- 検索フォーム（PC表示のみ） --}}
             <div class="database-search pc" style="margin-top: 30px;">
                 <div>
-                    @livewire('song-search')
+                    @livewire('song-search', ['artistId' => $artist->id])
                 </div>
             </div>
         </div>
