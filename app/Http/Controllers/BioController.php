@@ -22,6 +22,7 @@ class BioController extends Controller
             ->get();
         $songs = Song::orderBy('id', 'asc')
             ->get();
+
         return view('database.index', compact('bios', 'songs'));
     }
 

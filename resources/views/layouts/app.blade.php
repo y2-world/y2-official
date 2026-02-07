@@ -89,6 +89,9 @@
                         <a class="nav-link" href="{{ url('/database') }}">&emsp;Database</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/stats') }}">&emsp;Stats</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ url('https://ameblo.jp/y2-world') }}"
                             target="_blank">&emsp;Blog</a>
                     </li>
