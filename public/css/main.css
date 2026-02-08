@@ -1814,6 +1814,10 @@ h2 {
     padding-bottom: 50px;
 }
 
+.stats-wrapper .element.js-fadein {
+    padding-top: 95px;
+}
+
 .stats-title {
     font-size: 3rem;
     font-weight: 700;
