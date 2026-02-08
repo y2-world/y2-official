@@ -67,14 +67,16 @@
 
                     <!-- Most Listened Songs Section -->
                     <div class="stats-section visible">
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
-                            <h2 class="section-title" style="margin-bottom: 0;">
+                        <div class="section-title-wrapper">
+                            <h2 class="section-title">
                                 <i class="fas fa-fire"></i> Most Listened Songs
                             </h2>
-                            <label style="display: flex; align-items: center; cursor: pointer; font-size: 0.9rem;">
-                                <input type="checkbox" id="uniqueTourCheckbox" style="margin-right: 0.5rem;">
-                                Count same-named tours only once
-                            </label>
+                            <div class="unique-tour-toggle">
+                                <label class="unique-tour-label">
+                                    <input type="checkbox" id="uniqueTourCheckbox" class="unique-tour-checkbox">
+                                    <span class="unique-tour-text">Count same-named tours only once</span>
+                                </label>
+                            </div>
                         </div>
                         <div class="stats-table-container">
                             <table class="stats-table" id="songStatsTable">
@@ -115,7 +117,7 @@
                     <!-- Artist Statistics Section -->
                     <div class="stats-section visible">
                         <h2 class="section-title">
-                            <i class="fas fa-user-music"></i> Artist Statistics
+                            <i class="fas fa-microphone"></i> Artist Statistics
                         </h2>
                         <div class="stats-table-container">
                             <table class="stats-table">
