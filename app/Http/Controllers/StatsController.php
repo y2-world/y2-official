@@ -278,9 +278,9 @@ class StatsController extends Controller
 
     private function getMrChildrenSongStats()
     {
-        // ツアーで演奏された全曲
+        // ツアーで演奏された全曲（ツアーごとに1カウント）
         $tourSetlists = TourSetlist::all();
-        $songPlayCounts = [];
+        $songTourCounts = []; // [songId => [tourId1, tourId2, ...]]
 
         foreach ($tourSetlists as $setlist) {
             $allSongs = array_merge(
@@ -291,12 +291,24 @@ class StatsController extends Controller
             foreach ($allSongs as $songData) {
                 if (isset($songData['song']) && is_numeric($songData['song'])) {
                     $songId = (int)$songData['song'];
-                    if (!isset($songPlayCounts[$songId])) {
-                        $songPlayCounts[$songId] = 0;
+                    $tourId = $setlist->tour_id;
+
+                    if (!isset($songTourCounts[$songId])) {
+                        $songTourCounts[$songId] = [];
                     }
-                    $songPlayCounts[$songId]++;
+
+                    // 同じツアーで複数回出ても1カウント
+                    if (!in_array($tourId, $songTourCounts[$songId])) {
+                        $songTourCounts[$songId][] = $tourId;
+                    }
                 }
             }
+        }
+
+        // ツアー数をカウント
+        $songPlayCounts = [];
+        foreach ($songTourCounts as $songId => $tourIds) {
+            $songPlayCounts[$songId] = count($tourIds);
         }
 
         arsort($songPlayCounts);
