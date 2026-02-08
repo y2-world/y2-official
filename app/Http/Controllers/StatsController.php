@@ -132,7 +132,7 @@ class StatsController extends Controller
                 $songPlayCounts[$songId] = count($tours);
             }
         } else {
-            // 通常のカウント（全セットリスト）
+            // 通常のカウント（1ライブ内で同じ曲が複数回演奏されても1回カウント）
             foreach ($setlists as $setlist) {
                 $allSongs = array_merge(
                     $setlist->setlist ?? [],
@@ -141,13 +141,21 @@ class StatsController extends Controller
                     $setlist->fes_encore ?? []
                 );
 
+                // このセットリスト内で既に登場した曲を記録
+                $songsInThisSetlist = [];
                 foreach ($allSongs as $songData) {
                     if (isset($songData['song']) && is_numeric($songData['song'])) {
                         $songId = (int)$songData['song'];
-                        if (!isset($songPlayCounts[$songId])) {
-                            $songPlayCounts[$songId] = 0;
+
+                        // このセットリスト内で初めて登場する場合のみカウント
+                        if (!in_array($songId, $songsInThisSetlist)) {
+                            $songsInThisSetlist[] = $songId;
+
+                            if (!isset($songPlayCounts[$songId])) {
+                                $songPlayCounts[$songId] = 0;
+                            }
+                            $songPlayCounts[$songId]++;
                         }
-                        $songPlayCounts[$songId]++;
                     }
                 }
             }
@@ -578,7 +586,7 @@ class StatsController extends Controller
         // そのアーティストのライブのみ取得
         $setlists = Setlist::where('artist_id', $artistId)->get();
 
-        // 通常のカウント（全セットリスト）
+        // 通常のカウント（1ライブ内で同じ曲が複数回演奏されても1回カウント）
         $songPlayCounts = [];
         foreach ($setlists as $setlist) {
             $allSongs = array_merge(
@@ -588,13 +596,21 @@ class StatsController extends Controller
                 $setlist->fes_encore ?? []
             );
 
+            // このセットリスト内で既に登場した曲を記録
+            $songsInThisSetlist = [];
             foreach ($allSongs as $songData) {
                 if (isset($songData['song']) && is_numeric($songData['song'])) {
                     $songId = (int)$songData['song'];
-                    if (!isset($songPlayCounts[$songId])) {
-                        $songPlayCounts[$songId] = 0;
+
+                    // このセットリスト内で初めて登場する場合のみカウント
+                    if (!in_array($songId, $songsInThisSetlist)) {
+                        $songsInThisSetlist[] = $songId;
+
+                        if (!isset($songPlayCounts[$songId])) {
+                            $songPlayCounts[$songId] = 0;
+                        }
+                        $songPlayCounts[$songId]++;
                     }
-                    $songPlayCounts[$songId]++;
                 }
             }
         }
