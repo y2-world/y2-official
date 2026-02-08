@@ -81,19 +81,27 @@
                                 </thead>
                                 <tbody>
                                     @foreach($songStats as $index => $song)
+                                    @php
+                                        $showRank = $index === 0 || $songStats[$index - 1]['count'] !== $song['count'];
+                                        $actualRank = $index + 1;
+                                    @endphp
                                     <tr class="{{ $index >= 10 ? 'hidden-row' : '' }}">
                                         <td class="rank-col">
-                                            @if($index === 0)
-                                                <span class="rank-badge gold">🏆</span>
-                                            @elseif($index === 1)
-                                                <span class="rank-badge silver">🥈</span>
-                                            @elseif($index === 2)
-                                                <span class="rank-badge bronze">🥉</span>
-                                            @else
-                                                <span class="rank-number">{{ $index + 1 }}</span>
+                                            @if($showRank)
+                                                @if($index === 0)
+                                                    <span class="rank-badge gold">🏆</span>
+                                                @elseif($index === 1)
+                                                    <span class="rank-badge silver">🥈</span>
+                                                @elseif($index === 2)
+                                                    <span class="rank-badge bronze">🥉</span>
+                                                @else
+                                                    <span class="rank-number">{{ $actualRank }}</span>
+                                                @endif
                                             @endif
                                         </td>
-                                        <td class="song-title">{{ $song['title'] }}</td>
+                                        <td class="song-title">
+                                            <a href="{{ url('/database/songs/' . $song['song_id']) }}" class="stats-link">{{ $song['title'] }}</a>
+                                        </td>
                                         <td class="count-col">
                                             <span class="count-badge">{{ $song['count'] }}</span>
                                         </td>
@@ -127,19 +135,27 @@
                                 </thead>
                                 <tbody>
                                     @foreach($encoreSongStats as $index => $song)
+                                    @php
+                                        $showRank = $index === 0 || $encoreSongStats[$index - 1]['count'] !== $song['count'];
+                                        $actualRank = $index + 1;
+                                    @endphp
                                     <tr>
                                         <td class="rank-col">
-                                            @if($index === 0)
-                                                <span class="rank-badge gold">🏆</span>
-                                            @elseif($index === 1)
-                                                <span class="rank-badge silver">🥈</span>
-                                            @elseif($index === 2)
-                                                <span class="rank-badge bronze">🥉</span>
-                                            @else
-                                                <span class="rank-number">{{ $index + 1 }}</span>
+                                            @if($showRank)
+                                                @if($index === 0)
+                                                    <span class="rank-badge gold">🏆</span>
+                                                @elseif($index === 1)
+                                                    <span class="rank-badge silver">🥈</span>
+                                                @elseif($index === 2)
+                                                    <span class="rank-badge bronze">🥉</span>
+                                                @else
+                                                    <span class="rank-number">{{ $actualRank }}</span>
+                                                @endif
                                             @endif
                                         </td>
-                                        <td class="song-title">{{ $song['title'] }}</td>
+                                        <td class="song-title">
+                                            <a href="{{ url('/database/songs/' . $song['song_id']) }}" class="stats-link">{{ $song['title'] }}</a>
+                                        </td>
                                         <td class="count-col">
                                             <span class="count-badge">{{ $song['count'] }}</span>
                                         </td>
@@ -166,19 +182,27 @@
                                 </thead>
                                 <tbody>
                                     @foreach($openingSongStats as $index => $song)
+                                    @php
+                                        $showRank = $index === 0 || $openingSongStats[$index - 1]['count'] !== $song['count'];
+                                        $actualRank = $index + 1;
+                                    @endphp
                                     <tr>
                                         <td class="rank-col">
-                                            @if($index === 0)
-                                                <span class="rank-badge gold">🏆</span>
-                                            @elseif($index === 1)
-                                                <span class="rank-badge silver">🥈</span>
-                                            @elseif($index === 2)
-                                                <span class="rank-badge bronze">🥉</span>
-                                            @else
-                                                <span class="rank-number">{{ $index + 1 }}</span>
+                                            @if($showRank)
+                                                @if($index === 0)
+                                                    <span class="rank-badge gold">🏆</span>
+                                                @elseif($index === 1)
+                                                    <span class="rank-badge silver">🥈</span>
+                                                @elseif($index === 2)
+                                                    <span class="rank-badge bronze">🥉</span>
+                                                @else
+                                                    <span class="rank-number">{{ $actualRank }}</span>
+                                                @endif
                                             @endif
                                         </td>
-                                        <td class="song-title">{{ $song['title'] }}</td>
+                                        <td class="song-title">
+                                            <a href="{{ url('/database/songs/' . $song['song_id']) }}" class="stats-link">{{ $song['title'] }}</a>
+                                        </td>
                                         <td class="count-col">
                                             <span class="count-badge">{{ $song['count'] }}</span>
                                         </td>
@@ -205,23 +229,31 @@
                                 </thead>
                                 <tbody>
                                     @foreach($longestSetlists as $index => $setlist)
+                                    @php
+                                        $showRank = $index === 0 || $longestSetlists[$index - 1]['song_count'] !== $setlist['song_count'];
+                                        $actualRank = $index + 1;
+                                    @endphp
                                     <tr>
                                         <td class="rank-col">
-                                            @if($index === 0)
-                                                <span class="rank-badge gold">🏆</span>
-                                            @elseif($index === 1)
-                                                <span class="rank-badge silver">🥈</span>
-                                            @elseif($index === 2)
-                                                <span class="rank-badge bronze">🥉</span>
-                                            @else
-                                                <span class="rank-number">{{ $index + 1 }}</span>
+                                            @if($showRank)
+                                                @if($index === 0)
+                                                    <span class="rank-badge gold">🏆</span>
+                                                @elseif($index === 1)
+                                                    <span class="rank-badge silver">🥈</span>
+                                                @elseif($index === 2)
+                                                    <span class="rank-badge bronze">🥉</span>
+                                                @else
+                                                    <span class="rank-number">{{ $actualRank }}</span>
+                                                @endif
                                             @endif
                                         </td>
                                         <td class="song-title">
-                                            {{ $setlist['tour_title'] }}
-                                            @if($setlist['subtitle'])
-                                                <br><small style="color: #666;">{{ $setlist['subtitle'] }}</small>
-                                            @endif
+                                            <a href="{{ url('/database/live/' . $setlist['tour_id']) }}" class="stats-link">
+                                                {{ $setlist['tour_title'] }}
+                                                @if($setlist['subtitle'])
+                                                    <br><small style="color: #666;">{{ $setlist['subtitle'] }}</small>
+                                                @endif
+                                            </a>
                                         </td>
                                         <td class="count-col">
                                             <span class="count-badge">{{ $setlist['song_count'] }}</span>

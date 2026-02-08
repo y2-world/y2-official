@@ -162,7 +162,9 @@ class StatsController extends Controller
             if ($setlistSong) {
                 $artist = Artist::find($setlistSong->artist_id);
                 $topSongs[] = [
+                    'song_id' => $songId,
                     'title' => $setlistSong->title,
+                    'artist_id' => $setlistSong->artist_id,
                     'artist_name' => $artist ? $artist->name : '不明',
                     'count' => $songPlayCounts[$songId],
                 ];
@@ -357,6 +359,7 @@ class StatsController extends Controller
             $song = Song::find($songId);
             if ($song) {
                 $songStats[] = [
+                    'song_id' => $songId,
                     'title' => $song->title,
                     'count' => $count,
                 ];
@@ -463,6 +466,7 @@ class StatsController extends Controller
             $song = Song::find($songId);
             if ($song) {
                 $encoreStats[] = [
+                    'song_id' => $songId,
                     'title' => $song->title,
                     'count' => $count,
                 ];
@@ -511,6 +515,7 @@ class StatsController extends Controller
             $song = Song::find($songId);
             if ($song) {
                 $openingStats[] = [
+                    'song_id' => $songId,
                     'title' => $song->title,
                     'count' => $count,
                 ];
@@ -544,6 +549,7 @@ class StatsController extends Controller
             if ($songCount > 0) {
                 $tour = Tour::find($setlist->tour_id);
                 $setlistLengths[] = [
+                    'tour_id' => $setlist->tour_id,
                     'tour_title' => $tour ? $tour->title : '不明',
                     'subtitle' => $setlist->subtitle ?? '',
                     'song_count' => $songCount,
@@ -637,6 +643,7 @@ class StatsController extends Controller
             $setlistSong = SetlistSong::find($songId);
             if ($setlistSong) {
                 $allSongs[] = [
+                    'song_id' => $songId,
                     'title' => $setlistSong->title,
                     'count' => $count,
                 ];
@@ -649,6 +656,7 @@ class StatsController extends Controller
             $setlistSong = SetlistSong::find($songId);
             if ($setlistSong) {
                 $allSongsUnique[] = [
+                    'song_id' => $songId,
                     'title' => $setlistSong->title,
                     'count' => $count,
                 ];
