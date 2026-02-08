@@ -387,9 +387,9 @@ class StatsController extends Controller
 
     private function getMrChildrenEncoreSongStats()
     {
-        // アンコールで最も演奏された曲
+        // アンコールで最も演奏された曲（ツアーごとに1カウント）
         $tourSetlists = TourSetlist::all();
-        $encoreSongCounts = [];
+        $encoreSongTourCounts = []; // [songId => [tourId1, tourId2, ...]]
 
         foreach ($tourSetlists as $setlist) {
             $encoreSongs = $setlist->encore ?? [];
@@ -397,12 +397,24 @@ class StatsController extends Controller
             foreach ($encoreSongs as $songData) {
                 if (isset($songData['song']) && is_numeric($songData['song'])) {
                     $songId = (int)$songData['song'];
-                    if (!isset($encoreSongCounts[$songId])) {
-                        $encoreSongCounts[$songId] = 0;
+                    $tourId = $setlist->tour_id;
+
+                    if (!isset($encoreSongTourCounts[$songId])) {
+                        $encoreSongTourCounts[$songId] = [];
                     }
-                    $encoreSongCounts[$songId]++;
+
+                    // 同じツアーで複数回出ても1カウント
+                    if (!in_array($tourId, $encoreSongTourCounts[$songId])) {
+                        $encoreSongTourCounts[$songId][] = $tourId;
+                    }
                 }
             }
+        }
+
+        // ツアー数をカウント
+        $encoreSongCounts = [];
+        foreach ($encoreSongTourCounts as $songId => $tourIds) {
+            $encoreSongCounts[$songId] = count($tourIds);
         }
 
         arsort($encoreSongCounts);
@@ -423,9 +435,9 @@ class StatsController extends Controller
 
     private function getMrChildrenOpeningSongStats()
     {
-        // オープニング曲の統計
+        // オープニング曲の統計（ツアーごとに1カウント）
         $tourSetlists = TourSetlist::all();
-        $openingSongCounts = [];
+        $openingSongTourCounts = []; // [songId => [tourId1, tourId2, ...]]
 
         foreach ($tourSetlists as $setlist) {
             $setlistSongs = $setlist->setlist ?? [];
@@ -433,12 +445,24 @@ class StatsController extends Controller
                 $firstSong = $setlistSongs[0];
                 if (isset($firstSong['song']) && is_numeric($firstSong['song'])) {
                     $songId = (int)$firstSong['song'];
-                    if (!isset($openingSongCounts[$songId])) {
-                        $openingSongCounts[$songId] = 0;
+                    $tourId = $setlist->tour_id;
+
+                    if (!isset($openingSongTourCounts[$songId])) {
+                        $openingSongTourCounts[$songId] = [];
                     }
-                    $openingSongCounts[$songId]++;
+
+                    // 同じツアーで複数回出ても1カウント
+                    if (!in_array($tourId, $openingSongTourCounts[$songId])) {
+                        $openingSongTourCounts[$songId][] = $tourId;
+                    }
                 }
             }
+        }
+
+        // ツアー数をカウント
+        $openingSongCounts = [];
+        foreach ($openingSongTourCounts as $songId => $tourIds) {
+            $openingSongCounts[$songId] = count($tourIds);
         }
 
         arsort($openingSongCounts);
