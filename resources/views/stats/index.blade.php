@@ -67,11 +67,17 @@
 
                     <!-- Most Listened Songs Section -->
                     <div class="stats-section visible">
-                        <h2 class="section-title">
-                            <i class="fas fa-fire"></i> Most Listened Songs
-                        </h2>
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                            <h2 class="section-title" style="margin-bottom: 0;">
+                                <i class="fas fa-fire"></i> Most Listened Songs
+                            </h2>
+                            <label style="display: flex; align-items: center; cursor: pointer; font-size: 0.9rem;">
+                                <input type="checkbox" id="uniqueTourCheckbox" style="margin-right: 0.5rem;">
+                                Count same-named tours only once
+                            </label>
+                        </div>
                         <div class="stats-table-container">
-                            <table class="stats-table">
+                            <table class="stats-table" id="songStatsTable">
                                 <thead>
                                     <tr>
                                         <th class="rank-col">Rank</th>
@@ -302,5 +308,43 @@ function toggleArtistRows(button) {
         ? 'Show More <i class="fas fa-chevron-down"></i>'
         : 'Show Less <i class="fas fa-chevron-up"></i>';
 }
+
+// Most Listened Songs - Unique Tour Toggle
+const songStatsData = @json($songStats);
+const songStatsUnique = @json($songStatsUnique);
+
+document.getElementById('uniqueTourCheckbox').addEventListener('change', function(e) {
+    const useUnique = e.target.checked;
+    const data = useUnique ? songStatsUnique : songStatsData;
+
+    const tbody = document.querySelector('#songStatsTable tbody');
+    tbody.innerHTML = '';
+
+    data.forEach((song, index) => {
+        const tr = document.createElement('tr');
+
+        let rankBadge = '';
+        if (index === 0) {
+            rankBadge = '<span class="rank-badge gold">🏆</span>';
+        } else if (index === 1) {
+            rankBadge = '<span class="rank-badge silver">🥈</span>';
+        } else if (index === 2) {
+            rankBadge = '<span class="rank-badge bronze">🥉</span>';
+        } else {
+            rankBadge = '<span class="rank-number">' + (index + 1) + '</span>';
+        }
+
+        tr.innerHTML = `
+            <td class="rank-col">${rankBadge}</td>
+            <td class="song-title">${song.title}</td>
+            <td class="artist-name">${song.artist_name}</td>
+            <td class="count-col">
+                <span class="count-badge">${song.count}</span>
+            </td>
+        `;
+
+        tbody.appendChild(tr);
+    });
+});
 </script>
 @endsection

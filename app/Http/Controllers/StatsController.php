@@ -26,6 +26,7 @@ class StatsController extends Controller
         // Personal stats (参加したライブの履歴)
         $overallStats = $this->getPersonalOverallStats();
         $songStats = $this->getPersonalSongStats();
+        $songStatsUnique = $this->getPersonalSongStats(true); // 同名ツアーを1回カウント
         $artistStats = $this->getPersonalArtistStats();
         $venueStats = $this->getPersonalVenueStats();
         $yearStats = $this->getPersonalYearStats();
@@ -36,6 +37,7 @@ class StatsController extends Controller
         return view('stats.index', compact(
             'overallStats',
             'songStats',
+            'songStatsUnique',
             'artistStats',
             'venueStats',
             'yearStats',
@@ -89,27 +91,64 @@ class StatsController extends Controller
         ];
     }
 
-    private function getPersonalSongStats()
+    private function getPersonalSongStats($uniqueTourOnly = false)
     {
         // 最も聴いた曲トップ10（IDのみ使用）
         $setlists = Setlist::all();
         $songPlayCounts = [];
 
-        foreach ($setlists as $setlist) {
-            $allSongs = array_merge(
-                $setlist->setlist ?? [],
-                $setlist->encore ?? [],
-                $setlist->fes_setlist ?? [],
-                $setlist->fes_encore ?? []
-            );
+        if ($uniqueTourOnly) {
+            // 同名ツアーを1回だけカウント
+            $songTourCounts = []; // [songId => [tourName1, tourName2, ...]]
 
-            foreach ($allSongs as $songData) {
-                if (isset($songData['song']) && is_numeric($songData['song'])) {
-                    $songId = (int)$songData['song'];
-                    if (!isset($songPlayCounts[$songId])) {
-                        $songPlayCounts[$songId] = 0;
+            foreach ($setlists as $setlist) {
+                $allSongs = array_merge(
+                    $setlist->setlist ?? [],
+                    $setlist->encore ?? [],
+                    $setlist->fes_setlist ?? [],
+                    $setlist->fes_encore ?? []
+                );
+
+                $tourName = $setlist->title ?? 'Unknown';
+
+                foreach ($allSongs as $songData) {
+                    if (isset($songData['song']) && is_numeric($songData['song'])) {
+                        $songId = (int)$songData['song'];
+
+                        if (!isset($songTourCounts[$songId])) {
+                            $songTourCounts[$songId] = [];
+                        }
+
+                        // 同じツアー名で複数回出ても1カウント
+                        if (!in_array($tourName, $songTourCounts[$songId])) {
+                            $songTourCounts[$songId][] = $tourName;
+                        }
                     }
-                    $songPlayCounts[$songId]++;
+                }
+            }
+
+            // ツアー数をカウント
+            foreach ($songTourCounts as $songId => $tours) {
+                $songPlayCounts[$songId] = count($tours);
+            }
+        } else {
+            // 通常のカウント（全セットリスト）
+            foreach ($setlists as $setlist) {
+                $allSongs = array_merge(
+                    $setlist->setlist ?? [],
+                    $setlist->encore ?? [],
+                    $setlist->fes_setlist ?? [],
+                    $setlist->fes_encore ?? []
+                );
+
+                foreach ($allSongs as $songData) {
+                    if (isset($songData['song']) && is_numeric($songData['song'])) {
+                        $songId = (int)$songData['song'];
+                        if (!isset($songPlayCounts[$songId])) {
+                            $songPlayCounts[$songId] = 0;
+                        }
+                        $songPlayCounts[$songId]++;
+                    }
                 }
             }
         }
@@ -533,7 +572,7 @@ class StatsController extends Controller
         // そのアーティストのライブのみ取得
         $setlists = Setlist::where('artist_id', $artistId)->get();
 
-        // 最も聴いた曲トップ10
+        // 通常のカウント（全セットリスト）
         $songPlayCounts = [];
         foreach ($setlists as $setlist) {
             $allSongs = array_merge(
@@ -555,23 +594,61 @@ class StatsController extends Controller
         }
 
         arsort($songPlayCounts);
-        $topSongs = [];
-        foreach (array_slice($songPlayCounts, 0, 10, true) as $songId => $count) {
+
+        // 同名ツアーを1回だけカウント
+        $songTourCounts = []; // [songId => [tourName1, tourName2, ...]]
+        foreach ($setlists as $setlist) {
+            $allSongs = array_merge(
+                $setlist->setlist ?? [],
+                $setlist->encore ?? [],
+                $setlist->fes_setlist ?? [],
+                $setlist->fes_encore ?? []
+            );
+
+            $tourName = $setlist->title ?? 'Unknown';
+
+            foreach ($allSongs as $songData) {
+                if (isset($songData['song']) && is_numeric($songData['song'])) {
+                    $songId = (int)$songData['song'];
+
+                    if (!isset($songTourCounts[$songId])) {
+                        $songTourCounts[$songId] = [];
+                    }
+
+                    // 同じツアー名で複数回出ても1カウント
+                    if (!in_array($tourName, $songTourCounts[$songId])) {
+                        $songTourCounts[$songId][] = $tourName;
+                    }
+                }
+            }
+        }
+
+        // ツアー数をカウント
+        $songPlayCountsUnique = [];
+        foreach ($songTourCounts as $songId => $tours) {
+            $songPlayCountsUnique[$songId] = count($tours);
+        }
+
+        arsort($songPlayCountsUnique);
+
+        // 全楽曲リスト（聴いた回数順）- 通常
+        $allSongs = [];
+        foreach ($songPlayCounts as $songId => $count) {
             $setlistSong = SetlistSong::find($songId);
             if ($setlistSong) {
-                $topSongs[] = [
+                $allSongs[] = [
                     'title' => $setlistSong->title,
                     'count' => $count,
                 ];
             }
         }
 
-        // 全楽曲リスト（聴いた回数順）
-        $allSongs = [];
-        foreach ($songPlayCounts as $songId => $count) {
+        // 全楽曲リスト（同名ツアー1回カウント）
+        $allSongsUnique = [];
+        foreach ($songPlayCountsUnique as $songId => $count) {
             $setlistSong = SetlistSong::find($songId);
             if ($setlistSong) {
-                $allSongs[] = [
+                $allSongsUnique[] = [
                     'title' => $setlistSong->title,
                     'count' => $count,
                 ];
@@ -604,8 +681,8 @@ class StatsController extends Controller
 
         return view('stats.artist', compact(
             'artist',
-            'topSongs',
             'allSongs',
+            'allSongsUnique',
             'yearStats',
             'venueStats',
             'totalShows',

@@ -40,11 +40,17 @@
 
                     <!-- Top Songs for Artist -->
                     <div class="stats-section visible">
-                        <h2 class="section-title">
-                            <i class="fas fa-fire"></i> Most Listened Songs ({{ count($allSongs) }})
-                        </h2>
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                            <h2 class="section-title" style="margin-bottom: 0;">
+                                <i class="fas fa-fire"></i> Most Listened Songs (<span id="songCountLabel">{{ count($allSongs) }}</span>)
+                            </h2>
+                            <label style="display: flex; align-items: center; cursor: pointer; font-size: 0.9rem;">
+                                <input type="checkbox" id="uniqueTourCheckboxArtist" style="margin-right: 0.5rem;">
+                                Count same-named tours only once
+                            </label>
+                        </div>
                         <div class="stats-table-container">
-                            <table class="stats-table">
+                            <table class="stats-table" id="artistSongStatsTable">
                                 <thead>
                                     <tr>
                                         <th class="rank-col">Rank</th>
@@ -74,13 +80,11 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            @if(count($allSongs) > 10)
-                            <div class="show-more-container">
+                            <div class="show-more-container" id="showMoreContainer" style="{{ count($allSongs) > 10 ? '' : 'display: none;' }}">
                                 <button class="show-more-btn" onclick="toggleTopSongRows(this)">
                                     Show More <i class="fas fa-chevron-down"></i>
                                 </button>
                             </div>
-                            @endif
                         </div>
                     </div>
 
@@ -198,5 +202,65 @@ function toggleTopSongRows(button) {
         ? 'Show More <i class="fas fa-chevron-down"></i>'
         : 'Show Less <i class="fas fa-chevron-up"></i>';
 }
+
+// Most Listened Songs - Unique Tour Toggle
+const allSongsData = @json($allSongs);
+const allSongsUnique = @json($allSongsUnique);
+
+document.getElementById('uniqueTourCheckboxArtist').addEventListener('change', function(e) {
+    const useUnique = e.target.checked;
+    const data = useUnique ? allSongsUnique : allSongsData;
+
+    // Update song count label
+    document.getElementById('songCountLabel').textContent = data.length;
+
+    // Reset show more button state
+    const showMoreBtn = document.querySelector('.show-more-btn');
+    if (showMoreBtn) {
+        showMoreBtn.classList.remove('expanded');
+        showMoreBtn.innerHTML = 'Show More <i class="fas fa-chevron-down"></i>';
+    }
+
+    // Update show more container visibility
+    const showMoreContainer = document.getElementById('showMoreContainer');
+    if (data.length > 10) {
+        showMoreContainer.style.display = '';
+    } else {
+        showMoreContainer.style.display = 'none';
+    }
+
+    const tbody = document.querySelector('#artistSongStatsTable tbody');
+    tbody.innerHTML = '';
+
+    data.forEach((song, index) => {
+        const tr = document.createElement('tr');
+
+        // Hide rows after 10
+        if (index >= 10) {
+            tr.classList.add('hidden-row-top-songs');
+        }
+
+        let rankBadge = '';
+        if (index === 0) {
+            rankBadge = '<span class="rank-badge gold">🏆</span>';
+        } else if (index === 1) {
+            rankBadge = '<span class="rank-badge silver">🥈</span>';
+        } else if (index === 2) {
+            rankBadge = '<span class="rank-badge bronze">🥉</span>';
+        } else {
+            rankBadge = '<span class="rank-number">' + (index + 1) + '</span>';
+        }
+
+        tr.innerHTML = `
+            <td class="rank-col">${rankBadge}</td>
+            <td class="song-title">${song.title}</td>
+            <td class="count-col">
+                <span class="count-badge">${song.count}</span>
+            </td>
+        `;
+
+        tbody.appendChild(tr);
+    });
+});
 </script>
 @endsection
