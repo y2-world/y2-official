@@ -459,7 +459,10 @@ class StatsController extends Controller
             $songCount = 0;
             foreach ($songs as $songData) {
                 if (isset($songData['song']) && is_numeric($songData['song'])) {
-                    $songCount++;
+                    // is_dailyが1の曲は除外
+                    if (!isset($songData['is_daily']) || $songData['is_daily'] != 1) {
+                        $songCount++;
+                    }
                 }
             }
 
