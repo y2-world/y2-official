@@ -111,17 +111,24 @@ class StatsController extends Controller
 
                 $tourName = $setlist->title ?? 'Unknown';
 
+                // このセットリスト内で既に登場した曲を記録
+                $songsInThisSetlist = [];
                 foreach ($allSongs as $songData) {
                     if (isset($songData['song']) && is_numeric($songData['song'])) {
                         $songId = (int)$songData['song'];
 
-                        if (!isset($songTourCounts[$songId])) {
-                            $songTourCounts[$songId] = [];
-                        }
+                        // このセットリスト内で初めて登場する場合のみ処理
+                        if (!in_array($songId, $songsInThisSetlist)) {
+                            $songsInThisSetlist[] = $songId;
 
-                        // 同じツアー名で複数回出ても1カウント
-                        if (!in_array($tourName, $songTourCounts[$songId])) {
-                            $songTourCounts[$songId][] = $tourName;
+                            if (!isset($songTourCounts[$songId])) {
+                                $songTourCounts[$songId] = [];
+                            }
+
+                            // 同じツアー名で複数回出ても1カウント
+                            if (!in_array($tourName, $songTourCounts[$songId])) {
+                                $songTourCounts[$songId][] = $tourName;
+                            }
                         }
                     }
                 }
@@ -583,23 +590,35 @@ class StatsController extends Controller
             abort(404);
         }
 
-        // そのアーティストのライブのみ取得
-        $setlists = Setlist::where('artist_id', $artistId)->get();
+        // そのアーティストのライブ + フェスでの出演を取得
+        $setlists = Setlist::all();
 
         // 通常のカウント（1ライブ内で同じ曲が複数回演奏されても1回カウント）
         $songPlayCounts = [];
         foreach ($setlists as $setlist) {
-            $allSongs = array_merge(
-                $setlist->setlist ?? [],
-                $setlist->encore ?? [],
-                $setlist->fes_setlist ?? [],
-                $setlist->fes_encore ?? []
-            );
+            $allSongs = [];
+
+            // アーティスト単独ライブの場合
+            if ($setlist->artist_id == $artistId) {
+                $allSongs = array_merge(
+                    $setlist->setlist ?? [],
+                    $setlist->encore ?? []
+                );
+            }
+            // フェスの場合は、そのアーティストの曲のみ抽出
+            elseif ($setlist->fes == 1) {
+                foreach (array_merge($setlist->fes_setlist ?? [], $setlist->fes_encore ?? []) as $songData) {
+                    if (isset($songData['artist']) && $songData['artist'] == $artistId) {
+                        $allSongs[] = $songData;
+                    }
+                }
+            }
 
             // このセットリスト内で既に登場した曲を記録
             $songsInThisSetlist = [];
             foreach ($allSongs as $songData) {
                 if (isset($songData['song']) && is_numeric($songData['song'])) {
+
                     $songId = (int)$songData['song'];
 
                     // このセットリスト内で初めて登場する場合のみカウント
@@ -620,26 +639,50 @@ class StatsController extends Controller
         // 同名ツアーを1回だけカウント
         $songTourCounts = []; // [songId => [tourName1, tourName2, ...]]
         foreach ($setlists as $setlist) {
-            $allSongs = array_merge(
-                $setlist->setlist ?? [],
-                $setlist->encore ?? [],
-                $setlist->fes_setlist ?? [],
-                $setlist->fes_encore ?? []
-            );
+            $allSongs = [];
+
+            // アーティスト単独ライブの場合
+            if ($setlist->artist_id == $artistId) {
+                $allSongs = array_merge(
+                    $setlist->setlist ?? [],
+                    $setlist->encore ?? []
+                );
+            }
+
+            // フェスの場合は、そのアーティストの曲のみ抽出
+            if ($setlist->fes == 1) {
+                foreach (array_merge($setlist->fes_setlist ?? [], $setlist->fes_encore ?? []) as $songData) {
+                    if (isset($songData['artist']) && (string)$songData['artist'] === (string)$artistId) {
+                        $allSongs[] = $songData;
+                    }
+                }
+            }
 
             $tourName = $setlist->title ?? 'Unknown';
 
+            // このセットリスト内で既に登場した曲を記録
+            $songsInThisSetlist = [];
             foreach ($allSongs as $songData) {
                 if (isset($songData['song']) && is_numeric($songData['song'])) {
-                    $songId = (int)$songData['song'];
-
-                    if (!isset($songTourCounts[$songId])) {
-                        $songTourCounts[$songId] = [];
+                    // フェスの場合はアーティストチェック
+                    if ($setlist->fes == 1 && isset($songData['artist']) && $songData['artist'] != $artistId) {
+                        continue;
                     }
 
-                    // 同じツアー名で複数回出ても1カウント
-                    if (!in_array($tourName, $songTourCounts[$songId])) {
-                        $songTourCounts[$songId][] = $tourName;
+                    $songId = (int)$songData['song'];
+
+                    // このセットリスト内で初めて登場する場合のみ処理
+                    if (!in_array($songId, $songsInThisSetlist)) {
+                        $songsInThisSetlist[] = $songId;
+
+                        if (!isset($songTourCounts[$songId])) {
+                            $songTourCounts[$songId] = [];
+                        }
+
+                        // 同じツアー名で複数回出ても1カウント
+                        if (!in_array($tourName, $songTourCounts[$songId])) {
+                            $songTourCounts[$songId][] = $tourName;
+                        }
                     }
                 }
             }
@@ -679,7 +722,7 @@ class StatsController extends Controller
             }
         }
 
-        // 年別の参加公演数（多い順）
+        // 年別の参加公演数（多い順）- 単独ライブのみ
         $yearStats = Setlist::where('artist_id', $artistId)
             ->select('year', DB::raw('count(*) as count'))
             ->whereNotNull('year')
@@ -687,7 +730,7 @@ class StatsController extends Controller
             ->orderBy('count', 'desc')
             ->get();
 
-        // 会場別トップ5
+        // 会場別トップ5 - 単独ライブのみ
         $venueStats = Setlist::where('artist_id', $artistId)
             ->select('venue', DB::raw('count(*) as count'))
             ->whereNotNull('venue')
