@@ -284,7 +284,9 @@
                                         <td class="year-col">{{ $yearData->year }}</td>
                                         <td class="count-col">
                                             <div class="year-bar-container">
-                                                <div class="year-bar" style="width: {{ ($yearData->count / $yearStats->max('count')) * 100 }}%"></div>
+                                                <div class="year-bar-wrapper">
+                                                    <div class="year-bar" style="width: {{ ($yearData->count / $yearStats->max('count')) * 100 }}%"></div>
+                                                </div>
                                                 <span class="year-count">{{ $yearData->count }}</span>
                                             </div>
                                         </td>

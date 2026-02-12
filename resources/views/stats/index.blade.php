@@ -244,7 +244,9 @@
                                         <td class="year-col">{{ $yearStat->year }}</td>
                                         <td class="count-col">
                                             <div class="year-bar-container">
-                                                <div class="year-bar" style="width: {{ ($yearStat->count / $yearStats->max('count')) * 100 }}%"></div>
+                                                <div class="year-bar-wrapper">
+                                                    <div class="year-bar" style="width: {{ ($yearStat->count / $yearStats->max('count')) * 100 }}%"></div>
+                                                </div>
                                                 <span class="year-count">{{ $yearStat->count }}</span>
                                             </div>
                                         </td>
@@ -274,7 +276,9 @@
                                         <td class="year-col">{{ $monthStat->month }}</td>
                                         <td class="count-col">
                                             <div class="year-bar-container">
-                                                <div class="year-bar" style="width: {{ $monthStats->max('count') > 0 ? ($monthStat->count / $monthStats->max('count')) * 100 : 0 }}%"></div>
+                                                <div class="year-bar-wrapper">
+                                                    <div class="year-bar" style="width: {{ $monthStats->max('count') > 0 ? ($monthStat->count / $monthStats->max('count')) * 100 : 0 }}%"></div>
+                                                </div>
                                                 <span class="year-count">{{ $monthStat->count }}</span>
                                             </div>
                                         </td>

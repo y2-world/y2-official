@@ -52,16 +52,19 @@ class StatsController extends Controller
 
     private function getPersonalOverallStats()
     {
-        $totalShows = Setlist::count();
+        $today = now()->toDateString();
+
+        $totalShows = Setlist::where('date', '<=', $today)->count();
 
         // ユニークなアーティスト数
-        $uniqueArtists = Setlist::whereNotNull('artist_id')
+        $uniqueArtists = Setlist::where('date', '<=', $today)
+            ->whereNotNull('artist_id')
             ->distinct('artist_id')
             ->count('artist_id');
 
         // 聴いた曲数（setlistsから全曲のユニークID）
         $allSongIds = [];
-        $setlists = Setlist::all();
+        $setlists = Setlist::where('date', '<=', $today)->get();
         foreach ($setlists as $setlist) {
             $songs = array_merge(
                 $setlist->setlist ?? [],
@@ -78,7 +81,8 @@ class StatsController extends Controller
         $uniqueSongs = count($allSongIds);
 
         // 訪れた会場数
-        $uniqueVenues = Setlist::whereNotNull('venue')
+        $uniqueVenues = Setlist::where('date', '<=', $today)
+            ->whereNotNull('venue')
             ->where('venue', '!=', '')
             ->distinct('venue')
             ->count('venue');
@@ -94,7 +98,8 @@ class StatsController extends Controller
     private function getPersonalSongStats($uniqueTourOnly = false)
     {
         // 最も聴いた曲トップ10（IDのみ使用）
-        $setlists = Setlist::all();
+        $today = now()->toDateString();
+        $setlists = Setlist::where('date', '<=', $today)->get();
         $songPlayCounts = [];
 
         if ($uniqueTourOnly) {
@@ -191,21 +196,48 @@ class StatsController extends Controller
 
     private function getPersonalArtistStats()
     {
-        // アーティスト別の参加公演数（全アーティスト）
-        $artistShowCounts = Setlist::whereNotNull('artist_id')
-            ->select('artist_id', DB::raw('count(*) as count'))
-            ->groupBy('artist_id')
-            ->orderBy('count', 'desc')
-            ->get();
+        // アーティスト別の参加公演数（単独ライブ + フェス出演）
+        $today = now()->toDateString();
+        $setlists = Setlist::where('date', '<=', $today)->get();
+        $artistShowCounts = [];
+
+        foreach ($setlists as $setlist) {
+            // 単独ライブ
+            if ($setlist->artist_id) {
+                $artistId = $setlist->artist_id;
+                if (!isset($artistShowCounts[$artistId])) {
+                    $artistShowCounts[$artistId] = 0;
+                }
+                $artistShowCounts[$artistId]++;
+            }
+
+            // フェスの場合、出演アーティストごとにカウント
+            if ($setlist->fes == 1) {
+                $fesArtistIds = [];
+                foreach (array_merge($setlist->fes_setlist ?? [], $setlist->fes_encore ?? []) as $songData) {
+                    if (isset($songData['artist']) && is_numeric($songData['artist'])) {
+                        $fesArtistIds[(int)$songData['artist']] = true;
+                    }
+                }
+                foreach (array_keys($fesArtistIds) as $fesArtistId) {
+                    if (!isset($artistShowCounts[$fesArtistId])) {
+                        $artistShowCounts[$fesArtistId] = 0;
+                    }
+                    $artistShowCounts[$fesArtistId]++;
+                }
+            }
+        }
+
+        arsort($artistShowCounts);
 
         $artistStats = [];
-        foreach ($artistShowCounts as $item) {
-            $artist = Artist::find($item->artist_id);
+        foreach ($artistShowCounts as $artistId => $count) {
+            $artist = Artist::find($artistId);
             if ($artist) {
                 $artistStats[] = [
                     'id' => $artist->id,
                     'name' => $artist->name,
-                    'show_count' => $item->count,
+                    'show_count' => $count,
                 ];
             }
         }
@@ -216,7 +248,9 @@ class StatsController extends Controller
     private function getPersonalVenueStats()
     {
         // 最も訪れた会場トップ10
-        $venues = Setlist::select('venue', DB::raw('count(*) as count'))
+        $today = now()->toDateString();
+        $venues = Setlist::where('date', '<=', $today)
+            ->select('venue', DB::raw('count(*) as count'))
             ->whereNotNull('venue')
             ->where('venue', '!=', '')
             ->groupBy('venue')
@@ -230,7 +264,9 @@ class StatsController extends Controller
     private function getPersonalYearStats()
     {
         // 年別の参加公演数（多い順）
-        $yearStats = Setlist::select('year', DB::raw('count(*) as count'))
+        $today = now()->toDateString();
+        $yearStats = Setlist::where('date', '<=', $today)
+            ->select('year', DB::raw('count(*) as count'))
             ->whereNotNull('year')
             ->groupBy('year')
             ->orderBy('count', 'desc')
@@ -243,7 +279,9 @@ class StatsController extends Controller
     private function getPersonalMonthStats()
     {
         // 月別の参加公演数分布
-        $monthCounts = Setlist::select(DB::raw('MONTH(date) as month'), DB::raw('count(*) as count'))
+        $today = now()->toDateString();
+        $monthCounts = Setlist::where('date', '<=', $today)
+            ->select(DB::raw('MONTH(date) as month'), DB::raw('count(*) as count'))
             ->whereNotNull('date')
             ->groupBy('month')
             ->get()
@@ -590,8 +628,9 @@ class StatsController extends Controller
             abort(404);
         }
 
-        // そのアーティストのライブ + フェスでの出演を取得
-        $setlists = Setlist::all();
+        // そのアーティストのライブ + フェスでの出演を取得（未来の公演を除外）
+        $today = now()->toDateString();
+        $setlists = Setlist::where('date', '<=', $today)->get();
 
         // 通常のカウント（1ライブ内で同じ曲が複数回演奏されても1回カウント）
         $songPlayCounts = [];
@@ -722,26 +761,44 @@ class StatsController extends Controller
             }
         }
 
-        // 年別の参加公演数（多い順）- 単独ライブのみ
-        $yearStats = Setlist::where('artist_id', $artistId)
-            ->select('year', DB::raw('count(*) as count'))
-            ->whereNotNull('year')
-            ->groupBy('year')
-            ->orderBy('count', 'desc')
-            ->get();
-
-        // 会場別トップ5 - 単独ライブのみ
-        $venueStats = Setlist::where('artist_id', $artistId)
-            ->select('venue', DB::raw('count(*) as count'))
-            ->whereNotNull('venue')
-            ->where('venue', '!=', '')
-            ->groupBy('venue')
-            ->orderBy('count', 'desc')
-            ->limit(5)
-            ->get();
+        // そのアーティストに関連するセットリスト（単独ライブ + フェス出演）
+        $artistSetlists = $setlists->filter(function ($setlist) use ($artistId) {
+            if ($setlist->artist_id == $artistId) {
+                return true;
+            }
+            if ($setlist->fes == 1) {
+                foreach (array_merge($setlist->fes_setlist ?? [], $setlist->fes_encore ?? []) as $songData) {
+                    if (isset($songData['artist']) && $songData['artist'] == $artistId) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        });
 
         // 総参加公演数
-        $totalShows = $setlists->count();
+        $totalShows = $artistSetlists->count();
+
+        // 年別の参加公演数（多い順）
+        $yearStats = $artistSetlists->whereNotNull('year')
+            ->groupBy('year')
+            ->map(function ($items, $year) {
+                return (object)['year' => $year, 'count' => $items->count()];
+            })
+            ->sortByDesc('count')
+            ->values();
+
+        // 会場別トップ5
+        $venueStats = $artistSetlists->filter(function ($setlist) {
+                return !empty($setlist->venue);
+            })
+            ->groupBy('venue')
+            ->map(function ($items, $venue) {
+                return (object)['venue' => $venue, 'count' => $items->count()];
+            })
+            ->sortByDesc('count')
+            ->values()
+            ->take(5);
 
         // 総曲数（ユニーク）
         $totalSongs = count($songPlayCounts);
