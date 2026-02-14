@@ -56,16 +56,26 @@ class StatsController extends Controller
 
         $totalShows = Setlist::where('date', '<=', $today)->count();
 
-        // ユニークなアーティスト数
-        $uniqueArtists = Setlist::where('date', '<=', $today)
-            ->whereNotNull('artist_id')
-            ->distinct('artist_id')
-            ->count('artist_id');
+        // ユニークなアーティスト数（単独ライブ + フェス出演アーティスト）
+        $allArtistIds = [];
+        $allSetlists = Setlist::where('date', '<=', $today)->get();
+        foreach ($allSetlists as $setlist) {
+            if ($setlist->artist_id) {
+                $allArtistIds[$setlist->artist_id] = true;
+            }
+            if ($setlist->fes == 1) {
+                foreach (array_merge($setlist->fes_setlist ?? [], $setlist->fes_encore ?? []) as $songData) {
+                    if (isset($songData['artist']) && is_numeric($songData['artist'])) {
+                        $allArtistIds[(int)$songData['artist']] = true;
+                    }
+                }
+            }
+        }
+        $uniqueArtists = count($allArtistIds);
 
         // 聴いた曲数（setlistsから全曲のユニークID）
         $allSongIds = [];
-        $setlists = Setlist::where('date', '<=', $today)->get();
-        foreach ($setlists as $setlist) {
+        foreach ($allSetlists as $setlist) {
             $songs = array_merge(
                 $setlist->setlist ?? [],
                 $setlist->encore ?? [],

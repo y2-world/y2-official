@@ -114,7 +114,7 @@
                                 <tbody>
                                     @foreach($yearStats as $yearData)
                                     <tr>
-                                        <td class="year-col">{{ $yearData->year }}</td>
+                                        <td class="year-col"><a href="{{ url('/setlists/years/' . $yearData->year) }}" class="stats-link">{{ $yearData->year }}</a></td>
                                         <td class="count-col">
                                             <div class="year-bar-container">
                                                 <div class="year-bar-wrapper">
