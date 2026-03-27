@@ -6,6 +6,7 @@ use App\Filament\Resources\SongResource\Pages;
 use App\Filament\Resources\SongResource\RelationManagers;
 use App\Models\Song;
 use App\Models\Album;
+use App\Models\Bio;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -60,17 +61,12 @@ class SongResource extends Resource
                 // 年（year）
                 Forms\Components\Select::make('year')
                     ->label('年')
-                    ->options(fn() => \App\Models\Song::query()
-                        ->distinct()
+                    ->options(fn() => \App\Models\Bio::query()
                         ->whereNotNull('year')
-                        ->where('year', '!=', '')
                         ->orderBy('year')
                         ->pluck('year', 'year'))
                     ->searchable()
                     ->native(false)
-                    ->placeholder('新しい年を入力する場合は追加')
-                    ->reactive()
-                    ->createOptionUsing(fn(string $label) => (int) $label)
                     ->required()
                     ->columnSpan(1),
 
