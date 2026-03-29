@@ -17,7 +17,6 @@
 
     <div class="container-lg database-year-content">
         @if(isset($singles->tracklist))
-        <h3 style="margin-top: 0; margin-bottom: 15px;">Tracklist</h3>
         <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); padding: 30px;">
             <ol style="margin: 0; padding-left: 25px; font-size: 15px; line-height: 2;">
               @foreach ($singles->tracklist as $data)
