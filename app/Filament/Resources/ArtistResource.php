@@ -84,7 +84,8 @@ class ArtistResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('id', 'desc');
     }
 
     public static function getRelations(): array

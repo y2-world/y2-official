@@ -164,7 +164,8 @@ class AlbumResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('date', 'desc');
     }
 
     public static function getRelations(): array

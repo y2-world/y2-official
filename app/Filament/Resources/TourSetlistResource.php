@@ -307,7 +307,7 @@ class TourSetlistResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('id', 'asc'); // ID昇順に変更
+            ->defaultSort('id', 'desc');
     }
 
     public static function getRelations(): array
