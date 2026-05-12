@@ -43,8 +43,8 @@ class SetlistController extends Controller
         $pastTotalCount = $pastSetlists->total();
 
         // アーティスト、全てのアーティスト、年のデータを取得する
-        $artists = Artist::where('visible', 1)->orderBy('id', 'asc')->get();
-        $allArtists = Artist::orderBy('id', 'asc')->get();
+        $artists = Artist::orderBy('id', 'asc')->get();
+        $allArtists = $artists;
 
         // Setlistから年のリストを取得
         $years = Setlist::select('year')
