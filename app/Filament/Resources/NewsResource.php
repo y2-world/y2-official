@@ -61,8 +61,6 @@ class NewsResource extends Resource
                 FileUpload::make('image')
                     ->label('画像')
                     ->image()
-                    ->disk('local')
-                    ->directory('livewire-tmp')
                     ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
                     ->maxSize(10240)
                     ->downloadable()

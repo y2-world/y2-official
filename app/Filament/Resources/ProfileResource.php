@@ -46,8 +46,6 @@ class ProfileResource extends Resource
                 Forms\Components\FileUpload::make('image')
                     ->label('画像')
                     ->image()
-                    ->disk('local')
-                    ->directory('livewire-tmp')
                     ->saveUploadedFileUsing(function ($file) {
                         return $file->storeOnCloudinary('images')->getSecurePath();
                     }),
