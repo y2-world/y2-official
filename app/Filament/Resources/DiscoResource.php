@@ -101,7 +101,7 @@ class DiscoResource extends Resource
                     ->saveUploadedFileUsing(function ($file) {
                         return $file->storeOnCloudinary('images')->getSecurePath();
                     })
-                    ->getUploadedFileUsing(fn ($file) => $file)
+                    ->getUploadedFileUsing(fn ($file) => is_string($file) ? $file : null)
                     ->dehydrateStateUsing(fn ($state, Forms\Components\FileUpload $component) => $state ?: $component->getRecord()?->image),
             ]);
     }
