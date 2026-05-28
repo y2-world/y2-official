@@ -65,7 +65,8 @@ class NewsResource extends Resource
                     ->directory('images')
                     ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
                     ->maxSize(10240)
-                    ->downloadable(),
+                    ->downloadable()
+                    ->getUploadedFileNameForStorageUsing(fn ($file): string => (string) str()->ulid()),
             ]);
     }
 
