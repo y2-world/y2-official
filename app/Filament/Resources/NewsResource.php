@@ -61,11 +61,14 @@ class NewsResource extends Resource
                 FileUpload::make('image')
                     ->label('画像')
                     ->image()
-                    ->disk('cloudinary')
-                    ->directory('images')
+                    ->disk('local')
+                    ->directory('livewire-tmp')
                     ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
                     ->maxSize(10240)
-                    ->downloadable(),
+                    ->downloadable()
+                    ->saveUploadedFileUsing(function ($file) {
+                        return $file->storeOnCloudinary('images')->getSecurePath();
+                    }),
             ]);
     }
 
