@@ -98,16 +98,8 @@ class DiscoResource extends Resource
                 Forms\Components\FileUpload::make('image')
                     ->label('画像')
                     ->image()
-                    ->saveUploadedFileUsing(function ($file) {
-                        return $file->storeOnCloudinary('images')->getSecurePath();
-                    })
-                    ->getUploadedFileUsing(fn ($file) => ['name' => basename($file), 'size' => 0, 'type' => 'image/jpeg', 'url' => $file])
-                    ->dehydrateStateUsing(function ($state, Forms\Components\FileUpload $component) {
-                        if (is_string($state) && str_starts_with($state, 'http')) {
-                            return $state;
-                        }
-                        return $component->getRecord()?->image;
-                    }),
+                    ->disk('cloudinary')
+                    ->directory('images'),
             ]);
     }
 

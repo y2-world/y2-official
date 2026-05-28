@@ -46,9 +46,8 @@ class ProfileResource extends Resource
                 Forms\Components\FileUpload::make('image')
                     ->label('画像')
                     ->image()
-                    ->saveUploadedFileUsing(function ($file) {
-                        return $file->storeOnCloudinary('images')->getSecurePath();
-                    }),
+                    ->disk('cloudinary')
+                    ->directory('images'),
             ]);
     }
 
