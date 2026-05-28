@@ -100,7 +100,16 @@ class DiscoResource extends Resource
                     ->image()
                     ->saveUploadedFileUsing(function ($file) {
                         return $file->storeOnCloudinary('images')->getSecurePath();
-                    }),
+                    })
+                    ->formatStateUsing(fn ($state) => null)
+                    ->dehydrateStateUsing(fn ($state) => $state ?: null),
+                Forms\Components\Placeholder::make('image_preview')
+                    ->label('現在の画像')
+                    ->content(fn ($record) => $record?->image
+                        ? new \Illuminate\Support\HtmlString('<img src="' . e($record->image) . '" style="max-width:200px;">')
+                        : '画像なし'
+                    )
+                    ->visible(fn ($record) => (bool) $record?->image),
             ]);
     }
 
