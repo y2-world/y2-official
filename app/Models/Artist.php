@@ -41,6 +41,13 @@ class Artist extends Model
         return $this->hasMany(Bio::class)->orderBy('year', 'asc');
     }
 
+    public function getYearsAttribute()
+    {
+        $singleYears = $this->singles()->whereNotNull('date')->get()->map(fn($s) => (int) date('Y', strtotime($s->date)));
+        $albumYears = $this->albums()->whereNotNull('date')->get()->map(fn($a) => (int) date('Y', strtotime($a->date)));
+        return $singleYears->merge($albumYears)->unique()->sort()->values()->map(fn($y) => (object)['year' => $y]);
+    }
+
     public function tours()
     {
         return $this->hasMany(Tour::class);

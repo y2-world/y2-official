@@ -3,7 +3,10 @@
     "allow": [
       "Bash(docker exec:*)",
       "Bash(sqlite3:*)",
-      "Bash(docker-compose:*)"
+      "Bash(docker-compose:*)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)"
     ]
   }
 }
