@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Artist;
 use App\Models\Song;
 use App\Models\Album;
 use App\Models\Single;
@@ -17,16 +18,17 @@ class SongController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($artistId)
     {
-        $songs = Song::orderBy('id', 'asc')
+        $artist = Artist::findOrFail($artistId);
+
+        $songs = Song::where('artist_id', $artistId)
+            ->orderBy('id', 'asc')
             ->paginate(10);
         $totalCount = $songs->total();
 
-        $albums = Album::orderBy('id', 'asc')
-            ->get();
-        $bios = Bio::orderBy('id', 'asc')
-            ->get();
+        $albums = Album::where('artist_id', $artistId)->orderBy('id', 'asc')->get();
+        $bios = $artist->bios()->get();
 
         // 検索用候補（曲名 + アーティスト名）
         $suggestions = \App\Models\SetlistSong::query()
@@ -47,7 +49,7 @@ class SongController extends Controller
             ->toArray();
 
         // アーティスト一覧（検索フォーム用）
-        $artists = \App\Artist::orderBy('id', 'asc')->get();
+        $artists = Artist::orderBy('id', 'asc')->get();
 
         // AJAXリクエストの場合はJSON形式で返す
         if (request()->wantsJson() || request()->ajax()) {
@@ -60,7 +62,7 @@ class SongController extends Controller
             ]);
         }
 
-        return view('songs.index', compact('albums', 'songs', 'bios', 'totalCount', 'suggestions', 'artists'));
+        return view('songs.index', compact('albums', 'songs', 'bios', 'totalCount', 'suggestions', 'artists', 'artist'));
     }
 
     /**

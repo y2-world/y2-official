@@ -9,6 +9,7 @@ use App\Models\Album;
 use App\Models\Bio;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -21,7 +22,7 @@ class SongResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Mr.Children Database';
+    protected static ?string $navigationGroup = 'Database';
 
     protected static ?int $navigationSort = 25;
 
@@ -33,13 +34,21 @@ class SongResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Select::make('artist_id')
+                    ->label('アーティスト')
+                    ->options(fn() => \App\Models\Artist::pluck('name', 'id'))
+                    ->required()
+                    ->native(false)
+                    ->searchable()
+                    ->live(),
                 Forms\Components\TextInput::make('title')
                     ->label('タイトル')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Select::make('album_id')
                     ->label('アルバム')
-                    ->options(fn() => \App\Models\Album::query()
+                    ->options(fn(Get $get) => \App\Models\Album::query()
+                        ->when($get('artist_id'), fn($q, $id) => $q->where('artist_id', $id))
                         ->whereNotNull('title')
                         ->where('title', '!=', '')
                         ->orderBy('title')
@@ -50,7 +59,8 @@ class SongResource extends Resource
 
                 Forms\Components\Select::make('single_id')
                     ->label('シングル')
-                    ->options(fn() => \App\Models\Single::query()
+                    ->options(fn(Get $get) => \App\Models\Single::query()
+                        ->when($get('artist_id'), fn($q, $id) => $q->where('artist_id', $id))
                         ->whereNotNull('title')
                         ->where('title', '!=', '')
                         ->orderBy('title')
@@ -61,7 +71,8 @@ class SongResource extends Resource
                 // 年（year）
                 Forms\Components\Select::make('year')
                     ->label('年')
-                    ->options(fn() => \App\Models\Bio::query()
+                    ->options(fn(Get $get) => \App\Models\Bio::query()
+                        ->when($get('artist_id'), fn($q, $id) => $q->where('artist_id', $id))
                         ->whereNotNull('year')
                         ->orderBy('year')
                         ->pluck('year', 'year'))
@@ -81,6 +92,10 @@ class SongResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('artist.name')
+                    ->label('アーティスト')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('id')
                     ->label('ID')
                     ->sortable(),
@@ -103,6 +118,9 @@ class SongResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('artist_id')
+                    ->label('アーティスト')
+                    ->options(fn() => \App\Models\Artist::pluck('name', 'id')),
                 Tables\Filters\SelectFilter::make('album_id')
                     ->relationship('album', 'title')
                     ->label('アルバム')

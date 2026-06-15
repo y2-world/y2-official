@@ -19,8 +19,14 @@ class StatsController extends Controller
     {
         $tab = $request->get('tab', 'personal');
 
-        if ($tab === 'mrchildren') {
-            return $this->getMrChildrenStats();
+        if ($tab === 'database') {
+            $artistId = $request->get('artist_id');
+            if (!$artistId) {
+                $dbArtists = Artist::whereHas('tours')->orderBy('name')->get();
+                $tab = 'database';
+                return view('stats.database', compact('dbArtists', 'tab'));
+            }
+            return $this->getDatabaseStats((int)$artistId);
         }
 
         // Personal stats (参加したライブの履歴)
@@ -311,21 +317,26 @@ class StatsController extends Controller
     }
 
     // =====================================
-    // Mr.Children統計（ツアー情報のみ）
+    // Database統計（ツアー情報）
     // =====================================
 
-    private function getMrChildrenStats()
+    private function getDatabaseStats(int $artistId)
     {
-        $overallStats = $this->getMrChildrenOverallStats();
-        $songStats = $this->getMrChildrenSongStats();
-        $encoreSongStats = $this->getMrChildrenEncoreSongStats();
-        $openingSongStats = $this->getMrChildrenOpeningSongStats();
-        $longestSetlists = $this->getMrChildrenLongestSetlists();
-        $yearStats = $this->getMrChildrenYearStats();
+        $artist = Artist::findOrFail($artistId);
+        $dbArtists = Artist::whereHas('tours')->orderBy('name')->get();
 
-        $tab = 'mrchildren';
+        $overallStats = $this->getDatabaseOverallStats($artistId);
+        $songStats = $this->getDatabaseSongStats($artistId);
+        $encoreSongStats = $this->getDatabaseEncoreSongStats($artistId);
+        $openingSongStats = $this->getDatabaseOpeningSongStats($artistId);
+        $longestSetlists = $this->getDatabaseLongestSetlists($artistId);
+        $yearStats = $this->getDatabaseYearStats($artistId);
 
-        return view('stats.mrchildren', compact(
+        $tab = 'database';
+
+        return view('stats.database', compact(
+            'artist',
+            'dbArtists',
             'overallStats',
             'songStats',
             'encoreSongStats',
@@ -336,38 +347,28 @@ class StatsController extends Controller
         ));
     }
 
-    private function getMrChildrenOverallStats()
+    private function getDatabaseOverallStats(int $artistId)
     {
-        $totalTours = Tour::count();
-        $totalSetlistPatterns = TourSetlist::count();
-        $totalSongs = Song::count();
+        $tourIds = Tour::where('artist_id', $artistId)->pluck('id');
+        $totalTours = $tourIds->count();
+        $totalSetlistPatterns = TourSetlist::whereIn('tour_id', $tourIds)->count();
+        $totalSongs = Song::where('artist_id', $artistId)->count();
 
-        // ツアーで演奏された曲数（ユニーク）
         $uniqueSongIds = [];
-        $tourSetlists = TourSetlist::all();
+        $tourSetlists = TourSetlist::whereIn('tour_id', $tourIds)->get();
         foreach ($tourSetlists as $setlist) {
-            $songs = array_merge(
-                $setlist->setlist ?? [],
-                $setlist->encore ?? []
-            );
-            foreach ($songs as $songData) {
-                if (isset($songData['song']) && is_numeric($songData['song'])) {
-                    $uniqueSongIds[(int)$songData['song']] = true;
+            foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
+                if (isset($s['song']) && is_numeric($s['song'])) {
+                    $uniqueSongIds[(int)$s['song']] = true;
                 }
             }
         }
         $uniqueSongsInTours = count($uniqueSongIds);
 
-        // 平均セットリスト曲数
         $totalSongCount = 0;
-        $setlistCount = 0;
+        $setlistCount = $tourSetlists->count();
         foreach ($tourSetlists as $setlist) {
-            $songs = array_merge(
-                $setlist->setlist ?? [],
-                $setlist->encore ?? []
-            );
-            $totalSongCount += count($songs);
-            $setlistCount++;
+            $totalSongCount += count(array_merge($setlist->setlist ?? [], $setlist->encore ?? []));
         }
         $avgSetlistLength = $setlistCount > 0 ? round($totalSongCount / $setlistCount, 1) : 0;
 
@@ -380,28 +381,18 @@ class StatsController extends Controller
         ];
     }
 
-    private function getMrChildrenSongStats()
+    private function getDatabaseSongStats(int $artistId)
     {
-        // ツアーで演奏された全曲（ツアーごとに1カウント）
-        $tourSetlists = TourSetlist::all();
-        $songTourCounts = []; // [songId => [tourId1, tourId2, ...]]
+        $tourIds = Tour::where('artist_id', $artistId)->pluck('id');
+        $tourSetlists = TourSetlist::whereIn('tour_id', $tourIds)->get();
+        $songTourCounts = [];
 
         foreach ($tourSetlists as $setlist) {
-            $allSongs = array_merge(
-                $setlist->setlist ?? [],
-                $setlist->encore ?? []
-            );
-
-            foreach ($allSongs as $songData) {
-                if (isset($songData['song']) && is_numeric($songData['song'])) {
-                    $songId = (int)$songData['song'];
+            foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
+                if (isset($s['song']) && is_numeric($s['song'])) {
+                    $songId = (int)$s['song'];
                     $tourId = $setlist->tour_id;
-
-                    if (!isset($songTourCounts[$songId])) {
-                        $songTourCounts[$songId] = [];
-                    }
-
-                    // 同じツアーで複数回出ても1カウント
+                    if (!isset($songTourCounts[$songId])) $songTourCounts[$songId] = [];
                     if (!in_array($tourId, $songTourCounts[$songId])) {
                         $songTourCounts[$songId][] = $tourId;
                     }
@@ -409,222 +400,109 @@ class StatsController extends Controller
             }
         }
 
-        // ツアー数をカウント
-        $songPlayCounts = [];
-        foreach ($songTourCounts as $songId => $tourIds) {
-            $songPlayCounts[$songId] = count($tourIds);
-        }
+        $counts = array_map('count', $songTourCounts);
+        arsort($counts);
 
-        arsort($songPlayCounts);
-
-        $songStats = [];
-        foreach ($songPlayCounts as $songId => $count) {
+        $stats = [];
+        foreach ($counts as $songId => $count) {
             $song = Song::find($songId);
-            if ($song) {
-                $songStats[] = [
-                    'song_id' => $songId,
-                    'title' => $song->title,
-                    'count' => $count,
-                ];
-            }
+            if ($song) $stats[] = ['song_id' => $songId, 'title' => $song->title, 'count' => $count];
         }
-
-        return $songStats;
+        return $stats;
     }
 
-    private function getMrChildrenTourStats()
+    private function getDatabaseYearStats(int $artistId)
     {
-        // ツアーごとのセットリストパターン数
-        $tourPatternCounts = TourSetlist::select('tour_id', DB::raw('count(*) as pattern_count'))
-            ->groupBy('tour_id')
-            ->orderBy('pattern_count', 'desc')
-            ->limit(5)
-            ->get();
-
-        $tourStats = [];
-        foreach ($tourPatternCounts as $item) {
-            $tour = Tour::find($item->tour_id);
-            if ($tour) {
-                $tourStats[] = [
-                    'title' => $tour->title,
-                    'pattern_count' => $item->pattern_count,
-                ];
-            }
-        }
-
-        return $tourStats;
-    }
-
-    private function getMrChildrenTourPatternStats()
-    {
-        // 全ツアーのパターン数
-        $tourPatterns = TourSetlist::select('tour_id', DB::raw('count(*) as pattern_count'))
-            ->groupBy('tour_id')
-            ->orderBy('tour_id', 'asc')
-            ->get();
-
-        $tourPatternStats = [];
-        foreach ($tourPatterns as $item) {
-            $tour = Tour::find($item->tour_id);
-            if ($tour) {
-                $tourPatternStats[] = [
-                    'tour_title' => $tour->title,
-                    'pattern_count' => $item->pattern_count,
-                ];
-            }
-        }
-
-        return collect($tourPatternStats);
-    }
-
-    private function getMrChildrenYearStats()
-    {
-        // 年別のツアー数（多い順）
-        $yearStats = Tour::select(DB::raw('YEAR(date1) as year'), DB::raw('count(*) as count'))
+        return Tour::where('artist_id', $artistId)
+            ->select(DB::raw('YEAR(date1) as year'), DB::raw('count(*) as count'))
             ->whereNotNull('date1')
             ->groupBy('year')
             ->orderBy('count', 'desc')
             ->limit(10)
             ->get();
-
-        return $yearStats;
     }
 
-    private function getMrChildrenEncoreSongStats()
+    private function getDatabaseEncoreSongStats(int $artistId)
     {
-        // アンコールで最も演奏された曲（ツアーごとに1カウント）
-        $tourSetlists = TourSetlist::all();
-        $encoreSongTourCounts = []; // [songId => [tourId1, tourId2, ...]]
+        $tourIds = Tour::where('artist_id', $artistId)->pluck('id');
+        $tourSetlists = TourSetlist::whereIn('tour_id', $tourIds)->get();
+        $counts = [];
 
         foreach ($tourSetlists as $setlist) {
-            $encoreSongs = $setlist->encore ?? [];
-
-            foreach ($encoreSongs as $songData) {
-                if (isset($songData['song']) && is_numeric($songData['song'])) {
-                    $songId = (int)$songData['song'];
+            foreach ($setlist->encore ?? [] as $s) {
+                if (isset($s['song']) && is_numeric($s['song'])) {
+                    $songId = (int)$s['song'];
                     $tourId = $setlist->tour_id;
-
-                    if (!isset($encoreSongTourCounts[$songId])) {
-                        $encoreSongTourCounts[$songId] = [];
-                    }
-
-                    // 同じツアーで複数回出ても1カウント
-                    if (!in_array($tourId, $encoreSongTourCounts[$songId])) {
-                        $encoreSongTourCounts[$songId][] = $tourId;
-                    }
+                    if (!isset($counts[$songId])) $counts[$songId] = [];
+                    if (!in_array($tourId, $counts[$songId])) $counts[$songId][] = $tourId;
                 }
             }
         }
 
-        // ツアー数をカウント
-        $encoreSongCounts = [];
-        foreach ($encoreSongTourCounts as $songId => $tourIds) {
-            $encoreSongCounts[$songId] = count($tourIds);
-        }
+        $counts = array_map('count', $counts);
+        arsort($counts);
 
-        arsort($encoreSongCounts);
-
-        $encoreStats = [];
-        foreach (array_slice($encoreSongCounts, 0, 10, true) as $songId => $count) {
+        $stats = [];
+        foreach (array_slice($counts, 0, 10, true) as $songId => $count) {
             $song = Song::find($songId);
-            if ($song) {
-                $encoreStats[] = [
-                    'song_id' => $songId,
-                    'title' => $song->title,
-                    'count' => $count,
-                ];
-            }
+            if ($song) $stats[] = ['song_id' => $songId, 'title' => $song->title, 'count' => $count];
         }
-
-        return $encoreStats;
+        return $stats;
     }
 
-    private function getMrChildrenOpeningSongStats()
+    private function getDatabaseOpeningSongStats(int $artistId)
     {
-        // オープニング曲の統計（ツアーごとに1カウント）
-        $tourSetlists = TourSetlist::all();
-        $openingSongTourCounts = []; // [songId => [tourId1, tourId2, ...]]
+        $tourIds = Tour::where('artist_id', $artistId)->pluck('id');
+        $tourSetlists = TourSetlist::whereIn('tour_id', $tourIds)->get();
+        $counts = [];
 
         foreach ($tourSetlists as $setlist) {
-            $setlistSongs = $setlist->setlist ?? [];
-            if (!empty($setlistSongs)) {
-                $firstSong = $setlistSongs[0];
-                if (isset($firstSong['song']) && is_numeric($firstSong['song'])) {
-                    $songId = (int)$firstSong['song'];
-                    $tourId = $setlist->tour_id;
-
-                    if (!isset($openingSongTourCounts[$songId])) {
-                        $openingSongTourCounts[$songId] = [];
-                    }
-
-                    // 同じツアーで複数回出ても1カウント
-                    if (!in_array($tourId, $openingSongTourCounts[$songId])) {
-                        $openingSongTourCounts[$songId][] = $tourId;
-                    }
-                }
+            $songs = $setlist->setlist ?? [];
+            if (!empty($songs) && isset($songs[0]['song']) && is_numeric($songs[0]['song'])) {
+                $songId = (int)$songs[0]['song'];
+                $tourId = $setlist->tour_id;
+                if (!isset($counts[$songId])) $counts[$songId] = [];
+                if (!in_array($tourId, $counts[$songId])) $counts[$songId][] = $tourId;
             }
         }
 
-        // ツアー数をカウント
-        $openingSongCounts = [];
-        foreach ($openingSongTourCounts as $songId => $tourIds) {
-            $openingSongCounts[$songId] = count($tourIds);
-        }
+        $counts = array_map('count', $counts);
+        arsort($counts);
 
-        arsort($openingSongCounts);
-
-        $openingStats = [];
-        foreach (array_slice($openingSongCounts, 0, 10, true) as $songId => $count) {
+        $stats = [];
+        foreach (array_slice($counts, 0, 10, true) as $songId => $count) {
             $song = Song::find($songId);
-            if ($song) {
-                $openingStats[] = [
-                    'song_id' => $songId,
-                    'title' => $song->title,
-                    'count' => $count,
-                ];
-            }
+            if ($song) $stats[] = ['song_id' => $songId, 'title' => $song->title, 'count' => $count];
         }
-
-        return $openingStats;
+        return $stats;
     }
 
-    private function getMrChildrenLongestSetlists()
+    private function getDatabaseLongestSetlists(int $artistId)
     {
-        // 最も曲数の多いセットリスト
-        $tourSetlists = TourSetlist::all();
-        $setlistLengths = [];
+        $tourIds = Tour::where('artist_id', $artistId)->pluck('id');
+        $tourSetlists = TourSetlist::whereIn('tour_id', $tourIds)->get();
+        $lengths = [];
 
         foreach ($tourSetlists as $setlist) {
-            $songs = array_merge(
-                $setlist->setlist ?? [],
-                $setlist->encore ?? []
-            );
-            $songCount = 0;
-            foreach ($songs as $songData) {
-                if (isset($songData['song']) && is_numeric($songData['song'])) {
-                    // is_dailyが1の曲は除外
-                    if (!isset($songData['is_daily']) || $songData['is_daily'] != 1) {
-                        $songCount++;
-                    }
+            $count = 0;
+            foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
+                if (isset($s['song']) && is_numeric($s['song']) && empty($s['is_daily'])) {
+                    $count++;
                 }
             }
-
-            if ($songCount > 0) {
+            if ($count > 0) {
                 $tour = Tour::find($setlist->tour_id);
-                $setlistLengths[] = [
+                $lengths[] = [
                     'tour_id' => $setlist->tour_id,
                     'tour_title' => $tour ? $tour->title : '不明',
                     'subtitle' => $setlist->subtitle ?? '',
-                    'song_count' => $songCount,
+                    'song_count' => $count,
                 ];
             }
         }
 
-        usort($setlistLengths, function($a, $b) {
-            return $b['song_count'] - $a['song_count'];
-        });
-
-        return array_slice($setlistLengths, 0, 5);
+        usort($lengths, fn($a, $b) => $b['song_count'] - $a['song_count']);
+        return array_slice($lengths, 0, 5);
     }
 
     // =====================================

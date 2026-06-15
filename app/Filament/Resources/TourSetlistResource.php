@@ -6,6 +6,7 @@ use App\Filament\Resources\TourSetlistResource\Pages;
 use App\Models\TourSetlist;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -20,7 +21,7 @@ class TourSetlistResource extends Resource
 
     protected static ?string $modelLabel = 'セットリスト';
 
-    protected static ?string $navigationGroup = 'Mr.Children Database';
+    protected static ?string $navigationGroup = 'Database';
 
     protected static ?int $navigationSort = 21;
 
@@ -30,12 +31,27 @@ class TourSetlistResource extends Resource
             ->schema([
                 Forms\Components\Section::make('基本情報')
                     ->schema([
-                        Forms\Components\Select::make('tour_id')
-                            ->label('タイトル')
-                            ->relationship('tour', 'title', fn($query) => $query->orderBy('id', 'asc'))
+                        Forms\Components\Select::make('_artist_id')
+                            ->label('アーティスト')
+                            ->options(fn() => \App\Models\Artist::orderBy('name')->pluck('name', 'id'))
                             ->searchable()
                             ->native(false)
-                            ->preload()
+                            ->live()
+                            ->afterStateHydrated(function ($state, $set, $record) {
+                                if ($record && $record->tour) {
+                                    $set('_artist_id', $record->tour->artist_id);
+                                }
+                            })
+                            ->dehydrated(false),
+
+                        Forms\Components\Select::make('tour_id')
+                            ->label('ツアー')
+                            ->options(fn(Get $get) => \App\Models\Tour::when(
+                                $get('_artist_id'),
+                                fn($q, $artistId) => $q->where('artist_id', $artistId)
+                            )->orderBy('id', 'asc')->pluck('title', 'id'))
+                            ->searchable()
+                            ->native(false)
                             ->required(),
 
                         Forms\Components\TextInput::make('order_no')
@@ -62,13 +78,19 @@ class TourSetlistResource extends Resource
                                 // 曲名（横いっぱい）
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
-                                    ->options(fn() => \App\Models\Song::orderBy('title')->pluck('title', 'id'))
+                                    ->options(fn(Get $get) => \App\Models\Song::when(
+                                        $get('../../_artist_id'),
+                                        fn($q, $id) => $q->where('artist_id', $id)
+                                    )->orderBy('title')->pluck('title', 'id'))
                                     ->searchable()
                                     ->native(false)
                                     ->required()
                                     ->allowHtml()
-                                    ->getSearchResultsUsing(function (string $search) {
-                                        return \App\Models\Song::where('title', 'like', "%{$search}%")
+                                    ->getSearchResultsUsing(function (string $search, Get $get) {
+                                        return \App\Models\Song::when(
+                                            $get('../../_artist_id'),
+                                            fn($q, $id) => $q->where('artist_id', $id)
+                                        )->where('title', 'like', "%{$search}%")
                                             ->orderBy('title')
                                             ->limit(50)
                                             ->pluck('title', 'id');
@@ -164,13 +186,19 @@ class TourSetlistResource extends Resource
                                 // 曲名
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
-                                    ->options(fn() => \App\Models\Song::orderBy('title')->pluck('title', 'id'))
+                                    ->options(fn(Get $get) => \App\Models\Song::when(
+                                        $get('../../_artist_id'),
+                                        fn($q, $id) => $q->where('artist_id', $id)
+                                    )->orderBy('title')->pluck('title', 'id'))
                                     ->searchable()
                                     ->native(false)
                                     ->required()
                                     ->allowHtml()
-                                    ->getSearchResultsUsing(function (string $search) {
-                                        return \App\Models\Song::where('title', 'like', "%{$search}%")
+                                    ->getSearchResultsUsing(function (string $search, Get $get) {
+                                        return \App\Models\Song::when(
+                                            $get('../../_artist_id'),
+                                            fn($q, $id) => $q->where('artist_id', $id)
+                                        )->where('title', 'like', "%{$search}%")
                                             ->orderBy('title')
                                             ->limit(50)
                                             ->pluck('title', 'id');
@@ -276,6 +304,10 @@ class TourSetlistResource extends Resource
                 Tables\Columns\TextColumn::make('id')
                     ->label('ID')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('tour.artist.name')
+                    ->label('アーティスト')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('tour.title')
                     ->label('タイトル')
                     ->searchable()
@@ -293,6 +325,15 @@ class TourSetlistResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('artist')
+                    ->label('アーティスト')
+                    ->options(fn() => \App\Models\Artist::orderBy('name')->pluck('name', 'id'))
+                    ->query(fn($query, array $data) =>
+                        $data['value']
+                            ? $query->whereHas('tour', fn($q) => $q->where('artist_id', $data['value']))
+                            : $query
+                    )
+                    ->searchable(),
                 Tables\Filters\SelectFilter::make('tour')
                     ->relationship('tour', 'title')
                     ->label('ツアー')

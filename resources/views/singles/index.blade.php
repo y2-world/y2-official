@@ -1,29 +1,29 @@
 @extends('layouts.app')
-@section('title', 'Yuki Official - Singles')
+@section('title', 'Yuki Official - ' . $artist->name . ' Singles')
 @section('content')
     <div class="database-hero database-year-hero">
         <div class="container">
             <h1 class="database-title">Singles</h1>
-            <p class="database-subtitle">すべてのシングルコレクション</p>
+            <p class="database-subtitle">{{ $artist->name }} — すべてのシングルコレクション</p>
 
             <div class="year-navigation">
                 <select class="year-select" name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Discography</option>
-                    <option value="{{ url('/database/songs') }}">Songs</option>
-                    <option value="{{ url('/database/albums') }}">Albums</option>
+                    <option value="{{ route('database.songs', $artist->id) }}">Songs</option>
+                    <option value="{{ route('database.albums', $artist->id) }}">Albums</option>
                 </select>
                 <select class="year-select" name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Live</option>
-                    <option value="{{ url('/database/live') }}">All</option>
-                    <option value="{{ url('/database/live?type=1') }}">Tours</option>
-                    <option value="{{ url('/database/live?type=2') }}">Events</option>
-                    <option value="{{ url('/database/live?type=3') }}">ap bank fes</option>
-                    <option value="{{ url('/database/live?type=4') }}">Solo</option>
+                    <option value="{{ route('database.live', $artist->id) }}">All</option>
+                    <option value="{{ route('database.live', $artist->id) }}?type=1">Tours</option>
+                    <option value="{{ route('database.live', $artist->id) }}?type=2">Events</option>
+                    <option value="{{ route('database.live', $artist->id) }}?type=3">ap bank fes</option>
+                    <option value="{{ route('database.live', $artist->id) }}?type=4">Solo</option>
                 </select>
                 <select class="year-select" name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Years</option>
                     @foreach ($bios as $bio)
-                        <option value="{{ url('/database/years', $bio->year) }}">{{ $bio->year }}</option>
+                        <option value="{{ route('database.biography.year', [$artist->id, $bio->year]) }}">{{ $bio->year }}</option>
                     @endforeach
                 </select>
             </div>
@@ -31,23 +31,23 @@
     </div>
 
     <div class="container-lg database-year-content">
-  <table class="table table-striped">
-      <thead>
-        <tr>
-          <th class="mobile">#</th>
-          <th class="mobile">タイトル</th>
-          <th class="mobile">リリース日</th>
-        </tr>
-      </thead>
-      <tbody id="singles-container">
-          @include('singles._list', ['singles' => $singles])
-      </tbody>
-    </table>
-  <div class="pagination" id="pagination-links" style="display: none;">
-    {!! $singles->onEachSide(5)->links() !!}
-  </div>
-  <br>
-</div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="mobile">#</th>
+                    <th class="mobile">タイトル</th>
+                    <th class="mobile">リリース日</th>
+                </tr>
+            </thead>
+            <tbody id="singles-container">
+                @include('singles._list', ['singles' => $singles])
+            </tbody>
+        </table>
+        <div class="pagination" id="pagination-links" style="display: none;">
+            {!! $singles->onEachSide(5)->links() !!}
+        </div>
+        <br>
+    </div>
 @endsection
 
 @section('page-script')
@@ -64,7 +64,6 @@
                     nextPageUrl: nextUrl
                 });
             @else
-                // ページがない場合はページネーションを表示
                 const pagination = document.getElementById('pagination-links');
                 if (pagination) {
                     pagination.style.display = 'block';

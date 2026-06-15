@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Tour extends Model
 {
     protected $fillable = [
+        'artist_id',
         'title',
         'type',
         'date1',
@@ -19,6 +20,11 @@ class Tour extends Model
     protected $casts = [
         // setlist1~6 は削除済み。tour_setlistsテーブルで管理
     ];
+
+    public function artist()
+    {
+        return $this->belongsTo(Artist::class);
+    }
 
     public function songs()
     {

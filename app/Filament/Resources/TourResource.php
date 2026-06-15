@@ -23,7 +23,7 @@ class TourResource extends Resource
 
     protected static ?string $modelLabel = 'ツアー・ライブ情報';
 
-    protected static ?string $navigationGroup = 'Mr.Children Database';
+    protected static ?string $navigationGroup = 'Database';
 
     protected static ?int $navigationSort = 20;
 
@@ -33,6 +33,13 @@ class TourResource extends Resource
             ->schema([
                 Forms\Components\Section::make('基本情報')
                     ->schema([
+                        Forms\Components\Select::make('artist_id')
+                            ->label('アーティスト')
+                            ->options(fn() => \App\Models\Artist::pluck('name', 'id'))
+                            ->required()
+                            ->native(false)
+                            ->searchable()
+                            ->columnSpanFull(),
                         TextInput::make('title')
                             ->label('タイトル')
                             ->required()
@@ -124,6 +131,10 @@ class TourResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('artist.name')
+                    ->label('アーティスト')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('id')
                     ->label('ID')
                     ->sortable(),
@@ -152,6 +163,9 @@ class TourResource extends Resource
                     ->sortable(),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('artist_id')
+                    ->label('アーティスト')
+                    ->options(fn() => \App\Models\Artist::pluck('name', 'id')),
                 Tables\Filters\SelectFilter::make('type')
                     ->label('タイプ')
                     ->options([

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Single extends Model
 {
     protected $fillable = [
+        'artist_id',
         'single_id',
         'date',
         'title',
@@ -29,7 +30,13 @@ class Single extends Model
         $this->attributes['tracklist'] = json_encode(array_values($value));
     }
 
-    public function songs(){
+    public function artist()
+    {
+        return $this->belongsTo(Artist::class);
+    }
+
+    public function songs()
+    {
         return $this->hasMany('App\Models\Song');
     }
 }

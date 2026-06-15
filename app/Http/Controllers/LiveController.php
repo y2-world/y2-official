@@ -2,56 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Artist;
 use App\Models\Song;
-use App\Models\Bio;
 use App\Models\Tour;
 use App\Models\TourSetlist;
 
 class LiveController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index($artistId)
     {
-
+        $artist = Artist::findOrFail($artistId);
         $type = request()->input('type');
 
-        // クエリビルダーを生成し、セットリストを取得する
-        $liveQuery = Tour::orderBy('date1', 'desc');
-    
+        $liveQuery = Tour::where('artist_id', $artistId)->orderBy('date1', 'desc');
+
         if ($type === '1') {
-            // live_typeが1の場合はfesカラムが0のセットリストを取得する
             $liveQuery->whereIn('type', [0, 1]);
         } elseif ($type === '2') {
-            // live_typeが2の場合はfesカラムが1か2のセットリストを取得する
             $liveQuery->where('type', 2);
         } elseif ($type === '3') {
-            // live_typeが2の場合はfesカラムが1か2のセットリストを取得する
             $liveQuery->where('type', 3);
         } elseif ($type === '4') {
-            // live_typeが2の場合はfesカラムが1か2のセットリストを取得する
             $liveQuery->where('type', 4);
         }
 
-        $bios = Bio::orderBy('id', 'asc')
-        ->get();
-        $songs = Song::orderBy('id', 'asc')
-        ->get();
-    
-        // ページネーションを適用してセットリストを取得する
+        $bios = $artist->bios()->get();
         $tours = $liveQuery->paginate(10);
         $totalCount = $tours->total();
 
-        $bios = Bio::orderBy('id', 'asc')
-        ->get();
-        $songs = Song::orderBy('id', 'asc')
-        ->get();
-
-        // AJAXリクエストの場合はJSON形式で返す
         if (request()->wantsJson() || request()->ajax()) {
             $html = view('live._list', compact('tours', 'totalCount', 'type'))->render();
             return response()->json([
@@ -62,79 +40,18 @@ class LiveController extends Controller
             ]);
         }
 
-        return view('live.index', compact('tours', 'bios', 'songs', 'type', 'totalCount'));
+        return view('live.index', compact('tours', 'bios', 'type', 'totalCount', 'artist'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        $tours = Tour::find($id);
-        $songs = Song::orderBy('id', 'asc')
-        ->get();
+        $tours = Tour::findOrFail($id);
+        $artist = $tours->artist;
+        $songs = Song::orderBy('id', 'asc')->get();
         $tourSetlists = TourSetlist::where('tour_id', $id)->orderBy('order_no', 'asc')->get();
-        $previous = Tour::where('id', '<', $tours->id)->orderBy('id', 'desc')->first();
-        $next = Tour::where('id', '>', $tours->id)->orderBy('id')->first();
-        
-        return view('live.show', compact('songs', 'previous', 'next', 'tours', 'tourSetlists'));
-    }
+        $previous = Tour::where('artist_id', $tours->artist_id)->where('id', '<', $tours->id)->orderBy('id', 'desc')->first();
+        $next = Tour::where('artist_id', $tours->artist_id)->where('id', '>', $tours->id)->orderBy('id')->first();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return view('live.show', compact('songs', 'previous', 'next', 'tours', 'tourSetlists', 'artist'));
     }
 }

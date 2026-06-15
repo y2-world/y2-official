@@ -45,7 +45,7 @@
                         @if (isset($data['id']))
                             <a href="{{ url('/database/songs', $data['id']) }}"
                                 style="color: #667eea; text-decoration: none; font-weight: 500; transition: color 0.3s ease;">
-                                {{ $data['exception'] ?? $songs[$data['id'] - 1]['title'] }}
+                                {{ $data['exception'] ?? ($songs[$data['id']]->title ?? '') }}
                             </a>
                         @else
                             <span style="color: #718096;">{{ $data['exception'] }}</span>

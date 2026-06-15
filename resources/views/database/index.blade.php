@@ -3,102 +3,34 @@
 @section('content')
     <div class="database-hero">
         <div class="container">
-            <h1 class="database-title" style="margin-bottom: 20px; text-align: center;">Mr.Children Database</h1>
-
-            {{-- 検索フォーム（SP表示） --}}
-            <div class="sp" id="spSearchFormDatabase" style="margin-top: 10px;">
-                <div>
-                    @livewire('database-song-search')
-                </div>
-            </div>
-
-            {{-- 検索フォーム（PC表示のみ） --}}
-            <div class="database-search pc" style="margin-top: 40px;">
-                @livewire('database-song-search')
-            </div>
+            <h1 class="database-title" style="margin-bottom: 20px; text-align: center;">Database</h1>
+            <p class="database-subtitle" style="text-align: center;">アーティストを選択してください</p>
         </div>
     </div>
 
     <div class="container database-content">
-        <div class="row">
-            <!-- Live Card -->
-            <div class="col-md-4 mb-4">
-                <div class="database-card">
-                    <div class="card-icon">
-                        <i class="fa-solid fa-guitar"></i>
-                    </div>
-                    <h3 class="card-title">Live</h3>
-                    <p class="card-description">すべてのツアー、イベント、公演情報</p>
-                    <div class="card-links">
-                        <a href="{{ url('/database/live') }}" class="database-link">
-                            <span>All</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                        <a href="{{ url('/database/live?type=1') }}" class="database-link">
-                            <span>Tours</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                        <a href="{{ url('/database/live?type=2') }}" class="database-link">
-                            <span>Events</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                        <a href="{{ url('/database/live?type=3') }}" class="database-link">
-                            <span>ap bank fes</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                        <a href="{{ url('/database/live?type=4') }}" class="database-link">
-                            <span>Solo</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                    </div>
+        <div class="row justify-content-center">
+            @foreach ($artists as $artist)
+                <div class="col-md-4 mb-4">
+                    <a href="{{ route('database.artist', $artist->id) }}" class="text-decoration-none">
+                        <div class="database-card" style="cursor: pointer;">
+                            <div class="card-icon">
+                                <i class="fa-solid fa-music"></i>
+                            </div>
+                            <h3 class="card-title">{{ $artist->name }}</h3>
+                            @if ($artist->kana)
+                                <p class="card-description">{{ $artist->kana }}</p>
+                            @endif
+                            <div class="card-links" style="margin-top: 12px;">
+                                <span class="database-link">
+                                    <span>Database を見る</span>
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-            </div>
-
-            <!-- Discography Card -->
-            <div class="col-md-4 mb-4">
-                <div class="database-card">
-                    <div class="card-icon">
-                        <i class="fa-solid fa-music"></i>
-                    </div>
-                    <h3 class="card-title">Discography</h3>
-                    <p class="card-description">すべての楽曲、シングル、アルバムを閲覧</p>
-                    <div class="card-links">
-                        <a href="{{ url('/database/songs') }}" class="database-link">
-                            <span>Songs</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                        <a href="{{ url('/database/singles') }}" class="database-link">
-                            <span>Singles</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                        <a href="{{ url('/database/albums') }}" class="database-link">
-                            <span>Albums</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Biography Card -->
-            <div class="col-md-4 mb-4">
-                <div class="database-card">
-                    <div class="card-icon">
-                        <i class="fa-solid fa-book"></i>
-                    </div>
-                    <h3 class="card-title">Biography</h3>
-                    <p class="card-description">年代ごとの歴史を探索</p>
-                    <div class="card-links card-links-grid">
-                        @foreach ($bios as $bio)
-                            <a href="{{ url('/database/years', $bio->year) }}" class="database-link-year">
-                                {{ $bio->year }}
-                            </a>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
-@endsection
-
-@section('page-script')
 @endsection

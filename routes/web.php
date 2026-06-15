@@ -8,6 +8,7 @@ use App\Http\Controllers\SingleController;
 use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\LiveController;
 use App\Http\Controllers\BioController;
+use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\LyricController;
@@ -38,25 +39,47 @@ Route::prefix('setlists')->group(function () {
     // 他の年関連のルートもここに追加する
 });
 Route::prefix('database')->group(function () {
-    Route::get('songs', [SongController::class, 'index']);
+    // アーティスト選択トップ
+    Route::get('/', [DatabaseController::class, 'index']);
+
+    // アーティスト別DB（新URL構造）
+    Route::prefix('artists/{artistId}')->group(function () {
+        Route::get('/', [DatabaseController::class, 'show'])->name('database.artist');
+        Route::get('songs', [SongController::class, 'index'])->name('database.songs');
+        Route::get('singles', [SingleController::class, 'index'])->name('database.singles');
+        Route::get('albums', [AlbumController::class, 'index'])->name('database.albums');
+        Route::get('live', [LiveController::class, 'index'])->name('database.live');
+        Route::get('biography', [BioController::class, 'index'])->name('database.biography');
+        Route::get('biography/{year}', [BioController::class, 'show'])->name('database.biography.year');
+    });
+
+    // 個別詳細ページ（アーティスト問わず同一URL）
     Route::get('songs/{id}', [SongController::class, 'show'])->name('songs.show');
-    // 他のアーティスト関連のルートもここに追加する
-
-    Route::get('singles', [SingleController::class, 'index']);
     Route::get('singles/{id}', [SingleController::class, 'show'])->name('singles.show');
-    // 他のアーティスト関連のルートもここに追加する
-
-    Route::get('albums', [AlbumController::class, 'index'])->name('albums.index');
     Route::get('albums/{id}', [AlbumController::class, 'show'])->name('albums.show');
-    // 他のアーティスト関連のルートもここに追加する
-
-    Route::get('live', [LiveController::class, 'index']);
     Route::get('live/{id}', [LiveController::class, 'show'])->name('live.show');
-    // 他の年関連のルートもここに追加する
 
-    Route::get('/', [BioController::class, 'index']);
-    Route::get('years/{year}', [BioController::class, 'show']);
-    // 他の年関連のルートもここに追加する
+    // 旧URL → Mr.Children のアーティストIDへリダイレクト（後方互換）
+    Route::get('songs', function () {
+        $id = \App\Models\Artist::where('name', 'Mr.Children')->value('id');
+        return redirect("/database/artists/{$id}/songs");
+    });
+    Route::get('singles', function () {
+        $id = \App\Models\Artist::where('name', 'Mr.Children')->value('id');
+        return redirect("/database/artists/{$id}/singles");
+    });
+    Route::get('albums', function () {
+        $id = \App\Models\Artist::where('name', 'Mr.Children')->value('id');
+        return redirect("/database/artists/{$id}/albums");
+    })->name('albums.index');
+    Route::get('live', function () {
+        $id = \App\Models\Artist::where('name', 'Mr.Children')->value('id');
+        return redirect("/database/artists/{$id}/live");
+    });
+    Route::get('years/{year}', function ($year) {
+        $id = \App\Models\Artist::where('name', 'Mr.Children')->value('id');
+        return redirect("/database/artists/{$id}/biography/{$year}");
+    });
 });
 
 

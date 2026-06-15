@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Album extends Model
 {
     protected $fillable = [
+        'artist_id',
         'album_id',
         'date',
         'title',
@@ -19,9 +20,14 @@ class Album extends Model
         'tracklist' =>'json',
     ];
 
+    public function artist()
+    {
+        return $this->belongsTo(Artist::class);
+    }
+
     public function songs()
     {
-        return $this->hasMany('App\Models\Song'); 
+        return $this->hasMany('App\Models\Song');
     }
 
     public function getSongs()

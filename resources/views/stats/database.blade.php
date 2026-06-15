@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Mr.Children Statistics')
-@section('og_title', 'Mr.Children Statistics - Yuki Official')
-@section('og_description', 'Mr.Children setlist statistics and analytics')
+@section('title', isset($artist) ? $artist->name . ' Statistics' : 'Database Statistics')
+@section('og_title', isset($artist) ? $artist->name . ' Statistics - Yuki Official' : 'Database Statistics - Yuki Official')
+@section('og_description', isset($artist) ? $artist->name . ' setlist statistics and analytics' : 'Database statistics and analytics')
 
 @section('content')
 <div class="stats-wrapper">
@@ -11,7 +11,7 @@
             <div class="col-xl-10">
                 <div class="element js-fadein">
                     <h1 class="stats-title">Statistics</h1>
-                    <p class="stats-subtitle">Mr.Children セットリスト統計</p>
+                    <p class="stats-subtitle">{{ isset($artist) ? $artist->name . ' セットリスト統計' : 'Database' }}</p>
 
                     <!-- Tab Navigation -->
                     <div class="stats-tabs">
@@ -19,12 +19,26 @@
                            class="stats-tab {{ $tab === 'personal' ? 'active' : '' }}">
                             <i class="fas fa-user"></i> Personal
                         </a>
-                        <a href="{{ route('stats.index', ['tab' => 'mrchildren']) }}"
-                           class="stats-tab {{ $tab === 'mrchildren' ? 'active' : '' }}">
-                            <i class="fas fa-database"></i> Mr.Children
+                        <a href="{{ route('stats.index', ['tab' => 'database']) }}"
+                           class="stats-tab {{ $tab === 'database' ? 'active' : '' }}">
+                            <i class="fas fa-database"></i> Database
                         </a>
                     </div>
 
+                    <!-- Artist Selector -->
+                    <div style="margin-bottom: 24px;">
+                        <select onchange="location.href=this.value" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: inherit; padding: 6px 12px; border-radius: 6px; cursor: pointer;">
+                            <option value="" disabled {{ !isset($artist) ? 'selected' : '' }}>アーティストを選択</option>
+                            @foreach($dbArtists as $a)
+                                <option value="{{ route('stats.index', ['tab' => 'database', 'artist_id' => $a->id]) }}"
+                                    {{ isset($artist) && $a->id === $artist->id ? 'selected' : '' }}>
+                                    {{ $a->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    @isset($artist)
                     <!-- Overall Stats Cards -->
                     <div class="row stats-cards">
                         <div class="col-md-3 col-sm-6 mb-4">
@@ -326,6 +340,8 @@
             <br>
         </div>
     </div>
+    @endisset
+
 </div>
 
 <script>

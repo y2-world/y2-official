@@ -19,9 +19,9 @@
                            class="stats-tab {{ $tab === 'personal' ? 'active' : '' }}">
                             <i class="fas fa-user"></i> Personal
                         </a>
-                        <a href="{{ route('stats.index', ['tab' => 'mrchildren']) }}"
-                           class="stats-tab {{ $tab === 'mrchildren' ? 'active' : '' }}">
-                            <i class="fas fa-database"></i> Mr.Children
+                        <a href="{{ route('stats.index', ['tab' => 'database']) }}"
+                           class="stats-tab {{ $tab === 'database' ? 'active' : '' }}">
+                            <i class="fas fa-database"></i> Database
                         </a>
                     </div>
 

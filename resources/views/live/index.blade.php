@@ -1,38 +1,38 @@
 @extends('layouts.app')
-@section('title', 'Yuki Official - Live')
+@section('title', 'Yuki Official - ' . $artist->name . ' Live')
 @section('content')
     <div class="database-hero database-year-hero">
         <div class="container">
             @if (request('type') == 1)
                 <h1 class="database-title">Tours</h1>
-                <p class="database-subtitle">すべてのツアー情報</p>
+                <p class="database-subtitle">{{ $artist->name }} — すべてのツアー情報</p>
             @elseif(request('type') == 2)
                 <h1 class="database-title">Events</h1>
-                <p class="database-subtitle">すべてのイベント情報</p>
+                <p class="database-subtitle">{{ $artist->name }} — すべてのイベント情報</p>
             @elseif(request('type') == 3)
                 <h1 class="database-title">ap bank fes</h1>
-                <p class="database-subtitle">ap bank fes出演履歴</p>
+                <p class="database-subtitle">{{ $artist->name }} — ap bank fes出演履歴</p>
             @elseif(request('type') == 4)
                 <h1 class="database-title">Solo</h1>
-                <p class="database-subtitle">すべてのソロ活動</p>
+                <p class="database-subtitle">{{ $artist->name }} — すべてのソロ活動</p>
             @else
                 <h1 class="database-title">Live</h1>
-                <p class="database-subtitle">すべてのライブ情報</p>
+                <p class="database-subtitle">{{ $artist->name }} — すべてのライブ情報</p>
             @endif
 
             <div class="year-navigation">
                 <select class="year-select" name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Live</option>
-                    <option value="{{ url('/database/live') }}">All</option>
-                    <option value="{{ url('/database/live?type=1') }}">Tours</option>
-                    <option value="{{ url('/database/live?type=2') }}">Events</option>
-                    <option value="{{ url('/database/live?type=3') }}">ap bank fes</option>
-                    <option value="{{ url('/database/live?type=4') }}">Solo</option>
+                    <option value="{{ route('database.live', $artist->id) }}">All</option>
+                    <option value="{{ route('database.live', $artist->id) }}?type=1">Tours</option>
+                    <option value="{{ route('database.live', $artist->id) }}?type=2">Events</option>
+                    <option value="{{ route('database.live', $artist->id) }}?type=3">ap bank fes</option>
+                    <option value="{{ route('database.live', $artist->id) }}?type=4">Solo</option>
                 </select>
                 <select class="year-select" name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Years</option>
                     @foreach ($bios as $bio)
-                        <option value="{{ url('/database/years', $bio->year) }}">{{ $bio->year }}</option>
+                        <option value="{{ route('database.biography.year', [$artist->id, $bio->year]) }}">{{ $bio->year }}</option>
                     @endforeach
                 </select>
             </div>
@@ -74,7 +74,6 @@
                     nextPageUrl: nextUrl
                 });
             @else
-                // ページがない場合はページネーションを表示
                 const pagination = document.getElementById('pagination-links');
                 if (pagination) {
                     pagination.style.display = 'block';

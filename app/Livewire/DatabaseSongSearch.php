@@ -9,24 +9,21 @@ class DatabaseSongSearch extends Component
 {
     public $search = '';
     public $songs = [];
+    public $artistId = null;
 
-    public function mount()
+    public function mount($artistId = null)
     {
+        $this->artistId = $artistId;
         $this->loadInitialSongs();
     }
 
     public function loadInitialSongs()
     {
-        $this->songs = Song::orderBy('title')
+        $this->songs = Song::when($this->artistId, fn($q) => $q->where('artist_id', $this->artistId))
+            ->orderBy('title')
             ->limit(10)
             ->get()
-            ->map(function ($song) {
-                return [
-                    'id' => $song->id,
-                    'title' => $song->title,
-                    'artist' => null,
-                ];
-            })
+            ->map(fn($song) => ['id' => $song->id, 'title' => $song->title])
             ->toArray();
     }
 
@@ -37,19 +34,14 @@ class DatabaseSongSearch extends Component
             return;
         }
 
-        $escapedQuery = str_replace(['%', '_'], ['\%', '\_'], $this->search);
+        $escaped = str_replace(['%', '_'], ['\%', '\_'], $this->search);
 
-        $this->songs = Song::whereRaw('LOWER(title) LIKE LOWER(?)', [$escapedQuery . '%'])
+        $this->songs = Song::when($this->artistId, fn($q) => $q->where('artist_id', $this->artistId))
+            ->whereRaw('LOWER(title) LIKE LOWER(?)', [$escaped . '%'])
             ->orderBy('title')
             ->limit(10)
             ->get()
-            ->map(function ($song) {
-                return [
-                    'id' => $song->id,
-                    'title' => $song->title,
-                    'artist' => null,
-                ];
-            })
+            ->map(fn($song) => ['id' => $song->id, 'title' => $song->title])
             ->toArray();
     }
 

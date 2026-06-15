@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Yuki Official - ' . $bio->year)
+@section('title', 'Yuki Official - ' . $artist->name . ' ' . $bio->year)
 @section('content')
     <div class="database-hero database-year-hero">
         <div class="container">
@@ -13,21 +13,21 @@
                 </button>
                 <select class="year-select" name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Discography</option>
-                    <option value="{{ url('/database/singles') }}">Singles</option>
-                    <option value="{{ url('/database/albums') }}">Albums</option>
+                    <option value="{{ route('database.singles', $artist->id) }}">Singles</option>
+                    <option value="{{ route('database.albums', $artist->id) }}">Albums</option>
                 </select>
                 <select class="year-select" name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Live</option>
-                    <option value="{{ url('/database/live') }}">All</option>
-                    <option value="{{ url('/database/live?type=1') }}">Tours</option>
-                    <option value="{{ url('/database/live?type=2') }}">Events</option>
-                    <option value="{{ url('/database/live?type=3') }}">ap bank fes</option>
-                    <option value="{{ url('/database/live?type=4') }}">Solo</option>
+                    <option value="{{ route('database.live', $artist->id) }}">All</option>
+                    <option value="{{ route('database.live', $artist->id) }}?type=1">Tours</option>
+                    <option value="{{ route('database.live', $artist->id) }}?type=2">Events</option>
+                    <option value="{{ route('database.live', $artist->id) }}?type=3">ap bank fes</option>
+                    <option value="{{ route('database.live', $artist->id) }}?type=4">Solo</option>
                 </select>
                 <select class="year-select" name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Years</option>
-                    @foreach ($bios as $bio)
-                        <option value="{{ url('database/years', $bio->year) }}">{{ $bio->year }}</option>
+                    @foreach ($bios as $b)
+                        <option value="{{ route('database.biography.year', [$artist->id, $b->year]) }}">{{ $b->year }}</option>
                     @endforeach
                 </select>
             </div>

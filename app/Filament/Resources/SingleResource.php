@@ -20,7 +20,7 @@ class SingleResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Mr.Children Database';
+    protected static ?string $navigationGroup = 'Database';
 
     protected static ?int $navigationSort = 23;
 
@@ -32,6 +32,12 @@ class SingleResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Select::make('artist_id')
+                    ->label('アーティスト')
+                    ->options(fn() => \App\Models\Artist::pluck('name', 'id'))
+                    ->required()
+                    ->native(false)
+                    ->searchable(),
                 Forms\Components\TextInput::make('single_id')
                     ->label('シングルID')
                     ->numeric(),
@@ -101,6 +107,10 @@ class SingleResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('artist.name')
+                    ->label('アーティスト')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('single_id')
                     ->label('シングルID')
                     ->numeric()
@@ -126,6 +136,9 @@ class SingleResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('artist_id')
+                    ->label('アーティスト')
+                    ->options(fn() => \App\Models\Artist::pluck('name', 'id')),
                 Tables\Filters\TernaryFilter::make('download')
                     ->label('種別')
                     ->placeholder('すべて')

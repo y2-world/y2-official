@@ -24,7 +24,7 @@
                   @if(isset($data['exception']))
                   <li><a href="{{ url('/database/songs', $data['id']) }}" style="color: #667eea; text-decoration: none; font-weight: 500; transition: color 0.3s ease;">{{ $data['exception']}}</a></li>
                   @else
-                  <li><a href="{{ url('/database/songs', $data['id']) }}" style="color: #667eea; text-decoration: none; font-weight: 500; transition: color 0.3s ease;">{{ $songs[$data['id'] - 1]['title'] }}</a></li>
+                  <li><a href="{{ url('/database/songs', $data['id']) }}" style="color: #667eea; text-decoration: none; font-weight: 500; transition: color 0.3s ease;">{{ $songs[$data['id']]->title ?? '' }}</a></li>
                   @endif
                 @else
                   <li style="color: #718096;">{{ $data['exception'] }}</li>
