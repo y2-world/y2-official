@@ -30,7 +30,24 @@ class BioController extends Controller
         $singles = Single::where('artist_id', $artistId)->orderBy('id', 'asc')->get();
         $albums = Album::where('artist_id', $artistId)->orderBy('id', 'asc')->get();
         $bios = Bio::where('artist_id', $artistId)->orderBy('year', 'asc')->get();
-        $songs = Song::where('artist_id', $artistId)->where('year', $bio->year)->orderBy('id', 'asc')->get();
+        // シングルに収録されている曲はシングルのリリース年で判定
+        $singleSongIds = collect();
+        Single::where('artist_id', $artistId)->whereYear('date', $year)->get()->each(function ($single) use (&$singleSongIds) {
+            $singleSongIds = $singleSongIds->merge(collect($single->tracklist ?? [])->pluck('id'));
+        });
+        // 全シングルに収録されている曲IDを収集（アルバムの絞り込みに使用）
+        $allSingleSongIds = collect();
+        Single::where('artist_id', $artistId)->get()->each(function ($single) use (&$allSingleSongIds) {
+            $allSingleSongIds = $allSingleSongIds->merge(collect($single->tracklist ?? [])->pluck('id'));
+        });
+        // アルバムにのみ収録されている曲はアルバムのリリース年で判定
+        $albumSongIds = collect();
+        Album::where('artist_id', $artistId)->where('best', false)->whereYear('date', $year)->get()->each(function ($album) use (&$albumSongIds, $allSingleSongIds) {
+            $ids = collect($album->tracklist ?? [])->pluck('id')->filter()->map(fn($id) => (string)$id);
+            $albumSongIds = $albumSongIds->merge($ids->diff($allSingleSongIds->map(fn($id) => (string)$id)));
+        });
+        $songIds = $singleSongIds->merge($albumSongIds)->unique()->filter()->values();
+        $songs = Song::where('artist_id', $artistId)->whereIn('id', $songIds)->orderBy('id', 'asc')->get();
 
         $tours = Tour::where('artist_id', $artistId)
             ->whereRaw('YEAR(date1) = ? OR YEAR(date2) = ?', [$year, $year])

@@ -45,42 +45,6 @@ class SongResource extends Resource
                     ->label('タイトル')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('album_id')
-                    ->label('アルバム')
-                    ->options(fn(Get $get) => \App\Models\Album::query()
-                        ->when($get('artist_id'), fn($q, $id) => $q->where('artist_id', $id))
-                        ->whereNotNull('title')
-                        ->where('title', '!=', '')
-                        ->orderBy('title')
-                        ->pluck('title', 'id'))
-                    ->searchable()
-                    ->native(false)
-                    ->nullable(),
-
-                Forms\Components\Select::make('single_id')
-                    ->label('シングル')
-                    ->options(fn(Get $get) => \App\Models\Single::query()
-                        ->when($get('artist_id'), fn($q, $id) => $q->where('artist_id', $id))
-                        ->whereNotNull('title')
-                        ->where('title', '!=', '')
-                        ->orderBy('title')
-                        ->pluck('title', 'id'))
-                    ->searchable()
-                    ->native(false)
-                    ->nullable(),
-                // 年（year）
-                Forms\Components\Select::make('year')
-                    ->label('年')
-                    ->options(fn(Get $get) => \App\Models\Bio::query()
-                        ->when($get('artist_id'), fn($q, $id) => $q->where('artist_id', $id))
-                        ->whereNotNull('year')
-                        ->orderBy('year')
-                        ->pluck('year', 'year'))
-                    ->searchable()
-                    ->native(false)
-                    ->required()
-                    ->columnSpan(1),
-
                 Forms\Components\Textarea::make('text')
                     ->label('説明')
                     ->rows(5)
@@ -102,12 +66,6 @@ class SongResource extends Resource
                 Tables\Columns\TextColumn::make('title')
                     ->label('タイトル')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('album.title')
-                    ->label('アルバム名')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('single.title')
-                    ->label('シングル名')
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y.m.d H:i')
                     ->sortable()
@@ -121,14 +79,6 @@ class SongResource extends Resource
                 Tables\Filters\SelectFilter::make('artist_id')
                     ->label('アーティスト')
                     ->options(fn() => \App\Models\Artist::pluck('name', 'id')),
-                Tables\Filters\SelectFilter::make('album_id')
-                    ->relationship('album', 'title')
-                    ->label('アルバム')
-                    ->searchable(),
-                Tables\Filters\SelectFilter::make('single_id')
-                    ->relationship('single', 'title')
-                    ->label('シングル')
-                    ->searchable(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

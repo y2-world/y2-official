@@ -16,19 +16,22 @@
             <h1 class="database-title pc" style="margin-bottom: 20px;">{{ $songs->title }}</h1>
 
             <div style="font-size: 1rem; color: rgba(255, 255, 255, 0.9); line-height: 1.8;">
-                @if (isset($songs->single->title))
+                @php
+                    $single = $songs->singleFromTracklist;
+                    $album = $songs->albumFromTracklist;
+                @endphp
+                @if ($single)
                     <div style="margin-bottom: 8px;">
                         <strong>Single:</strong>
-                        <a href="{{ route('singles.show', $songs->single_id) }}"
+                        <a href="{{ route('singles.show', $single->id) }}"
                             style="color: white; text-decoration: underline;">
-                            {{ $songs->single->title }}
+                            {{ $single->title }}
                         </a>
-                        @if (isset($songs->single->date))
-                            <br><strong>Release:</strong> {{ date('Y.m.d', strtotime($songs->single->date)) }}
+                        @if ($single->date)
+                            <br><strong>Release:</strong> {{ date('Y.m.d', strtotime($single->date)) }}
                         @endif
                     </div>
                 @endif
-                @php $album = $songs->albumFromTracklist; @endphp
                 @if ($album)
                     <div style="margin-bottom: 8px;">
                         <strong>Album:</strong>
