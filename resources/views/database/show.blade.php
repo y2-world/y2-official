@@ -21,8 +21,10 @@
                     <option value="{{ route('database.live', $artist->id) }}">All</option>
                     <option value="{{ route('database.live', $artist->id) }}?type=1">Tours</option>
                     <option value="{{ route('database.live', $artist->id) }}?type=2">Events</option>
+                    @if($artist->name === 'Mr.Children')
                     <option value="{{ route('database.live', $artist->id) }}?type=3">ap bank fes</option>
                     <option value="{{ route('database.live', $artist->id) }}?type=4">Solo</option>
+                    @endif
                 </select>
                 <select class="year-select" name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Years</option>

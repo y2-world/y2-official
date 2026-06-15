@@ -42,6 +42,7 @@
                             <span>Events</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
+                        @if($artist->name === 'Mr.Children')
                         <a href="{{ route('database.live', $artist->id) }}?type=3" class="database-link">
                             <span>ap bank fes</span>
                             <i class="fa-solid fa-arrow-right"></i>
@@ -50,6 +51,7 @@
                             <span>Solo</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
+                        @endif
                     </div>
                 </div>
             </div>
