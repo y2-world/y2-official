@@ -28,15 +28,16 @@
                         @endif
                     </div>
                 @endif
-                @if (isset($songs->album->title))
+                @php $album = $songs->albumFromTracklist; @endphp
+                @if ($album)
                     <div style="margin-bottom: 8px;">
                         <strong>Album:</strong>
-                        <a href="{{ route('albums.show', $songs->album_id) }}"
+                        <a href="{{ route('albums.show', $album->id) }}"
                             style="color: white; text-decoration: underline;">
-                            {{ $songs->album->title }}
+                            {{ $album->title }}
                         </a>
-                        @if (isset($songs->album->date))
-                            <br><strong>Release:</strong> {{ date('Y.m.d', strtotime($songs->album->date)) }}
+                        @if ($album->date)
+                            <br><strong>Release:</strong> {{ date('Y.m.d', strtotime($album->date)) }}
                         @endif
                     </div>
                 @else

@@ -40,6 +40,17 @@ class Song extends Model
         return $this->belongsTo(Album::class, 'album_id');
     }
 
+    public function getAlbumFromTracklistAttribute()
+    {
+        $songId = $this->id;
+        return Album::where('artist_id', $this->artist_id)
+            ->get()
+            ->first(function ($album) use ($songId) {
+                $tracklist = $album->tracklist ?? [];
+                return collect($tracklist)->pluck('id')->contains((string) $songId);
+            });
+    }
+
     public function single()
     {
         return $this->belongsTo(Single::class, 'single_id');

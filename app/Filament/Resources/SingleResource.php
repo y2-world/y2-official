@@ -65,7 +65,7 @@ class SingleResource extends Resource
                         // 曲名（常に表示）
                         Forms\Components\Select::make('id')
                             ->label('曲名')
-                            ->options(fn() => Song::pluck('title', 'id'))
+                            ->options(fn(Forms\Get $get) => Song::where('artist_id', $get('../../artist_id'))->pluck('title', 'id'))
                             ->searchable()
                             ->native(false)
                             ->columnSpanFull(),

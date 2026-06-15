@@ -60,7 +60,7 @@ class AlbumResource extends Resource
                         // 曲名（メイン）
                         Forms\Components\Select::make('id')
                             ->label('曲名')
-                            ->options(fn() => \App\Models\Song::pluck('title', 'id'))
+                            ->options(fn(Forms\Get $get) => \App\Models\Song::where('artist_id', $get('../../artist_id'))->pluck('title', 'id'))
                             ->searchable()
                             ->native(false)
                             ->columnSpanFull(),
