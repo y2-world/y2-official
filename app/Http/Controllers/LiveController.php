@@ -26,7 +26,7 @@ class LiveController extends Controller
             $liveQuery->where('type', 4);
         }
 
-        $bios = $artist->bios()->get();
+        $bios = $artist->years;
         $tours = $liveQuery->paginate(10);
         $totalCount = $tours->total();
 

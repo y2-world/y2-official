@@ -16,7 +16,7 @@ class AlbumController extends Controller
             ->orderBy('date', 'asc')
             ->paginate(10);
         $totalCount = $albums->total();
-        $bios = $artist->bios()->get();
+        $bios = $artist->years;
 
         if (request()->wantsJson() || request()->ajax()) {
             $html = view('albums._list', compact('albums', 'totalCount'))->render();

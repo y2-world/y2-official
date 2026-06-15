@@ -28,7 +28,7 @@ class SongController extends Controller
         $totalCount = $songs->total();
 
         $albums = Album::where('artist_id', $artistId)->orderBy('id', 'asc')->get();
-        $bios = $artist->bios()->get();
+        $bios = $artist->years;
 
         // 検索用候補（曲名 + アーティスト名）
         $suggestions = \App\Models\SetlistSong::query()

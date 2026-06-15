@@ -16,7 +16,7 @@ class SingleController extends Controller
             ->orderBy('date', 'asc')
             ->paginate(10);
         $totalCount = $singles->total();
-        $bios = $artist->bios()->get();
+        $bios = $artist->years;
 
         if (request()->wantsJson() || request()->ajax()) {
             $html = view('singles._list', compact('singles', 'totalCount'))->render();
