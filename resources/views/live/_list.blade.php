@@ -1,16 +1,6 @@
 @foreach ($tours as $tour)
     <tr>
-        @if (request('type') == 1)
-            <td>{{ $tour->tour_id }}</td>
-        @elseif(request('type') == 2)
-            <td>{{ $tour->event_id }}</td>
-        @elseif(request('type') == 3)
-            <td>{{ $tour->ap_id }}</td>
-        @elseif(request('type') == 4)
-            <td>{{ $tour->solo_id }}</td>
-        @else
-            <td>{{ $tour->id }}</td>
-        @endif
+        <td>{{ ($tours->currentPage() - 1) * $tours->perPage() + $loop->iteration }}</td>
         @if (isset($tour->date1) && isset($tour->date2))
             <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }} -
                 {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
