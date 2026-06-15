@@ -137,8 +137,9 @@ class SongController extends Controller
         $allSongs = Song::orderBy('id')->get();
         $albums = Album::orderBy('id')->get();
         $singles = Single::orderBy('id')->get();
-        $previous = Song::where('id', '<', $songs->id)->orderBy('id', 'desc')->first();
-        $next = Song::where('id', '>', $songs->id)->orderBy('id')->first();
+        $previous = Song::where('artist_id', $songs->artist_id)->where('id', '<', $songs->id)->orderBy('id', 'desc')->first();
+        $next = Song::where('artist_id', $songs->artist_id)->where('id', '>', $songs->id)->orderBy('id')->first();
+        $songNumber = Song::where('artist_id', $songs->artist_id)->where('id', '<=', $songs->id)->count();
 
         return view('songs.show', compact(
             'songs',
@@ -148,7 +149,8 @@ class SongController extends Controller
             'previous',
             'next',
             'tourSetlists',
-            'tours'
+            'tours',
+            'songNumber'
         ));
     }
 

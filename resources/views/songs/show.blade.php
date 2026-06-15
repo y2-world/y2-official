@@ -8,7 +8,7 @@
 @section('content')
     <div class="database-hero database-year-hero">
         <div class="container">
-            <p class="database-subtitle" style="margin-bottom: 10px;"># {{ $songs->id }}</p>
+            <p class="database-subtitle" style="margin-bottom: 10px;"># {{ $songNumber }}</p>
             <h1 class="database-title sp" style="margin-bottom: 20px; cursor: pointer;"
                 onclick="document.getElementById('spSearchFormSongs').style.display='block'; document.querySelector('.database-title.sp').style.display='none';">
                 {{ $songs->title }}

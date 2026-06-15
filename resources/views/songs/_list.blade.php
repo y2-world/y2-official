@@ -1,6 +1,6 @@
 @foreach ($songs as $song)
     <tr>
-        <td>{{ $song->id }}</td>
+        <td>{{ ($songs->currentPage() - 1) * $songs->perPage() + $loop->iteration }}</td>
         <td><a href="{{ route('songs.show', $song->id) }}">{{ $song->title }}</a></td>
         @if (isset($song->single_id) && isset($song->album_id))
             @if ($song->single->date > $song->album->date)
