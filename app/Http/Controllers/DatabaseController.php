@@ -8,7 +8,7 @@ class DatabaseController extends Controller
 {
     public function index()
     {
-        $artists = Artist::where('visible', 1)->orderBy('id', 'asc')->get();
+        $artists = Artist::where('visible', 1)->whereHas('songs')->orderBy('id', 'asc')->get();
         return view('database.index', compact('artists'));
     }
 
