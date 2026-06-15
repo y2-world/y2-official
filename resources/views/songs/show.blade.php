@@ -50,7 +50,7 @@
             {{-- 検索フォーム（SP表示） --}}
              <div class="sp" id="spSearchFormSongs" style="margin-top: 10px; display: none;">
                 <div>
-                    @livewire('database-song-search')
+                    @livewire('database-song-search', ['artistId' => $songs->artist_id])
                     {{-- 閉じるボタン --}}
                     <div style="text-align: center; margin-top: 15px;">
                         <button type="button" onclick="document.getElementById('spSearchFormSongs').style.display='none'; document.querySelector('.database-title.sp').style.display='block';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;">
@@ -63,7 +63,7 @@
             {{-- 検索フォーム（PC表示のみ） --}}
             <div class="database-search pc" style="margin-top: 30px;">
                 <div>
-                    @livewire('database-song-search')
+                    @livewire('database-song-search', ['artistId' => $songs->artist_id])
                 </div>
             </div>
         </div>

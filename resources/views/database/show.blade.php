@@ -37,14 +37,14 @@
             {{-- 検索フォーム（SP表示） --}}
             <div class="sp" id="spSearchFormDatabaseYear" style="margin-top: 20px; display: none;">
                 <div>
-                    @livewire('database-song-search')
+                    @livewire('database-song-search', ['artistId' => $artist->id])
                 </div>
             </div>
 
             {{-- 検索フォーム（PC表示のみ） --}}
             <div class="database-search pc" style="margin-top: 30px;">
                 <div>
-                    @livewire('database-song-search')
+                    @livewire('database-song-search', ['artistId' => $artist->id])
                 </div>
             </div>
         </div>

@@ -8,13 +8,13 @@
             {{-- 検索フォーム（SP表示） --}}
             <div class="sp" id="spSearchFormDatabase" style="margin-top: 10px;">
                 <div>
-                    @livewire('database-song-search')
+                    @livewire('database-song-search', ['artistId' => $artist->id])
                 </div>
             </div>
 
             {{-- 検索フォーム（PC表示のみ） --}}
             <div class="database-search pc" style="margin-top: 40px;">
-                @livewire('database-song-search')
+                @livewire('database-song-search', ['artistId' => $artist->id])
             </div>
         </div>
     </div>
