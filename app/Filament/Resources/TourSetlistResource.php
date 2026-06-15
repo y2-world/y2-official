@@ -8,6 +8,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
+use Illuminate\Validation\Rule;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -57,7 +58,15 @@ class TourSetlistResource extends Resource
                         Forms\Components\TextInput::make('order_no')
                             ->label('パターン番号')
                             ->numeric()
-                            ->required(),
+                            ->required()
+                            ->rules(fn(Get $get, $record) => [
+                                Rule::unique('tour_setlists', 'order_no')
+                                    ->where('tour_id', $get('tour_id'))
+                                    ->ignore($record?->id),
+                            ])
+                            ->validationMessages([
+                                'unique' => 'このツアーではすでに使われているパターン番号です。',
+                            ]),
 
                         Forms\Components\TextInput::make('subtitle')
                             ->label('サブタイトル（日付や説明）')

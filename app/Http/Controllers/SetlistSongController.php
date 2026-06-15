@@ -63,8 +63,8 @@ class SetlistSongController extends Controller
         ->values();
 
         // 前後のSetlistSong
-        $previous = SetlistSong::where('id', '<', $song->id)->orderBy('id', 'desc')->first();
-        $next = SetlistSong::where('id', '>', $song->id)->orderBy('id')->first();
+        $previous = SetlistSong::where('artist_id', $song->artist_id)->where('id', '<', $song->id)->orderBy('id', 'desc')->first();
+        $next = SetlistSong::where('artist_id', $song->artist_id)->where('id', '>', $song->id)->orderBy('id')->first();
 
         // 検索候補（曲名 + アーティスト名）
         $suggestions = SetlistSong::query()
