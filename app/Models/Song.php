@@ -20,13 +20,19 @@ class Song extends Model
     public function getAlbumFromTracklistAttribute()
     {
         $songId = $this->id;
-        return Album::where('artist_id', $this->artist_id)
-            ->where('best', false)
-            ->get()
-            ->first(function ($album) use ($songId) {
-                $tracklist = $album->tracklist ?? [];
-                return collect($tracklist)->pluck('id')->contains((string) $songId);
-            });
+        $albums = Album::where('artist_id', $this->artist_id)
+            ->orderBy('date', 'asc')
+            ->get();
+
+        $original = $albums->where('best', false)->first(function ($album) use ($songId) {
+            return collect($album->tracklist ?? [])->pluck('id')->contains((string) $songId);
+        });
+
+        if ($original) return $original;
+
+        return $albums->where('best', true)->first(function ($album) use ($songId) {
+            return collect($album->tracklist ?? [])->pluck('id')->contains((string) $songId);
+        });
     }
 
     public function getSingleFromTracklistAttribute()

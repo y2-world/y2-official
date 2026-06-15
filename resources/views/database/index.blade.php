@@ -4,7 +4,6 @@
     <div class="database-hero">
         <div class="container">
             <h1 class="database-title" style="margin-bottom: 20px; text-align: center;">Database</h1>
-            <p class="database-subtitle" style="text-align: center;">アーティストを選択してください</p>
         </div>
     </div>
 
@@ -23,7 +22,7 @@
                             @endif
                             <div class="card-links" style="margin-top: 12px;">
                                 <span class="database-link">
-                                    <span>Database を見る</span>
+                                    <span>View</span>
                                     <i class="fa-solid fa-arrow-right"></i>
                                 </span>
                             </div>
