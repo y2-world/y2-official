@@ -15,7 +15,7 @@ class DatabaseController extends Controller
     public function show($artistId)
     {
         $artist = Artist::findOrFail($artistId);
-        $bios = $artist->bios()->get();
+        $bios = $artist->years;
         return view('database.artist', compact('artist', 'bios'));
     }
 }
