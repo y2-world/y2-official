@@ -40,7 +40,10 @@ class Artist extends Model
     {
         $singleYears = $this->singles()->whereNotNull('date')->get()->map(fn($s) => (int) date('Y', strtotime($s->date)));
         $albumYears = $this->albums()->whereNotNull('date')->get()->map(fn($a) => (int) date('Y', strtotime($a->date)));
-        $tourYears = $this->tours()->whereNotNull('date1')->get()->map(fn($t) => (int) date('Y', strtotime($t->date1)));
+        $tourYears = $this->tours()->whereNotNull('date1')->get()->flatMap(fn($t) => array_filter([
+            (int) date('Y', strtotime($t->date1)),
+            $t->date2 ? (int) date('Y', strtotime($t->date2)) : null,
+        ]));
         return $singleYears->merge($albumYears)->merge($tourYears)->unique()->sort()->values()->map(fn($y) => (object)['year' => $y]);
     }
 
