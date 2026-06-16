@@ -36,11 +36,6 @@ class Artist extends Model
         return $this->hasMany(Single::class);
     }
 
-    public function bios()
-    {
-        return $this->hasMany(Bio::class)->orderBy('year', 'asc');
-    }
-
     public function getYearsAttribute()
     {
         $singleYears = $this->singles()->whereNotNull('date')->get()->map(fn($s) => (int) date('Y', strtotime($s->date)));
