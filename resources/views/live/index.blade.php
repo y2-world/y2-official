@@ -48,7 +48,7 @@
                     <th class="mobile">#</th>
                     <th class="mobile">開催日</th>
                     <th class="mobile">タイトル</th>
-                    <th class="pc">会場</th>
+                    <th class="mobile">会場</th>
                 </tr>
             </thead>
             <tbody id="tours-container">
