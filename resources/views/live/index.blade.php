@@ -42,6 +42,7 @@
     </div>
 
     <div class="container database-year-content">
+        <div class="table-wrapper">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -55,6 +56,7 @@
                 @include('live._list', ['tours' => $tours])
             </tbody>
         </table>
+        </div>
         <div class="pagination" id="pagination-links" style="display: none;">
             {!! $tours->appends(['type' => $type])->links() !!}
         </div>
