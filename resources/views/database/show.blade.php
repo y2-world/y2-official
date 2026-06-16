@@ -58,7 +58,6 @@
                     @else
                         <div class="column1">
                 @endif
-                <div class="table-wrapper">
                 @if ($tours->isEmpty())
                     <table class="table table-striped">
                     @else
@@ -129,7 +128,6 @@
             @endforeach
 
             @if ($hasTourEvent)
-                <div class="table-wrapper">
                 <table class="table table-striped count tour">
                     <thead>
                         <tr>
@@ -162,7 +160,6 @@
             @endif
 
             @if ($hasSolo)
-                <div class="table-wrapper">
                 <table class="table table-striped count solo">
                     <thead>
                         <tr>

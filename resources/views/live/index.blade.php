@@ -42,7 +42,6 @@
     </div>
 
     <div class="container database-year-content">
-        <div class="table-wrapper">
         <table class="table table-striped">
             <thead>
                 <tr>

@@ -40,7 +40,6 @@
 
     <div class="container-lg database-year-content">
         @if (!$data->isEmpty())
-            <div class="table-wrapper">
             <table class="table table-striped count">
                 <thead>
                     <tr>

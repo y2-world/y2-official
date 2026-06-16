@@ -33,7 +33,6 @@
     </div>
 
     <div class="container-lg database-year-content" style="margin-bottom: 2rem;">
-        <div class="table-wrapper">
         <table class="table table-striped">
             <thead>
                 <tr>

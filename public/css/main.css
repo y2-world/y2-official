@@ -1665,15 +1665,13 @@ h2 {
     /* margin-top: 30px; */
 }
 
-.database-year-content .table-wrapper {
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-}
-
 .database-year-content .table {
     background: white;
-    margin-bottom: 0;
+    border-radius: 15px;
+    border-collapse: separate;
+    border-spacing: 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
 }
 
 .database-year-content .table thead {
