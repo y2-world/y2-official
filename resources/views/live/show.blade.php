@@ -142,7 +142,9 @@
                 <div class="schedule-text">
                     <!-- Additional content -->
                     @if (!is_null($tours->schedule))
-                        <hr>
+                        @if ($tourSetlists->count())
+                            <hr>
+                        @endif
                         <h5>SCHEDULE</h5>
                         {!! nl2br(e($tours->schedule)) !!}
                     @endif
