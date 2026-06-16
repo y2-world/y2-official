@@ -49,13 +49,13 @@ class TourResource extends Resource
                         Radio::make('type')
                             ->label('タイプ')
                             ->options([
-                                '0' => 'ツアー',
-                                '1' => '単発ライブ',
-                                '2' => 'イベント',
-                                '3' => 'ap bank fes',
-                                '4' => 'ソロ',
+                                0 => 'ツアー',
+                                1 => '単発ライブ',
+                                2 => 'イベント',
+                                3 => 'ap bank fes',
+                                4 => 'ソロ',
                             ])
-                            ->default('0')
+                            ->default(0)
                             ->required()
                             ->columnSpanFull(),
 
@@ -185,7 +185,7 @@ class TourResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('date1', 'desc');
+            ->defaultSort('id', 'desc');
     }
 
     public static function getRelations(): array

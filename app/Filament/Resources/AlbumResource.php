@@ -178,7 +178,7 @@ class AlbumResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('date', 'desc');
+            ->defaultSort('id', 'desc');
     }
 
     public static function getRelations(): array
