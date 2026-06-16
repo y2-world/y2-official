@@ -6,7 +6,6 @@ use App\Filament\Resources\SongResource\Pages;
 use App\Filament\Resources\SongResource\RelationManagers;
 use App\Models\Song;
 use App\Models\Album;
-use App\Models\Bio;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;

@@ -3,47 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Artist;
-use App\Models\Bio;
 use App\Models\Single;
 use App\Models\Album;
 use App\Models\Song;
 use App\Models\Tour;
+
 
 class BioController extends Controller
 {
     public function index($artistId)
     {
         $artist = Artist::findOrFail($artistId);
-        $bios = $artist->bios()->get();
-
-        // Bioがない場合はSingle/Albumのリリース年から生成
-        if ($bios->isEmpty()) {
-            $singleYears = Single::where('artist_id', $artistId)->whereNotNull('date')->get()->map(fn($s) => (int) date('Y', strtotime($s->date)));
-            $albumYears = Album::where('artist_id', $artistId)->whereNotNull('date')->get()->map(fn($a) => (int) date('Y', strtotime($a->date)));
-            $years = $singleYears->merge($albumYears)->unique()->sort()->values();
-            $bios = $years->map(fn($year) => (object)['year' => $year]);
-        }
-
+        $bios = $artist->years;
         return view('database.artist', compact('artist', 'bios'));
     }
 
     public function show($artistId, $year)
     {
         $artist = Artist::findOrFail($artistId);
-        $bio = Bio::where('artist_id', $artistId)->where('year', $year)->first()
-            ?? (object)['year' => $year, 'text' => null];
-
-        $singles = Single::where('artist_id', $artistId)->orderBy('id', 'asc')->get();
-        $albums = Album::where('artist_id', $artistId)->orderBy('id', 'asc')->get();
-
-        $biosFromDb = Bio::where('artist_id', $artistId)->orderBy('year', 'asc')->get();
-        if ($biosFromDb->isEmpty()) {
-            $singleYears = $singles->whereNotNull('date')->map(fn($s) => (int) date('Y', strtotime($s->date)));
-            $albumYears = $albums->whereNotNull('date')->map(fn($a) => (int) date('Y', strtotime($a->date)));
-            $bios = $singleYears->merge($albumYears)->unique()->sort()->values()->map(fn($y) => (object)['year' => $y]);
-        } else {
-            $bios = $biosFromDb;
-        }
+        $bio = (object)['year' => $year, 'text' => null];
+        $bios = $artist->years;
         // シングルに収録されている曲はシングルのリリース年で判定
         $singleSongIds = collect();
         Single::where('artist_id', $artistId)->whereYear('date', $year)->get()->each(function ($single) use (&$singleSongIds) {
@@ -71,8 +50,6 @@ class BioController extends Controller
         return view('database.show', [
             'artist' => $artist,
             'bio' => $bio,
-            'singles' => $singles,
-            'albums' => $albums,
             'bios' => $bios,
             'songs' => $songs,
             'tours' => $tours,

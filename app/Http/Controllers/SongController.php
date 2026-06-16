@@ -6,7 +6,6 @@ use App\Models\Artist;
 use App\Models\Song;
 use App\Models\Album;
 use App\Models\Single;
-use App\Models\Bio;
 use App\Models\Tour;
 use Illuminate\Http\Request;
 use App\Models\TourSetlist;
