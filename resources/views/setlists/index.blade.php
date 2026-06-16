@@ -128,7 +128,6 @@
                     @endforeach
                 </tbody>
             </table>
-            </div>
         @endif
 
         {{-- 今までのライブ --}}
@@ -156,7 +155,6 @@
                 @include('setlists._list', ['setlists' => $pastSetlists, 'totalCount' => $pastTotalCount, 'type' => $type])
             </tbody>
         </table>
-        </div>
         <div class="pagination" id="pagination-links" style="display: none;">
             {!! $pastSetlists->appends(['type' => $type])->links() !!}
         </div>
