@@ -58,6 +58,7 @@
                     @else
                         <div class="column1">
                 @endif
+                <div class="table-wrapper">
                 @if ($tours->isEmpty())
                     <table class="table table-striped">
                     @else
@@ -104,6 +105,7 @@
                     @endforeach
                 </tbody>
                 </table>
+                </div>
             @endif
         </div>
         @if ($songs->isEmpty())
@@ -127,6 +129,7 @@
             @endforeach
 
             @if ($hasTourEvent)
+                <div class="table-wrapper">
                 <table class="table table-striped count tour">
                     <thead>
                         <tr>
@@ -154,10 +157,12 @@
                         @endforeach
                     </tbody>
                 </table>
+                </div>
                 <br>
             @endif
 
             @if ($hasSolo)
+                <div class="table-wrapper">
                 <table class="table table-striped count solo">
                     <thead>
                         <tr>
@@ -185,6 +190,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                </div>
                 <br>
             @endif
 

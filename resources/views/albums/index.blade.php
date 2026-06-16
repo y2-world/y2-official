@@ -33,6 +33,7 @@
     </div>
 
     <div class="container-lg database-year-content" style="margin-bottom: 2rem;">
+        <div class="table-wrapper">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -45,6 +46,7 @@
                 @include('albums._list', ['albums' => $albums])
             </tbody>
         </table>
+        </div>
         <div class="pagination" id="pagination-links" style="display: none;">
             {!! $albums->onEachSide(5)->links() !!}
         </div>

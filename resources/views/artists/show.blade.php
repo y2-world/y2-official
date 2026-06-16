@@ -52,6 +52,7 @@
             <p style="text-align: center; color: #999; margin-top: 40px;">セットリストがありません。</p>
         @endif
         @if(!$setlists->isEmpty())
+            <div class="table-wrapper">
             <table class="table table-striped count">
                 <thead>
                     <tr>
@@ -74,6 +75,7 @@
                     @endforeach
                 </tbody>
             </table>
+            </div>
         @endif
         <br>
     </div>

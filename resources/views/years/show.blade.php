@@ -36,6 +36,7 @@
     </div>
 
     <div class="container-lg database-year-content">
+        <div class="table-wrapper">
         <table class="table table-striped count">
             <thead>
                 <tr>
@@ -77,6 +78,7 @@
                 @endforeach
             </tbody>
         </table>
+        </div>
     </div>
     <br>
     </div>

@@ -67,6 +67,7 @@
         {{-- これからのライブ --}}
         @if($upcomingSetlists->count() > 0)
             <h3 style="margin-top: 0; margin-bottom: 15px;">Upcoming Shows</h3>
+            <div class="table-wrapper">
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -128,10 +129,12 @@
                     @endforeach
                 </tbody>
             </table>
+            </div>
         @endif
 
         {{-- 今までのライブ --}}
         <h3 style="margin-top: {{ $upcomingSetlists->count() > 0 ? '30px' : '0' }}; margin-bottom: 15px;">Past Shows</h3>
+        <div class="table-wrapper">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -155,6 +158,7 @@
                 @include('setlists._list', ['setlists' => $pastSetlists, 'totalCount' => $pastTotalCount, 'type' => $type])
             </tbody>
         </table>
+        </div>
         <div class="pagination" id="pagination-links" style="display: none;">
             {!! $pastSetlists->appends(['type' => $type])->links() !!}
         </div>

@@ -46,6 +46,7 @@
 
         @if (!$setlists->isEmpty())
             <h3 style="margin-top: 0; margin-bottom: 15px;">Live Performances</h3>
+            <div class="table-wrapper">
             <table class="table table-striped count">
                 <thead>
                     <tr>
@@ -69,6 +70,7 @@
                     @endforeach
                 </tbody>
             </table>
+            </div>
         @endif
 
         {{-- 前後リンク --}}

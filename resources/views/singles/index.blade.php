@@ -33,6 +33,7 @@
     </div>
 
     <div class="container-lg database-year-content">
+        <div class="table-wrapper">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -45,6 +46,7 @@
                 @include('singles._list', ['singles' => $singles])
             </tbody>
         </table>
+        </div>
         <div class="pagination" id="pagination-links" style="display: none;">
             {!! $singles->onEachSide(5)->links() !!}
         </div>

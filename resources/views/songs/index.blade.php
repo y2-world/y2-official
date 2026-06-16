@@ -51,6 +51,7 @@
     </div>
 
     <div class="container-lg database-year-content">
+        <div class="table-wrapper">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -64,6 +65,7 @@
                 @include('songs._list', ['songs' => $songs])
             </tbody>
         </table>
+        </div>
         <div class="pagination" id="pagination-links" style="display: none;">
             {!! $songs->links() !!}
         </div>
