@@ -43,7 +43,10 @@ class BioController extends Controller
         $songs = Song::where('artist_id', $artistId)->whereIn('id', $songIds)->orderBy('id', 'asc')->get();
 
         $tours = Tour::where('artist_id', $artistId)
-            ->whereRaw('YEAR(date1) = ? OR YEAR(date2) = ?', [$year, $year])
+            ->where(function ($q) use ($year) {
+                $q->whereRaw('YEAR(date1) = ?', [$year])
+                  ->orWhereRaw('YEAR(date2) = ?', [$year]);
+            })
             ->orderBy('date1', 'asc')
             ->get();
 
