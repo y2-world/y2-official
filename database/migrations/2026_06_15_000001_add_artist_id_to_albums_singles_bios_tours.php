@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        foreach (['albums', 'singles', 'bios', 'tours', 'songs'] as $tableName) {
+        foreach (['albums', 'singles', 'tours', 'songs'] as $tableName) {
             if (!Schema::hasColumn($tableName, 'artist_id')) {
                 Schema::table($tableName, function (Blueprint $table) {
                     $table->unsignedBigInteger('artist_id')->nullable()->after('id');
@@ -22,8 +22,7 @@ return new class extends Migration
             $id = $mrChildren->id;
             DB::table('albums')->whereNull('artist_id')->update(['artist_id' => $id]);
             DB::table('singles')->whereNull('artist_id')->update(['artist_id' => $id]);
-            DB::table('bios')->whereNull('artist_id')->update(['artist_id' => $id]);
-            DB::table('tours')->whereNull('artist_id')->update(['artist_id' => $id]);
+DB::table('tours')->whereNull('artist_id')->update(['artist_id' => $id]);
             DB::table('songs')->whereNull('artist_id')->update(['artist_id' => $id]);
         }
     }
@@ -36,10 +35,7 @@ return new class extends Migration
         Schema::table('singles', function (Blueprint $table) {
             $table->dropColumn('artist_id');
         });
-        Schema::table('bios', function (Blueprint $table) {
-            $table->dropColumn('artist_id');
-        });
-        Schema::table('tours', function (Blueprint $table) {
+Schema::table('tours', function (Blueprint $table) {
             $table->dropColumn('artist_id');
         });
     }
