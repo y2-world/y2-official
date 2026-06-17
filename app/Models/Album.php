@@ -12,6 +12,7 @@ class Album extends Model
         'date',
         'title',
         'best',
+        'mini',
         'text',
         'tracklist',
     ];
