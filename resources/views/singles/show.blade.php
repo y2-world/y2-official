@@ -4,10 +4,10 @@
     <div class="database-hero database-year-hero">
         <div class="container">
             <p class="database-subtitle" style="margin-bottom: 10px;">
-                @if($singles->download == 0)
-                # {{$singles->single_id}}
-                @else
-                Download Single
+                @if($singles->download == 0 && $singles->single_id)
+                    {{ ordinal($singles->single_id) }} Single
+                @elseif($singles->download)
+                    Digital Exclusive Single
                 @endif
             </p>
             <h1 class="database-title" style="margin-bottom: 20px;">{{$singles->title}}</h1>

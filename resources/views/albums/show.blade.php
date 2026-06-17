@@ -6,10 +6,12 @@
             <p class="database-subtitle" style="margin-bottom: 10px;">
                 @if ($albums->best)
                     Best Album
+                @elseif ($albums->mini && $albums->album_id)
+                    {{ ordinal($albums->album_id) }} Mini Album
                 @elseif ($albums->mini)
                     Mini Album
                 @elseif ($albums->album_id)
-                    # {{ $albums->album_id }}
+                    {{ ordinal($albums->album_id) }} Album
                 @endif
             </p>
             <h1 class="database-title" style="margin-bottom: 20px;">{{ $albums->title }}</h1>
