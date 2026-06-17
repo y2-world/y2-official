@@ -4,10 +4,12 @@
     <div class="database-hero database-year-hero">
         <div class="container">
             <p class="database-subtitle" style="margin-bottom: 10px;">
-                @if ($albums->best == 0)
-                    # {{ $albums->album_id }}
-                @else
+                @if ($albums->best)
                     Best Album
+                @elseif ($albums->mini)
+                    Mini Album
+                @elseif ($albums->album_id)
+                    # {{ $albums->album_id }}
                 @endif
             </p>
             <h1 class="database-title" style="margin-bottom: 20px;">{{ $albums->title }}</h1>

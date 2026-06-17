@@ -54,6 +54,10 @@ class AlbumResource extends Resource
                     ->label('ベスト')
                     ->onColor('success')
                     ->offColor('gray'),
+                Forms\Components\Toggle::make('mini')
+                    ->label('ミニアルバム')
+                    ->onColor('warning')
+                    ->offColor('gray'),
                 Forms\Components\Repeater::make('tracklist')
                     ->label('収録曲')
                     ->schema([
@@ -149,6 +153,10 @@ class AlbumResource extends Resource
                 Tables\Columns\ToggleColumn::make('best')
                     ->label('ベスト')
                     ->onColor('success')
+                    ->offColor('gray'),
+                Tables\Columns\ToggleColumn::make('mini')
+                    ->label('ミニアルバム')
+                    ->onColor('warning')
                     ->offColor('gray'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y.m.d H:i')
