@@ -47,9 +47,9 @@ class BioController extends Controller
                     collect($single->tracklist ?? [])->pluck('id')->map(fn($id) => (string)$id)->diff($previousIds)
                 );
             });
-        // アルバムの曲：初出年のみ表示
+        // アルバムの曲：初出年のみ表示（ベスト含む）
         $albumSongIds = collect();
-        Album::where('artist_id', $artistId)->where('best', false)
+        Album::where('artist_id', $artistId)
             ->whereYear('date', $year)->get()
             ->each(function ($album) use (&$albumSongIds, $previousIds) {
                 $ids = collect($album->tracklist ?? [])->pluck('id')->filter()->map(fn($id) => (string)$id);
