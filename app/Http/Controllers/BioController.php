@@ -31,7 +31,7 @@ class BioController extends Controller
                     collect($single->tracklist ?? [])->pluck('id')->map(fn($id) => (string)$id)
                 );
             });
-        Album::where('artist_id', $artistId)->where('best', false)->whereNotNull('album_id')
+        Album::where('artist_id', $artistId)->where('best', false)
             ->whereYear('date', '<', $year)->get()
             ->each(function ($album) use (&$previousIds) {
                 $previousIds = $previousIds->merge(
@@ -49,7 +49,7 @@ class BioController extends Controller
             });
         // アルバムの曲：初出年のみ表示
         $albumSongIds = collect();
-        Album::where('artist_id', $artistId)->where('best', false)->whereNotNull('album_id')
+        Album::where('artist_id', $artistId)->where('best', false)
             ->whereYear('date', $year)->get()
             ->each(function ($album) use (&$albumSongIds, $previousIds) {
                 $ids = collect($album->tracklist ?? [])->pluck('id')->filter()->map(fn($id) => (string)$id);
