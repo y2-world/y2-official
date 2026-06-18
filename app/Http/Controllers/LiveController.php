@@ -49,8 +49,8 @@ class LiveController extends Controller
         $artist = $tours->artist;
         $songs = Song::orderBy('id', 'asc')->get();
         $tourSetlists = TourSetlist::where('tour_id', $id)->orderBy('order_no', 'asc')->get();
-        $previous = Tour::where('artist_id', $tours->artist_id)->where('id', '<', $tours->id)->orderBy('id', 'desc')->first();
-        $next = Tour::where('artist_id', $tours->artist_id)->where('id', '>', $tours->id)->orderBy('id')->first();
+        $previous = Tour::where('artist_id', $tours->artist_id)->where('date1', '<', $tours->date1)->orderBy('date1', 'desc')->first();
+        $next = Tour::where('artist_id', $tours->artist_id)->where('date1', '>', $tours->date1)->orderBy('date1')->first();
 
         return view('live.show', compact('songs', 'previous', 'next', 'tours', 'tourSetlists', 'artist'));
     }
