@@ -1733,8 +1733,12 @@ h2 {
         display: table-cell;
     }
     
-    .database-year-content .table tbody td:not(.pc) {
+    .database-year-content .table tbody td:not(.pc):not(.pc_venue) {
         display: table-cell;
+    }
+
+    .database-year-content .table tbody td.pc_venue {
+        display: none;
     }
 }
 
