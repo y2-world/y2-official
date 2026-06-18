@@ -23,11 +23,20 @@ class BioController extends Controller
         $artist = Artist::findOrFail($artistId);
         $bio = (object)['year' => $year, 'text' => null];
         $bios = $artist->years;
-        // シングルに収録されている曲はシングルのリリース年で判定
+        // 過去のシングル（同年より前）に収録済みの曲IDを収集
+        $previousSingleSongIds = collect();
+        Single::where('artist_id', $artistId)->whereYear('date', '<', $year)->get()
+            ->each(function ($single) use (&$previousSingleSongIds) {
+                $previousSingleSongIds = $previousSingleSongIds->merge(collect($single->tracklist ?? [])->pluck('id'));
+            });
+        // シングルに収録されている曲はシングルのリリース年で判定（初出年のみ）
         $singleSongIds = collect();
-        Single::where('artist_id', $artistId)->whereYear('date', $year)->get()->each(function ($single) use (&$singleSongIds) {
-            $singleSongIds = $singleSongIds->merge(collect($single->tracklist ?? [])->pluck('id'));
-        });
+        Single::where('artist_id', $artistId)->whereYear('date', $year)->get()
+            ->each(function ($single) use (&$singleSongIds, $previousSingleSongIds) {
+                $singleSongIds = $singleSongIds->merge(
+                    collect($single->tracklist ?? [])->pluck('id')->diff($previousSingleSongIds)
+                );
+            });
         // 全シングルに収録されている曲IDを収集（アルバムの絞り込みに使用）
         $allSingleSongIds = collect();
         Single::where('artist_id', $artistId)->get()->each(function ($single) use (&$allSingleSongIds) {
