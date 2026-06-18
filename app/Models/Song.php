@@ -24,15 +24,14 @@ class Song extends Model
             ->orderBy('date', 'asc')
             ->get();
 
-        $original = $albums->where('best', false)->first(function ($album) use ($songId) {
-            return collect($album->tracklist ?? [])->pluck('id')->contains((string) $songId);
-        });
+        $contains = fn($album) => collect($album->tracklist ?? [])->pluck('id')->contains((string) $songId);
 
+        // album_idあり（オリジナル・ミニ）を優先
+        $original = $albums->where('best', false)->whereNotNull('album_id')->first($contains);
         if ($original) return $original;
 
-        return $albums->where('best', true)->first(function ($album) use ($songId) {
-            return collect($album->tracklist ?? [])->pluck('id')->contains((string) $songId);
-        });
+        // ベストアルバムのみフォールバック
+        return $albums->where('best', true)->first($contains);
     }
 
     public function getSingleFromTracklistAttribute()

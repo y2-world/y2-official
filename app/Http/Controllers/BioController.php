@@ -33,11 +33,23 @@ class BioController extends Controller
         Single::where('artist_id', $artistId)->get()->each(function ($single) use (&$allSingleSongIds) {
             $allSingleSongIds = $allSingleSongIds->merge(collect($single->tracklist ?? [])->pluck('id'));
         });
-        // アルバムにのみ収録されている曲はアルバムのリリース年で判定
+        // 過去のアルバム（同年より前）に収録済みの曲IDを収集
+        $previousAlbumSongIds = collect();
+        Album::where('artist_id', $artistId)->where('best', false)->whereNotNull('album_id')
+            ->whereYear('date', '<', $year)->get()
+            ->each(function ($album) use (&$previousAlbumSongIds) {
+                $previousAlbumSongIds = $previousAlbumSongIds->merge(
+                    collect($album->tracklist ?? [])->pluck('id')->filter()->map(fn($id) => (string)$id)
+                );
+            });
+        // アルバムにのみ収録されている曲はアルバムのリリース年で判定（初出年のみ表示）
         $albumSongIds = collect();
-        Album::where('artist_id', $artistId)->where('best', false)->whereYear('date', $year)->get()->each(function ($album) use (&$albumSongIds, $allSingleSongIds) {
+        Album::where('artist_id', $artistId)->where('best', false)->whereNotNull('album_id')->whereYear('date', $year)->get()->each(function ($album) use (&$albumSongIds, $allSingleSongIds, $previousAlbumSongIds) {
             $ids = collect($album->tracklist ?? [])->pluck('id')->filter()->map(fn($id) => (string)$id);
-            $albumSongIds = $albumSongIds->merge($ids->diff($allSingleSongIds->map(fn($id) => (string)$id)));
+            $albumSongIds = $albumSongIds->merge(
+                $ids->diff($allSingleSongIds->map(fn($id) => (string)$id))
+                    ->diff($previousAlbumSongIds)
+            );
         });
         $songIds = $singleSongIds->merge($albumSongIds)->unique()->filter()->values();
         $songs = Song::where('artist_id', $artistId)->whereIn('id', $songIds)->orderBy('id', 'asc')->get();
