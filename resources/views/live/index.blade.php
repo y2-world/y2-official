@@ -6,6 +6,9 @@
             @if (request('type') == 1)
                 <h1 class="database-title">Tours</h1>
                 <p class="database-subtitle">{{ $artist->name }} — すべてのツアー情報</p>
+            @elseif(request('type') == 5)
+                <h1 class="database-title">単発ライブ</h1>
+                <p class="database-subtitle">{{ $artist->name }} — すべての単発ライブ情報</p>
             @elseif(request('type') == 2)
                 <h1 class="database-title">Events</h1>
                 <p class="database-subtitle">{{ $artist->name }} — すべてのイベント情報</p>
@@ -25,6 +28,7 @@
                     <option value="" disabled selected>Live</option>
                     <option value="{{ route('database.live', $artist->id) }}">All</option>
                     <option value="{{ route('database.live', $artist->id) }}?type=1">Tours</option>
+                    <option value="{{ route('database.live', $artist->id) }}?type=5">単発ライブ</option>
                     <option value="{{ route('database.live', $artist->id) }}?type=2">Events</option>
                     @if($artist->name === 'Mr.Children')
                     <option value="{{ route('database.live', $artist->id) }}?type=3">ap bank fes</option>
