@@ -77,7 +77,7 @@
                         @php
                             $single = $song->singleFromTracklist;
                             $album = $song->albumFromTracklist;
-                            $songNumber = \App\Models\Song::where('artist_id', $song->artist_id)->where('id', '<=', $song->id)->count();
+                            $songNumber = \App\Models\DbSong::where('artist_id', $song->artist_id)->where('id', '<=', $song->id)->count();
                         @endphp
                         <tr>
                             <td>{{ $songNumber }}</td>
