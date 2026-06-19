@@ -70,7 +70,7 @@
 
                             if ($isNumericId) {
                                 // SetlistSongテーブルから曲名を取得
-                                $song = \App\Models\SetlistSong::find($songValue);
+                                $song = \App\Models\SlSong::find($songValue);
                                 $songTitle = $song ? $song->title : $songValue;
                                 // SetlistSongの詳細ページにリンク
                                 $url = url('/setlist-songs/' . $songValue);
@@ -82,7 +82,7 @@
                                 $cleanTitle = trim($cleanTitle);
 
                                 // SetlistSongを検索（タイトルとartist_idで）
-                                $setlistSong = \App\Models\SetlistSong::where('title', $cleanTitle);
+                                $setlistSong = \App\Models\SlSong::where('title', $cleanTitle);
                                 if ($artistId) {
                                     $setlistSong = $setlistSong->where('artist_id', $artistId);
                                 }
@@ -162,7 +162,7 @@
 
                             if ($isNumericId) {
                                 // SetlistSongテーブルから曲名を取得
-                                $song = \App\Models\SetlistSong::find($songValue);
+                                $song = \App\Models\SlSong::find($songValue);
                                 $songTitle = $song ? $song->title : $songValue;
                                 // SetlistSongの詳細ページにリンク
                                 $url = url('/setlist-songs/' . $songValue);
@@ -174,7 +174,7 @@
                                 $cleanTitle = trim($cleanTitle);
 
                                 // SetlistSongを検索（タイトルとartist_idで）
-                                $setlistSong = \App\Models\SetlistSong::where('title', $cleanTitle);
+                                $setlistSong = \App\Models\SlSong::where('title', $cleanTitle);
                                 if ($artistId) {
                                     $setlistSong = $setlistSong->where('artist_id', $artistId);
                                 }
@@ -299,7 +299,7 @@
 
                             if ($isNumericId) {
                                 // SetlistSongテーブルから曲名を取得
-                                $song = \App\Models\SetlistSong::find($songValue);
+                                $song = \App\Models\SlSong::find($songValue);
                                 $songTitle = $song ? $song->title : $songValue;
                                 // SetlistSongの詳細ページにリンク
                                 $url = url('/setlist-songs/' . $songValue);
@@ -311,7 +311,7 @@
                                 $cleanTitle = trim($cleanTitle);
                                 
                                 // SetlistSongを検索（タイトルとartist_idで）
-                                $setlistSong = \App\Models\SetlistSong::where('title', $cleanTitle);
+                                $setlistSong = \App\Models\SlSong::where('title', $cleanTitle);
                                 if ($artistId) {
                                     $setlistSong = $setlistSong->where('artist_id', $artistId);
                                 }
@@ -400,7 +400,7 @@
 
                                 if ($isNumericId) {
                                     // SetlistSongテーブルから曲名を取得
-                                    $song = \App\Models\SetlistSong::find($songValue);
+                                    $song = \App\Models\SlSong::find($songValue);
                                     $songTitle = $song ? $song->title : $songValue;
                                     // SetlistSongの詳細ページにリンク
                                     $url = url('/setlist-songs/' . $songValue);
@@ -412,7 +412,7 @@
                                     $cleanTitle = trim($cleanTitle);
                                     
                                     // SetlistSongを検索（タイトルとartist_idで）
-                                    $setlistSong = \App\Models\SetlistSong::where('title', $cleanTitle);
+                                    $setlistSong = \App\Models\SlSong::where('title', $cleanTitle);
                                     if ($artistId) {
                                         $setlistSong = $setlistSong->where('artist_id', $artistId);
                                     }
