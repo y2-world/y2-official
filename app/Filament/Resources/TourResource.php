@@ -191,10 +191,8 @@ class TourResource extends Resource
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
         return parent::getEloquentQuery()
-            ->join('artists', 'tours.artist_id', '=', 'artists.id')
-            ->orderBy('artists.created_at', 'desc')
-            ->orderBy('tours.date1', 'desc')
-            ->select('tours.*');
+            ->orderByRaw('(SELECT created_at FROM artists WHERE artists.id = tours.artist_id) DESC')
+            ->orderBy('date1', 'desc');
     }
 
     public static function getRelations(): array
