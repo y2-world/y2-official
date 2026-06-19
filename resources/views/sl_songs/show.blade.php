@@ -42,39 +42,38 @@
         </div>
     </div>
 
-    <div class="container-lg database-year-content">
-
-        @if (!$setlists->isEmpty())
-            <h3 style="margin-top: 0; margin-bottom: 15px;">Live Performances</h3>
-            <table class="table table-striped count">
-                <thead>
-                    <tr>
-                        <th class="mobile">#</th>
-                        <th class="mobile">開催日</th>
-                        <th class="mobile">タイトル</th>
-                        <th class="pc">会場</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($setlists as $setlist)
-                        <tr>
-                            <td></td>
-                            <td class="td_date">{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
-                            <td class="td_title"><a
-                                    href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
-                            <td class="pc"><a
-                                    href="{{ url('/venue?keyword=' . urlencode($setlist->venue)) }}">{{ $setlist->venue }}</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            </div>
-        @endif
-
-        {{-- 前後リンク --}}
+    <div class="container database-year-content">
         <div class="row justify-content-center">
             <div class="col-xl-9">
+
+                @if (!$setlists->isEmpty())
+                    <h3 style="margin-top: 0; margin-bottom: 15px;">Live Performances</h3>
+                    <table class="table table-striped count">
+                        <thead>
+                            <tr>
+                                <th class="mobile">#</th>
+                                <th class="mobile">開催日</th>
+                                <th class="mobile">タイトル</th>
+                                <th class="pc">会場</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($setlists as $setlist)
+                                <tr>
+                                    <td></td>
+                                    <td class="td_date">{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
+                                    <td class="td_title"><a
+                                            href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
+                                    <td class="pc"><a
+                                            href="{{ url('/venue?keyword=' . urlencode($setlist->venue)) }}">{{ $setlist->venue }}</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif
+
+                {{-- 前後リンク --}}
                 <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
                     @if (isset($previous))
                         <a href="{{ url('/setlist-songs', $previous->id) }}" rel="prev"
@@ -93,6 +92,7 @@
                         </a>
                     @endif
                 </div>
+
             </div>
         </div>
     </div>
