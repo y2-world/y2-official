@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\SlSetlist;
 use App\Models\SlSong;
-use App\Artist;
+use App\Models\Artist;
 
 class ImportSetlistSongsFromSetlists extends Command
 {

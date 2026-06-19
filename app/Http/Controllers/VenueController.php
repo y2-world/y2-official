@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Artist;
+use App\Models\Artist;
 use Illuminate\Http\Request;
 use App\SlSetlist;
 
