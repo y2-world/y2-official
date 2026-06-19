@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OfficialLyric extends Model
 {
-    protected $table = \'official_lyrics\';
+    protected $table = 'official_lyrics';
 
     protected $fillable = [
         'title',

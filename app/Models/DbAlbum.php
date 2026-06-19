@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DbAlbum extends Model
 {
-    protected $table = \'db_albums\';
+    protected $table = 'db_albums';
 
     protected $fillable = [
         'artist_id',

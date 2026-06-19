@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SlSetlist extends Model
 {
-    protected $table = \'sl_setlists\';
+    protected $table = 'sl_setlists';
 
     protected $casts = [
         'setlist' => 'array',

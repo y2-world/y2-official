@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SlSong extends Model
 {
-    protected $table = \'sl_songs\';
+    protected $table = 'sl_songs';
 
     use HasFactory;
 

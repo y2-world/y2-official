@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OfficialProfile extends Model
 {
-    protected $table = \'official_profiles\';
+    protected $table = 'official_profiles';
 
     protected $fillable = [
         'name',
