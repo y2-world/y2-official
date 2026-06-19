@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\Setlist;
-use App\Models\SetlistSong;
+use App\Models\SlSetlist;
+use App\Models\SlSong;
 use App\Artist;
 
 class UpdateSetlistsWithSongIds extends Command
@@ -32,7 +32,7 @@ class UpdateSetlistsWithSongIds extends Command
     {
         $this->info('Starting update of setlists with song IDs...');
         
-        $setlists = Setlist::all();
+        $setlists = SlSetlist::all();
         $totalSetlists = $setlists->count();
         $processed = 0;
         $updated = 0;
@@ -132,7 +132,7 @@ class UpdateSetlistsWithSongIds extends Command
                 $title = trim($title);
                 
                 if (!empty($title)) {
-                    $song = SetlistSong::where('title', $title)
+                    $song = SlSong::where('title', $title)
                         ->where('artist_id', $defaultArtistId)
                         ->first();
                     
@@ -178,7 +178,7 @@ class UpdateSetlistsWithSongIds extends Command
                         }
                     }
                     
-                    $query = SetlistSong::where('title', $title);
+                    $query = SlSong::where('title', $title);
                     if ($artistId !== null) {
                         $query->where('artist_id', $artistId);
                     } else {

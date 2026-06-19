@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Artist;
-use App\Models\Song;
-use App\Models\Tour;
-use App\Models\TourSetlist;
+use App\Models\DbSong;
+use App\Models\DbConcert;
+use App\Models\DbSetlist;
 
 class LiveController extends Controller
 {
@@ -14,7 +14,7 @@ class LiveController extends Controller
         $artist = Artist::findOrFail($artistId);
         $type = request()->input('type');
 
-        $liveQuery = Tour::where('artist_id', $artistId)->orderBy('date1', 'desc');
+        $liveQuery = DbConcert::where('artist_id', $artistId)->orderBy('date1', 'desc');
 
         if ($type === '1') {
             $liveQuery->whereIn('type', [0, 1]);
@@ -49,12 +49,12 @@ class LiveController extends Controller
 
     public function show($id)
     {
-        $tours = Tour::findOrFail($id);
+        $tours = DbConcert::findOrFail($id);
         $artist = $tours->artist;
-        $songs = Song::orderBy('id', 'asc')->get();
-        $tourSetlists = TourSetlist::where('tour_id', $id)->orderBy('order_no', 'asc')->get();
-        $previous = Tour::where('artist_id', $tours->artist_id)->where('date1', '<', $tours->date1)->orderBy('date1', 'desc')->first();
-        $next = Tour::where('artist_id', $tours->artist_id)->where('date1', '>', $tours->date1)->orderBy('date1')->first();
+        $songs = DbSong::orderBy('id', 'asc')->get();
+        $tourSetlists = DbSetlist::where('tour_id', $id)->orderBy('order_no', 'asc')->get();
+        $previous = DbConcert::where('artist_id', $tours->artist_id)->where('date1', '<', $tours->date1)->orderBy('date1', 'desc')->first();
+        $next = DbConcert::where('artist_id', $tours->artist_id)->where('date1', '>', $tours->date1)->orderBy('date1')->first();
 
         return view('live.show', compact('songs', 'previous', 'next', 'tours', 'tourSetlists', 'artist'));
     }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\News;
+use App\Models\OfficialNews;
 
 class NewsController extends Controller
 {
@@ -46,7 +46,7 @@ class NewsController extends Controller
      */
     public function show($id)
     {
-        $news = News::findOrFail($id);
+        $news = OfficialNews::findOrFail($id);
 
         // JSONリクエストの場合はJSONを返す（既存のポップアップ機能用）
         if (request()->wantsJson() || request()->ajax()) {

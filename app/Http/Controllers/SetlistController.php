@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Artist;
-use App\Setlist;
+use App\SlSetlist;
 use Illuminate\Http\Request;
 
 class SetlistController extends Controller
@@ -19,7 +19,7 @@ class SetlistController extends Controller
         $today = now()->toDateString();
 
         // これからのライブ（今日以降）
-        $upcomingQuery = Setlist::where('date', '>=', $today)->orderBy('date', 'asc');
+        $upcomingQuery = SlSetlist::where('date', '>=', $today)->orderBy('date', 'asc');
 
         if ($type === '1') {
             $upcomingQuery->where('fes', 0);
@@ -31,7 +31,7 @@ class SetlistController extends Controller
         $upcomingTotalCount = $upcomingSetlists->count();
 
         // 今までのライブ（今日より前）
-        $pastQuery = Setlist::where('date', '<', $today)->orderBy('date', 'desc');
+        $pastQuery = SlSetlist::where('date', '<', $today)->orderBy('date', 'desc');
 
         if ($type === '1') {
             $pastQuery->where('fes', 0);
@@ -49,7 +49,7 @@ class SetlistController extends Controller
         $allArtists = $artists;
 
         // Setlistから年のリストを取得
-        $years = Setlist::select('year')
+        $years = SlSetlist::select('year')
             ->whereNotNull('year')
             ->distinct()
             ->orderBy('year', 'asc')
@@ -74,7 +74,7 @@ class SetlistController extends Controller
         }
 
         // 検索候補を取得（曲名 + アーティスト名）
-        $suggestions = \App\Models\SetlistSong::query()
+        $suggestions = \App\Models\SlSong::query()
             ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
             ->orderBy('setlist_songs.title', 'asc')
             ->get([
@@ -127,11 +127,11 @@ class SetlistController extends Controller
         // メモリリミットを増やす
         ini_set('memory_limit', '256M');
         
-        $setlists = Setlist::with('artist')->findOrFail($id);
+        $setlists = SlSetlist::with('artist')->findOrFail($id);
         $artists = Artist::orderBy('id', 'asc')
         ->get(['id', 'name']); // 必要なカラムのみ取得
-        $previous = Setlist::where('date', '<', $setlists->date)->orderBy('date', 'desc')->first();
-        $next = Setlist::where('date', '>', $setlists->date)->orderBy('date')->first();
+        $previous = SlSetlist::where('date', '<', $setlists->date)->orderBy('date', 'desc')->first();
+        $next = SlSetlist::where('date', '>', $setlists->date)->orderBy('date')->first();
         
         return view('setlists.show', compact('artists', 'setlists', 'previous', 'next'));
     }

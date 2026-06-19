@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Artist;
 use Illuminate\Http\Request;
-use App\Setlist;
+use App\SlSetlist;
 
 class VenueController extends Controller
 {
@@ -15,7 +15,7 @@ class VenueController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Setlist::query();
+        $query = SlSetlist::query();
         $keyword = $request->input('keyword');
 
         // キーワードが空でない場合のみ、検索条件を追加

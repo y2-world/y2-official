@@ -8,6 +8,6 @@ class Year extends Model
 {
     public function setlists()
     {
-        return $this->hasMany('App\Setlist'); 
+        return $this->hasMany('App\SlSetlist'); 
     }
 }

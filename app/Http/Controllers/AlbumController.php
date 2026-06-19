@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Album;
+use App\Models\DbAlbum;
 use App\Models\Artist;
-use App\Models\Song;
+use App\Models\DbSong;
 use Illuminate\Http\Request;
 
 class AlbumController extends Controller
@@ -12,7 +12,7 @@ class AlbumController extends Controller
     public function index($artistId)
     {
         $artist = Artist::findOrFail($artistId);
-        $albums = Album::where('artist_id', $artistId)
+        $albums = DbAlbum::where('artist_id', $artistId)
             ->orderBy('date', 'asc')
             ->paginate(10);
         $totalCount = $albums->total();
@@ -33,11 +33,11 @@ class AlbumController extends Controller
 
     public function show($id)
     {
-        $albums = Album::findOrFail($id);
+        $albums = DbAlbum::findOrFail($id);
         $artist = $albums->artist;
-        $songs = Song::where('artist_id', $albums->artist_id)->get()->keyBy('id');
-        $previous = Album::where('artist_id', $albums->artist_id)->where('id', '<', $albums->id)->orderBy('id', 'desc')->first();
-        $next = Album::where('artist_id', $albums->artist_id)->where('id', '>', $albums->id)->orderBy('id')->first();
+        $songs = DbSong::where('artist_id', $albums->artist_id)->get()->keyBy('id');
+        $previous = DbAlbum::where('artist_id', $albums->artist_id)->where('id', '<', $albums->id)->orderBy('id', 'desc')->first();
+        $next = DbAlbum::where('artist_id', $albums->artist_id)->where('id', '>', $albums->id)->orderBy('id')->first();
 
         return view('albums.show', compact('songs', 'albums', 'previous', 'next', 'artist'));
     }

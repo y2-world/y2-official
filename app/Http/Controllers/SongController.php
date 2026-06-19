@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Artist;
-use App\Models\Song;
-use App\Models\Album;
-use App\Models\Single;
-use App\Models\Tour;
+use App\Models\DbSong;
+use App\Models\DbAlbum;
+use App\Models\DbSingle;
+use App\Models\DbConcert;
 use Illuminate\Http\Request;
-use App\Models\TourSetlist;
+use App\Models\DbSetlist;
 
 class SongController extends Controller
 {
@@ -21,16 +21,16 @@ class SongController extends Controller
     {
         $artist = Artist::findOrFail($artistId);
 
-        $songs = Song::where('artist_id', $artistId)
+        $songs = DbSong::where('artist_id', $artistId)
             ->orderBy('id', 'asc')
             ->paginate(10);
         $totalCount = $songs->total();
 
-        $albums = Album::where('artist_id', $artistId)->orderBy('id', 'asc')->get();
+        $albums = DbAlbum::where('artist_id', $artistId)->orderBy('id', 'asc')->get();
         $bios = $artist->years;
 
         // 検索用候補（曲名 + アーティスト名）
-        $suggestions = \App\Models\SetlistSong::query()
+        $suggestions = \App\Models\SlSong::query()
             ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
             ->orderBy('setlist_songs.title', 'asc')
             ->get([
@@ -93,11 +93,11 @@ class SongController extends Controller
      */
     public function show($id)
     {
-        $songs = Song::findOrFail($id);
+        $songs = DbSong::findOrFail($id);
         $title = $songs->title;
 
-        // 関連する TourSetlist を tour 付きで取得してフィルター
-        $tourSetlists = TourSetlist::with('tour')->get()
+        // 関連する DbSetlist を tour 付きで取得してフィルター
+        $tourSetlists = DbSetlist::with('tour')->get()
             ->filter(function ($setlistModel) use ($id, $title) {
                 $setlistArr = is_array($setlistModel->setlist)
                     ? $setlistModel->setlist
@@ -133,12 +133,12 @@ class SongController extends Controller
         $tours = $tourSetlists->pluck('tour')->filter()->unique('id')->values();
 
         // その他データ
-        $allSongs = Song::orderBy('id')->get();
-        $albums = Album::orderBy('id')->get();
-        $singles = Single::orderBy('id')->get();
-        $previous = Song::where('artist_id', $songs->artist_id)->where('id', '<', $songs->id)->orderBy('id', 'desc')->first();
-        $next = Song::where('artist_id', $songs->artist_id)->where('id', '>', $songs->id)->orderBy('id')->first();
-        $songNumber = Song::where('artist_id', $songs->artist_id)->where('id', '<=', $songs->id)->count();
+        $allSongs = DbSong::orderBy('id')->get();
+        $albums = DbAlbum::orderBy('id')->get();
+        $singles = DbSingle::orderBy('id')->get();
+        $previous = DbSong::where('artist_id', $songs->artist_id)->where('id', '<', $songs->id)->orderBy('id', 'desc')->first();
+        $next = DbSong::where('artist_id', $songs->artist_id)->where('id', '>', $songs->id)->orderBy('id')->first();
+        $songNumber = DbSong::where('artist_id', $songs->artist_id)->where('id', '<=', $songs->id)->count();
 
         return view('songs.show', compact(
             'songs',
@@ -194,7 +194,7 @@ class SongController extends Controller
             $rawQuery = $request->input('q', '');
             
             // デバッグ: リクエスト情報をログに記録
-            \Log::info('=== Song Search API Called ===');
+            \Log::info('=== DbSong Search API Called ===');
             \Log::info('Raw query: "' . $rawQuery . '"');
             \Log::info('Query length: ' . mb_strlen($rawQuery));
             \Log::info('Request method: ' . $request->method());
@@ -207,7 +207,7 @@ class SongController extends Controller
             // 空文字列の場合はA-Z順に最初の10件を返す
             if ($query === '') {
                 \Log::info('Query is empty, returning songs in alphabetical order');
-                $songs = Song::orderBy('title')
+                $songs = DbSong::orderBy('title')
                     ->limit(10)
                     ->get()
                     ->map(function ($song) {
@@ -226,7 +226,7 @@ class SongController extends Controller
             \Log::info('Escaped query: "' . $escapedQuery . '"');
             \Log::info('Search pattern: "' . $escapedQuery . '%"');
 
-            $songs = Song::whereRaw('LOWER(title) LIKE LOWER(?)', [$escapedQuery . '%'])
+            $songs = DbSong::whereRaw('LOWER(title) LIKE LOWER(?)', [$escapedQuery . '%'])
                 ->orderBy('title')
                 ->limit(10)
                 ->get()
@@ -251,15 +251,15 @@ class SongController extends Controller
             
             $response = $songs->toArray();
             \Log::info('Response JSON length: ' . strlen(json_encode($response)) . ' bytes');
-            \Log::info('=== Song Search API End ===');
+            \Log::info('=== DbSong Search API End ===');
 
             return response()->json($response);
         } catch (\Exception $e) {
-            \Log::error('=== Song Search API Error ===');
+            \Log::error('=== DbSong Search API Error ===');
             \Log::error('Error message: ' . $e->getMessage());
             \Log::error('Error file: ' . $e->getFile() . ':' . $e->getLine());
             \Log::error('Stack trace: ' . $e->getTraceAsString());
-            \Log::error('=== Song Search API Error End ===');
+            \Log::error('=== DbSong Search API Error End ===');
             return response()->json([]);
         }
     }

@@ -3,7 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use App\Setlist;
+use App\SlSetlist;
 
 class VenueSearch extends Component
 {
@@ -19,7 +19,7 @@ class VenueSearch extends Component
 
     public function loadInitialVenues()
     {
-        $this->venues = Setlist::query()
+        $this->venues = SlSetlist::query()
             ->whereNotNull('venue')
             ->where('venue', '!=', '')
             ->distinct()
@@ -43,7 +43,7 @@ class VenueSearch extends Component
 
         $escapedQuery = str_replace(['%', '_'], ['\%', '\_'], $this->search);
 
-        $this->venues = Setlist::query()
+        $this->venues = SlSetlist::query()
             ->whereNotNull('venue')
             ->where('venue', '!=', '')
             ->whereRaw('LOWER(venue) LIKE LOWER(?)', [$escapedQuery . '%'])

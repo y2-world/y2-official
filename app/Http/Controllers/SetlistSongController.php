@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SetlistSong;
-use App\Models\Setlist;
+use App\Models\SlSong;
+use App\Models\SlSetlist;
 use Illuminate\Http\Request;
 
 class SetlistSongController extends Controller
@@ -16,11 +16,11 @@ class SetlistSongController extends Controller
      */
     public function show($id)
     {
-        $song = SetlistSong::findOrFail($id);
+        $song = SlSong::findOrFail($id);
         $title = $song->title;
 
         // この曲が含まれるセットリストを検索
-        $setlists = Setlist::all()->filter(function ($setlist) use ($id, $title) {
+        $setlists = SlSetlist::all()->filter(function ($setlist) use ($id, $title) {
             // setlist フィールドをチェック
             $setlistArr = is_array($setlist->setlist)
                 ? $setlist->setlist
@@ -63,11 +63,11 @@ class SetlistSongController extends Controller
         ->values();
 
         // 前後のSetlistSong
-        $previous = SetlistSong::where('artist_id', $song->artist_id)->where('id', '<', $song->id)->orderBy('id', 'desc')->first();
-        $next = SetlistSong::where('artist_id', $song->artist_id)->where('id', '>', $song->id)->orderBy('id')->first();
+        $previous = SlSong::where('artist_id', $song->artist_id)->where('id', '<', $song->id)->orderBy('id', 'desc')->first();
+        $next = SlSong::where('artist_id', $song->artist_id)->where('id', '>', $song->id)->orderBy('id')->first();
 
         // 検索候補（曲名 + アーティスト名）
-        $suggestions = SetlistSong::query()
+        $suggestions = SlSong::query()
             ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
             ->orderBy('setlist_songs.title', 'asc')
             ->get([
@@ -100,7 +100,7 @@ class SetlistSongController extends Controller
             $rawQuery = $request->input('q', '');
             
             // デバッグ: リクエスト情報をログに記録
-            \Log::info('=== SetlistSong Search API Called ===');
+            \Log::info('=== SlSong Search API Called ===');
             \Log::info('Raw query: "' . $rawQuery . '"');
             \Log::info('Query length: ' . mb_strlen($rawQuery));
             \Log::info('Request method: ' . $request->method());
@@ -113,7 +113,7 @@ class SetlistSongController extends Controller
             // 空文字列の場合はA-Z順に最初の10件を返す
             if ($query === '') {
                 \Log::info('Query is empty, returning songs in alphabetical order');
-                $songs = SetlistSong::query()
+                $songs = SlSong::query()
                     ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
                     ->orderBy('setlist_songs.title')
                     ->limit(10)
@@ -131,7 +131,7 @@ class SetlistSongController extends Controller
             \Log::info('Escaped query: "' . $escapedQuery . '"');
             \Log::info('Search pattern: "' . $escapedQuery . '%"');
 
-            $songs = SetlistSong::query()
+            $songs = SlSong::query()
                 ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
                 ->whereRaw('LOWER(setlist_songs.title) LIKE LOWER(?)', [$escapedQuery . '%'])
                 ->orderBy('setlist_songs.title')
@@ -155,16 +155,16 @@ class SetlistSongController extends Controller
             
             $response = $songs->toArray();
             \Log::info('Response JSON length: ' . strlen(json_encode($response)) . ' bytes');
-            \Log::info('=== SetlistSong Search API End ===');
+            \Log::info('=== SlSong Search API End ===');
 
             // JSON形式で返す（配列形式）
             return response()->json($response);
         } catch (\Exception $e) {
-            \Log::error('=== SetlistSong Search API Error ===');
+            \Log::error('=== SlSong Search API Error ===');
             \Log::error('Error message: ' . $e->getMessage());
             \Log::error('Error file: ' . $e->getFile() . ':' . $e->getLine());
             \Log::error('Stack trace: ' . $e->getTraceAsString());
-            \Log::error('=== SetlistSong Search API Error End ===');
+            \Log::error('=== SlSong Search API Error End ===');
             return response()->json([]);
         }
     }

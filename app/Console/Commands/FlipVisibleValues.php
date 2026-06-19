@@ -15,7 +15,7 @@ class FlipVisibleValues extends Command
         $this->info('Flipping visible values...');
 
         DB::statement('UPDATE news SET visible = CASE WHEN visible = 0 THEN 1 WHEN visible = 1 THEN 0 ELSE visible END');
-        $this->info('News updated');
+        $this->info('OfficialNews updated');
 
         DB::statement('UPDATE discos SET visible = CASE WHEN visible = 0 THEN 1 WHEN visible = 1 THEN 0 ELSE visible END');
         $this->info('Discos updated');

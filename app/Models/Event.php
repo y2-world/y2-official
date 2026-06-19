@@ -13,7 +13,7 @@ class Event extends Model
 
     public function songs()
     {
-        return $this->hasMany('App\Models\Song'); 
+        return $this->hasMany('App\Models\DbSong'); 
     }
 
     public function getTourAttribute($value)

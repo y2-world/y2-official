@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Profile;
+use App\Models\OfficialProfile;
 
 class ProfileController extends Controller
 {
@@ -14,7 +14,7 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        $profiles = Profile::orderBy('created_at', 'desc')
+        $profiles = OfficialProfile::orderBy('created_at', 'desc')
         ->get();
         return view('profile.index', compact('profiles'));
     }

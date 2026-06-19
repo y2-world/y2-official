@@ -3,7 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use App\Models\Song;
+use App\Models\DbSong;
 
 class DatabaseSongSearch extends Component
 {
@@ -19,7 +19,7 @@ class DatabaseSongSearch extends Component
 
     public function loadInitialSongs()
     {
-        $this->songs = Song::when($this->artistId, fn($q) => $q->where('artist_id', $this->artistId))
+        $this->songs = DbSong::when($this->artistId, fn($q) => $q->where('artist_id', $this->artistId))
             ->orderBy('title')
             ->limit(10)
             ->get()
@@ -36,7 +36,7 @@ class DatabaseSongSearch extends Component
 
         $escaped = str_replace(['%', '_'], ['\%', '\_'], $this->search);
 
-        $this->songs = Song::when($this->artistId, fn($q) => $q->where('artist_id', $this->artistId))
+        $this->songs = DbSong::when($this->artistId, fn($q) => $q->where('artist_id', $this->artistId))
             ->whereRaw('LOWER(title) LIKE LOWER(?)', [$escaped . '%'])
             ->orderBy('title')
             ->limit(10)

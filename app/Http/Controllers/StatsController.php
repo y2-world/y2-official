@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Setlist;
-use App\Models\TourSetlist;
-use App\Models\Tour;
+use App\Models\SlSetlist;
+use App\Models\DbSetlist;
+use App\Models\DbConcert;
 use App\Models\Artist;
-use App\Models\Song;
-use App\Models\Single;
-use App\Models\Album;
-use App\Models\SetlistSong;
+use App\Models\DbSong;
+use App\Models\DbSingle;
+use App\Models\DbAlbum;
+use App\Models\SlSong;
 use Illuminate\Support\Facades\DB;
 
 class StatsController extends Controller
@@ -60,11 +60,11 @@ class StatsController extends Controller
     {
         $today = now()->toDateString();
 
-        $totalShows = Setlist::where('date', '<=', $today)->count();
+        $totalShows = SlSetlist::where('date', '<=', $today)->count();
 
         // ユニークなアーティスト数（単独ライブ + フェス出演アーティスト）
         $allArtistIds = [];
-        $allSetlists = Setlist::where('date', '<=', $today)->get();
+        $allSetlists = SlSetlist::where('date', '<=', $today)->get();
         foreach ($allSetlists as $setlist) {
             if ($setlist->artist_id) {
                 $allArtistIds[$setlist->artist_id] = true;
@@ -97,7 +97,7 @@ class StatsController extends Controller
         $uniqueSongs = count($allSongIds);
 
         // 訪れた会場数
-        $uniqueVenues = Setlist::where('date', '<=', $today)
+        $uniqueVenues = SlSetlist::where('date', '<=', $today)
             ->whereNotNull('venue')
             ->where('venue', '!=', '')
             ->distinct('venue')
@@ -115,7 +115,7 @@ class StatsController extends Controller
     {
         // 最も聴いた曲トップ10（IDのみ使用）
         $today = now()->toDateString();
-        $setlists = Setlist::where('date', '<=', $today)->get();
+        $setlists = SlSetlist::where('date', '<=', $today)->get();
         $songPlayCounts = [];
 
         if ($uniqueTourOnly) {
@@ -194,7 +194,7 @@ class StatsController extends Controller
 
         $topSongs = [];
         foreach ($topSongIds as $songId) {
-            $setlistSong = SetlistSong::find($songId);
+            $setlistSong = SlSong::find($songId);
             if ($setlistSong) {
                 $artist = Artist::find($setlistSong->artist_id);
                 $topSongs[] = [
@@ -214,7 +214,7 @@ class StatsController extends Controller
     {
         // アーティスト別の参加公演数（単独ライブ + フェス出演）
         $today = now()->toDateString();
-        $setlists = Setlist::where('date', '<=', $today)->get();
+        $setlists = SlSetlist::where('date', '<=', $today)->get();
         $artistShowCounts = [];
 
         foreach ($setlists as $setlist) {
@@ -265,7 +265,7 @@ class StatsController extends Controller
     {
         // 最も訪れた会場トップ10
         $today = now()->toDateString();
-        $venues = Setlist::where('date', '<=', $today)
+        $venues = SlSetlist::where('date', '<=', $today)
             ->select('venue', DB::raw('count(*) as count'))
             ->whereNotNull('venue')
             ->where('venue', '!=', '')
@@ -281,7 +281,7 @@ class StatsController extends Controller
     {
         // 年別の参加公演数（多い順）
         $today = now()->toDateString();
-        $yearStats = Setlist::where('date', '<=', $today)
+        $yearStats = SlSetlist::where('date', '<=', $today)
             ->select('year', DB::raw('count(*) as count'))
             ->whereNotNull('year')
             ->groupBy('year')
@@ -296,7 +296,7 @@ class StatsController extends Controller
     {
         // 月別の参加公演数分布
         $today = now()->toDateString();
-        $monthCounts = Setlist::where('date', '<=', $today)
+        $monthCounts = SlSetlist::where('date', '<=', $today)
             ->select(DB::raw('MONTH(date) as month'), DB::raw('count(*) as count'))
             ->whereNotNull('date')
             ->groupBy('month')
@@ -349,13 +349,13 @@ class StatsController extends Controller
 
     private function getDatabaseOverallStats(int $artistId)
     {
-        $tourIds = Tour::where('artist_id', $artistId)->pluck('id');
+        $tourIds = DbConcert::where('artist_id', $artistId)->pluck('id');
         $totalTours = $tourIds->count();
-        $totalSetlistPatterns = TourSetlist::whereIn('tour_id', $tourIds)->count();
-        $totalSongs = Song::where('artist_id', $artistId)->count();
+        $totalSetlistPatterns = DbSetlist::whereIn('tour_id', $tourIds)->count();
+        $totalSongs = DbSong::where('artist_id', $artistId)->count();
 
         $uniqueSongIds = [];
-        $tourSetlists = TourSetlist::whereIn('tour_id', $tourIds)->get();
+        $tourSetlists = DbSetlist::whereIn('tour_id', $tourIds)->get();
         foreach ($tourSetlists as $setlist) {
             foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
                 if (isset($s['song']) && is_numeric($s['song'])) {
@@ -383,8 +383,8 @@ class StatsController extends Controller
 
     private function getDatabaseSongStats(int $artistId)
     {
-        $tourIds = Tour::where('artist_id', $artistId)->pluck('id');
-        $tourSetlists = TourSetlist::whereIn('tour_id', $tourIds)->get();
+        $tourIds = DbConcert::where('artist_id', $artistId)->pluck('id');
+        $tourSetlists = DbSetlist::whereIn('tour_id', $tourIds)->get();
         $songTourCounts = [];
 
         foreach ($tourSetlists as $setlist) {
@@ -405,7 +405,7 @@ class StatsController extends Controller
 
         $stats = [];
         foreach ($counts as $songId => $count) {
-            $song = Song::find($songId);
+            $song = DbSong::find($songId);
             if ($song) $stats[] = ['song_id' => $songId, 'title' => $song->title, 'count' => $count];
         }
         return $stats;
@@ -413,7 +413,7 @@ class StatsController extends Controller
 
     private function getDatabaseYearStats(int $artistId)
     {
-        return Tour::where('artist_id', $artistId)
+        return DbConcert::where('artist_id', $artistId)
             ->select(DB::raw('YEAR(date1) as year'), DB::raw('count(*) as count'))
             ->whereNotNull('date1')
             ->groupBy('year')
@@ -424,8 +424,8 @@ class StatsController extends Controller
 
     private function getDatabaseEncoreSongStats(int $artistId)
     {
-        $tourIds = Tour::where('artist_id', $artistId)->pluck('id');
-        $tourSetlists = TourSetlist::whereIn('tour_id', $tourIds)->get();
+        $tourIds = DbConcert::where('artist_id', $artistId)->pluck('id');
+        $tourSetlists = DbSetlist::whereIn('tour_id', $tourIds)->get();
         $counts = [];
 
         foreach ($tourSetlists as $setlist) {
@@ -444,7 +444,7 @@ class StatsController extends Controller
 
         $stats = [];
         foreach (array_slice($counts, 0, 10, true) as $songId => $count) {
-            $song = Song::find($songId);
+            $song = DbSong::find($songId);
             if ($song) $stats[] = ['song_id' => $songId, 'title' => $song->title, 'count' => $count];
         }
         return $stats;
@@ -452,8 +452,8 @@ class StatsController extends Controller
 
     private function getDatabaseOpeningSongStats(int $artistId)
     {
-        $tourIds = Tour::where('artist_id', $artistId)->pluck('id');
-        $tourSetlists = TourSetlist::whereIn('tour_id', $tourIds)->get();
+        $tourIds = DbConcert::where('artist_id', $artistId)->pluck('id');
+        $tourSetlists = DbSetlist::whereIn('tour_id', $tourIds)->get();
         $counts = [];
 
         foreach ($tourSetlists as $setlist) {
@@ -471,7 +471,7 @@ class StatsController extends Controller
 
         $stats = [];
         foreach (array_slice($counts, 0, 10, true) as $songId => $count) {
-            $song = Song::find($songId);
+            $song = DbSong::find($songId);
             if ($song) $stats[] = ['song_id' => $songId, 'title' => $song->title, 'count' => $count];
         }
         return $stats;
@@ -479,8 +479,8 @@ class StatsController extends Controller
 
     private function getDatabaseLongestSetlists(int $artistId)
     {
-        $tourIds = Tour::where('artist_id', $artistId)->pluck('id');
-        $tourSetlists = TourSetlist::whereIn('tour_id', $tourIds)->get();
+        $tourIds = DbConcert::where('artist_id', $artistId)->pluck('id');
+        $tourSetlists = DbSetlist::whereIn('tour_id', $tourIds)->get();
         $lengths = [];
 
         foreach ($tourSetlists as $setlist) {
@@ -491,7 +491,7 @@ class StatsController extends Controller
                 }
             }
             if ($count > 0) {
-                $tour = Tour::find($setlist->tour_id);
+                $tour = DbConcert::find($setlist->tour_id);
                 $lengths[] = [
                     'tour_id' => $setlist->tour_id,
                     'tour_title' => $tour ? $tour->title : '不明',
@@ -518,7 +518,7 @@ class StatsController extends Controller
 
         // そのアーティストのライブ + フェスでの出演を取得（未来の公演を除外）
         $today = now()->toDateString();
-        $setlists = Setlist::where('date', '<=', $today)->get();
+        $setlists = SlSetlist::where('date', '<=', $today)->get();
 
         // 通常のカウント（1ライブ内で同じ曲が複数回演奏されても1回カウント）
         $songPlayCounts = [];
@@ -626,7 +626,7 @@ class StatsController extends Controller
         // 全楽曲リスト（聴いた回数順）- 通常
         $allSongs = [];
         foreach ($songPlayCounts as $songId => $count) {
-            $setlistSong = SetlistSong::find($songId);
+            $setlistSong = SlSong::find($songId);
             if ($setlistSong) {
                 $allSongs[] = [
                     'song_id' => $songId,
@@ -639,7 +639,7 @@ class StatsController extends Controller
         // 全楽曲リスト（同名ツアー1回カウント）
         $allSongsUnique = [];
         foreach ($songPlayCountsUnique as $songId => $count) {
-            $setlistSong = SetlistSong::find($songId);
+            $setlistSong = SlSong::find($songId);
             if ($setlistSong) {
                 $allSongsUnique[] = [
                     'song_id' => $songId,

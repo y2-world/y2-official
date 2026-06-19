@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\Setlist;
-use App\Models\SetlistSong;
+use App\Models\SlSetlist;
+use App\Models\SlSong;
 use App\Artist;
 
 class ImportSetlistSongsFromSetlists extends Command
@@ -32,7 +32,7 @@ class ImportSetlistSongsFromSetlists extends Command
     {
         $this->info('Starting import of songs from setlists...');
         
-        $setlists = Setlist::all();
+        $setlists = SlSetlist::all();
         $totalSetlists = $setlists->count();
         $processed = 0;
         $created = 0;
@@ -124,7 +124,7 @@ class ImportSetlistSongsFromSetlists extends Command
 
         // song が数値 ID の場合
         if (is_numeric($songValue)) {
-            $existingSong = SetlistSong::find($songValue);
+            $existingSong = SlSong::find($songValue);
             if ($existingSong) {
                 // 既存の曲なのでスキップ
                 return 'skipped';
@@ -146,7 +146,7 @@ class ImportSetlistSongsFromSetlists extends Command
 
             // firstOrCreate で重複を防ぐ
             try {
-                SetlistSong::firstOrCreate(
+                SlSong::firstOrCreate(
                     [
                         'title' => $title,
                         'artist_id' => $artistId,
@@ -200,7 +200,7 @@ class ImportSetlistSongsFromSetlists extends Command
 
         // song が数値 ID の場合
         if (is_numeric($songValue)) {
-            $existingSong = SetlistSong::find($songValue);
+            $existingSong = SlSong::find($songValue);
             if ($existingSong) {
                 // 既存の曲なのでスキップ
                 return 'skipped';
@@ -222,7 +222,7 @@ class ImportSetlistSongsFromSetlists extends Command
 
             // firstOrCreate で重複を防ぐ
             try {
-                SetlistSong::firstOrCreate(
+                SlSong::firstOrCreate(
                     [
                         'title' => $title,
                         'artist_id' => $artistId,

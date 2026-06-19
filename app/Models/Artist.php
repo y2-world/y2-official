@@ -18,22 +18,22 @@ class Artist extends Model
 
     public function setlists()
     {
-        return $this->hasMany(Setlist::class);
+        return $this->hasMany(SlSetlist::class);
     }
 
     public function songs()
     {
-        return $this->hasMany(Song::class);
+        return $this->hasMany(DbSong::class);
     }
 
     public function albums()
     {
-        return $this->hasMany(Album::class);
+        return $this->hasMany(DbAlbum::class);
     }
 
     public function singles()
     {
-        return $this->hasMany(Single::class);
+        return $this->hasMany(DbSingle::class);
     }
 
     public function getYearsAttribute()
@@ -49,6 +49,6 @@ class Artist extends Model
 
     public function tours()
     {
-        return $this->hasMany(Tour::class);
+        return $this->hasMany(DbConcert::class);
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Artist;
-use App\Setlist;
+use App\SlSetlist;
 
 class ArtistController extends Controller
 {
@@ -19,7 +19,7 @@ class ArtistController extends Controller
             ->paginate(10);
 
         // Setlistから年のリストを取得
-        $years = Setlist::select('year')
+        $years = SlSetlist::select('year')
             ->whereNotNull('year')
             ->distinct()
             ->orderBy('year', 'asc')
@@ -72,7 +72,7 @@ class ArtistController extends Controller
         $artists = Artist::orderBy('id', 'asc')->where('visible', 1)->get();
 
         // Setlistから年のリストを取得
-        $years = Setlist::select('year')
+        $years = SlSetlist::select('year')
             ->whereNotNull('year')
             ->distinct()
             ->orderBy('year', 'asc')
@@ -82,7 +82,7 @@ class ArtistController extends Controller
             });
 
         // 指定されたアーティストのセットリストを取得
-        $setlists = Setlist::where('artist_id', $artist->id)
+        $setlists = SlSetlist::where('artist_id', $artist->id)
         ->orWhere(function ($query) use ($artistId) {
             $query->whereRaw("
                 JSON_CONTAINS(fes_setlist, JSON_OBJECT('artist', ?))
@@ -95,7 +95,7 @@ class ArtistController extends Controller
         ->paginate(100);
 
         // 検索候補（曲名のみ）- 表示中のアーティストの楽曲のみ
-        $suggestions = \App\Models\SetlistSong::query()
+        $suggestions = \App\Models\SlSong::query()
             ->where('artist_id', $artistId)
             ->orderBy('title', 'asc')
             ->get(['id', 'title'])

@@ -412,7 +412,7 @@ class BzSongsSeeder extends Seeder
         ], $titles);
 
         // 既存タイトルはスキップ
-        $existing = DB::table('songs')
+        $existing = DB::table('db_songs')
             ->where('artist_id', $artistId)
             ->pluck('title')
             ->flip();
@@ -425,7 +425,7 @@ class BzSongsSeeder extends Seeder
         }
 
         foreach (array_chunk($insert, 100) as $chunk) {
-            DB::table('songs')->insert($chunk);
+            DB::table('db_songs')->insert($chunk);
         }
 
         $this->command->info('Inserted ' . count($insert) . " B'z songs.");

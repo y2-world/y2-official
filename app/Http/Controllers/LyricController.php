@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Disco;
-use App\Models\Lyric;
+use App\Models\OfficialRelease;
+use App\Models\OfficialLyric;
 
 class LyricController extends Controller
 {
@@ -15,11 +15,11 @@ class LyricController extends Controller
      */
     // public function index()
     // {
-    //     $lyrics = Lyric::orderBy('id', 'asc')
+    //     $lyrics = OfficialLyric::orderBy('id', 'asc')
     //         ->paginate(10);
     //     $totalCount = $lyrics->total();
 
-    //     $discos = Disco::orderBy('id', 'asc')
+    //     $discos = OfficialRelease::orderBy('id', 'asc')
     //         ->get();
 
     //     // AJAXリクエストの場合はJSON形式で返す
@@ -65,13 +65,13 @@ class LyricController extends Controller
      */
     public function show($id)
     {
-        // $lyrics = Lyric::find($id);
-        // $previous = Lyric::where('id', '<', $lyrics->id)->orderBy('id', 'desc')->first();
-        // $next = Lyric::where('id', '>', $lyrics->id)->orderBy('id')->first();
+        // $lyrics = OfficialLyric::find($id);
+        // $previous = OfficialLyric::where('id', '<', $lyrics->id)->orderBy('id', 'desc')->first();
+        // $next = OfficialLyric::where('id', '>', $lyrics->id)->orderBy('id')->first();
         
         // return view('lyrics.show', compact('lyrics', 'previous', 'next'));
 
-        $lyrics = Lyric::findOrFail($id);
+        $lyrics = OfficialLyric::findOrFail($id);
         return response()->json([
             'title' => $lyrics->title,
             'lyrics' => nl2br(e($lyrics->lyrics)), // 改行を <br> に変換して HTML エスケープ

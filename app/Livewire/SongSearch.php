@@ -3,7 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use App\Models\SetlistSong;
+use App\Models\SlSong;
 
 class SongSearch extends Component
 {
@@ -21,7 +21,7 @@ class SongSearch extends Component
 
     public function loadInitialSongs()
     {
-        $query = SetlistSong::query();
+        $query = SlSong::query();
 
         // アーティストIDが指定されている場合はフィルタリング（アーティスト名は表示しない）
         if ($this->artistId) {
@@ -60,7 +60,7 @@ class SongSearch extends Component
 
         $escapedQuery = str_replace(['%', '_'], ['\%', '\_'], $this->search);
 
-        $query = SetlistSong::query()
+        $query = SlSong::query()
             ->whereRaw('LOWER(setlist_songs.title) LIKE LOWER(?)', [$escapedQuery . '%']);
 
         // アーティストIDが指定されている場合はフィルタリング（アーティスト名は表示しない）

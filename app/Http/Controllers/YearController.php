@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Setlist;
+use App\Models\SlSetlist;
 use App\Models\Artist;
 
 class YearController extends Controller
@@ -16,7 +16,7 @@ class YearController extends Controller
     public function index()
     {
         // Setlistから年を取得（重複なし、降順）
-        $years = Setlist::select('year')
+        $years = SlSetlist::select('year')
             ->whereNotNull('year')
             ->distinct()
             ->orderBy('year', 'desc')
@@ -59,12 +59,12 @@ class YearController extends Controller
      */
     public function show($yearParam)
     {
-        // 指定された年の Setlist を取得
-        $setlists = Setlist::where('year', $yearParam)
+        // 指定された年の SlSetlist を取得
+        $setlists = SlSetlist::where('year', $yearParam)
             ->orderBy('date', 'asc')
             ->get();
 
-        // Setlist が存在しない場合は、404 エラーを返す
+        // SlSetlist が存在しない場合は、404 エラーを返す
         if ($setlists->isEmpty()) {
             abort(404);
         }
@@ -73,7 +73,7 @@ class YearController extends Controller
         $artists = Artist::orderBy('id', 'asc')->where('visible', 1)->get();
 
         // Setlistから年のリストを取得
-        $years = Setlist::select('year')
+        $years = SlSetlist::select('year')
             ->whereNotNull('year')
             ->distinct()
             ->orderBy('year', 'asc')
@@ -86,7 +86,7 @@ class YearController extends Controller
         $year = (object)['year' => $yearParam];
 
         // 検索候補を取得（曲名 + アーティスト名）
-        $suggestions = \App\Models\SetlistSong::query()
+        $suggestions = \App\Models\SlSong::query()
             ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
             ->orderBy('setlist_songs.title', 'asc')
             ->get([

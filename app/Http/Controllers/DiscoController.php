@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Disco;
-use App\Models\Lyric;
+use App\Models\OfficialRelease;
+use App\Models\OfficialLyric;
 
 class DiscoController extends Controller
 {
@@ -47,11 +47,11 @@ class DiscoController extends Controller
      */
     public function show($id)
     {
-        $discos = Disco::find($id);
-        $lyrics = Lyric::orderBy('id', 'asc')
+        $discos = OfficialRelease::find($id);
+        $lyrics = OfficialLyric::orderBy('id', 'asc')
             ->get();
-        $previous = Disco::where('id', '<', $discos->id)->orderBy('id', 'desc')->first();
-        $next = Disco::where('id', '>', $discos->id)->orderBy('id')->first();
+        $previous = OfficialRelease::where('id', '<', $discos->id)->orderBy('id', 'desc')->first();
+        $next = OfficialRelease::where('id', '>', $discos->id)->orderBy('id')->first();
 
         return view('music.show', compact('discos', 'lyrics', 'previous', 'next'));
     }
