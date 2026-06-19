@@ -16,7 +16,7 @@ class ProfileController extends Controller
     {
         $profiles = OfficialProfile::orderBy('created_at', 'desc')
         ->get();
-        return view('profile.index', compact('profiles'));
+        return view('official_profiles.index', compact('profiles'));
     }
 
     /**

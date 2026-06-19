@@ -24,7 +24,7 @@ class LyricController extends Controller
 
     //     // AJAXリクエストの場合はJSON形式で返す
     //     if (request()->wantsJson() || request()->ajax()) {
-    //         $html = view('lyrics._list', compact('lyrics', 'totalCount'))->render();
+    //         $html = view('official_lyrics._list', compact('lyrics', 'totalCount'))->render();
     //         return response()->json([
     //             'html' => $html,
     //             'next_page_url' => $lyrics->nextPageUrl(),
@@ -33,7 +33,7 @@ class LyricController extends Controller
     //         ]);
     //     }
 
-    //     return view('lyrics.index', compact('lyrics', 'discos', 'totalCount'));
+    //     return view('official_lyrics.index', compact('lyrics', 'discos', 'totalCount'));
     // }
 
     /**
@@ -69,7 +69,7 @@ class LyricController extends Controller
         // $previous = OfficialLyric::where('id', '<', $lyrics->id)->orderBy('id', 'desc')->first();
         // $next = OfficialLyric::where('id', '>', $lyrics->id)->orderBy('id')->first();
         
-        // return view('lyrics.show', compact('lyrics', 'previous', 'next'));
+        // return view('official_lyrics.show', compact('lyrics', 'previous', 'next'));
 
         $lyrics = OfficialLyric::findOrFail($id);
         return response()->json([

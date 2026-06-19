@@ -60,7 +60,7 @@ class NewsController extends Controller
         }
 
         // 通常のリクエストの場合はビューを返す
-        return view('news.show', compact('news'));
+        return view('official_news.show', compact('news'));
     }
 
     /**

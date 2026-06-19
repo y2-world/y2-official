@@ -60,7 +60,7 @@ class SetlistController extends Controller
 
         // AJAXリクエストの場合はJSON形式で返す（過去のライブのみページネーション対応）
         if (request()->wantsJson() || request()->ajax()) {
-            $html = view('setlists._list', [
+            $html = view('sl_setlists._list', [
                 'setlists' => $pastSetlists,
                 'totalCount' => $pastTotalCount,
                 'type' => $type
@@ -92,7 +92,7 @@ class SetlistController extends Controller
             ->toArray();
 
         // ビューにデータを渡して表示する
-        return view('setlists.index', compact('artists', 'allArtists', 'liveArtists', 'fesArtists', 'upcomingSetlists', 'pastSetlists', 'upcomingTotalCount', 'pastTotalCount', 'years', 'type', 'suggestions'));
+        return view('sl_setlists.index', compact('artists', 'allArtists', 'liveArtists', 'fesArtists', 'upcomingSetlists', 'pastSetlists', 'upcomingTotalCount', 'pastTotalCount', 'years', 'type', 'suggestions'));
     }
 
     /**
@@ -133,7 +133,7 @@ class SetlistController extends Controller
         $previous = SlSetlist::where('date', '<', $setlists->date)->orderBy('date', 'desc')->first();
         $next = SlSetlist::where('date', '>', $setlists->date)->orderBy('date')->first();
         
-        return view('setlists.show', compact('artists', 'setlists', 'previous', 'next'));
+        return view('sl_setlists.show', compact('artists', 'setlists', 'previous', 'next'));
     }
 
     /**

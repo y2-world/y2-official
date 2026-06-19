@@ -19,7 +19,7 @@ class AlbumController extends Controller
         $bios = $artist->years;
 
         if (request()->wantsJson() || request()->ajax()) {
-            $html = view('albums._list', compact('albums', 'totalCount'))->render();
+            $html = view('db_albums._list', compact('albums', 'totalCount'))->render();
             return response()->json([
                 'html' => $html,
                 'next_page_url' => $albums->nextPageUrl(),
@@ -28,7 +28,7 @@ class AlbumController extends Controller
             ]);
         }
 
-        return view('albums.index', compact('albums', 'bios', 'totalCount', 'artist'));
+        return view('db_albums.index', compact('albums', 'bios', 'totalCount', 'artist'));
     }
 
     public function show($id)
@@ -39,6 +39,6 @@ class AlbumController extends Controller
         $previous = DbAlbum::where('artist_id', $albums->artist_id)->where('id', '<', $albums->id)->orderBy('id', 'desc')->first();
         $next = DbAlbum::where('artist_id', $albums->artist_id)->where('id', '>', $albums->id)->orderBy('id')->first();
 
-        return view('albums.show', compact('songs', 'albums', 'previous', 'next', 'artist'));
+        return view('db_albums.show', compact('songs', 'albums', 'previous', 'next', 'artist'));
     }
 }

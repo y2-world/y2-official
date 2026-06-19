@@ -35,7 +35,7 @@ class LiveController extends Controller
         $totalCount = $tours->total();
 
         if (request()->wantsJson() || request()->ajax()) {
-            $html = view('live._list', compact('tours', 'totalCount', 'type'))->render();
+            $html = view('db_concerts._list', compact('tours', 'totalCount', 'type'))->render();
             return response()->json([
                 'html' => $html,
                 'next_page_url' => $tours->appends(['type' => $type])->nextPageUrl(),
@@ -44,7 +44,7 @@ class LiveController extends Controller
             ]);
         }
 
-        return view('live.index', compact('tours', 'bios', 'type', 'totalCount', 'artist'));
+        return view('db_concerts.index', compact('tours', 'bios', 'type', 'totalCount', 'artist'));
     }
 
     public function show($id)
@@ -56,6 +56,6 @@ class LiveController extends Controller
         $previous = DbConcert::where('artist_id', $tours->artist_id)->where('date1', '<', $tours->date1)->orderBy('date1', 'desc')->first();
         $next = DbConcert::where('artist_id', $tours->artist_id)->where('date1', '>', $tours->date1)->orderBy('date1')->first();
 
-        return view('live.show', compact('songs', 'previous', 'next', 'tours', 'tourSetlists', 'artist'));
+        return view('db_concerts.show', compact('songs', 'previous', 'next', 'tours', 'tourSetlists', 'artist'));
     }
 }

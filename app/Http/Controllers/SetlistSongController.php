@@ -84,7 +84,7 @@ class SetlistSongController extends Controller
             })
             ->toArray();
 
-        return view('setlist_songs.show', compact(
+        return view('sl_songs.show', compact(
             'song',
             'setlists',
             'suggestions',

@@ -53,7 +53,7 @@ class DiscoController extends Controller
         $previous = OfficialRelease::where('id', '<', $discos->id)->orderBy('id', 'desc')->first();
         $next = OfficialRelease::where('id', '>', $discos->id)->orderBy('id')->first();
 
-        return view('music.show', compact('discos', 'lyrics', 'previous', 'next'));
+        return view('official_releases.show', compact('discos', 'lyrics', 'previous', 'next'));
     }
 
     /**

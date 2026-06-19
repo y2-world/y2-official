@@ -19,7 +19,7 @@ class SingleController extends Controller
         $bios = $artist->years;
 
         if (request()->wantsJson() || request()->ajax()) {
-            $html = view('singles._list', compact('singles', 'totalCount'))->render();
+            $html = view('db_singles._list', compact('singles', 'totalCount'))->render();
             return response()->json([
                 'html' => $html,
                 'next_page_url' => $singles->nextPageUrl(),
@@ -28,7 +28,7 @@ class SingleController extends Controller
             ]);
         }
 
-        return view('singles.index', compact('singles', 'bios', 'totalCount', 'artist'));
+        return view('db_singles.index', compact('singles', 'bios', 'totalCount', 'artist'));
     }
 
     public function show($id)
@@ -39,6 +39,6 @@ class SingleController extends Controller
         $previous = DbSingle::where('artist_id', $singles->artist_id)->where('id', '<', $singles->id)->orderBy('id', 'desc')->first();
         $next = DbSingle::where('artist_id', $singles->artist_id)->where('id', '>', $singles->id)->orderBy('id')->first();
 
-        return view('singles.show', compact('songs', 'singles', 'previous', 'next', 'artist'));
+        return view('db_singles.show', compact('songs', 'singles', 'previous', 'next', 'artist'));
     }
 }

@@ -52,7 +52,7 @@ class SongController extends Controller
 
         // AJAXリクエストの場合はJSON形式で返す
         if (request()->wantsJson() || request()->ajax()) {
-            $html = view('songs._list', compact('songs', 'totalCount'))->render();
+            $html = view('db_songs._list', compact('songs', 'totalCount'))->render();
             return response()->json([
                 'html' => $html,
                 'next_page_url' => $songs->nextPageUrl(),
@@ -61,7 +61,7 @@ class SongController extends Controller
             ]);
         }
 
-        return view('songs.index', compact('albums', 'songs', 'bios', 'totalCount', 'suggestions', 'artists', 'artist'));
+        return view('db_songs.index', compact('albums', 'songs', 'bios', 'totalCount', 'suggestions', 'artists', 'artist'));
     }
 
     /**
@@ -140,7 +140,7 @@ class SongController extends Controller
         $next = DbSong::where('artist_id', $songs->artist_id)->where('id', '>', $songs->id)->orderBy('id')->first();
         $songNumber = DbSong::where('artist_id', $songs->artist_id)->where('id', '<=', $songs->id)->count();
 
-        return view('songs.show', compact(
+        return view('db_songs.show', compact(
             'songs',
             'allSongs',
             'albums',
