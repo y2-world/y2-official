@@ -60,7 +60,7 @@
                 </tr>
             </thead>
             <tbody id="tours-container">
-                @include('live._list', ['tours' => $tours])
+                @include('db_concerts._list', ['tours' => $tours])
             </tbody>
         </table>
         </div>

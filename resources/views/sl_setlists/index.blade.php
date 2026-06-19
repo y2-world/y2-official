@@ -152,7 +152,7 @@
                 </tr>
             </thead>
             <tbody id="setlists-container">
-                @include('setlists._list', ['setlists' => $pastSetlists, 'totalCount' => $pastTotalCount, 'type' => $type])
+                @include('sl_setlists._list', ['setlists' => $pastSetlists, 'totalCount' => $pastTotalCount, 'type' => $type])
             </tbody>
         </table>
         <div class="pagination" id="pagination-links" style="display: none;">

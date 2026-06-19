@@ -42,7 +42,7 @@
                 </tr>
             </thead>
             <tbody id="albums-container">
-                @include('albums._list', ['albums' => $albums])
+                @include('db_albums._list', ['albums' => $albums])
             </tbody>
         </table>
         </div>

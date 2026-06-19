@@ -61,7 +61,7 @@
                 </tr>
             </thead>
             <tbody id="songs-container">
-                @include('songs._list', ['songs' => $songs])
+                @include('db_songs._list', ['songs' => $songs])
             </tbody>
         </table>
         </div>

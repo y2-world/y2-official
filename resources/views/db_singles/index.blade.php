@@ -42,7 +42,7 @@
                 </tr>
             </thead>
             <tbody id="singles-container">
-                @include('singles._list', ['singles' => $singles])
+                @include('db_singles._list', ['singles' => $singles])
             </tbody>
         </table>
         </div>
