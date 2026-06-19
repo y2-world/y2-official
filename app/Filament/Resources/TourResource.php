@@ -185,7 +185,16 @@ class TourResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('id', 'desc');
+            ->defaultSort('date1', 'desc');
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()
+            ->join('artists', 'tours.artist_id', '=', 'artists.id')
+            ->orderBy('artists.created_at', 'desc')
+            ->orderBy('tours.date1', 'desc')
+            ->select('tours.*');
     }
 
     public static function getRelations(): array
