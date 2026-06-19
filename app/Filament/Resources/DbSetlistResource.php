@@ -50,7 +50,7 @@ class DbSetlistResource extends Resource
                             ->options(fn(Get $get) => \App\Models\DbConcert::when(
                                 $get('_artist_id'),
                                 fn($q, $artistId) => $q->where('artist_id', $artistId)
-                            )->orderBy('id', 'asc')->pluck('title', 'id'))
+                            )->orderBy('date1', 'asc')->pluck('title', 'id'))
                             ->searchable()
                             ->native(false)
                             ->required(),
