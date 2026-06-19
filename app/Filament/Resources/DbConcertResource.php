@@ -191,7 +191,7 @@ class DbConcertResource extends Resource
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
         return parent::getEloquentQuery()
-            ->orderByRaw('(SELECT created_at FROM artists WHERE artists.id = tours.artist_id) DESC')
+            ->orderByRaw('(SELECT created_at FROM artists WHERE artists.id = db_concerts.artist_id) DESC')
             ->orderBy('date1', 'desc');
     }
 
