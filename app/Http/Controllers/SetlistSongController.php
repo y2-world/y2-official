@@ -68,11 +68,11 @@ class SetlistSongController extends Controller
 
         // 検索候補（曲名 + アーティスト名）
         $suggestions = SlSong::query()
-            ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
-            ->orderBy('setlist_songs.title', 'asc')
+            ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
+            ->orderBy('sl_songs.title', 'asc')
             ->get([
-                'setlist_songs.id as id',
-                'setlist_songs.title as title',
+                'sl_songs.id as id',
+                'sl_songs.title as title',
                 'artists.name as artist_name',
             ])
             ->map(function ($row) {
@@ -114,12 +114,12 @@ class SetlistSongController extends Controller
             if ($query === '') {
                 \Log::info('Query is empty, returning songs in alphabetical order');
                 $songs = SlSong::query()
-                    ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
-                    ->orderBy('setlist_songs.title')
+                    ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
+                    ->orderBy('sl_songs.title')
                     ->limit(10)
                     ->get([
-                        'setlist_songs.id as id',
-                        'setlist_songs.title as title',
+                        'sl_songs.id as id',
+                        'sl_songs.title as title',
                         'artists.name as artist',
                     ]);
                 return response()->json($songs->toArray());
@@ -132,13 +132,13 @@ class SetlistSongController extends Controller
             \Log::info('Search pattern: "' . $escapedQuery . '%"');
 
             $songs = SlSong::query()
-                ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
+                ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
                 ->whereRaw('LOWER(setlist_songs.title) LIKE LOWER(?)', [$escapedQuery . '%'])
-                ->orderBy('setlist_songs.title')
+                ->orderBy('sl_songs.title')
                 ->limit(10)
                 ->get([
-                    'setlist_songs.id as id',
-                    'setlist_songs.title as title',
+                    'sl_songs.id as id',
+                    'sl_songs.title as title',
                     'artists.name as artist',
                 ]);
 

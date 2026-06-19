@@ -25,26 +25,26 @@ class SongSearch extends Component
 
         // アーティストIDが指定されている場合はフィルタリング（アーティスト名は表示しない）
         if ($this->artistId) {
-            $query->where('setlist_songs.artist_id', $this->artistId);
+            $query->where('sl_songs.artist_id', $this->artistId);
 
             $this->songs = $query
-                ->orderBy('setlist_songs.title')
+                ->orderBy('sl_songs.title')
                 ->limit(10)
                 ->get([
-                    'setlist_songs.id as id',
-                    'setlist_songs.title as title',
+                    'sl_songs.id as id',
+                    'sl_songs.title as title',
                 ])
                 ->toArray();
         } else {
             // アーティストIDが指定されていない場合は全楽曲をアーティスト名付きで表示
-            $query->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id');
+            $query->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id');
 
             $this->songs = $query
-                ->orderBy('setlist_songs.title')
+                ->orderBy('sl_songs.title')
                 ->limit(10)
                 ->get([
-                    'setlist_songs.id as id',
-                    'setlist_songs.title as title',
+                    'sl_songs.id as id',
+                    'sl_songs.title as title',
                     'artists.name as artist',
                 ])
                 ->toArray();
@@ -65,26 +65,26 @@ class SongSearch extends Component
 
         // アーティストIDが指定されている場合はフィルタリング（アーティスト名は表示しない）
         if ($this->artistId) {
-            $query->where('setlist_songs.artist_id', $this->artistId);
+            $query->where('sl_songs.artist_id', $this->artistId);
 
             $this->songs = $query
-                ->orderBy('setlist_songs.title')
+                ->orderBy('sl_songs.title')
                 ->limit(10)
                 ->get([
-                    'setlist_songs.id as id',
-                    'setlist_songs.title as title',
+                    'sl_songs.id as id',
+                    'sl_songs.title as title',
                 ])
                 ->toArray();
         } else {
             // アーティストIDが指定されていない場合は全楽曲をアーティスト名付きで表示
-            $query->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id');
+            $query->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id');
 
             $this->songs = $query
-                ->orderBy('setlist_songs.title')
+                ->orderBy('sl_songs.title')
                 ->limit(10)
                 ->get([
-                    'setlist_songs.id as id',
-                    'setlist_songs.title as title',
+                    'sl_songs.id as id',
+                    'sl_songs.title as title',
                     'artists.name as artist',
                 ])
                 ->toArray();

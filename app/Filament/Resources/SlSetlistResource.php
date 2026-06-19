@@ -115,9 +115,9 @@ class SlSetlistResource extends Resource
                                     ->required()
                                     ->options(function () {
                                         $songs = \App\Models\SlSong::query()
-                                            ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
-                                            ->select('setlist_songs.id', 'setlist_songs.title', 'artists.name as artist_name')
-                                            ->orderBy('setlist_songs.title')
+                                            ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
+                                            ->select('sl_songs.id', 'sl_songs.title', 'artists.name as artist_name')
+                                            ->orderBy('sl_songs.title')
                                             ->get();
                                         
                                         // タイトルごとの出現回数をカウント
@@ -225,9 +225,9 @@ class SlSetlistResource extends Resource
                                     ->required()
                                     ->options(function () {
                                         $songs = \App\Models\SlSong::query()
-                                            ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
-                                            ->select('setlist_songs.id', 'setlist_songs.title', 'artists.name as artist_name')
-                                            ->orderBy('setlist_songs.title')
+                                            ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
+                                            ->select('sl_songs.id', 'sl_songs.title', 'artists.name as artist_name')
+                                            ->orderBy('sl_songs.title')
                                             ->get();
                                         
                                         // タイトルごとの出現回数をカウント
@@ -372,9 +372,9 @@ class SlSetlistResource extends Resource
                                     ->required()
                                     ->options(function () {
                                         $songs = \App\Models\SlSong::query()
-                                            ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
-                                            ->select('setlist_songs.id', 'setlist_songs.title', 'artists.name as artist_name')
-                                            ->orderBy('setlist_songs.title')
+                                            ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
+                                            ->select('sl_songs.id', 'sl_songs.title', 'artists.name as artist_name')
+                                            ->orderBy('sl_songs.title')
                                             ->get();
                                         
                                         // タイトルごとの出現回数をカウント
@@ -507,9 +507,9 @@ class SlSetlistResource extends Resource
                                     ->required()
                                     ->options(function () {
                                         $songs = \App\Models\SlSong::query()
-                                            ->leftJoin('artists', 'artists.id', '=', 'setlist_songs.artist_id')
-                                            ->select('setlist_songs.id', 'setlist_songs.title', 'artists.name as artist_name')
-                                            ->orderBy('setlist_songs.title')
+                                            ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
+                                            ->select('sl_songs.id', 'sl_songs.title', 'artists.name as artist_name')
+                                            ->orderBy('sl_songs.title')
                                             ->get();
                                         
                                         // タイトルごとの出現回数をカウント
