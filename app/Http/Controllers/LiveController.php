@@ -18,6 +18,8 @@ class LiveController extends Controller
 
         if ($type === '1') {
             $liveQuery->whereIn('type', [0, 1]);
+        } elseif ($type === '6') {
+            $liveQuery->where('type', 0);
         } elseif ($type === '5') {
             $liveQuery->where('type', 1);
         } elseif ($type === '2') {

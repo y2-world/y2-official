@@ -4,6 +4,9 @@
     <div class="database-hero database-year-hero">
         <div class="container">
             @if (request('type') == 1)
+                <h1 class="database-title">Live</h1>
+                <p class="database-subtitle">{{ $artist->name }} — すべてのツアー・単発ライブ情報</p>
+            @elseif(request('type') == 6)
                 <h1 class="database-title">Tours</h1>
                 <p class="database-subtitle">{{ $artist->name }} — すべてのツアー情報</p>
             @elseif(request('type') == 5)
@@ -27,7 +30,8 @@
                 <select class="year-select" name="select" onChange="location.href=value;">
                     <option value="" disabled selected>Live</option>
                     <option value="{{ route('database.live', $artist->id) }}">All</option>
-                    <option value="{{ route('database.live', $artist->id) }}?type=1">Tours</option>
+                    <option value="{{ route('database.live', $artist->id) }}?type=1">Live</option>
+                    <option value="{{ route('database.live', $artist->id) }}?type=6">Tours</option>
                     <option value="{{ route('database.live', $artist->id) }}?type=5">単発ライブ</option>
                     <option value="{{ route('database.live', $artist->id) }}?type=2">Events</option>
                     @if($artist->name === 'Mr.Children')
