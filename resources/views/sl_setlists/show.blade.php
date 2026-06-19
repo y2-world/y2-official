@@ -73,7 +73,7 @@
                                 $song = \App\Models\SlSong::find($songValue);
                                 $songTitle = $song ? $song->title : $songValue;
                                 // SetlistSongの詳細ページにリンク
-                                $url = url('/setlist-songs/' . $songValue);
+                                $url = url('/setlists/songs/' . $songValue);
                             } else {
                                 // 文字列の場合はSetlistSongテーブルから検索
                                 $songTitle = $songValue;
@@ -90,7 +90,7 @@
 
                                 if ($setlistSong) {
                                     // 見つかった場合は詳細ページにリンク
-                                    $url = url('/setlist-songs/' . $setlistSong->id);
+                                    $url = url('/setlists/songs/' . $setlistSong->id);
                                 } else {
                                     // 見つからない場合はテキストのみ（リンクなし）
                                     $url = '#';
@@ -165,7 +165,7 @@
                                 $song = \App\Models\SlSong::find($songValue);
                                 $songTitle = $song ? $song->title : $songValue;
                                 // SetlistSongの詳細ページにリンク
-                                $url = url('/setlist-songs/' . $songValue);
+                                $url = url('/setlists/songs/' . $songValue);
                             } else {
                                 // 文字列の場合はSetlistSongテーブルから検索
                                 $songTitle = $songValue;
@@ -182,7 +182,7 @@
 
                                 if ($setlistSong) {
                                     // 見つかった場合は詳細ページにリンク
-                                    $url = url('/setlist-songs/' . $setlistSong->id);
+                                    $url = url('/setlists/songs/' . $setlistSong->id);
                                 } else {
                                     // 見つからない場合はテキストのみ（リンクなし）
                                     $url = '#';
@@ -302,7 +302,7 @@
                                 $song = \App\Models\SlSong::find($songValue);
                                 $songTitle = $song ? $song->title : $songValue;
                                 // SetlistSongの詳細ページにリンク
-                                $url = url('/setlist-songs/' . $songValue);
+                                $url = url('/setlists/songs/' . $songValue);
                             } else {
                                 // 文字列の場合はSetlistSongテーブルから検索
                                 $songTitle = $songValue;
@@ -319,7 +319,7 @@
                                 
                                 if ($setlistSong) {
                                     // 見つかった場合は詳細ページにリンク
-                                    $url = url('/setlist-songs/' . $setlistSong->id);
+                                    $url = url('/setlists/songs/' . $setlistSong->id);
                                 } else {
                                     // 見つからない場合はテキストのみ（リンクなし）
                                     $url = '#';
@@ -403,7 +403,7 @@
                                     $song = \App\Models\SlSong::find($songValue);
                                     $songTitle = $song ? $song->title : $songValue;
                                     // SetlistSongの詳細ページにリンク
-                                    $url = url('/setlist-songs/' . $songValue);
+                                    $url = url('/setlists/songs/' . $songValue);
                                 } else {
                                     // 文字列の場合はSetlistSongテーブルから検索
                                     $songTitle = $songValue;
@@ -420,7 +420,7 @@
                                     
                                     if ($setlistSong) {
                                         // 見つかった場合は詳細ページにリンク
-                                        $url = url('/setlist-songs/' . $setlistSong->id);
+                                        $url = url('/setlists/songs/' . $setlistSong->id);
                                     } else {
                                         // 見つからない場合はテキストのみ（リンクなし）
                                         $url = '#';

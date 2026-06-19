@@ -15,7 +15,7 @@
     },
     selectSong(songId) {
         if (songId) {
-            window.location.href = '/setlist-songs/' + songId;
+            window.location.href = '/setlists/songs/' + songId;
         }
     },
     navigateDown() {

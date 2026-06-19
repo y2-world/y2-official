@@ -81,7 +81,7 @@
                                             @endif
                                         </td>
                                         <td class="song-title">
-                                            <a href="{{ url('/setlist-songs/' . $song['song_id']) }}" class="stats-link">{{ $song['title'] }}</a>
+                                            <a href="{{ url('/setlists/songs/' . $song['song_id']) }}" class="stats-link">{{ $song['title'] }}</a>
                                         </td>
                                         <td class="count-col">
                                             <span class="count-badge">{{ $song['count'] }}</span>
@@ -280,7 +280,7 @@ document.getElementById('uniqueTourCheckboxArtist').addEventListener('change', f
         tr.innerHTML = `
             <td class="rank-col">${rankBadge}</td>
             <td class="song-title">
-                <a href="/setlist-songs/${song.song_id}" class="stats-link">${song.title}</a>
+                <a href="/setlists/songs/${song.song_id}" class="stats-link">${song.title}</a>
             </td>
             <td class="count-col">
                 <span class="count-badge">${song.count}</span>

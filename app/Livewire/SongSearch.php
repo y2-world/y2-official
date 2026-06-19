@@ -95,7 +95,7 @@ class SongSearch extends Component
 
     public function selectSong($songId)
     {
-        return redirect('/setlist-songs/' . $songId);
+        return redirect('/setlists/songs/' . $songId);
     }
 
     public function render()
