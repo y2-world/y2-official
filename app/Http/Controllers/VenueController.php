@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Artist;
 use Illuminate\Http\Request;
-use App\SlSetlist;
+use App\Models\SlSetlist;
 
 class VenueController extends Controller
 {

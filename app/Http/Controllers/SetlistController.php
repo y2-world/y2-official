@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Artist;
-use App\SlSetlist;
+use App\Models\SlSetlist;
 use Illuminate\Http\Request;
 
 class SetlistController extends Controller

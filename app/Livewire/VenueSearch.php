@@ -3,7 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use App\SlSetlist;
+use App\Models\SlSetlist;
 
 class VenueSearch extends Component
 {
