@@ -103,10 +103,10 @@
                             $keyword = $main;
 
                             // 共演者がある場合は曲名の後に追加
-                            $featuring = !empty($data['featuring']) ? ' <span style="color:#999;font-size:0.85em;">/ ' . $data['featuring'] . '</span>' : '';
+                            $featuring = !empty($data['featuring']) ? ' <span style="color:#999;font-size:0.75em;">' . $data['featuring'] . '</span>' : '';
 
                             // バージョン違いがある場合は共演者の後に追加
-                            $version = !empty($data['version']) ? ' <span style="color:#999;font-size:0.85em;">' . $data['version'] . '</span>' : '';
+                            $version = !empty($data['version']) ? ' <span style="color:#999;font-size:0.75em;">' . $data['version'] . '</span>' : '';
 
                             $isMedley = !empty($data['medley']) && $data['medley'] == 1;
 
@@ -195,10 +195,10 @@
                             $keyword = $main;
 
                             // 共演者がある場合は曲名の後に追加
-                            $featuring = !empty($data['featuring']) ? ' <span style="color:#999;font-size:0.85em;">/ ' . $data['featuring'] . '</span>' : '';
+                            $featuring = !empty($data['featuring']) ? ' <span style="color:#999;font-size:0.75em;">' . $data['featuring'] . '</span>' : '';
 
                             // バージョン違いがある場合は共演者の後に追加
-                            $version = !empty($data['version']) ? ' <span style="color:#999;font-size:0.85em;">' . $data['version'] . '</span>' : '';
+                            $version = !empty($data['version']) ? ' <span style="color:#999;font-size:0.75em;">' . $data['version'] . '</span>' : '';
 
                             $isMedley = !empty($data['medley']) && $data['medley'] == 1;
 
@@ -349,9 +349,9 @@
                             // アーティスト名がない場合はスラッシュを付けて共演者を表示
                             if (!empty($data['featuring'])) {
                                 if (empty($artistDisplay)) {
-                                    $artistDisplay = ' <span style="color:#999;font-size:0.85em;">/ ' . htmlspecialchars($data['featuring'], ENT_QUOTES, 'UTF-8') . '</span>';
+                                    $artistDisplay = ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_QUOTES, 'UTF-8') . '</span>';
                                 } else {
-                                    $artistDisplay .= ' <span style="color:#999;font-size:0.85em;">' . htmlspecialchars($data['featuring'], ENT_QUOTES, 'UTF-8') . '</span>';
+                                    $artistDisplay .= ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_QUOTES, 'UTF-8') . '</span>';
                                 }
                             }
                         @endphp
@@ -455,9 +455,9 @@
                                 // アーティスト名がない場合はスラッシュを付けて共演者を表示
                                 if (!empty($data['featuring'])) {
                                     if (empty($encoreArtistDisplay)) {
-                                        $encoreArtistDisplay = ' <span style="color:#999;font-size:0.85em;">/ ' . htmlspecialchars($data['featuring'], ENT_QUOTES, 'UTF-8') . '</span>';
+                                        $encoreArtistDisplay = ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_QUOTES, 'UTF-8') . '</span>';
                                     } else {
-                                        $encoreArtistDisplay .= ' <span style="color:#999;font-size:0.85em;">' . htmlspecialchars($data['featuring'], ENT_QUOTES, 'UTF-8') . '</span>';
+                                        $encoreArtistDisplay .= ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_QUOTES, 'UTF-8') . '</span>';
                                     }
                                 }
                             @endphp

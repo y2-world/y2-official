@@ -110,10 +110,10 @@
                                                         {{ $title }}
                                                     @endif
                                                     @if(!empty($featuring))
-                                                        <span style="color:#999;font-size:0.85em;">/ {{ $featuring }}</span>
+                                                        <span style="color:#999;font-size:0.75em;">{{ $featuring }}</span>
                                                     @endif
                                                     @if(!empty($dailyNote))
-                                                        <span style="color:#999;font-size:0.85em;">({{ $dailyNote }})</span>
+                                                        <span style="color:#999;font-size:0.75em;">{{ $dailyNote }}</span>
                                                     @endif
                                                     <br>
                                                 @else
@@ -124,10 +124,10 @@
                                                             {{ $title }}
                                                         @endif
                                                         @if(!empty($featuring))
-                                                            <span style="color:#999;font-size:0.85em;">/ {{ $featuring }}</span>
+                                                            <span style="color:#999;font-size:0.75em;">{{ $featuring }}</span>
                                                         @endif
                                                         @if(!empty($dailyNote))
-                                                            <span style="color:#999;font-size:0.85em;">({{ $dailyNote }})</span>
+                                                            <span style="color:#999;font-size:0.75em;">{{ $dailyNote }}</span>
                                                         @endif
                                                     </li>
                                                 @endif
