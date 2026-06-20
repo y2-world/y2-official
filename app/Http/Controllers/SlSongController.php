@@ -6,7 +6,7 @@ use App\Models\SlSong;
 use App\Models\SlSetlist;
 use Illuminate\Http\Request;
 
-class SetlistSongController extends Controller
+class SlSongController extends Controller
 {
     /**
      * Display the specified resource.

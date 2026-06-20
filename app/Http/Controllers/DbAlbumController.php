@@ -7,7 +7,7 @@ use App\Models\Artist;
 use App\Models\DbSong;
 use Illuminate\Http\Request;
 
-class AlbumController extends Controller
+class DbAlbumController extends Controller
 {
     public function index($artistId)
     {

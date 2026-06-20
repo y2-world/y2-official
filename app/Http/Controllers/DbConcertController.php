@@ -7,7 +7,7 @@ use App\Models\DbSong;
 use App\Models\DbConcert;
 use App\Models\DbSetlist;
 
-class LiveController extends Controller
+class DbConcertController extends Controller
 {
     public function index($artistId)
     {

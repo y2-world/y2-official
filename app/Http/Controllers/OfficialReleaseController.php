@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\OfficialRelease;
 use App\Models\OfficialLyric;
 
-class DiscoController extends Controller
+class OfficialReleaseController extends Controller
 {
     /**
      * Display a listing of the resource.

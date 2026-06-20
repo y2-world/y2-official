@@ -7,7 +7,7 @@ use App\Models\Artist;
 use App\Models\DbSingle;
 use App\Models\DbSong;
 
-class SingleController extends Controller
+class DbSingleController extends Controller
 {
     public function index($artistId)
     {

@@ -3,14 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ArtistController;
 use App\Http\Controllers\YearController;
-use App\Http\Controllers\SongController;
-use App\Http\Controllers\SingleController;
-use App\Http\Controllers\AlbumController;
-use App\Http\Controllers\LiveController;
+use App\Http\Controllers\DbSongController;
+use App\Http\Controllers\DbSingleController;
+use App\Http\Controllers\DbAlbumController;
+use App\Http\Controllers\DbConcertController;
 use App\Http\Controllers\BioController;
 use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\NewsController;
+use App\Http\Controllers\OfficialNewsController;
 use App\Http\Controllers\LyricController;
 
 /*
@@ -24,9 +24,9 @@ use App\Http\Controllers\LyricController;
 |
 */
 
-Route::resource('setlists', 'SetlistController');
+Route::resource('setlists', 'SlSetlistController');
 Route::resource('venue', 'VenueController');
-Route::get('setlists/songs/{id}', [App\Http\Controllers\SetlistSongController::class, 'show']);
+Route::get('setlists/songs/{id}', [App\Http\Controllers\SlSongController::class, 'show']);
 // Route::resource('songs', 'SongController');
 // Route::resource('singles', 'SingleController');
 Route::prefix('setlists')->group(function () {
@@ -45,19 +45,19 @@ Route::prefix('database')->group(function () {
     // アーティスト別DB（新URL構造）
     Route::prefix('artists/{artistId}')->group(function () {
         Route::get('/', [DatabaseController::class, 'show'])->name('database.artist');
-        Route::get('songs', [SongController::class, 'index'])->name('database.songs');
-        Route::get('singles', [SingleController::class, 'index'])->name('database.singles');
-        Route::get('albums', [AlbumController::class, 'index'])->name('database.albums');
-        Route::get('live', [LiveController::class, 'index'])->name('database.live');
+        Route::get('songs', [DbSongController::class, 'index'])->name('database.songs');
+        Route::get('singles', [DbSingleController::class, 'index'])->name('database.singles');
+        Route::get('albums', [DbAlbumController::class, 'index'])->name('database.albums');
+        Route::get('live', [DbConcertController::class, 'index'])->name('database.live');
         Route::get('biography', [BioController::class, 'index'])->name('database.biography');
         Route::get('biography/{year}', [BioController::class, 'show'])->name('database.biography.year');
     });
 
     // 個別詳細ページ（アーティスト問わず同一URL）
-    Route::get('songs/{id}', [SongController::class, 'show'])->name('songs.show');
-    Route::get('singles/{id}', [SingleController::class, 'show'])->name('singles.show');
-    Route::get('albums/{id}', [AlbumController::class, 'show'])->name('albums.show');
-    Route::get('live/{id}', [LiveController::class, 'show'])->name('live.show');
+    Route::get('songs/{id}', [DbSongController::class, 'show'])->name('songs.show');
+    Route::get('singles/{id}', [DbSingleController::class, 'show'])->name('singles.show');
+    Route::get('albums/{id}', [DbAlbumController::class, 'show'])->name('albums.show');
+    Route::get('live/{id}', [DbConcertController::class, 'show'])->name('live.show');
 
     // 旧URL → Mr.Children のアーティストIDへリダイレクト（後方互換）
     Route::get('songs', function () {
@@ -91,20 +91,20 @@ Route::prefix('database')->group(function () {
 // Route::resource('live', 'LiveController');
 // Route::resource('news', 'NewsController');
 Route::resource('profile', 'ProfileController');
-Route::resource('music', 'DiscoController');
+Route::resource('music', 'OfficialReleaseController');
 // Route::resource('single', 'DiscoSingleController');
 // Route::resource('album', 'DiscoAlbumController');
 // Route::resource('radio', 'RadioController');
 // Route::resource('lyrics', 'LyricController');
 Route::resource('/', 'HomeController');
 // Route::resource('/home', 'HomeController');
-Route::get('/find', [SongController::class, 'search']);
-Route::get('/find-setlist-song', [App\Http\Controllers\SetlistSongController::class, 'search']);
+Route::get('/find', [DbSongController::class, 'search']);
+Route::get('/find-setlist-song', [App\Http\Controllers\SlSongController::class, 'search']);
 
 // routes/web.php
 Route::get('/top/news', [HomeController::class, 'getAllNews'])->name('news.all');
 Route::get('/top/music', [HomeController::class, 'getAllMusic'])->name('music.all');
-Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
+Route::get('/news/{id}', [OfficialNewsController::class, 'show'])->name('news.show');
 Route::get('/lyrics/{id}', [LyricController::class, 'show'])->name('lyric.show');
 
 // Statistics routes

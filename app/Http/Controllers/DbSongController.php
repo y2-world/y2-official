@@ -10,7 +10,7 @@ use App\Models\DbConcert;
 use Illuminate\Http\Request;
 use App\Models\DbSetlist;
 
-class SongController extends Controller
+class DbSongController extends Controller
 {
     /**
      * Display a listing of the resource.
