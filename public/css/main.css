@@ -1304,8 +1304,8 @@ h2 {
 }
 
 .database-subtitle {
-    font-size: 1.1rem;
-    opacity: 0.9;
+    font-size: 0.85rem;
+    opacity: 0.75;
     margin-bottom: 40px;
 }
 
@@ -1484,7 +1484,7 @@ h2 {
     }
 
     .database-subtitle {
-        font-size: 1rem;
+        font-size: 0.8rem;
         margin-bottom: 30px;
     }
 
