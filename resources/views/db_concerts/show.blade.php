@@ -110,10 +110,10 @@
                                                         {{ $title }}
                                                     @endif
                                                     @if(!empty($featuring))
-                                                        / {{ $featuring }}
+                                                        <span style="color:#999;font-size:0.85em;">/ {{ $featuring }}</span>
                                                     @endif
                                                     @if(!empty($dailyNote))
-                                                        ({{ $dailyNote }})
+                                                        <span style="color:#999;font-size:0.85em;">({{ $dailyNote }})</span>
                                                     @endif
                                                     <br>
                                                 @else
@@ -124,10 +124,10 @@
                                                             {{ $title }}
                                                         @endif
                                                         @if(!empty($featuring))
-                                                            / {{ $featuring }}
+                                                            <span style="color:#999;font-size:0.85em;">/ {{ $featuring }}</span>
                                                         @endif
                                                         @if(!empty($dailyNote))
-                                                            ({{ $dailyNote }})
+                                                            <span style="color:#999;font-size:0.85em;">({{ $dailyNote }})</span>
                                                         @endif
                                                     </li>
                                                 @endif
