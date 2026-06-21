@@ -340,18 +340,18 @@
                             // アーティスト名の表示（リンク付き）
                             $artistDisplay = '';
                             if ($artistName && $artistId) {
-                                $artistDisplay = ' <span style="color:#999;font-size:0.75em;"><a href="' . url('/setlists/artists', $artistId) . '" style="color:#999;">' . htmlspecialchars($artistName, ENT_QUOTES, 'UTF-8') . '</a></span>';
+                                $artistDisplay = ' <span style="color:#999;font-size:0.75em;"><a href="' . url('/setlists/artists', $artistId) . '" style="color:#999;">' . htmlspecialchars($artistName, ENT_COMPAT, 'UTF-8') . '</a></span>';
                             } elseif ($artistName) {
-                                $artistDisplay = ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($artistName, ENT_QUOTES, 'UTF-8') . '</span>';
+                                $artistDisplay = ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($artistName, ENT_COMPAT, 'UTF-8') . '</span>';
                             }
 
                             // 共演者がある場合はアーティスト名の後に追加
                             // アーティスト名がない場合はスラッシュを付けて共演者を表示
                             if (!empty($data['featuring'])) {
                                 if (empty($artistDisplay)) {
-                                    $artistDisplay = ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_QUOTES, 'UTF-8') . '</span>';
+                                    $artistDisplay = ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_COMPAT, 'UTF-8') . '</span>';
                                 } else {
-                                    $artistDisplay .= ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_QUOTES, 'UTF-8') . '</span>';
+                                    $artistDisplay .= ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_COMPAT, 'UTF-8') . '</span>';
                                 }
                             }
                         @endphp
@@ -446,18 +446,18 @@
                                 // アーティスト名の表示（リンク付き）
                                 $encoreArtistDisplay = '';
                                 if ($artistName && $artistId) {
-                                    $encoreArtistDisplay = ' <span style="color:#999;font-size:0.75em;"><a href="' . url('/setlists/artists', $artistId) . '" style="color:#999;">' . htmlspecialchars($artistName, ENT_QUOTES, 'UTF-8') . '</a></span>';
+                                    $encoreArtistDisplay = ' <span style="color:#999;font-size:0.75em;"><a href="' . url('/setlists/artists', $artistId) . '" style="color:#999;">' . htmlspecialchars($artistName, ENT_COMPAT, 'UTF-8') . '</a></span>';
                                 } elseif ($artistName) {
-                                    $encoreArtistDisplay = ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($artistName, ENT_QUOTES, 'UTF-8') . '</span>';
+                                    $encoreArtistDisplay = ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($artistName, ENT_COMPAT, 'UTF-8') . '</span>';
                                 }
 
                                 // 共演者がある場合はアーティスト名の後に追加
                                 // アーティスト名がない場合はスラッシュを付けて共演者を表示
                                 if (!empty($data['featuring'])) {
                                     if (empty($encoreArtistDisplay)) {
-                                        $encoreArtistDisplay = ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_QUOTES, 'UTF-8') . '</span>';
+                                        $encoreArtistDisplay = ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_COMPAT, 'UTF-8') . '</span>';
                                     } else {
-                                        $encoreArtistDisplay .= ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_QUOTES, 'UTF-8') . '</span>';
+                                        $encoreArtistDisplay .= ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_COMPAT, 'UTF-8') . '</span>';
                                     }
                                 }
                             @endphp

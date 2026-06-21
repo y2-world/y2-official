@@ -2,7 +2,7 @@
 @section('title', 'Yuki Official - ' . $tours->title)
 
 @section('og_title', $tours->title . ' - Yuki Official')
-@section('og_description', 'Tour: ' . $tours->title . ' (' . date('Y', strtotime($tours->date_start)) . ')')
+@section('og_description', 'Tour: ' . $tours->title . ($tours->date1 ? ' (' . date('Y', strtotime($tours->date1)) . ')' : ''))
 @section('og_type', 'article')
 
 @section('content')
