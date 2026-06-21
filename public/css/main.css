@@ -726,7 +726,7 @@ select {
     display: flex;
     flex-wrap: nowrap; /* Prevent wrapping */
     overflow-x: scroll; /* Enable horizontal scrolling */
-    justify-content: flex-start;
+    justify-content: center;
 }
 
 .live-column {
