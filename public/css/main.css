@@ -726,11 +726,8 @@ select {
     display: flex;
     flex-wrap: nowrap;
     overflow-x: scroll;
-    justify-content: flex-start;
-}
-
-.setlist-row.setlist-center {
     justify-content: center;
+    justify-content: safe center;
 }
 
 .live-column {
