@@ -13,6 +13,7 @@ class EditDbSetlist extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            Actions\SaveAction::make(),
             Actions\DeleteAction::make(),
         ];
     }

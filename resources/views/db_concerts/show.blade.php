@@ -35,7 +35,7 @@
 
         // レイアウト用クラスを調整
         $colClass = $totalOlCount <= 1 ? 'col-xl-9' : ($totalOlCount <= 3 ? 'col-xl-11' : 'col-xl-12');
-        $flexDirectionClass = $totalOlCount <= 1 ? 'flex-start' : 'space-around';
+        $flexDirectionClass = $totalOlCount >= 4 ? 'flex-start' : ($totalOlCount <= 1 ? 'flex-start' : 'space-around');
     @endphp
 
     <div class="database-hero database-year-hero">
