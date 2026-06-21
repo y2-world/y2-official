@@ -58,7 +58,7 @@
             <div class="{{ $colClass }}">
                 <div class="setlist">
                     @if ($tourSetlists->count())
-                        <div class="setlist-row justify-content-{{ $flexDirectionClass }} {{ $totalOlCount >= 4 ? 'setlist-row-wrap' : '' }}">
+                        <div class="setlist-row {{ $totalOlCount >= 4 ? 'setlist-row-wrap' : 'justify-content-' . $flexDirectionClass }}">
                             @foreach ($tourSetlists as $setlistModel)
                                 @php
                                     $setlist = is_array($setlistModel->setlist) ? $setlistModel->setlist : [];
