@@ -725,15 +725,11 @@ select {
 .setlist-row {
     display: flex;
     flex-wrap: nowrap;
-    overflow-x: scroll;
+    overflow-x: auto;
     justify-content: center;
     justify-content: safe center;
-    scrollbar-width: none;
 }
 
-.setlist-row::-webkit-scrollbar {
-    display: none;
-}
 
 .live-column {
     flex: 0 0 auto;
