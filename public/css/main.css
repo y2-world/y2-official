@@ -735,6 +735,17 @@ select {
     min-width: 350px; /* Adjust the width based on your needs */
 }
 
+@media (min-width: 992px) {
+    .setlist-row-wrap {
+        flex-wrap: wrap;
+        overflow-x: unset;
+    }
+    .setlist-row-wrap .live-column {
+        flex: 0 0 calc(25% - 20px);
+        min-width: unset;
+    }
+}
+
 /* Define .setlist-row to use flex layout */
 .database-row {
     display: flex;

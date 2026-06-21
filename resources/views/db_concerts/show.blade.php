@@ -34,7 +34,7 @@
             ->count();
 
         // レイアウト用クラスを調整
-        $colClass = $totalOlCount <= 2 ? 'col-xl-9' : 'col-xl-10';
+        $colClass = $totalOlCount <= 1 ? 'col-xl-9' : ($totalOlCount <= 3 ? 'col-xl-11' : 'col-xl-12');
         $flexDirectionClass = $totalOlCount <= 1 ? 'flex-start' : 'space-around';
     @endphp
 
@@ -58,11 +58,12 @@
             <div class="{{ $colClass }}">
                 <div class="setlist">
                     @if ($tourSetlists->count())
-                        <div class="setlist-row justify-content-{{ $flexDirectionClass }}">
+                        <div class="setlist-row justify-content-{{ $flexDirectionClass }} {{ $totalOlCount >= 4 ? 'setlist-row-wrap' : '' }}">
                             @foreach ($tourSetlists as $setlistModel)
                                 @php
                                     $setlist = is_array($setlistModel->setlist) ? $setlistModel->setlist : [];
                                     $encore = is_array($setlistModel->encore) ? $setlistModel->encore : [];
+                                    $totalItems = $totalOlCount;
                                 @endphp
 
                                 @if (count($setlist) || count($encore))
