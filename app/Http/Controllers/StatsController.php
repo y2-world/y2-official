@@ -486,7 +486,7 @@ class StatsController extends Controller
         foreach ($tourSetlists as $setlist) {
             $count = 0;
             foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
-                if (isset($s['song']) && is_numeric($s['song']) && empty($s['is_daily'])) {
+                if (isset($s['song']) && !empty($s['song']) && empty($s['is_daily'])) {
                     $count++;
                 }
             }
