@@ -34,7 +34,7 @@
             ->count();
 
         // レイアウト用クラスを調整
-        $colClass = $totalOlCount <= 2 ? 'col-xl-9' : 'col-xl-10';
+        $colClass = $totalOlCount <= 2 ? 'col-xl-9' : 'col-xl-12';
         $flexDirectionClass = $totalOlCount <= 1 ? 'flex-start' : 'space-around';
     @endphp
 
@@ -53,12 +53,12 @@
         </div>
     </div>
 
-    <div class="container database-year-content">
+    <div class="{{ $totalOlCount >= 3 ? 'container-fluid' : 'container' }} database-year-content">
         <div class="row justify-content-center">
             <div class="{{ $colClass }}">
-                <div class="setlist">
+                <div class="setlist" style="width: 100%;">
                     @if ($tourSetlists->count())
-                        <div class="setlist-row justify-content-{{ $flexDirectionClass }} {{ $totalOlCount >= 4 ? 'setlist-row-wrap' : '' }}">
+                        <div class="setlist-row justify-content-{{ $flexDirectionClass }}">
                             @foreach ($tourSetlists as $setlistModel)
                                 @php
                                     $setlist = is_array($setlistModel->setlist) ? $setlistModel->setlist : [];
@@ -140,6 +140,12 @@
                         </div>
                     @endif
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="container database-year-content" style="padding-top: 0;">
+        <div class="row justify-content-center">
+            <div class="col-xl-9">
                 <div class="schedule-text">
                     <!-- Additional content -->
                     @if (!is_null($tours->schedule))
@@ -176,4 +182,5 @@
             </div>
         </div>
     </div>
+
 @endsection
