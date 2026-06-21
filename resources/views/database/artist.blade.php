@@ -22,7 +22,7 @@
     <div class="container database-content">
         <div class="row">
             <!-- Live Card -->
-            <div class="col-md-4 mb-4">
+            <div class="col-lg-4 mb-4">
                 <div class="database-card">
                     <div class="card-icon">
                         <i class="fa-solid fa-guitar"></i>
@@ -57,7 +57,7 @@
             </div>
 
             <!-- Discography Card -->
-            <div class="col-md-4 mb-4">
+            <div class="col-lg-4 mb-4">
                 <div class="database-card">
                     <div class="card-icon">
                         <i class="fa-solid fa-music"></i>
@@ -82,7 +82,7 @@
             </div>
 
             <!-- Biography Card -->
-            <div class="col-md-4 mb-4">
+            <div class="col-lg-4 mb-4">
                 <div class="database-card">
                     <div class="card-icon">
                         <i class="fa-solid fa-book"></i>

@@ -10,24 +10,30 @@
     <div class="container database-content">
         <div class="row justify-content-center">
             @foreach ($artists as $artist)
-                <div class="col-md-4 mb-4">
-                    <a href="{{ route('database.artist', $artist->id) }}" class="text-decoration-none">
-                        <div class="database-card" style="cursor: pointer;">
-                            <div class="card-icon">
-                                <i class="fa-solid fa-music"></i>
-                            </div>
-                            <h3 class="card-title">{{ $artist->name }}</h3>
-                            @if ($artist->kana)
-                                <p class="card-description">{{ $artist->kana }}</p>
-                            @endif
-                            <div class="card-links" style="margin-top: 12px;">
-                                <span class="database-link">
-                                    <span>View</span>
-                                    <i class="fa-solid fa-arrow-right"></i>
-                                </span>
-                            </div>
+                <div class="col-lg-4 mb-4">
+                    <div class="database-card">
+                        <div class="card-icon">
+                            <i class="fa-solid fa-music"></i>
                         </div>
-                    </a>
+                        <h3 class="card-title">{{ $artist->name }}</h3>
+                        @if ($artist->kana)
+                            <p class="card-description">{{ $artist->kana }}</p>
+                        @endif
+                        <div class="card-links">
+                            <a href="{{ route('database.live', $artist->id) }}" class="database-link">
+                                <span>Live</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                            <a href="{{ route('database.songs', $artist->id) }}" class="database-link">
+                                <span>Songs</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                            <a href="{{ route('database.artist', $artist->id) }}" class="database-link">
+                                <span>View All</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             @endforeach
         </div>

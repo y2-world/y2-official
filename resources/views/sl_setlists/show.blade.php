@@ -340,9 +340,9 @@
                             // アーティスト名の表示（リンク付き）
                             $artistDisplay = '';
                             if ($artistName && $artistId) {
-                                $artistDisplay = ' / <a href="' . url('/setlists/artists', $artistId) . '">' . htmlspecialchars($artistName, ENT_QUOTES, 'UTF-8') . '</a>';
+                                $artistDisplay = ' <span style="color:#999;font-size:0.75em;"><a href="' . url('/setlists/artists', $artistId) . '" style="color:#999;">' . htmlspecialchars($artistName, ENT_QUOTES, 'UTF-8') . '</a></span>';
                             } elseif ($artistName) {
-                                $artistDisplay = ' / ' . htmlspecialchars($artistName, ENT_QUOTES, 'UTF-8');
+                                $artistDisplay = ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($artistName, ENT_QUOTES, 'UTF-8') . '</span>';
                             }
 
                             // 共演者がある場合はアーティスト名の後に追加
@@ -446,9 +446,9 @@
                                 // アーティスト名の表示（リンク付き）
                                 $encoreArtistDisplay = '';
                                 if ($artistName && $artistId) {
-                                    $encoreArtistDisplay = ' / <a href="' . url('/setlists/artists', $artistId) . '">' . htmlspecialchars($artistName, ENT_QUOTES, 'UTF-8') . '</a>';
+                                    $encoreArtistDisplay = ' <span style="color:#999;font-size:0.75em;"><a href="' . url('/setlists/artists', $artistId) . '" style="color:#999;">' . htmlspecialchars($artistName, ENT_QUOTES, 'UTF-8') . '</a></span>';
                                 } elseif ($artistName) {
-                                    $encoreArtistDisplay = ' / ' . htmlspecialchars($artistName, ENT_QUOTES, 'UTF-8');
+                                    $encoreArtistDisplay = ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($artistName, ENT_QUOTES, 'UTF-8') . '</span>';
                                 }
 
                                 // 共演者がある場合はアーティスト名の後に追加

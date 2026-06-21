@@ -349,6 +349,12 @@ class DbSetlistResource extends Resource
                     ->searchable(),
             ])
             ->actions([
+                Tables\Actions\ReplicateAction::make()
+                    ->beforeReplicaSaved(function ($replica) {
+                        $replica->order_no = 0;
+                        $replica->subtitle = null;
+                    })
+                    ->redirectTo(fn($replica) => static::getUrl('edit', ['record' => $replica])),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
