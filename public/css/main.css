@@ -729,10 +729,25 @@ select {
     justify-content: flex-start;
 }
 
+.setlist-row.setlist-row-wrap {
+    flex-wrap: wrap;
+    overflow-x: unset;
+}
+
 .live-column {
-    flex: 0 0 auto; /* Prevent columns from shrinking */
+    flex: 0 0 auto;
     margin: 10px;
-    min-width: 350px; /* Adjust the width based on your needs */
+    min-width: min(350px, 80vw);
+}
+
+.setlist-row.setlist-row-wrap .live-column {
+    min-width: 220px;
+}
+
+@media (min-width: 1400px) {
+    .setlist-row.setlist-row-wrap .live-column {
+        min-width: 180px;
+    }
 }
 
 
