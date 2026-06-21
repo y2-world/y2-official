@@ -350,6 +350,7 @@ class DbSetlistResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ReplicateAction::make()
+                    ->modalHidden()
                     ->beforeReplicaSaved(function ($replica) {
                         $replica->order_no = 0;
                         $replica->subtitle = null;
