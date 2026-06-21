@@ -728,6 +728,11 @@ select {
     overflow-x: scroll;
     justify-content: center;
     justify-content: safe center;
+    scrollbar-width: none;
+}
+
+.setlist-row::-webkit-scrollbar {
+    display: none;
 }
 
 .live-column {
