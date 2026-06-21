@@ -736,11 +736,11 @@ select {
 }
 
 @media (min-width: 992px) {
-    .setlist-row-wrap {
+    .setlist-row.setlist-row-wrap {
         flex-wrap: wrap;
         overflow-x: unset;
     }
-    .setlist-row-wrap .live-column {
+    .setlist-row.setlist-row-wrap .live-column {
         flex: 0 0 calc(25% - 20px);
         min-width: unset;
     }
