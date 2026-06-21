@@ -724,8 +724,12 @@ select {
 
 .setlist-row {
     display: flex;
-    flex-wrap: nowrap; /* Prevent wrapping */
-    overflow-x: scroll; /* Enable horizontal scrolling */
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    justify-content: flex-start;
+}
+
+.setlist-row.setlist-center {
     justify-content: center;
 }
 

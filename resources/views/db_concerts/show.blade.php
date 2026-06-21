@@ -57,7 +57,7 @@
             <div class="{{ $colClass }}">
                 <div class="setlist" style="width: 100%;">
                     @if ($tourSetlists->count())
-                        <div class="setlist-row">
+                        <div class="setlist-row {{ $totalOlCount <= 2 ? 'setlist-center' : '' }}">
                             @foreach ($tourSetlists as $setlistModel)
                                 @php
                                     $setlist = is_array($setlistModel->setlist) ? $setlistModel->setlist : [];
