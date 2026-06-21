@@ -34,8 +34,8 @@
             ->count();
 
         // レイアウト用クラスを調整
-        $colClass = $totalOlCount <= 1 ? 'col-xl-9' : ($totalOlCount <= 3 ? 'col-xl-11' : 'col-xl-12');
-        $flexDirectionClass = $totalOlCount >= 4 ? 'flex-start' : ($totalOlCount <= 1 ? 'flex-start' : 'space-around');
+        $colClass = $totalOlCount <= 2 ? 'col-xl-9' : 'col-xl-10';
+        $flexDirectionClass = $totalOlCount <= 1 ? 'flex-start' : 'space-around';
     @endphp
 
     <div class="database-hero database-year-hero">
@@ -58,16 +58,16 @@
             <div class="{{ $colClass }}">
                 <div class="setlist">
                     @if ($tourSetlists->count())
-                        <div class="setlist-row {{ $totalOlCount >= 4 ? 'setlist-row-wrap' : 'justify-content-' . $flexDirectionClass }}">
+                        <div class="setlist-row justify-content-{{ $flexDirectionClass }}">
                             @foreach ($tourSetlists as $setlistModel)
                                 @php
                                     $setlist = is_array($setlistModel->setlist) ? $setlistModel->setlist : [];
                                     $encore = is_array($setlistModel->encore) ? $setlistModel->encore : [];
-                                    $totalItems = $totalOlCount;
+                                    $totalItems = count($setlist) + count($encore);
                                 @endphp
 
                                 @if (count($setlist) || count($encore))
-                                    <ol class="live-column">
+                                    <ol class="live-column {{ $totalItems >= 20 ? 'live-column-two-col' : '' }}">
                                         @if (!empty(trim($setlistModel->subtitle ?? '')))
                                             <h5>{{ $setlistModel->subtitle }}</h5>
                                         @endif
