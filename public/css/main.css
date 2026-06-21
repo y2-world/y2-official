@@ -739,6 +739,7 @@ select {
     .setlist-row.setlist-row-wrap {
         flex-wrap: wrap;
         overflow-x: unset;
+        justify-content: flex-start !important;
     }
     .setlist-row.setlist-row-wrap .live-column {
         flex: 0 0 calc(25% - 20px);
