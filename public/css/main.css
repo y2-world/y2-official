@@ -726,8 +726,11 @@ select {
     display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
+    justify-content: flex-start;
+}
+
+.setlist-row.setlist-centered {
     justify-content: center;
-    justify-content: safe center;
 }
 
 
