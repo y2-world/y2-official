@@ -53,145 +53,125 @@
     <div class="container database-year-content">
         <div class="database-row">
             @if (!$songs->isEmpty())
-                @if ($tours->isEmpty())
-                    <div class="column">
-                    @else
-                        <div class="column1">
-                @endif
-                @if ($tours->isEmpty())
-                    <table class="table table-striped">
-                    @else
-                        <table class="table table-striped songs">
-                @endif
-                <thead>
-                    <tr>
-                        <th class="mobile">#</th>
-                        <th class="mobile">タイトル</th>
-                        <th class="mobile">シングル / アルバム</th>
-                        <th class="pc">リリース日</th>
-                    </tr>
-                </thead>
-                <h5>Songs</h5>
-                <tbody>
-                    @foreach ($songs as $song)
-                        @php
-                            $single = $song->singleFromTracklist;
-                            $album = $song->albumFromTracklist;
-                            $songNumber = \App\Models\DbSong::where('artist_id', $song->artist_id)->where('id', '<=', $song->id)->count();
-                        @endphp
+                <div class="{{ $tours->isEmpty() ? 'column' : 'column1' }}">
+                    <table class="table table-striped {{ $tours->isEmpty() ? '' : 'songs' }}">
+                    <thead>
                         <tr>
-                            <td>{{ $songNumber }}</td>
-                            <td><a href="{{ route('songs.show', $song->id) }}">{{ $song->title }}</a></td>
-                            @if ($single && $album)
-                                @if ($single->date > $album->date)
+                            <th class="mobile">#</th>
+                            <th class="mobile">タイトル</th>
+                            <th class="mobile">シングル / アルバム</th>
+                            <th class="pc">リリース日</th>
+                        </tr>
+                    </thead>
+                    <h5>Songs</h5>
+                    <tbody>
+                        @foreach ($songs as $song)
+                            @php
+                                $single = $song->singleFromTracklist;
+                                $album = $song->albumFromTracklist;
+                                $songNumber = \App\Models\DbSong::where('artist_id', $song->artist_id)->where('id', '<=', $song->id)->count();
+                            @endphp
+                            <tr>
+                                <td>{{ $songNumber }}</td>
+                                <td><a href="{{ route('songs.show', $song->id) }}">{{ $song->title }}</a></td>
+                                @if ($single && $album)
+                                    @if ($single->date > $album->date)
+                                        <td><a href="{{ route('albums.show', $album->id) }}">{{ $album->title }}</a></td>
+                                        <td class="pc">{{ date('Y.m.d', strtotime($album->date)) }}</td>
+                                    @else
+                                        <td><a href="{{ route('singles.show', $single->id) }}">{{ $single->title }}</a></td>
+                                        <td class="pc">{{ date('Y.m.d', strtotime($single->date)) }}</td>
+                                    @endif
+                                @elseif($album)
                                     <td><a href="{{ route('albums.show', $album->id) }}">{{ $album->title }}</a></td>
                                     <td class="pc">{{ date('Y.m.d', strtotime($album->date)) }}</td>
-                                @else
+                                @elseif($single)
                                     <td><a href="{{ route('singles.show', $single->id) }}">{{ $single->title }}</a></td>
                                     <td class="pc">{{ date('Y.m.d', strtotime($single->date)) }}</td>
+                                @else
+                                    <td></td>
+                                    <td class="pc"></td>
                                 @endif
-                            @elseif($album)
-                                <td><a href="{{ route('albums.show', $album->id) }}">{{ $album->title }}</a></td>
-                                <td class="pc">{{ date('Y.m.d', strtotime($album->date)) }}</td>
-                            @elseif($single)
-                                <td><a href="{{ route('singles.show', $single->id) }}">{{ $single->title }}</a></td>
-                                <td class="pc">{{ date('Y.m.d', strtotime($single->date)) }}</td>
-                            @else
-                                <td></td>
-                                <td class="pc"></td>
-                            @endif
-                        </tr>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    </table>
+                </div>
+            @endif
+            <div class="{{ $songs->isEmpty() ? 'column' : 'column2-bio' }}">
+                @if (!$tours->isEmpty())
+                    @php
+                        $hasTourEvent = false;
+                        $hasSolo = false;
+                    @endphp
+
+                    @foreach ($tours as $tour)
+                        @if ($tour->type == 0 || $tour->type != 4)
+                            @php $hasTourEvent = true; @endphp
+                        @else
+                            @php $hasSolo = true; @endphp
+                        @endif
                     @endforeach
-                </tbody>
-                </table>
-                </div>
-            @endif
-        </div>
-        @if ($songs->isEmpty())
-            <div class="column">
-            @else
-                <div class="column2-bio">
-        @endif
-        @if (!$tours->isEmpty())
 
-            @php
-                $hasTourEvent = false;
-                $hasSolo = false;
-            @endphp
+                    @if ($hasTourEvent)
+                        <table class="table table-striped count tour">
+                            <thead>
+                                <tr>
+                                    <th class="mobile">#</th>
+                                    <th class="mobile">開催日</th>
+                                    <th class="mobile">タイトル</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <h5>Tour / Event</h5>
+                                @foreach ($tours as $tour)
+                                    @if ($tour->type == 0 || $tour->type != 4)
+                                        <tr>
+                                            <td></td>
+                                            @if (isset($tour->date1) && isset($tour->date2))
+                                                <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }} - {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
+                                            @elseif(isset($tour->date1) && !isset($tour->date2))
+                                                <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
+                                            @endif
+                                            <td class="td_title"><a href="{{ route('live.show', $tour->id) }}">{{ $tour->title }}</a></td>
+                                        </tr>
+                                    @endif
+                                @endforeach
+                            </tbody>
+                        </table>
+                        <br>
+                    @endif
 
-            @foreach ($tours as $tour)
-                @if ($tour->type == 0 || $tour->type != 4)
-                    @php $hasTourEvent = true; @endphp
-                @else
-                    @php $hasSolo = true; @endphp
+                    @if ($hasSolo)
+                        <table class="table table-striped count solo">
+                            <thead>
+                                <tr>
+                                    <th class="mobile">#</th>
+                                    <th class="mobile">開催日</th>
+                                    <th class="mobile">タイトル</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <h5>Solo</h5>
+                                @foreach ($tours as $tour)
+                                    @if ($tour->type == 4)
+                                        <tr>
+                                            <td></td>
+                                            @if (isset($tour->date1) && isset($tour->date2))
+                                                <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }} - {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
+                                            @elseif(isset($tour->date1) && !isset($tour->date2))
+                                                <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
+                                            @endif
+                                            <td class="td_title"><a href="{{ route('live.show', $tour->id) }}">{{ $tour->title }}</a></td>
+                                        </tr>
+                                    @endif
+                                @endforeach
+                            </tbody>
+                        </table>
+                        <br>
+                    @endif
                 @endif
-            @endforeach
-
-            @if ($hasTourEvent)
-                <table class="table table-striped count tour">
-                    <thead>
-                        <tr>
-                            <th class="mobile">#</th>
-                            <th class="mobile">開催日</th>
-                            <th class="mobile">タイトル</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <h5>Tour / Event</h5>
-                        @foreach ($tours as $tour)
-                            @if ($tour->type == 0 || $tour->type != 4)
-                                <tr>
-                                    <td></td>
-                                    @if (isset($tour->date1) && isset($tour->date2))
-                                        <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }} -
-                                            {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
-                                    @elseif(isset($tour->date1) && !isset($tour->date2))
-                                        <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
-                                    @endif
-                                    <td class="td_title"><a
-                                            href="{{ route('live.show', $tour->id) }}">{{ $tour->title }}</a></td>
-                                </tr>
-                            @endif
-                        @endforeach
-                    </tbody>
-                </table>
-                </div>
-                <br>
-            @endif
-
-            @if ($hasSolo)
-                <table class="table table-striped count solo">
-                    <thead>
-                        <tr>
-                            <th class="mobile">#</th>
-                            <th class="mobile">開催日</th>
-                            <th class="mobile">タイトル</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <h5>Solo</h5>
-                        @foreach ($tours as $tour)
-                            @if ($tour->type == 4)
-                                <tr>
-                                    <td></td>
-                                    @if (isset($tour->date1) && isset($tour->date2))
-                                        <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }} -
-                                            {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
-                                    @elseif(isset($tour->date1) && !isset($tour->date2))
-                                        <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
-                                    @endif
-                                    <td class="td_title"><a
-                                            href="{{ route('live.show', $tour->id) }}">{{ $tour->title }}</a></td>
-                                </tr>
-                            @endif
-                        @endforeach
-                    </tbody>
-                </table>
-                </div>
-                <br>
-            @endif
-
-        @endif
+            </div>
         </div>
     </div>
 @endsection
