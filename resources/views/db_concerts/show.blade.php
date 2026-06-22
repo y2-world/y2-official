@@ -35,6 +35,25 @@
 
         // レイアウト用クラスを調整
         $colClass = $totalOlCount <= 2 ? 'col-xl-9' : 'col-xl-12';
+
+        // 全パターンに共通する曲IDを計算
+        $commonSongs = null;
+        if ($totalOlCount >= 2) {
+            foreach ($tourSetlists as $setlistModel) {
+                $allSongs = array_merge(
+                    is_array($setlistModel->setlist) ? $setlistModel->setlist : [],
+                    is_array($setlistModel->encore) ? $setlistModel->encore : []
+                );
+                $songIds = array_map(fn($s) => $s['song'] ?? '', $allSongs);
+                $songIds = array_filter($songIds, fn($s) => $s !== '');
+                if ($commonSongs === null) {
+                    $commonSongs = array_flip($songIds);
+                } else {
+                    $commonSongs = array_intersect_key($commonSongs, array_flip($songIds));
+                }
+            }
+            $commonSongs = array_keys($commonSongs ?? []);
+        }
     @endphp
 
     <div class="database-hero database-year-hero">
@@ -87,6 +106,7 @@
                                                     $isNumericSong = is_numeric($data['song'] ?? '');
                                                     $title = '';
                                                     $link = null;
+                                                    $isUnique = $commonSongs !== null && !in_array($data['song'] ?? '', $commonSongs);
 
                                                     if ($isNumericSong) {
                                                         $songModel = $songs->find($data['song']);
@@ -105,9 +125,9 @@
                                                 @if ($isDaily)
                                                     -
                                                     @if ($link)
-                                                        <a href="{{ $link }}">{{ $title }}</a>
+                                                        <a href="{{ $link }}" @if($isUnique) style="font-weight:bold;" @endif>{{ $title }}</a>
                                                     @else
-                                                        {{ $title }}
+                                                        @if($isUnique)<strong>{{ $title }}</strong>@else{{ $title }}@endif
                                                     @endif
                                                     @if(!empty($featuring))
                                                         <span style="color:#999;font-size:0.75em;">{{ $featuring }}</span>
@@ -117,7 +137,7 @@
                                                     @endif
                                                     <br>
                                                 @else
-                                                    <li>
+                                                    <li @if($isUnique) style="font-weight:bold;" @endif>
                                                         @if ($link)
                                                             <a href="{{ $link }}">{{ $title }}</a>
                                                         @else
