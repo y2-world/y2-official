@@ -1028,12 +1028,6 @@ h2 {
         font-size: 11px;
     }
 
-    .database-row {
-        display: column;
-        flex-direction: column;
-        flex-wrap: wrap;
-    }
-
     .column,
     .column1,
     .column2-bio {
