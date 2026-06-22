@@ -204,4 +204,15 @@
 
 
 
+@section('page-script')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var row = document.querySelector('.setlist-row');
+    if (row && row.scrollWidth <= row.clientWidth) {
+        row.style.justifyContent = 'center';
+    }
+});
+</script>
+@endsection
+
 @endsection

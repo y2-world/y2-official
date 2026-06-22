@@ -726,7 +726,7 @@ select {
     display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 
