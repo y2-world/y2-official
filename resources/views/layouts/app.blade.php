@@ -15,8 +15,8 @@
     @endphp
 
     <!-- OGP Meta Tags -->
-    <meta property="og:title" content="{!! str_replace('&#039;', "'", e($ogTitle)) !!}">
-    <meta property="og:description" content="{!! str_replace('&#039;', "'", e($ogDescription)) !!}">
+    <meta property="og:title" content="{!! str_replace('&#039;', "'", $ogTitle) !!}">
+    <meta property="og:description" content="{!! str_replace('&#039;', "'", $ogDescription) !!}">
     <meta property="og:image" content="{{ $ogImage }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:type" content="{{ $ogType }}">
