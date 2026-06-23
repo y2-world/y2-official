@@ -402,6 +402,7 @@ class StatsController extends Controller
 
         $counts = array_map('count', $songTourCounts);
         arsort($counts);
+        uksort($counts, fn($a, $b) => $counts[$b] !== $counts[$a] ? $counts[$b] - $counts[$a] : $a - $b);
 
         $stats = [];
         foreach ($counts as $songId => $count) {
@@ -441,6 +442,7 @@ class StatsController extends Controller
 
         $counts = array_map('count', $counts);
         arsort($counts);
+        uksort($counts, fn($a, $b) => $counts[$b] !== $counts[$a] ? $counts[$b] - $counts[$a] : $a - $b);
 
         $stats = [];
         foreach (array_slice($counts, 0, 10, true) as $songId => $count) {
@@ -468,6 +470,7 @@ class StatsController extends Controller
 
         $counts = array_map('count', $counts);
         arsort($counts);
+        uksort($counts, fn($a, $b) => $counts[$b] !== $counts[$a] ? $counts[$b] - $counts[$a] : $a - $b);
 
         $stats = [];
         foreach (array_slice($counts, 0, 10, true) as $songId => $count) {
