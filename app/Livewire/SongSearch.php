@@ -61,7 +61,7 @@ class SongSearch extends Component
         $escapedQuery = str_replace(['%', '_'], ['\%', '\_'], $this->search);
 
         $query = SlSong::query()
-            ->whereRaw('LOWER(setlist_songs.title) LIKE LOWER(?)', [$escapedQuery . '%']);
+            ->whereRaw('LOWER(sl_songs.title) LIKE LOWER(?)', [$escapedQuery . '%']);
 
         // アーティストIDが指定されている場合はフィルタリング（アーティスト名は表示しない）
         if ($this->artistId) {
