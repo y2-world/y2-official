@@ -11,10 +11,9 @@
     </nav>
     <style>
         .breadcrumb-nav {
-            position: absolute;
-            top: 62px;
-            left: 15px;
-            right: 15px;
+            margin: 0 0 4px;
+            padding: 0;
+            line-height: 1;
         }
         .breadcrumb-item-link {
             color: rgba(255,255,255,0.75);
@@ -31,7 +30,13 @@
             font-size: 0.8rem;
         }
         @media (max-width: 767px) {
-            .breadcrumb-nav { top: 58px; }
+            .breadcrumb-nav {
+                position: absolute;
+                top: 8px;
+                left: 10px;
+                right: 10px;
+                margin-bottom: 0;
+            }
             .breadcrumb-item-link { font-size: 0.7rem; }
             .breadcrumb-sep { font-size: 0.7rem; }
             .breadcrumb-item-current,
