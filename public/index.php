@@ -10,6 +10,9 @@
 // メモリリミットを増やす
 ini_set('memory_limit', '256M');
 
+// PHP 8.4 の Carbon 2.x 互換性警告を抑制（ローカル開発用）
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
+
 define('LARAVEL_START', microtime(true));
 
 /*

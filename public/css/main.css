@@ -1606,7 +1606,8 @@ h2 {
 
 @media (max-width: 768px) {
     .database-year-hero {
-        padding: 95px 0 25px;
+        padding-top: 75px;
+        padding-bottom: 25px;
     }
 }
 
