@@ -3,6 +3,11 @@
 @section('content')
     <div class="database-hero database-year-hero">
         <div class="container">
+            @include('database._breadcrumb', ['breadcrumbs' => [
+            ['label' => 'Database', 'url' => '/database'],
+            ['label' => $artist->name, 'url' => route('database.artist', $artist->id)],
+            ['label' => 'Songs'],
+        ]])
             <h1 class="database-title">Songs</h1>
             <p class="database-subtitle">{{ $artist->name }} — すべての楽曲コレクション</p>
 

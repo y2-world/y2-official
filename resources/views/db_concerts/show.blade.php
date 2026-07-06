@@ -58,6 +58,12 @@
 
     <div class="database-hero database-year-hero">
         <div class="container">
+            @include('database._breadcrumb', ['breadcrumbs' => [
+            ['label' => 'Database', 'url' => '/database'],
+            ['label' => $artist->name, 'url' => route('database.artist', $artist->id)],
+            ['label' => 'Live', 'url' => route('database.live', $artist->id)],
+            ['label' => $tours->title],
+        ]])
             <h1 class="database-title" style="margin-bottom: 15px;">{{ $tours->title }}</h1>
             <p class="database-subtitle" style="margin-bottom: 0;">
                 @if (isset($tours->date1) && isset($tours->date2))

@@ -8,6 +8,12 @@
 @section('content')
     <div class="database-hero database-year-hero">
         <div class="container">
+            @include('database._breadcrumb', ['breadcrumbs' => [
+            ['label' => 'Database', 'url' => '/database'],
+            ['label' => $songs->artist->name, 'url' => route('database.artist', $songs->artist_id)],
+            ['label' => 'Songs', 'url' => route('database.songs', $songs->artist_id)],
+            ['label' => $songs->title],
+        ]])
             <p class="database-subtitle" style="margin-bottom: 10px;"># {{ $songNumber }}</p>
             <h1 class="database-title sp" style="margin-bottom: 20px; cursor: pointer;"
                 onclick="document.getElementById('spSearchFormSongs').style.display='block'; document.querySelector('.database-title.sp').style.display='none';">

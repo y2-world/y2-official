@@ -3,6 +3,12 @@
 @section('content')
     <div class="database-hero database-year-hero">
         <div class="container">
+            @include('database._breadcrumb', ['breadcrumbs' => [
+            ['label' => 'Database', 'url' => '/database'],
+            ['label' => $artist->name, 'url' => route('database.artist', $artist->id)],
+            ['label' => 'Singles', 'url' => route('database.singles', $artist->id)],
+            ['label' => $singles->title],
+        ]])
             <p class="database-subtitle" style="margin-bottom: 10px;">
                 @if($singles->download == 0 && $singles->single_id)
                     {{ ordinal($singles->single_id) }} Single

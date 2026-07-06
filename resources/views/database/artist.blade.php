@@ -3,6 +3,10 @@
 @section('content')
     <div class="database-hero">
         <div class="container">
+            @include('database._breadcrumb', ['breadcrumbs' => [
+            ['label' => 'Database', 'url' => '/database'],
+            ['label' => $artist->name],
+        ]])
             <h1 class="database-title" style="margin-bottom: 20px; text-align: center;">{{ $artist->name }} Database</h1>
 
             {{-- 検索フォーム（SP表示） --}}

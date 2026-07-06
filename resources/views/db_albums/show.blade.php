@@ -3,6 +3,12 @@
 @section('content')
     <div class="database-hero database-year-hero">
         <div class="container">
+            @include('database._breadcrumb', ['breadcrumbs' => [
+            ['label' => 'Database', 'url' => '/database'],
+            ['label' => $artist->name, 'url' => route('database.artist', $artist->id)],
+            ['label' => 'Albums', 'url' => route('database.albums', $artist->id)],
+            ['label' => $albums->title],
+        ]])
             <p class="database-subtitle" style="margin-bottom: 10px;">
                 @if ($albums->best)
                     Best Album
