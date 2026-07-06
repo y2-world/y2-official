@@ -242,6 +242,9 @@
                     }
                 @endphp
 
+                <div class="setlist-row" style="justify-content: center;">
+                <div class="live-column">
+
                 {{-- 通常ライブ --}}
                 @if (!$setlists->fes)
                     @php $count = renderSetlist($setlists->setlist, $setlists->artist_id, [], 1, empty($setlists->encore)); @endphp
@@ -473,6 +476,9 @@
                     @endif
                     </ol>
                 @endif
+
+                </div>{{-- live-column --}}
+                </div>{{-- setlist-row --}}
 
                 {{-- 前後リンク --}}
                 <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
