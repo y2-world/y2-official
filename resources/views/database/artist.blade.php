@@ -2,7 +2,7 @@
 @section('title', 'Yuki Official - ' . $artist->name . ' Database')
 @section('content')
     <div class="database-hero">
-        <div class="container">
+        <div class="container" style="position: relative;">
             @include('database._breadcrumb', ['breadcrumbs' => [
             ['label' => 'Database', 'url' => '/database'],
             ['label' => $artist->name],

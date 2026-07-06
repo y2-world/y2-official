@@ -1,19 +1,41 @@
 @if (!empty($breadcrumbs))
-    <nav style="text-align: left; margin-bottom: 12px;">
+    <nav class="breadcrumb-nav">
         @foreach ($breadcrumbs as $i => $crumb)
             @if (!$loop->last)
-                <a href="{{ $crumb['url'] }}" style="color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.8rem;" class="breadcrumb-item-link">{{ $crumb['label'] }}</a>
-                <span style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin: 0 4px;">›</span>
+                <a href="{{ $crumb['url'] }}" class="breadcrumb-item-link">{{ $crumb['label'] }}</a>
+                <span class="breadcrumb-sep">›</span>
             @else
-                <span style="color: rgba(255,255,255,0.95); font-size: 0.8rem;" class="breadcrumb-item-current">{{ $crumb['label'] }}</span>
+                <span class="breadcrumb-item-current">{{ $crumb['label'] }}</span>
             @endif
         @endforeach
     </nav>
     <style>
+        .breadcrumb-nav {
+            position: absolute;
+            top: 62px;
+            left: 15px;
+            right: 15px;
+        }
+        .breadcrumb-item-link {
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+        .breadcrumb-sep {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.8rem;
+            margin: 0 4px;
+        }
+        .breadcrumb-item-current {
+            color: rgba(255,255,255,0.95);
+            font-size: 0.8rem;
+        }
         @media (max-width: 767px) {
-            .breadcrumb-item-link, .breadcrumb-item-current {
-                font-size: 0.7rem !important;
-            }
+            .breadcrumb-nav { top: 58px; }
+            .breadcrumb-item-link { font-size: 0.7rem; }
+            .breadcrumb-sep { font-size: 0.7rem; }
+            .breadcrumb-item-current,
+            .breadcrumb-nav > *:nth-last-child(2) { display: none; }
         }
     </style>
 @endif

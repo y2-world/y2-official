@@ -57,7 +57,7 @@
     @endphp
 
     <div class="database-hero database-year-hero">
-        <div class="container">
+        <div class="container" style="position: relative;">
             @include('database._breadcrumb', ['breadcrumbs' => [
             ['label' => 'Database', 'url' => '/database'],
             ['label' => $artist->name, 'url' => route('database.artist', $artist->id)],
