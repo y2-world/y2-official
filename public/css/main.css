@@ -1283,6 +1283,15 @@ h2 {
     padding-top: 95px;
 }
 
+/* Top-level /database index hero only (other database-* pages also add .database-year-hero) */
+.database-hero:not(.database-year-hero) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+    padding-top: 55px;
+}
+
 .database-hero a {
     text-decoration: none !important;
 }
@@ -1310,6 +1319,21 @@ h2 {
     margin: 0 auto;
     position: relative;
     overflow: visible;
+}
+
+/* 楽曲検索窓: デスクトップでは右上に配置（song/biography-yearページのみ） */
+.song-search-top-right {
+    margin-top: 30px;
+}
+
+@media (min-width: 1080px) {
+    .song-search-top-right {
+        position: absolute;
+        top: 0;
+        right: 0;
+        max-width: 280px;
+        margin: 0;
+    }
 }
 
 .search-wrapper {
@@ -1474,6 +1498,11 @@ h2 {
     .database-hero {
         padding: 40px 0 30px;
         padding-top: 100px;
+    }
+
+    .database-hero:not(.database-year-hero) {
+        min-height: 180px;
+        padding-top: 55px;
     }
 
     .database-title {

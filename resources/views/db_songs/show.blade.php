@@ -71,7 +71,7 @@
             </div>
 
             {{-- 検索フォーム（PC表示のみ） --}}
-            <div class="database-search pc" style="margin-top: 30px;">
+            <div class="database-search pc song-search-top-right">
                 <div>
                     @livewire('database-song-search', ['artistId' => $songs->artist_id])
                 </div>

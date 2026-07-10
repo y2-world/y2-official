@@ -9,6 +9,6 @@
         @endif
         <td class="td_title"><a href="{{ route('live.show', $tour->id) }}">{{ $tour->title }}</a>
         </td>
-        <td class="pc_venue"><a href="{{ url('/venue?keyword='.urlencode($tour->venue)) }}">{{ $tour->venue }}</a></td>
+        <td class="pc_venue">{{ $tour->venue }}</td>
     </tr>
 @endforeach
