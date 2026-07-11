@@ -26,13 +26,13 @@
                 $album = $songs->albumFromTracklist;
             @endphp
             @if ($single)
-                <p class="database-subtitle">Single: <a href="{{ route('singles.show', $single->id) }}" style="color: white; text-decoration: underline;">{{ $single->title }}</a></p>
+                <p class="database-subtitle" style="font-weight: bold;"><strong>Single:</strong> <a href="{{ route('singles.show', $single->id) }}" style="color: white; text-decoration: underline;">{{ $single->title }}</a></p>
                 @if ($single->date)
                     <p class="database-subtitle">Release: {{ date('Y.m.d', strtotime($single->date)) }}</p>
                 @endif
             @endif
             @if ($album)
-                <p class="database-subtitle">Album: <a href="{{ route('albums.show', $album->id) }}" style="color: white; text-decoration: underline;">{{ $album->title }}</a></p>
+                <p class="database-subtitle" style="font-weight: bold;"><strong>Album:</strong> <a href="{{ route('albums.show', $album->id) }}" style="color: white; text-decoration: underline;">{{ $album->title }}</a></p>
                 @if ($album->date)
                     <p class="database-subtitle">Release: {{ date('Y.m.d', strtotime($album->date)) }}</p>
                 @endif
