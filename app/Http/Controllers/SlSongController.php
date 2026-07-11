@@ -41,7 +41,22 @@ class SlSongController extends Controller
                 ? $setlist->fes_encore
                 : json_decode($setlist->fes_encore ?? '[]', true);
 
-            $allLists = array_merge($setlistArr, $encoreArr, $fesSetlistArr, $fesEncoreArr);
+            // fes_setlist/fes_encoreのblockアイテムを展開
+            $expandFes = function ($items) {
+                $result = [];
+                foreach ($items as $item) {
+                    if (($item['type'] ?? 'song') === 'block') {
+                        foreach ($item['songs'] ?? [] as $s) {
+                            $result[] = $s;
+                        }
+                    } else {
+                        $result[] = $item;
+                    }
+                }
+                return $result;
+            };
+
+            $allLists = array_merge($setlistArr, $encoreArr, $expandFes($fesSetlistArr), $expandFes($fesEncoreArr));
 
             foreach ($allLists as $entry) {
                 // 数値IDの場合：SetlistSongのIDと一致するか
