@@ -265,288 +265,119 @@
                 {{-- フェス形式 --}}
                 @if($setlists->fes)
 
-                {{-- ブロック型フェス --}}
-                @if($setlists->fes_type === 'block')
+                {{-- フェス（type:'block'と'song'の混合対応） --}}
+                @if(true)
                     @php
-                        function renderFesBlock($blocks, $artistIdToName, $setlistsTitle) {
-                            foreach ((array) $blocks as $block) {
-                                $blockArtistId = isset($block['artist']) ? (int)$block['artist'] : null;
-                                $blockArtistName = $artistIdToName[$blockArtistId] ?? '';
-                                // 桜井→櫻井 ap fes
-                                if (stripos($setlistsTitle, 'ap') !== false && stripos($blockArtistName, '桜井') !== false) {
-                                    $blockArtistName = str_ireplace('桜井', '櫻井', $blockArtistName);
-                                }
-                                echo '<div class="fes-block">';
-                                if ($blockArtistName) {
-                                    if ($blockArtistId) {
-                                        echo '<p class="fes-block-artist"><a href="' . url('/setlists/artists', $blockArtistId) . '" style="color:inherit;text-decoration:none;">' . htmlspecialchars($blockArtistName, ENT_COMPAT, 'UTF-8') . '</a></p>';
-                                    } else {
-                                        echo '<p class="fes-block-artist">' . htmlspecialchars($blockArtistName, ENT_COMPAT, 'UTF-8') . '</p>';
+                        // fes_setlistをレンダリング（type:'block'と'song'の混合対応）
+                        function renderFesMixed($items, $artistIdToName, $setlistsTitle) {
+                            $inSongList = false;
+                            foreach ((array) $items as $data) {
+                                $type = $data['type'] ?? 'song';
+                                if ($type === 'block') {
+                                    // 開いているolを閉じる
+                                    if ($inSongList) { echo '</ol>'; $inSongList = false; }
+                                    $blockArtistId = isset($data['artist']) ? (int)$data['artist'] : null;
+                                    $blockArtistName = $artistIdToName[$blockArtistId] ?? '';
+                                    if (stripos($setlistsTitle, 'ap') !== false && stripos($blockArtistName, '桜井') !== false) {
+                                        $blockArtistName = str_ireplace('桜井', '櫻井', $blockArtistName);
                                     }
-                                }
-                                echo '<ol class="setlist">';
-                                foreach ((array)($block['songs'] ?? []) as $data) {
-                                    $songValue = $data['song'] ?? '';
-                                    $isNumericId = is_numeric($songValue);
-                                    if ($isNumericId) {
-                                        $song = \App\Models\SlSong::find($songValue);
-                                        $songTitle = $song ? $song->title : $songValue;
-                                        $url = url('/setlists/songs/' . $songValue);
-                                    } else {
-                                        $songTitle = $songValue;
-                                        $cleanTitle = trim(preg_replace('/\s*\[[^\]]+\]/u', '', $songTitle));
-                                        $setlistSong = \App\Models\SlSong::where('title', $cleanTitle);
-                                        if ($blockArtistId) $setlistSong = $setlistSong->where('artist_id', $blockArtistId);
-                                        $setlistSong = $setlistSong->first();
-                                        $url = $setlistSong ? url('/setlists/songs/' . $setlistSong->id) : '#';
+                                    echo '<div class="fes-block">';
+                                    if ($blockArtistName) {
+                                        if ($blockArtistId) {
+                                            echo '<p class="fes-block-artist"><a href="' . url('/setlists/artists', $blockArtistId) . '" style="color:inherit;text-decoration:none;">' . htmlspecialchars($blockArtistName, ENT_COMPAT, 'UTF-8') . '</a></p>';
+                                        } else {
+                                            echo '<p class="fes-block-artist">' . htmlspecialchars($blockArtistName, ENT_COMPAT, 'UTF-8') . '</p>';
+                                        }
                                     }
-                                    $parts = splitAnnotation($songTitle);
+                                    echo '<ol class="setlist">';
+                                    foreach ((array)($data['songs'] ?? []) as $song) {
+                                        $sv = $song['song'] ?? '';
+                                        if (is_numeric($sv)) {
+                                            $sm = \App\Models\SlSong::find($sv);
+                                            $title = $sm ? $sm->title : $sv;
+                                            $url = url('/setlists/songs/' . $sv);
+                                        } else {
+                                            $title = $sv;
+                                            $clean = trim(preg_replace('/\s*\[[^\]]+\]/u', '', $title));
+                                            $sm = \App\Models\SlSong::where('title', $clean)->when($blockArtistId, fn($q) => $q->where('artist_id', $blockArtistId))->first();
+                                            $url = $sm ? url('/setlists/songs/' . $sm->id) : '#';
+                                        }
+                                        $parts = splitAnnotation($title);
+                                        $keyword = $parts['main'];
+                                        $annotation = $parts['annotation'];
+                                        $feat = !empty($song['featuring']) ? ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($song['featuring'], ENT_COMPAT, 'UTF-8') . '</span>' : '';
+                                        $ver = !empty($song['version']) ? ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($song['version'], ENT_COMPAT, 'UTF-8') . '</span>' : '';
+                                        $isMedley = !empty($song['medley']) && $song['medley'] == 1;
+                                        if ($isMedley) {
+                                            echo '- ';
+                                            echo ($url !== '#') ? '<a href="' . $url . '">' . htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8') . '</a>' : htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8');
+                                            echo $feat . $ver . (!empty($annotation) ? ' ' . $annotation : '') . '<br>';
+                                        } else {
+                                            echo '<li>';
+                                            echo ($url !== '#') ? '<a href="' . $url . '">' . htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8') . '</a>' : htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8');
+                                            echo $feat . $ver . (!empty($annotation) ? ' ' . $annotation : '') . '</li>';
+                                        }
+                                    }
+                                    echo '</ol></div>';
+                                } else {
+                                    // type:'song' — インターリーブ
+                                    if (!$inSongList) { echo '<ol class="setlist">'; $inSongList = true; }
+                                    $artistId = isset($data['artist']) ? (is_numeric($data['artist']) ? (int)$data['artist'] : null) : null;
+                                    $artistName = $artistIdToName[$artistId] ?? ($data['artist'] ?? '');
+                                    if (stripos($setlistsTitle, 'ap') !== false && stripos($artistName, '桜井') !== false) {
+                                        $artistName = str_ireplace('桜井', '櫻井', $artistName);
+                                    }
+                                    $sv = $data['song'] ?? '';
+                                    if (is_numeric($sv)) {
+                                        $sm = \App\Models\SlSong::find($sv);
+                                        $title = $sm ? $sm->title : $sv;
+                                        $url = url('/setlists/songs/' . $sv);
+                                    } else {
+                                        $title = $sv;
+                                        $clean = trim(preg_replace('/\s*\[[^\]]+\]/u', '', $title));
+                                        $sm = \App\Models\SlSong::where('title', $clean)->when($artistId, fn($q) => $q->where('artist_id', $artistId))->first();
+                                        $url = $sm ? url('/setlists/songs/' . $sm->id) : '#';
+                                    }
+                                    $parts = splitAnnotation($title);
                                     $keyword = $parts['main'];
                                     $annotation = $parts['annotation'];
-                                    $featuring = !empty($data['featuring']) ? ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_COMPAT, 'UTF-8') . '</span>' : '';
-                                    $version = !empty($data['version']) ? ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['version'], ENT_COMPAT, 'UTF-8') . '</span>' : '';
                                     $isMedley = !empty($data['medley']) && $data['medley'] == 1;
+                                    $artistDisplay = '';
+                                    if ($artistName && $artistId) {
+                                        $artistDisplay = ' <span style="color:#999;font-size:0.75em;"><a href="' . url('/setlists/artists', $artistId) . '" style="color:#999;">' . htmlspecialchars($artistName, ENT_COMPAT, 'UTF-8') . '</a></span>';
+                                    } elseif ($artistName) {
+                                        $artistDisplay = ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($artistName, ENT_COMPAT, 'UTF-8') . '</span>';
+                                    }
+                                    if (!empty($data['featuring'])) {
+                                        $artistDisplay .= ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_COMPAT, 'UTF-8') . '</span>';
+                                    }
                                     if ($isMedley) {
                                         echo '- ';
-                                        if ($url !== '#') echo '<a href="' . $url . '">' . htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8') . '</a>';
-                                        else echo htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8');
-                                        echo $featuring . $version . (!empty($annotation) ? ' ' . $annotation : '') . '<br>';
+                                        echo ($url !== '#') ? '<a href="' . $url . '">' . htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8') . '</a>' : htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8');
+                                        echo $artistDisplay . (!empty($annotation) ? ' ' . $annotation : '') . '<br>';
                                     } else {
                                         echo '<li>';
-                                        if ($url !== '#') echo '<a href="' . $url . '">' . htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8') . '</a>';
-                                        else echo htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8');
-                                        echo $featuring . $version . (!empty($annotation) ? ' ' . $annotation : '') . '</li>';
+                                        echo ($url !== '#') ? '<a href="' . $url . '">' . htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8') . '</a>' : htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8');
+                                        echo $artistDisplay . (!empty($annotation) ? ' ' . $annotation : '') . '</li>';
                                     }
                                 }
-                                echo '</ol></div>';
                             }
+                            if ($inSongList) echo '</ol>';
                         }
                     @endphp
 
-                    @php renderFesBlock($setlists->fes_blocks, $artistIdToName, $setlists->title); @endphp
+                    @php renderFesMixed($setlists->fes_setlist, $artistIdToName, $setlists->title); @endphp
 
-                    @if (!empty($setlists->fes_blocks_encore))
-                        <div style="margin: 0;">
-                            <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
-                        </div>
-                        @php renderFesBlock($setlists->fes_blocks_encore, $artistIdToName, $setlists->title); @endphp
-                    @endif
-
-                {{-- インターリーブ型フェス --}}
-                @else
-                    @php
-                        $prevArtistId = null;
-                        $songNumber = 0; // ナンバリング用カウンター
-                    @endphp
-
-                    {{-- フェス本編 --}}
-                    <ol class="setlist">
-                    @foreach ((array) $setlists->fes_setlist as $key => $data)
-                        @php
-                            // アーティストIDを取得（数値IDまたは名前から変換）
-                            $artistId = null;
-                            if (isset($data['artist'])) {
-                                if (is_numeric($data['artist'])) {
-                                    $artistId = (int)$data['artist'];
-                                } else {
-                                    $artistId = $artistNameToId[$data['artist']] ?? null;
-                                }
-                            }
-                            
-                            $artistName = $artistIdToName[$artistId] ?? ($data['artist'] ?? '');
-                            
-                            // 桜井ソロ apの時は櫻井に変換
-                            if (stripos($setlists->title, 'ap') !== false && stripos($artistName, '桜井') !== false) {
-                                $artistName = str_ireplace('桜井', '櫻井', $artistName);
-                            }
-                            
-                            // 型を統一して比較
-                            $currentArtistId = $artistId ? (is_numeric($artistId) ? (int)$artistId : $artistId) : null;
-                            $prevArtistIdInt = $prevArtistId ? (is_numeric($prevArtistId) ? (int)$prevArtistId : $prevArtistId) : null;
-                        @endphp
-
-                        @php
-                            // songフィールドの処理：数値ならSetlistSongのID、文字列なら直接曲名
-                            $songValue = $data['song'] ?? '';
-                            $isNumericId = is_numeric($songValue);
-
-                            if ($isNumericId) {
-                                // SetlistSongテーブルから曲名を取得
-                                $song = \App\Models\SlSong::find($songValue);
-                                $songTitle = $song ? $song->title : $songValue;
-                                // SetlistSongの詳細ページにリンク
-                                $url = url('/setlists/songs/' . $songValue);
-                            } else {
-                                // 文字列の場合はSetlistSongテーブルから検索
-                                $songTitle = $songValue;
-                                // タイトルから[xxx]の部分を削除して検索
-                                $cleanTitle = preg_replace('/\s*\[[^\]]+\]/u', '', $songTitle);
-                                $cleanTitle = trim($cleanTitle);
-                                
-                                // SetlistSongを検索（タイトルとartist_idで）
-                                $setlistSong = \App\Models\SlSong::where('title', $cleanTitle);
-                                if ($artistId) {
-                                    $setlistSong = $setlistSong->where('artist_id', $artistId);
-                                }
-                                $setlistSong = $setlistSong->first();
-                                
-                                if ($setlistSong) {
-                                    // 見つかった場合は詳細ページにリンク
-                                    $url = url('/setlists/songs/' . $setlistSong->id);
-                                } else {
-                                    // 見つからない場合はテキストのみ（リンクなし）
-                                    $url = '#';
-                                }
-                            }
-
-                            $isMedley = !empty($data['medley']) && $data['medley'] == 1;
-                            
-                            // メドレー以外の曲のみナンバリング
-                            if (!$isMedley) {
-                                $songNumber++;
-                            }
-                            $parts = splitAnnotation($songTitle);
-                            $main = $parts['main'];
-                            $annotation = $parts['annotation'];
-                            $keyword = $main;
-
-                            // アーティスト名の表示（リンク付き）
-                            $artistDisplay = '';
-                            if ($artistName && $artistId) {
-                                $artistDisplay = ' <span style="color:#999;font-size:0.75em;"><a href="' . url('/setlists/artists', $artistId) . '" style="color:#999;">' . htmlspecialchars($artistName, ENT_COMPAT, 'UTF-8') . '</a></span>';
-                            } elseif ($artistName) {
-                                $artistDisplay = ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($artistName, ENT_COMPAT, 'UTF-8') . '</span>';
-                            }
-
-                            // 共演者がある場合はアーティスト名の後に追加
-                            // アーティスト名がない場合はスラッシュを付けて共演者を表示
-                            if (!empty($data['featuring'])) {
-                                if (empty($artistDisplay)) {
-                                    $artistDisplay = ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_COMPAT, 'UTF-8') . '</span>';
-                                } else {
-                                    $artistDisplay .= ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_COMPAT, 'UTF-8') . '</span>';
-                                }
-                            }
-                        @endphp
-
-                        @if ($isMedley)
-                            <li>@if($url !== '#')<a href="{{ $url }}">{{ $keyword }}</a>@else{{ $keyword }}@endif{!! $artistDisplay !!}{{ !empty($annotation) ? ' ' . $annotation : '' }}</li>
-                        @else
-                            <li>@if($url !== '#')<a href="{{ $url }}">{{ $keyword }}</a>@else{{ $keyword }}@endif{!! $artistDisplay !!}{{ !empty($annotation) ? ' ' . $annotation : '' }}</li>
-                        @endif
-
-                        @php $prevArtistId = $currentArtistId; @endphp
-                    @endforeach
-
-                    {{-- フェスアンコール --}}
                     @if (!empty($setlists->fes_encore))
                         <div style="margin: 0;">
                             <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
                         </div>
-                        @foreach ((array) $setlists->fes_encore as $key => $data)
-                            @php
-                                // アーティストIDを取得（数値IDまたは名前から変換）
-                                $artistId = null;
-                                if (isset($data['artist'])) {
-                                    if (is_numeric($data['artist'])) {
-                                        $artistId = (int)$data['artist'];
-                                    } else {
-                                        $artistId = $artistNameToId[$data['artist']] ?? null;
-                                    }
-                                }
-                                
-                                $artistName = $artistIdToName[$artistId] ?? ($data['artist'] ?? '');
-                                
-                                // 桜井ソロ apの時は櫻井に変換
-                                if (stripos($setlists->title, 'ap') !== false && stripos($artistName, '桜井') !== false) {
-                                    $artistName = str_ireplace('桜井', '櫻井', $artistName);
-                                }
-                                
-                                // 型を統一して比較
-                                $currentEncoreArtistId = $artistId ? (is_numeric($artistId) ? (int)$artistId : $artistId) : null;
-                                $prevEncoreArtistIdInt = $prevArtistId ? (is_numeric($prevArtistId) ? (int)$prevArtistId : $prevArtistId) : null;
-
-                                // songフィールドの処理：数値ならSetlistSongのID、文字列なら直接曲名
-                                $songValue = $data['song'] ?? '';
-                                $isNumericId = is_numeric($songValue);
-
-                                if ($isNumericId) {
-                                    // SetlistSongテーブルから曲名を取得
-                                    $song = \App\Models\SlSong::find($songValue);
-                                    $songTitle = $song ? $song->title : $songValue;
-                                    // SetlistSongの詳細ページにリンク
-                                    $url = url('/setlists/songs/' . $songValue);
-                                } else {
-                                    // 文字列の場合はSetlistSongテーブルから検索
-                                    $songTitle = $songValue;
-                                    // タイトルから[xxx]の部分を削除して検索
-                                    $cleanTitle = preg_replace('/\s*\[[^\]]+\]/u', '', $songTitle);
-                                    $cleanTitle = trim($cleanTitle);
-                                    
-                                    // SetlistSongを検索（タイトルとartist_idで）
-                                    $setlistSong = \App\Models\SlSong::where('title', $cleanTitle);
-                                    if ($artistId) {
-                                        $setlistSong = $setlistSong->where('artist_id', $artistId);
-                                    }
-                                    $setlistSong = $setlistSong->first();
-                                    
-                                    if ($setlistSong) {
-                                        // 見つかった場合は詳細ページにリンク
-                                        $url = url('/setlists/songs/' . $setlistSong->id);
-                                    } else {
-                                        // 見つからない場合はテキストのみ（リンクなし）
-                                        $url = '#';
-                                    }
-                                }
-
-                                $isMedley = !empty($data['medley']) && $data['medley'] == 1;
-                                
-                                // メドレー以外の曲のみナンバリング
-                                if (!$isMedley) {
-                                    $songNumber++;
-                                }
-                                
-                                $parts = splitAnnotation($songTitle);
-                                $main = $parts['main'];
-                                $annotation = $parts['annotation'];
-                                $keyword = $main;
-
-                            @endphp
-
-                            @php
-
-                                // アーティスト名の表示（リンク付き）
-                                $encoreArtistDisplay = '';
-                                if ($artistName && $artistId) {
-                                    $encoreArtistDisplay = ' <span style="color:#999;font-size:0.75em;"><a href="' . url('/setlists/artists', $artistId) . '" style="color:#999;">' . htmlspecialchars($artistName, ENT_COMPAT, 'UTF-8') . '</a></span>';
-                                } elseif ($artistName) {
-                                    $encoreArtistDisplay = ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($artistName, ENT_COMPAT, 'UTF-8') . '</span>';
-                                }
-
-                                // 共演者がある場合はアーティスト名の後に追加
-                                // アーティスト名がない場合はスラッシュを付けて共演者を表示
-                                if (!empty($data['featuring'])) {
-                                    if (empty($encoreArtistDisplay)) {
-                                        $encoreArtistDisplay = ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_COMPAT, 'UTF-8') . '</span>';
-                                    } else {
-                                        $encoreArtistDisplay .= ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_COMPAT, 'UTF-8') . '</span>';
-                                    }
-                                }
-                            @endphp
-
-                            @if ($isMedley)
-                                <li>@if($url !== '#')<a href="{{ $url }}">{{ $keyword }}</a>@else{{ $keyword }}@endif{!! $encoreArtistDisplay !!}{{ !empty($annotation) ? ' ' . $annotation : '' }}</li>
-                            @else
-                                <li>@if($url !== '#')<a href="{{ $url }}">{{ $keyword }}</a>@else{{ $keyword }}@endif{!! $encoreArtistDisplay !!}{{ !empty($annotation) ? ' ' . $annotation : '' }}</li>
-                            @endif
-
-                            @php $prevArtistId = $currentEncoreArtistId; @endphp
-                        @endforeach
+                        @php renderFesMixed($setlists->fes_encore, $artistIdToName, $setlists->title); @endphp
                     @endif
-                    </ol>
-                @endif {{-- インターリーブ型 @else 終わり --}}
 
-                @endif {{-- $setlists->fes_type === 'block' 終わり --}}
+                @endif {{-- fes_type混合 終わり --}}
+
+                @endif {{-- fes 終わり --}}
 
                 </div>{{-- live-column --}}
                 </div>{{-- setlist-row --}}
