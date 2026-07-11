@@ -242,7 +242,7 @@
                     }
                 @endphp
 
-                <div class="setlist-row" style="justify-content: center;">
+                <div class="setlist-row">
                 <div class="live-column">
 
                 {{-- 通常ライブ --}}
