@@ -84,12 +84,8 @@ class ArtistController extends Controller
         // 指定されたアーティストのセットリストを取得
         $setlists = SlSetlist::where('artist_id', $artist->id)
         ->orWhere(function ($query) use ($artistId) {
-            $query->whereRaw("
-                JSON_CONTAINS(fes_setlist, JSON_OBJECT('artist', ?))
-            ", [$artistId])
-            ->orWhereRaw("
-                JSON_CONTAINS(fes_encore, JSON_OBJECT('artist', ?))
-            ", [$artistId]);
+            $query->whereRaw("JSON_SEARCH(fes_setlist, 'one', ?, NULL, '$[*].artist') IS NOT NULL", [$artistId])
+            ->orWhereRaw("JSON_SEARCH(fes_encore, 'one', ?, NULL, '$[*].artist') IS NOT NULL", [$artistId]);
         })
         ->orderBy('date', 'asc')
         ->paginate(100);
