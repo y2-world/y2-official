@@ -21,41 +21,27 @@
             </h1>
             <h1 class="database-title pc" style="">{{ $songs->title }}</h1>
 
-            <div style="font-size: 1rem; color: rgba(255, 255, 255, 0.9); line-height: 1.8;">
-                @php
-                    $single = $songs->singleFromTracklist;
-                    $album = $songs->albumFromTracklist;
-                @endphp
-                @if ($single)
-                    <div style="">
-                        <strong>Single:</strong>
-                        <a href="{{ route('singles.show', $single->id) }}"
-                            style="color: white; text-decoration: underline;">
-                            {{ $single->title }}
-                        </a>
-                        @if ($single->date)
-                            <br><strong>Release:</strong> {{ date('Y.m.d', strtotime($single->date)) }}
-                        @endif
-                    </div>
+            @php
+                $single = $songs->singleFromTracklist;
+                $album = $songs->albumFromTracklist;
+            @endphp
+            @if ($single)
+                <p class="database-subtitle">Single: <a href="{{ route('singles.show', $single->id) }}" style="color: white; text-decoration: underline;">{{ $single->title }}</a></p>
+                @if ($single->date)
+                    <p class="database-subtitle">Release: {{ date('Y.m.d', strtotime($single->date)) }}</p>
                 @endif
-                @if ($album)
-                    <div style="">
-                        <strong>Album:</strong>
-                        <a href="{{ route('albums.show', $album->id) }}"
-                            style="color: white; text-decoration: underline;">
-                            {{ $album->title }}
-                        </a>
-                        @if ($album->date)
-                            <br><strong>Release:</strong> {{ date('Y.m.d', strtotime($album->date)) }}
-                        @endif
-                    </div>
-                @else
-                    <div style="">アルバム未収録</div>
+            @endif
+            @if ($album)
+                <p class="database-subtitle">Album: <a href="{{ route('albums.show', $album->id) }}" style="color: white; text-decoration: underline;">{{ $album->title }}</a></p>
+                @if ($album->date)
+                    <p class="database-subtitle">Release: {{ date('Y.m.d', strtotime($album->date)) }}</p>
                 @endif
-                @if ($songs->text)
-                    <div style="margin-top: 15px;">{{ $songs->text }}</div>
-                @endif
-            </div>
+            @else
+                <p class="database-subtitle">アルバム未収録</p>
+            @endif
+            @if ($songs->text)
+                <p class="database-subtitle" style="margin-top: 8px;">{{ $songs->text }}</p>
+            @endif
 
             {{-- 検索フォーム（SP表示） --}}
              <div class="sp" id="spSearchFormSongs" style="margin-top: 10px; display: none;">
