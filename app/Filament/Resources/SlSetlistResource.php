@@ -467,6 +467,20 @@ class SlSetlistResource extends Resource
                                             })
                                             ->searchable()
                                             ->native(false)
+                                            ->createOptionForm([
+                                                Forms\Components\TextInput::make('title')
+                                                    ->label('曲名')
+                                                    ->required()
+                                                    ->maxLength(255),
+                                            ])
+                                            ->createOptionUsing(function (array $data, Forms\Get $get): int {
+                                                $artistId = $get('../../artist');
+                                                $song = \App\Models\SlSong::firstOrCreate(
+                                                    ['title' => $data['title'], 'artist_id' => $artistId],
+                                                    []
+                                                );
+                                                return $song->id;
+                                            })
                                             ->columnSpanFull(),
                                         Forms\Components\Grid::make(2)->schema([
                                             Forms\Components\Toggle::make('medley')
@@ -640,6 +654,20 @@ class SlSetlistResource extends Resource
                                             })
                                             ->searchable()
                                             ->native(false)
+                                            ->createOptionForm([
+                                                Forms\Components\TextInput::make('title')
+                                                    ->label('曲名')
+                                                    ->required()
+                                                    ->maxLength(255),
+                                            ])
+                                            ->createOptionUsing(function (array $data, Forms\Get $get): int {
+                                                $artistId = $get('../../artist');
+                                                $song = \App\Models\SlSong::firstOrCreate(
+                                                    ['title' => $data['title'], 'artist_id' => $artistId],
+                                                    []
+                                                );
+                                                return $song->id;
+                                            })
                                             ->columnSpanFull(),
                                         Forms\Components\Grid::make(2)->schema([
                                             Forms\Components\Toggle::make('medley')
