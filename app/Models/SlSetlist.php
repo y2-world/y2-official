@@ -125,7 +125,7 @@ class SlSetlist extends Model
         return $decoded;
     }
 
-    // fes_setlistを設定する際に、UUIDが存在しない場合は追加
+    // fes_setlistを設定する際に、UUIDが存在しない場合は追加、artistを文字列に統一
     public function setFesSetlistAttribute($value)
     {
         if (is_array($value)) {
@@ -133,19 +133,25 @@ class SlSetlist extends Model
                 if (!isset($item['_uuid'])) {
                     $item['_uuid'] = \Illuminate\Support\Str::uuid()->toString();
                 }
+                if (isset($item['artist'])) {
+                    $item['artist'] = (string) $item['artist'];
+                }
                 return $item;
             }, $value);
         }
         $this->attributes['fes_setlist'] = json_encode($value);
     }
 
-    // fes_encoreを設定する際に、UUIDが存在しない場合は追加
+    // fes_encoreを設定する際に、UUIDが存在しない場合は追加、artistを文字列に統一
     public function setFesEncoreAttribute($value)
     {
         if (is_array($value)) {
             $value = array_map(function ($item) {
                 if (!isset($item['_uuid'])) {
                     $item['_uuid'] = \Illuminate\Support\Str::uuid()->toString();
+                }
+                if (isset($item['artist'])) {
+                    $item['artist'] = (string) $item['artist'];
                 }
                 return $item;
             }, $value);
