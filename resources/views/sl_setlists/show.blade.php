@@ -264,6 +264,76 @@
 
                 {{-- フェス形式 --}}
                 @if($setlists->fes)
+
+                {{-- ブロック型フェス --}}
+                @if($setlists->fes_type === 'block')
+                    @php
+                        function renderFesBlock($blocks, $artistIdToName, $setlistsTitle) {
+                            foreach ((array) $blocks as $block) {
+                                $blockArtistId = isset($block['artist']) ? (int)$block['artist'] : null;
+                                $blockArtistName = $artistIdToName[$blockArtistId] ?? '';
+                                // 桜井→櫻井 ap fes
+                                if (stripos($setlistsTitle, 'ap') !== false && stripos($blockArtistName, '桜井') !== false) {
+                                    $blockArtistName = str_ireplace('桜井', '櫻井', $blockArtistName);
+                                }
+                                echo '<div class="fes-block">';
+                                if ($blockArtistName) {
+                                    if ($blockArtistId) {
+                                        echo '<p class="fes-block-artist"><a href="' . url('/setlists/artists', $blockArtistId) . '" style="color:inherit;text-decoration:none;">' . htmlspecialchars($blockArtistName, ENT_COMPAT, 'UTF-8') . '</a></p>';
+                                    } else {
+                                        echo '<p class="fes-block-artist">' . htmlspecialchars($blockArtistName, ENT_COMPAT, 'UTF-8') . '</p>';
+                                    }
+                                }
+                                echo '<ol class="setlist">';
+                                foreach ((array)($block['songs'] ?? []) as $data) {
+                                    $songValue = $data['song'] ?? '';
+                                    $isNumericId = is_numeric($songValue);
+                                    if ($isNumericId) {
+                                        $song = \App\Models\SlSong::find($songValue);
+                                        $songTitle = $song ? $song->title : $songValue;
+                                        $url = url('/setlists/songs/' . $songValue);
+                                    } else {
+                                        $songTitle = $songValue;
+                                        $cleanTitle = trim(preg_replace('/\s*\[[^\]]+\]/u', '', $songTitle));
+                                        $setlistSong = \App\Models\SlSong::where('title', $cleanTitle);
+                                        if ($blockArtistId) $setlistSong = $setlistSong->where('artist_id', $blockArtistId);
+                                        $setlistSong = $setlistSong->first();
+                                        $url = $setlistSong ? url('/setlists/songs/' . $setlistSong->id) : '#';
+                                    }
+                                    $parts = splitAnnotation($songTitle);
+                                    $keyword = $parts['main'];
+                                    $annotation = $parts['annotation'];
+                                    $featuring = !empty($data['featuring']) ? ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_COMPAT, 'UTF-8') . '</span>' : '';
+                                    $version = !empty($data['version']) ? ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['version'], ENT_COMPAT, 'UTF-8') . '</span>' : '';
+                                    $isMedley = !empty($data['medley']) && $data['medley'] == 1;
+                                    if ($isMedley) {
+                                        echo '- ';
+                                        if ($url !== '#') echo '<a href="' . $url . '">' . htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8') . '</a>';
+                                        else echo htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8');
+                                        echo $featuring . $version . (!empty($annotation) ? ' ' . $annotation : '') . '<br>';
+                                    } else {
+                                        echo '<li>';
+                                        if ($url !== '#') echo '<a href="' . $url . '">' . htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8') . '</a>';
+                                        else echo htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8');
+                                        echo $featuring . $version . (!empty($annotation) ? ' ' . $annotation : '') . '</li>';
+                                    }
+                                }
+                                echo '</ol></div>';
+                            }
+                        }
+                    @endphp
+
+                    @php renderFesBlock($setlists->fes_blocks, $artistIdToName, $setlists->title); @endphp
+
+                    @if (!empty($setlists->fes_blocks_encore))
+                        <div style="margin: 0;">
+                            <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
+                        </div>
+                        @php renderFesBlock($setlists->fes_blocks_encore, $artistIdToName, $setlists->title); @endphp
+                    @endif
+
+                {{-- インターリーブ型フェス --}}
+                @else
                     @php
                         $prevArtistId = null;
                         $songNumber = 0; // ナンバリング用カウンター
@@ -370,7 +440,6 @@
 
                     {{-- フェスアンコール --}}
                     @if (!empty($setlists->fes_encore))
-                        <br>
                         <div style="margin: 0;">
                             <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
                         </div>
@@ -475,7 +544,9 @@
                         @endforeach
                     @endif
                     </ol>
-                @endif
+                @endif {{-- インターリーブ型 @else 終わり --}}
+
+                @endif {{-- $setlists->fes_type === 'block' 終わり --}}
 
                 </div>{{-- live-column --}}
                 </div>{{-- setlist-row --}}

@@ -88,17 +88,19 @@ class SlSetlistResource extends Resource
                                 return $data['venue'];
                             }),
 
-                        Forms\Components\Radio::make('fes')
-                            ->label('イベント種別')
-                            ->options([
-                                0 => '単独ライブ',
-                                1 => 'フェス',
-                            ])
-                            ->default(0)
-                            ->reactive()
-                            ->columnSpanFull(),
                     ])
                     ->columns(2),
+
+                Forms\Components\Radio::make('fes')
+                    ->label('イベント種別')
+                    ->options([
+                        0 => '単独ライブ',
+                        1 => 'フェス',
+                    ])
+                    ->default(0)
+                    ->live()
+                    ->columnSpanFull(),
+
 
                 // 単独ライブの場合のセットリスト
                 Forms\Components\Section::make('セットリスト（単独ライブ）')
@@ -334,14 +336,252 @@ class SlSetlistResource extends Resource
                             ->columnSpanFull(),
 
                     ])
-                    ->visible(fn(Forms\Get $get) => $get('fes') == 0)
-                    ->collapsible()
+                    ->hidden(fn(Forms\Get $get) => (bool)$get('fes'))
                     ->columnSpanFull(),
 
                 // フェスの場合のセットリスト
                 Forms\Components\Section::make('セットリスト（フェス）')
                     ->schema([
+                        Forms\Components\Select::make('fes_type')
+                            ->label('フェス形式')
+                            ->options([
+                                'interleaved' => '交互型（曲ごとにアーティスト指定）',
+                                'block' => 'ブロック型（アーティストごとにまとめて入力）',
+                            ])
+                            ->default('interleaved')
+                            ->required()
+                            ->live()
+                            ->columnSpanFull(),
+
+                        // ブロック型: アーティストブロック → 曲リスト
+                        Forms\Components\Repeater::make('fes_blocks')
+                            ->label('本編（ブロック型）')
+                            ->schema([
+                                Forms\Components\Hidden::make('_uuid')
+                                    ->default(fn() => \Illuminate\Support\Str::uuid()->toString()),
+                                Forms\Components\Select::make('artist')
+                                    ->label('アーティスト')
+                                    ->options(fn() => \App\Models\Artist::pluck('name', 'id'))
+                                    ->searchable()
+                                    ->native(false)
+                                    ->required()
+                                    ->afterStateHydrated(fn(Forms\Components\Select $component, $state) => $component->state($state !== null ? (int)$state : null))
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('name')
+                                            ->label('アーティスト名')
+                                            ->required()
+                                            ->maxLength(255),
+                                    ])
+                                    ->createOptionUsing(function (array $data) {
+                                        $artist = \App\Models\Artist::create(['name' => $data['name'], 'hidden' => 0]);
+                                        return $artist->id;
+                                    })
+                                    ->columnSpanFull(),
+                                Forms\Components\Repeater::make('songs')
+                                    ->label('曲リスト')
+                                    ->schema([
+                                        Forms\Components\Hidden::make('_uuid')
+                                            ->default(fn() => \Illuminate\Support\Str::uuid()->toString()),
+                                        Forms\Components\Select::make('song')
+                                            ->label('曲名')
+                                            ->required()
+                                            ->afterStateHydrated(fn(Forms\Components\Select $component, $state) => $component->state($state !== null ? (int)$state : null))
+                                            ->options(function () {
+                                                $songs = \App\Models\SlSong::query()
+                                                    ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
+                                                    ->select('sl_songs.id', 'sl_songs.title', 'artists.name as artist_name')
+                                                    ->orderBy('sl_songs.title')
+                                                    ->get();
+                                                $titleCounts = $songs->groupBy('title')->map->count();
+                                                return $songs->mapWithKeys(function ($song) use ($titleCounts) {
+                                                    $label = $song->title;
+                                                    if ($titleCounts[$song->title] > 1 && $song->artist_name) {
+                                                        $label .= ' - ' . $song->artist_name;
+                                                    }
+                                                    return [$song->id => $label];
+                                                });
+                                            })
+                                            ->searchable()
+                                            ->native(false)
+                                            ->createOptionForm([
+                                                Forms\Components\TextInput::make('title')
+                                                    ->label('曲名')
+                                                    ->required()
+                                                    ->maxLength(255),
+                                            ])
+                                            ->createOptionUsing(function (array $data, Forms\Get $get): int {
+                                                $artistId = $get('../../artist');
+                                                $song = \App\Models\SlSong::firstOrCreate(
+                                                    ['title' => $data['title'], 'artist_id' => $artistId],
+                                                    []
+                                                );
+                                                return $song->id;
+                                            })
+                                            ->columnSpan(1),
+                                        Forms\Components\Section::make('詳細設定')
+                                            ->collapsible()
+                                            ->collapsed()
+                                            ->schema([
+                                                Forms\Components\Grid::make(2)->schema([
+                                                    Forms\Components\Toggle::make('medley')
+                                                        ->label('メドレー')
+                                                        ->inline(false)
+                                                        ->default(false)
+                                                        ->dehydrated(),
+                                                    Forms\Components\TextInput::make('featuring')
+                                                        ->label('共演者')
+                                                        ->maxLength(255)
+                                                        ->dehydrated(),
+                                                ]),
+                                                Forms\Components\TextInput::make('version')
+                                                    ->label('バージョン')
+                                                    ->maxLength(255)
+                                                    ->dehydrated(),
+                                            ])
+                                            ->columnSpanFull(),
+                                    ])
+                                    ->columns(1)
+                                    ->defaultItems(1)
+                                    ->reorderable()
+                                    ->itemLabel(function (array $state, $component): ?string {
+                                        $items = $component->getState();
+                                        if (!is_array($items)) return '1';
+                                        $currentUuid = $state['_uuid'] ?? null;
+                                        $number = 0;
+                                        foreach ($items as $item) {
+                                            if (empty($item['medley'])) $number++;
+                                            if (($item['_uuid'] ?? null) === $currentUuid) {
+                                                return empty($item['medley']) ? (string)$number : '';
+                                            }
+                                        }
+                                        return '1';
+                                    })
+                                    ->addActionLabel('曲を追加')
+                                    ->columnSpanFull(),
+                            ])
+                            ->defaultItems(0)
+                            ->reorderable()
+                            ->itemLabel(fn(array $state): ?string => \App\Models\Artist::find($state['artist'] ?? null)?->name ?? 'ブロック')
+                            ->addActionLabel('アーティストブロックを追加')
+                            ->columnSpanFull()
+                            ->visible(fn(Forms\Get $get) => $get('fes_type') === 'block'),
+
+                        // ブロック型アンコール
+                        Forms\Components\Repeater::make('fes_blocks_encore')
+                            ->label('アンコール（ブロック型）')
+                            ->schema([
+                                Forms\Components\Hidden::make('_uuid')
+                                    ->default(fn() => \Illuminate\Support\Str::uuid()->toString()),
+                                Forms\Components\Select::make('artist')
+                                    ->label('アーティスト')
+                                    ->options(fn() => \App\Models\Artist::pluck('name', 'id'))
+                                    ->searchable()
+                                    ->native(false)
+                                    ->required()
+                                    ->afterStateHydrated(fn(Forms\Components\Select $component, $state) => $component->state($state !== null ? (int)$state : null))
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('name')
+                                            ->label('アーティスト名')
+                                            ->required()
+                                            ->maxLength(255),
+                                    ])
+                                    ->createOptionUsing(function (array $data) {
+                                        $artist = \App\Models\Artist::create(['name' => $data['name'], 'hidden' => 0]);
+                                        return $artist->id;
+                                    })
+                                    ->columnSpanFull(),
+                                Forms\Components\Repeater::make('songs')
+                                    ->label('曲リスト')
+                                    ->schema([
+                                        Forms\Components\Hidden::make('_uuid')
+                                            ->default(fn() => \Illuminate\Support\Str::uuid()->toString()),
+                                        Forms\Components\Select::make('song')
+                                            ->label('曲名')
+                                            ->required()
+                                            ->afterStateHydrated(fn(Forms\Components\Select $component, $state) => $component->state($state !== null ? (int)$state : null))
+                                            ->options(function () {
+                                                $songs = \App\Models\SlSong::query()
+                                                    ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
+                                                    ->select('sl_songs.id', 'sl_songs.title', 'artists.name as artist_name')
+                                                    ->orderBy('sl_songs.title')
+                                                    ->get();
+                                                $titleCounts = $songs->groupBy('title')->map->count();
+                                                return $songs->mapWithKeys(function ($song) use ($titleCounts) {
+                                                    $label = $song->title;
+                                                    if ($titleCounts[$song->title] > 1 && $song->artist_name) {
+                                                        $label .= ' - ' . $song->artist_name;
+                                                    }
+                                                    return [$song->id => $label];
+                                                });
+                                            })
+                                            ->searchable()
+                                            ->native(false)
+                                            ->createOptionForm([
+                                                Forms\Components\TextInput::make('title')
+                                                    ->label('曲名')
+                                                    ->required()
+                                                    ->maxLength(255),
+                                            ])
+                                            ->createOptionUsing(function (array $data, Forms\Get $get): int {
+                                                $artistId = $get('../../artist');
+                                                $song = \App\Models\SlSong::firstOrCreate(
+                                                    ['title' => $data['title'], 'artist_id' => $artistId],
+                                                    []
+                                                );
+                                                return $song->id;
+                                            })
+                                            ->columnSpan(1),
+                                        Forms\Components\Section::make('詳細設定')
+                                            ->collapsible()
+                                            ->collapsed()
+                                            ->schema([
+                                                Forms\Components\Grid::make(2)->schema([
+                                                    Forms\Components\Toggle::make('medley')
+                                                        ->label('メドレー')
+                                                        ->inline(false)
+                                                        ->default(false)
+                                                        ->dehydrated(),
+                                                    Forms\Components\TextInput::make('featuring')
+                                                        ->label('共演者')
+                                                        ->maxLength(255)
+                                                        ->dehydrated(),
+                                                ]),
+                                                Forms\Components\TextInput::make('version')
+                                                    ->label('バージョン')
+                                                    ->maxLength(255)
+                                                    ->dehydrated(),
+                                            ])
+                                            ->columnSpanFull(),
+                                    ])
+                                    ->columns(1)
+                                    ->defaultItems(1)
+                                    ->reorderable()
+                                    ->itemLabel(function (array $state, $component): ?string {
+                                        $items = $component->getState();
+                                        if (!is_array($items)) return '1';
+                                        $currentUuid = $state['_uuid'] ?? null;
+                                        $number = 0;
+                                        foreach ($items as $item) {
+                                            if (empty($item['medley'])) $number++;
+                                            if (($item['_uuid'] ?? null) === $currentUuid) {
+                                                return empty($item['medley']) ? (string)$number : '';
+                                            }
+                                        }
+                                        return '1';
+                                    })
+                                    ->addActionLabel('曲を追加')
+                                    ->columnSpanFull(),
+                            ])
+                            ->defaultItems(0)
+                            ->reorderable()
+                            ->itemLabel(fn(array $state): ?string => \App\Models\Artist::find($state['artist'] ?? null)?->name ?? 'ブロック')
+                            ->addActionLabel('アーティストブロックを追加')
+                            ->columnSpanFull()
+                            ->visible(fn(Forms\Get $get) => $get('fes_type') === 'block'),
+
+                        // 交互型（既存）
                         Forms\Components\Repeater::make('fes_setlist')
+                            ->visible(fn(Forms\Get $get) => $get('fes_type') !== 'block')
                             ->label('本編')
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')
@@ -616,8 +856,7 @@ class SlSetlistResource extends Resource
                             ->addActionLabel('曲を追加')
                             ->columnSpanFull(),
                     ])
-                    ->visible(fn(Forms\Get $get) => $get('fes') == 1)
-                    ->collapsible()
+                    ->hidden(fn(Forms\Get $get) => !(bool)$get('fes'))
                     ->columnSpanFull(),
             ]);
     }

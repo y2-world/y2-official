@@ -736,6 +736,22 @@ select {
     min-width: min(350px, 80vw);
 }
 
+.fes-block {
+    margin-bottom: 24px;
+}
+
+.fes-block-artist {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #888;
+    letter-spacing: 1px;
+    margin: 0 0 4px 0;
+}
+
+.fes-block .setlist {
+    margin-top: 0;
+}
+
 
 /* Define .setlist-row to use flex layout */
 .database-row {

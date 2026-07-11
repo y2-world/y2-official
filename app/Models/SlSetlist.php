@@ -13,6 +13,8 @@ class SlSetlist extends Model
         'encore' => 'array',
         'fes_setlist' => 'array',
         'fes_encore' => 'array',
+        'fes_blocks' => 'array',
+        'fes_blocks_encore' => 'array',
         'date' => 'date',
         'fes' => 'boolean',
     ];
@@ -28,8 +30,11 @@ class SlSetlist extends Model
         'setlist',
         'encore',
         'fes',
+        'fes_type',
         'fes_setlist',
         'fes_encore',
+        'fes_blocks',
+        'fes_blocks_encore',
     ];
 
     public function artist()
