@@ -33,7 +33,7 @@
             this.selectSong(this.songs[this.selectedIndex].id);
         }
     }
-}" class="search-wrapper" style="position: relative;">
+}" class="search-wrapper" style="position: relative; width: 100%;">
     <input
         type="text"
         wire:model.live.debounce.300ms="search"

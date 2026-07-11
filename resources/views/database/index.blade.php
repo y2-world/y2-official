@@ -1,9 +1,10 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - Database')
 @section('content')
-    <div class="database-hero">
+    <div class="database-hero database-hero--detail">
         <div class="container">
-            <h1 class="database-title" style="margin-bottom: 20px; text-align: center;">Database</h1>
+            <h1 class="database-title" style="text-align: center;">Database</h1>
+            <p class="database-subtitle" style="text-align: center; margin-top: 8px; margin-bottom: 0;">アーティストのライブ・楽曲データベース</p>
         </div>
     </div>
 

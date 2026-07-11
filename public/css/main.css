@@ -6,7 +6,7 @@ html {
 }
 body {
     margin: 0;
-    padding-top: 55px;
+    padding-top: 56px !important;
     font-family: "Zen Old Mincho", serif;
     font-weight: 400;
     font-style: normal;
@@ -683,15 +683,15 @@ select {
     /* 初期化 */
     appearance: none;
     -moz-appearance: none;
-    /* -webkit-appearance: none; */
+    -webkit-appearance: none;
     background: none;
     border: none;
     color: #333;
     font-size: 16px;
-    /* width: 25%; */
     height: 100%;
-    /* padding: 0 10px; */
+    border-radius: 0;
 }
+
 
 .dropdown-wrapper select {
     margin-right: 30px;
@@ -1274,36 +1274,42 @@ h2 {
     }
 }
 /* Database Page Modern Design */
+.header_space {
+    display: none;
+}
+
+/* ========== Hero ========== */
 .database-hero {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 60px 0 40px;
     text-align: center;
     color: white;
-    margin-top: -55px;
-    padding-top: 95px;
 }
-
-/* Top-level /database index hero only (other database-* pages also add .database-year-hero) */
-.database-hero:not(.database-year-hero) {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 220px;
-    padding-top: 55px;
-}
-
 .database-hero a {
     text-decoration: none !important;
 }
 
-.database-subtitle a {
-    text-decoration: none !important;
+.database-hero.database-hero--nav {
+    padding: 30px 0;
 }
 
+.database-hero.database-hero--detail {
+    padding: 40px 0;
+}
+
+@media (max-width: 768px) {
+    .database-hero.database-hero--nav {
+        padding: 20px 0;
+    }
+    .database-hero.database-hero--detail {
+        padding: 25px 0;
+    }
+}
+
+/* ========== Title / Subtitle ========== */
 .database-title {
     font-size: 1.8rem;
     font-weight: 700;
-    margin-bottom: 15px;
+    margin: 0 0 4px;
     letter-spacing: -0.5px;
     line-height: 1.4;
 }
@@ -1311,7 +1317,20 @@ h2 {
 .database-subtitle {
     font-size: 0.85rem;
     opacity: 0.75;
-    margin-bottom: 40px;
+    margin: 0;
+}
+
+.database-subtitle a {
+    text-decoration: none !important;
+}
+
+@media (max-width: 768px) {
+    .database-title {
+        font-size: 1.5rem;
+    }
+    .database-subtitle {
+        font-size: 0.8rem;
+    }
 }
 
 .database-search {
@@ -1323,17 +1342,12 @@ h2 {
 
 /* 楽曲検索窓: デスクトップでは右上に配置（song/biography-yearページのみ） */
 .song-search-top-right {
-    margin-top: 30px;
-}
-
-@media (min-width: 1080px) {
-    .song-search-top-right {
-        position: absolute;
-        top: 0;
-        right: 0;
-        max-width: 280px;
-        margin: 0;
-    }
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 320px !important;
+    max-width: 320px !important;
+    margin: 0;
 }
 
 .search-wrapper {
@@ -1495,25 +1509,6 @@ h2 {
 }
 
 @media (max-width: 768px) {
-    .database-hero {
-        padding: 40px 0 30px;
-        padding-top: 100px;
-    }
-
-    .database-hero:not(.database-year-hero) {
-        min-height: 180px;
-        padding-top: 55px;
-    }
-
-    .database-title {
-        font-size: 1.5rem;
-    }
-
-    .database-subtitle {
-        font-size: 0.8rem;
-        margin-bottom: 30px;
-    }
-
     .database-content {
         padding: 40px 15px;
     }
@@ -1628,14 +1623,54 @@ h2 {
 
 
 /* Database Year Page Styles */
-.database-year-hero {
-    margin-top: -55px;
-    padding: 100px 0 40px;
+
+.header-selects {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.header-selects::-webkit-scrollbar {
+    display: none;
+}
+
+.setlists-header-row {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-top: 0;
+    overflow: visible;
+    flex-wrap: nowrap;
+    text-align: left;
+}
+
+.setlists-header-row + .database-subtitle {
+    text-align: left;
+    margin-top: 8px;
+    margin-bottom: 0;
 }
 
 @media (max-width: 768px) {
-    .database-year-hero {
-        padding: 100px 0 25px;
+    .setlists-header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        margin-top: 0;
+    }
+}
+
+@media (min-width: 769px) {
+    .setlists-header-row {
+        justify-content: flex-start;
+    }
+    .setlists-search-pc {
+        display: block !important;
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .setlists-search-pc {
+        display: none !important;
     }
 }
 
@@ -1656,10 +1691,10 @@ h2 {
 
 .year-select {
     padding: 6px 10px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 25px;
-    background: rgba(255, 255, 255, 0.15);
-    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 25px !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: white !important;
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
@@ -1667,6 +1702,8 @@ h2 {
     backdrop-filter: blur(10px);
     min-width: 100px;
     flex-shrink: 0;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 .year-select:hover {
@@ -1737,7 +1774,6 @@ h2 {
     .database-year-content .table {
         table-layout: auto;
         width: 100%;
-        overflow-x: visible;
     }
     
     .database-year-content .table tbody td.td_title {

@@ -1,55 +1,68 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - ' . $artist->name . ' Live')
 @section('content')
-    <div class="database-hero database-year-hero">
+    <div class="database-hero database-hero--nav">
         <div class="container" style="position: relative;">
             @include('database._breadcrumb', ['breadcrumbs' => [
             ['label' => 'Database', 'url' => '/database'],
             ['label' => $artist->name, 'url' => route('database.artist', $artist->id)],
             ['label' => 'Live'],
         ]])
-            @if (request('type') == 1)
-                <h1 class="database-title">Live</h1>
-                <p class="database-subtitle">{{ $artist->name }} — すべてのツアー・単発ライブ情報</p>
-            @elseif(request('type') == 6)
-                <h1 class="database-title">Tours</h1>
-                <p class="database-subtitle">{{ $artist->name }} — すべてのツアー情報</p>
-            @elseif(request('type') == 5)
-                <h1 class="database-title">単発ライブ</h1>
-                <p class="database-subtitle">{{ $artist->name }} — すべての単発ライブ情報</p>
-            @elseif(request('type') == 2)
-                <h1 class="database-title">Events</h1>
-                <p class="database-subtitle">{{ $artist->name }} — すべてのイベント情報</p>
-            @elseif(request('type') == 3)
-                <h1 class="database-title">ap bank fes</h1>
-                <p class="database-subtitle">{{ $artist->name }} — ap bank fes出演履歴</p>
-            @elseif(request('type') == 4)
-                <h1 class="database-title">Solo</h1>
-                <p class="database-subtitle">{{ $artist->name }} — すべてのソロ活動</p>
-            @else
-                <h1 class="database-title">Live</h1>
-                <p class="database-subtitle">{{ $artist->name }} — すべてのライブ情報</p>
-            @endif
+            @php
+                $liveTitle = match(request('type')) {
+                    '1' => 'Live', '6' => 'Tours', '5' => '単発ライブ',
+                    '2' => 'Events', '3' => 'ap bank fes', '4' => 'Solo',
+                    default => 'Live'
+                };
+                $liveSubtitle = match(request('type')) {
+                    '1' => 'すべてのツアー・単発ライブ情報', '6' => 'すべてのツアー情報',
+                    '5' => 'すべての単発ライブ情報', '2' => 'すべてのイベント情報',
+                    '3' => 'ap bank fes出演履歴', '4' => 'すべてのソロ活動',
+                    default => 'すべてのライブ情報'
+                };
+            @endphp
+            <div class="setlists-header-row">
+                <div style="flex-shrink: 0;">
+                    <h1 class="database-title" style="white-space: nowrap;">{{ $liveTitle }}</h1>
+                    <p class="database-subtitle" style="margin: 4px 0 0;">{{ $artist->name }} — {{ $liveSubtitle }}</p>
+                </div>
+                <div class="header-selects" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; overflow-x: auto; max-width: 100%;">
+                    <button type="button" id="spSearchButtonConcerts" class="sp" onclick="var form = document.getElementById('spSearchFormConcerts'); var icon = this.querySelector('i'); if (form.style.display === 'none' || form.style.display === '') { form.style.display='block'; icon.className='fa-solid fa-xmark'; } else { form.style.display='none'; icon.className='fa-solid fa-magnifying-glass'; }" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fa-solid fa-magnifying-glass" style="font-size: 14px;"></i>
+                    </button>
+                    <select class="year-select" name="select" onChange="location.href=value;">
+                        <option value="" disabled selected>Discography</option>
+                        <option value="{{ route('database.songs', $artist->id) }}">Songs</option>
+                        <option value="{{ route('database.singles', $artist->id) }}">Singles</option>
+                        <option value="{{ route('database.albums', $artist->id) }}">Albums</option>
+                    </select>
+                    <select class="year-select" name="select" onChange="location.href=value;">
+                        <option value="" disabled>Live</option>
+                        <option value="{{ route('database.live', $artist->id) }}" {{ !request('type') ? 'selected' : '' }}>All</option>
+                        <option value="{{ route('database.live', $artist->id) }}?type=1" {{ request('type') == '1' ? 'selected' : '' }}>Live</option>
+                        <option value="{{ route('database.live', $artist->id) }}?type=6" {{ request('type') == '6' ? 'selected' : '' }}>Tours</option>
+                        <option value="{{ route('database.live', $artist->id) }}?type=5" {{ request('type') == '5' ? 'selected' : '' }}>単発ライブ</option>
+                        <option value="{{ route('database.live', $artist->id) }}?type=2" {{ request('type') == '2' ? 'selected' : '' }}>Events</option>
+                        @if($artist->name === 'Mr.Children')
+                        <option value="{{ route('database.live', $artist->id) }}?type=3" {{ request('type') == '3' ? 'selected' : '' }}>ap bank fes</option>
+                        <option value="{{ route('database.live', $artist->id) }}?type=4" {{ request('type') == '4' ? 'selected' : '' }}>Solo</option>
+                        @endif
+                    </select>
+                    <select class="year-select" name="select" onChange="location.href=value;">
+                        <option value="" disabled selected>Years</option>
+                        @foreach ($bios as $bio)
+                            <option value="{{ route('database.biography.year', [$artist->id, $bio->year]) }}">{{ $bio->year }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="setlists-search-pc" style="min-width: 320px; position: relative; overflow: visible; flex-shrink: 0;">
+                    @livewire('database-song-search', ['artistId' => $artist->id])
+                </div>
+            </div>
 
-            <div class="year-navigation">
-                <select class="year-select" name="select" onChange="location.href=value;">
-                    <option value="" disabled selected>Live</option>
-                    <option value="{{ route('database.live', $artist->id) }}">All</option>
-                    <option value="{{ route('database.live', $artist->id) }}?type=1">Live</option>
-                    <option value="{{ route('database.live', $artist->id) }}?type=6">Tours</option>
-                    <option value="{{ route('database.live', $artist->id) }}?type=5">単発ライブ</option>
-                    <option value="{{ route('database.live', $artist->id) }}?type=2">Events</option>
-                    @if($artist->name === 'Mr.Children')
-                    <option value="{{ route('database.live', $artist->id) }}?type=3">ap bank fes</option>
-                    <option value="{{ route('database.live', $artist->id) }}?type=4">Solo</option>
-                    @endif
-                </select>
-                <select class="year-select" name="select" onChange="location.href=value;">
-                    <option value="" disabled selected>Years</option>
-                    @foreach ($bios as $bio)
-                        <option value="{{ route('database.biography.year', [$artist->id, $bio->year]) }}">{{ $bio->year }}</option>
-                    @endforeach
-                </select>
+            {{-- 検索フォーム（SP表示） --}}
+            <div class="sp" id="spSearchFormConcerts" style="margin-top: 15px; display: none;">
+                @livewire('database-song-search', ['artistId' => $artist->id])
             </div>
         </div>
     </div>

@@ -7,42 +7,39 @@
 
 @section('content')
     <?php $artist_id = $artist->id; ?>
-    <div class="database-hero database-year-hero">
+    <div class="database-hero database-hero--nav">
         <div class="container">
-            <h1 class="database-title">{{ $artist->name }}</h1>
-            <p class="database-subtitle">すべてのセットリスト</p>
-
-            <div class="year-navigation" style="display: flex; align-items: center; gap: 10px;">
-                {{-- 虫眼鏡アイコン（SP表示のみ・ドロップダウンの左端） --}}
-                <button type="button" id="spSearchButtonArtist" class="sp" onclick="var form = document.getElementById('spSearchFormArtist'); var icon = this.querySelector('i'); if (form.style.display === 'none' || form.style.display === '') { form.style.display='block'; icon.className='fa-solid fa-xmark'; } else { form.style.display='none'; icon.className='fa-solid fa-magnifying-glass'; }" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <i class="fa-solid fa-magnifying-glass" style="font-size: 14px;"></i>
-                </button>
-                <select class="year-select" name="select" onChange="location.href=value;">
-                    <option value="" disabled selected>Artists</option>
-                    @foreach ($artists as $artistItem)
-                        <option value="{{ url('/setlists/artists', $artistItem->id) }}">{{ $artistItem->name }}</option>
-                    @endforeach
-                </select>
-                <select class="year-select" name="select" onChange="location.href=value;">
-                    <option value="" disabled selected>Years</option>
-                    @foreach ($years as $year)
-                        <option value="{{ url('/setlists/years', $year->year) }}">{{ $year->year }}</option>
-                    @endforeach
-                </select>
+            <div class="setlists-header-row">
+                <div style="flex-shrink: 0;">
+                    <h1 class="database-title" style="white-space: nowrap;">{{ $artist->name }}</h1>
+                    <p class="database-subtitle" style="margin: 4px 0 0;">すべてのセットリスト</p>
+                </div>
+                <div class="header-selects" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; overflow-x: auto; max-width: 100%;">
+                    {{-- 虫眼鏡アイコン（SP表示のみ） --}}
+                    <button type="button" id="spSearchButtonArtist" class="sp" onclick="var form = document.getElementById('spSearchFormArtist'); var icon = this.querySelector('i'); if (form.style.display === 'none' || form.style.display === '') { form.style.display='block'; icon.className='fa-solid fa-xmark'; } else { form.style.display='none'; icon.className='fa-solid fa-magnifying-glass'; }" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fa-solid fa-magnifying-glass" style="font-size: 14px;"></i>
+                    </button>
+                    <select class="year-select" name="select" onChange="location.href=value;">
+                        <option value="" disabled selected>Artists</option>
+                        @foreach ($artists as $artistItem)
+                            <option value="{{ url('/setlists/artists', $artistItem->id) }}" {{ $artistItem->id == $artist->id ? 'selected' : '' }}>{{ $artistItem->name }}</option>
+                        @endforeach
+                    </select>
+                    <select class="year-select" name="select" onChange="location.href=value;">
+                        <option value="" disabled selected>Years</option>
+                        @foreach ($years as $year)
+                            <option value="{{ url('/setlists/years', $year->year) }}">{{ $year->year }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="setlists-search-pc" style="min-width: 320px; position: relative; overflow: visible; flex-shrink: 0; display: none;">
+                    @livewire('song-search', ['artistId' => $artist->id])
+                </div>
             </div>
 
             {{-- 検索フォーム（SP表示） --}}
-            <div class="sp" id="spSearchFormArtist" style="margin-top: 20px; display: none;">
-                <div>
-                    @livewire('song-search', ['artistId' => $artist->id])
-                </div>
-            </div>
-
-            {{-- 検索フォーム（PC表示のみ） --}}
-            <div class="database-search pc" style="margin-top: 30px;">
-                <div>
-                    @livewire('song-search', ['artistId' => $artist->id])
-                </div>
+            <div class="sp" id="spSearchFormArtist" style="margin-top: 15px; display: none;">
+                @livewire('song-search', ['artistId' => $artist->id])
             </div>
         </div>
     </div>

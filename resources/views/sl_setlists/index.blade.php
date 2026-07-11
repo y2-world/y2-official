@@ -6,59 +6,55 @@
 @section('og_type', 'website')
 
 @section('content')
-    <div class="database-hero database-year-hero">
+    <div class="database-hero database-hero--nav">
         <div class="container">
-            <h1 class="database-title" style="margin-bottom: 0; text-align: center;">Setlists</h1>
-
-            <div class="year-navigation" style="display: flex; align-items: center; gap: 10px;">
-                {{-- 虫眼鏡アイコン（SP表示のみ・ドロップダウンの左端） --}}
-                <button type="button" id="spSearchButtonSetlists" class="sp" onclick="var form = document.getElementById('spSearchFormSetlists'); var icon = this.querySelector('i'); if (form.style.display === 'none' || form.style.display === '') { form.style.display='block'; icon.className='fa-solid fa-xmark'; } else { form.style.display='none'; icon.className='fa-solid fa-magnifying-glass'; }" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <i class="fa-solid fa-magnifying-glass" style="font-size: 14px;"></i>
-                </button>
-                <select class="year-select" name="select" onchange="if (this.value) window.location.href=this.value;">
-                    <option value="" disabled selected>Live Type</option>
-                    <option value="{{ url('/setlists') }}" {{ request('type') ? '' : 'selected' }}>All</option>
-                    <option value="{{ url('/setlists?type=1') }}" {{ request('type') == '1' ? 'selected' : '' }}>Live</option>
-                    <option value="{{ url('/setlists?type=2') }}" {{ request('type') == '2' ? 'selected' : '' }}>Fes</option>
-                </select>
-                <select class="year-select" name="select" onChange="location.href=value;">
-                    <option value="" disabled selected>Artists</option>
-                    @if($liveArtists->isNotEmpty())
-                        <optgroup label="Live">
-                            @foreach ($liveArtists as $artist)
-                                <option value="{{ url('/setlists/artists', $artist->id) }}">{{ $artist->name }}</option>
-                            @endforeach
-                        </optgroup>
-                    @endif
-                    @if($fesArtists->isNotEmpty())
-                        <optgroup label="Fes">
-                            @foreach ($fesArtists as $artist)
-                                <option value="{{ url('/setlists/artists', $artist->id) }}">{{ $artist->name }}</option>
-                            @endforeach
-                        </optgroup>
-                    @endif
-                </select>
-                <select class="year-select" name="select" onChange="location.href=value;">
-                    <option value="" disabled selected>Years</option>
-                    @foreach ($years as $year)
-                        <option value="{{ url('/setlists/years', $year->year) }}">{{ $year->year }}</option>
-                    @endforeach
-                </select>
+            <div class="setlists-header-row">
+                <h1 class="database-title" style="text-align: center;">Setlists</h1>
+                <div class="header-selects" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; overflow-x: auto; max-width: 100%;">
+                    {{-- 虫眼鏡アイコン（SP表示のみ） --}}
+                    <button type="button" id="spSearchButtonSetlists" class="sp" onclick="var form = document.getElementById('spSearchFormSetlists'); var icon = this.querySelector('i'); if (form.style.display === 'none' || form.style.display === '') { form.style.display='block'; icon.className='fa-solid fa-xmark'; } else { form.style.display='none'; icon.className='fa-solid fa-magnifying-glass'; }" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fa-solid fa-magnifying-glass" style="font-size: 14px;"></i>
+                    </button>
+                    <select class="year-select" name="select" onchange="if (this.value) window.location.href=this.value;">
+                        <option value="" disabled selected>Live Type</option>
+                        <option value="{{ url('/setlists') }}" {{ request('type') ? '' : 'selected' }}>All</option>
+                        <option value="{{ url('/setlists?type=1') }}" {{ request('type') == '1' ? 'selected' : '' }}>Live</option>
+                        <option value="{{ url('/setlists?type=2') }}" {{ request('type') == '2' ? 'selected' : '' }}>Fes</option>
+                    </select>
+                    <select class="year-select" name="select" onChange="location.href=value;">
+                        <option value="" disabled selected>Artists</option>
+                        @if($liveArtists->isNotEmpty())
+                            <optgroup label="Live">
+                                @foreach ($liveArtists as $artist)
+                                    <option value="{{ url('/setlists/artists', $artist->id) }}">{{ $artist->name }}</option>
+                                @endforeach
+                            </optgroup>
+                        @endif
+                        @if($fesArtists->isNotEmpty())
+                            <optgroup label="Fes">
+                                @foreach ($fesArtists as $artist)
+                                    <option value="{{ url('/setlists/artists', $artist->id) }}">{{ $artist->name }}</option>
+                                @endforeach
+                            </optgroup>
+                        @endif
+                    </select>
+                    <select class="year-select" name="select" onChange="location.href=value;">
+                        <option value="" disabled selected>Years</option>
+                        @foreach ($years as $year)
+                            <option value="{{ url('/setlists/years', $year->year) }}">{{ $year->year }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div style="min-width: 320px; position: relative; overflow: visible; flex-shrink: 0; display: none;" class="setlists-search-pc">
+                    @livewire('song-search')
+                </div>
             </div>
 
             {{-- 検索フォーム（SP表示） --}}
             <div class="sp" id="spSearchFormSetlists" style="margin-top: 20px; display: none;">
-                <div>
-                    @livewire('song-search')
-                </div>
+                @livewire('song-search')
             </div>
 
-            {{-- 検索フォーム（PC表示のみ） --}}
-            <div class="database-search pc" style="margin-top: 30px;">
-                <div>
-                    @livewire('song-search')
-                </div>
-            </div>
         </div>
     </div>
 

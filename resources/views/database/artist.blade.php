@@ -1,23 +1,21 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - ' . $artist->name . ' Database')
 @section('content')
-    <div class="database-hero">
+    <div class="database-hero database-hero--nav">
         <div class="container" style="position: relative;">
             @include('database._breadcrumb', ['breadcrumbs' => [
             ['label' => 'Database', 'url' => '/database'],
             ['label' => $artist->name],
         ]])
-            <h1 class="database-title" style="margin-bottom: 20px; text-align: center;">{{ $artist->name }} Database</h1>
-
-            {{-- 検索フォーム（SP表示） --}}
-            <div class="sp" id="spSearchFormDatabase" style="margin-top: 10px;">
-                <div>
+            <div class="setlists-header-row">
+                <h1 class="database-title" style="white-space: nowrap; flex-shrink: 0;">{{ $artist->name }} Database</h1>
+                <div class="setlists-search-pc" style="min-width: 320px; position: relative; overflow: visible; flex-shrink: 0;">
                     @livewire('database-song-search', ['artistId' => $artist->id])
                 </div>
             </div>
 
-            {{-- 検索フォーム（PC表示のみ） --}}
-            <div class="database-search pc" style="margin-top: 40px;">
+            {{-- 検索フォーム（SP表示） --}}
+            <div class="sp" id="spSearchFormDatabase" style="margin-top: 15px;">
                 @livewire('database-song-search', ['artistId' => $artist->id])
             </div>
         </div>

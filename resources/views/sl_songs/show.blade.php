@@ -1,17 +1,22 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - ' . $song->title)
 @section('content')
-    <div class="database-hero database-year-hero">
-        <div class="container">
-            <h1 class="database-title sp" style="margin-bottom: 20px; cursor: pointer;"
+    <div class="database-hero database-hero--detail">
+        <div class="container" style="position: relative;">
+            @include('database._breadcrumb', ['breadcrumbs' => [
+                ['label' => 'Setlists', 'url' => '/setlists'],
+                ['label' => $song->title],
+            ]])
+            <p class="database-subtitle">#{{ $songNumber }}</p>
+            <h1 class="database-title sp" style="cursor: pointer;"
                 onclick="document.getElementById('spSearchFormSetlistSong').style.display='block'; document.querySelector('.database-title.sp').style.display='none';">
                 {{ $song->title }}
             </h1>
-            <h1 class="database-title pc" style="margin-bottom: 20px;">{{ $song->title }}</h1>
+            <h1 class="database-title pc" style="">{{ $song->title }}</h1>
 
             <div style="font-size: 1rem; color: rgba(255, 255, 255, 0.9); line-height: 1.8;">
                 @if ($song->artist)
-                    <div style="margin-bottom: 8px;">
+                    <div style="">
                         <a href="{{ url('/setlists/artists', $song->artist_id) }}"
                             style="color: white; text-decoration: underline;">
                             {{ $song->artist->name }}
@@ -34,7 +39,7 @@
             </div>
 
             {{-- 検索フォーム（PC表示のみ） --}}
-            <div class="database-search pc" style="margin-top: 30px;">
+            <div class="database-search pc song-search-top-right">
                 <div>
                     @livewire('song-search')
                 </div>

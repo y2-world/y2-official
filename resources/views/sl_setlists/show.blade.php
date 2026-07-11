@@ -6,17 +6,17 @@
 @section('og_type', 'article')
 
 @section('content')
-    <div class="database-hero database-year-hero">
+    <div class="database-hero database-hero--detail">
         <div class="container">
             @if (!$setlists->fes && $setlists->artist)
-                <p class="database-subtitle" style="margin-bottom: 10px;">
+                <p class="database-subtitle" style="">
                     <a href="{{ url('/setlists/artists', $setlists->artist_id) }}" style="color: white; text-decoration: none;">
                         {{ $setlists->artist->name }}
                     </a>
                 </p>
             @endif
-            <h1 class="database-title" style="margin-bottom: 15px;">{{ $setlists->title }}</h1>
-            <p class="database-subtitle" style="margin-bottom: 0;">
+            <h1 class="database-title" style="">{{ $setlists->title }}</h1>
+            <p class="database-subtitle" style="">
                 {{ date('Y.m.d', strtotime($setlists->date)) }}<br>
                 <a href="{{ url('/venue?keyword=' . urlencode($setlists->venue)) }}" style="color: white; text-decoration: none;">
                     {{ $setlists->venue }}

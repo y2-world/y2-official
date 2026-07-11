@@ -6,7 +6,7 @@
 @section('og_type', 'music.song')
 
 @section('content')
-    <div class="database-hero database-year-hero">
+    <div class="database-hero database-hero--detail">
         <div class="container" style="position: relative;">
             @include('database._breadcrumb', ['breadcrumbs' => [
             ['label' => 'Database', 'url' => '/database'],
@@ -14,12 +14,12 @@
             ['label' => 'Songs', 'url' => route('database.songs', $songs->artist_id)],
             ['label' => $songs->title],
         ]])
-            <p class="database-subtitle" style="margin-bottom: 10px;"># {{ $songNumber }}</p>
+            <p class="database-subtitle" style=""># {{ $songNumber }}</p>
             <h1 class="database-title sp" style="margin-bottom: 20px; cursor: pointer;"
                 onclick="document.getElementById('spSearchFormSongs').style.display='block'; document.querySelector('.database-title.sp').style.display='none';">
                 {{ $songs->title }}
             </h1>
-            <h1 class="database-title pc" style="margin-bottom: 20px;">{{ $songs->title }}</h1>
+            <h1 class="database-title pc" style="">{{ $songs->title }}</h1>
 
             <div style="font-size: 1rem; color: rgba(255, 255, 255, 0.9); line-height: 1.8;">
                 @php
@@ -27,7 +27,7 @@
                     $album = $songs->albumFromTracklist;
                 @endphp
                 @if ($single)
-                    <div style="margin-bottom: 8px;">
+                    <div style="">
                         <strong>Single:</strong>
                         <a href="{{ route('singles.show', $single->id) }}"
                             style="color: white; text-decoration: underline;">
@@ -39,7 +39,7 @@
                     </div>
                 @endif
                 @if ($album)
-                    <div style="margin-bottom: 8px;">
+                    <div style="">
                         <strong>Album:</strong>
                         <a href="{{ route('albums.show', $album->id) }}"
                             style="color: white; text-decoration: underline;">
@@ -50,7 +50,7 @@
                         @endif
                     </div>
                 @else
-                    <div style="margin-bottom: 8px;">アルバム未収録</div>
+                    <div style="">アルバム未収録</div>
                 @endif
                 @if ($songs->text)
                     <div style="margin-top: 15px;">{{ $songs->text }}</div>
@@ -71,7 +71,7 @@
             </div>
 
             {{-- 検索フォーム（PC表示のみ） --}}
-            <div class="database-search pc song-search-top-right">
+            <div class="database-search pc song-search-top-right" style="width: 320px; max-width: 320px;">
                 <div>
                     @livewire('database-song-search', ['artistId' => $songs->artist_id])
                 </div>

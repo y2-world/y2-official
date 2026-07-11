@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - ' . $albums->title)
 @section('content')
-    <div class="database-hero database-year-hero">
+    <div class="database-hero database-hero--detail">
         <div class="container" style="position: relative;">
             @include('database._breadcrumb', ['breadcrumbs' => [
             ['label' => 'Database', 'url' => '/database'],
@@ -9,7 +9,7 @@
             ['label' => 'Albums', 'url' => route('database.albums', $artist->id)],
             ['label' => $albums->title],
         ]])
-            <p class="database-subtitle" style="margin-bottom: 10px;">
+            <p class="database-subtitle" style="">
                 @if ($albums->best)
                     Best Album
                 @elseif ($albums->mini && $albums->album_id)
@@ -20,8 +20,23 @@
                     {{ ordinal($albums->album_id) }} Album
                 @endif
             </p>
-            <h1 class="database-title" style="margin-bottom: 20px;">{{ $albums->title }}</h1>
-            <p class="database-subtitle" style="margin-bottom: 0;">Release: {{ date('Y.m.d', strtotime($albums->date)) }}</p>
+            <h1 class="database-title" style="">{{ $albums->title }}</h1>
+            <p class="database-subtitle" style="">Release: {{ date('Y.m.d', strtotime($albums->date)) }}</p>
+
+            {{-- 検索フォーム（SP表示） --}}
+            <div class="sp" id="spSearchFormAlbum" style="margin-top: 10px; display: none;">
+                @livewire('database-song-search', ['artistId' => $artist->id])
+                <div style="text-align: center; margin-top: 15px;">
+                    <button type="button" onclick="document.getElementById('spSearchFormAlbum').style.display='none';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-xmark" style="font-size: 16px;"></i>
+                    </button>
+                </div>
+            </div>
+
+            {{-- 検索フォーム（PC表示のみ） --}}
+            <div class="database-search pc song-search-top-right">
+                @livewire('database-song-search', ['artistId' => $artist->id])
+            </div>
         </div>
     </div>
 

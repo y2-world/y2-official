@@ -66,6 +66,9 @@ class SlSongController extends Controller
         $previous = SlSong::where('artist_id', $song->artist_id)->where('id', '<', $song->id)->orderBy('id', 'desc')->first();
         $next = SlSong::where('artist_id', $song->artist_id)->where('id', '>', $song->id)->orderBy('id')->first();
 
+        // アーティストごとのナンバリング
+        $songNumber = SlSong::where('artist_id', $song->artist_id)->where('id', '<=', $song->id)->count();
+
         // 検索候補（曲名 + アーティスト名）
         $suggestions = SlSong::query()
             ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
@@ -89,7 +92,8 @@ class SlSongController extends Controller
             'setlists',
             'suggestions',
             'previous',
-            'next'
+            'next',
+            'songNumber'
         ));
     }
 

@@ -56,7 +56,7 @@
         }
     @endphp
 
-    <div class="database-hero database-year-hero">
+    <div class="database-hero database-hero--detail">
         <div class="container" style="position: relative;">
             @include('database._breadcrumb', ['breadcrumbs' => [
             ['label' => 'Database', 'url' => '/database'],
@@ -64,8 +64,8 @@
             ['label' => 'Live', 'url' => route('database.live', $artist->id)],
             ['label' => $tours->title],
         ]])
-            <h1 class="database-title" style="margin-bottom: 15px;">{{ $tours->title }}</h1>
-            <p class="database-subtitle" style="margin-bottom: 0;">
+            <h1 class="database-title" style="">{{ $tours->title }}</h1>
+            <p class="database-subtitle" style="">
                 @if (isset($tours->date1) && isset($tours->date2))
                     {{ date('Y.m.d', strtotime($tours->date1)) }} - {{ date('Y.m.d', strtotime($tours->date2)) }}
                 @elseif(isset($tours->date1) && !isset($tours->date2))

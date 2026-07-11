@@ -6,31 +6,39 @@
 @section('og_type', 'website')
 
 @section('content')
-    <div class="database-hero database-year-hero">
+    <div class="database-hero database-hero--nav">
         <div class="container">
-            <h1 class="database-title">{{ $year->year }}</h1>
-            <p class="database-subtitle">この年のすべてのセットリスト</p>
-
-            <div class="year-navigation">
-                <select class="year-select" name="select" onChange="location.href=value;">
-                    <option value="" disabled selected>Artists</option>
-                    @foreach ($artists as $artistItem)
-                        <option value="{{ url('/setlists/artists', $artistItem->id) }}">{{ $artistItem->name }}</option>
-                    @endforeach
-                </select>
-                <select class="year-select" name="select" onChange="location.href=value;">
-                    <option value="" disabled selected>Years</option>
-                    @foreach ($years as $yearItem)
-                        <option value="{{ url('/setlists/years', $yearItem->year) }}">{{ $yearItem->year }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            {{-- 検索フォーム（PC表示のみ） --}}
-            <div class="database-search pc" style="margin-top: 30px;">
-                <div>
+            <div class="setlists-header-row">
+                <div style="flex-shrink: 0;">
+                    <h1 class="database-title" style="white-space: nowrap;">{{ $year->year }}</h1>
+                    <p class="database-subtitle" style="margin: 4px 0 0;">この年のすべてのセットリスト</p>
+                </div>
+                <div class="header-selects" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; overflow-x: auto; max-width: 100%;">
+                    {{-- 虫眼鏡アイコン（SP表示のみ） --}}
+                    <button type="button" id="spSearchButtonYears" class="sp" onclick="var form = document.getElementById('spSearchFormYears'); var icon = this.querySelector('i'); if (form.style.display === 'none' || form.style.display === '') { form.style.display='block'; icon.className='fa-solid fa-xmark'; } else { form.style.display='none'; icon.className='fa-solid fa-magnifying-glass'; }" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fa-solid fa-magnifying-glass" style="font-size: 14px;"></i>
+                    </button>
+                    <select class="year-select" name="select" onChange="location.href=value;">
+                        <option value="" disabled selected>Artists</option>
+                        @foreach ($artists as $artistItem)
+                            <option value="{{ url('/setlists/artists', $artistItem->id) }}">{{ $artistItem->name }}</option>
+                        @endforeach
+                    </select>
+                    <select class="year-select" name="select" onChange="location.href=value;">
+                        <option value="" disabled>Years</option>
+                        @foreach ($years as $yearItem)
+                            <option value="{{ url('/setlists/years', $yearItem->year) }}" {{ $yearItem->year == $year->year ? 'selected' : '' }}>{{ $yearItem->year }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="setlists-search-pc" style="min-width: 320px; position: relative; overflow: visible; flex-shrink: 0; display: none;">
                     @livewire('song-search')
                 </div>
+            </div>
+
+            {{-- 検索フォーム（SP表示） --}}
+            <div class="sp" id="spSearchFormYears" style="margin-top: 15px; display: none;">
+                @livewire('song-search')
             </div>
         </div>
     </div>
