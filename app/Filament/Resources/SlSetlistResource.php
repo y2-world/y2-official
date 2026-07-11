@@ -350,10 +350,10 @@ class SlSetlistResource extends Resource
                                 Forms\Components\Select::make('type')
                                     ->label('種別')
                                     ->options([
-                                        'song' => '1曲（交互）',
                                         'block' => 'ブロック（アーティスト単位）',
+                                        'song' => '1曲（交互）',
                                     ])
-                                    ->default('song')
+                                    ->default('block')
                                     ->live()
                                     ->required()
                                     ->columnSpanFull(),
@@ -540,10 +540,10 @@ class SlSetlistResource extends Resource
                                 Forms\Components\Select::make('type')
                                     ->label('種別')
                                     ->options([
-                                        'song' => '1曲（交互）',
                                         'block' => 'ブロック（アーティスト単位）',
+                                        'song' => '1曲（交互）',
                                     ])
-                                    ->default('song')
+                                    ->default('block')
                                     ->live()
                                     ->required()
                                     ->columnSpanFull(),
