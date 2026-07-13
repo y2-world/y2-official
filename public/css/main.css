@@ -727,7 +727,10 @@ select {
     flex-wrap: nowrap;
     overflow-x: auto;
     justify-content: flex-start;
-    margin-bottom: 24px;
+}
+
+.setlist-row + .setlist-row {
+    margin-top: 24px;
 }
 
 
