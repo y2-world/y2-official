@@ -36,9 +36,9 @@
         </div>
     </div>
 
-    <div class="container-lg database-year-content">
+    <div class="container database-year-content">
         @if(isset($singles->tracklist))
-        <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); padding: 30px;">
+        <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); padding: 30px; max-width: 560px; margin: 0 auto;">
             <ol style="margin: 0; padding-left: 25px; font-size: 15px; line-height: 2;">
               @foreach ($singles->tracklist as $data)
                 @if(isset($data['id']))

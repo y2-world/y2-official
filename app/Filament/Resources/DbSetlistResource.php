@@ -68,6 +68,13 @@ class DbSetlistResource extends Resource
                                 'unique' => 'このツアーではすでに使われているパターン番号です。',
                             ]),
 
+                        Forms\Components\TextInput::make('row')
+                            ->label('段')
+                            ->numeric()
+                            ->default(1)
+                            ->minValue(1)
+                            ->required(),
+
                         Forms\Components\TextInput::make('subtitle')
                             ->label('サブタイトル（日付や説明）')
                             ->maxLength(255)

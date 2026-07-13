@@ -82,72 +82,60 @@
             <div class="{{ $colClass }}">
                 <div class="setlist" style="width: 100%;">
                     @if ($tourSetlists->count())
-                        <div class="setlist-row">
-                            @foreach ($tourSetlists as $setlistModel)
-                                @php
-                                    $setlist = is_array($setlistModel->setlist) ? $setlistModel->setlist : [];
-                                    $encore = is_array($setlistModel->encore) ? $setlistModel->encore : [];
-                                    $totalItems = count($setlist) + count($encore);
-                                @endphp
+                        @php
+                            $setlistsByRow = $tourSetlists->groupBy(fn($m) => $m->row ?? 1)->sortKeys();
+                        @endphp
+                        @foreach ($setlistsByRow as $rowNum => $rowSetlists)
+                            <div class="setlist-row">
+                                @foreach ($rowSetlists as $setlistModel)
+                                    @php
+                                        $setlist = is_array($setlistModel->setlist) ? $setlistModel->setlist : [];
+                                        $encore = is_array($setlistModel->encore) ? $setlistModel->encore : [];
+                                        $totalItems = count($setlist) + count($encore);
+                                    @endphp
 
-                                @if (count($setlist) || count($encore))
-                                    <ol class="live-column {{ $totalItems >= 20 ? 'live-column-two-col' : '' }}">
-                                        @if (!empty(trim($setlistModel->subtitle ?? '')))
-                                            <h5>{{ $setlistModel->subtitle }}</h5>
-                                        @endif
-
-                                        @foreach ([$setlist, $encore] as $section)
-                                            @if ($loop->index === 1 && count($encore))
-                                                <div style="margin: 20px 0 0 0;">
-                                                    <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
-                                                </div>
+                                    @if (count($setlist) || count($encore))
+                                        <ol class="live-column {{ $totalItems >= 20 ? 'live-column-two-col' : '' }}">
+                                            @if (!empty(trim($setlistModel->subtitle ?? '')))
+                                                <h5>{{ $setlistModel->subtitle }}</h5>
                                             @endif
 
-                                            @foreach ($section as $data)
-                                                @php
-                                                    $isDaily = isset($data['is_daily']) && $data['is_daily'];
-                                                    $dailyNote = isset($data['daily_note']) ? $data['daily_note'] : '';
-                                                    $featuring = isset($data['featuring']) ? $data['featuring'] : '';
-                                                    $alternativeTitle = isset($data['alternative_title']) ? $data['alternative_title'] : '';
-                                                    $isNumericSong = is_numeric($data['song'] ?? '');
-                                                    $title = '';
-                                                    $link = null;
-                                                    $isUnique = $commonSongs !== null && !in_array($data['song'] ?? '', $commonSongs);
+                                            @foreach ([$setlist, $encore] as $section)
+                                                @if ($loop->index === 1 && count($encore))
+                                                    <div style="margin: 20px 0 0 0;">
+                                                        <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
+                                                    </div>
+                                                @endif
 
-                                                    if ($isNumericSong) {
-                                                        $songModel = $songs->find($data['song']);
-                                                        // 別表記がある場合はそれを使用、なければ元のタイトル
-                                                        $title = !empty($alternativeTitle) ? $alternativeTitle : ($songModel->title ?? 'Unknown Song');
-                                                        $link = $songModel
-                                                            ? url('/database/songs', $data['song'])
-                                                            : null;
-                                                    } else {
-                                                        // 文字列の場合はそのまま表示（別表記があればそれを使用）
-                                                        $title = !empty($alternativeTitle) ? $alternativeTitle : $data['song'];
+                                                @foreach ($section as $data)
+                                                    @php
+                                                        $isDaily = isset($data['is_daily']) && $data['is_daily'];
+                                                        $dailyNote = isset($data['daily_note']) ? $data['daily_note'] : '';
+                                                        $featuring = isset($data['featuring']) ? $data['featuring'] : '';
+                                                        $alternativeTitle = isset($data['alternative_title']) ? $data['alternative_title'] : '';
+                                                        $isNumericSong = is_numeric($data['song'] ?? '');
+                                                        $title = '';
                                                         $link = null;
-                                                    }
-                                                @endphp
+                                                        $isUnique = $commonSongs !== null && !in_array($data['song'] ?? '', $commonSongs);
 
-                                                @if ($isDaily)
-                                                    -
-                                                    @if ($link)
-                                                        <a href="{{ $link }}" @if($isUnique) style="font-weight:bold;" @endif>{{ $title }}</a>
-                                                    @else
-                                                        @if($isUnique)<strong>{{ $title }}</strong>@else{{ $title }}@endif
-                                                    @endif
-                                                    @if(!empty($featuring))
-                                                        <span style="color:#999;font-size:0.75em;">{{ $featuring }}</span>
-                                                    @endif
-                                                    @if(!empty($dailyNote))
-                                                        <span style="color:#999;font-size:0.75em;">{{ $dailyNote }}</span>
-                                                    @endif
-                                                    <br>
-                                                @else
-                                                    <li @if($isUnique) style="font-weight:bold;" @endif>
+                                                        if ($isNumericSong) {
+                                                            $songModel = $songs->find($data['song']);
+                                                            $title = !empty($alternativeTitle) ? $alternativeTitle : ($songModel->title ?? 'Unknown Song');
+                                                            $link = $songModel
+                                                                ? url('/database/songs', $data['song'])
+                                                                : null;
+                                                        } else {
+                                                            $title = !empty($alternativeTitle) ? $alternativeTitle : $data['song'];
+                                                            $link = null;
+                                                        }
+                                                    @endphp
+
+                                                    @if ($isDaily)
+                                                        -
                                                         @if ($link)
-                                                            <a href="{{ $link }}">{{ $title }}</a>
+                                                            <a href="{{ $link }}" @if($isUnique) style="font-weight:bold;" @endif>{{ $title }}</a>
                                                         @else
-                                                            {{ $title }}
+                                                            @if($isUnique)<strong>{{ $title }}</strong>@else{{ $title }}@endif
                                                         @endif
                                                         @if(!empty($featuring))
                                                             <span style="color:#999;font-size:0.75em;">{{ $featuring }}</span>
@@ -155,14 +143,29 @@
                                                         @if(!empty($dailyNote))
                                                             <span style="color:#999;font-size:0.75em;">{{ $dailyNote }}</span>
                                                         @endif
-                                                    </li>
-                                                @endif
+                                                        <br>
+                                                    @else
+                                                        <li @if($isUnique) style="font-weight:bold;" @endif>
+                                                            @if ($link)
+                                                                <a href="{{ $link }}">{{ $title }}</a>
+                                                            @else
+                                                                {{ $title }}
+                                                            @endif
+                                                            @if(!empty($featuring))
+                                                                <span style="color:#999;font-size:0.75em;">{{ $featuring }}</span>
+                                                            @endif
+                                                            @if(!empty($dailyNote))
+                                                                <span style="color:#999;font-size:0.75em;">{{ $dailyNote }}</span>
+                                                            @endif
+                                                        </li>
+                                                    @endif
+                                                @endforeach
                                             @endforeach
-                                        @endforeach
-                                    </ol>
-                                @endif
-                            @endforeach
-                        </div>
+                                        </ol>
+                                    @endif
+                                @endforeach
+                            </div>
+                        @endforeach
                     @endif
                 </div>
             </div>

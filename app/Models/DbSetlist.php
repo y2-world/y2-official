@@ -16,6 +16,7 @@ class DbSetlist extends Model
     protected $fillable = [
         'tour_id',
         'order_no',
+        'row',
         'subtitle',
         'setlist',
         'encore',
