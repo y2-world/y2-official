@@ -330,6 +330,9 @@ class DbSetlistResource extends Resource
                     ->label('タイトル')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('row')
+                    ->label('段')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('order_no')
                     ->label('パターン')
                     ->sortable(),
