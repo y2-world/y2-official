@@ -727,6 +727,7 @@ select {
     flex-wrap: nowrap;
     overflow-x: auto;
     justify-content: flex-start;
+    margin-bottom: 24px;
 }
 
 
@@ -734,8 +735,6 @@ select {
     flex: 0 0 auto;
     margin: 10px;
     min-width: min(350px, 80vw);
-    display: flex;
-    flex-direction: column;
 }
 
 .live-column {
@@ -743,7 +742,6 @@ select {
 }
 
 .setlist-subtitle-area {
-    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
