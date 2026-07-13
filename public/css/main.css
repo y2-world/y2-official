@@ -736,6 +736,14 @@ select {
     min-width: min(350px, 80vw);
 }
 
+.setlist-subtitle-area {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 3em;
+    margin-bottom: 4px;
+}
+
 .fes-block {
     margin-bottom: 24px;
 }

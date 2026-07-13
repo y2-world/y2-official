@@ -95,10 +95,13 @@
                                     @endphp
 
                                     @if (count($setlist) || count($encore))
-                                        <ol class="live-column {{ $totalItems >= 20 ? 'live-column-two-col' : '' }}">
-                                            @if (!empty(trim($setlistModel->subtitle ?? '')))
-                                                <h5 style="white-space: pre-line; display: flex; flex-direction: column; justify-content: flex-end; min-height: 2.5em;">{!! nl2br(e($setlistModel->subtitle)) !!}</h5>
-                                            @endif
+                                        <div class="live-column {{ $totalItems >= 20 ? 'live-column-two-col' : '' }}">
+                                            <div class="setlist-subtitle-area">
+                                                @if (!empty(trim($setlistModel->subtitle ?? '')))
+                                                    <h5 style="white-space: pre-line; margin: 0;">{!! nl2br(e($setlistModel->subtitle)) !!}</h5>
+                                                @endif
+                                            </div>
+                                            <ol style="margin: 0; padding-left: 25px;">
 
                                             @foreach ([$setlist, $encore] as $section)
                                                 @if ($loop->index === 1 && count($encore))
@@ -162,6 +165,7 @@
                                                 @endforeach
                                             @endforeach
                                         </ol>
+                                        </div>
                                     @endif
                                 @endforeach
                             </div>
