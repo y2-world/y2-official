@@ -86,7 +86,7 @@
                             $setlistsByRow = $tourSetlists->groupBy(fn($m) => $m->row ?? 1)->sortKeys();
                         @endphp
                         @foreach ($setlistsByRow as $rowNum => $rowSetlists)
-                            <div class="setlist-row">
+                            <div class="setlist-row" style="justify-content: center;">
                                 @foreach ($rowSetlists as $setlistModel)
                                     @php
                                         $setlist = is_array($setlistModel->setlist) ? $setlistModel->setlist : [];
@@ -97,7 +97,7 @@
                                     @if (count($setlist) || count($encore))
                                         <ol class="live-column {{ $totalItems >= 20 ? 'live-column-two-col' : '' }}">
                                             @if (!empty(trim($setlistModel->subtitle ?? '')))
-                                                <h5>{{ $setlistModel->subtitle }}</h5>
+                                                <h5 style="white-space: pre-line; display: flex; flex-direction: column; justify-content: flex-end; min-height: 2.5em;">{!! nl2br(e($setlistModel->subtitle)) !!}</h5>
                                             @endif
 
                                             @foreach ([$setlist, $encore] as $section)
@@ -216,10 +216,11 @@
 @section('page-script')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    var row = document.querySelector('.setlist-row');
-    if (row && row.scrollWidth <= row.clientWidth) {
-        row.style.justifyContent = 'center';
-    }
+    document.querySelectorAll('.setlist-row').forEach(function (row) {
+        if (row.scrollWidth > row.clientWidth) {
+            row.style.justifyContent = 'flex-start';
+        }
+    });
 });
 </script>
 @endsection

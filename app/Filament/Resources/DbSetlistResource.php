@@ -62,10 +62,11 @@ class DbSetlistResource extends Resource
                             ->rules(fn(Get $get, $record) => [
                                 Rule::unique('db_setlists', 'order_no')
                                     ->where('tour_id', $get('tour_id'))
+                                    ->where('row', $get('row') ?? 1)
                                     ->ignore($record?->id),
                             ])
                             ->validationMessages([
-                                'unique' => 'このツアーではすでに使われているパターン番号です。',
+                                'unique' => 'この段ではすでに使われているパターン番号です。',
                             ]),
 
                         Forms\Components\TextInput::make('row')
@@ -75,9 +76,10 @@ class DbSetlistResource extends Resource
                             ->minValue(1)
                             ->required(),
 
-                        Forms\Components\TextInput::make('subtitle')
-                            ->label('サブタイトル（日付や説明）')
-                            ->maxLength(255)
+                        Forms\Components\Textarea::make('subtitle')
+                            ->label('タイトル（日付や説明）')
+                            ->rows(2)
+                            ->maxLength(500)
                             ->columnSpanFull(),
                     ])
                     ->columns(2),
