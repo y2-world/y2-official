@@ -744,6 +744,11 @@ select {
     min-width: min(350px, 80vw);
 }
 
+.setlist-subtitle-area {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
 
 .fes-block {
     margin-bottom: 24px;
@@ -1746,7 +1751,7 @@ h2 {
 }
 
 .database-year-content h5 {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: #2d3748;
     margin-bottom: 20px;
