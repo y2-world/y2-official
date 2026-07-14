@@ -98,7 +98,7 @@
                                         <div class="live-column-wrap">
                                         <div class="setlist-subtitle-area">
                                             @if (!empty(trim($setlistModel->subtitle ?? '')))
-                                                <h5 style="white-space: pre-line;">{!! nl2br(e($setlistModel->subtitle)) !!}</h5>
+                                                <div style="white-space: pre-line;">{{ $setlistModel->subtitle }}</div>
                                             @endif
                                         </div>
                                         <ol class="live-column {{ $totalItems >= 20 ? 'live-column-two-col' : '' }}">

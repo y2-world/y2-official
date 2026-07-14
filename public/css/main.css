@@ -750,11 +750,11 @@ select {
     justify-content: flex-end;
 }
 
-.database-year-content .setlist-subtitle-area h5 {
+.setlist-subtitle-area div {
     margin-bottom: 0.5rem;
     font-size: 1.25rem;
     font-weight: 700;
-    color: inherit;
+    line-height: 1.1;
 }
 
 .fes-block {
@@ -1754,7 +1754,7 @@ h2 {
 }
 
 .database-year-content {
-    padding: 30px 15px;
+    padding: 15px;
 }
 
 .database-year-content h5 {
@@ -1764,6 +1764,7 @@ h2 {
     margin-bottom: 20px;
     /* margin-top: 30px; */
 }
+
 
 .database-year-content .table {
     background: white;
