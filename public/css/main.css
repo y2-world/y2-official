@@ -736,8 +736,14 @@ select {
 
 .live-column-wrap {
     flex: 0 0 auto;
-    margin: 10px 24px;
+    margin: 10px;
     min-width: min(350px, 80vw);
+}
+
+@media (max-width: 767px) {
+    .live-column-wrap {
+        margin: 10px 24px;
+    }
 }
 
 .live-column {
