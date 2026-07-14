@@ -96,12 +96,10 @@
 
                                     @if (count($setlist) || count($encore))
                                         <div class="live-column-wrap">
-                                        <div class="setlist-subtitle-area">
-                                            @if (!empty(trim($setlistModel->subtitle ?? '')))
-                                                <div style="white-space: pre-line;">{{ $setlistModel->subtitle }}</div>
-                                            @endif
-                                        </div>
                                         <ol class="live-column {{ $totalItems >= 20 ? 'live-column-two-col' : '' }}">
+                                            @if (!empty(trim($setlistModel->subtitle ?? '')))
+                                                <h5 style="white-space: pre-line;">{{ $setlistModel->subtitle }}</h5>
+                                            @endif
                                             @foreach ([$setlist, $encore] as $section)
                                                 @if ($loop->index === 1 && count($encore))
                                                     <div style="margin: 20px 0 0 0;">
@@ -223,11 +221,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (row.scrollWidth > row.clientWidth) {
             row.style.justifyContent = 'flex-start';
         }
-        // subtitle-areaの高さを同じrow内で揃える
-        var areas = row.querySelectorAll('.setlist-subtitle-area');
-        var maxH = 0;
-        areas.forEach(function (a) { a.style.height = 'auto'; maxH = Math.max(maxH, a.scrollHeight); });
-        areas.forEach(function (a) { a.style.height = maxH + 'px'; });
     });
 });
 </script>
