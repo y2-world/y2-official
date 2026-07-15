@@ -737,7 +737,7 @@ select {
 .live-column-wrap {
     flex: 0 0 auto;
     margin: 10px;
-    min-width: min(350px, 80vw);
+    min-width: min(300px, 80vw);
 }
 
 @media (max-width: 767px) {
@@ -747,7 +747,7 @@ select {
 }
 
 .live-column {
-    min-width: min(350px, 80vw);
+    min-width: min(300px, 80vw);
 }
 
 .setlist-subtitle-area {
