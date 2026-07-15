@@ -68,22 +68,24 @@
                         @endphp
                         @foreach ($setlistsByRow as $rowNum => $rowSetlists)
                             @php
-                                // この行（同時に見比べる列同士）でちょうど1列にしか出てこない曲を洗い出す
-                                $songCounts = [];
-                                foreach ($rowSetlists as $setlistModel) {
-                                    $allSongs = array_merge(
-                                        is_array($setlistModel->setlist) ? $setlistModel->setlist : [],
-                                        is_array($setlistModel->encore) ? $setlistModel->encore : []
-                                    );
-                                    $songIds = array_map(fn($s) => $s['song'] ?? '', $allSongs);
-                                    $songIds = array_unique(array_filter($songIds, fn($s) => $s !== ''));
-                                    foreach ($songIds as $songId) {
-                                        $songCounts[$songId] = ($songCounts[$songId] ?? 0) + 1;
+                                // この行（同時に見比べる列同士）に共通する曲IDを計算
+                                $commonSongs = null;
+                                if ($rowSetlists->count() >= 2) {
+                                    foreach ($rowSetlists as $setlistModel) {
+                                        $allSongs = array_merge(
+                                            is_array($setlistModel->setlist) ? $setlistModel->setlist : [],
+                                            is_array($setlistModel->encore) ? $setlistModel->encore : []
+                                        );
+                                        $songIds = array_map(fn($s) => $s['song'] ?? '', $allSongs);
+                                        $songIds = array_filter($songIds, fn($s) => $s !== '');
+                                        if ($commonSongs === null) {
+                                            $commonSongs = array_flip($songIds);
+                                        } else {
+                                            $commonSongs = array_intersect_key($commonSongs, array_flip($songIds));
+                                        }
                                     }
+                                    $commonSongs = array_keys($commonSongs ?? []);
                                 }
-                                $uniqueSongs = $rowSetlists->count() >= 2
-                                    ? array_keys(array_filter($songCounts, fn($count) => $count === 1))
-                                    : [];
                             @endphp
                             <div class="setlist-row" style="justify-content: center;">
                                 @foreach ($rowSetlists as $setlistModel)
@@ -117,7 +119,7 @@
                                                         $isNumericSong = is_numeric($data['song'] ?? '');
                                                         $title = '';
                                                         $link = null;
-                                                        $isUnique = in_array($data['song'] ?? '', $uniqueSongs);
+                                                        $isUnique = $commonSongs !== null && !in_array($data['song'] ?? '', $commonSongs);
 
                                                         if ($isNumericSong) {
                                                             $songModel = $songs->find($data['song']);
