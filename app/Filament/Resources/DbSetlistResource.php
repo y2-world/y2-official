@@ -76,13 +76,11 @@ class DbSetlistResource extends Resource
                             ->minValue(1)
                             ->required(),
 
-                        Forms\Components\RichEditor::make('subtitle')
+                        Forms\Components\Textarea::make('subtitle')
                             ->label('タイトル（日付や説明）')
-                            ->helperText('文字を選択してツールバーから見出し・文字色・文字サイズを設定できます。')
-                            ->toolbarButtons([
-                                'bold', 'italic', 'h2', 'h3', 'fontColor', 'fontSize', 'undo', 'redo',
-                            ])
-                            ->maxLength(1000)
+                            ->helperText('例: 「7.17 大阪」のように入力すると、最初の空白より後ろ（地名など）が自動で小さいグレー文字になります。')
+                            ->rows(2)
+                            ->maxLength(500)
                             ->columnSpanFull(),
                     ])
                     ->columns(2),

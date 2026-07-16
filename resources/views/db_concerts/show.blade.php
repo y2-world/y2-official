@@ -95,11 +95,28 @@
                                         $totalItems = count($setlist) + count($encore);
                                     @endphp
 
+                                    @php
+                                        // 改行を含む既存データ（例:「A」1行目+「1.30-2.19」2行目）はそのまま両方見出しサイズで表示。
+                                        // 改行を含まない1行だけのデータに限り、最初の空白で「日付」と「地名」を分けて地名だけ小さいグレーにする。
+                                        $subtitleRaw = trim($setlistModel->subtitle ?? '');
+                                        $subtitleHasNewline = preg_match('/\r\n|\r|\n/', $subtitleRaw) === 1;
+                                        if (!$subtitleHasNewline) {
+                                            $subtitleParts = preg_split('/[ \x{3000}]+/u', $subtitleRaw, 2);
+                                            $subtitleDate = $subtitleParts[0] ?? '';
+                                            $subtitlePlace = $subtitleParts[1] ?? '';
+                                        }
+                                    @endphp
                                     @if (count($setlist) || count($encore))
                                         <div class="live-column-wrap">
                                             <div class="setlist-subtitle-area">
-                                                @if (!empty(trim(strip_tags($setlistModel->subtitle ?? ''))))
-                                                    <div class="setlist-subtitle-rich">{!! $setlistModel->subtitle !!}</div>
+                                                @if ($subtitleHasNewline)
+                                                    @if ($subtitleRaw !== '')
+                                                        <h5 style="margin: 0; white-space: pre-line;">{{ $subtitleRaw }}</h5>
+                                                    @endif
+                                                @else
+                                                    @if ($subtitleDate !== '')
+                                                        <h5 style="margin: 0;">{{ $subtitleDate }}@if ($subtitlePlace !== '')<span style="font-size: 0.75rem; color: #999; font-weight: normal; margin-left: 4px;">{{ $subtitlePlace }}</span>@endif</h5>
+                                                    @endif
                                                 @endif
                                             </div>
                                         <ol class="live-column {{ $totalItems >= 20 ? 'live-column-two-col' : '' }}">

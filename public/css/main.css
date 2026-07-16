@@ -756,29 +756,6 @@ select {
     justify-content: flex-end;
 }
 
-/* セットリストのタイトル（旧: h5固定）。RichEditorの既定タグ(p)や、タグの付かない旧データにも旧h5相当の見た目を与える */
-.setlist-subtitle-rich {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 500;
-    line-height: 1.2;
-}
-
-.setlist-subtitle-rich p {
-    margin: 0;
-}
-
-.setlist-subtitle-rich p + p {
-    margin-top: 2px;
-}
-
-.setlist-subtitle-rich h2,
-.setlist-subtitle-rich h3 {
-    margin: 0;
-    font-weight: 700;
-    line-height: 1.2;
-}
-
 .fes-block {
     margin-bottom: 24px;
 }
