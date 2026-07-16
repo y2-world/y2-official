@@ -96,36 +96,47 @@
                                     @endphp
 
                                     @php
-                                        // 行ごとに処理: 先頭から続く「数字・.・-・,・空白」の並びを日付とみなし、
-                                        // その後ろに続く部分を会場名としてグレー表示にする。
-                                        // 例:「1.14, 15 大阪城ホール」→ 日付「1.14, 15」+ 会場名「大阪城ホール」
-                                        // 「7.3 函館, 13-8.21」→ 日付「7.3」+ 会場名「函館」+ 日付「, 13-8.21」
-                                        // ラベルのみの行（「A」「ホール公演」など、数字から始まらない行）はそのまま。
+                                        // 行ごとに処理: 「数字.数字」を含む日付らしいパターン（範囲・カンマ区切り可）を
+                                        // 行の中から繰り返し検出し、日付と日付の間に挟まる部分を会場名としてグレー表示にする。
+                                        // 例:「7.17 福井1」→ 日付「7.17」+ 会場名「福井1」
+                                        // 「7.17 東京1 7.18東京2」→ 日付「7.17」+ 会場名「東京1」+ 日付「7.18」+ 会場名「東京2」
+                                        // 日付らしいパターンが1つも無い行（「A」「ホール公演」など）はそのまま。
                                         $subtitleLines = preg_split('/\r\n|\r|\n/', trim($setlistModel->subtitle ?? ''));
                                         $subtitleLines = array_values(array_filter($subtitleLines, fn($line) => trim($line) !== ''));
-                                        $subtitleRenderedLines = array_map(function ($line) {
+                                        // 末尾の「-」だけで終わる開催期間未定表記（例:「6.13-」）も日付として扱う
+                                        $subtitleDatePattern = '/(\d{1,2}\.\d{1,2}(?:[-,、]\s*\d{1,2}(?:\.\d{1,2})?)*-?)/u';
+                                        $subtitleRenderedLines = array_map(function ($line) use ($subtitleDatePattern) {
                                             $line = trim($line);
+                                            $segments = preg_split($subtitleDatePattern, $line, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-                                            if (preg_match('/^([\d.\-,、\x{3000}\s]+)(.*)$/u', $line, $m) !== 1) {
-                                                return e($line);
-                                            }
-                                            $datePrefix = rtrim($m[1]);
-                                            $remainder = trim($m[2]);
-                                            if ($remainder === '') {
+                                            if (count($segments) <= 1) {
                                                 return e($line);
                                             }
 
-                                            // 会場名候補（数字・カンマ以外の連続部分）と、それ以降（続く日付など）を分ける
-                                            if (preg_match('/^([^\d,]+)(.*)$/us', $remainder, $m2) !== 1 || trim($m2[1]) === '') {
-                                                return e($line);
-                                            }
-                                            $place = trim($m2[1]);
-                                            $trailing = trim($m2[2] ?? '');
+                                            $html = '';
+                                            foreach ($segments as $i => $segment) {
+                                                if ($i % 2 === 1) {
+                                                    // 奇数インデックス = 日付本体
+                                                    $html .= e($segment);
+                                                    continue;
+                                                }
 
-                                            $html = e($datePrefix) . '<span style="font-size: 0.75rem; color: #999; font-weight: normal;">' . e($place) . '</span>';
-                                            if ($trailing !== '') {
-                                                $html .= e($trailing);
+                                                $venue = trim($segment);
+                                                if ($venue === '') {
+                                                    continue;
+                                                }
+
+                                                if ($i === 0) {
+                                                    // 最初の日付より前の文字列はラベル扱いでそのまま
+                                                    $html .= e($venue);
+                                                } else {
+                                                    $html .= '<span style="font-size: 0.75rem; color: #999; font-weight: normal;">' . e($venue) . '</span>';
+                                                    if (isset($segments[$i + 1])) {
+                                                        $html .= ' ';
+                                                    }
+                                                }
                                             }
+
                                             return $html;
                                         }, $subtitleLines);
                                     @endphp
