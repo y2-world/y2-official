@@ -98,8 +98,8 @@
                                     @if (count($setlist) || count($encore))
                                         <div class="live-column-wrap">
                                             <div class="setlist-subtitle-area">
-                                                @if (!empty(trim($setlistModel->subtitle ?? '')))
-                                                    <h5 style="white-space: pre-line;">{{ $setlistModel->subtitle }}</h5>
+                                                @if (!empty(trim(strip_tags($setlistModel->subtitle ?? ''))))
+                                                    <div class="setlist-subtitle-rich">{!! $setlistModel->subtitle !!}</div>
                                                 @endif
                                             </div>
                                         <ol class="live-column {{ $totalItems >= 20 ? 'live-column-two-col' : '' }}">

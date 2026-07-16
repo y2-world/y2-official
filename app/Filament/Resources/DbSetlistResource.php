@@ -76,10 +76,13 @@ class DbSetlistResource extends Resource
                             ->minValue(1)
                             ->required(),
 
-                        Forms\Components\Textarea::make('subtitle')
+                        Forms\Components\RichEditor::make('subtitle')
                             ->label('タイトル（日付や説明）')
-                            ->rows(2)
-                            ->maxLength(500)
+                            ->helperText('文字を選択してツールバーから見出し・文字色・文字サイズを設定できます。')
+                            ->toolbarButtons([
+                                'bold', 'italic', 'h2', 'h3', 'fontColor', 'fontSize', 'undo', 'redo',
+                            ])
+                            ->maxLength(1000)
                             ->columnSpanFull(),
                     ])
                     ->columns(2),
