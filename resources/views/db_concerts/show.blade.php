@@ -131,7 +131,7 @@
                                                     // 最初の日付より前の文字列はラベル扱いでそのまま
                                                     $html .= e($venue);
                                                 } else {
-                                                    // 会場名は見出しサイズに対する相対値(em)にして、行が縮小された時に追従させる
+                                                    // 会場名は見出しサイズに対する相対値(em)。見出し自体が行数で縮小されると連動して縮む
                                                     $html .= '<span style="font-size: 0.5em; color: #999; font-weight: normal; margin-left: 3px;">' . e($venue) . '</span>';
                                                     $hasVenue = true;
                                                     if (isset($segments[$i + 1])) {
@@ -142,22 +142,21 @@
 
                                             return ['html' => $html, 'hasVenue' => $hasVenue];
                                         }, $subtitleLines);
+                                        $subtitleRenderedLines = array_column($subtitleLineResults, 'html');
 
-                                        // 「日付+会場」の行が3行以上あるときだけ、その行に限って少し小さくする
-                                        $subtitleVenueLineCount = count(array_filter($subtitleLineResults, fn($r) => $r['hasVenue']));
-                                        $subtitleShrinkVenueLines = $subtitleVenueLineCount >= 3;
-                                        $subtitleRenderedLines = array_map(function ($r) use ($subtitleShrinkVenueLines) {
-                                            if ($r['hasVenue'] && $subtitleShrinkVenueLines) {
-                                                return '<span style="font-size: 0.85em;">' . $r['html'] . '</span>';
-                                            }
-                                            return $r['html'];
-                                        }, $subtitleLineResults);
+                                        // 「日付+会場」がある行の数が増えるほど見出し全体（日付・会場名とも）を段階的に縮小する
+                                        $subtitleLineCount = count(array_filter($subtitleLineResults, fn($r) => $r['hasVenue']));
+                                        $subtitleFontSize = match (true) {
+                                            $subtitleLineCount >= 4 => '0.75em',
+                                            $subtitleLineCount >= 3 => '0.95em',
+                                            default => null,
+                                        };
                                     @endphp
                                     @if (count($setlist) || count($encore))
                                         <div class="live-column-wrap">
                                             <div class="setlist-subtitle-area">
                                                 @if (count($subtitleRenderedLines))
-                                                    <h5 style="margin: 0;">{!! implode('<br>', $subtitleRenderedLines) !!}</h5>
+                                                    <h5 style="margin: 0;">@if ($subtitleFontSize)<span style="font-size: {{ $subtitleFontSize }};">{!! implode('<br>', $subtitleRenderedLines) !!}</span>@else{!! implode('<br>', $subtitleRenderedLines) !!}@endif</h5>
                                                 @endif
                                             </div>
                                         <ol class="live-column {{ $totalItems >= 20 ? 'live-column-two-col' : '' }}">
