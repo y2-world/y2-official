@@ -130,7 +130,7 @@
                                                     // 最初の日付より前の文字列はラベル扱いでそのまま
                                                     $html .= e($venue);
                                                 } else {
-                                                    $html .= '<span style="font-size: 0.75rem; color: #999; font-weight: normal;">' . e($venue) . '</span>';
+                                                    $html .= '<span style="font-size: 0.75rem; color: #999; font-weight: normal; margin-left: 3px;">' . e($venue) . '</span>';
                                                     if (isset($segments[$i + 1])) {
                                                         $html .= ' ';
                                                     }
