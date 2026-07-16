@@ -105,15 +105,16 @@
                                         $subtitleLines = array_values(array_filter($subtitleLines, fn($line) => trim($line) !== ''));
                                         // 末尾の「-」だけで終わる開催期間未定表記（例:「6.13-」）も日付として扱う
                                         $subtitleDatePattern = '/(\d{1,2}\.\d{1,2}(?:[-,、]\s*\d{1,2}(?:\.\d{1,2})?)*-?)/u';
-                                        $subtitleRenderedLines = array_map(function ($line) use ($subtitleDatePattern) {
+                                        $subtitleLineResults = array_map(function ($line) use ($subtitleDatePattern) {
                                             $line = trim($line);
                                             $segments = preg_split($subtitleDatePattern, $line, -1, PREG_SPLIT_DELIM_CAPTURE);
 
                                             if (count($segments) <= 1) {
-                                                return e($line);
+                                                return ['html' => e($line), 'hasVenue' => false];
                                             }
 
                                             $html = '';
+                                            $hasVenue = false;
                                             foreach ($segments as $i => $segment) {
                                                 if ($i % 2 === 1) {
                                                     // 奇数インデックス = 日付本体
@@ -130,15 +131,27 @@
                                                     // 最初の日付より前の文字列はラベル扱いでそのまま
                                                     $html .= e($venue);
                                                 } else {
-                                                    $html .= '<span style="font-size: 0.75rem; color: #999; font-weight: normal; margin-left: 3px;">' . e($venue) . '</span>';
+                                                    // 会場名は見出しサイズに対する相対値(em)にして、行が縮小された時に追従させる
+                                                    $html .= '<span style="font-size: 0.75em; color: #999; font-weight: normal; margin-left: 3px;">' . e($venue) . '</span>';
+                                                    $hasVenue = true;
                                                     if (isset($segments[$i + 1])) {
                                                         $html .= ' ';
                                                     }
                                                 }
                                             }
 
-                                            return $html;
+                                            return ['html' => $html, 'hasVenue' => $hasVenue];
                                         }, $subtitleLines);
+
+                                        // 「日付+会場」の行が3行以上あるときだけ、その行に限って少し小さくする
+                                        $subtitleVenueLineCount = count(array_filter($subtitleLineResults, fn($r) => $r['hasVenue']));
+                                        $subtitleShrinkVenueLines = $subtitleVenueLineCount >= 3;
+                                        $subtitleRenderedLines = array_map(function ($r) use ($subtitleShrinkVenueLines) {
+                                            if ($r['hasVenue'] && $subtitleShrinkVenueLines) {
+                                                return '<span style="font-size: 0.85em;">' . $r['html'] . '</span>';
+                                            }
+                                            return $r['html'];
+                                        }, $subtitleLineResults);
                                     @endphp
                                     @if (count($setlist) || count($encore))
                                         <div class="live-column-wrap">
