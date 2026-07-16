@@ -132,7 +132,7 @@
                                                     $html .= e($venue);
                                                 } else {
                                                     // 会場名は見出しサイズに対する相対値(em)にして、行が縮小された時に追従させる
-                                                    $html .= '<span style="font-size: 0.75em; color: #999; font-weight: normal; margin-left: 3px;">' . e($venue) . '</span>';
+                                                    $html .= '<span style="font-size: 0.5em; color: #999; font-weight: normal; margin-left: 3px;">' . e($venue) . '</span>';
                                                     $hasVenue = true;
                                                     if (isset($segments[$i + 1])) {
                                                         $html .= ' ';
