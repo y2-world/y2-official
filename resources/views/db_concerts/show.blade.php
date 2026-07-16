@@ -96,27 +96,44 @@
                                     @endphp
 
                                     @php
-                                        // 改行を含む既存データ（例:「A」1行目+「1.30-2.19」2行目）はそのまま両方見出しサイズで表示。
-                                        // 改行を含まない1行だけのデータに限り、最初の空白で「日付」と「地名」を分けて地名だけ小さいグレーにする。
-                                        $subtitleRaw = trim($setlistModel->subtitle ?? '');
-                                        $subtitleHasNewline = preg_match('/\r\n|\r|\n/', $subtitleRaw) === 1;
-                                        if (!$subtitleHasNewline) {
-                                            $subtitleParts = preg_split('/[ \x{3000}]+/u', $subtitleRaw, 2);
-                                            $subtitleDate = $subtitleParts[0] ?? '';
-                                            $subtitlePlace = $subtitleParts[1] ?? '';
-                                        }
+                                        // 行ごとに処理: 先頭から続く「数字・.・-・,・空白」の並びを日付とみなし、
+                                        // その後ろに続く部分を会場名としてグレー表示にする。
+                                        // 例:「1.14, 15 大阪城ホール」→ 日付「1.14, 15」+ 会場名「大阪城ホール」
+                                        // 「7.3 函館, 13-8.21」→ 日付「7.3」+ 会場名「函館」+ 日付「, 13-8.21」
+                                        // ラベルのみの行（「A」「ホール公演」など、数字から始まらない行）はそのまま。
+                                        $subtitleLines = preg_split('/\r\n|\r|\n/', trim($setlistModel->subtitle ?? ''));
+                                        $subtitleLines = array_values(array_filter($subtitleLines, fn($line) => trim($line) !== ''));
+                                        $subtitleRenderedLines = array_map(function ($line) {
+                                            $line = trim($line);
+
+                                            if (preg_match('/^([\d.\-,、\x{3000}\s]+)(.*)$/u', $line, $m) !== 1) {
+                                                return e($line);
+                                            }
+                                            $datePrefix = rtrim($m[1]);
+                                            $remainder = trim($m[2]);
+                                            if ($remainder === '') {
+                                                return e($line);
+                                            }
+
+                                            // 会場名候補（数字・カンマ以外の連続部分）と、それ以降（続く日付など）を分ける
+                                            if (preg_match('/^([^\d,]+)(.*)$/us', $remainder, $m2) !== 1 || trim($m2[1]) === '') {
+                                                return e($line);
+                                            }
+                                            $place = trim($m2[1]);
+                                            $trailing = trim($m2[2] ?? '');
+
+                                            $html = e($datePrefix) . '<span style="font-size: 0.75rem; color: #999; font-weight: normal;">' . e($place) . '</span>';
+                                            if ($trailing !== '') {
+                                                $html .= e($trailing);
+                                            }
+                                            return $html;
+                                        }, $subtitleLines);
                                     @endphp
                                     @if (count($setlist) || count($encore))
                                         <div class="live-column-wrap">
                                             <div class="setlist-subtitle-area">
-                                                @if ($subtitleHasNewline)
-                                                    @if ($subtitleRaw !== '')
-                                                        <h5 style="margin: 0; white-space: pre-line;">{{ $subtitleRaw }}</h5>
-                                                    @endif
-                                                @else
-                                                    @if ($subtitleDate !== '')
-                                                        <h5 style="margin: 0;">{{ $subtitleDate }}@if ($subtitlePlace !== '')<span style="font-size: 0.75rem; color: #999; font-weight: normal; margin-left: 4px;">{{ $subtitlePlace }}</span>@endif</h5>
-                                                    @endif
+                                                @if (count($subtitleRenderedLines))
+                                                    <h5 style="margin: 0;">{!! implode('<br>', $subtitleRenderedLines) !!}</h5>
                                                 @endif
                                             </div>
                                         <ol class="live-column {{ $totalItems >= 20 ? 'live-column-two-col' : '' }}">
