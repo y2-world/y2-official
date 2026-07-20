@@ -734,12 +734,12 @@
             <div class="show_button text-center">
                 <!-- Buttons for navigation -->
                 @if (isset($previous))
-                    <a class="btn btn-outline-dark" href="{{ route('live.show', [$previous->artist_id, $previous->id]) }}" rel="prev"
+                    <a class="btn btn-outline-dark" href="{{ route('live.show', $previous->id) }}" rel="prev"
                         role="button">
                         <i class="fa-solid fa-arrow-left fa-lg"></i></a>
                 @endif
                 @if (isset($next))
-                    <a class="btn btn-outline-dark" href="{{ route('live.show', [$next->artist_id, $next->id]) }}"rel="next" role="button"><i
+                    <a class="btn btn-outline-dark" href="{{ route('live.show', $next->id) }}"rel="next" role="button"><i
                             class="fa-solid fa-arrow-right fa-lg"></i></a>
                 @endif
             </div>

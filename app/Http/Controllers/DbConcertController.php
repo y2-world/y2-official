@@ -47,7 +47,7 @@ class DbConcertController extends Controller
         return view('db_concerts.index', compact('tours', 'bios', 'type', 'totalCount', 'artist'));
     }
 
-    public function show($artistId, $id)
+    public function show($id)
     {
         $tours = DbConcert::findOrFail($id);
         $artist = $tours->artist;

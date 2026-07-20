@@ -252,7 +252,7 @@
                 {{-- 前後リンク --}}
                 <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
                     @if (isset($previous))
-                        <a href="{{ route('live.show', [$previous->artist_id, $previous->id]) }}" rel="prev"
+                        <a href="{{ route('live.show', $previous->id) }}" rel="prev"
                            style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
                             <i class="fa-solid fa-arrow-left" style="margin-right: 8px;"></i>
                             Previous
@@ -261,7 +261,7 @@
                         <div></div>
                     @endif
                     @if (isset($next))
-                        <a href="{{ route('live.show', [$next->artist_id, $next->id]) }}" rel="next"
+                        <a href="{{ route('live.show', $next->id) }}" rel="next"
                            style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
                             Next
                             <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
