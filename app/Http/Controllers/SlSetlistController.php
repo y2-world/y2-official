@@ -130,8 +130,18 @@ class SlSetlistController extends Controller
         $setlists = SlSetlist::with('artist')->findOrFail($id);
         $artists = Artist::orderBy('id', 'asc')
         ->get(['id', 'name']); // 必要なカラムのみ取得
-        $previous = SlSetlist::where('date', '<', $setlists->date)->orderBy('date', 'desc')->first();
-        $next = SlSetlist::where('date', '>', $setlists->date)->orderBy('date')->first();
+        $previous = SlSetlist::where(function ($q) use ($setlists) {
+                $q->where('date', '<', $setlists->date)
+                  ->orWhere(function ($q2) use ($setlists) {
+                      $q2->where('date', $setlists->date)->where('id', '<', $setlists->id);
+                  });
+            })->orderBy('date', 'desc')->orderBy('id', 'desc')->first();
+        $next = SlSetlist::where(function ($q) use ($setlists) {
+                $q->where('date', '>', $setlists->date)
+                  ->orWhere(function ($q2) use ($setlists) {
+                      $q2->where('date', $setlists->date)->where('id', '>', $setlists->id);
+                  });
+            })->orderBy('date')->orderBy('id')->first();
         
         return view('sl_setlists.show', compact('artists', 'setlists', 'previous', 'next'));
     }

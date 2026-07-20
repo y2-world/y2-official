@@ -68,38 +68,38 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
                 <ul class="navbar-nav">
                     {{-- <li class="nav-item active">
-                    <a class="nav-link" href="{{ url('/') }}">&emsp;Home</a>
+                    <a class="nav-link" href="{{ url('/') }}">Home</a>
                 </li> --}}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/#news') }}">&emsp;News</a>
+                        <a class="nav-link" href="{{ url('/#news') }}">News</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/#music') }}">&emsp;Music</a>
+                        <a class="nav-link" href="{{ url('/#music') }}">Music</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/#profile') }}">&emsp;Profile</a>
+                        <a class="nav-link" href="{{ url('/#profile') }}">Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/#radio') }}">&emsp;Radio</a>
+                        <a class="nav-link" href="{{ url('/#radio') }}">Radio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/setlists') }}">&emsp;Setlists</a>
+                        <a class="nav-link" href="{{ url('/setlists') }}">Setlists</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/database') }}">&emsp;Database</a>
+                        <a class="nav-link" href="{{ url('/database') }}">Database</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/stats') }}">&emsp;Stats</a>
+                        <a class="nav-link" href="{{ url('/stats') }}">Stats</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('https://ameblo.jp/y2-world') }}"
-                            target="_blank">&emsp;Blog</a>
+                            target="_blank">Blog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/admin') }}" target="_blank">&emsp;Admin&emsp;</a>
+                        <a class="nav-link" href="{{ url('/admin') }}" target="_blank">Admin</a>
                     </li>
                     {{-- <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/filament') }}" target="_blank">&emsp;Admin&emsp;</a>
+                        <a class="nav-link" href="{{ url('/filament') }}" target="_blank">Admin</a>
                     </li> --}}
                     <li class="nav-item">
                         <div class="mb-sns-nav">

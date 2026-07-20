@@ -470,6 +470,13 @@ footer {
     padding-left: 15px;
 }
 
+@media (min-width: 992px) {
+    .navbar-expand-lg .navbar-nav .nav-link {
+        padding-right: 1em;
+        padding-left: 1em;
+    }
+}
+
 img {
     box-shadow: 0 5px 5px gray;
 }

@@ -53,8 +53,20 @@ class DbConcertController extends Controller
         $artist = $tours->artist;
         $songs = DbSong::orderBy('id', 'asc')->get();
         $tourSetlists = DbSetlist::where('tour_id', $id)->orderBy('order_no', 'asc')->get();
-        $previous = DbConcert::where('artist_id', $tours->artist_id)->where('date1', '<', $tours->date1)->orderBy('date1', 'desc')->first();
-        $next = DbConcert::where('artist_id', $tours->artist_id)->where('date1', '>', $tours->date1)->orderBy('date1')->first();
+        $previous = DbConcert::where('artist_id', $tours->artist_id)
+            ->where(function ($q) use ($tours) {
+                $q->where('date1', '<', $tours->date1)
+                  ->orWhere(function ($q2) use ($tours) {
+                      $q2->where('date1', $tours->date1)->where('id', '<', $tours->id);
+                  });
+            })->orderBy('date1', 'desc')->orderBy('id', 'desc')->first();
+        $next = DbConcert::where('artist_id', $tours->artist_id)
+            ->where(function ($q) use ($tours) {
+                $q->where('date1', '>', $tours->date1)
+                  ->orWhere(function ($q2) use ($tours) {
+                      $q2->where('date1', $tours->date1)->where('id', '>', $tours->id);
+                  });
+            })->orderBy('date1')->orderBy('id')->first();
 
         return view('db_concerts.show', compact('songs', 'previous', 'next', 'tours', 'tourSetlists', 'artist'));
     }
