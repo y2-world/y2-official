@@ -262,7 +262,7 @@
                                             @endif
                                         </td>
                                         <td class="song-title">
-                                            <a href="{{ url('/database/live/' . $setlist['tour_id']) }}" class="stats-link">
+                                            <a href="{{ route('live.show', [$setlist['artist_id'], $setlist['tour_id']]) }}" class="stats-link">
                                                 {{ $setlist['tour_title'] }}
                                                 @if($setlist['subtitle'])
                                                     <br><small style="color: #666;">{{ $setlist['subtitle'] }}</small>

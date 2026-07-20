@@ -497,6 +497,7 @@ class StatsController extends Controller
                 $tour = DbConcert::find($setlist->tour_id);
                 $lengths[] = [
                     'tour_id' => $setlist->tour_id,
+                    'artist_id' => $artistId,
                     'tour_title' => $tour ? $tour->title : '不明',
                     'subtitle' => $setlist->subtitle ?? '',
                     'song_count' => $count,

@@ -49,6 +49,7 @@ Route::prefix('database')->group(function () {
         Route::get('singles', [DbSingleController::class, 'index'])->name('database.singles');
         Route::get('albums', [DbAlbumController::class, 'index'])->name('database.albums');
         Route::get('live', [DbConcertController::class, 'index'])->name('database.live');
+        Route::get('live/{id}', [DbConcertController::class, 'show'])->name('live.show');
         Route::get('biography', [BioController::class, 'index'])->name('database.biography');
         Route::get('biography/{year}', [BioController::class, 'show'])->name('database.biography.year');
     });
@@ -57,7 +58,12 @@ Route::prefix('database')->group(function () {
     Route::get('songs/{id}', [DbSongController::class, 'show'])->name('songs.show');
     Route::get('singles/{id}', [DbSingleController::class, 'show'])->name('singles.show');
     Route::get('albums/{id}', [DbAlbumController::class, 'show'])->name('albums.show');
-    Route::get('live/{id}', [DbConcertController::class, 'show'])->name('live.show');
+
+    // 旧URL live/{id} → artist_id付きURLへリダイレクト（後方互換）
+    Route::get('live/{id}', function ($id) {
+        $concert = \App\Models\DbConcert::findOrFail($id);
+        return redirect(route('live.show', [$concert->artist_id, $concert->id]), 301);
+    });
 
     // 旧URL → Mr.Children のアーティストIDへリダイレクト（後方互換）
     Route::get('songs', function () {
