@@ -242,7 +242,8 @@
                     }
                 @endphp
 
-                <div class="setlist-row">
+                <div class="setlist-row" style="justify-content: center;">
+                <div class="live-column-wrap">
                 <div class="live-column">
 
                 {{-- 通常ライブ --}}
@@ -380,6 +381,7 @@
                 @endif {{-- fes 終わり --}}
 
                 </div>{{-- live-column --}}
+                </div>{{-- live-column-wrap --}}
                 </div>{{-- setlist-row --}}
 
                 {{-- 前後リンク --}}
