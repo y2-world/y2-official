@@ -56,7 +56,7 @@
         @endif
 
         {{-- 前後リンク --}}
-        <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
+        <div style="display: flex; justify-content: space-between; max-width: 560px; margin: 40px auto 0; padding-bottom: 40px;">
             @if(isset($previous))
                 <a href="{{ route('singles.show', $previous->id)}}" rel="prev"
                    style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
