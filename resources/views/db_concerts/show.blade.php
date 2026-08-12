@@ -87,7 +87,7 @@
                                     $commonSongs = array_keys($commonSongs ?? []);
                                 }
                             @endphp
-                            <div class="setlist-row" style="justify-content: center;">
+                            <div class="setlist-row" style="justify-content: safe center;">
                                 @foreach ($rowSetlists as $setlistModel)
                                     @php
                                         $setlist = is_array($setlistModel->setlist) ? $setlistModel->setlist : [];

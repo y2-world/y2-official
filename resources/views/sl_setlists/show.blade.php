@@ -242,7 +242,7 @@
                     }
                 @endphp
 
-                <div class="setlist-row" style="justify-content: center;">
+                <div class="setlist-row" style="justify-content: safe center;">
                 <div class="live-column-wrap">
                 <div class="live-column">
 
