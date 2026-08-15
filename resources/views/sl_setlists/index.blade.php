@@ -9,7 +9,10 @@
     <div class="database-hero database-hero--nav">
         <div class="container">
             <div class="setlists-header-row">
-                <h1 class="database-title" style="text-align: center;">Setlists</h1>
+                <div style="flex-shrink: 0;">
+                    <h1 class="database-title" style="white-space: nowrap;">Setlists</h1>
+                    <p class="database-subtitle" style="margin: 4px 0 0;">すべてのセットリスト</p>
+                 </div>
                 <div class="header-selects" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; overflow-x: auto; max-width: 100%;">
                     {{-- 虫眼鏡アイコン（SP表示のみ） --}}
                     <button type="button" id="spSearchButtonSetlists" class="sp" onclick="var form = document.getElementById('spSearchFormSetlists'); var icon = this.querySelector('i'); if (form.style.display === 'none' || form.style.display === '') { form.style.display='block'; icon.className='fa-solid fa-xmark'; } else { form.style.display='none'; icon.className='fa-solid fa-magnifying-glass'; }" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
