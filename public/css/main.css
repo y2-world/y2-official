@@ -1363,6 +1363,7 @@ h2 {
 
 .database-subtitle a {
     text-decoration: none !important;
+    color: inherit;
 }
 
 @media (max-width: 768px) {
