@@ -159,7 +159,7 @@
                                         <div class="live-column-wrap">
                                             <div class="setlist-subtitle-area">
                                                 @if (count($subtitleRenderedLines))
-                                                    <h5 style="margin: 0;">@if ($subtitleFontSize)<span style="font-size: {{ $subtitleFontSize }};">{!! implode('<br>', $subtitleRenderedLines) !!}</span>@else{!! implode('<br>', $subtitleRenderedLines) !!}@endif</h5>
+                                                    <h5 style="margin: 0.25rem;">@if ($subtitleFontSize)<span style="font-size: {{ $subtitleFontSize }};">{!! implode('<br>', $subtitleRenderedLines) !!}</span>@else{!! implode('<br>', $subtitleRenderedLines) !!}@endif</h5>
                                                 @endif
                                             </div>
                                         <ol class="live-column {{ $totalItems >= 20 ? 'live-column-two-col' : '' }}">
