@@ -47,8 +47,10 @@
                     // 日付らしいパターンが1つも無い行（「A」「ホール公演」など）はそのまま。
                     $subtitleLines = preg_split('/\r\n|\r|\n/', trim($setlistModel->subtitle ?? ''));
                     $subtitleLines = array_values(array_filter($subtitleLines, fn($line) => trim($line) !== ''));
-                    // 末尾の「-」だけで終わる開催期間未定表記（例:「6.13-」）も日付として扱う
-                    $subtitleDatePattern = '/(\d{1,2}\.\d{1,2}(?:[-]\s*\d{1,2}(?:\.\d{1,2})?)*-?)/u';
+                    // 末尾の「-」だけで終わる開催期間未定表記（例:「6.13-」）も日付として扱う。
+                    // 「9.16-12.23, 1.20-3.8」のようにカンマで複数の開催期間が並ぶ場合も
+                    // カンマ+空白ごと日付本体に含めて1つのまとまりとして扱う（会場名と誤認させない）
+                    $subtitleDatePattern = '/(\d{1,2}\.\d{1,2}(?:\s*[-,]\s*\d{1,2}(?:\.\d{1,2})?)*-?)/u';
                     $subtitleLineResults = array_map(function ($line) use ($subtitleDatePattern) {
                         $line = trim($line);
                         $segments = preg_split($subtitleDatePattern, $line, -1, PREG_SPLIT_DELIM_CAPTURE);
