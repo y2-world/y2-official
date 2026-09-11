@@ -35,10 +35,15 @@ class MyPageStatsController extends Controller
             if (!$setlist) {
                 continue;
             }
+            // 1つのセットリスト（＝1回のライブ参加）内で同じ曲が複数回演奏されても1回とカウントする
+            $songsInThisSetlist = [];
             foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
                 if (isset($s['song']) && is_numeric($s['song'])) {
                     $songId = (int)$s['song'];
-                    $songPlayCounts[$songId] = ($songPlayCounts[$songId] ?? 0) + 1;
+                    if (!in_array($songId, $songsInThisSetlist, true)) {
+                        $songsInThisSetlist[] = $songId;
+                        $songPlayCounts[$songId] = ($songPlayCounts[$songId] ?? 0) + 1;
+                    }
                 }
             }
         }
