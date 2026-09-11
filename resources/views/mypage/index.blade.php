@@ -156,9 +156,15 @@
                                                 @endif
                                             </td>
                                             <td class="song-title">
-                                                <a href="{{ route('songs.show', $song['song_id']) }}" class="stats-link">{{ $song['title'] }}</a>
+                                                <a href="{{ route('mypage.attendances.index', ['song_id' => $song['song_id']]) }}" class="stats-link">{{ $song['title'] }}</a>
                                             </td>
-                                            <td class="artist-name">{{ $song['artist_name'] }}</td>
+                                            <td class="artist-name">
+                                                @if ($song['artist_id'])
+                                                    <a href="{{ route('mypage.stats.artist', $song['artist_id']) }}" class="stats-link">{{ $song['artist_name'] }}</a>
+                                                @else
+                                                    {{ $song['artist_name'] }}
+                                                @endif
+                                            </td>
                                             <td class="count-col">
                                                 <span class="count-badge">{{ $song['count'] }}</span>
                                             </td>
@@ -177,6 +183,151 @@
                                     </button>
                                 </div>
                             @endif
+                        </div>
+                    </div>
+
+                    <!-- Artist Statistics Section -->
+                    <div class="stats-section visible">
+                        <div class="section-title-wrapper">
+                            <h2 class="section-title">
+                                <i class="fas fa-microphone"></i> Artist Statistics
+                            </h2>
+                        </div>
+                        <div class="stats-table-container">
+                            <table class="stats-table">
+                                <thead>
+                                    <tr>
+                                        <th class="rank-col">Rank</th>
+                                        <th>Artist Name</th>
+                                        <th class="count-col">Shows Attended</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($artistStats as $index => $artist)
+                                        @php
+                                            $showRank = $index === 0 || $artistStats[$index - 1]['show_count'] !== $artist['show_count'];
+                                            $actualRank = $index + 1;
+                                        @endphp
+                                        <tr class="{{ $index >= 10 ? 'hidden-row-artist' : '' }}">
+                                            <td class="rank-col">
+                                                @if ($showRank)
+                                                    @if ($index === 0)
+                                                        <span class="rank-badge gold">🏆</span>
+                                                    @elseif ($index === 1)
+                                                        <span class="rank-badge silver">🥈</span>
+                                                    @elseif ($index === 2)
+                                                        <span class="rank-badge bronze">🥉</span>
+                                                    @else
+                                                        <span class="rank-number">{{ $actualRank }}</span>
+                                                    @endif
+                                                @endif
+                                            </td>
+                                            <td class="artist-name">
+                                                <a href="{{ route('mypage.stats.artist', $artist['id']) }}" class="stats-link">{{ $artist['name'] }}</a>
+                                            </td>
+                                            <td class="count-col">
+                                                <span class="count-badge">{{ $artist['show_count'] }}</span>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="3">まだ参加したライブが記録されていません。</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                            @if (count($artistStats) > 10)
+                                <div class="show-more-container">
+                                    <button class="show-more-btn" onclick="toggleArtistStatsRows(this)">
+                                        Show More <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Top Venues Section -->
+                    <div class="stats-section visible">
+                        <h2 class="section-title">
+                            <i class="fas fa-map-marker-alt"></i> Top Venues
+                        </h2>
+                        <div class="stats-table-container">
+                            <table class="stats-table">
+                                <thead>
+                                    <tr>
+                                        <th class="rank-col">Rank</th>
+                                        <th>Venue</th>
+                                        <th class="count-col">Visits</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($venueStats as $index => $venue)
+                                        @php
+                                            $showRank = $index === 0 || $venueStats[$index - 1]->count !== $venue->count;
+                                            $actualRank = $index + 1;
+                                        @endphp
+                                        <tr>
+                                            <td class="rank-col">
+                                                @if ($showRank)
+                                                    @if ($index === 0)
+                                                        <span class="rank-badge gold">🏆</span>
+                                                    @elseif ($index === 1)
+                                                        <span class="rank-badge silver">🥈</span>
+                                                    @elseif ($index === 2)
+                                                        <span class="rank-badge bronze">🥉</span>
+                                                    @else
+                                                        <span class="rank-number">{{ $actualRank }}</span>
+                                                    @endif
+                                                @endif
+                                            </td>
+                                            <td class="venue-name">{{ $venue->venue }}</td>
+                                            <td class="count-col">
+                                                <span class="count-badge">{{ $venue->count }}</span>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="3">まだ参加したライブが記録されていません。</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Shows by Year Section -->
+                    <div class="stats-section visible">
+                        <h2 class="section-title">
+                            <i class="fas fa-calendar-alt"></i> Shows by Year
+                        </h2>
+                        <div class="stats-table-container">
+                            <table class="stats-table has-bar-indicator">
+                                <thead>
+                                    <tr>
+                                        <th>Year</th>
+                                        <th class="count-col">Shows Attended</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($yearStats as $yearStat)
+                                        <tr>
+                                            <td class="year-col"><a href="{{ route('mypage.attendances.index', ['year' => $yearStat->year]) }}" class="stats-link">{{ $yearStat->year }}</a></td>
+                                            <td class="count-col">
+                                                <div class="year-bar-container">
+                                                    <div class="year-bar-wrapper">
+                                                        <div class="year-bar" style="width: {{ ($yearStat->count / $yearStats->max('count')) * 100 }}%"></div>
+                                                    </div>
+                                                    <span class="year-count">{{ $yearStat->count }}</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="2">まだ参加したライブが記録されていません。</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
@@ -227,6 +378,20 @@ function toggleAttendanceRows(button) {
 
 function toggleSongRows(button) {
     const hiddenRows = document.querySelectorAll('.hidden-row-songs');
+    const isExpanded = button.classList.contains('expanded');
+
+    hiddenRows.forEach(row => {
+        row.style.display = isExpanded ? 'none' : 'table-row';
+    });
+
+    button.classList.toggle('expanded');
+    button.innerHTML = isExpanded
+        ? 'Show More <i class="fas fa-chevron-down"></i>'
+        : 'Show Less <i class="fas fa-chevron-up"></i>';
+}
+
+function toggleArtistStatsRows(button) {
+    const hiddenRows = document.querySelectorAll('.hidden-row-artist');
     const isExpanded = button.classList.contains('expanded');
 
     hiddenRows.forEach(row => {

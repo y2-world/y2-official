@@ -6,13 +6,18 @@
         <div class="container">
             @include('database._breadcrumb', ['breadcrumbs' => [
                 ['label' => 'My Page', 'url' => route('mypage.index')],
-                ['label' => 'ライブの参加記録を追加', 'url' => route('mypage.attendances.create')],
+                ['label' => 'セットリスト登録', 'url' => route('mypage.attendances.create')],
                 ['label' => $dbSetlist->tour->artist->name, 'url' => route('mypage.attendances.tours', $dbSetlist->tour->artist_id)],
                 ['label' => $dbSetlist->tour->title, 'url' => route('mypage.attendances.setlists', $dbSetlist->tour_id)],
                 ['label' => '参加日・会場を入力'],
             ]])
-            <h1 class="database-title" style="text-align: center;">参加日・会場を入力</h1>
-            <p class="database-subtitle" style="text-align: center;">{{ $dbSetlist->tour->title }} - {{ $dbSetlist->subtitle ?: 'パターン ' . $dbSetlist->order_no }}</p>
+            <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">セットリスト登録</p>
+            <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">{{ $dbSetlist->tour->artist->name }}</p>
+            <h1 class="database-title" style="text-align: center;">{{ $dbSetlist->tour->title }}</h1>
+            @if ($dbSetlist->subtitle)
+                <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">{{ $dbSetlist->subtitle }}</p>
+            @endif
+            <p class="database-subtitle" style="text-align: center;">参加日・会場を入力</p>
         </div>
     </div>
 
@@ -34,13 +39,13 @@
                     <input type="hidden" name="db_setlist_id" value="{{ $dbSetlist->id }}">
                     <div class="mb-3">
                         <label for="attended_date" class="form-label">参加日</label>
-                        <input type="date" class="form-control" id="attended_date" name="attended_date" value="{{ old('attended_date') }}">
+                        <input type="date" class="form-control" id="attended_date" name="attended_date" value="{{ old('attended_date', $defaultAttendedDate) }}">
                     </div>
                     <div class="mb-3">
                         <label for="venue" class="form-label">会場</label>
                         <input type="text" class="form-control" id="venue" name="venue" value="{{ old('venue', $dbSetlist->tour->venue) }}">
                     </div>
-                    <button type="submit" class="btn btn-outline-dark w-100">この記録を追加する</button>
+                    <button type="submit" class="btn btn-outline-dark w-100">登録</button>
                 </form>
             </div>
         </div>

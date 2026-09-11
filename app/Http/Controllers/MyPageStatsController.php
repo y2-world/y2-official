@@ -12,6 +12,77 @@ class MyPageStatsController extends Controller
 {
     use ComputesDbSongStamps;
 
+    // アーティスト別の自分専用統計（/stats/artist/{id} のMy Page版）。
+    // 集計対象は自分が記録したExternalUserAttendance経由のdb_setlistsのみ。
+    public function artist($artistId)
+    {
+        $artist = Artist::find($artistId);
+        if (!$artist) {
+            abort(404);
+        }
+
+        $attendances = Auth::guard('external')->user()
+            ->attendances()
+            ->with('dbSetlist.tour')
+            ->whereHas('dbSetlist.tour', fn($q) => $q->where('artist_id', $artistId))
+            ->get();
+
+        $totalShows = $attendances->count();
+
+        $songPlayCounts = [];
+        foreach ($attendances as $attendance) {
+            $setlist = $attendance->dbSetlist;
+            if (!$setlist) {
+                continue;
+            }
+            foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
+                if (isset($s['song']) && is_numeric($s['song'])) {
+                    $songId = (int)$s['song'];
+                    $songPlayCounts[$songId] = ($songPlayCounts[$songId] ?? 0) + 1;
+                }
+            }
+        }
+        arsort($songPlayCounts);
+
+        $songs = DbSong::whereIn('id', array_keys($songPlayCounts))->get()->keyBy('id');
+        $allSongs = [];
+        foreach ($songPlayCounts as $songId => $count) {
+            $song = $songs->get($songId);
+            if ($song) {
+                $allSongs[] = [
+                    'song_id' => $songId,
+                    'title' => $song->title,
+                    'count' => $count,
+                ];
+            }
+        }
+
+        $totalSongs = count($allSongs);
+
+        $yearStats = $attendances
+            ->filter(fn ($a) => $a->attended_date)
+            ->groupBy(fn ($a) => $a->attended_date->format('Y'))
+            ->map(fn ($group, $year) => (object) ['year' => $year, 'count' => $group->count()])
+            ->sortKeysDesc()
+            ->values();
+
+        $venueStats = $attendances
+            ->filter(fn ($a) => $a->venue)
+            ->groupBy('venue')
+            ->map(fn ($group, $venue) => (object) ['venue' => $venue, 'count' => $group->count()])
+            ->sortByDesc('count')
+            ->values();
+
+        return view('mypage.stats.artist', compact(
+            'artist',
+            'totalShows',
+            'totalSongs',
+            'allSongs',
+            'yearStats',
+            'venueStats'
+        ));
+    }
+
     // アーティストのdatabase楽曲カタログを台紙にした、自分専用のスタンプ帳。
     // 判定基準はStatsController::getStampBookと同じ考え方だが、「演奏済み」の元データが
     // SlSetlist（Yuki本人の記録）ではなく、自分が記録したExternalUserAttendanceになる。

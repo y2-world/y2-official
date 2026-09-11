@@ -1,6 +1,11 @@
 {{-- $tourSetlists（DbSetlistのコレクション）と $songs（全DbSongのコレクション）を受け取り、
      row でグルーピングした複数パターンのセットリストを横並びで描画する。
-     db_concerts/show.blade.php と mypage/attendances/show.blade.php から共通で利用する。 --}}
+     db_concerts/show.blade.php と mypage/attendances/show.blade.php から共通で利用する。
+     曲名のリンク先は既定でdatabase側の曲詳細だが、$songLinkResolver（fn($songModel) => string|null）を
+     渡すと呼び出し元でリンク先を差し替えられる（mypageでは自分の参加履歴一覧へ誘導するため）。 --}}
+@php
+    $songLinkResolver = $songLinkResolver ?? null;
+@endphp
 @if ($tourSetlists->count())
     @php
         $setlistsByRow = $tourSetlists->groupBy(fn($m) => $m->row ?? 1)->sortKeys();
@@ -123,7 +128,7 @@
                                         $songModel = $songs->find($data['song']);
                                         $title = !empty($alternativeTitle) ? $alternativeTitle : ($songModel->title ?? 'Unknown Song');
                                         $link = $songModel
-                                            ? url('/database/songs', $data['song'])
+                                            ? ($songLinkResolver ? $songLinkResolver($songModel) : url('/database/songs', $data['song']))
                                             : null;
                                     } else {
                                         $title = !empty($alternativeTitle) ? $alternativeTitle : $data['song'];

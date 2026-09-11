@@ -6,9 +6,10 @@
         <div class="container">
             @include('database._breadcrumb', ['breadcrumbs' => [
                 ['label' => 'My Page', 'url' => route('mypage.index')],
-                ['label' => 'ライブの参加記録を追加', 'url' => route('mypage.attendances.create')],
+                ['label' => 'セットリスト登録', 'url' => route('mypage.attendances.create')],
                 ['label' => $artist->name],
             ]])
+            <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">セットリスト登録</p>
             <h1 class="database-title" style="text-align: center;">{{ $artist->name }}</h1>
             <p class="database-subtitle" style="text-align: center;">ツアーを選択</p>
         </div>

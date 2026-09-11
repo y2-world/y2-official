@@ -143,6 +143,7 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
             Route::get('{attendance}', [AttendanceController::class, 'show'])->name('show');
         });
 
+        Route::get('stats/artist/{artistId}', [MyPageStatsController::class, 'artist'])->name('stats.artist');
         Route::get('stats/artist/{artistId}/stamps', [MyPageStatsController::class, 'stamps'])->name('stats.stamps');
     });
 });

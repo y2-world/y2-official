@@ -801,6 +801,10 @@ select {
     justify-content: flex-end;
 }
 
+.no-setlist-subtitle .setlist-subtitle-area {
+    display: none;
+}
+
 .fes-block {
     margin-bottom: 24px;
 }
@@ -2159,7 +2163,12 @@ h2 {
 
 .stats-table {
     width: 100%;
-    border-collapse: collapse;
+    background: white;
+    border-radius: 15px;
+    border-collapse: separate;
+    border-spacing: 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
 }
 
 .stats-table thead {
@@ -2195,6 +2204,10 @@ h2 {
 .stats-table tbody tr {
     border-bottom: 1px solid #f0f0f0;
     transition: background-color 0.2s ease;
+}
+
+.stats-table tbody tr:nth-child(odd) {
+    background-color: rgba(0, 0, 0, 0.03);
 }
 
 .stats-table tbody tr:hover {
@@ -2510,11 +2523,15 @@ h2 {
     }
 
     .stats-table thead th {
-        padding: 8px 4px !important;
-        font-size: 0.5rem !important;
-        line-height: 1.1;
+        padding: 12px 6px !important;
+        font-size: 0.55rem !important;
+        line-height: 1.3;
         letter-spacing: 0;
         word-break: break-word;
+    }
+
+    .stats-table thead th.rank-col {
+        white-space: nowrap;
     }
 
     .stats-table tbody td {
@@ -3316,6 +3333,7 @@ h2 {
     font-size: 0.95rem;
     overflow-wrap: break-word;
     word-break: break-word;
+    white-space: pre-line;
 }
 
 .select-card-meta {
@@ -3349,76 +3367,179 @@ h2 {
 }
 
 /* Setlist pattern card: expands inline to show the setlist */
-.setlist-pick-card {
+.pick-card {
+    display: block;
     background: white;
     border: 1px solid rgba(0, 0, 0, 0.06);
     border-radius: 14px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
     margin-bottom: 14px;
     overflow: hidden;
+    text-decoration: none;
+    color: #333;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
-.setlist-pick-header {
+.pick-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(102, 126, 234, 0.18);
+    border-color: rgba(102, 126, 234, 0.3);
+    color: #333;
+    text-decoration: none;
+}
+
+.pick-card .select-card-icon {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.pick-card-header {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 16px 18px;
-}
-
-.setlist-pick-toggle {
-    flex: 1 1 auto;
-    display: flex;
-    align-items: center;
-    gap: 12px;
     min-width: 0;
-    background: none;
-    border: none;
-    padding: 0;
-    text-align: left;
-    cursor: pointer;
-    color: inherit;
-    font: inherit;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.setlist-pick-toggle .select-card-icon {
-    background: linear-gradient(135deg, #a0a8e8 0%, #b399cf 100%);
+.pick-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
 }
 
-.setlist-pick-toggle[aria-expanded="true"] .select-card-icon {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.pick-card-grid .pick-card {
+    margin-bottom: 0;
 }
 
-.setlist-pick-toggle[aria-expanded="true"] .select-card-arrow {
-    transform: rotate(90deg);
+.setlist-pick-expand .fa-chevron-down {
+    color: #ccc;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.setlist-pick-expand[aria-expanded="true"] .fa-chevron-down {
+    transform: rotate(180deg);
     color: #667eea;
-}
-
-.setlist-pick-select {
-    flex: 0 0 auto;
-}
-
-.setlist-pick-select .btn {
-    white-space: nowrap;
-    font-size: 0.85rem;
 }
 
 .setlist-pick-body {
     border-top: 1px solid rgba(0, 0, 0, 0.06);
     padding: 20px 18px;
     background: #fafafe;
+    cursor: default;
+    font-size: 0.85rem;
+}
+
+.setlist-pick-confirm {
+    text-align: center;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.btn-pill {
+    display: inline-block;
+    padding: 10px 32px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.35);
+    color: white;
+    text-decoration: none;
+}
+
+.setlist-pick-body .setlist-subtitle-area {
+    display: none;
+}
+
+.setlist-pick-body .live-column-wrap {
+    margin: 0;
+    min-width: 0;
+    width: 100%;
+}
+
+.setlist-pick-body .live-column {
+    min-width: 0;
+}
+
+.setlist-pick-body .setlist-row {
+    flex-wrap: wrap;
 }
 
 .setlist-pick-body[hidden] {
     display: none;
 }
 
-@media (max-width: 576px) {
-    .setlist-pick-header {
-        flex-wrap: wrap;
-    }
+/* My Page attendance detail - setlist as cards */
+.setlist-card-section-label {
+    color: #999;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    margin: 24px 0 12px;
+}
 
-    .setlist-pick-select {
-        flex: 1 1 100%;
-        margin-left: 48px;
-    }
+.setlist-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.setlist-card {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+    padding: 10px 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+a.setlist-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(102, 126, 234, 0.18);
+    border-color: rgba(102, 126, 234, 0.3);
+    color: inherit;
+    text-decoration: none;
+}
+
+.setlist-card-number {
+    flex: 0 0 auto;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.setlist-card-title {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-weight: 600;
+    font-size: 0.75rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.setlist-card-meta {
+    flex: 0 0 auto;
+    font-size: 0.6rem;
+    color: #999;
 }

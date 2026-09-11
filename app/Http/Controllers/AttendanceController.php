@@ -19,11 +19,37 @@ class AttendanceController extends Controller
             ->with('dbSetlist.tour.artist');
 
         $artistId = $request->input('artist_id');
+        $filterArtist = null;
         if ($artistId) {
             $query->whereHas('dbSetlist.tour', fn($q) => $q->where('artist_id', $artistId));
+            $filterArtist = Artist::find($artistId);
         }
 
-        $attendances = $query->orderByDesc('attended_date')->paginate(20)->withQueryString();
+        $year = $request->input('year');
+        if ($year) {
+            $query->whereYear('attended_date', $year);
+        }
+
+        $songId = $request->input('song_id');
+        $song = null;
+        $songNumber = null;
+        if ($songId) {
+            $song = DbSong::find($songId);
+            if ($song) {
+                $songNumber = DbSong::where('artist_id', $song->artist_id)->where('id', '<=', $song->id)->count();
+            }
+            $matchingSetlistIds = DbSetlist::all()->filter(function (DbSetlist $setlist) use ($songId) {
+                foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
+                    if (isset($s['song']) && (int)$s['song'] === (int)$songId) {
+                        return true;
+                    }
+                }
+                return false;
+            })->pluck('id');
+            $query->whereIn('db_setlist_id', $matchingSetlistIds);
+        }
+
+        $attendances = $query->orderBy('attended_date')->paginate(20)->withQueryString();
 
         $artists = Artist::whereHas('tours', function ($q) {
             $q->whereHas('tourSetlists', function ($q2) {
@@ -33,7 +59,17 @@ class AttendanceController extends Controller
             });
         })->orderBy('name')->get();
 
-        return view('mypage.attendances.index', compact('attendances', 'artists', 'artistId'));
+        $years = Auth::guard('external')->user()
+            ->attendances()
+            ->whereNotNull('attended_date')
+            ->get()
+            ->pluck('attended_date')
+            ->map(fn ($date) => $date->format('Y'))
+            ->unique()
+            ->sort()
+            ->values();
+
+        return view('mypage.attendances.index', compact('attendances', 'artists', 'artistId', 'song', 'songNumber', 'filterArtist', 'years', 'year'));
     }
 
     // ステップ1: アーティストを選ぶ
@@ -56,10 +92,19 @@ class AttendanceController extends Controller
     }
 
     // ステップ3: そのツアー内のセットリストパターンを選ぶ
+    // パターンが1つしかない場合は選ぶまでもないので、そのまま入力フォームへ進める
     public function setlists($tourId)
     {
         $tour = DbConcert::findOrFail($tourId);
-        $tourSetlists = DbSetlist::where('tour_id', $tourId)->orderBy('order_no', 'asc')->get();
+        $tourSetlists = DbSetlist::where('tour_id', $tourId)
+            ->orderBy('row', 'asc')
+            ->orderBy('order_no', 'asc')
+            ->get();
+
+        if ($tourSetlists->count() === 1) {
+            return redirect()->route('mypage.attendances.form', $tourSetlists->first()->id);
+        }
+
         $songs = DbSong::orderBy('id', 'asc')->get();
 
         return view('mypage.attendances.setlists', compact('tour', 'tourSetlists', 'songs'));
@@ -70,7 +115,10 @@ class AttendanceController extends Controller
     {
         $dbSetlist = DbSetlist::with('tour.artist')->findOrFail($dbSetlistId);
 
-        return view('mypage.attendances.form', compact('dbSetlist'));
+        // 単発開催（date2が無い）の場合は参加日が一意に決まるため、date1を初期値にする
+        $defaultAttendedDate = !$dbSetlist->tour->date2 ? $dbSetlist->tour->date1 : null;
+
+        return view('mypage.attendances.form', compact('dbSetlist', 'defaultAttendedDate'));
     }
 
     public function store(Request $request)

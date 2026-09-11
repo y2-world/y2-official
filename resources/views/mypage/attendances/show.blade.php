@@ -9,7 +9,11 @@
                 ['label' => $attendance->dbSetlist->tour->title ?? '参加記録'],
             ]])
             <p class="database-subtitle" style="">
-                {{ $attendance->dbSetlist->tour->artist->name ?? '' }}
+                @if ($attendance->dbSetlist->tour->artist)
+                    <a href="{{ route('mypage.attendances.index', ['artist_id' => $attendance->dbSetlist->tour->artist_id]) }}" style="color: white; text-decoration: none;">
+                        {{ $attendance->dbSetlist->tour->artist->name }}
+                    </a>
+                @endif
             </p>
             <h1 class="database-title" style="">{{ $attendance->dbSetlist->tour->title ?? '' }}</h1>
             <p class="database-subtitle" style="">
@@ -25,8 +29,11 @@
     <div class="container database-year-content">
         <div class="row justify-content-center">
             <div class="col-xl-9">
+                @if (session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
                 <div class="setlist" style="width: 100%;">
-                    @include('db_concerts._setlist_rows', ['tourSetlists' => $tourSetlists, 'songs' => $songs])
+                    @include('mypage.attendances._setlist_cards', ['setlistModel' => $attendance->dbSetlist, 'songs' => $songs])
                 </div>
             </div>
         </div>
@@ -35,7 +42,11 @@
     <div class="container database-year-content" style="padding-top: 0;">
         <div class="row justify-content-center">
             <div class="col-xl-9">
-                <a href="{{ route('mypage.index') }}">← My Pageに戻る</a>
+                <div style="text-align: center; margin-top: 1rem;">
+                    <a href="{{ route('mypage.index') }}" style="color: #888; font-size: 0.9rem;">
+                        <i class="fa-solid fa-arrow-left"></i> Back to My Page
+                    </a>
+                </div>
             </div>
         </div>
     </div>

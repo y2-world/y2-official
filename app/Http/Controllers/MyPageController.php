@@ -44,6 +44,7 @@ class MyPageController extends Controller
                 $topSongs[] = [
                     'song_id' => $songId,
                     'title' => $song->title,
+                    'artist_id' => $artist?->id,
                     'artist_name' => $artist ? $artist->name : '不明',
                     'count' => $count,
                 ];
@@ -59,6 +60,36 @@ class MyPageController extends Controller
 
         $artists = Artist::whereIn('id', $setlists->pluck('tour.artist_id')->filter()->unique())->get();
 
-        return view('mypage.index', compact('attendances', 'overallStats', 'topSongs', 'artists'));
+        $artistStats = $attendances
+            ->filter(fn ($a) => $a->dbSetlist?->tour?->artist)
+            ->groupBy(fn ($a) => $a->dbSetlist->tour->artist_id)
+            ->map(function ($group) {
+                $artist = $group->first()->dbSetlist->tour->artist;
+                return [
+                    'id' => $artist->id,
+                    'name' => $artist->name,
+                    'show_count' => $group->count(),
+                ];
+            })
+            ->sortByDesc('show_count')
+            ->values();
+
+        $venueStats = $attendances
+            ->filter(fn ($a) => $a->venue)
+            ->groupBy('venue')
+            ->map(fn ($group, $venue) => (object) ['venue' => $venue, 'count' => $group->count()])
+            ->sortByDesc('count')
+            ->take(10)
+            ->values();
+
+        $yearStats = $attendances
+            ->filter(fn ($a) => $a->attended_date)
+            ->groupBy(fn ($a) => $a->attended_date->format('Y'))
+            ->map(fn ($group, $year) => (object) ['year' => $year, 'count' => $group->count()])
+            ->sortByDesc('count')
+            ->take(10)
+            ->values();
+
+        return view('mypage.index', compact('attendances', 'overallStats', 'topSongs', 'artists', 'artistStats', 'venueStats', 'yearStats'));
     }
 }
