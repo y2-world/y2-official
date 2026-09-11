@@ -110,3 +110,4 @@ Route::get('/lyrics/{id}', [LyricController::class, 'show'])->name('lyric.show')
 // Statistics routes
 Route::get('/stats', [App\Http\Controllers\StatsController::class, 'index'])->name('stats.index');
 Route::get('/stats/artist/{id}', [App\Http\Controllers\StatsController::class, 'getArtistTopSongs'])->name('stats.artist');
+Route::get('/stats/artist/{id}/stamps', [App\Http\Controllers\StatsController::class, 'getStampBook'])->name('stats.stamps');

@@ -1074,7 +1074,7 @@ h2 {
     }
 }
 
-@media (min-width: 1081px) {
+@media (min-width: 993px) {
     .mb-sns-nav {
         display: none;
     }
@@ -1146,7 +1146,7 @@ h2 {
     font-feature-settings: "liga";
 }
 
-@media (min-width: 1080px) {
+@media (min-width: 992px) {
     .sp {
         display: none !important;
     }
@@ -1156,13 +1156,13 @@ h2 {
     display: inline-flex;
 }
 
-@media (min-width: 1080px) {
+@media (min-width: 992px) {
     .sp-search-button {
         display: none !important;
     }
 }
 
-@media screen and (max-width: 1080px) {
+@media screen and (max-width: 991px) {
 
     h2 {
         text-align: center;
@@ -1675,7 +1675,7 @@ h2 {
     font-size: 13px;
 }
 
-@media (min-width: 1080px) {
+@media (min-width: 992px) {
     .song-search-suggestion {
         font-size: 14px;
     }
@@ -1836,8 +1836,8 @@ h2 {
     white-space: nowrap;
 }
 
-/* 770px-1080pxの範囲でテーブルが適切に表示されるようにする（.pc/.pc_venueの非表示境界と揃える） */
-@media screen and (min-width: 769px) and (max-width: 1080px) {
+/* 770px-991pxの範囲でテーブルが適切に表示されるようにする（.pc/.pc_venueの非表示境界と揃える） */
+@media screen and (min-width: 769px) and (max-width: 991px) {
     .database-year-content .table {
         table-layout: auto;
         width: 100%;
@@ -1921,12 +1921,12 @@ h2 {
     }
 }
 
-/* 770px-1080pxの範囲でヘッダーの曲名が表示されるようにする */
-@media screen and (min-width: 769px) and (max-width: 1080px) {
+/* 770px-991pxの範囲でヘッダーの曲名が表示されるようにする */
+@media screen and (min-width: 769px) and (max-width: 991px) {
     .database-title.pc {
         display: block !important;
     }
-    
+
     .database-title.sp {
         display: none !important;
     }
@@ -2926,5 +2926,245 @@ h2 {
     .db-tour-date {
         margin-bottom: 10px;
         margin-right: 0;
+    }
+}
+
+/* Stamp Book */
+.stamp-book-link-wrapper {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.stamp-book-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: white;
+    color: #764ba2;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stamp-book-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    color: #667eea;
+}
+
+.stamp-summary {
+    background: white;
+    border-radius: 15px;
+    padding: 25px 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.stamp-summary-count {
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.stamp-summary-done {
+    font-size: 2.2rem;
+    color: #667eea;
+}
+
+.stamp-summary-slash {
+    font-size: 1.4rem;
+    color: #ccc;
+    margin: 0 4px;
+}
+
+.stamp-summary-total {
+    font-size: 1.4rem;
+    color: #555;
+}
+
+.stamp-summary-unit {
+    font-size: 0.9rem;
+    color: #999;
+    margin-left: 8px;
+    font-weight: 400;
+}
+
+.stamp-summary-bar {
+    background: #eee;
+    border-radius: 10px;
+    height: 12px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.stamp-summary-bar-fill {
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+    transition: width 0.6s ease;
+}
+
+.stamp-summary-percentage {
+    font-size: 0.9rem;
+    color: #999;
+    font-weight: 600;
+}
+
+.stamp-summary-toggle.unique-tour-label {
+    justify-content: center;
+    margin-top: 16px;
+    white-space: normal;
+}
+
+.stamp-empty {
+    text-align: center;
+    color: white;
+    padding: 40px 0;
+}
+
+.stamp-book {
+    background: #f3ede1;
+    background-image:
+        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.02) 0px, rgba(0, 0, 0, 0.02) 1px, transparent 1px, transparent 3px);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 20px;
+}
+
+.stamp-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stamp-slot-frame {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border: 2px dashed #c9bfa8;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.stamp-slot-frame.is-tapped {
+    animation: stampTap 0.35s ease-out;
+}
+
+@keyframes stampTap {
+    0% {
+        transform: scale(1);
+    }
+    30% {
+        transform: scale(0.9);
+    }
+    55% {
+        transform: scale(1.08) rotate(-2deg);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.stamp-slot.is-stamped .stamp-slot-frame {
+    border-style: solid;
+    border-color: #b23b3b;
+    background: rgba(178, 59, 59, 0.06);
+}
+
+.stamp-slot.is-never-performed .stamp-slot-frame {
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(0, 0, 0, 0.05),
+        rgba(0, 0, 0, 0.05) 6px,
+        rgba(0, 0, 0, 0.015) 6px,
+        rgba(0, 0, 0, 0.015) 12px
+    );
+}
+
+.stamp-mark {
+    width: 78%;
+    height: 78%;
+    border: 3px solid #b23b3b;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #b23b3b;
+    transform: rotate(-14deg);
+    animation: stampIn 0.35s ease-out;
+    box-shadow: 0 0 0 3px rgba(178, 59, 59, 0.15) inset;
+}
+
+.stamp-mark-text {
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+}
+
+@keyframes stampIn {
+    0% {
+        transform: rotate(-14deg) scale(1.6);
+        opacity: 0;
+    }
+    70% {
+        transform: rotate(-14deg) scale(0.92);
+        opacity: 1;
+    }
+    100% {
+        transform: rotate(-14deg) scale(1);
+    }
+}
+
+.stamp-slot-title {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.75rem;
+    text-align: center;
+    color: #555;
+    line-height: 1.3;
+    word-break: break-word;
+    text-decoration: none;
+}
+
+.stamp-slot-title:hover {
+    color: #667eea;
+}
+
+.stamp-slot.is-stamped .stamp-slot-title {
+    color: #333;
+    font-weight: 600;
+}
+
+.stamp-slot.is-stamped .stamp-slot-title:hover {
+    color: #764ba2;
+}
+
+@media (max-width: 768px) {
+    .stamp-book {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 14px;
+        padding: 20px;
+    }
+
+    .stamp-mark-text {
+        font-size: 0.7rem;
+    }
+
+    .stamp-slot-title {
+        font-size: 0.7rem;
     }
 }

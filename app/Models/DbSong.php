@@ -19,6 +19,11 @@ class DbSong extends Model
         return $this->belongsTo(Artist::class);
     }
 
+    public function slSongs()
+    {
+        return $this->hasMany(SlSong::class);
+    }
+
     public function getAlbumFromTracklistAttribute()
     {
         $songId = $this->id;

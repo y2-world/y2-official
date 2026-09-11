@@ -16,6 +16,12 @@
                     <h1 class="stats-title">{{ $artist->name }}</h1>
                     <p class="stats-subtitle">Artist Statistics</p>
 
+                    <div class="stamp-book-link-wrapper">
+                        <a href="{{ route('stats.stamps', $artist->id) }}" class="stamp-book-link">
+                            <i class="fas fa-stamp"></i> View Live Stamp Book
+                        </a>
+                    </div>
+
                     <!-- Overall Stats Cards -->
                     <div class="row stats-cards">
                         <div class="col-md-6 col-sm-6 mb-4">

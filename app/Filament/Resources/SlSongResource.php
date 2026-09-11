@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SlSongResource\Pages;
+use App\Models\DbSong;
 use App\Models\SlSong;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -39,6 +40,20 @@ class SlSongResource extends Resource
                     ->searchable()
                     ->preload()
                     ->native(false)
+                    ->live()
+                    ->nullable(),
+
+                Forms\Components\Select::make('db_song_id')
+                    ->label('database楽曲との紐付け')
+                    ->helperText('スタンプ帳でこの曲がライブ演奏済みと判定されるために必要です')
+                    ->options(function (Forms\Get $get) {
+                        $artistId = $get('artist_id');
+                        if (!$artistId) return [];
+                        return DbSong::where('artist_id', $artistId)->orderBy('title')->pluck('title', 'id');
+                    })
+                    ->searchable()
+                    ->preload()
+                    ->native(false)
                     ->nullable(),
             ]);
     }
@@ -58,6 +73,12 @@ class SlSongResource extends Resource
                     ->label('アーティスト')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\IconColumn::make('db_song_id')
+                    ->label('DB紐付け')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check-circle')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->getStateUsing(fn(SlSong $record) => $record->db_song_id !== null),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('作成日')
                     ->dateTime('Y.m.d H:i')
@@ -74,6 +95,15 @@ class SlSongResource extends Resource
                     ->relationship('artist', 'name')
                     ->label('アーティスト')
                     ->searchable(),
+                Tables\Filters\TernaryFilter::make('db_song_id')
+                    ->label('DB紐付け状態')
+                    ->nullable()
+                    ->trueLabel('紐付け済み')
+                    ->falseLabel('未紐付け')
+                    ->queries(
+                        true: fn($query) => $query->whereNotNull('db_song_id'),
+                        false: fn($query) => $query->whereNull('db_song_id'),
+                    ),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

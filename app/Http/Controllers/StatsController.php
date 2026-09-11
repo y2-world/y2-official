@@ -756,4 +756,90 @@ class StatsController extends Controller
             'totalSongs'
         ));
     }
+
+    // アーティストのdatabase楽曲カタログを台紙にした「スタンプ帳」。
+    // 各曲は、紐付いたsl_songが（演奏したアーティスト名義を問わず）実際にどこかのライブで
+    // 演奏された記録（SlSetlist）があれば「済」。ソロ名義でのバンド曲演奏なども実績に含む
+    // （曲の詳細ページ SlSongController@show と同じ考え方）。
+    public function getStampBook($artistId)
+    {
+        $artist = Artist::find($artistId);
+        if (!$artist) {
+            abort(404);
+        }
+
+        $today = now()->toDateString();
+
+        // このアーティストのdatabase楽曲IDのうち、実際にライブ演奏された記録があるものを集める
+        $playedSlSongIds = [];
+        $setlists = SlSetlist::where('date', '<=', $today)->get();
+
+        foreach ($setlists as $setlist) {
+            $allSongs = array_merge(
+                $setlist->setlist ?? [],
+                $setlist->encore ?? [],
+                $this->flattenFesSongs($setlist->fes_setlist ?? []),
+                $this->flattenFesSongs($setlist->fes_encore ?? [])
+            );
+
+            foreach ($allSongs as $songData) {
+                if (isset($songData['song']) && is_numeric($songData['song'])) {
+                    $playedSlSongIds[(int)$songData['song']] = true;
+                }
+            }
+        }
+
+        $slSongToDbSongId = SlSong::where('artist_id', $artistId)
+            ->whereNotNull('db_song_id')
+            ->pluck('db_song_id', 'id');
+
+        $playedDbSongIds = [];
+        foreach ($slSongToDbSongId as $slSongId => $dbSongId) {
+            if (isset($playedSlSongIds[$slSongId])) {
+                $playedDbSongIds[(int)$dbSongId] = true;
+            }
+        }
+
+        // 公式ツアー記録（db_setlists）上、一度でも演奏された曲IDを集める。
+        // ここに含まれない曲は「ライブでそもそも未演奏」として台紙自体をグレー表示する。
+        $songArtistIds = DbSong::pluck('artist_id', 'id');
+        $tourIds = DbConcert::whereIn('artist_id', $this->crossoverTourArtistIds($artistId))->pluck('id');
+        $tourSetlists = DbSetlist::whereIn('tour_id', $tourIds)->get();
+        $everPerformedDbSongIds = [];
+        foreach ($tourSetlists as $setlist) {
+            foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
+                if (isset($s['song']) && is_numeric($s['song']) && ($songArtistIds[(int)$s['song']] ?? null) === (int)$artistId) {
+                    $everPerformedDbSongIds[(int)$s['song']] = true;
+                }
+            }
+        }
+
+        $dbSongs = DbSong::where('artist_id', $artistId)->orderBy('id')->get();
+        $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds) {
+            return [
+                'song_id' => $song->id,
+                'title' => $song->title,
+                'done' => isset($playedDbSongIds[$song->id]),
+                'never_performed' => !isset($everPerformedDbSongIds[$song->id]),
+            ];
+        });
+
+        $totalCount = $stamps->count();
+        $doneCount = $stamps->where('done', true)->count();
+        $percentage = $totalCount > 0 ? round(($doneCount / $totalCount) * 100, 1) : 0;
+
+        // ライブでそもそも演奏されたことがある曲だけを分母にした場合の達成率（表示切替用）
+        $performedCount = $stamps->where('never_performed', false)->count();
+        $performedPercentage = $performedCount > 0 ? round(($doneCount / $performedCount) * 100, 1) : 0;
+
+        return view('stats.stamps', compact(
+            'artist',
+            'stamps',
+            'totalCount',
+            'doneCount',
+            'percentage',
+            'performedCount',
+            'performedPercentage'
+        ));
+    }
 }
