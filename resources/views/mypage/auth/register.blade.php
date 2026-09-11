@@ -40,11 +40,11 @@
                         <label for="password_confirmation" class="form-label">パスワード（確認）</label>
                         <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
                     </div>
-                    <button type="submit" class="btn btn-outline-dark w-100">登録する</button>
+                    <button type="submit" class="btn btn-outline-dark w-100">登録</button>
                 </form>
 
                 <p class="text-center" style="margin-top: 20px;">
-                    すでにアカウントをお持ちの方は <a href="{{ route('mypage.login') }}">ログイン</a>
+                    すでにアカウントをお持ちの方は <a href="{{ route('mypage.login') }}" style="color: #667eea;">ログイン</a>
                 </p>
             </div>
         </div>
