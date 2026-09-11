@@ -9,7 +9,12 @@
         <div class="row justify-content-center">
             <div class="col-xl-10">
                 <div class="element js-fadein">
-                    <h1 class="stats-title">My Page</h1>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <h1 class="stats-title" style="margin-bottom: 0;">My Page</h1>
+                        <a href="{{ route('mypage.settings') }}" title="アカウント設定" style="color: inherit;">
+                            <i class="fa-solid fa-gear"></i>
+                        </a>
+                    </div>
                     <p class="stats-subtitle">参加したライブの記録</p>
 
                     <!-- Overall Stats Cards -->
@@ -242,6 +247,23 @@
                         </div>
                     </div>
 
+                    @if ($artists->isNotEmpty())
+                        <div class="stats-section visible">
+                            <div class="section-title-wrapper">
+                                <h2 class="section-title">
+                                    <i class="fas fa-stamp"></i> Live Stamp Book
+                                </h2>
+                            </div>
+                            <div class="stamp-book-link-wrapper" style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-start;">
+                                @foreach ($artists as $artist)
+                                    <a href="{{ route('mypage.stats.stamps', $artist->id) }}" class="stamp-book-link">
+                                        <i class="fas fa-stamp"></i> {{ $artist->name }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
                     <!-- Top Venues Section -->
                     <div class="stats-section visible">
                         <h2 class="section-title">
@@ -326,23 +348,6 @@
                             </table>
                         </div>
                     </div>
-
-                    @if ($artists->isNotEmpty())
-                        <div class="stats-section visible">
-                            <div class="section-title-wrapper">
-                                <h2 class="section-title">
-                                    <i class="fas fa-stamp"></i> Live Stamp Book
-                                </h2>
-                            </div>
-                            <div class="stamp-book-link-wrapper" style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-start;">
-                                @foreach ($artists as $artist)
-                                    <a href="{{ route('mypage.stats.stamps', $artist->id) }}" class="stamp-book-link">
-                                        <i class="fas fa-stamp"></i> {{ $artist->name }}
-                                    </a>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
 
                     <div style="text-align: center; margin-top: 40px;">
                         <form method="POST" action="{{ route('mypage.logout') }}">

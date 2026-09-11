@@ -67,4 +67,45 @@ class ExternalAuthController extends Controller
 
         return redirect()->route('mypage.login');
     }
+
+    public function showSettings()
+    {
+        return view('mypage.settings');
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::guard('external')->user();
+
+        $data = $request->validateWithBag('profile', [
+            'name' => ['nullable', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:external_users,email,' . $user->id],
+        ]);
+
+        $user->update($data);
+
+        return redirect()->route('mypage.settings')->with('success', 'プロフィールを更新しました。');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $user = Auth::guard('external')->user();
+
+        $request->validateWithBag('password', [
+            'current_password' => ['required'],
+            'password' => ['required', 'confirmed', Password::min(8)],
+        ]);
+
+        if (! Hash::check($request->input('current_password'), $user->password)) {
+            return back()->withErrors([
+                'current_password' => '現在のパスワードが正しくありません。',
+            ], 'password');
+        }
+
+        $user->update([
+            'password' => Hash::make($request->input('password')),
+        ]);
+
+        return redirect()->route('mypage.settings')->with('success', 'パスワードを更新しました。');
+    }
 }

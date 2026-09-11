@@ -178,6 +178,27 @@
                         </div>
                     </div>
 
+                    @php
+                        $stampBookArtists = collect($artistStats)->filter(fn($a) => isset($artistIdsWithDbSongs[$a['id']]));
+                    @endphp
+                    @if ($stampBookArtists->isNotEmpty())
+                        <!-- Live Stamp Book Section -->
+                        <div class="stats-section visible">
+                            <div class="section-title-wrapper">
+                                <h2 class="section-title">
+                                    <i class="fas fa-stamp"></i> Live Stamp Book
+                                </h2>
+                            </div>
+                            <div class="stamp-book-link-wrapper" style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-start;">
+                                @foreach ($stampBookArtists as $artistStat)
+                                    <a href="{{ route('stats.stamps', $artistStat['id']) }}" class="stamp-book-link">
+                                        <i class="fas fa-stamp"></i> {{ $artistStat['name'] }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
                     <!-- Top Venues Section -->
                     <div class="stats-section visible">
                         <h2 class="section-title">

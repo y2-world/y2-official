@@ -145,5 +145,9 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
 
         Route::get('stats/artist/{artistId}', [MyPageStatsController::class, 'artist'])->name('stats.artist');
         Route::get('stats/artist/{artistId}/stamps', [MyPageStatsController::class, 'stamps'])->name('stats.stamps');
+
+        Route::get('settings', [ExternalAuthController::class, 'showSettings'])->name('settings');
+        Route::put('settings/profile', [ExternalAuthController::class, 'updateProfile'])->name('settings.profile');
+        Route::put('settings/password', [ExternalAuthController::class, 'updatePassword'])->name('settings.password');
     });
 });

@@ -33,10 +33,20 @@
                 <div style="display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center;">
                     <input type="date" name="attended_date" value="{{ $attendance->attended_date?->format('Y-m-d') }}" style="border-radius: 6px; border: none; padding: 4px 8px; font-size: 0.85rem;">
                     <input type="text" name="venue" value="{{ $attendance->venue }}" placeholder="会場" style="border-radius: 6px; border: none; padding: 4px 8px; font-size: 0.85rem;">
-                    <button type="submit" style="background: none; border: none; color: white; cursor: pointer; padding: 4px;" title="保存">
-                        <i class="fa-solid fa-check"></i>
-                    </button>
+                    <span style="display: inline-flex; align-items: center; gap: 8px; flex-wrap: nowrap; flex-shrink: 0;">
+                        <button type="submit" style="background: none; border: none; color: white; cursor: pointer; padding: 4px;" title="保存">
+                            <i class="fa-solid fa-check"></i>
+                        </button>
+                        <a href="#" style="color: white; cursor: pointer; padding: 4px;" title="この参加記録を削除" onclick="event.preventDefault(); if (confirm('この参加記録を削除しますか？')) { document.getElementById('attendanceDeleteForm').submit(); }">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </span>
                 </div>
+            </form>
+
+            <form method="POST" action="{{ route('mypage.attendances.destroy', $attendance) }}" id="attendanceDeleteForm" style="display: none;">
+                @csrf
+                @method('DELETE')
             </form>
 
             <script>

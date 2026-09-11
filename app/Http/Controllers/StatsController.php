@@ -60,6 +60,10 @@ class StatsController extends Controller
         $yearStats = $this->getPersonalYearStats();
         $monthStats = $this->getPersonalMonthStats();
 
+        // Stamp BookはDbSong（database側の楽曲マスタ）を台紙にするため、
+        // 楽曲が1件も登録されていないアーティストは表示対象から除く
+        $artistIdsWithDbSongs = DbSong::select('artist_id')->distinct()->pluck('artist_id')->flip();
+
         $tab = 'personal';
 
         return view('stats.index', compact(
@@ -70,6 +74,7 @@ class StatsController extends Controller
             'venueStats',
             'yearStats',
             'monthStats',
+            'artistIdsWithDbSongs',
             'tab'
         ));
     }
