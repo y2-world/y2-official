@@ -9,7 +9,8 @@
                 ['label' => $attendance->dbSetlist->tour->title ?? '参加記録'],
             ]])
             <p class="database-subtitle" style="">
-                @if ($attendance->dbSetlist->tour->artist)
+                {{-- type=0（ツアー）・1（単発ライブ）以外は複数アーティスト出演のフェス等のため、単独アーティスト名は表示しない --}}
+                @if ($attendance->dbSetlist->tour->artist && !in_array((int)$attendance->dbSetlist->tour->type, [2, 3, 4], true))
                     <a href="{{ route('mypage.attendances.index', ['artist_id' => $attendance->dbSetlist->tour->artist_id]) }}" style="color: white; text-decoration: none;">
                         {{ $attendance->dbSetlist->tour->artist->name }}
                     </a>
@@ -37,7 +38,7 @@
                         <button type="submit" style="background: none; border: none; color: white; cursor: pointer; padding: 4px;" title="保存">
                             <i class="fa-solid fa-check"></i>
                         </button>
-                        <a href="#" style="color: white; cursor: pointer; padding: 4px;" title="この参加記録を削除" onclick="event.preventDefault(); if (confirm('この参加記録を削除しますか？')) { document.getElementById('attendanceDeleteForm').submit(); }">
+                        <a href="#" style="color: white; cursor: pointer; padding: 4px;" title="このセットリストを削除" onclick="event.preventDefault(); if (confirm('このセットリストを削除しますか？')) { document.getElementById('attendanceDeleteForm').submit(); }">
                             <i class="fa-solid fa-trash"></i>
                         </a>
                     </span>

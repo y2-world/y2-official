@@ -22,39 +22,62 @@ class MyPageController extends Controller
         $totalVenues = $attendances->pluck('venue')->filter()->unique()->count();
 
         $attendedSetlistIds = $attendances->pluck('db_setlist_id')->unique();
-        $setlists = DbSetlist::whereIn('id', $attendedSetlistIds)->get();
+        $setlists = DbSetlist::whereIn('id', $attendedSetlistIds)->with('tour')->get();
 
         $songPlayCounts = [];
+        // 同名ツアーを1回だけカウントする版：[songId => [tourTitle1, tourTitle2, ...]]
+        $songTourTitles = [];
         foreach ($setlists as $setlist) {
             // 1つのセットリスト（＝1回のライブ参加）内で同じ曲が複数回演奏されても1回とカウントする
             $songsInThisSetlist = [];
+            $tourTitle = $setlist->tour->title ?? 'Unknown';
             foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
                 if (isset($s['song']) && is_numeric($s['song'])) {
                     $songId = (int)$s['song'];
                     if (!in_array($songId, $songsInThisSetlist, true)) {
                         $songsInThisSetlist[] = $songId;
                         $songPlayCounts[$songId] = ($songPlayCounts[$songId] ?? 0) + 1;
+
+                        if (!isset($songTourTitles[$songId])) {
+                            $songTourTitles[$songId] = [];
+                        }
+                        if (!in_array($tourTitle, $songTourTitles[$songId], true)) {
+                            $songTourTitles[$songId][] = $tourTitle;
+                        }
                     }
                 }
             }
         }
         arsort($songPlayCounts);
 
-        $songs = DbSong::whereIn('id', array_keys($songPlayCounts))->get()->keyBy('id');
-        $topSongs = [];
-        foreach ($songPlayCounts as $songId => $count) {
-            $song = $songs->get($songId);
-            if ($song) {
-                $artist = $song->artist;
-                $topSongs[] = [
-                    'song_id' => $songId,
-                    'title' => $song->title,
-                    'artist_id' => $artist?->id,
-                    'artist_name' => $artist ? $artist->name : '不明',
-                    'count' => $count,
-                ];
-            }
+        $songPlayCountsUnique = [];
+        foreach ($songTourTitles as $songId => $tourTitles) {
+            $songPlayCountsUnique[$songId] = count($tourTitles);
         }
+        arsort($songPlayCountsUnique);
+
+        $songs = DbSong::whereIn('id', array_keys($songPlayCounts))->get()->keyBy('id');
+
+        $buildTopSongs = function (array $counts) use ($songs) {
+            $result = [];
+            foreach ($counts as $songId => $count) {
+                $song = $songs->get($songId);
+                if ($song) {
+                    $artist = $song->artist;
+                    $result[] = [
+                        'song_id' => $songId,
+                        'title' => $song->title,
+                        'artist_id' => $artist?->id,
+                        'artist_name' => $artist ? $artist->name : '不明',
+                        'count' => $count,
+                    ];
+                }
+            }
+            return $result;
+        };
+
+        $topSongs = $buildTopSongs($songPlayCounts);
+        $topSongsUnique = $buildTopSongs($songPlayCountsUnique);
 
         $overallStats = [
             'total_shows' => $totalShows,
@@ -66,7 +89,8 @@ class MyPageController extends Controller
         $artists = Artist::whereIn('id', $setlists->pluck('tour.artist_id')->filter()->unique())->get();
 
         $artistStats = $attendances
-            ->filter(fn ($a) => $a->dbSetlist?->tour?->artist)
+            // type=0（ツアー）・1（単発ライブ）以外は複数アーティスト出演のフェス等のため、単独アーティストの参加数には含めない
+            ->filter(fn ($a) => $a->dbSetlist?->tour?->artist && !in_array((int)$a->dbSetlist->tour->type, [2, 3, 4], true))
             ->groupBy(fn ($a) => $a->dbSetlist->tour->artist_id)
             ->map(function ($group) {
                 $artist = $group->first()->dbSetlist->tour->artist;
@@ -95,6 +119,6 @@ class MyPageController extends Controller
             ->take(10)
             ->values();
 
-        return view('mypage.index', compact('attendances', 'overallStats', 'topSongs', 'artists', 'artistStats', 'venueStats', 'yearStats'));
+        return view('mypage.index', compact('attendances', 'overallStats', 'topSongs', 'topSongsUnique', 'artists', 'artistStats', 'venueStats', 'yearStats'));
     }
 }

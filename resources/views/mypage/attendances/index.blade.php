@@ -137,10 +137,13 @@
                     </thead>
                     <tbody>
                         @foreach ($attendances as $attendance)
+                            @php
+                                $isFes = in_array((int)($attendance->dbSetlist?->tour?->type ?? 0), [2, 3, 4], true);
+                            @endphp
                             <tr>
                                 <td></td>
                                 <td>{{ $attendance->attended_date?->format('Y.m.d') ?? '-' }}</td>
-                                @if ($attendance->dbSetlist?->tour?->artist)
+                                @if ($attendance->dbSetlist?->tour?->artist && !$isFes)
                                     <td class="pc">
                                         <a href="{{ route('mypage.attendances.index', ['artist_id' => $attendance->dbSetlist->tour->artist_id]) }}">{{ $attendance->dbSetlist->tour->artist->name }}</a>
                                     </td>
@@ -174,10 +177,13 @@
                     </thead>
                     <tbody>
                         @foreach ($attendances as $index => $attendance)
+                            @php
+                                $isFes = in_array((int)($attendance->dbSetlist?->tour?->type ?? 0), [2, 3, 4], true);
+                            @endphp
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $attendance->attended_date?->format('Y.m.d') ?? '-' }}</td>
-                                @if ($attendance->dbSetlist?->tour?->artist)
+                                @if ($attendance->dbSetlist?->tour?->artist && !$isFes)
                                     <td class="sp">
                                         <a href="{{ route('mypage.attendances.index', ['artist_id' => $attendance->dbSetlist->tour->artist_id]) }}">{{ $attendance->dbSetlist->tour->artist->name }}</a>
                                         /
