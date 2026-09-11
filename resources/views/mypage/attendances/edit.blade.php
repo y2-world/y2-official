@@ -42,7 +42,7 @@
                         <label for="venue" class="form-label">会場</label>
                         <input type="text" class="form-control" id="venue" name="venue" value="{{ old('venue', $attendance->venue) }}">
                     </div>
-                    <button type="submit" class="btn btn-outline-dark w-100">更新する</button>
+                    <button type="submit" class="btn btn-outline-dark w-100">更新</button>
                 </form>
             </div>
         </div>

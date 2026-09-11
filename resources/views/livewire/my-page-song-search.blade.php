@@ -59,6 +59,7 @@
                 style="padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #eee; color: black; text-align: left;"
                 @mouseenter="selectedIndex = index">
                 <span x-text="song.title"></span>
+                <span x-show="song.artist" x-text="' - ' + song.artist" style="color: #666;"></span>
             </div>
         </template>
     </div>

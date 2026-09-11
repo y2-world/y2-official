@@ -12,10 +12,6 @@
                     <h1 class="stats-title">My Page</h1>
                     <p class="stats-subtitle">参加したライブの記録</p>
 
-                    @if (session('success'))
-                        <div class="alert alert-success">{{ session('success') }}</div>
-                    @endif
-
                     <!-- Overall Stats Cards -->
                     <div class="row stats-cards">
                         <div class="col-md-3 col-sm-6 mb-4">

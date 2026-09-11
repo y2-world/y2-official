@@ -8,11 +8,7 @@
                 ['label' => $song->title],
             ]])
             <p class="database-subtitle">#{{ $songNumber }}</p>
-            <h1 class="database-title sp" style="cursor: pointer;"
-                onclick="document.getElementById('spSearchFormSetlistSong').style.display='block'; document.querySelector('.database-title.sp').style.display='none';">
-                {{ $song->title }}
-            </h1>
-            <h1 class="database-title pc" style="">{{ $song->title }}</h1>
+            <h1 class="database-title" style="">{{ $song->title }}</h1>
 
             <div style="font-size: 1rem; color: rgba(255, 255, 255, 0.9); line-height: 1.8;">
                 @if ($song->artist)
@@ -25,17 +21,26 @@
                 @endif
             </div>
 
+            {{-- 虫眼鏡アイコン（SP表示のみ、見出しブロックの高さに影響しない絶対配置） --}}
+            <button type="button" id="spSearchButtonSetlistSong" class="sp sp-toggle-search" aria-expanded="false" onclick="toggleSpSearch('spSearchFormSetlistSong', 'spSearchButtonSetlistSong')" style="position: absolute; bottom: 8px; right: 8px; background: none; border: none; color: white; cursor: pointer; padding: 4px;">
+                <i class="fa-solid fa-magnifying-glass sp-toggle-search-icon" style="font-size: 16px;"></i>
+                <i class="fa-solid fa-xmark sp-toggle-close-icon" style="font-size: 16px;"></i>
+            </button>
+
+            <script>
+            function toggleSpSearch(formId, buttonId) {
+                var form = document.getElementById(formId);
+                var button = document.getElementById(buttonId);
+                var isOpen = button.getAttribute('aria-expanded') === 'true';
+
+                form.style.display = isOpen ? 'none' : 'block';
+                button.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+            }
+            </script>
+
             {{-- 検索フォーム（SP表示） --}}
             <div class="sp" id="spSearchFormSetlistSong" style="margin-top: 10px; display: none;">
-                <div>
-                    @livewire('song-search')
-                    {{-- 閉じるボタン --}}
-                    <div style="text-align: center; margin-top: 15px;">
-                        <button type="button" onclick="document.getElementById('spSearchFormSetlistSong').style.display='none'; document.querySelector('.database-title.sp').style.display='block';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;">
-                            <i class="fa-solid fa-xmark" style="font-size: 16px;"></i>
-                        </button>
-                    </div>
-                </div>
+                @livewire('song-search')
             </div>
 
             {{-- 検索フォーム（PC表示のみ） --}}

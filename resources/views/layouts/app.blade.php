@@ -137,6 +137,26 @@
 <div class="header_space"></div>
 @yield('content')
 
+@if (session('success'))
+    <div id="appToast" class="app-toast">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>{{ session('success') }}</span>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var toast = document.getElementById('appToast');
+        if (!toast) return;
+        requestAnimationFrame(function () {
+            toast.classList.add('show');
+        });
+        setTimeout(function () {
+            toast.classList.remove('show');
+            setTimeout(function () { toast.remove(); }, 300);
+        }, 3000);
+    });
+    </script>
+@endif
+
 <!-- JS -->
 <script src='https://code.jquery.com/jquery-3.6.4.min.js'></script>
 <script src="{{ asset('/js/main.js') }}"></script>

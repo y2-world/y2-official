@@ -3,39 +3,71 @@
 
 @section('content')
     <div class="database-hero database-hero--nav">
-        <div class="container">
+        <div class="container" style="position: relative;">
             @if ($song)
+                {{-- 曲単位の絞り込み：sl_songs/show.blade.php と全く同じシンプルな構造 --}}
                 @include('database._breadcrumb', ['breadcrumbs' => [
                     ['label' => 'My Page', 'url' => route('mypage.index')],
                     ['label' => $song->title],
                 ]])
-            @endif
-            <div class="setlists-header-row">
-                <div style="flex-shrink: 0;">
-                    @if ($song)
-                        <p class="database-subtitle" style="margin: 0;">#{{ $songNumber }}</p>
-                        <h1 class="database-title sp" style="cursor: pointer;"
-                            onclick="document.getElementById('spSearchFormMyPageSong').style.display='block'; document.querySelector('.database-title.sp').style.display='none';">
-                            {{ $song->title }}
-                        </h1>
-                        <h1 class="database-title pc" style="">{{ $song->title }}</h1>
-                        @if ($song->artist)
-                            <p class="database-subtitle" style="margin: 4px 0 0;">
-                                <a href="{{ route('mypage.stats.artist', $song->artist_id) }}" style="color: inherit;">{{ $song->artist->name }}</a>
-                            </p>
-                        @endif
-                    @elseif ($filterArtist)
-                        <h1 class="database-title" style="white-space: nowrap;">{{ $filterArtist->name }}</h1>
-                        <p class="database-subtitle" style="margin: 4px 0 0;">すべてのセットリスト</p>
-                    @elseif ($year)
-                        <h1 class="database-title" style="white-space: nowrap;">{{ $year }}</h1>
-                        <p class="database-subtitle" style="margin: 4px 0 0;">この年のすべてのセットリスト</p>
-                    @else
-                        <h1 class="database-title" style="white-space: nowrap;">My Live Attendances</h1>
-                        <p class="database-subtitle" style="margin: 4px 0 0;">すべてのセットリスト</p>
+                @if ($songNumber)
+                    <p class="database-subtitle">#{{ $songNumber }}</p>
+                @endif
+                <h1 class="database-title" style="">{{ $song->title }}</h1>
+
+                <div style="font-size: 1rem; color: rgba(255, 255, 255, 0.9); line-height: 1.8;">
+                    @if ($song->artist)
+                        <div style="">
+                            <a href="{{ route('mypage.attendances.index', ['artist_id' => $song->artist_id]) }}"
+                                style="color: white; text-decoration: underline;">
+                                {{ $song->artist->name }}
+                            </a>
+                        </div>
                     @endif
                 </div>
-                @unless ($song)
+
+                {{-- 虫眼鏡アイコン（SP表示のみ、見出しブロックの高さに影響しない絶対配置） --}}
+                <button type="button" id="spSearchButtonMyPageSong" class="sp sp-toggle-search" aria-expanded="false" onclick="toggleSpSearch('spSearchFormMyPageSong', 'spSearchButtonMyPageSong')" style="position: absolute; bottom: 8px; right: 8px; background: none; border: none; color: white; cursor: pointer; padding: 4px;">
+                    <i class="fa-solid fa-magnifying-glass sp-toggle-search-icon" style="font-size: 16px;"></i>
+                    <i class="fa-solid fa-xmark sp-toggle-close-icon" style="font-size: 16px;"></i>
+                </button>
+
+                <script>
+                function toggleSpSearch(formId, buttonId) {
+                    var form = document.getElementById(formId);
+                    var button = document.getElementById(buttonId);
+                    var isOpen = button.getAttribute('aria-expanded') === 'true';
+
+                    form.style.display = isOpen ? 'none' : 'block';
+                    button.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+                }
+                </script>
+
+                {{-- 検索フォーム（SP表示） --}}
+                <div class="sp" id="spSearchFormMyPageSong" style="margin-top: 10px; display: none;">
+                    @livewire('my-page-song-search')
+                </div>
+
+                {{-- 検索フォーム（PC表示のみ） --}}
+                <div class="database-search pc song-search-top-right">
+                    <div>
+                        @livewire('my-page-song-search')
+                    </div>
+                </div>
+            @else
+                <div class="setlists-header-row">
+                    <div style="flex-shrink: 0;">
+                        @if ($filterArtist)
+                            <h1 class="database-title" style="white-space: nowrap;">{{ $filterArtist->name }}</h1>
+                            <p class="database-subtitle" style="margin: 4px 0 0;">すべてのセットリスト</p>
+                        @elseif ($year)
+                            <h1 class="database-title" style="white-space: nowrap;">{{ $year }}</h1>
+                            <p class="database-subtitle" style="margin: 4px 0 0;">この年のすべてのセットリスト</p>
+                        @else
+                            <h1 class="database-title" style="white-space: nowrap;">My Live Attendances</h1>
+                            <p class="database-subtitle" style="margin: 4px 0 0;">すべてのセットリスト</p>
+                        @endif
+                    </div>
                     <div class="header-selects" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; overflow-x: auto; max-width: 100%;">
                         {{-- 虫眼鏡アイコン（SP表示のみ） --}}
                         <button type="button" id="spSearchButtonMyAttendances" class="sp" onclick="var form = document.getElementById('spSearchFormMyAttendances'); var icon = this.querySelector('i'); if (form.style.display === 'none' || form.style.display === '') { form.style.display='block'; icon.className='fa-solid fa-xmark'; } else { form.style.display='none'; icon.className='fa-solid fa-magnifying-glass'; }" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
@@ -55,35 +87,13 @@
                         </select>
                     </div>
                     <div class="setlists-search-pc" style="min-width: 320px; position: relative; overflow: visible; flex-shrink: 0; display: none;">
-                        @livewire('my-page-song-search', ['artistId' => $artistId])
-                    </div>
-                @endunless
-            </div>
-
-            @if ($song)
-                {{-- 検索フォーム（SP表示） --}}
-                <div class="sp" id="spSearchFormMyPageSong" style="margin-top: 10px; display: none;">
-                    <div>
-                        @livewire('my-page-song-search', ['artistId' => $song->artist_id])
-                        {{-- 閉じるボタン --}}
-                        <div style="text-align: center; margin-top: 15px;">
-                            <button type="button" onclick="document.getElementById('spSearchFormMyPageSong').style.display='none'; document.querySelector('.database-title.sp').style.display='block';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;">
-                                <i class="fa-solid fa-xmark" style="font-size: 16px;"></i>
-                            </button>
-                        </div>
+                        @livewire('my-page-song-search')
                     </div>
                 </div>
 
-                {{-- 検索フォーム（PC表示のみ） --}}
-                <div class="database-search pc song-search-top-right">
-                    <div>
-                        @livewire('my-page-song-search', ['artistId' => $song->artist_id])
-                    </div>
-                </div>
-            @else
                 {{-- 検索フォーム（SP表示） --}}
                 <div class="sp" id="spSearchFormMyAttendances" style="margin-top: 15px; display: none;">
-                    @livewire('my-page-song-search', ['artistId' => $artistId])
+                    @livewire('my-page-song-search')
                 </div>
             @endif
         </div>
@@ -196,6 +206,28 @@
                 </table>
             @endif
             {{ $attendances->links() }}
+        @endif
+
+        @if ($song)
+            {{-- 前後リンク（初めて聴いた順） --}}
+            <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
+                @if ($previousSong)
+                    <a href="{{ route('mypage.attendances.index', ['song_id' => $previousSong->id]) }}" rel="prev"
+                       style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
+                        <i class="fa-solid fa-arrow-left" style="margin-right: 8px;"></i>
+                        Previous
+                    </a>
+                @else
+                    <div></div>
+                @endif
+                @if ($nextSong)
+                    <a href="{{ route('mypage.attendances.index', ['song_id' => $nextSong->id]) }}" rel="next"
+                       style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
+                        Next
+                        <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
+                    </a>
+                @endif
+            </div>
         @endif
     </div>
 @endsection
