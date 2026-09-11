@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\SongTitleNormalizer;
 use Illuminate\Database\Eloquent\Model;
 
 class DbSong extends Model
@@ -13,6 +14,29 @@ class DbSong extends Model
         'artist_id',
         'text',
     ];
+
+    protected static function booted()
+    {
+        // 新規作成時、同一アーティストでタイトルが一致する未紐付けのSlSongが1件だけ見つかれば
+        // 自動で紐付ける（SlSong::booted()の逆方向。どちらを先に登録しても紐付く）。
+        static::created(function (DbSong $song) {
+            if (!$song->artist_id || !$song->title) {
+                return;
+            }
+
+            $normalizedTitle = SongTitleNormalizer::normalize($song->title);
+            $candidates = SlSong::where('artist_id', $song->artist_id)
+                ->whereNull('db_song_id')
+                ->get(['id', 'title']);
+            $matches = $candidates->filter(
+                fn(SlSong $candidate) => SongTitleNormalizer::normalize($candidate->title) === $normalizedTitle
+            );
+
+            if ($matches->count() === 1) {
+                $matches->first()->update(['db_song_id' => $song->id]);
+            }
+        });
+    }
 
     public function artist()
     {
