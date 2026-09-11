@@ -3576,17 +3576,3 @@ a.setlist-card:hover {
 .app-toast i {
     color: #4ade80;
 }
-
-/* SP search toggle button: swap magnifying-glass / xmark via aria-expanded,
-   avoids relying on JS to flip inline styles on Font Awesome icons directly */
-.sp-toggle-search .sp-toggle-close-icon {
-    display: none;
-}
-
-.sp-toggle-search[aria-expanded="true"] .sp-toggle-search-icon {
-    display: none;
-}
-
-.sp-toggle-search[aria-expanded="true"] .sp-toggle-close-icon {
-    display: inline-block;
-}
