@@ -207,7 +207,6 @@
                     </tbody>
                 </table>
             @endif
-            {{ $attendances->links() }}
         @endif
 
         @if ($song)

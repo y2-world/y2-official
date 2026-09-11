@@ -21,7 +21,8 @@ class AttendanceController extends Controller
         $artistId = $request->input('artist_id');
         $filterArtist = null;
         if ($artistId) {
-            $query->whereHas('dbSetlist.tour', fn($q) => $q->where('artist_id', $artistId));
+            // type=4（ソロ）は本人単独のプロジェクトであり、アーティスト本体のライブ履歴には含めない
+            $query->whereHas('dbSetlist.tour', fn($q) => $q->where('artist_id', $artistId)->where('type', '!=', 4));
             $filterArtist = Artist::find($artistId);
         }
 
@@ -89,7 +90,7 @@ class AttendanceController extends Controller
         } else {
             $query->orderBy('attended_date');
         }
-        $attendances = $query->paginate(20)->withQueryString();
+        $attendances = $query->get();
 
         $artists = Artist::whereHas('tours', function ($q) {
             $q->whereHas('tourSetlists', function ($q2) {
