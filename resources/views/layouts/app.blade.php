@@ -102,6 +102,13 @@
                         <a class="nav-link" href="{{ url('/filament') }}" target="_blank">Admin</a>
                     </li> --}}
                     <li class="nav-item">
+                        @auth('external')
+                            <a class="btn btn-outline-dark mypage-nav-button" href="{{ route('mypage.index') }}">My Page</a>
+                        @else
+                            <a class="btn btn-outline-dark mypage-nav-button" href="{{ route('mypage.login') }}">Login</a>
+                        @endauth
+                    </li>
+                    <li class="nav-item">
                         <div class="mb-sns-nav">
                             <a href="https://music.apple.com/jp/artist/yuki-yoshida/1448865361?itsct=music_box_badge&itscg=30200&ct=artists_yuki_yoshida&app=music&ls=1"
                                 target="_blank"><i class="fab fa-apple fa-2x"></i></a>

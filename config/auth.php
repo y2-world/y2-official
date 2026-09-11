@@ -46,6 +46,11 @@ return [
             'provider' => 'users',
             'hash' => false,
         ],
+
+        'external' => [
+            'driver' => 'session',
+            'provider' => 'external_users',
+        ],
     ],
 
     /*
@@ -75,6 +80,11 @@ return [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
+
+        'external_users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\ExternalUser::class,
+        ],
     ],
 
     /*

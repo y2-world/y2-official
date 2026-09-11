@@ -475,6 +475,28 @@ footer {
     padding-left: 1em;
 }
 
+/* ナビゲーション内のLogin/My Pageボタン。モバイルではメニュー内で幅いっぱい、PCでは通常サイズのボタンとして表示 */
+.mypage-nav-button {
+    box-sizing: border-box;
+    padding: 0.35rem 1rem;
+    font-size: 0.75rem;
+}
+
+@media (max-width: 991px) {
+    .mypage-nav-button {
+        display: block !important;
+        margin: 10px 16px 16px !important;
+        width: auto;
+        text-align: center;
+    }
+}
+
+@media (min-width: 992px) {
+    .mypage-nav-button {
+        margin: auto 0.5em;
+    }
+}
+
 img {
     box-shadow: 0 5px 5px gray;
 }
@@ -2054,7 +2076,9 @@ h2 {
 /* Hidden rows and show more button */
 .hidden-row,
 .hidden-row-artist,
-.hidden-row-top-songs {
+.hidden-row-top-songs,
+.hidden-row-songs,
+.hidden-row-attendances {
     display: none;
 }
 
@@ -2119,6 +2143,8 @@ h2 {
     margin-bottom: 25px;
     padding-bottom: 15px;
     border-bottom: 3px solid #667eea;
+    text-align: center !important;
+    width: 100%;
 }
 
 .section-title i {
@@ -2155,6 +2181,12 @@ h2 {
     text-align: right;
 }
 
+/* 曲名・タイトル列に幅を確保し、Artist/Countなど他の短い列との間の余白が
+   不自然に開かないようにする */
+.stats-table thead th.title-col {
+    width: 35%;
+}
+
 /* Left align header when table has bar indicators */
 .stats-table.has-bar-indicator thead th.count-col {
     text-align: left;
@@ -2180,7 +2212,7 @@ h2 {
 }
 
 .count-col {
-    min-width: 180px;
+    min-width: 70px;
     text-align: right;
     padding-right: 20px !important;
     vertical-align: middle;
@@ -2225,6 +2257,7 @@ h2 {
 .artist-name {
     color: #667eea;
     font-weight: 500;
+    white-space: nowrap;
 }
 
 .venue-name {
@@ -2326,6 +2359,7 @@ h2 {
     margin-bottom: 0;
     padding-bottom: 0;
     border-bottom: none;
+    flex: 1 1 auto;
 }
 
 .unique-tour-toggle {
@@ -2460,16 +2494,19 @@ h2 {
         margin-bottom: 15px;
     }
 
-    /* Tables - No horizontal scroll */
+    /* table-layout: auto のまま、内容量に応じて列幅が決まるようにする
+       （fixedだと短い列が不自然に間延びするため使わない）。
+       4列が画面幅に収まりきらない場合は、隠さずコンテナ内で横スクロールさせる */
     .stats-table-container {
-        overflow-x: visible;
+        overflow-x: auto;
         width: 100%;
+        -webkit-overflow-scrolling: touch;
     }
 
     .stats-table {
         font-size: 0.75rem;
         width: 100%;
-        table-layout: fixed;
+        table-layout: auto;
     }
 
     .stats-table thead th {
@@ -2493,10 +2530,14 @@ h2 {
     }
 
     .count-col {
-        min-width: 70px;
-        width: 30%;
+        width: 50px;
+        max-width: 50px;
         text-align: right;
         padding-right: 4px !important;
+    }
+
+    .stats-table thead th.title-col {
+        width: auto;
     }
 
     /* Wider column for bar indicators on mobile */
@@ -2666,7 +2707,15 @@ h2 {
 
     .stats-table tbody td {
         padding: 8px 4px;
-        font-size: 0.8rem;
+        font-size: 0.65rem;
+    }
+
+    .stats-table .song-title {
+        font-size: 0.7rem !important;
+    }
+
+    .stats-table .artist-name {
+        font-size: 0.7rem !important;
     }
 
     .rank-col {
@@ -2674,7 +2723,8 @@ h2 {
     }
 
     .count-col {
-        min-width: 100px;
+        width: 50px;
+        max-width: 50px;
     }
 
     .count-badge {
@@ -2956,6 +3006,27 @@ h2 {
     color: #667eea;
 }
 
+.mypage-add-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 0.9rem;
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mypage-add-button:hover {
+    transform: scale(1.08);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
 .stamp-summary {
     background: white;
     border-radius: 15px;
@@ -3170,5 +3241,184 @@ h2 {
     .stamp-slot-title {
         font-size: 0.5rem;
         margin-top: 4px;
+    }
+}
+
+/* My Page - Compact selection cards (artist / tour / setlist pattern) */
+.select-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 10px;
+}
+
+.select-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 10px;
+    width: 100%;
+    min-width: 0;
+}
+
+.select-card-list .select-card {
+    max-width: 100%;
+}
+
+.select-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 14px;
+    padding: 16px 18px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: #333;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.select-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(102, 126, 234, 0.18);
+    border-color: rgba(102, 126, 234, 0.3);
+    color: #333;
+    text-decoration: none;
+}
+
+.select-card-icon {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.select-card-body {
+    display: block;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.select-card-title {
+    display: block;
+    font-weight: 600;
+    font-size: 0.95rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.select-card-meta {
+    display: block;
+    font-size: 0.75rem;
+    color: #999;
+    margin-top: 2px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.select-card-arrow {
+    flex: 0 0 auto;
+    color: #ccc;
+    font-size: 0.85rem;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.select-card:hover .select-card-arrow {
+    color: #667eea;
+    transform: translateX(3px);
+}
+
+.select-group-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #888;
+    letter-spacing: 1px;
+    margin: 4px 0 14px;
+    text-transform: uppercase;
+}
+
+/* Setlist pattern card: expands inline to show the setlist */
+.setlist-pick-card {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    margin-bottom: 14px;
+    overflow: hidden;
+}
+
+.setlist-pick-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px;
+}
+
+.setlist-pick-toggle {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: left;
+    cursor: pointer;
+    color: inherit;
+    font: inherit;
+}
+
+.setlist-pick-toggle .select-card-icon {
+    background: linear-gradient(135deg, #a0a8e8 0%, #b399cf 100%);
+}
+
+.setlist-pick-toggle[aria-expanded="true"] .select-card-icon {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.setlist-pick-toggle[aria-expanded="true"] .select-card-arrow {
+    transform: rotate(90deg);
+    color: #667eea;
+}
+
+.setlist-pick-select {
+    flex: 0 0 auto;
+}
+
+.setlist-pick-select .btn {
+    white-space: nowrap;
+    font-size: 0.85rem;
+}
+
+.setlist-pick-body {
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 20px 18px;
+    background: #fafafe;
+}
+
+.setlist-pick-body[hidden] {
+    display: none;
+}
+
+@media (max-width: 576px) {
+    .setlist-pick-header {
+        flex-wrap: wrap;
+    }
+
+    .setlist-pick-select {
+        flex: 1 1 100%;
+        margin-left: 48px;
     }
 }

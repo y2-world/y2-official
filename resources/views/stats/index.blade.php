@@ -67,11 +67,11 @@
 
                     <!-- Most Listened Songs Section -->
                     <div class="stats-section visible">
-                        <div class="section-title-wrapper">
-                            <h2 class="section-title">
+                        <div class="section-title-wrapper" style="flex-direction: column; align-items: center; gap: 10px;">
+                            <h2 class="section-title" style="text-align: center;">
                                 <i class="fas fa-fire"></i> Most Listened Songs
                             </h2>
-                            <div class="unique-tour-toggle">
+                            <div class="unique-tour-toggle" style="margin-left: 0;">
                                 <label class="unique-tour-label">
                                     <input type="checkbox" id="uniqueTourCheckbox" class="unique-tour-checkbox">
                                     <span class="unique-tour-text">Count same-named tours only once</span>
@@ -83,9 +83,9 @@
                                 <thead>
                                     <tr>
                                         <th class="rank-col">Rank</th>
-                                        <th>Song Title</th>
+                                        <th class="title-col">Song Title</th>
                                         <th>Artist</th>
-                                        <th class="count-col">Times Heard</th>
+                                        <th class="count-col">Count</th>
                                     </tr>
                                 </thead>
                                 <tbody>

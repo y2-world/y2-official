@@ -12,6 +12,10 @@ use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OfficialNewsController;
 use App\Http\Controllers\LyricController;
+use App\Http\Controllers\ExternalAuthController;
+use App\Http\Controllers\MyPageController;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\MyPageStatsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -111,3 +115,34 @@ Route::get('/lyrics/{id}', [LyricController::class, 'show'])->name('lyric.show')
 Route::get('/stats', [App\Http\Controllers\StatsController::class, 'index'])->name('stats.index');
 Route::get('/stats/artist/{id}', [App\Http\Controllers\StatsController::class, 'getArtistTopSongs'])->name('stats.artist');
 Route::get('/stats/artist/{id}/stamps', [App\Http\Controllers\StatsController::class, 'getStampBook'])->name('stats.stamps');
+
+// My Page routes (external/fan user accounts, separate from admin users)
+Route::prefix('mypage')->name('mypage.')->group(function () {
+    Route::middleware('guest:external')->group(function () {
+        Route::get('register', [ExternalAuthController::class, 'showRegister'])->name('register');
+        Route::post('register', [ExternalAuthController::class, 'register']);
+        Route::get('login', [ExternalAuthController::class, 'showLogin'])->name('login');
+        Route::post('login', [ExternalAuthController::class, 'login']);
+    });
+
+    Route::middleware('auth:external')->group(function () {
+        Route::post('logout', [ExternalAuthController::class, 'logout'])->name('logout');
+
+        Route::get('/', [MyPageController::class, 'index'])->name('index');
+
+        Route::prefix('attendances')->name('attendances.')->group(function () {
+            Route::get('/', [AttendanceController::class, 'index'])->name('index');
+            Route::get('create', [AttendanceController::class, 'create'])->name('create');
+            Route::get('create/artists/{artistId}/tours', [AttendanceController::class, 'tours'])->name('tours');
+            Route::get('create/tours/{tourId}/setlists', [AttendanceController::class, 'setlists'])->name('setlists');
+            Route::get('create/setlists/{dbSetlistId}', [AttendanceController::class, 'form'])->name('form');
+            Route::post('/', [AttendanceController::class, 'store'])->name('store');
+            Route::get('{attendance}/edit', [AttendanceController::class, 'edit'])->name('edit');
+            Route::put('{attendance}', [AttendanceController::class, 'update'])->name('update');
+            Route::delete('{attendance}', [AttendanceController::class, 'destroy'])->name('destroy');
+            Route::get('{attendance}', [AttendanceController::class, 'show'])->name('show');
+        });
+
+        Route::get('stats/artist/{artistId}/stamps', [MyPageStatsController::class, 'stamps'])->name('stats.stamps');
+    });
+});

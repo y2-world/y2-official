@@ -27,6 +27,11 @@ class DbSetlist extends Model
         return $this->belongsTo(DbConcert::class, 'tour_id', 'id');
     }
 
+    public function attendances()
+    {
+        return $this->hasMany(ExternalUserAttendance::class, 'db_setlist_id');
+    }
+
     // setlistを設定する際に、UUIDが存在しない場合は追加
     public function setSetlistAttribute($value)
     {
