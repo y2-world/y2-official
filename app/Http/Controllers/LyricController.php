@@ -65,17 +65,18 @@ class LyricController extends Controller
      */
     public function show($id)
     {
-        // $lyrics = OfficialLyric::find($id);
-        // $previous = OfficialLyric::where('id', '<', $lyrics->id)->orderBy('id', 'desc')->first();
-        // $next = OfficialLyric::where('id', '>', $lyrics->id)->orderBy('id')->first();
-        
-        // return view('official_lyrics.show', compact('lyrics', 'previous', 'next'));
-
         $lyrics = OfficialLyric::findOrFail($id);
-        return response()->json([
-            'title' => $lyrics->title,
-            'lyrics' => nl2br(e($lyrics->lyrics)), // 改行を <br> に変換して HTML エスケープ
-        ]);
+
+        // JSONリクエストの場合はJSONを返す（既存のポップアップ機能用）
+        if (request()->wantsJson() || request()->ajax()) {
+            return response()->json([
+                'title' => $lyrics->title,
+                'lyrics' => nl2br(e($lyrics->lyrics)), // 改行を <br> に変換して HTML エスケープ
+            ]);
+        }
+
+        // 通常のリクエストの場合はビューを返す
+        return view('official_lyrics.show', compact('lyrics'));
     }
 
     /**

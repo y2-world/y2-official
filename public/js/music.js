@@ -14,7 +14,12 @@ document.addEventListener('DOMContentLoaded', function () {
             const lyricLink = e.target.closest('.music-link');
             const lyricId = lyricLink.getAttribute('data-id');
 
-            fetch(`/lyrics/${lyricId}`)
+            fetch(`/lyrics/${lyricId}`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {

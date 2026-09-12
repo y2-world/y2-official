@@ -72,17 +72,24 @@
                                         <ol>
                                             @foreach ($discos->tracklist as $data)
                                                 @if (isset($data['id']) && isset($data['exception']))
-                                                    <li>
-                                                        <a href="javascript:void(0);" class="music-link"
-                                                            data-id="{{ $data['id'] }}">{{ $data['exception'] }}</a>
-                                                    </li>
+                                                    @php
+                                                        $lyric = $lyrics->firstWhere('id', $data['id']);
+                                                    @endphp
+                                                    @if ($lyric)
+                                                        <li>
+                                                            <a href="{{ route('lyric.show', $data['id']) }}" class="music-link"
+                                                                data-id="{{ $data['id'] }}">{{ $data['exception'] }}</a>
+                                                        </li>
+                                                    @else
+                                                        <li>{{ $data['exception'] }}</li>
+                                                    @endif
                                                 @elseif(isset($data['id']))
                                                     @php
                                                         $lyric = $lyrics->firstWhere('id', $data['id']);
                                                     @endphp
                                                     @if($lyric)
                                                         <li>
-                                                            <a href="javascript:void(0);" class="music-link"
+                                                            <a href="{{ route('lyric.show', $data['id']) }}" class="music-link"
                                                                 data-id="{{ $data['id'] }}">{{ $lyric->title }}</a>
                                                         </li>
                                                     @else
