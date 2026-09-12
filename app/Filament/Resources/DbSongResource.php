@@ -48,6 +48,22 @@ class DbSongResource extends Resource
                     ->label('説明')
                     ->rows(5)
                     ->columnSpanFull(),
+
+                Forms\Components\Select::make('slSongs')
+                    ->label('セットリスト楽曲との紐付け')
+                    ->helperText('この楽曲に対応するセットリスト楽曲（複数可）。スタンプ帳の判定に使われます')
+                    ->relationship(
+                        name: 'slSongs',
+                        titleAttribute: 'title',
+                        modifyQueryUsing: fn (Builder $query, Get $get) => $get('artist_id')
+                            ? $query->where('artist_id', $get('artist_id'))
+                            : $query,
+                    )
+                    ->multiple()
+                    ->searchable()
+                    ->preload()
+                    ->native(false)
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -65,6 +81,12 @@ class DbSongResource extends Resource
                 Tables\Columns\TextColumn::make('title')
                     ->label('タイトル')
                     ->searchable(),
+                Tables\Columns\IconColumn::make('sl_songs_linked')
+                    ->label('セットリスト楽曲紐付け')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check-circle')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->getStateUsing(fn (DbSong $record) => $record->slSongs->isNotEmpty()),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y.m.d H:i')
                     ->sortable()
@@ -78,6 +100,15 @@ class DbSongResource extends Resource
                 Tables\Filters\SelectFilter::make('artist_id')
                     ->label('アーティスト')
                     ->options(fn() => \App\Models\Artist::pluck('name', 'id')),
+                Tables\Filters\TernaryFilter::make('sl_songs_linked')
+                    ->label('セットリスト楽曲紐付け状態')
+                    ->nullable()
+                    ->trueLabel('紐付け済み')
+                    ->falseLabel('未紐付け')
+                    ->queries(
+                        true: fn ($query) => $query->whereHas('slSongs'),
+                        false: fn ($query) => $query->whereDoesntHave('slSongs'),
+                    ),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -95,6 +126,11 @@ class DbSongResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with('slSongs');
     }
 
     public static function getPages(): array

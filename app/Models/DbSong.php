@@ -17,9 +17,11 @@ class DbSong extends Model
 
     protected static function booted()
     {
-        // 新規作成時、同一アーティストでタイトルが一致する未紐付けのSlSongが1件だけ見つかれば
-        // 自動で紐付ける（SlSong::booted()の逆方向。どちらを先に登録しても紐付く）。
-        static::created(function (DbSong $song) {
+        // 作成・更新のたびに、同一アーティストでタイトルが一致する未紐付けのSlSongが1件だけ
+        // 見つかれば自動で紐付ける（SlSong::booted()の逆方向。どちらを先に登録・編集しても紐付く）。
+        // savedを使うのは、createdの時点ではまだ$song->idが確定していない場合があるため、
+        // 保存完了後（更新時のタイトル変更でも再チェックされる）に実行する。
+        static::saved(function (DbSong $song) {
             if (!$song->artist_id || !$song->title) {
                 return;
             }
@@ -74,5 +76,38 @@ class DbSong extends Model
                 $tracklist = $single->tracklist ?? [];
                 return collect($tracklist)->pluck('id')->contains((string) $songId);
             });
+    }
+
+    // この曲（db_songs.id）が実際に演奏されたDbSetlist（setlist/encore列内に自分のidまたは
+    // タイトル一致の項目を含むもの）を、演奏日（tour.date1）降順で返す。
+    // DbSetController@show の抽出ロジックと同じ考え方（Eloquentリレーションではなく
+    // JSON列の総当たりスキャンになるのは、db_setlists側が曲IDを外部キーとして持たないため）。
+    public function performedTourSetlists()
+    {
+        $id = $this->id;
+        $title = $this->title;
+
+        return DbSetlist::with('tour')->get()
+            ->filter(function ($setlistModel) use ($id, $title) {
+                $lists = array_merge($setlistModel->setlist ?? [], $setlistModel->encore ?? []);
+
+                foreach ($lists as $entry) {
+                    if (!isset($entry['song'])) {
+                        continue;
+                    }
+                    if (is_numeric($entry['song']) && (int) $entry['song'] === (int) $id) {
+                        return true;
+                    }
+                    if (!is_numeric($entry['song'])) {
+                        $entryTitle = preg_replace('/\s*\[[^\]]+\]/u', '', $entry['song']);
+                        if (trim($entryTitle) === $title) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            })
+            ->sortByDesc(fn ($setlistModel) => optional($setlistModel->tour)->date1)
+            ->values();
     }
 }

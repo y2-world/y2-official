@@ -94,40 +94,9 @@ class DbSongController extends Controller
     public function show($id)
     {
         $songs = DbSong::findOrFail($id);
-        $title = $songs->title;
 
         // 関連する DbSetlist を tour 付きで取得してフィルター
-        $tourSetlists = DbSetlist::with('tour')->get()
-            ->filter(function ($setlistModel) use ($id, $title) {
-                $setlistArr = is_array($setlistModel->setlist)
-                    ? $setlistModel->setlist
-                    : json_decode($setlistModel->setlist ?? '[]', true);
-
-                $encoreArr = is_array($setlistModel->encore)
-                    ? $setlistModel->encore
-                    : json_decode($setlistModel->encore ?? '[]', true);
-
-                $lists = array_merge($setlistArr, $encoreArr);
-
-                foreach ($lists as $entry) {
-                    if (is_numeric($entry['song']) && (int)$entry['song'] === (int)$id) {
-                        return true;
-                    }
-
-                    if (!is_numeric($entry['song'])) {
-                        $entryTitle = preg_replace('/\s*\[[^\]]+\]/u', '', $entry['song']);
-                        if (trim($entryTitle) === $title) {
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            })
-            ->sortByDesc(function ($setlistModel) {
-                // tour->start_date があるものを基準に降順ソート
-                return optional($setlistModel->tour)->date1;
-            })
-            ->values(); // 並べ替え後にキーを振り直す
+        $tourSetlists = $songs->performedTourSetlists();
 
         // 関連ツアー一覧（重複除去）
         $tours = $tourSetlists->pluck('tour')->filter()->unique('id')->values();
