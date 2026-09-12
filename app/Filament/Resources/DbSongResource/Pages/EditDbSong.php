@@ -41,6 +41,15 @@ class EditDbSong extends EditRecord
     {
         $this->originalSlSongId = $this->record->slSongs()->value('id');
 
+        \Log::info('DEBUG EditDbSong mutateFormDataBeforeSave', [
+            'record_id' => $this->record->id,
+            'record_title_before' => $this->record->title,
+            'new_title' => $data['title'] ?? null,
+            'raw_sl_song_id' => $data['sl_song_id'] ?? '(key not present)',
+            'originalSlSongId' => $this->originalSlSongId,
+            'raw_extra_sl_songs' => $data['extra_sl_songs'] ?? '(key not present)',
+        ]);
+
         if (array_key_exists('extra_sl_songs', $data)) {
             $originalExtraIds = $this->record->slSongs()->skip(1)->pluck('id')->all();
             $remainingIds = collect($data['extra_sl_songs'] ?? [])->pluck('id')->filter()->map(fn ($id) => (int) $id)->all();
@@ -119,6 +128,14 @@ class EditDbSong extends EditRecord
     // （slSongIdToSyncがnullでない）場合のみ、明示的な操作とみなして反映する。
     protected function afterSave(): void
     {
+        \Log::info('DEBUG EditDbSong afterSave', [
+            'slSongIdToSync' => $this->slSongIdToSync,
+            'originalSlSongId' => $this->originalSlSongId,
+            'extraSlSongIdsToDetach' => $this->extraSlSongIdsToDetach,
+            'record_title_after_save' => $this->record->fresh()->title,
+            'slSongs_now' => $this->record->slSongs()->pluck('title', 'id')->all(),
+        ]);
+
         if (!empty($this->extraSlSongIdsToDetach)) {
             SlSong::whereIn('id', $this->extraSlSongIdsToDetach)->update(['db_song_id' => null]);
         }
