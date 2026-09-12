@@ -43,11 +43,11 @@
                     @else
                         <div class="stamp-book">
                             @foreach ($stamps as $stamp)
-                                <div class="stamp-slot {{ $stamp['done'] ? 'is-stamped' : '' }} {{ $stamp['never_performed'] ? 'is-never-performed' : '' }}">
+                                <div class="stamp-slot {{ $stamp['done'] ? 'is-stamped' : '' }} {{ $stamp['never_performed'] ? 'is-never-performed' : '' }} {{ $stamp['fes_only'] ? 'is-fes-only' : '' }}">
                                     <div class="stamp-slot-frame js-stamp-tap" @if ($stamp['never_performed']) title="ライブで演奏されたことがない曲です" @endif>
                                         @if ($stamp['done'])
                                             <div class="stamp-mark">
-                                                <span class="stamp-mark-text">LIVE</span>
+                                                <span class="stamp-mark-text">{{ $stamp['fes_only'] ? 'FES' : 'LIVE' }}</span>
                                             </div>
                                         @endif
                                     </div>

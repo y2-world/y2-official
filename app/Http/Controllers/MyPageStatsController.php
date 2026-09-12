@@ -131,26 +131,38 @@ class MyPageStatsController extends Controller
             ->whereHas('dbSetlist.tour', fn($q) => $q->where('artist_id', $artistId))
             ->pluck('db_setlist_id');
 
-        $setlists = DbSetlist::whereIn('id', $attendedSetlistIds)->get();
+        $setlists = DbSetlist::whereIn('id', $attendedSetlistIds)->with('tour')->get();
 
-        $playedDbSongIds = [];
+        // type=0（ツアー）・1（単発ライブ）以外（イベント・ap bank fes・ソロ）はFES扱いとし、
+        // そちらでしか演奏されていない曲は台紙上で区別できるようにする
+        $playedDbSongIdsNormal = [];
+        $playedDbSongIdsFes = [];
         foreach ($setlists as $setlist) {
+            $isFes = !in_array((int)($setlist->tour->type ?? 0), [0, 1], true);
             foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
                 if (isset($s['song']) && is_numeric($s['song'])) {
-                    $playedDbSongIds[(int)$s['song']] = true;
+                    if ($isFes) {
+                        $playedDbSongIdsFes[(int)$s['song']] = true;
+                    } else {
+                        $playedDbSongIdsNormal[(int)$s['song']] = true;
+                    }
                 }
             }
         }
 
+        $playedDbSongIds = $playedDbSongIdsNormal + $playedDbSongIdsFes;
+        $fesOnlyDbSongIds = array_diff_key($playedDbSongIdsFes, $playedDbSongIdsNormal);
+
         $everPerformedDbSongIds = $this->everPerformedDbSongIds((int)$artistId);
 
         $dbSongs = DbSong::where('artist_id', $artistId)->orderBy('id')->get();
-        $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds) {
+        $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds, $fesOnlyDbSongIds) {
             return [
                 'song_id' => $song->id,
                 'title' => $song->title,
                 'done' => isset($playedDbSongIds[$song->id]),
                 'never_performed' => !isset($everPerformedDbSongIds[$song->id]),
+                'fes_only' => isset($fesOnlyDbSongIds[$song->id]),
             ];
         });
 

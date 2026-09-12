@@ -790,21 +790,24 @@ class StatsController extends Controller
 
         $today = now()->toDateString();
 
-        // このアーティストのdatabase楽曲IDのうち、実際にライブ演奏された記録があるものを集める
-        $playedSlSongIds = [];
+        // このアーティストのdatabase楽曲IDのうち、実際にライブ演奏された記録があるものを集める。
+        // 通常セットリスト（setlist/encore）とフェス（fes_setlist/fes_encore）を別集計にし、
+        // フェスでしか演奏されていない曲は台紙上で区別できるようにする
+        $playedSlSongIdsNormal = [];
+        $playedSlSongIdsFes = [];
         $setlists = SlSetlist::where('date', '<=', $today)->get();
 
         foreach ($setlists as $setlist) {
-            $allSongs = array_merge(
-                $setlist->setlist ?? [],
-                $setlist->encore ?? [],
-                $this->flattenFesSongs($setlist->fes_setlist ?? []),
-                $this->flattenFesSongs($setlist->fes_encore ?? [])
-            );
-
-            foreach ($allSongs as $songData) {
+            foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $songData) {
                 if (isset($songData['song']) && is_numeric($songData['song'])) {
-                    $playedSlSongIds[(int)$songData['song']] = true;
+                    $playedSlSongIdsNormal[(int)$songData['song']] = true;
+                }
+            }
+
+            $fesSongs = $this->flattenFesSongs(array_merge($setlist->fes_setlist ?? [], $setlist->fes_encore ?? []));
+            foreach ($fesSongs as $songData) {
+                if (isset($songData['song']) && is_numeric($songData['song'])) {
+                    $playedSlSongIdsFes[(int)$songData['song']] = true;
                 }
             }
         }
@@ -814,9 +817,15 @@ class StatsController extends Controller
             ->pluck('db_song_id', 'id');
 
         $playedDbSongIds = [];
+        $fesOnlyDbSongIds = [];
         foreach ($slSongToDbSongId as $slSongId => $dbSongId) {
-            if (isset($playedSlSongIds[$slSongId])) {
+            $playedNormal = isset($playedSlSongIdsNormal[$slSongId]);
+            $playedFes = isset($playedSlSongIdsFes[$slSongId]);
+            if ($playedNormal || $playedFes) {
                 $playedDbSongIds[(int)$dbSongId] = true;
+            }
+            if ($playedFes && !$playedNormal) {
+                $fesOnlyDbSongIds[(int)$dbSongId] = true;
             }
         }
 
@@ -825,12 +834,13 @@ class StatsController extends Controller
         $everPerformedDbSongIds = $this->everPerformedDbSongIds((int)$artistId);
 
         $dbSongs = DbSong::where('artist_id', $artistId)->orderBy('id')->get();
-        $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds) {
+        $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds, $fesOnlyDbSongIds) {
             return [
                 'song_id' => $song->id,
                 'title' => $song->title,
                 'done' => isset($playedDbSongIds[$song->id]),
                 'never_performed' => !isset($everPerformedDbSongIds[$song->id]),
+                'fes_only' => isset($fesOnlyDbSongIds[$song->id]),
             ];
         });
 
