@@ -51,7 +51,9 @@ class EditDbSong extends EditRecord
         ]);
 
         if (array_key_exists('extra_sl_songs', $data)) {
-            $originalExtraIds = $this->record->slSongs()->skip(1)->pluck('id')->all();
+            // slSongs()（クエリビルダー）へのskip(1)はOFFSET句のみになりMySQLの構文エラーになるため、
+            // 既にロード済みのslSongs（Eloquentコレクション）側のskip(1)（配列操作）を使う。
+            $originalExtraIds = $this->record->slSongs->skip(1)->pluck('id')->all();
             $remainingIds = collect($data['extra_sl_songs'] ?? [])->pluck('id')->filter()->map(fn ($id) => (int) $id)->all();
             $this->extraSlSongIdsToDetach = array_diff($originalExtraIds, $remainingIds);
             unset($data['extra_sl_songs']);
