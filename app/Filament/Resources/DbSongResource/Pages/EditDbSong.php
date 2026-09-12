@@ -33,9 +33,20 @@ class EditDbSong extends EditRecord
         ];
     }
 
+    // extra_sl_songsリピーターから消された（＝解除ボタンを押された）SlSongのidを保持し、
+    // afterSaveで実際にdb_song_idをnullにする。
+    protected array $extraSlSongIdsToDetach = [];
+
     protected function mutateFormDataBeforeSave(array $data): array
     {
         $this->originalSlSongId = $this->record->slSongs()->value('id');
+
+        if (array_key_exists('extra_sl_songs', $data)) {
+            $originalExtraIds = $this->record->slSongs()->skip(1)->pluck('id')->all();
+            $remainingIds = collect($data['extra_sl_songs'] ?? [])->pluck('id')->filter()->map(fn ($id) => (int) $id)->all();
+            $this->extraSlSongIdsToDetach = array_diff($originalExtraIds, $remainingIds);
+            unset($data['extra_sl_songs']);
+        }
 
         $this->slSongIdToSync = array_key_exists('sl_song_id', $data)
             ? (int) $data['sl_song_id'] ?: null
@@ -95,18 +106,24 @@ class EditDbSong extends EditRecord
         return $data;
     }
 
-    // ユーザーが選択欄を実際に操作した（保存直前の紐付け=originalSlSongIdと
-    // 異なる値がフォームから送られてきた）場合のみ、その差分を反映する。
-    // 未操作（=フォームの値がoriginalSlSongIdと同じ）なら、ここでは一切何もしない。
+    // ユーザーが選択欄で「別の特定のSlSongを選んだ」場合のみ、その差分を反映する。
+    // それ以外（未操作、または明示的に空欄へクリアした場合）は、ここでは一切何もせず、
+    // $record->save()の中で既に発火済みのDbSong::booted()のsavedイベント（自動紐付け）の
+    // 結果をそのまま残す。
     //
-    // これが重要な理由: $record->save()の中でDbSong::booted()のsavedイベント（自動紐付け）が
-    // 既に発火済みであり、タイトル変更（例: EXIT→Little）によって紐付け先が
-    // originalSlSongIdとは別のSlSongに切り替わっている可能性がある。
-    // 「ユーザー操作の有無」を見ずに「現在のDB値と違うから」で書き戻すと、
-    // 自動紐付けが新しく設定した紐付けを、フォームの古い値で上書きして戻してしまう。
+    // 「空欄にクリアする」操作の意図は「今の紐付けを強制的に外す」ことではなく「自動照合に
+    // 任せる」ことである。タイトル変更（例: EXIT→Little）と同時に空欄クリアした場合、
+    // 自動紐付けは既に新タイトルに合う別のSlSong（Little）へ切り替え済みのはずで、
+    // ここで「今のDB値(=Little) != フォームの値(=null)だから解除する」と判断すると、
+    // 自動紐付けの結果を消してしまう。そのため「ユーザーが具体的な別の値を選んだ」
+    // （slSongIdToSyncがnullでない）場合のみ、明示的な操作とみなして反映する。
     protected function afterSave(): void
     {
-        if ($this->slSongIdToSync === false) {
+        if (!empty($this->extraSlSongIdsToDetach)) {
+            SlSong::whereIn('id', $this->extraSlSongIdsToDetach)->update(['db_song_id' => null]);
+        }
+
+        if ($this->slSongIdToSync === false || $this->slSongIdToSync === null) {
             return;
         }
 
@@ -120,8 +137,6 @@ class EditDbSong extends EditRecord
             SlSong::where('id', $currentSlSongId)->update(['db_song_id' => null]);
         }
 
-        if ($this->slSongIdToSync) {
-            SlSong::where('id', $this->slSongIdToSync)->update(['db_song_id' => $this->record->id]);
-        }
+        SlSong::where('id', $this->slSongIdToSync)->update(['db_song_id' => $this->record->id]);
     }
 }

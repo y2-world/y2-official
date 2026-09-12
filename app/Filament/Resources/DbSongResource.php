@@ -78,6 +78,56 @@ class DbSongResource extends Resource
                     ->placeholder('選択してください')
                     ->nullable()
                     ->columnSpanFull(),
+
+                // 1対1が前提のため、通常はslSongsが2件以上になることはない。もし2件以上ある場合、
+                // 上のSelectはslSongs->first()しか表示・操作できず、2件目以降が画面外に隠れたまま
+                // 誰にも気づかれず残ってしまう（実際に過去のデータ不整合で発生した）。
+                // ここで隠れている分を明示的に警告表示し、その場で解除できるようにする。
+                Forms\Components\Placeholder::make('extra_sl_songs_warning')
+                    ->label('')
+                    ->columnSpanFull()
+                    ->visible(fn (?DbSong $record) => $record && $record->slSongs->count() > 1)
+                    ->content(function (?DbSong $record) {
+                        if (!$record) {
+                            return '';
+                        }
+                        $extras = $record->slSongs->skip(1);
+                        $list = $extras->map(fn ($s) => "「{$s->title}」(id: {$s->id})")->implode('、');
+                        return new \Illuminate\Support\HtmlString(
+                            '<div class="rounded-lg bg-danger-50 p-3 text-sm text-danger-700 dark:bg-danger-500/10 dark:text-danger-400">'
+                            . "この楽曲には上記以外にも {$list} が紐付いたままになっています（本来1対1のはずが異常な状態です）。"
+                            . '下の一覧からそれぞれ個別に紐付け解除してください。'
+                            . '</div>'
+                        );
+                    }),
+
+                Forms\Components\Repeater::make('extra_sl_songs')
+                    ->label('その他の紐付き（要解除）')
+                    ->columnSpanFull()
+                    ->visible(fn (?DbSong $record) => $record && $record->slSongs->count() > 1)
+                    ->schema([
+                        Forms\Components\Hidden::make('id'),
+                        Forms\Components\TextInput::make('title')
+                            ->label('セットリスト楽曲')
+                            ->disabled(),
+                    ])
+                    ->afterStateHydrated(function (Forms\Components\Repeater $component, ?DbSong $record) {
+                        if (!$record) {
+                            return;
+                        }
+                        $component->state(
+                            $record->slSongs->skip(1)->map(fn ($s) => ['id' => $s->id, 'title' => $s->title])->values()->all()
+                        );
+                    })
+                    ->addable(false)
+                    ->reorderable(false)
+                    ->deletable(true)
+                    ->deleteAction(
+                        fn (Forms\Components\Actions\Action $action) => $action
+                            ->label('この紐付けを解除')
+                            ->requiresConfirmation(),
+                    )
+                    ->dehydrated(),
             ]);
     }
 
