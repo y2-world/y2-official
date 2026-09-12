@@ -48,6 +48,18 @@ class EditDbSong extends EditRecord
             $remainingIds = collect($data['extra_sl_songs'] ?? [])->pluck('id')->filter()->map(fn ($id) => (int) $id)->all();
             $this->extraSlSongIdsToDetach = array_diff($originalExtraIds, $remainingIds);
             unset($data['extra_sl_songs']);
+
+            // ここ（$record->save()より前）で解除する。afterSaveまで待つと、
+            // $record->save()の中で発火するDbSong::booted()のsavedイベント（タイトル一致の
+            // 自動照合）が、まだ解除されていない（db_song_idが埋まったままの）SlSongを
+            // whereNull('db_song_id')の候補から除外してしまい、本来紐付くべきだったものが
+            // 見つからないまま自動照合が失敗してしまう
+            // （実際に「Show Me Your Love」を空欄クリア + 「With You」の紐付き解除を同時に
+            // 行った際、Withyouがまだ紐付いたままの状態で自動照合が走り、結局どちらも
+            // 未紐付けのまま終わってしまう事故として発生した）。
+            if (!empty($this->extraSlSongIdsToDetach)) {
+                SlSong::whereIn('id', $this->extraSlSongIdsToDetach)->update(['db_song_id' => null]);
+            }
         }
 
         $this->slSongIdToSync = array_key_exists('sl_song_id', $data)
@@ -120,10 +132,6 @@ class EditDbSong extends EditRecord
     // 紐付け先がoriginalSlSongIdのまま変化していなければ、明示的に解除する。
     protected function afterSave(): void
     {
-        if (!empty($this->extraSlSongIdsToDetach)) {
-            SlSong::whereIn('id', $this->extraSlSongIdsToDetach)->update(['db_song_id' => null]);
-        }
-
         if ($this->slSongIdToSync !== false && $this->slSongIdToSync !== $this->originalSlSongId) {
             if ($this->slSongIdToSync === null) {
                 // originalSlSongIdが今もこのDbSongに紐付いたままなら、自動照合は何も変えられなかった
