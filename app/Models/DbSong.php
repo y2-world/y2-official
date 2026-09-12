@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\SongTitleNormalizer;
+use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Model;
 
 class DbSong extends Model
@@ -34,16 +35,22 @@ class DbSong extends Model
                 fn(SlSong $candidate) => SongTitleNormalizer::normalize($candidate->title) === $normalizedTitle
             );
 
-            \Log::info('DEBUG DbSong auto-match (saved event)', [
-                'song_id' => $song->id,
-                'song_title' => $song->title,
-                'candidate_count' => $candidates->count(),
-                'match_count' => $matches->count(),
-                'match_ids' => $matches->pluck('id')->all(),
-            ]);
-
             if ($matches->count() === 1) {
                 $matches->first()->update(['db_song_id' => $song->id]);
+                return;
+            }
+
+            // 候補が2件以上で自動では決められない場合、サイレントにスキップすると
+            // 気づかれないまま未紐付けが放置されるため、管理画面上に通知する。
+            // モデルイベントはArtisanコマンド等（通知先のUIが無い文脈）からも発火するため、
+            // Web/Livewireリクエスト内でのみ送信する。
+            if ($matches->count() > 1 && !app()->runningInConsole()) {
+                Notification::make()
+                    ->warning()
+                    ->title('セットリスト楽曲の自動紐付けが曖昧です')
+                    ->body("「{$song->title}」に一致する未紐付けのセットリスト楽曲が複数見つかったため、自動紐付けをスキップしました。手動で紐付けてください。")
+                    ->persistent()
+                    ->send();
             }
         });
     }

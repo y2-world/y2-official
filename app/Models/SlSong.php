@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\SongTitleNormalizer;
+use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -35,6 +36,18 @@ class SlSong extends Model
 
             if ($matches->count() === 1) {
                 $song->db_song_id = $matches->first()->id;
+                return;
+            }
+
+            // 候補が2件以上で自動では決められない場合、サイレントにスキップすると
+            // 気づかれないまま未紐付けが放置されるため、管理画面上に通知する。
+            if ($matches->count() > 1 && !app()->runningInConsole()) {
+                Notification::make()
+                    ->warning()
+                    ->title('database楽曲の自動紐付けが曖昧です')
+                    ->body("「{$song->title}」に一致するdatabase楽曲が複数見つかったため、自動紐付けをスキップしました。手動で紐付けてください。")
+                    ->persistent()
+                    ->send();
             }
         });
     }
