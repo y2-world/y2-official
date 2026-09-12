@@ -21,7 +21,7 @@
                             <i class="fa-solid fa-gear"></i>
                         </a>
                     </div>
-                    <p class="stats-subtitle">参加したライブの記録</p>
+                    <p class="stats-subtitle" style="margin-top: 10px;">参加したライブの記録</p>
 
                     <!-- Overall Stats Cards -->
                     <div class="row stats-cards">

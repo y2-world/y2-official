@@ -1,14 +1,14 @@
 @extends('layouts.app')
-@section('title', 'Yuki Official - 参加記録を編集')
+@section('title', 'Yuki Official - セットリストを編集')
 
 @section('content')
     <div class="database-hero database-hero--detail">
         <div class="container">
             @include('database._breadcrumb', ['breadcrumbs' => [
                 ['label' => 'My Page', 'url' => route('mypage.index')],
-                ['label' => '参加記録を編集'],
+                ['label' => 'セットリストを編集'],
             ]])
-            <h1 class="database-title" style="text-align: center;">参加記録を編集</h1>
+            <h1 class="database-title" style="text-align: center;">セットリストを編集</h1>
             <p class="database-subtitle" style="text-align: center;">
                 {{ $attendance->dbSetlist->tour->title ?? '-' }}
                 @if ($attendance->dbSetlist?->subtitle)

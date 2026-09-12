@@ -277,7 +277,7 @@ class AttendanceController extends Controller
 
         $attendance->update($data);
 
-        return redirect()->route('mypage.attendances.show', $attendance)->with('success', '参加記録を更新しました。');
+        return redirect()->route('mypage.attendances.show', $attendance)->with('success', 'セットリストを更新しました。');
     }
 
     public function destroy(ExternalUserAttendance $attendance)
@@ -286,7 +286,7 @@ class AttendanceController extends Controller
 
         $attendance->delete();
 
-        return redirect()->route('mypage.index')->with('success', '参加記録を削除しました。');
+        return redirect()->route('mypage.index')->with('success', 'セットリストを削除しました。');
     }
 
     private function authorizeOwnership(ExternalUserAttendance $attendance): void
