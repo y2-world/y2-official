@@ -78,9 +78,18 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // ページを開いた時、済みスタンプを一斉にパコンと押す
+    // 済みスタンプは、スクロールして画面に入ってきた瞬間にパコンと押す
+    const stampObserver = new IntersectionObserver(function (entries, observer) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-stamp-in');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.4 });
+
     document.querySelectorAll('.stamp-slot.is-stamped .stamp-mark').forEach(function (mark) {
-        mark.classList.add('is-stamp-in');
+        stampObserver.observe(mark);
     });
 
     const summary = document.querySelector('.stamp-summary');
