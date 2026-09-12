@@ -271,6 +271,62 @@
                         </div>
                     @endif
 
+                    @if ($artistSongStats->isNotEmpty())
+                        <!-- Unique Songs by Artist Section -->
+                        <div class="stats-section visible">
+                            <h2 class="section-title">
+                                <i class="fas fa-music"></i> Unique Songs by Artist
+                            </h2>
+                            <div class="stats-table-container">
+                                <table class="stats-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="rank-col">Rank</th>
+                                            <th>Artist Name</th>
+                                            <th class="count-col">Unique Songs</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($artistSongStats as $index => $artistStat)
+                                        @php
+                                            $showRank = $index === 0 || $artistSongStats[$index - 1]['unique_songs'] !== $artistStat['unique_songs'];
+                                            $actualRank = $index + 1;
+                                        @endphp
+                                        <tr class="{{ $index >= 10 ? 'hidden-row-artist-song-stats' : '' }}">
+                                            <td class="rank-col">
+                                                @if ($showRank)
+                                                    @if ($index === 0)
+                                                        <span class="rank-badge gold">🏆</span>
+                                                    @elseif ($index === 1)
+                                                        <span class="rank-badge silver">🥈</span>
+                                                    @elseif ($index === 2)
+                                                        <span class="rank-badge bronze">🥉</span>
+                                                    @else
+                                                        <span class="rank-number">{{ $actualRank }}</span>
+                                                    @endif
+                                                @endif
+                                            </td>
+                                            <td class="artist-name">
+                                                <a href="{{ route('mypage.stats.artist', $artistStat['id']) }}" class="stats-link">{{ $artistStat['name'] }}</a>
+                                            </td>
+                                            <td class="count-col">
+                                                <span class="count-badge">{{ $artistStat['unique_songs'] }} / {{ $artistStat['total_songs'] }}</span>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                @if (count($artistSongStats) > 10)
+                                <div class="show-more-container">
+                                    <button class="show-more-btn" onclick="toggleArtistSongStatsRows(this)">
+                                        Show More <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
+
                     <!-- Top Venues Section -->
                     <div class="stats-section visible">
                         <h2 class="section-title">
@@ -400,6 +456,20 @@ function toggleSongRows(button) {
 
 function toggleArtistStatsRows(button) {
     const hiddenRows = document.querySelectorAll('.hidden-row-artist');
+    const isExpanded = button.classList.contains('expanded');
+
+    hiddenRows.forEach(row => {
+        row.style.display = isExpanded ? 'none' : 'table-row';
+    });
+
+    button.classList.toggle('expanded');
+    button.innerHTML = isExpanded
+        ? 'Show More <i class="fas fa-chevron-down"></i>'
+        : 'Show Less <i class="fas fa-chevron-up"></i>';
+}
+
+function toggleArtistSongStatsRows(button) {
+    const hiddenRows = document.querySelectorAll('.hidden-row-artist-song-stats');
     const isExpanded = button.classList.contains('expanded');
 
     hiddenRows.forEach(row => {

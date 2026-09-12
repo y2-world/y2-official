@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Concerns;
 use App\Models\DbConcert;
 use App\Models\DbSetlist;
 use App\Models\DbSong;
+use App\Models\SlSetlist;
+use App\Models\SlSong;
 
 trait ComputesDbSongStamps
 {
@@ -44,5 +46,42 @@ trait ComputesDbSongStamps
         }
 
         return $everPerformedDbSongIds;
+    }
+
+    // Yuki本人が実際にライブで演奏した記録（SlSetlist、フェスのゲスト出演含む）がある
+    // db_song_idの集合を、アーティストIDに関わらず一度に集める。
+    // Live Stamp Bookの「アーティストごとのUnique Songs」集計で、全アーティストを
+    // 都度SlSetlist全件走査するのを避けるための共通ヘルパー。
+    private function playedDbSongIdsByArtist(): array
+    {
+        $today = now()->toDateString();
+        $playedSlSongIds = [];
+        $setlists = SlSetlist::where('date', '<=', $today)->get();
+
+        foreach ($setlists as $setlist) {
+            $allSongs = array_merge(
+                $setlist->setlist ?? [],
+                $setlist->encore ?? [],
+                $this->flattenFesSongs($setlist->fes_setlist ?? []),
+                $this->flattenFesSongs($setlist->fes_encore ?? [])
+            );
+
+            foreach ($allSongs as $songData) {
+                if (isset($songData['song']) && is_numeric($songData['song'])) {
+                    $playedSlSongIds[(int)$songData['song']] = true;
+                }
+            }
+        }
+
+        $playedDbSongIdsByArtist = [];
+        SlSong::whereNotNull('db_song_id')->select('id', 'artist_id', 'db_song_id')
+            ->get()
+            ->each(function (SlSong $slSong) use ($playedSlSongIds, &$playedDbSongIdsByArtist) {
+                if (isset($playedSlSongIds[$slSong->id])) {
+                    $playedDbSongIdsByArtist[$slSong->artist_id][(int)$slSong->db_song_id] = true;
+                }
+            });
+
+        return $playedDbSongIdsByArtist;
     }
 }

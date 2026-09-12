@@ -112,7 +112,7 @@
                                             <a href="{{ url('/setlists/songs/' . $song['song_id']) }}" class="stats-link">{{ $song['title'] }}</a>
                                         </td>
                                         <td class="artist-name">
-                                            <a href="{{ route('stats.artist', $song['artist_id']) }}" class="stats-link">{{ $song['artist_name'] }}</a>
+                                            <a href="{{ url('/setlists/artists/' . $song['artist_id']) }}" class="stats-link">{{ $song['artist_name'] }}</a>
                                         </td>
                                         <td class="count-col">
                                             <span class="count-badge">{{ $song['count'] }}</span>
@@ -195,6 +195,62 @@
                                         <i class="fas fa-stamp"></i> {{ $artistStat['name'] }}
                                     </a>
                                 @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+                    @if (isset($stampBookSongStats) && $stampBookSongStats->isNotEmpty())
+                        <!-- Unique Songs by Artist Section -->
+                        <div class="stats-section visible">
+                            <h2 class="section-title">
+                                <i class="fas fa-music"></i> Unique Songs by Artist
+                            </h2>
+                            <div class="stats-table-container">
+                                <table class="stats-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="rank-col">Rank</th>
+                                            <th>Artist Name</th>
+                                            <th class="count-col">Unique Songs</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($stampBookSongStats as $index => $artistStat)
+                                        @php
+                                            $showRank = $index === 0 || $stampBookSongStats[$index - 1]['done_count'] !== $artistStat['done_count'];
+                                            $actualRank = $index + 1;
+                                        @endphp
+                                        <tr class="{{ $index >= 10 ? 'hidden-row-song-stats' : '' }}">
+                                            <td class="rank-col">
+                                                @if($showRank)
+                                                    @if($index === 0)
+                                                        <span class="rank-badge gold">🏆</span>
+                                                    @elseif($index === 1)
+                                                        <span class="rank-badge silver">🥈</span>
+                                                    @elseif($index === 2)
+                                                        <span class="rank-badge bronze">🥉</span>
+                                                    @else
+                                                        <span class="rank-number">{{ $actualRank }}</span>
+                                                    @endif
+                                                @endif
+                                            </td>
+                                            <td class="artist-name">
+                                                <a href="{{ route('stats.artist', $artistStat['id']) }}" class="stats-link">{{ $artistStat['name'] }}</a>
+                                            </td>
+                                            <td class="count-col">
+                                                <span class="count-badge">{{ $artistStat['done_count'] }} / {{ $artistStat['total_count'] }}</span>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                @if(count($stampBookSongStats) > 10)
+                                <div class="show-more-container">
+                                    <button class="show-more-btn" onclick="toggleStampBookSongStatsRows(this)">
+                                        Show More <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                </div>
+                                @endif
                             </div>
                         </div>
                     @endif
@@ -356,6 +412,20 @@ function toggleArtistRows(button) {
         : 'Show Less <i class="fas fa-chevron-up"></i>';
 }
 
+function toggleStampBookSongStatsRows(button) {
+    const hiddenRows = document.querySelectorAll('.hidden-row-song-stats');
+    const isExpanded = button.classList.contains('expanded');
+
+    hiddenRows.forEach(row => {
+        row.style.display = isExpanded ? 'none' : 'table-row';
+    });
+
+    button.classList.toggle('expanded');
+    button.innerHTML = isExpanded
+        ? 'Show More <i class="fas fa-chevron-down"></i>'
+        : 'Show Less <i class="fas fa-chevron-up"></i>';
+}
+
 // Most Listened Songs - Unique Tour Toggle
 const songStatsData = @json($songStats);
 const songStatsUnique = @json($songStatsUnique);
@@ -393,7 +463,7 @@ document.getElementById('uniqueTourCheckbox').addEventListener('change', functio
                 <a href="/setlists/songs/${song.song_id}" class="stats-link">${song.title}</a>
             </td>
             <td class="artist-name">
-                <a href="/stats/artist/${song.artist_id}" class="stats-link">${song.artist_name}</a>
+                <a href="/setlists/artists/${song.artist_id}" class="stats-link">${song.artist_name}</a>
             </td>
             <td class="count-col">
                 <span class="count-badge">${song.count}</span>

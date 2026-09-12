@@ -88,6 +88,34 @@ class MyPageController extends Controller
 
         $artists = Artist::whereIn('id', $setlists->pluck('tour.artist_id')->filter()->unique())->get();
 
+        // Live Stamp Bookの下に表示する、アーティストごとのUnique Songs（自分が聴いた曲数）統計
+        // type=4（ソロ）は単独アーティストとしての集計に含めない（AttendanceControllerの絞り込みと同じ基準）
+        $songIdsByArtist = [];
+        foreach ($attendances as $attendance) {
+            $tour = $attendance->dbSetlist?->tour;
+            if (!$tour || !$tour->artist_id || (int)$tour->type === 4) {
+                continue;
+            }
+            $setlist = $attendance->dbSetlist;
+            foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
+                if (isset($s['song']) && is_numeric($s['song'])) {
+                    $songIdsByArtist[$tour->artist_id][(int)$s['song']] = true;
+                }
+            }
+        }
+        $artistSongStats = $artists
+            ->filter(fn ($artist) => isset($songIdsByArtist[$artist->id]))
+            ->map(function ($artist) use ($songIdsByArtist) {
+                return [
+                    'id' => $artist->id,
+                    'name' => $artist->name,
+                    'unique_songs' => count($songIdsByArtist[$artist->id]),
+                    'total_songs' => DbSong::where('artist_id', $artist->id)->count(),
+                ];
+            })
+            ->sortByDesc('unique_songs')
+            ->values();
+
         $artistStats = $attendances
             // type=0（ツアー）・1（単発ライブ）以外は複数アーティスト出演のフェス等のため、単独アーティストの参加数には含めない
             ->filter(fn ($a) => $a->dbSetlist?->tour?->artist && !in_array((int)$a->dbSetlist->tour->type, [2, 3, 4], true))
@@ -119,6 +147,6 @@ class MyPageController extends Controller
             ->take(10)
             ->values();
 
-        return view('mypage.index', compact('attendances', 'overallStats', 'topSongs', 'topSongsUnique', 'artists', 'artistStats', 'venueStats', 'yearStats'));
+        return view('mypage.index', compact('attendances', 'overallStats', 'topSongs', 'topSongsUnique', 'artists', 'artistStats', 'artistSongStats', 'venueStats', 'yearStats'));
     }
 }

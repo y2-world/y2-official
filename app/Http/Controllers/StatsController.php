@@ -64,6 +64,29 @@ class StatsController extends Controller
         // 楽曲が1件も登録されていないアーティストは表示対象から除く
         $artistIdsWithDbSongs = DbSong::select('artist_id')->distinct()->pluck('artist_id')->flip();
 
+        // Live Stamp Bookの下に表示する、アーティストごとのUnique Songs（演奏済み曲数）統計
+        $dbSongTotalsByArtist = DbSong::select('artist_id', DB::raw('count(*) as total'))
+            ->groupBy('artist_id')
+            ->pluck('total', 'artist_id');
+        $playedDbSongIdsByArtist = $this->playedDbSongIdsByArtist();
+        $stampBookSongStats = collect($artistIdsWithDbSongs->keys())
+            ->map(function ($artistId) use ($dbSongTotalsByArtist, $playedDbSongIdsByArtist) {
+                $artist = Artist::find($artistId);
+                if (!$artist) {
+                    return null;
+                }
+                $doneCount = count($playedDbSongIdsByArtist[$artistId] ?? []);
+                return [
+                    'id' => $artist->id,
+                    'name' => $artist->name,
+                    'done_count' => $doneCount,
+                    'total_count' => $dbSongTotalsByArtist[$artistId] ?? 0,
+                ];
+            })
+            ->filter()
+            ->sortByDesc('done_count')
+            ->values();
+
         $tab = 'personal';
 
         return view('stats.index', compact(
@@ -75,6 +98,7 @@ class StatsController extends Controller
             'yearStats',
             'monthStats',
             'artistIdsWithDbSongs',
+            'stampBookSongStats',
             'tab'
         ));
     }
