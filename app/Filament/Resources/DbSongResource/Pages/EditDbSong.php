@@ -4,6 +4,7 @@ namespace App\Filament\Resources\DbSongResource\Pages;
 
 use App\Filament\Resources\DbSongResource;
 use App\Models\SlSong;
+use App\Support\SongTitleNormalizer;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Validation\ValidationException;
@@ -59,6 +60,32 @@ class EditDbSong extends EditRecord
                     'data.sl_song_id' => "このセットリスト楽曲「{$conflicting->title}」は既に別の楽曲「"
                         . ($conflictingDbSong?->title ?? '(id: ' . $conflicting->db_song_id . ')')
                         . '」に紐付いています。先にそちらの紐付けを解除してください。',
+                ]);
+            }
+        }
+
+        // 紐付け欄を空欄にして保存した場合（＝自動照合に任せる場合）、保存後のsavedイベントで
+        // 初めて自動照合が走るため、そこで失敗しても保存自体は止められない。
+        // タイトル変更と紐付け解除を同時に行うワークフロー（順番を間違えて登録した曲を後から
+        // 直す場合など）でこの失敗が起きると気づかれないまま終わってしまうため、
+        // 保存前の時点で「新しいタイトルに一致するSlSongがあるが、既に別のDbSongに奪われている」
+        // ケースを検出し、保存自体をエラーで止める。
+        if ($this->slSongIdToSync === null && !empty($data['title'])) {
+            $artistId = $data['artist_id'] ?? $this->record->artist_id;
+            $normalizedTitle = SongTitleNormalizer::normalize($data['title']);
+
+            $stolenByOther = SlSong::where('artist_id', $artistId)
+                ->whereNotNull('db_song_id')
+                ->where('db_song_id', '!=', $this->record->id)
+                ->get(['id', 'title', 'db_song_id'])
+                ->first(fn (SlSong $candidate) => SongTitleNormalizer::normalize($candidate->title) === $normalizedTitle);
+
+            if ($stolenByOther) {
+                $owner = $stolenByOther->dbSong;
+                throw ValidationException::withMessages([
+                    'data.sl_song_id' => "タイトルが一致するセットリスト楽曲「{$stolenByOther->title}」は既に別の楽曲「"
+                        . ($owner?->title ?? '(id: ' . $stolenByOther->db_song_id . ')')
+                        . '」に紐付いているため、自動紐付けできません。先にそちらの紐付けを解除するか、直接選択してください。',
                 ]);
             }
         }
