@@ -17,7 +17,7 @@
                 @endif
             </p>
             <h1 class="database-title" style="">{{ $attendance->dbSetlist->tour->title ?? '' }}</h1>
-            <p class="database-subtitle" id="attendanceDisplay" style="">
+            <p class="database-subtitle" id="attendanceDisplay" style="@if ($errors->any()) display: none; @endif">
                 @if ($attendance->attended_date)
                     {{ $attendance->attended_date->format('Y.m.d') }}
                 @endif
@@ -28,12 +28,22 @@
                 </a>
             </p>
 
-            <form method="POST" action="{{ route('mypage.attendances.update', $attendance) }}" id="attendanceEditForm" style="display: none; text-align: center;">
+            @if ($errors->any())
+                <div class="alert alert-danger" style="max-width: 400px; margin: 10px auto 0; text-align: center;">
+                    <ul style="margin-bottom: 0; padding-left: 20px; text-align: left;">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('mypage.attendances.update', $attendance) }}" id="attendanceEditForm" style="{{ $errors->any() ? 'display: block;' : 'display: none;' }} text-align: center;">
                 @csrf
                 @method('PUT')
                 <div style="display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center;">
-                    <input type="date" name="attended_date" value="{{ $attendance->attended_date?->format('Y-m-d') }}" style="border-radius: 6px; border: none; padding: 4px 8px; font-size: 0.85rem;">
-                    <input type="text" name="venue" value="{{ $attendance->venue }}" placeholder="会場" style="border-radius: 6px; border: none; padding: 4px 8px; font-size: 0.85rem;">
+                    <input type="date" name="attended_date" value="{{ old('attended_date', $attendance->attended_date?->format('Y-m-d')) }}" style="border-radius: 6px; border: none; padding: 4px 8px; font-size: 0.85rem;" required>
+                    <input type="text" name="venue" value="{{ old('venue', $attendance->venue) }}" placeholder="会場" style="border-radius: 6px; border: none; padding: 4px 8px; font-size: 0.85rem;">
                     <span style="display: inline-flex; align-items: center; gap: 8px; flex-wrap: nowrap; flex-shrink: 0;">
                         <button type="submit" style="background: none; border: none; color: white; cursor: pointer; padding: 4px;" title="保存">
                             <i class="fa-solid fa-check"></i>

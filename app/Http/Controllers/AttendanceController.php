@@ -9,6 +9,8 @@ use App\Models\DbSong;
 use App\Models\ExternalUserAttendance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class AttendanceController extends Controller
 {
@@ -168,11 +170,41 @@ class AttendanceController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
+        $validator = Validator::make($request->all(), [
             'db_setlist_id' => ['required', 'exists:db_setlists,id'],
-            'attended_date' => ['nullable', 'date'],
+            'attended_date' => [
+                'required',
+                'date',
+                Rule::unique('external_user_attendances')->where(
+                    fn ($query) => $query
+                        ->where('external_user_id', Auth::guard('external')->id())
+                        ->where('db_setlist_id', $request->input('db_setlist_id'))
+                ),
+            ],
             'venue' => ['nullable', 'string', 'max:255'],
+        ], [
+            'attended_date.unique' => 'この公演はすでに登録されています。',
         ]);
+
+        if ($validator->fails()) {
+            // セッションフラッシュ経由のリダイレクトだと、setlists()（一覧選択画面）の
+            // 自動リダイレクト（パターンが1つしかない場合）が間に挟まってエラーが失われることがあるため、
+            // リダイレクトせずこの場でform画面をエラー付きで直接描画する
+            $dbSetlist = DbSetlist::with('tour.artist')->findOrFail($request->input('db_setlist_id'));
+            $defaultAttendedDate = !$dbSetlist->tour->date2 ? $dbSetlist->tour->date1 : null;
+            $scheduleOptions = $dbSetlist->tour->parseScheduleEntries();
+
+            $errorBag = new \Illuminate\Support\ViewErrorBag();
+            $errorBag->put('default', $validator->errors());
+
+            return response()
+                ->view('mypage.attendances.form', compact('dbSetlist', 'defaultAttendedDate', 'scheduleOptions') + [
+                    'errors' => $errorBag,
+                ])
+                ->setStatusCode(422);
+        }
+
+        $data = $validator->validated();
 
         $attendance = Auth::guard('external')->user()->attendances()->create($data);
 
@@ -222,10 +254,26 @@ class AttendanceController extends Controller
     {
         $this->authorizeOwnership($attendance);
 
-        $data = $request->validate([
-            'attended_date' => ['nullable', 'date'],
+        $validator = Validator::make($request->all(), [
+            'attended_date' => [
+                'required',
+                'date',
+                Rule::unique('external_user_attendances')->where(
+                    fn ($query) => $query
+                        ->where('external_user_id', Auth::guard('external')->id())
+                        ->where('db_setlist_id', $attendance->db_setlist_id)
+                )->ignore($attendance->id),
+            ],
             'venue' => ['nullable', 'string', 'max:255'],
+        ], [
+            'attended_date.unique' => 'この公演はすでに登録されています。',
         ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $data = $validator->validated();
 
         $attendance->update($data);
 

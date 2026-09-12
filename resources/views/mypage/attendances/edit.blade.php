@@ -36,7 +36,7 @@
                     @method('PUT')
                     <div class="mb-3">
                         <label for="attended_date" class="form-label">参加日</label>
-                        <input type="date" class="form-control" id="attended_date" name="attended_date" value="{{ old('attended_date', $attendance->attended_date?->format('Y-m-d')) }}">
+                        <input type="date" class="form-control" id="attended_date" name="attended_date" value="{{ old('attended_date', $attendance->attended_date?->format('Y-m-d')) }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="venue" class="form-label">会場</label>

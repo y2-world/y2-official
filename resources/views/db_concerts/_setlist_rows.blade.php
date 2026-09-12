@@ -71,6 +71,9 @@
                                     $title = '';
                                     $link = null;
                                     $isUnique = $commonSongs !== null && !in_array($data['song'] ?? '', $commonSongs);
+                                    // 共演者名が長いと曲名と同じ行では折り返しが崩れるため、
+                                    // 一定の長さを超えたら曲名の下に別行で表示する
+                                    $featuringIsLong = mb_strlen($featuringDisplay) > 10;
 
                                     if ($isNumericSong) {
                                         $songModel = $songs->find($data['song']);
@@ -106,7 +109,11 @@
                                             {{ $title }}
                                         @endif
                                         @if(!empty($featuring))
-                                            <span style="color:#999;font-size:0.75em;">{{ $featuringDisplay }}</span>
+                                            @if($featuringIsLong)
+                                                <div style="color:#999;font-size:0.75em;font-weight:normal;">{{ $featuringDisplay }}</div>
+                                            @else
+                                                <span style="color:#999;font-size:0.75em;">{{ $featuringDisplay }}</span>
+                                            @endif
                                         @endif
                                         @if(!empty($dailyNote))
                                             <span style="color:#999;font-size:0.75em;">{{ $dailyNote }}</span>

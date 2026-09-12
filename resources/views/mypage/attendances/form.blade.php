@@ -82,7 +82,7 @@
                         <input type="hidden" name="db_setlist_id" value="{{ $dbSetlist->id }}">
                         <div class="mb-3">
                             <label for="attended_date" class="form-label">参加日</label>
-                            <input type="date" class="form-control" id="attended_date" name="attended_date" value="{{ old('attended_date', $defaultAttendedDate) }}">
+                            <input type="date" class="form-control" id="attended_date" name="attended_date" value="{{ old('attended_date', $defaultAttendedDate) }}" required>
                         </div>
                         <div class="mb-3">
                             <label for="venue" class="form-label">会場</label>

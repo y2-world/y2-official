@@ -3603,9 +3603,9 @@ a.setlist-card:hover {
 /* Toast notifications */
 .app-toast {
     position: fixed;
-    bottom: 24px;
+    top: 24px;
     left: 50%;
-    transform: translate(-50%, 20px);
+    transform: translate(-50%, -20px);
     display: flex;
     align-items: center;
     gap: 8px;
