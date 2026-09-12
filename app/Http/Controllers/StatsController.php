@@ -548,7 +548,9 @@ class StatsController extends Controller
 
     private function getDatabaseLongestSetlists(int $artistId)
     {
-        $tourIds = DbConcert::where('artist_id', $artistId)->pluck('id');
+        // type=2（イベント）・3（ap bank fes）・4（ソロ）は他アーティストとの合同編成や
+        // 単独プロジェクトのため、そのアーティスト単独のセットリスト長の比較には含めない
+        $tourIds = DbConcert::where('artist_id', $artistId)->whereNotIn('type', [2, 3, 4])->pluck('id');
         $tourSetlists = DbSetlist::whereIn('tour_id', $tourIds)->get();
         $lengths = [];
 

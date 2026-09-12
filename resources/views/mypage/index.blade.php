@@ -278,7 +278,7 @@
                                 <i class="fas fa-music"></i> Unique Songs by Artist
                             </h2>
                             <div class="stats-table-container">
-                                <table class="stats-table">
+                                <table class="stats-table has-ratio-count">
                                     <thead>
                                         <tr>
                                             <th class="rank-col">Rank</th>

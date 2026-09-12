@@ -117,8 +117,9 @@ class MyPageController extends Controller
             ->values();
 
         $artistStats = $attendances
-            // type=0（ツアー）・1（単発ライブ）以外は複数アーティスト出演のフェス等のため、単独アーティストの参加数には含めない
-            ->filter(fn ($a) => $a->dbSetlist?->tour?->artist && !in_array((int)$a->dbSetlist->tour->type, [2, 3, 4], true))
+            // type=4（ソロ）は本人単独のプロジェクトであり、アーティスト本体の参加数には含めない
+            // （イベント・ap bank fesはそのアーティスト自身としての出演なので含める）
+            ->filter(fn ($a) => $a->dbSetlist?->tour?->artist && (int)$a->dbSetlist->tour->type !== 4)
             ->groupBy(fn ($a) => $a->dbSetlist->tour->artist_id)
             ->map(function ($group) {
                 $artist = $group->first()->dbSetlist->tour->artist;

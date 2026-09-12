@@ -2237,6 +2237,11 @@ h2 {
     width: 70%;
 }
 
+/* Wider column for "done / total" style counts (e.g. "75 / 268") that don't fit the default badge width */
+.stats-table.has-ratio-count .count-col {
+    min-width: 110px;
+}
+
 .rank-badge {
     font-size: 1.5rem;
     display: inline-block;
@@ -2563,6 +2568,12 @@ h2 {
         width: 80%;
     }
 
+    /* Wider column for "done / total" style counts on mobile */
+    .stats-table.has-ratio-count .count-col {
+        width: 70px;
+        max-width: 70px;
+    }
+
     .rank-badge {
         font-size: 1rem;
     }
@@ -2742,6 +2753,11 @@ h2 {
     .count-col {
         width: 50px;
         max-width: 50px;
+    }
+
+    .stats-table.has-ratio-count .count-col {
+        width: 70px;
+        max-width: 70px;
     }
 
     .count-badge {
