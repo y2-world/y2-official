@@ -34,6 +34,14 @@ class DbSong extends Model
                 fn(SlSong $candidate) => SongTitleNormalizer::normalize($candidate->title) === $normalizedTitle
             );
 
+            \Log::info('DEBUG DbSong auto-match (saved event)', [
+                'song_id' => $song->id,
+                'song_title' => $song->title,
+                'candidate_count' => $candidates->count(),
+                'match_count' => $matches->count(),
+                'match_ids' => $matches->pluck('id')->all(),
+            ]);
+
             if ($matches->count() === 1) {
                 $matches->first()->update(['db_song_id' => $song->id]);
             }

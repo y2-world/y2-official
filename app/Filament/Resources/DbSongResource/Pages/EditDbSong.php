@@ -38,6 +38,14 @@ class EditDbSong extends EditRecord
             ? (int) $data['sl_song_id'] ?: null
             : false;
 
+        \Log::info('DEBUG DbSong mutateFormDataBeforeSave', [
+            'raw' => $data['sl_song_id'] ?? null,
+            'slSongIdToSync' => $this->slSongIdToSync,
+            'originalSlSongId' => $this->originalSlSongId,
+            'record_title_before_save' => $this->record->title,
+            'new_title' => $data['title'] ?? null,
+        ]);
+
         unset($data['sl_song_id']);
 
         return $data;
@@ -54,15 +62,23 @@ class EditDbSong extends EditRecord
     // 自動紐付けが新しく設定した紐付けを、フォームの古い値で上書きして戻してしまう。
     protected function afterSave(): void
     {
+        $currentSlSongId = $this->record->slSongs()->value('id');
+
+        \Log::info('DEBUG DbSong afterSave', [
+            'slSongIdToSync' => $this->slSongIdToSync,
+            'originalSlSongId' => $this->originalSlSongId,
+            'currentSlSongId_after_auto_match' => $currentSlSongId,
+            'record_title_after_save' => $this->record->fresh()->title,
+        ]);
+
         if ($this->slSongIdToSync === false) {
             return;
         }
 
         if ($this->slSongIdToSync === $this->originalSlSongId) {
+            \Log::info('DEBUG DbSong afterSave: skipped (unchanged form value)');
             return;
         }
-
-        $currentSlSongId = $this->record->slSongs()->value('id');
 
         if ($currentSlSongId) {
             \App\Models\SlSong::where('id', $currentSlSongId)->update(['db_song_id' => null]);
@@ -71,5 +87,10 @@ class EditDbSong extends EditRecord
         if ($this->slSongIdToSync) {
             \App\Models\SlSong::where('id', $this->slSongIdToSync)->update(['db_song_id' => $this->record->id]);
         }
+
+        \Log::info('DEBUG DbSong afterSave: applied sync', [
+            'unset_from' => $currentSlSongId,
+            'set_to' => $this->slSongIdToSync,
+        ]);
     }
 }
