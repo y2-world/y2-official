@@ -159,7 +159,11 @@ class AttendanceController extends Controller
         // 単発開催（date2が無い）の場合は参加日が一意に決まるため、date1を初期値にする
         $defaultAttendedDate = !$dbSetlist->tour->date2 ? $dbSetlist->tour->date1 : null;
 
-        return view('mypage.attendances.form', compact('dbSetlist', 'defaultAttendedDate'));
+        // スケジュール表（db_concerts.schedule）から日付・会場の候補をドロップダウン用に用意する。
+        // パースできる行のみ候補になり、パース失敗時は従来通り手入力にフォールバックできる。
+        $scheduleOptions = $dbSetlist->tour->parseScheduleEntries();
+
+        return view('mypage.attendances.form', compact('dbSetlist', 'defaultAttendedDate', 'scheduleOptions'));
     }
 
     public function store(Request $request)
