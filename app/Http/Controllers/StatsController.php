@@ -76,15 +76,17 @@ class StatsController extends Controller
                     return null;
                 }
                 $doneCount = count($playedDbSongIdsByArtist[$artistId] ?? []);
+                $totalCount = $dbSongTotalsByArtist[$artistId] ?? 0;
                 return [
                     'id' => $artist->id,
                     'name' => $artist->name,
                     'done_count' => $doneCount,
-                    'total_count' => $dbSongTotalsByArtist[$artistId] ?? 0,
+                    'total_count' => $totalCount,
+                    'percentage' => $totalCount > 0 ? round($doneCount / $totalCount * 100, 1) : 0,
                 ];
             })
             ->filter()
-            ->sortByDesc('done_count')
+            ->sortByDesc('percentage')
             ->values();
 
         $tab = 'personal';

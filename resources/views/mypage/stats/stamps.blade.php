@@ -78,6 +78,11 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // ページを開いた時、済みスタンプを一斉にパコンと押す
+    document.querySelectorAll('.stamp-slot.is-stamped .stamp-mark').forEach(function (mark) {
+        mark.classList.add('is-stamp-in');
+    });
+
     const summary = document.querySelector('.stamp-summary');
     const checkbox = document.getElementById('stampPerformedOnlyCheckbox');
     const totalEl = document.getElementById('stampSummaryTotal');

@@ -106,14 +106,17 @@ class MyPageController extends Controller
         $artistSongStats = $artists
             ->filter(fn ($artist) => isset($songIdsByArtist[$artist->id]))
             ->map(function ($artist) use ($songIdsByArtist) {
+                $uniqueSongs = count($songIdsByArtist[$artist->id]);
+                $totalSongs = DbSong::where('artist_id', $artist->id)->count();
                 return [
                     'id' => $artist->id,
                     'name' => $artist->name,
-                    'unique_songs' => count($songIdsByArtist[$artist->id]),
-                    'total_songs' => DbSong::where('artist_id', $artist->id)->count(),
+                    'unique_songs' => $uniqueSongs,
+                    'total_songs' => $totalSongs,
+                    'percentage' => $totalSongs > 0 ? round($uniqueSongs / $totalSongs * 100, 1) : 0,
                 ];
             })
-            ->sortByDesc('unique_songs')
+            ->sortByDesc('percentage')
             ->values();
 
         $artistStats = $attendances

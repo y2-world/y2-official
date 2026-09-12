@@ -212,12 +212,13 @@
                                             <th class="rank-col">Rank</th>
                                             <th>Artist Name</th>
                                             <th class="count-col">Unique Songs</th>
+                                            <th class="percentage-col">%</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($stampBookSongStats as $index => $artistStat)
                                         @php
-                                            $showRank = $index === 0 || $stampBookSongStats[$index - 1]['done_count'] !== $artistStat['done_count'];
+                                            $showRank = $index === 0 || $stampBookSongStats[$index - 1]['percentage'] !== $artistStat['percentage'];
                                             $actualRank = $index + 1;
                                         @endphp
                                         <tr class="{{ $index >= 10 ? 'hidden-row-song-stats' : '' }}">
@@ -237,8 +238,9 @@
                                             <td class="artist-name">
                                                 <a href="{{ route('stats.artist', $artistStat['id']) }}" class="stats-link">{{ $artistStat['name'] }}</a>
                                             </td>
-                                            <td class="count-col">
-                                                <span class="count-badge">{{ $artistStat['done_count'] }} / {{ $artistStat['total_count'] }}</span>
+                                            <td class="count-col">{{ $artistStat['done_count'] }} / {{ $artistStat['total_count'] }}</td>
+                                            <td class="percentage-col">
+                                                <span class="count-badge">{{ $artistStat['percentage'] }}%</span>
                                             </td>
                                         </tr>
                                         @endforeach
