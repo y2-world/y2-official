@@ -49,20 +49,22 @@ class DbSongResource extends Resource
                     ->rows(5)
                     ->columnSpanFull(),
 
-                Forms\Components\Select::make('slSongs')
+                Forms\Components\Select::make('sl_song_ids')
                     ->label('セットリスト楽曲との紐付け')
                     ->helperText('この楽曲に対応するセットリスト楽曲（複数可）。スタンプ帳の判定に使われます')
-                    ->relationship(
-                        name: 'slSongs',
-                        titleAttribute: 'title',
-                        modifyQueryUsing: fn (Builder $query, Get $get) => $get('artist_id')
-                            ? $query->where('artist_id', $get('artist_id'))
-                            : $query,
-                    )
+                    // hasMany + multiple() はFilamentのrelationship()保存処理が対応しておらず
+                    // 保存時に何も反映されない（Select::saveRelationshipsUsingがHasOneOrManyを素通りする）ため、
+                    // ->relationship()は使わず、state読み込み・保存を自前で行う（下のPagesクラス側で処理）
+                    ->options(fn (Get $get) => $get('artist_id')
+                        ? \App\Models\SlSong::where('artist_id', $get('artist_id'))->orderBy('title')->pluck('title', 'id')
+                        : [])
+                    ->default(fn (?DbSong $record) => $record?->slSongs->pluck('id')->all() ?? [])
+                    ->dehydrated(false)
                     ->multiple()
                     ->searchable()
                     ->preload()
                     ->native(false)
+                    ->placeholder('紐付けるセットリスト楽曲を選択')
                     ->columnSpanFull(),
             ]);
     }
