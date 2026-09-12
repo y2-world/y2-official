@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Yuki Official - 参加記録一覧')
+@section('title', 'Yuki Official - セットリスト一覧')
 
 @section('content')
     <div class="database-hero database-hero--nav">

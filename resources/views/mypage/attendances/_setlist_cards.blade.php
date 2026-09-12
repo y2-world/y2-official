@@ -1,5 +1,5 @@
 {{-- $setlistModel（DbSetlist 1件）と $songs（全DbSongのコレクション）を受け取り、
-     曲ごとにカード化して表示する。My Pageの参加記録詳細（1パターンのみ表示）専用。 --}}
+     曲ごとにカード化して表示する。My Pageのセットリスト詳細（1パターンのみ表示）専用。 --}}
 @php
     $setlist = is_array($setlistModel->setlist) ? $setlistModel->setlist : [];
     $encore = is_array($setlistModel->encore) ? $setlistModel->encore : [];

@@ -1,12 +1,12 @@
 @extends('layouts.app')
-@section('title', 'Yuki Official - ' . ($attendance->dbSetlist->tour->title ?? '参加記録'))
+@section('title', 'Yuki Official - ' . ($attendance->dbSetlist->tour->title ?? 'セットリスト'))
 
 @section('content')
     <div class="database-hero database-hero--detail">
         <div class="container">
             @include('database._breadcrumb', ['breadcrumbs' => [
                 ['label' => 'My Page', 'url' => route('mypage.index')],
-                ['label' => $attendance->dbSetlist->tour->title ?? '参加記録'],
+                ['label' => $attendance->dbSetlist->tour->title ?? 'セットリスト'],
             ]])
             <p class="database-subtitle" style="">
                 {{-- type=0（ツアー）・1（単発ライブ）以外は複数アーティスト出演のフェス等のため、単独アーティスト名は表示しない --}}
