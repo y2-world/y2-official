@@ -41,15 +41,6 @@ class EditDbSong extends EditRecord
     {
         $this->originalSlSongId = $this->record->slSongs()->value('id');
 
-        \Log::info('DEBUG EditDbSong mutateFormDataBeforeSave', [
-            'record_id' => $this->record->id,
-            'record_title_before' => $this->record->title,
-            'new_title' => $data['title'] ?? null,
-            'raw_sl_song_id' => $data['sl_song_id'] ?? '(key not present)',
-            'originalSlSongId' => $this->originalSlSongId,
-            'raw_extra_sl_songs' => $data['extra_sl_songs'] ?? '(key not present)',
-        ]);
-
         if (array_key_exists('extra_sl_songs', $data)) {
             // slSongs()（クエリビルダー）へのskip(1)はOFFSET句のみになりMySQLの構文エラーになるため、
             // 既にロード済みのslSongs（Eloquentコレクション）側のskip(1)（配列操作）を使う。
@@ -130,32 +121,29 @@ class EditDbSong extends EditRecord
     // （slSongIdToSyncがnullでない）場合のみ、明示的な操作とみなして反映する。
     protected function afterSave(): void
     {
-        \Log::info('DEBUG EditDbSong afterSave', [
-            'slSongIdToSync' => $this->slSongIdToSync,
-            'originalSlSongId' => $this->originalSlSongId,
-            'extraSlSongIdsToDetach' => $this->extraSlSongIdsToDetach,
-            'record_title_after_save' => $this->record->fresh()->title,
-            'slSongs_now' => $this->record->slSongs()->pluck('title', 'id')->all(),
-        ]);
-
         if (!empty($this->extraSlSongIdsToDetach)) {
             SlSong::whereIn('id', $this->extraSlSongIdsToDetach)->update(['db_song_id' => null]);
         }
 
-        if ($this->slSongIdToSync === false || $this->slSongIdToSync === null) {
-            return;
+        if ($this->slSongIdToSync !== false
+            && $this->slSongIdToSync !== null
+            && $this->slSongIdToSync !== $this->originalSlSongId
+        ) {
+            $currentSlSongId = $this->record->slSongs()->value('id');
+
+            if ($currentSlSongId) {
+                SlSong::where('id', $currentSlSongId)->update(['db_song_id' => null]);
+            }
+
+            SlSong::where('id', $this->slSongIdToSync)->update(['db_song_id' => $this->record->id]);
         }
 
-        if ($this->slSongIdToSync === $this->originalSlSongId) {
-            return;
-        }
-
-        $currentSlSongId = $this->record->slSongs()->value('id');
-
-        if ($currentSlSongId) {
-            SlSong::where('id', $currentSlSongId)->update(['db_song_id' => null]);
-        }
-
-        SlSong::where('id', $this->slSongIdToSync)->update(['db_song_id' => $this->record->id]);
+        // sl_song_id・extra_sl_songsはモデルのfillableではなくこのページで独自に同期している
+        // フィールドのため、上記の更新（自動紐付けの再照合結果や手動同期の結果）はFilament標準の
+        // 「保存後にフォームへ書き戻す」対象に含まれない。何もしないと、保存ボタンを押しただけでは
+        // 画面上の紐付け表示が古いままになり、手動でページを再読み込みしない限り反映されない。
+        // フォームを明示的に再fillしてこの画面全体を最新のDB状態で描き直す。
+        $this->record->refresh();
+        $this->fillForm();
     }
 }

@@ -27,11 +27,6 @@ class DbSong extends Model
                 return;
             }
 
-            \Log::info('DEBUG DbSong saved event (auto-match)', [
-                'song_id' => $song->id,
-                'song_title' => $song->title,
-            ]);
-
             $normalizedTitle = SongTitleNormalizer::normalize($song->title);
             $candidates = SlSong::where('artist_id', $song->artist_id)
                 ->whereNull('db_song_id')
