@@ -177,7 +177,7 @@ class AttendanceController extends Controller
         $attendance = Auth::guard('external')->user()->attendances()->create($data);
 
         return redirect()->route('mypage.attendances.show', $attendance)
-            ->with('success', 'ライブの参加記録を追加しました。');
+            ->with('success', 'セットリストを追加しました。');
     }
 
     public function show(ExternalUserAttendance $attendance)

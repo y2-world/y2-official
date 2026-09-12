@@ -25,13 +25,20 @@
                     @foreach ($tourSetlists as $setlist)
                         @php
                             $songCount = count($setlist->setlist ?? []) + count($setlist->encore ?? []);
-                            $label = $setlist->subtitle ?: 'パターン ' . $setlist->order_no;
+                            if ($setlist->subtitle) {
+                                $labelRendered = renderSubtitleWithGreyedVenues($setlist->subtitle);
+                                $label = implode('<br>', $labelRendered['lines']);
+                                $labelFontSize = $labelRendered['font_size'];
+                            } else {
+                                $label = e('パターン ' . $setlist->order_no);
+                                $labelFontSize = null;
+                            }
                         @endphp
                         <div class="pick-card">
                             <button type="button" class="pick-card-header setlist-pick-expand" aria-expanded="false" onclick="toggleSetlistPick(this)" style="width: 100%; background: none; border: none; cursor: pointer; text-align: left; font: inherit; color: inherit;">
                                 <span class="select-card-icon"><i class="fa-solid fa-music"></i></span>
                                 <span class="select-card-body">
-                                    <span class="select-card-title">{{ $label }}</span>
+                                    <span class="select-card-title" @if ($labelFontSize) style="font-size: {{ $labelFontSize }};" @endif>{!! $label !!}</span>
                                     <span class="select-card-meta">{{ $songCount }}曲</span>
                                 </span>
                                 <i class="fa-solid fa-chevron-down"></i>

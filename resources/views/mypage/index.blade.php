@@ -63,7 +63,7 @@
                             <h2 class="section-title" style="text-align: left !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; flex: 1 1 auto; margin-bottom: 0;">
                                 <i class="fas fa-calendar-check"></i> My Live Attendances
                             </h2>
-                            <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-button" title="ライブの参加記録を追加" style="flex: 0 0 auto;">
+                            <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-button" title="セットリストを追加" style="flex: 0 0 auto;">
                                 <i class="fas fa-plus"></i>
                             </a>
                         </div>
