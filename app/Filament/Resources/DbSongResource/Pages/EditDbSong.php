@@ -108,34 +108,42 @@ class EditDbSong extends EditRecord
         return $data;
     }
 
-    // ユーザーが選択欄で「別の特定のSlSongを選んだ」場合のみ、その差分を反映する。
-    // それ以外（未操作、または明示的に空欄へクリアした場合）は、ここでは一切何もせず、
-    // $record->save()の中で既に発火済みのDbSong::booted()のsavedイベント（自動紐付け）の
-    // 結果をそのまま残す。
+    // ユーザーが選択欄で「別の特定のSlSongを選んだ」場合は、その差分を反映する。
+    // 「空欄にクリアした」場合は、まず自動照合（DbSong::booted()のsavedイベント、
+    // $record->save()の中で既に発火済み）の結果を尊重する。
     //
-    // 「空欄にクリアする」操作の意図は「今の紐付けを強制的に外す」ことではなく「自動照合に
-    // 任せる」ことである。タイトル変更（例: EXIT→Little）と同時に空欄クリアした場合、
-    // 自動紐付けは既に新タイトルに合う別のSlSong（Little）へ切り替え済みのはずで、
-    // ここで「今のDB値(=Little) != フォームの値(=null)だから解除する」と判断すると、
-    // 自動紐付けの結果を消してしまう。そのため「ユーザーが具体的な別の値を選んだ」
-    // （slSongIdToSyncがnullでない）場合のみ、明示的な操作とみなして反映する。
+    // ただし「自動照合の結果を尊重する」のは、それが何かを実際に変えられた場合のみ。
+    // 自動照合は「未紐付けの候補が1件だけ見つかれば新たに紐付ける」ことしかせず、
+    // 「既存の紐付けを外す」処理を持たないため、候補が見つからなかった（0件・複数件・
+    // 既に他に奪われている）場合は保存前の紐付け（originalSlSongId）がそのまま残ってしまう。
+    // これでは「空欄にして保存」という操作が何も反映されない結果になるため、保存後も
+    // 紐付け先がoriginalSlSongIdのまま変化していなければ、明示的に解除する。
     protected function afterSave(): void
     {
         if (!empty($this->extraSlSongIdsToDetach)) {
             SlSong::whereIn('id', $this->extraSlSongIdsToDetach)->update(['db_song_id' => null]);
         }
 
-        if ($this->slSongIdToSync !== false
-            && $this->slSongIdToSync !== null
-            && $this->slSongIdToSync !== $this->originalSlSongId
-        ) {
-            $currentSlSongId = $this->record->slSongs()->value('id');
+        if ($this->slSongIdToSync !== false && $this->slSongIdToSync !== $this->originalSlSongId) {
+            if ($this->slSongIdToSync === null) {
+                // originalSlSongIdが今もこのDbSongに紐付いたままなら、自動照合は何も変えられなかった
+                // ということなので明示的に解除する。record->slSongs()->value('id')（順序未指定の
+                // 先頭1件）で判定すると、複数紐付いている間はどのidが返るか不定で誤判定するため、
+                // originalSlSongId自体がまだ紐付いているかを直接確認する。
+                if ($this->originalSlSongId
+                    && SlSong::where('id', $this->originalSlSongId)->where('db_song_id', $this->record->id)->exists()
+                ) {
+                    SlSong::where('id', $this->originalSlSongId)->update(['db_song_id' => null]);
+                }
+            } else {
+                $currentSlSongId = $this->record->slSongs()->value('id');
 
-            if ($currentSlSongId) {
-                SlSong::where('id', $currentSlSongId)->update(['db_song_id' => null]);
+                if ($currentSlSongId) {
+                    SlSong::where('id', $currentSlSongId)->update(['db_song_id' => null]);
+                }
+
+                SlSong::where('id', $this->slSongIdToSync)->update(['db_song_id' => $this->record->id]);
             }
-
-            SlSong::where('id', $this->slSongIdToSync)->update(['db_song_id' => $this->record->id]);
         }
 
         // sl_song_id・extra_sl_songsはモデルのfillableではなくこのページで独自に同期している
