@@ -39,18 +39,20 @@ class ShiftDbSongIds extends Command
             foreach ($ids as $oldId) {
                 $newId = $oldId + 1;
 
-                // 1. sl_songs.db_song_id（外部キー制約あり）
+                // 1. db_songs.id 自体を先に更新する。sl_songs.db_song_idの外部キー制約は
+                // 「参照先が実在するid」であることを要求するため、参照元より先に参照先
+                // （db_songs.id）を新しいidへ動かしておく必要がある。
+                DbSong::where('id', $oldId)->update(['id' => $newId]);
+
+                // 2. sl_songs.db_song_id（外部キー制約あり）
                 SlSong::where('db_song_id', $oldId)->update(['db_song_id' => $newId]);
 
-                // 2. db_albums.tracklist / db_singles.tracklist 内のJSON 'id'（文字列として保持）
+                // 3. db_albums.tracklist / db_singles.tracklist 内のJSON 'id'（文字列として保持）
                 $this->shiftTracklistReferences(DbAlbum::class, $oldId, $newId);
                 $this->shiftTracklistReferences(DbSingle::class, $oldId, $newId);
 
-                // 3. db_setlists.setlist / encore 内のJSON 'song'（数値または文字列として保持）
+                // 4. db_setlists.setlist / encore 内のJSON 'song'（数値または文字列として保持）
                 $this->shiftSetlistReferences($oldId, $newId);
-
-                // 4. db_songs.id 自体を更新
-                DbSong::where('id', $oldId)->update(['id' => $newId]);
 
                 $this->line("  {$oldId} -> {$newId}");
             }
