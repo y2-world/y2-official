@@ -12,6 +12,8 @@ class SongTitleNormalizer
         $title = str_replace(['’', '‘'], "'", $title);
         $title = str_replace(['＝'], '=', $title);
         $title = str_replace(['〜', '～'], '~', $title); // 波ダッシュ・全角チルダを統一
+        $title = str_replace('…', '...', $title); // 三点リーダー(1文字)とピリオド3つ表記の揺れを統一
+        $title = preg_replace('/\.{2,}/u', '...', $title); // ピリオド2つ以上はすべて3つに正規化
         $title = preg_replace('/\s+/u', ' ', $title);
         return mb_strtolower(trim($title));
     }
