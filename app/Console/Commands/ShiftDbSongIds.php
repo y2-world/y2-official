@@ -35,28 +35,38 @@ class ShiftDbSongIds extends Command
             return self::SUCCESS;
         }
 
-        DB::transaction(function () use ($ids) {
-            foreach ($ids as $oldId) {
-                $newId = $oldId + 1;
+        // MySQLの外部キー制約は「親行の更新」も子行が参照している限り拒否する
+        // （ON DELETE SET NULLはDELETE時のみに適用され、UPDATE時はカバーしない）。
+        // db_songs.id側を先に動かしても、sl_songs.db_song_id側を先に動かしても、
+        // どちらの順序でも単純な逐次更新では制約に阻まれるため、この一括更新の間だけ
+        // 制約チェックを無効化する。トランザクションのコミット/ロールバックに関わらず
+        // 必ず再有効化されるようfinallyで保証する。
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
-                // 1. db_songs.id 自体を先に更新する。sl_songs.db_song_idの外部キー制約は
-                // 「参照先が実在するid」であることを要求するため、参照元より先に参照先
-                // （db_songs.id）を新しいidへ動かしておく必要がある。
-                DbSong::where('id', $oldId)->update(['id' => $newId]);
+        try {
+            DB::transaction(function () use ($ids) {
+                foreach ($ids as $oldId) {
+                    $newId = $oldId + 1;
 
-                // 2. sl_songs.db_song_id（外部キー制約あり）
-                SlSong::where('db_song_id', $oldId)->update(['db_song_id' => $newId]);
+                    // 1. db_songs.id 自体を更新
+                    DbSong::where('id', $oldId)->update(['id' => $newId]);
 
-                // 3. db_albums.tracklist / db_singles.tracklist 内のJSON 'id'（文字列として保持）
-                $this->shiftTracklistReferences(DbAlbum::class, $oldId, $newId);
-                $this->shiftTracklistReferences(DbSingle::class, $oldId, $newId);
+                    // 2. sl_songs.db_song_id
+                    SlSong::where('db_song_id', $oldId)->update(['db_song_id' => $newId]);
 
-                // 4. db_setlists.setlist / encore 内のJSON 'song'（数値または文字列として保持）
-                $this->shiftSetlistReferences($oldId, $newId);
+                    // 3. db_albums.tracklist / db_singles.tracklist 内のJSON 'id'（文字列として保持）
+                    $this->shiftTracklistReferences(DbAlbum::class, $oldId, $newId);
+                    $this->shiftTracklistReferences(DbSingle::class, $oldId, $newId);
 
-                $this->line("  {$oldId} -> {$newId}");
-            }
-        });
+                    // 4. db_setlists.setlist / encore 内のJSON 'song'（数値または文字列として保持）
+                    $this->shiftSetlistReferences($oldId, $newId);
+
+                    $this->line("  {$oldId} -> {$newId}");
+                }
+            });
+        } finally {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        }
 
         $this->info('Done.');
 
