@@ -12,10 +12,8 @@ class EditDbSong extends EditRecord
 
     // Filament標準のrelationship()保存はHasMany + multiple()に対応していないため、
     // sl_song_idはモデルのfillableに含めず、この一時プロパティ経由で自前で同期する。
-    // フォームを開いた時点で紐付いていたSlSongのidを保持しておき、保存時の選択値と比較する。
-    // これにより「ユーザーが実際に選択欄を操作した場合のみ」変更を反映し、
-    // 何も操作していない（＝フォームのhydrationが機能しておらずnullのまま送られてきた）場合に
-    // 既存の紐付け（自動紐付け含む）を誤って解除してしまう事故を防ぐ。
+    // フォームから送られてきた選択値（false=キー自体が無かった、null=未選択）。
+    // originalSlSongIdと比較し、「ユーザーが実際に選択欄を操作した場合のみ」変更を反映する。
     protected int|false|null $slSongIdToSync = false;
 
     protected ?int $originalSlSongId = null;
@@ -37,7 +35,7 @@ class EditDbSong extends EditRecord
     protected function mutateFormDataBeforeSave(array $data): array
     {
         $this->slSongIdToSync = array_key_exists('sl_song_id', $data)
-            ? $data['sl_song_id']
+            ? (int) $data['sl_song_id'] ?: null
             : false;
 
         unset($data['sl_song_id']);
@@ -45,9 +43,15 @@ class EditDbSong extends EditRecord
         return $data;
     }
 
-    // ユーザーが選択欄を実際に操作した（フォームを開いた時点の紐付けと異なる値が来た）場合のみ、
-    // その差分を反映する。同じ値（=未操作、あるいは操作して元に戻した）ならここでは何もせず、
-    // 自動紐付け（DbSong::booted()のsavedイベント）の結果をそのまま残す。
+    // ユーザーが選択欄を実際に操作した（フォームを開いた時点の紐付け=originalSlSongIdと
+    // 異なる値がフォームから送られてきた）場合のみ、その差分を反映する。
+    // 未操作（=フォームの値がoriginalSlSongIdと同じ）なら、ここでは一切何もしない。
+    //
+    // これが重要な理由: $record->save()の中でDbSong::booted()のsavedイベント（自動紐付け）が
+    // 既に発火済みであり、タイトル変更（例: EXIT→Little）によって紐付け先が
+    // originalSlSongIdとは別のSlSongに切り替わっている可能性がある。
+    // 「ユーザー操作の有無」を見ずに「現在のDB値と違うから」で書き戻すと、
+    // 自動紐付けが新しく設定した紐付けを、フォームの古い値で上書きして戻してしまう。
     protected function afterSave(): void
     {
         if ($this->slSongIdToSync === false) {
@@ -58,8 +62,10 @@ class EditDbSong extends EditRecord
             return;
         }
 
-        if ($this->originalSlSongId) {
-            \App\Models\SlSong::where('id', $this->originalSlSongId)->update(['db_song_id' => null]);
+        $currentSlSongId = $this->record->slSongs()->value('id');
+
+        if ($currentSlSongId) {
+            \App\Models\SlSong::where('id', $currentSlSongId)->update(['db_song_id' => null]);
         }
 
         if ($this->slSongIdToSync) {
