@@ -40,15 +40,41 @@ class DbSong extends Model
                 return;
             }
 
+            if (app()->runningInConsole()) {
+                return;
+            }
+
             // 候補が2件以上で自動では決められない場合、サイレントにスキップすると
             // 気づかれないまま未紐付けが放置されるため、管理画面上に通知する。
             // モデルイベントはArtisanコマンド等（通知先のUIが無い文脈）からも発火するため、
             // Web/Livewireリクエスト内でのみ送信する。
-            if ($matches->count() > 1 && !app()->runningInConsole()) {
+            if ($matches->count() > 1) {
                 Notification::make()
                     ->warning()
                     ->title('セットリスト楽曲の自動紐付けが曖昧です')
                     ->body("「{$song->title}」に一致する未紐付けのセットリスト楽曲が複数見つかったため、自動紐付けをスキップしました。手動で紐付けてください。")
+                    ->persistent()
+                    ->send();
+                return;
+            }
+
+            // 候補が0件でも、「タイトルは一致するが既に別のDbSongに奪われている」SlSongが
+            // 存在する場合は、新曲でSlSongがまだ存在しないだけの通常ケースとは違い、
+            // データの取り合いが起きている異常な状態なので気づけるようにする。
+            $stolenByOther = SlSong::where('artist_id', $song->artist_id)
+                ->whereNotNull('db_song_id')
+                ->where('db_song_id', '!=', $song->id)
+                ->get(['id', 'title', 'db_song_id'])
+                ->first(fn(SlSong $candidate) => SongTitleNormalizer::normalize($candidate->title) === $normalizedTitle);
+
+            if ($stolenByOther) {
+                $owner = DbSong::find($stolenByOther->db_song_id);
+                Notification::make()
+                    ->warning()
+                    ->title('セットリスト楽曲が既に別の楽曲に紐付いています')
+                    ->body("「{$song->title}」に一致するセットリスト楽曲「{$stolenByOther->title}」は既に別の楽曲「"
+                        . ($owner?->title ?? '(id: ' . $stolenByOther->db_song_id . ')')
+                        . '」に紐付いているため、自動紐付けできませんでした。')
                     ->persistent()
                     ->send();
             }
