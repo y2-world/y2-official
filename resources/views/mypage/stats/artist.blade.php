@@ -46,13 +46,19 @@
 
                     <!-- Top Songs for Artist -->
                     <div class="stats-section visible">
-                        <div class="section-title-wrapper">
-                            <h2 class="section-title">
-                                <i class="fas fa-fire"></i> Most Listened Songs ({{ count($allSongs) }})
+                        <div class="section-title-wrapper" style="flex-direction: column; align-items: center; gap: 10px;">
+                            <h2 class="section-title" style="text-align: center;">
+                                <i class="fas fa-fire"></i> Most Listened Songs (<span id="mypageArtistSongCountLabel">{{ count($allSongs) }}</span>)
                             </h2>
+                            <div class="unique-tour-toggle" style="margin-left: 0;">
+                                <label class="unique-tour-label">
+                                    <input type="checkbox" id="uniqueTourCheckboxMypageArtist" class="unique-tour-checkbox">
+                                    <span class="unique-tour-text">Count same-named tours only once</span>
+                                </label>
+                            </div>
                         </div>
                         <div class="stats-table-container">
-                            <table class="stats-table">
+                            <table class="stats-table" id="mypageArtistSongStatsTable">
                                 <thead>
                                     <tr>
                                         <th class="rank-col">Rank</th>
@@ -94,13 +100,11 @@
                                     @endforelse
                                 </tbody>
                             </table>
-                            @if (count($allSongs) > 10)
-                            <div class="show-more-container">
+                            <div class="show-more-container" id="mypageArtistShowMoreContainer" style="{{ count($allSongs) > 10 ? '' : 'display: none;' }}">
                                 <button class="show-more-btn" onclick="toggleTopSongRows(this)">
                                     Show More <i class="fas fa-chevron-down"></i>
                                 </button>
                             </div>
-                            @endif
                         </div>
                     </div>
 
@@ -209,5 +213,69 @@ function toggleTopSongRows(button) {
         ? 'Show More <i class="fas fa-chevron-down"></i>'
         : 'Show Less <i class="fas fa-chevron-up"></i>';
 }
+
+// Most Listened Songs - Unique Tour Toggle
+const mypageArtistAllSongsData = @json($allSongs);
+const mypageArtistAllSongsUnique = @json($allSongsUnique);
+
+document.getElementById('uniqueTourCheckboxMypageArtist').addEventListener('change', function(e) {
+    const useUnique = e.target.checked;
+    const data = useUnique ? mypageArtistAllSongsUnique : mypageArtistAllSongsData;
+
+    document.getElementById('mypageArtistSongCountLabel').textContent = data.length;
+
+    const showMoreBtn = document.querySelector('#mypageArtistShowMoreContainer .show-more-btn');
+    if (showMoreBtn) {
+        showMoreBtn.classList.remove('expanded');
+        showMoreBtn.innerHTML = 'Show More <i class="fas fa-chevron-down"></i>';
+    }
+
+    const showMoreContainer = document.getElementById('mypageArtistShowMoreContainer');
+    showMoreContainer.style.display = data.length > 10 ? '' : 'none';
+
+    const tbody = document.querySelector('#mypageArtistSongStatsTable tbody');
+    tbody.innerHTML = '';
+
+    if (data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3">まだ参加したライブが記録されていません。</td></tr>';
+        return;
+    }
+
+    data.forEach((song, index) => {
+        const tr = document.createElement('tr');
+
+        if (index >= 10) {
+            tr.classList.add('hidden-row-top-songs');
+        }
+
+        const showRank = index === 0 || data[index - 1].count !== song.count;
+        const actualRank = index + 1;
+
+        let rankBadge = '';
+        if (showRank) {
+            if (index === 0) {
+                rankBadge = '<span class="rank-badge gold">🏆</span>';
+            } else if (index === 1) {
+                rankBadge = '<span class="rank-badge silver">🥈</span>';
+            } else if (index === 2) {
+                rankBadge = '<span class="rank-badge bronze">🥉</span>';
+            } else {
+                rankBadge = '<span class="rank-number">' + actualRank + '</span>';
+            }
+        }
+
+        tr.innerHTML = `
+            <td class="rank-col">${rankBadge}</td>
+            <td class="song-title">
+                <a href="{{ url('/mypage/attendances') }}?song_id=${song.song_id}" class="stats-link">${song.title}</a>
+            </td>
+            <td class="count-col">
+                <span class="count-badge">${song.count}</span>
+            </td>
+        `;
+
+        tbody.appendChild(tr);
+    });
+});
 </script>
 @endsection

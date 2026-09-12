@@ -46,11 +46,11 @@
 
                     <!-- Top Songs for Artist -->
                     <div class="stats-section visible">
-                        <div class="section-title-wrapper">
-                            <h2 class="section-title">
+                        <div class="section-title-wrapper" style="flex-direction: column; align-items: center; gap: 10px;">
+                            <h2 class="section-title" style="text-align: center;">
                                 <i class="fas fa-fire"></i> Most Listened Songs (<span id="songCountLabel">{{ count($allSongs) }}</span>)
                             </h2>
-                            <div class="unique-tour-toggle">
+                            <div class="unique-tour-toggle" style="margin-left: 0;">
                                 <label class="unique-tour-label">
                                     <input type="checkbox" id="uniqueTourCheckboxArtist" class="unique-tour-checkbox">
                                     <span class="unique-tour-text">Count same-named tours only once</span>

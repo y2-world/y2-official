@@ -21,15 +21,19 @@ class MyPageStatsController extends Controller
             abort(404);
         }
 
+        // type=4（ソロ）は本人単独のプロジェクトであり、アーティスト本体の統計には含めない
+        // （イベント・ap bank fesはそのアーティスト自身としての出演なので含める）
         $attendances = Auth::guard('external')->user()
             ->attendances()
             ->with('dbSetlist.tour')
-            ->whereHas('dbSetlist.tour', fn($q) => $q->where('artist_id', $artistId))
+            ->whereHas('dbSetlist.tour', fn($q) => $q->where('artist_id', $artistId)->where('type', '!=', 4))
             ->get();
 
         $totalShows = $attendances->count();
 
         $songPlayCounts = [];
+        // 同名ツアーを1回だけカウントする版：[songId => [tourTitle1, tourTitle2, ...]]
+        $songTourTitles = [];
         foreach ($attendances as $attendance) {
             $setlist = $attendance->dbSetlist;
             if (!$setlist) {
@@ -37,30 +41,51 @@ class MyPageStatsController extends Controller
             }
             // 1つのセットリスト（＝1回のライブ参加）内で同じ曲が複数回演奏されても1回とカウントする
             $songsInThisSetlist = [];
+            $tourTitle = $setlist->tour->title ?? 'Unknown';
             foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
                 if (isset($s['song']) && is_numeric($s['song'])) {
                     $songId = (int)$s['song'];
                     if (!in_array($songId, $songsInThisSetlist, true)) {
                         $songsInThisSetlist[] = $songId;
                         $songPlayCounts[$songId] = ($songPlayCounts[$songId] ?? 0) + 1;
+
+                        if (!isset($songTourTitles[$songId])) {
+                            $songTourTitles[$songId] = [];
+                        }
+                        if (!in_array($tourTitle, $songTourTitles[$songId], true)) {
+                            $songTourTitles[$songId][] = $tourTitle;
+                        }
                     }
                 }
             }
         }
         arsort($songPlayCounts);
 
-        $songs = DbSong::whereIn('id', array_keys($songPlayCounts))->get()->keyBy('id');
-        $allSongs = [];
-        foreach ($songPlayCounts as $songId => $count) {
-            $song = $songs->get($songId);
-            if ($song) {
-                $allSongs[] = [
-                    'song_id' => $songId,
-                    'title' => $song->title,
-                    'count' => $count,
-                ];
-            }
+        $songPlayCountsUnique = [];
+        foreach ($songTourTitles as $songId => $tourTitles) {
+            $songPlayCountsUnique[$songId] = count($tourTitles);
         }
+        arsort($songPlayCountsUnique);
+
+        $songs = DbSong::whereIn('id', array_keys($songPlayCounts))->get()->keyBy('id');
+
+        $buildAllSongs = function (array $counts) use ($songs) {
+            $result = [];
+            foreach ($counts as $songId => $count) {
+                $song = $songs->get($songId);
+                if ($song) {
+                    $result[] = [
+                        'song_id' => $songId,
+                        'title' => $song->title,
+                        'count' => $count,
+                    ];
+                }
+            }
+            return $result;
+        };
+
+        $allSongs = $buildAllSongs($songPlayCounts);
+        $allSongsUnique = $buildAllSongs($songPlayCountsUnique);
 
         $totalSongs = count($allSongs);
 
@@ -83,6 +108,7 @@ class MyPageStatsController extends Controller
             'totalShows',
             'totalSongs',
             'allSongs',
+            'allSongsUnique',
             'yearStats',
             'venueStats'
         ));
