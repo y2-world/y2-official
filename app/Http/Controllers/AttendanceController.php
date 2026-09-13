@@ -642,7 +642,12 @@ class AttendanceController extends Controller
                 ->orderBy('attended_date')->orderBy('id')->first();
         }
 
-        return view('mypage.attendances.show', compact('attendance', 'tourSetlists', 'tour', 'artist', 'isOfficial', 'songs', 'previous', 'next', 'isOwner'));
+        $backUrl = url()->previous();
+        if (!$backUrl || $backUrl === url()->current()) {
+            $backUrl = route('mypage.index');
+        }
+
+        return view('mypage.attendances.show', compact('attendance', 'tourSetlists', 'tour', 'artist', 'isOfficial', 'songs', 'previous', 'next', 'isOwner', 'backUrl'));
     }
 
     public function edit(ExternalUserAttendance $attendance)

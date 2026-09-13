@@ -3863,13 +3863,14 @@ a.setlist-card:hover {
 
 .timeline-comment-form-input.form-control {
     font-size: 0.8rem;
-    min-height: 76px;
+    min-height: 120px;
     line-height: 1.5;
     resize: none;
     overflow: hidden;
 }
 
 .timeline-comment-body-input.form-control {
+    font-size: 0.8rem;
     min-height: 38px;
     line-height: 1.5;
     resize: none;

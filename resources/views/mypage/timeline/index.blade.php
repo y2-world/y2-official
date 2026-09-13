@@ -142,6 +142,14 @@
         document.querySelectorAll('.timeline-card').forEach(initTimelineCard);
     });
 
+    // ブラウザのbfcacheから復元された場合（投稿詳細でコメントを追加後に「戻る」した時など）、
+    // コメント数などがページ離脱時点のまま古くなっているため強制的に再読み込みする。
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            location.reload();
+        }
+    });
+
     // --- Pull to Refresh（ページ先頭で下にスワイプするとタイムラインを再読み込みする） ---
     (function () {
         const indicator = document.getElementById('timelinePullIndicator');

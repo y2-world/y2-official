@@ -121,7 +121,7 @@
                     </div>
 
                     <form class="timeline-comment-form" data-post-url="{{ route('mypage.timeline.comments.store', $attendance) }}">
-                        <textarea class="form-control timeline-comment-form-input" placeholder="コメントする" maxlength="1000" rows="3"></textarea>
+                        <textarea class="form-control timeline-comment-form-input" placeholder="コメントする" maxlength="1000" rows="5"></textarea>
                         <button type="submit" class="timeline-comment-form-submit">送信</button>
                     </form>
                 </div>
@@ -155,7 +155,7 @@
         <div class="row justify-content-center">
             <div class="col-xl-9">
                 <div style="text-align: center; margin-top: 1rem;">
-                    <a href="{{ route('mypage.index') }}" style="color: #888; font-size: 0.9rem;" onclick="event.preventDefault(); history.back();">
+                    <a href="{{ $backUrl }}" style="color: #888; font-size: 0.9rem;">
                         <i class="fa-solid fa-arrow-left"></i> Back
                     </a>
                 </div>
