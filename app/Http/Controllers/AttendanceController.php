@@ -609,7 +609,7 @@ class AttendanceController extends Controller
 
     // 参加記録の詳細（セットリスト表示）。Timeline経由で誰でも他人の投稿を閲覧できるが、
     // 前後ナビゲーション・編集操作は本人の記録内でのみ意味を持つため、本人閲覧時だけ表示する。
-    public function show(ExternalUserAttendance $attendance)
+    public function show(Request $request, ExternalUserAttendance $attendance)
     {
         $userId = Auth::guard('external')->id();
         $isOwner = $attendance->external_user_id === $userId;
@@ -642,15 +642,17 @@ class AttendanceController extends Controller
                 ->orderBy('attended_date')->orderBy('id')->first();
         }
 
-        // url()->previous()はリファラーをそのまま返すため、セットリスト登録直後のように
-        // 直前がPOST専用エンドポイントだった場合、そのURLへGETアクセスすると404になる。
-        // Timeline一覧など「戻り先として安全とわかっているGETルート」だけを許可し、
-        // それ以外は常にMy Pageトップへフォールバックする。
-        $backUrl = route('mypage.index');
-        $previousUrl = url()->previous();
-        if ($previousUrl && rtrim($previousUrl, '/') === rtrim(route('mypage.timeline.index'), '/')) {
-            $backUrl = $previousUrl;
-        }
+        // url()->previous()（リファラー）は、セットリスト登録のような複数ステップの
+        // POSTフローを経由した直後だと、そのステップ内の中間ページ（存在しないパラメータの
+        // ままの古いURL等）を指してしまい404になることがある。そのため各リンク側で
+        // 明示的に「戻り先」を?from=で指定してもらい、ここでは既知の値だけをホワイトリストで
+        // 受け付ける。指定が無い・未知の値の場合は常にMy Pageトップへ安全にフォールバックする。
+        $backUrl = match ($request->query('from')) {
+            'timeline' => route('mypage.timeline.index'),
+            'stats' => route('mypage.stats'),
+            'attendances' => route('mypage.attendances.index'),
+            default => route('mypage.index'),
+        };
 
         return view('mypage.attendances.show', compact('attendance', 'tourSetlists', 'tour', 'artist', 'isOfficial', 'songs', 'previous', 'next', 'isOwner', 'backUrl'));
     }

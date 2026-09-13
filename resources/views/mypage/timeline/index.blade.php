@@ -21,7 +21,7 @@
                                 : 'user-' . $tour?->user_artist_id;
                             $isOwner = $attendance->external_user_id === \Illuminate\Support\Facades\Auth::guard('external')->id();
                         @endphp
-                        <a href="{{ route('mypage.attendances.show', $attendance) }}" class="timeline-card" data-attendance-id="{{ $attendance->id }}">
+                        <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'timeline']) }}" class="timeline-card" data-attendance-id="{{ $attendance->id }}">
                             <div class="timeline-card-header">
                                 <div class="timeline-card-meta">
                                     <span class="timeline-card-user" data-nav-url="{{ route('mypage.users.stats', $attendance->external_user_id) }}">{{ $attendance->externalUser->name ?: 'ゲスト' }}</span>

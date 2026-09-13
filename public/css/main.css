@@ -3835,7 +3835,6 @@ a.setlist-card:hover {
     color: #333;
     word-break: break-word;
     white-space: pre-wrap;
-    padding-right: 44px;
 }
 
 .timeline-comment-body-input {
@@ -3896,4 +3895,10 @@ a.setlist-card:hover {
     color: white;
     font-size: 0.8rem;
     font-weight: 600;
+}
+
+/* Font Awesome Kit（JS版）が<i>をSVGに差し替える際、Bootstrap等のライブラリCSSが
+   同じ詳細度で[hidden]のUA既定スタイルを上書きしてしまうことがあるため、明示的に固定する。 */
+[hidden] {
+    display: none !important;
 }

@@ -241,6 +241,36 @@
             const before = (e.clientY - rect.top) / rect.height < 0.5;
             container.insertBefore(draggedSongRow, before ? row : row.nextSibling);
         });
+
+        // --- スマホのタッチ操作用（HTML5 Drag&DropはiOS/Androidのブラウザでは動かないため） ---
+        let touchDragging = false;
+
+        handle.addEventListener('touchstart', (e) => {
+            touchDragging = true;
+            draggedSongRow = row;
+            row.classList.add('is-dragging');
+            e.preventDefault();
+        }, { passive: false });
+
+        handle.addEventListener('touchmove', (e) => {
+            if (!touchDragging || !draggedSongRow) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            const target = document.elementFromPoint(touch.clientX, touch.clientY);
+            const overRow = target ? target.closest('.setlist-song-row') : null;
+            if (!overRow || overRow === draggedSongRow || overRow.parentElement !== container) return;
+            const rect = overRow.getBoundingClientRect();
+            const before = (touch.clientY - rect.top) / rect.height < 0.5;
+            container.insertBefore(draggedSongRow, before ? overRow : overRow.nextSibling);
+        }, { passive: false });
+
+        handle.addEventListener('touchend', () => {
+            if (!touchDragging) return;
+            touchDragging = false;
+            row.classList.remove('is-dragging');
+            draggedSongRow = null;
+            renumberRows(container);
+        });
     }
 
     function renumberRows(container) {

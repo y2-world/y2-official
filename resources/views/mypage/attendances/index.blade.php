@@ -121,7 +121,7 @@
                             <tr>
                                 <td></td>
                                 <td>{{ $attendance->attended_date?->format('Y.m.d') ?? '-' }}</td>
-                                <td><a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $attendance->attendedTour->title ?? '-' }}</a></td>
+                                <td><a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'attendances']) }}">{{ $attendance->attendedTour->title ?? '-' }}</a></td>
                                 <td class="pc">{{ $attendance->venue }}</td>
                             </tr>
                         @endforeach
@@ -158,13 +158,13 @@
                                     <td class="sp">
                                         <a href="{{ route('mypage.attendances.index', ['artist_id' => $artistRef]) }}">{{ $tour->artist->name }}</a>
                                         /
-                                        <a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $tour->title ?? '-' }}</a>
+                                        <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'attendances']) }}">{{ $tour->title ?? '-' }}</a>
                                     </td>
                                 @else
                                     <td class="pc"></td>
-                                    <td class="sp"><a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $tour->title ?? '-' }}</a></td>
+                                    <td class="sp"><a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'attendances']) }}">{{ $tour->title ?? '-' }}</a></td>
                                 @endif
-                                <td class="pc"><a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $tour->title ?? '-' }}</a></td>
+                                <td class="pc"><a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'attendances']) }}">{{ $tour->title ?? '-' }}</a></td>
                                 <td class="pc">{{ $attendance->venue }}</td>
                             </tr>
                         @endforeach
@@ -198,19 +198,19 @@
                                     <td class="sp">
                                         <a href="{{ route('mypage.attendances.index', ['artist_id' => $artistRef]) }}">{{ $tour->artist->name }}</a>
                                         /
-                                        <a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $tour->title ?? '-' }}</a>
+                                        <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'attendances']) }}">{{ $tour->title ?? '-' }}</a>
                                     </td>
                                     <td class="pc td_artist">
                                         <a href="{{ route('mypage.attendances.index', ['artist_id' => $artistRef]) }}">{{ $tour->artist->name }}</a>
                                     </td>
                                 @else
                                     <td class="sp">
-                                        <a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $tour->title ?? '-' }}</a>
+                                        <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'attendances']) }}">{{ $tour->title ?? '-' }}</a>
                                     </td>
                                     <td class="pc"></td>
                                 @endif
                                 <td class="pc">
-                                    <a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $tour->title ?? '-' }}</a>
+                                    <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'attendances']) }}">{{ $tour->title ?? '-' }}</a>
                                 </td>
                                 <td class="pc">{{ $attendance->venue }}</td>
                             </tr>

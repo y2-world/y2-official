@@ -55,6 +55,12 @@
                     @endforeach
                 </div>
                 <p id="noSongsMessage" style="text-align: center; color: #999;" @if ($songs->isNotEmpty()) hidden @endif>まだ曲がありません。</p>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="{{ route('mypage.manage.artist', $artist->id) }}" style="color: #888; font-size: 0.9rem;">
+                        <i class="fa-solid fa-arrow-left"></i> Back
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -64,7 +70,7 @@
         const songList = document.getElementById('songList');
         if (!songList) return;
 
-        // --- ドラッグハンドルを起点にしたHTML5 Drag&Dropで並べ替える ---
+        // --- ドラッグハンドルを起点にしたHTML5 Drag&Dropで並べ替える（PC・マウス操作） ---
         let draggedRow = null;
         function setupReorder(row) {
             const handle = row.querySelector('.manage-drag-handle');
@@ -86,6 +92,37 @@
                 const rect = row.getBoundingClientRect();
                 const before = (e.clientY - rect.top) / rect.height < 0.5;
                 songList.insertBefore(draggedRow, before ? row : row.nextSibling);
+            });
+
+            // --- スマホのタッチ操作用（HTML5 Drag&DropはiOS/Androidのブラウザでは動かないため） ---
+            let touchDragging = false;
+
+            handle.addEventListener('touchstart', (e) => {
+                touchDragging = true;
+                draggedRow = row;
+                row.classList.add('is-dragging');
+                // ハンドルを押した瞬間にページ全体がスクロールし始めるのを防ぐ
+                e.preventDefault();
+            }, { passive: false });
+
+            handle.addEventListener('touchmove', (e) => {
+                if (!touchDragging || !draggedRow) return;
+                e.preventDefault();
+                const touch = e.touches[0];
+                const target = document.elementFromPoint(touch.clientX, touch.clientY);
+                const overRow = target ? target.closest('.manage-row') : null;
+                if (!overRow || overRow === draggedRow) return;
+                const rect = overRow.getBoundingClientRect();
+                const before = (touch.clientY - rect.top) / rect.height < 0.5;
+                songList.insertBefore(draggedRow, before ? overRow : overRow.nextSibling);
+            }, { passive: false });
+
+            handle.addEventListener('touchend', () => {
+                if (!touchDragging) return;
+                touchDragging = false;
+                row.classList.remove('is-dragging');
+                draggedRow = null;
+                persistSongOrder();
             });
         }
 
