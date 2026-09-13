@@ -5,7 +5,8 @@
 
 @section('content')
     <div id="timelinePullIndicator" class="timeline-pull-indicator">
-        <i class="fa-solid fa-arrow-down"></i>
+        <i class="fa-solid fa-arrow-down timeline-pull-arrow"></i>
+        <span class="timeline-pull-spinner"></span>
     </div>
 
     <div class="container database-content" style="padding-top: 24px;">
@@ -76,8 +77,20 @@
     .timeline-pull-indicator.is-visible {
         height: 40px;
     }
-    .timeline-pull-indicator.is-spinning i {
+    .timeline-pull-spinner {
+        display: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #ddd;
+        border-top-color: #764ba2;
+        border-radius: 50%;
         animation: timeline-spin 0.6s linear infinite;
+    }
+    .timeline-pull-indicator.is-spinning .timeline-pull-arrow {
+        display: none;
+    }
+    .timeline-pull-indicator.is-spinning .timeline-pull-spinner {
+        display: inline-block;
     }
     @keyframes timeline-spin {
         to { transform: rotate(360deg); }
