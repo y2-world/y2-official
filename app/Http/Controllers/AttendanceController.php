@@ -642,9 +642,14 @@ class AttendanceController extends Controller
                 ->orderBy('attended_date')->orderBy('id')->first();
         }
 
-        $backUrl = url()->previous();
-        if (!$backUrl || $backUrl === url()->current()) {
-            $backUrl = route('mypage.index');
+        // url()->previous()はリファラーをそのまま返すため、セットリスト登録直後のように
+        // 直前がPOST専用エンドポイントだった場合、そのURLへGETアクセスすると404になる。
+        // Timeline一覧など「戻り先として安全とわかっているGETルート」だけを許可し、
+        // それ以外は常にMy Pageトップへフォールバックする。
+        $backUrl = route('mypage.index');
+        $previousUrl = url()->previous();
+        if ($previousUrl && rtrim($previousUrl, '/') === rtrim(route('mypage.timeline.index'), '/')) {
+            $backUrl = $previousUrl;
         }
 
         return view('mypage.attendances.show', compact('attendance', 'tourSetlists', 'tour', 'artist', 'isOfficial', 'songs', 'previous', 'next', 'isOwner', 'backUrl'));

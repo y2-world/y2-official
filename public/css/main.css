@@ -3877,6 +3877,10 @@ a.setlist-card:hover {
     overflow: hidden;
 }
 
+.timeline-comment-body-input.form-control[hidden] {
+    display: none;
+}
+
 .timeline-comment-form {
     display: flex;
     flex-direction: column;

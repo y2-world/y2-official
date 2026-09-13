@@ -273,7 +273,7 @@ function initTimelineCard(card) {
             bodyInput.hidden = false;
             resizeBodyInput();
             bodyInput.focus();
-            bodyInput.select();
+            bodyInput.setSelectionRange(bodyInput.value.length, bodyInput.value.length);
             penIcon.hidden = true;
             checkIcon.hidden = false;
         };
