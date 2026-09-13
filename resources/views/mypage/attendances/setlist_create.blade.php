@@ -83,13 +83,23 @@
         align-items: center;
         gap: 12px;
     }
-    .setlist-song-row.is-dragging {
-        opacity: 0.5;
-    }
-    .setlist-song-row .song-row-drag-handle {
-        color: #ccc;
-        cursor: grab;
+    .setlist-song-row .song-row-reorder-buttons {
+        display: flex;
+        flex-direction: column;
         flex-shrink: 0;
+    }
+    .setlist-song-row .song-row-reorder-up,
+    .setlist-song-row .song-row-reorder-down {
+        background: none;
+        border: none;
+        color: #999;
+        cursor: pointer;
+        padding: 2px 6px;
+        line-height: 1;
+    }
+    .setlist-song-row .song-row-reorder-up:hover,
+    .setlist-song-row .song-row-reorder-down:hover {
+        color: #667eea;
     }
     .setlist-song-row .song-row-number {
         flex: 0 0 auto;
@@ -117,15 +127,15 @@
     }
     </style>
     <script>
-    let draggedSongRow = null;
-
     function addSongRow(containerId, fieldName) {
         const container = document.getElementById(containerId);
         const row = document.createElement('div');
         row.className = 'setlist-song-row';
-        row.setAttribute('draggable', 'false');
         row.innerHTML = `
-            <i class="fa-solid fa-grip-lines song-row-drag-handle"></i>
+            <div class="song-row-reorder-buttons">
+                <button type="button" class="song-row-reorder-up" title="上へ"><i class="fa-solid fa-chevron-up"></i></button>
+                <button type="button" class="song-row-reorder-down" title="下へ"><i class="fa-solid fa-chevron-down"></i></button>
+            </div>
             <span class="song-row-number"></span>
             <input type="text" class="form-control" name="${fieldName}[]" list="songTitleOptions" placeholder="曲名">
             <button type="button" class="remove-row-btn" title="削除" onclick="this.closest('.setlist-song-row').remove(); renumberRows('${containerId}');">
@@ -138,55 +148,18 @@
         row.querySelector('input').focus();
     }
 
+    // --- 上下ボタンで1つずつ順位を入れ替える（ドラッグ操作は誤操作が多いため） ---
     function setupSongRowDrag(row, container) {
-        const handle = row.querySelector('.song-row-drag-handle');
-        handle.setAttribute('draggable', 'true');
-
-        handle.addEventListener('dragstart', (e) => {
-            draggedSongRow = row;
-            row.classList.add('is-dragging');
-            e.dataTransfer.effectAllowed = 'move';
-        });
-        row.addEventListener('dragend', () => {
-            row.classList.remove('is-dragging');
-            draggedSongRow = null;
+        row.querySelector('.song-row-reorder-up').addEventListener('click', () => {
+            const prev = row.previousElementSibling;
+            if (!prev) return;
+            container.insertBefore(row, prev);
             renumberRows(container.id);
         });
-        row.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            if (!draggedSongRow || draggedSongRow === row || draggedSongRow.parentElement !== container) return;
-            const rect = row.getBoundingClientRect();
-            const before = (e.clientY - rect.top) / rect.height < 0.5;
-            container.insertBefore(draggedSongRow, before ? row : row.nextSibling);
-        });
-
-        // --- スマホのタッチ操作用（HTML5 Drag&DropはiOS/Androidのブラウザでは動かないため） ---
-        let touchDragging = false;
-
-        handle.addEventListener('touchstart', (e) => {
-            touchDragging = true;
-            draggedSongRow = row;
-            row.classList.add('is-dragging');
-            e.preventDefault();
-        }, { passive: false });
-
-        handle.addEventListener('touchmove', (e) => {
-            if (!touchDragging || !draggedSongRow) return;
-            e.preventDefault();
-            const touch = e.touches[0];
-            const target = document.elementFromPoint(touch.clientX, touch.clientY);
-            const overRow = target ? target.closest('.setlist-song-row') : null;
-            if (!overRow || overRow === draggedSongRow || overRow.parentElement !== container) return;
-            const rect = overRow.getBoundingClientRect();
-            const before = (touch.clientY - rect.top) / rect.height < 0.5;
-            container.insertBefore(draggedSongRow, before ? overRow : overRow.nextSibling);
-        }, { passive: false });
-
-        handle.addEventListener('touchend', () => {
-            if (!touchDragging) return;
-            touchDragging = false;
-            row.classList.remove('is-dragging');
-            draggedSongRow = null;
+        row.querySelector('.song-row-reorder-down').addEventListener('click', () => {
+            const next = row.nextElementSibling;
+            if (!next) return;
+            container.insertBefore(next, row);
             renumberRows(container.id);
         });
     }

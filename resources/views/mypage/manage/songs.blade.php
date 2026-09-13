@@ -41,7 +41,10 @@
                 <div id="songList">
                     @foreach ($songs as $song)
                         <div class="manage-row" data-song-id="{{ $song->id }}">
-                            <i class="fa-solid fa-grip-lines manage-drag-handle"></i>
+                            <div class="manage-reorder-buttons">
+                                <button type="button" class="manage-reorder-up" title="上へ"><i class="fa-solid fa-chevron-up"></i></button>
+                                <button type="button" class="manage-reorder-down" title="下へ"><i class="fa-solid fa-chevron-down"></i></button>
+                            </div>
                             <span class="manage-row-title" data-title="{{ $song->title }}">{{ $song->title }}</span>
                             <input type="text" class="manage-row-title-input" value="{{ $song->title }}" hidden>
                             <button type="button" class="manage-edit-btn" data-update-url="{{ route('mypage.manage.songs.update', [$artist->id, $song->id]) }}" title="編集">
@@ -70,58 +73,18 @@
         const songList = document.getElementById('songList');
         if (!songList) return;
 
-        // --- ドラッグハンドルを起点にしたHTML5 Drag&Dropで並べ替える（PC・マウス操作） ---
-        let draggedRow = null;
+        // --- 上下ボタンで1つずつ順位を入れ替える（ドラッグ操作は誤操作が多いため） ---
         function setupReorder(row) {
-            const handle = row.querySelector('.manage-drag-handle');
-            handle.setAttribute('draggable', 'true');
-
-            handle.addEventListener('dragstart', (e) => {
-                draggedRow = row;
-                row.classList.add('is-dragging');
-                e.dataTransfer.effectAllowed = 'move';
-            });
-            row.addEventListener('dragend', () => {
-                row.classList.remove('is-dragging');
-                draggedRow = null;
+            row.querySelector('.manage-reorder-up').addEventListener('click', () => {
+                const prev = row.previousElementSibling;
+                if (!prev) return;
+                songList.insertBefore(row, prev);
                 persistSongOrder();
             });
-            row.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                if (!draggedRow || draggedRow === row) return;
-                const rect = row.getBoundingClientRect();
-                const before = (e.clientY - rect.top) / rect.height < 0.5;
-                songList.insertBefore(draggedRow, before ? row : row.nextSibling);
-            });
-
-            // --- スマホのタッチ操作用（HTML5 Drag&DropはiOS/Androidのブラウザでは動かないため） ---
-            let touchDragging = false;
-
-            handle.addEventListener('touchstart', (e) => {
-                touchDragging = true;
-                draggedRow = row;
-                row.classList.add('is-dragging');
-                // ハンドルを押した瞬間にページ全体がスクロールし始めるのを防ぐ
-                e.preventDefault();
-            }, { passive: false });
-
-            handle.addEventListener('touchmove', (e) => {
-                if (!touchDragging || !draggedRow) return;
-                e.preventDefault();
-                const touch = e.touches[0];
-                const target = document.elementFromPoint(touch.clientX, touch.clientY);
-                const overRow = target ? target.closest('.manage-row') : null;
-                if (!overRow || overRow === draggedRow) return;
-                const rect = overRow.getBoundingClientRect();
-                const before = (touch.clientY - rect.top) / rect.height < 0.5;
-                songList.insertBefore(draggedRow, before ? overRow : overRow.nextSibling);
-            }, { passive: false });
-
-            handle.addEventListener('touchend', () => {
-                if (!touchDragging) return;
-                touchDragging = false;
-                row.classList.remove('is-dragging');
-                draggedRow = null;
+            row.querySelector('.manage-reorder-down').addEventListener('click', () => {
+                const next = row.nextElementSibling;
+                if (!next) return;
+                songList.insertBefore(next, row);
                 persistSongOrder();
             });
         }
