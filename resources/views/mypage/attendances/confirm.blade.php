@@ -16,7 +16,7 @@
                 }
             @endphp
             @include('database._breadcrumb', ['breadcrumbs' => [
-                ['label' => 'My Page', 'url' => route('mypage.stats')],
+                ['label' => 'My Page', 'url' => route('mypage.index')],
                 ['label' => 'セットリスト登録', 'url' => route('mypage.attendances.create')],
                 ['label' => $artistName, 'url' => route('mypage.attendances.tours', $artistId === 'new' ? ['artistId' => 'new', 'name' => $artistName] : $artistId)],
                 ['label' => $tourTitle, 'url' => route('mypage.attendances.setlist_create', $setlistCreateParams)],
@@ -65,7 +65,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="venue" class="form-label">会場</label>
-                        <input type="text" class="form-control" id="venue" name="venue" value="{{ old('venue') }}">
+                        <input type="text" class="form-control" id="venue" name="venue" value="{{ old('venue') }}" required>
                     </div>
                     <div class="d-flex gap-2">
                         <a href="#" onclick="event.preventDefault(); history.back();" class="btn btn-outline-secondary w-100">戻る</a>

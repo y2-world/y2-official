@@ -17,6 +17,7 @@ use App\Http\Controllers\MyPageController;
 use App\Http\Controllers\MyPageHubController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\MyPageStatsController;
+use App\Http\Controllers\ManageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -155,6 +156,24 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
         Route::get('stamp-books', [MyPageStatsController::class, 'index'])->name('stamps.index');
         Route::get('stats/artist/{artistId}', [MyPageStatsController::class, 'artist'])->name('stats.artist');
         Route::get('stats/artist/{artistId}/stamps', [MyPageStatsController::class, 'stamps'])->name('stats.stamps');
+
+        Route::prefix('manage')->name('manage.')->group(function () {
+            Route::get('/', [ManageController::class, 'index'])->name('index');
+            Route::get('artists/{artistId}', [ManageController::class, 'artist'])->name('artist');
+            Route::get('artists/{artistId}/songs', [ManageController::class, 'songs'])->name('songs');
+            Route::get('artists/{artistId}/concerts', [ManageController::class, 'concerts'])->name('concerts');
+            Route::get('artists/{artistId}/concerts/{concertId}/setlists', [ManageController::class, 'setlists'])->name('setlists');
+            Route::post('artists/{artistId}/concerts/{concertId}/edit', [ManageController::class, 'updateConcert'])->name('concerts.update');
+            Route::post('artists/{artistId}/concerts/{concertId}/setlists/{setlistId}/edit', [ManageController::class, 'updateSetlist'])->name('setlists.update');
+            Route::post('artists/{artistId}/songs', [ManageController::class, 'storeSong'])->name('songs.store');
+            Route::post('artists/{artistId}/songs/reorder', [ManageController::class, 'reorderSongs'])->name('songs.reorder');
+            Route::post('artists/{artistId}/songs/{songId}/edit', [ManageController::class, 'updateSong'])->name('songs.update');
+            // スワイプ削除はfetch()のPOSTで叩くため、DELETEに加えてPOSTでも受け付ける
+            Route::match(['post', 'delete'], 'artists/{artistId}/songs/{songId}', [ManageController::class, 'destroySong'])->name('songs.destroy');
+            Route::match(['post', 'delete'], 'artists/{artistId}', [ManageController::class, 'destroyArtist'])->name('artists.destroy');
+            Route::match(['post', 'delete'], 'artists/{artistId}/concerts/{concertId}', [ManageController::class, 'destroyConcert'])->name('concerts.destroy');
+            Route::match(['post', 'delete'], 'artists/{artistId}/concerts/{concertId}/setlists/{setlistId}', [ManageController::class, 'destroySetlist'])->name('setlists.destroy');
+        });
 
         Route::get('settings', [ExternalAuthController::class, 'showSettings'])->name('settings');
         Route::put('settings/profile', [ExternalAuthController::class, 'updateProfile'])->name('settings.profile');

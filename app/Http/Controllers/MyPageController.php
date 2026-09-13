@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Artist;
 use App\Models\DbSetlist;
 use App\Models\DbSong;
+use App\Models\UserArtist;
+use App\Models\UserSetlist;
+use App\Models\UserSong;
 use Illuminate\Support\Facades\Auth;
 
 class MyPageController extends Controller
@@ -13,27 +16,34 @@ class MyPageController extends Controller
     {
         $user = Auth::guard('external')->user();
         $attendances = $user->attendances()
-            ->with('dbSetlist.tour.artist')
+            ->with(['dbSetlist.tour.artist', 'userSetlist.concert.artist'])
             ->orderByDesc('attended_date')
             ->get();
 
         $totalShows = $attendances->count();
-        $totalArtists = $attendances->pluck('dbSetlist.tour.artist_id')->filter()->unique()->count();
+        $totalArtists = $attendances
+            ->map(fn ($a) => $a->db_setlist_id
+                ? 'official-' . $a->dbSetlist?->tour?->artist_id
+                : 'user-' . $a->userSetlist?->concert?->user_artist_id)
+            ->filter(fn ($ref) => $ref !== 'official-' && $ref !== 'user-')
+            ->unique()
+            ->count();
         $totalVenues = $attendances->pluck('venue')->filter()->unique()->count();
 
-        $attendedSetlistIds = $attendances->pluck('db_setlist_id')->unique();
-        $setlists = DbSetlist::whereIn('id', $attendedSetlistIds)->with('tour')->get();
+        // 公式（db_setlists）とユーザー登録（user_setlists）、それぞれの出席記録からセットリストを引く
+        $dbAttendances = $attendances->filter(fn ($a) => $a->db_setlist_id);
+        $userAttendances = $attendances->filter(fn ($a) => $a->user_setlist_id);
+
+        $dbSetlists = DbSetlist::whereIn('id', $dbAttendances->pluck('db_setlist_id')->unique())->with('tour')->get();
+        $userSetlists = UserSetlist::whereIn('id', $userAttendances->pluck('user_setlist_id')->unique())->with('concert')->get();
 
         $songPlayCounts = [];
-        // 同名ツアーを1回だけカウントする版：[songId => [tourTitle1, tourTitle2, ...]]
         $songTourTitles = [];
-        foreach ($setlists as $setlist) {
-            // 1つのセットリスト（＝1回のライブ参加）内で同じ曲が複数回演奏されても1回とカウントする
+        $countSetlistSongs = function ($setlist, $tourTitle) use (&$songPlayCounts, &$songTourTitles) {
             $songsInThisSetlist = [];
-            $tourTitle = $setlist->tour->title ?? 'Unknown';
             foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
                 if (isset($s['song']) && is_numeric($s['song'])) {
-                    $songId = (int)$s['song'];
+                    $songId = (int) $s['song'];
                     if (!in_array($songId, $songsInThisSetlist, true)) {
                         $songsInThisSetlist[] = $songId;
                         $songPlayCounts[$songId] = ($songPlayCounts[$songId] ?? 0) + 1;
@@ -47,93 +57,179 @@ class MyPageController extends Controller
                     }
                 }
             }
+        };
+
+        // 公式楽曲IDとユーザー登録楽曲IDは同じテーブルではないため、
+        // 曲の集計キーを "official-{id}" / "user-{id}" の複合参照にして混在させない
+        $officialSongPlayCounts = [];
+        $officialSongTourTitles = [];
+        foreach ($dbSetlists as $setlist) {
+            $tourTitle = $setlist->tour->title ?? 'Unknown';
+            $countSetlistSongs($setlist, $tourTitle);
         }
-        arsort($songPlayCounts);
+        $officialSongPlayCounts = $songPlayCounts;
+        $officialSongTourTitles = $songTourTitles;
 
-        $songPlayCountsUnique = [];
-        foreach ($songTourTitles as $songId => $tourTitles) {
-            $songPlayCountsUnique[$songId] = count($tourTitles);
+        $songPlayCounts = [];
+        $songTourTitles = [];
+        foreach ($userSetlists as $setlist) {
+            $tourTitle = $setlist->concert->title ?? 'Unknown';
+            $countSetlistSongs($setlist, $tourTitle);
         }
-        arsort($songPlayCountsUnique);
+        $userSongPlayCounts = $songPlayCounts;
+        $userSongTourTitles = $songTourTitles;
 
-        $songs = DbSong::whereIn('id', array_keys($songPlayCounts))->get()->keyBy('id');
+        arsort($officialSongPlayCounts);
+        arsort($userSongPlayCounts);
 
-        $buildTopSongs = function (array $counts) use ($songs) {
+        $officialSongPlayCountsUnique = [];
+        foreach ($officialSongTourTitles as $songId => $tourTitles) {
+            $officialSongPlayCountsUnique[$songId] = count($tourTitles);
+        }
+        arsort($officialSongPlayCountsUnique);
+
+        $userSongPlayCountsUnique = [];
+        foreach ($userSongTourTitles as $songId => $tourTitles) {
+            $userSongPlayCountsUnique[$songId] = count($tourTitles);
+        }
+        arsort($userSongPlayCountsUnique);
+
+        $officialSongs = DbSong::whereIn('id', array_keys($officialSongPlayCounts))->get()->keyBy('id');
+        $userSongs = UserSong::whereIn('id', array_keys($userSongPlayCounts))->get()->keyBy('id');
+
+        $buildTopSongs = function (array $officialCounts, array $userCounts) use ($officialSongs, $userSongs) {
             $result = [];
-            foreach ($counts as $songId => $count) {
-                $song = $songs->get($songId);
+            foreach ($officialCounts as $songId => $count) {
+                $song = $officialSongs->get($songId);
                 if ($song) {
                     $artist = $song->artist;
                     $result[] = [
-                        'song_id' => $songId,
+                        'song_id' => 'official-' . $songId,
                         'title' => $song->title,
-                        'artist_id' => $artist?->id,
+                        'artist_id' => $artist ? 'official-' . $artist->id : null,
                         'artist_name' => $artist ? $artist->name : '不明',
                         'count' => $count,
                     ];
                 }
             }
+            foreach ($userCounts as $songId => $count) {
+                $song = $userSongs->get($songId);
+                if ($song) {
+                    $artist = $song->artist;
+                    $result[] = [
+                        'song_id' => 'user-' . $songId,
+                        'title' => $song->title,
+                        'artist_id' => $artist ? 'user-' . $artist->id : null,
+                        'artist_name' => $artist ? $artist->name : '不明',
+                        'count' => $count,
+                    ];
+                }
+            }
+            usort($result, fn ($a, $b) => $b['count'] <=> $a['count']);
             return $result;
         };
 
-        $topSongs = $buildTopSongs($songPlayCounts);
-        $topSongsUnique = $buildTopSongs($songPlayCountsUnique);
+        $topSongs = $buildTopSongs($officialSongPlayCounts, $userSongPlayCounts);
+        $topSongsUnique = $buildTopSongs($officialSongPlayCountsUnique, $userSongPlayCountsUnique);
 
         $overallStats = [
             'total_shows' => $totalShows,
             'total_artists' => $totalArtists,
-            'total_songs' => count($songPlayCounts),
+            'total_songs' => count($officialSongPlayCounts) + count($userSongPlayCounts),
             'total_venues' => $totalVenues,
         ];
 
-        $artists = Artist::whereIn('id', $setlists->pluck('tour.artist_id')->filter()->unique())->get();
+        $officialArtists = Artist::whereIn('id', $dbSetlists->pluck('tour.artist_id')->filter()->unique())->get();
+        $userArtists = UserArtist::whereIn('id', $userSetlists->pluck('concert.user_artist_id')->filter()->unique())->get();
 
         // Live Stamp Bookの下に表示する、アーティストごとのUnique Songs（自分が聴いた曲数）統計
         // type=4（ソロ）は単独アーティストとしての集計に含めない（AttendanceControllerの絞り込みと同じ基準）
         $songIdsByArtist = [];
-        foreach ($attendances as $attendance) {
+        foreach ($dbAttendances as $attendance) {
             $tour = $attendance->dbSetlist?->tour;
-            if (!$tour || !$tour->artist_id || (int)$tour->type === 4) {
+            if (!$tour || !$tour->artist_id || (int) $tour->type === 4) {
                 continue;
             }
             $setlist = $attendance->dbSetlist;
             foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
                 if (isset($s['song']) && is_numeric($s['song'])) {
-                    $songIdsByArtist[$tour->artist_id][(int)$s['song']] = true;
+                    $songIdsByArtist['official-' . $tour->artist_id][(int) $s['song']] = true;
                 }
             }
         }
-        $artistSongStats = $artists
-            ->filter(fn ($artist) => isset($songIdsByArtist[$artist->id]))
-            ->map(function ($artist) use ($songIdsByArtist) {
-                $uniqueSongs = count($songIdsByArtist[$artist->id]);
-                $totalSongs = DbSong::where('artist_id', $artist->id)->count();
-                return [
-                    'id' => $artist->id,
-                    'name' => $artist->name,
-                    'unique_songs' => $uniqueSongs,
-                    'total_songs' => $totalSongs,
-                    'percentage' => $totalSongs > 0 ? round($uniqueSongs / $totalSongs * 100, 1) : 0,
-                ];
-            })
-            ->sortByDesc('percentage')
-            ->values();
+        foreach ($userAttendances as $attendance) {
+            $concert = $attendance->userSetlist?->concert;
+            if (!$concert || !$concert->user_artist_id) {
+                continue;
+            }
+            $setlist = $attendance->userSetlist;
+            foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
+                if (isset($s['song']) && is_numeric($s['song'])) {
+                    $songIdsByArtist['user-' . $concert->user_artist_id][(int) $s['song']] = true;
+                }
+            }
+        }
 
-        $artistStats = $attendances
+        $artistSongStats = collect();
+        foreach ($officialArtists as $artist) {
+            $ref = 'official-' . $artist->id;
+            if (!isset($songIdsByArtist[$ref])) {
+                continue;
+            }
+            $uniqueSongs = count($songIdsByArtist[$ref]);
+            $totalSongs = DbSong::where('artist_id', $artist->id)->count();
+            $artistSongStats->push([
+                'id' => $ref,
+                'name' => $artist->name,
+                'unique_songs' => $uniqueSongs,
+                'total_songs' => $totalSongs,
+                'percentage' => $totalSongs > 0 ? round($uniqueSongs / $totalSongs * 100, 1) : 0,
+            ]);
+        }
+        foreach ($userArtists as $artist) {
+            $ref = 'user-' . $artist->id;
+            if (!isset($songIdsByArtist[$ref])) {
+                continue;
+            }
+            $uniqueSongs = count($songIdsByArtist[$ref]);
+            $totalSongs = UserSong::where('user_artist_id', $artist->id)->count();
+            $artistSongStats->push([
+                'id' => $ref,
+                'name' => $artist->name,
+                'unique_songs' => $uniqueSongs,
+                'total_songs' => $totalSongs,
+                'percentage' => $totalSongs > 0 ? round($uniqueSongs / $totalSongs * 100, 1) : 0,
+            ]);
+        }
+        $artistSongStats = $artistSongStats->sortByDesc('percentage')->values();
+
+        $officialArtistStats = $dbAttendances
             // type=4（ソロ）は本人単独のプロジェクトであり、アーティスト本体の参加数には含めない
             // （イベント・ap bank fesはそのアーティスト自身としての出演なので含める）
-            ->filter(fn ($a) => $a->dbSetlist?->tour?->artist && (int)$a->dbSetlist->tour->type !== 4)
+            ->filter(fn ($a) => $a->dbSetlist?->tour?->artist && (int) $a->dbSetlist->tour->type !== 4)
             ->groupBy(fn ($a) => $a->dbSetlist->tour->artist_id)
             ->map(function ($group) {
                 $artist = $group->first()->dbSetlist->tour->artist;
                 return [
-                    'id' => $artist->id,
+                    'id' => 'official-' . $artist->id,
                     'name' => $artist->name,
                     'show_count' => $group->count(),
                 ];
-            })
-            ->sortByDesc('show_count')
-            ->values();
+            });
+
+        $userArtistStats = $userAttendances
+            ->filter(fn ($a) => $a->userSetlist?->concert?->artist)
+            ->groupBy(fn ($a) => $a->userSetlist->concert->user_artist_id)
+            ->map(function ($group) {
+                $artist = $group->first()->userSetlist->concert->artist;
+                return [
+                    'id' => 'user-' . $artist->id,
+                    'name' => $artist->name,
+                    'show_count' => $group->count(),
+                ];
+            });
+
+        $artistStats = $officialArtistStats->merge($userArtistStats)->sortByDesc('show_count')->values();
 
         $venueStats = $attendances
             ->filter(fn ($a) => $a->venue)
@@ -151,6 +247,6 @@ class MyPageController extends Controller
             ->take(10)
             ->values();
 
-        return view('mypage.index', compact('attendances', 'overallStats', 'topSongs', 'topSongsUnique', 'artists', 'artistStats', 'artistSongStats', 'venueStats', 'yearStats'));
+        return view('mypage.index', compact('attendances', 'overallStats', 'topSongs', 'topSongsUnique', 'artistStats', 'artistSongStats', 'venueStats', 'yearStats'));
     }
 }

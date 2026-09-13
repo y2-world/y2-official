@@ -7,7 +7,7 @@
             @if ($song)
                 {{-- 曲単位の絞り込み：sl_songs/show.blade.php と全く同じシンプルな構造 --}}
                 @include('database._breadcrumb', ['breadcrumbs' => [
-                    ['label' => 'My Page', 'url' => route('mypage.stats')],
+                    ['label' => 'My Page', 'url' => route('mypage.index')],
                     ['label' => $song->title],
                 ]])
                 @if ($songNumber)

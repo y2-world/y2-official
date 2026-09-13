@@ -5,7 +5,7 @@
     <div class="database-hero database-hero--detail">
         <div class="container">
             @include('database._breadcrumb', ['breadcrumbs' => [
-                ['label' => 'My Page', 'url' => route('mypage.stats')],
+                ['label' => 'My Page', 'url' => route('mypage.index')],
                 ['label' => 'セットリスト登録', 'url' => route('mypage.attendances.create')],
                 ['label' => $artistName, 'url' => route('mypage.attendances.tours', $artistId === 'new' ? ['artistId' => 'new', 'name' => $artistName] : $artistId)],
                 ['label' => $tourTitle],
@@ -47,7 +47,6 @@
                         <input type="hidden" name="tour_date2" value="{{ $tourDate2 }}">
                     @endif
 
-                    <h5>本編</h5>
                     <div id="setlistRows" class="setlist-song-rows"></div>
                     <div style="text-align: center; margin-bottom: 24px;">
                         <button type="button" class="mypage-add-button" title="曲を追加" onclick="addSongRow('setlistRows', 'setlist')" style="border: none;">
@@ -55,7 +54,7 @@
                         </button>
                     </div>
 
-                    <h5>アンコール</h5>
+                    <h5 style="font-size: 0.9rem; color: #999; letter-spacing: 1px;">ENCORE</h5>
                     <div id="encoreRows" class="setlist-song-rows"></div>
                     <div style="text-align: center; margin-bottom: 24px;">
                         <button type="button" class="mypage-add-button" title="曲を追加" onclick="addSongRow('encoreRows', 'encore')" style="border: none;">
@@ -74,45 +73,92 @@
 
     <style>
     .setlist-song-row {
+        position: relative;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        background: white;
+        border: 1px solid #eee;
+        padding: 10px 16px;
         display: flex;
         align-items: center;
-        gap: 8px;
-        margin-bottom: 8px;
+        gap: 12px;
+    }
+    .setlist-song-row.is-dragging {
+        opacity: 0.5;
+    }
+    .setlist-song-row .song-row-drag-handle {
+        color: #ccc;
+        cursor: grab;
+        flex-shrink: 0;
     }
     .setlist-song-row .song-row-number {
         flex: 0 0 auto;
-        width: 1.8em;
+        width: 1.6em;
         text-align: right;
         color: #999;
         font-size: 0.9em;
     }
     .setlist-song-row input[type="text"] {
         flex: 1;
+        border: none;
+        padding: 4px 0;
+    }
+    .setlist-song-row input[type="text"]:focus {
+        outline: none;
+        box-shadow: none;
     }
     .setlist-song-row .remove-row-btn {
         background: none;
         border: none;
-        color: #999;
+        color: #dc3545;
         cursor: pointer;
         padding: 4px 8px;
-        font-size: 20px;
+        flex-shrink: 0;
     }
     </style>
     <script>
+    let draggedSongRow = null;
+
     function addSongRow(containerId, fieldName) {
         const container = document.getElementById(containerId);
         const row = document.createElement('div');
         row.className = 'setlist-song-row';
+        row.setAttribute('draggable', 'false');
         row.innerHTML = `
+            <i class="fa-solid fa-grip-lines song-row-drag-handle"></i>
             <span class="song-row-number"></span>
             <input type="text" class="form-control" name="${fieldName}[]" list="songTitleOptions" placeholder="曲名">
             <button type="button" class="remove-row-btn" title="削除" onclick="this.closest('.setlist-song-row').remove(); renumberRows('${containerId}');">
-                <i class="fa-solid fa-xmark"></i>
+                <i class="fa-solid fa-trash"></i>
             </button>
         `;
         container.appendChild(row);
+        setupSongRowDrag(row, container);
         renumberRows(containerId);
         row.querySelector('input').focus();
+    }
+
+    function setupSongRowDrag(row, container) {
+        const handle = row.querySelector('.song-row-drag-handle');
+        handle.setAttribute('draggable', 'true');
+
+        handle.addEventListener('dragstart', (e) => {
+            draggedSongRow = row;
+            row.classList.add('is-dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        });
+        row.addEventListener('dragend', () => {
+            row.classList.remove('is-dragging');
+            draggedSongRow = null;
+            renumberRows(container.id);
+        });
+        row.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            if (!draggedSongRow || draggedSongRow === row || draggedSongRow.parentElement !== container) return;
+            const rect = row.getBoundingClientRect();
+            const before = (e.clientY - rect.top) / rect.height < 0.5;
+            container.insertBefore(draggedSongRow, before ? row : row.nextSibling);
+        });
     }
 
     function renumberRows(containerId) {

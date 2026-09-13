@@ -5,7 +5,7 @@
     <div class="database-hero database-hero--detail">
         <div class="container">
             @include('database._breadcrumb', ['breadcrumbs' => [
-                ['label' => 'My Page', 'url' => route('mypage.stats')],
+                ['label' => 'My Page', 'url' => route('mypage.index')],
                 ['label' => 'セットリスト登録', 'url' => route('mypage.attendances.create')],
                 ['label' => $tour->artist->name, 'url' => route('mypage.attendances.tours', $kind . '-' . $tour->artist->id)],
                 ['label' => $tour->title, 'url' => route('mypage.attendances.setlists', $kind . '-' . $tour->id)],
@@ -86,7 +86,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="venue" class="form-label">会場</label>
-                            <input type="text" class="form-control" id="venue" name="venue" value="{{ old('venue', $tour->venue ?? '') }}">
+                            <input type="text" class="form-control" id="venue" name="venue" value="{{ old('venue', $tour->venue ?? '') }}" required>
                         </div>
                         <button type="submit" class="btn btn-outline-dark w-100">登録</button>
                     </form>

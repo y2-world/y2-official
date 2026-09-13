@@ -17,7 +17,7 @@
                     <p class="stats-subtitle">My Artist Statistics</p>
 
                     <div class="stamp-book-link-wrapper">
-                        <a href="{{ route('mypage.stats.stamps', $artist->id) }}" class="stamp-book-link">
+                        <a href="{{ $stampsRoute }}" class="stamp-book-link">
                             <i class="fas fa-stamp"></i> View Live Stamp Book
                         </a>
                     </div>
@@ -124,7 +124,7 @@
                                 <tbody>
                                     @forelse ($yearStats as $yearData)
                                     <tr>
-                                        <td class="year-col"><a href="{{ route('mypage.attendances.index', ['artist_id' => $artist->id, 'year' => $yearData->year]) }}" class="stats-link">{{ $yearData->year }}</a></td>
+                                        <td class="year-col"><a href="{{ route('mypage.attendances.index', ['artist_id' => $artistRef, 'year' => $yearData->year]) }}" class="stats-link">{{ $yearData->year }}</a></td>
                                         <td class="count-col">
                                             <div class="year-bar-container">
                                                 <div class="year-bar-wrapper">

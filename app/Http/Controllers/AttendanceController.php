@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\SplitsKindRef;
 use App\Models\Artist;
 use App\Models\DbConcert;
 use App\Models\DbSetlist;
@@ -29,6 +30,8 @@ use Illuminate\Validation\Rule;
  */
 class AttendanceController extends Controller
 {
+    use SplitsKindRef;
+
     public function index(Request $request)
     {
         $query = Auth::guard('external')->user()
@@ -423,7 +426,7 @@ class AttendanceController extends Controller
             'encore' => ['array'],
             'encore.*' => ['nullable', 'string', 'max:255'],
             'attended_date' => ['required', 'date'],
-            'venue' => ['nullable', 'string', 'max:255'],
+            'venue' => ['required', 'string', 'max:255'],
         ]);
 
         if ($validator->fails()) {
@@ -458,6 +461,7 @@ class AttendanceController extends Controller
                 ]);
                 $userSetlist = UserSetlist::create([
                     'user_concert_id' => $tour->id,
+                    'external_user_id' => $userId,
                     'order_no' => 1,
                     'row' => 1,
                     'setlist' => [],
@@ -479,6 +483,7 @@ class AttendanceController extends Controller
                     $nextOrderNo = (UserSetlist::where('user_concert_id', $tour->id)->max('order_no') ?? 0) + 1;
                     $userSetlist = UserSetlist::create([
                         'user_concert_id' => $tour->id,
+                        'external_user_id' => $userId,
                         'order_no' => $nextOrderNo,
                         'row' => 1,
                         'setlist' => [],
@@ -496,7 +501,7 @@ class AttendanceController extends Controller
                     }
                     $song = UserSong::firstOrCreate(
                         ['user_artist_id' => $userArtist->id, 'title' => $title],
-                        []
+                        ['sort_order' => (UserSong::where('user_artist_id', $userArtist->id)->max('sort_order') ?? -1) + 1]
                     );
                     $items[] = ['song' => (string) $song->id];
                 }
@@ -565,7 +570,7 @@ class AttendanceController extends Controller
                         ->where($kind === 'official' ? 'db_setlist_id' : 'user_setlist_id', $id)
                 ),
             ],
-            'venue' => ['nullable', 'string', 'max:255'],
+            'venue' => ['required', 'string', 'max:255'],
         ], [
             'attended_date.unique' => 'この公演はすでに登録されています。',
         ]);
@@ -658,7 +663,7 @@ class AttendanceController extends Controller
                         ->where('user_setlist_id', $attendance->user_setlist_id)
                 )->ignore($attendance->id),
             ],
-            'venue' => ['nullable', 'string', 'max:255'],
+            'venue' => ['required', 'string', 'max:255'],
         ], [
             'attended_date.unique' => 'この公演はすでに登録されています。',
         ]);
@@ -686,13 +691,5 @@ class AttendanceController extends Controller
     private function authorizeOwnership(ExternalUserAttendance $attendance): void
     {
         abort_unless($attendance->external_user_id === Auth::guard('external')->id(), 403);
-    }
-
-    // "official:123" / "user:45" を ['official', '123'] / ['user', '45'] に分解する
-    private function splitRef(string $ref): array
-    {
-        $parts = explode('-', $ref, 2);
-        abort_if(count($parts) !== 2 || !in_array($parts[0], ['official', 'user'], true), 404);
-        return $parts;
     }
 }

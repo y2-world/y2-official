@@ -51,7 +51,11 @@
                                             </div>
                                         @endif
                                     </div>
-                                    <a href="{{ route('songs.show', $stamp['song_id']) }}" class="stamp-slot-title">{{ $stamp['title'] }}</a>
+                                    @if ($stamp['song_url'])
+                                        <a href="{{ $stamp['song_url'] }}" class="stamp-slot-title">{{ $stamp['title'] }}</a>
+                                    @else
+                                        <span class="stamp-slot-title">{{ $stamp['title'] }}</span>
+                                    @endif
                                 </div>
                             @endforeach
                         </div>

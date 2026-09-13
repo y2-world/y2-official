@@ -5,7 +5,7 @@
     <div class="database-hero database-hero--detail">
         <div class="container">
             @include('database._breadcrumb', ['breadcrumbs' => [
-                ['label' => 'My Page', 'url' => route('mypage.stats')],
+                ['label' => 'My Page', 'url' => route('mypage.index')],
                 ['label' => $tour->title ?? 'セットリスト'],
             ]])
             <p class="database-subtitle" style="">
@@ -43,7 +43,7 @@
                 @method('PUT')
                 <div style="display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center;">
                     <input type="date" name="attended_date" value="{{ old('attended_date', $attendance->attended_date?->format('Y-m-d')) }}" style="border-radius: 6px; border: none; padding: 4px 8px; font-size: 0.85rem;" required>
-                    <input type="text" name="venue" value="{{ old('venue', $attendance->venue) }}" placeholder="会場" style="border-radius: 6px; border: none; padding: 4px 8px; font-size: 0.85rem;">
+                    <input type="text" name="venue" value="{{ old('venue', $attendance->venue) }}" placeholder="会場" style="border-radius: 6px; border: none; padding: 4px 8px; font-size: 0.85rem;" required>
                     <span style="display: inline-flex; align-items: center; gap: 8px; flex-wrap: nowrap; flex-shrink: 0;">
                         <button type="submit" style="background: none; border: none; color: white; cursor: pointer; padding: 4px;" title="保存">
                             <i class="fa-solid fa-check"></i>
@@ -103,7 +103,7 @@
         <div class="row justify-content-center">
             <div class="col-xl-9">
                 <div style="text-align: center; margin-top: 1rem;">
-                    <a href="{{ route('mypage.stats') }}" style="color: #888; font-size: 0.9rem;">
+                    <a href="{{ route('mypage.index') }}" style="color: #888; font-size: 0.9rem;">
                         <i class="fa-solid fa-arrow-left"></i> Back to My Page
                     </a>
                 </div>

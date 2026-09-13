@@ -9,6 +9,7 @@ class UserSong extends Model
     protected $fillable = [
         'user_artist_id',
         'title',
+        'sort_order',
     ];
 
     public function artist()

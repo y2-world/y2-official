@@ -137,25 +137,30 @@
 <div class="header_space"></div>
 @yield('content')
 
-@if (session('success'))
-    <div id="appToast" class="app-toast">
-        <i class="fa-solid fa-circle-check"></i>
-        <span>{{ session('success') }}</span>
-    </div>
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var toast = document.getElementById('appToast');
-        if (!toast) return;
-        requestAnimationFrame(function () {
-            toast.classList.add('show');
-        });
-        setTimeout(function () {
-            toast.classList.remove('show');
-            setTimeout(function () { toast.remove(); }, 300);
-        }, 3000);
+<script>
+// どのページからでも呼べるトースト表示関数。Ajax操作の完了後などに使う。
+function showAppToast(message) {
+    var toast = document.createElement('div');
+    toast.className = 'app-toast';
+    toast.innerHTML = '<i class="fa-solid fa-circle-check"></i><span></span>';
+    toast.querySelector('span').textContent = message;
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(function () {
+        toast.classList.add('show');
     });
-    </script>
+    setTimeout(function () {
+        toast.classList.remove('show');
+        setTimeout(function () { toast.remove(); }, 300);
+    }, 3000);
+}
+
+@if (session('success'))
+    document.addEventListener('DOMContentLoaded', function () {
+        showAppToast(@json(session('success')));
+    });
 @endif
+</script>
 
 <!-- JS -->
 <script src='https://code.jquery.com/jquery-3.6.4.min.js'></script>

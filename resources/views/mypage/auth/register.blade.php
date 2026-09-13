@@ -25,7 +25,7 @@
                 <form method="POST" action="{{ route('mypage.register') }}">
                     @csrf
                     <div class="mb-3">
-                        <label for="name" class="form-label">お名前（任意）</label>
+                        <label for="name" class="form-label">ユーザ名（任意）</label>
                         <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}">
                     </div>
                     <div class="mb-3">

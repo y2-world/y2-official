@@ -85,25 +85,29 @@
                                     @php $attendanceStart = count($attendances); @endphp
                                     @forelse ($attendances as $index => $attendance)
                                         @php
-                                            $isFes = in_array((int)($attendance->dbSetlist?->tour?->type ?? 0), [2, 3, 4], true);
+                                            $tour = $attendance->attendedTour;
+                                            $isFes = in_array((int)($tour?->type ?? 0), [2, 3, 4], true);
+                                            $artistRef = $attendance->db_setlist_id
+                                                ? 'official-' . $tour?->artist_id
+                                                : 'user-' . $tour?->user_artist_id;
                                         @endphp
                                         <tr class="{{ $index >= 10 ? 'hidden-row-attendances' : '' }}">
                                             <td>{{ $attendanceStart - $index }}</td>
                                             <td>{{ $attendance->attended_date?->format('Y.m.d') ?? '-' }}</td>
                                             <td class="sp">
-                                                @if ($attendance->dbSetlist?->tour?->artist && !$isFes)
-                                                    <a href="{{ route('mypage.attendances.index', ['artist_id' => $attendance->dbSetlist->tour->artist_id]) }}" class="stats-link">{{ $attendance->dbSetlist->tour->artist->name }}</a>
+                                                @if ($tour?->artist && !$isFes)
+                                                    <a href="{{ route('mypage.attendances.index', ['artist_id' => $artistRef]) }}" class="stats-link">{{ $tour->artist->name }}</a>
                                                     /
                                                 @endif
-                                                <a href="{{ route('mypage.attendances.show', $attendance) }}" class="stats-link">{{ $attendance->dbSetlist->tour->title ?? '-' }}</a>
+                                                <a href="{{ route('mypage.attendances.show', $attendance) }}" class="stats-link">{{ $tour->title ?? '-' }}</a>
                                             </td>
                                             <td class="pc td_artist">
-                                                @if ($attendance->dbSetlist?->tour?->artist && !$isFes)
-                                                    <a href="{{ route('mypage.attendances.index', ['artist_id' => $attendance->dbSetlist->tour->artist_id]) }}" class="stats-link">{{ $attendance->dbSetlist->tour->artist->name }}</a>
+                                                @if ($tour?->artist && !$isFes)
+                                                    <a href="{{ route('mypage.attendances.index', ['artist_id' => $artistRef]) }}" class="stats-link">{{ $tour->artist->name }}</a>
                                                 @endif
                                             </td>
                                             <td class="pc">
-                                                <a href="{{ route('mypage.attendances.show', $attendance) }}" class="stats-link">{{ $attendance->dbSetlist->tour->title ?? '-' }}</a>
+                                                <a href="{{ route('mypage.attendances.show', $attendance) }}" class="stats-link">{{ $tour->title ?? '-' }}</a>
                                             </td>
                                             <td class="pc">{{ $attendance->venue }}</td>
                                         </tr>

@@ -5,7 +5,7 @@
     <div class="database-hero database-hero--detail">
         <div class="container">
             @include('database._breadcrumb', ['breadcrumbs' => [
-                ['label' => 'My Page', 'url' => route('mypage.stats')],
+                ['label' => 'My Page', 'url' => route('mypage.index')],
                 ['label' => 'セットリストを編集'],
             ]])
             @php
@@ -44,7 +44,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="venue" class="form-label">会場</label>
-                        <input type="text" class="form-control" id="venue" name="venue" value="{{ old('venue', $attendance->venue) }}">
+                        <input type="text" class="form-control" id="venue" name="venue" value="{{ old('venue', $attendance->venue) }}" required>
                     </div>
                     <button type="submit" class="btn btn-outline-dark w-100">更新</button>
                 </form>

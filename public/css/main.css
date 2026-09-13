@@ -2277,7 +2277,6 @@ h2 {
 .song-title {
     font-weight: 600;
     color: #333;
-    font-size: 1.05rem;
 }
 
 .artist-name {
@@ -3420,6 +3419,83 @@ h2 {
     letter-spacing: 1px;
     margin: 4px 0 14px;
     text-transform: uppercase;
+}
+
+/* Manage My Artists & Setlists: 曲/ツアー/アーティスト一覧の共通行スタイル */
+.manage-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.manage-row:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(102, 126, 234, 0.18);
+    border-color: rgba(102, 126, 234, 0.3);
+}
+
+.manage-row.is-dragging {
+    opacity: 0.5;
+}
+
+.manage-row-title {
+    flex: 1;
+    min-width: 0;
+    color: #333;
+}
+
+.manage-row-title-input {
+    flex: 1;
+    min-width: 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: inherit;
+}
+
+.manage-drag-handle {
+    color: #ccc;
+    cursor: grab;
+    flex-shrink: 0;
+}
+
+.manage-edit-btn,
+.manage-delete-btn {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    padding: 4px 8px;
+    flex-shrink: 0;
+}
+
+.manage-delete-btn {
+    color: #dc3545;
+}
+
+/* アーティスト一覧：select-cardのリンクに削除ボタンを併置する行 */
+.manage-artist-row .select-card {
+    margin-bottom: 14px;
+}
+
+.manage-artist-delete {
+    flex: 0 0 auto;
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    padding: 4px 8px;
 }
 
 /* Setlist pattern card: expands inline to show the setlist */

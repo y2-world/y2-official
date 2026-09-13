@@ -13,6 +13,7 @@ class UserSetlist extends Model
 
     protected $fillable = [
         'user_concert_id',
+        'external_user_id',
         'order_no',
         'row',
         'subtitle',
@@ -23,6 +24,11 @@ class UserSetlist extends Model
     public function concert()
     {
         return $this->belongsTo(UserConcert::class, 'user_concert_id');
+    }
+
+    public function createdByExternalUser()
+    {
+        return $this->belongsTo(ExternalUser::class, 'external_user_id');
     }
 
     public function attendances()

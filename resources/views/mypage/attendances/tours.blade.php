@@ -5,7 +5,7 @@
     <div class="database-hero database-hero--detail">
         <div class="container">
             @include('database._breadcrumb', ['breadcrumbs' => [
-                ['label' => 'My Page', 'url' => route('mypage.stats')],
+                ['label' => 'My Page', 'url' => route('mypage.index')],
                 ['label' => 'セットリスト登録', 'url' => route('mypage.attendances.create')],
                 ['label' => $artistName],
             ]])
@@ -56,7 +56,7 @@
 
                 @if ($canAddTour)
                     <div style="margin-top: 24px; text-align: center;">
-                        <a href="#" id="newTourToggle" class="mypage-add-button" title="新しいツアー・ライブを追加" style="display: inline-flex;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newTourForm').hidden = false; this.hidden = true; var msg = document.getElementById('noToursMessage'); if (msg) { msg.hidden = true; }" @else hidden @endif>
+                        <a href="#" id="newTourToggle" class="mypage-add-button" title="新しいツアーを追加" style="display: inline-flex;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newTourForm').hidden = false; this.hidden = true; var msg = document.getElementById('noToursMessage'); if (msg) { msg.hidden = true; }" @else hidden @endif>
                             <i class="fas fa-plus"></i>
                         </a>
                         <form id="newTourForm" method="POST" action="{{ route('mypage.attendances.tours.new', $artistId) }}" @if(!$errors->any()) hidden @endif style="max-width: 360px; margin: 16px auto 0; text-align: left;">
@@ -65,7 +65,7 @@
                                 <input type="hidden" name="name" value="{{ $artistName }}">
                             @endif
                             <div class="mb-3">
-                                <label for="new_tour_title" class="form-label">ツアー・ライブ名</label>
+                                <label for="new_tour_title" class="form-label">ツアー名</label>
                                 <input type="text" class="form-control" id="new_tour_title" name="title" value="{{ old('title') }}" required>
                             </div>
                             <div class="mb-3">

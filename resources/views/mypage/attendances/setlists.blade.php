@@ -8,7 +8,7 @@
                 $artistRef = $kind . '-' . ($kind === 'official' ? $tour->artist_id : $tour->user_artist_id);
             @endphp
             @include('database._breadcrumb', ['breadcrumbs' => [
-                ['label' => 'My Page', 'url' => route('mypage.stats')],
+                ['label' => 'My Page', 'url' => route('mypage.index')],
                 ['label' => 'セットリスト登録', 'url' => route('mypage.attendances.create')],
                 ['label' => $tour->artist->name, 'url' => route('mypage.attendances.tours', $artistRef)],
                 ['label' => $tour->title],

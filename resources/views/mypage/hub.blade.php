@@ -18,7 +18,7 @@
 
                     <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 32px;">
                         <span style="color: rgba(255, 255, 255, 0.9); font-size: 0.85rem;">セットリストを追加</span>
-                        <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-button" title="セットリストを追加">
+                        <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-button" title="セットリストを追加" style="background: white; color: #764ba2;">
                             <i class="fas fa-plus"></i>
                         </a>
                     </div>
@@ -45,7 +45,7 @@
                             <i class="fa-solid fa-chevron-right select-card-arrow"></i>
                         </a>
 
-                        <a href="#" class="select-card" title="準備中">
+                        <a href="{{ route('mypage.manage.index') }}" class="select-card">
                             <span class="select-card-body">
                                 <span class="select-card-title"><i class="fa-solid fa-pen-to-square" style="margin-right: 10px;"></i> Manage My Artists & Setlists</span>
                             </span>
