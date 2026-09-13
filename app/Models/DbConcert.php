@@ -56,7 +56,17 @@ class DbConcert extends Model
 
         $entries = [];
         $currentYear = (int)date('Y', strtotime($this->date1));
+        $lastMonth = null;
         $lines = preg_split('/\r\n|\r|\n/', $this->schedule);
+
+        // scheduleに明示的な年の区切りが無い年跨ぎツアー（例: 12月開始〜翌年3月）向けに、
+        // 月が前の行より小さくなった時点で年が繰り上がったとみなす。
+        $advanceYearIfMonthWrapped = function (int $month) use (&$lastMonth, &$currentYear) {
+            if ($lastMonth !== null && $month < $lastMonth) {
+                $currentYear++;
+            }
+            $lastMonth = $month;
+        };
 
         foreach ($lines as $line) {
             $line = trim($line);
@@ -67,11 +77,13 @@ class DbConcert extends Model
             // 年の区切り行（"1992" 単独 or "＜2023年＞"）
             if (preg_match('/^(\d{4})年?$/u', $line, $m) || preg_match('/^[＜<](\d{4})年?[＞>]$/u', $line, $m)) {
                 $currentYear = (int)$m[1];
+                $lastMonth = null;
                 continue;
             }
 
             // "4月24日(土) 愛知・日本ガイシホール (公演中止)" 形式
             if (preg_match('/^(\d{1,2})月(\d{1,2})日\s*(?:\([^)]*\))?\s*(.+)$/u', $line, $m)) {
+                $advanceYearIfMonthWrapped((int)$m[1]);
                 $venue = trim(preg_replace('/[（(][^）)]*[）)]\s*$/u', '', $m[3]));
                 $date = $this->buildDate($currentYear, (int)$m[1], (int)$m[2]);
                 if ($date && $venue !== '') {
@@ -80,8 +92,9 @@ class DbConcert extends Model
                 continue;
             }
 
-            // "06.18(月) Zepp Sapporo" / "05.14(土) マリンメッセ福岡A館" 形式
-            if (preg_match('/^(\d{1,2})\.(\d{1,2})\s*(?:\([^)]*\))?\s+(.+)$/u', $line, $m)) {
+            // "06.18(月) Zepp Sapporo" / "05.14(土) マリンメッセ福岡A館" / "06/18(月) Zepp Sapporo" 形式
+            if (preg_match('/^(\d{1,2})[.\/](\d{1,2})\s*(?:\([^)]*\))?\s+(.+)$/u', $line, $m)) {
+                $advanceYearIfMonthWrapped((int)$m[1]);
                 $venue = trim(preg_replace('/[（(][^）)]*[）)]\s*$/u', '', $m[3]));
                 $date = $this->buildDate($currentYear, (int)$m[1], (int)$m[2]);
                 if ($date && $venue !== '') {
@@ -90,11 +103,12 @@ class DbConcert extends Model
                 continue;
             }
 
-            // "9.28,29 大阪ミューズホール"（複数日で同一会場）形式
-            if (preg_match('/^(\d{1,2})\.(\d{1,2})(?:,(\d{1,2}))+\s+(.+)$/u', $line, $m)) {
-                $venue = trim($m[4]);
-                preg_match('/^(\d{1,2})\.((?:\d{1,2},?)+)\s+(.+)$/u', $line, $m2);
+            // "9.28,29 大阪ミューズホール" / "9/28,29 大阪ミューズホール"（複数日で同一会場）形式
+            if (preg_match('/^(\d{1,2})[.\/](\d{1,2})(?:,(\d{1,2}))+\s+(.+)$/u', $line, $m)) {
+                preg_match('/^(\d{1,2})[.\/]((?:\d{1,2},?)+)\s+(.+)$/u', $line, $m2);
                 $month = (int)$m2[1];
+                $advanceYearIfMonthWrapped($month);
+                $venue = trim($m2[3]);
                 $days = explode(',', $m2[2]);
                 foreach ($days as $day) {
                     $date = $this->buildDate($currentYear, $month, (int)$day);
