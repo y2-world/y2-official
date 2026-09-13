@@ -13,7 +13,7 @@
             <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">セットリスト登録</p>
             <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">{{ $artistName }}</p>
             <h1 class="database-title" style="text-align: center;">{{ $tourTitle }}</h1>
-            <p class="database-subtitle" style="text-align: center;">セットリストを入力してください</p>
+            <p class="database-subtitle" style="text-align: center;">セットリストを入力</p>
         </div>
     </div>
 

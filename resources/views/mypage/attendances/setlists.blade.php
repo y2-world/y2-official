@@ -15,7 +15,7 @@
             ]])
             <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">セットリスト登録</p>
             <h1 class="database-title" style="text-align: center; overflow-wrap: break-word; word-break: break-word;">{{ $tour->title }}</h1>
-            <p class="database-subtitle" style="text-align: center;">参加したセットリストパターンを選択してください</p>
+            <p class="database-subtitle" style="text-align: center;">参加したセットリストパターンを選択</p>
         </div>
     </div>
 

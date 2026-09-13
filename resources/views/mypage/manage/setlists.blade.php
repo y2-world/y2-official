@@ -98,7 +98,7 @@
                         <form method="POST" action="{{ route('mypage.manage.setlists.update', [$artist->id, $concert->id, $setlist->id]) }}" class="setlist-pattern-form" hidden style="margin-top: 16px;">
                             @csrf
                             <div class="mb-3">
-                                <input type="text" class="form-control setlist-pattern-title-input" name="subtitle" placeholder="パターン名を入力してください" value="{{ $setlist->subtitle }}">
+                                <input type="text" class="form-control setlist-pattern-title-input" name="subtitle" placeholder="パターン名を入力" value="{{ $setlist->subtitle }}">
                             </div>
                             <div class="setlist-song-rows" data-field="setlist">
                                 @foreach ($setlist->setlist ?? [] as $item)
