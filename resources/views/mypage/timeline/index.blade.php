@@ -19,6 +19,11 @@
                             $artistRef = $attendance->db_setlist_id
                                 ? 'official-' . $tour?->artist_id
                                 : 'user-' . $tour?->user_artist_id;
+                            // 公式アーティストはDatabase側のライブ一覧へ、ユーザー登録アーティストは
+                            // Database側に対応するページが無いため従来通り参加記録一覧へ遷移する。
+                            $artistNavUrl = $attendance->db_setlist_id
+                                ? route('database.live', $tour?->artist_id)
+                                : route('mypage.attendances.index', ['artist_id' => $artistRef]);
                             $isOwner = $attendance->external_user_id === \Illuminate\Support\Facades\Auth::guard('external')->id();
                         @endphp
                         <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'timeline']) }}" class="timeline-card" data-attendance-id="{{ $attendance->id }}">
@@ -26,7 +31,7 @@
                                 <div class="timeline-card-meta">
                                     <span class="timeline-card-user" data-nav-url="{{ route('mypage.users.stats', $attendance->external_user_id) }}">{{ $attendance->externalUser->name ?: 'ゲスト' }}</span>
                                     @if ($tour?->artist)
-                                        <span class="timeline-card-artist" data-nav-url="{{ route('mypage.attendances.index', ['artist_id' => $artistRef]) }}">{{ $tour->artist->name }}</span>
+                                        <span class="timeline-card-artist" data-nav-url="{{ $artistNavUrl }}">{{ $tour->artist->name }}</span>
                                     @endif
                                     <span class="timeline-card-title">{{ $tour->title ?? '-' }}</span>
                                     <span class="timeline-card-sub">

@@ -11,7 +11,9 @@
             <p class="database-subtitle" style="">
                 {{-- type=0（ツアー）・1（単発ライブ）以外は複数アーティスト出演のフェス等のため、単独アーティスト名は表示しない --}}
                 @if ($artist && !in_array((int) $tour->type, [2, 3, 4], true))
-                    <a href="{{ route('mypage.attendances.index', ['artist_id' => ($isOfficial ? 'official' : 'user') . '-' . $artist->id]) }}" style="color: white; text-decoration: none;">
+                    {{-- 公式アーティストはDatabase側のライブ一覧へ、ユーザー登録アーティストは
+                         Database側に対応するページが無いため参加記録一覧へ遷移する。 --}}
+                    <a href="{{ $isOfficial ? route('database.live', $artist->id) : route('mypage.attendances.index', ['artist_id' => 'user-' . $artist->id]) }}" style="color: white; text-decoration: none;">
                         {{ $artist->name }}
                     </a>
                 @endif
