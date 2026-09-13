@@ -3,9 +3,14 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SlSetlistResource\Pages;
+use App\Models\DbConcert;
+use App\Models\DbSetlist;
+use App\Models\DbSong;
 use App\Models\SlSetlist;
+use App\Models\SlSong;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -807,6 +812,76 @@ class SlSetlistResource extends Resource
                     }),
             ])
             ->actions([
+                Tables\Actions\Action::make('copyToDatabase')
+                    ->label('DBにコピー')
+                    ->icon('heroicon-o-document-duplicate')
+                    ->color('gray')
+                    ->visible(fn (SlSetlist $record) => !$record->fes && (!empty($record->setlist) || !empty($record->encore)))
+                    ->modalHeading('データベースにコピー')
+                    ->modalDescription('このセットリストを新しいツアー・ライブとしてデータベース（database側）にコピーします。曲目はSlSong側の紐付け（db_song_id）があればそれを使い、無ければ同名のDbSongを新規作成します。')
+                    ->modalSubmitActionLabel('コピーする')
+                    ->form([
+                        Forms\Components\Select::make('artist_id')
+                            ->label('アーティスト')
+                            ->options(fn () => \App\Models\Artist::pluck('name', 'id'))
+                            ->required()
+                            ->native(false)
+                            ->searchable(),
+
+                        Forms\Components\TextInput::make('title')
+                            ->label('タイトル')
+                            ->required()
+                            ->maxLength(255),
+
+                        Forms\Components\Radio::make('type')
+                            ->label('タイプ')
+                            ->options([
+                                0 => 'ツアー',
+                                1 => '単発ライブ',
+                                2 => 'イベント',
+                                3 => 'ap bank fes',
+                                4 => 'ソロ',
+                            ])
+                            ->default(1)
+                            ->required(),
+
+                        Forms\Components\DatePicker::make('date1')
+                            ->label('開始日')
+                            ->required()
+                            ->native(false)
+                            ->displayFormat('Y.m.d'),
+
+                        Forms\Components\DatePicker::make('date2')
+                            ->label('終了日')
+                            ->native(false)
+                            ->displayFormat('Y.m.d'),
+
+                        Forms\Components\TextInput::make('venue')
+                            ->label('会場')
+                            ->maxLength(255),
+
+                        Forms\Components\Textarea::make('schedule')
+                            ->label('スケジュール')
+                            ->rows(6),
+                    ])
+                    ->fillForm(fn (SlSetlist $record) => [
+                        'artist_id' => $record->artist_id,
+                        'title' => $record->title,
+                        'type' => 1,
+                        'date1' => $record->date,
+                        'venue' => $record->venue,
+                    ])
+                    ->action(function (array $data, SlSetlist $record) {
+                        $dbSetlist = static::copySlSetlistToDatabase($record, $data);
+
+                        Notification::make()
+                            ->success()
+                            ->title('データベースにコピーしました')
+                            ->body("「{$dbSetlist->tour->title}」として登録しました。")
+                            ->send();
+
+                        return redirect(DbSetlistResource::getUrl('edit', ['record' => $dbSetlist]));
+                    }),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -832,5 +907,59 @@ class SlSetlistResource extends Resource
             'create' => Pages\CreateSlSetlist::route('/create'),
             'edit' => Pages\EditSlSetlist::route('/{record}/edit'),
         ];
+    }
+
+    // SlSetlist（公開セトリ投稿）1件を、新しいDbConcert（database側のツアー・ライブ）+
+    // DbSetlist（セットリストパターン1つ）としてコピーする。
+    // アーティスト・タイトル・タイプ・日程・会場・スケジュールは確認モーダルで
+    // 編集された$dataの内容を使う（初期値はSlSetlistの値だが、その場で修正できる）。
+    // 曲目はSlSong.db_song_idの既存紐付けがあればそれを使い、無ければ同名のDbSongを
+    // firstOrCreateする（タイトル一致で自動的に他の箇所からも参照できる曲になる）。
+    private static function copySlSetlistToDatabase(SlSetlist $record, array $data): DbSetlist
+    {
+        $tour = DbConcert::create([
+            'artist_id' => $data['artist_id'],
+            'title' => $data['title'],
+            'type' => $data['type'],
+            'date1' => $data['date1'],
+            'date2' => $data['date2'] ?? null,
+            'venue' => $data['venue'] ?? null,
+            'schedule' => $data['schedule'] ?? null,
+        ]);
+
+        $toDbSongItems = function (array $items) use ($data) {
+            $result = [];
+            foreach ($items as $item) {
+                if (!isset($item['song']) || $item['song'] === '') {
+                    continue;
+                }
+
+                $slSong = SlSong::find($item['song']);
+                if (!$slSong) {
+                    continue;
+                }
+
+                if ($slSong->db_song_id) {
+                    $dbSongId = $slSong->db_song_id;
+                } else {
+                    $dbSong = DbSong::firstOrCreate(
+                        ['artist_id' => $data['artist_id'], 'title' => $slSong->title],
+                        []
+                    );
+                    $dbSongId = $dbSong->id;
+                }
+
+                $result[] = ['song' => (string) $dbSongId];
+            }
+            return $result;
+        };
+
+        return DbSetlist::create([
+            'tour_id' => $tour->id,
+            'order_no' => 1,
+            'row' => 1,
+            'setlist' => $toDbSongItems($record->setlist ?? []),
+            'encore' => $toDbSongItems($record->encore ?? []),
+        ]);
     }
 }

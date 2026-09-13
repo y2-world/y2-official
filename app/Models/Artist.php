@@ -38,12 +38,15 @@ class Artist extends Model
 
     public function getYearsAttribute()
     {
-        $singleYears = $this->singles()->whereNotNull('date')->get()->map(fn($s) => (int) date('Y', strtotime($s->date)));
-        $albumYears = $this->albums()->whereNotNull('date')->get()->map(fn($a) => (int) date('Y', strtotime($a->date)));
-        $tourYears = $this->tours()->whereNotNull('date1')->get()->flatMap(fn($t) => array_filter([
+        // ->map()/->flatMap()した後もEloquent\Collectionのままだと、
+        // 後続のmerge()が要素をモデルとみなしてgetKey()を呼び失敗する
+        // （中身はint年であってモデルではないため）。collect()でSupport\Collectionにしてから連結する。
+        $singleYears = collect($this->singles()->whereNotNull('date')->get()->map(fn($s) => (int) date('Y', strtotime($s->date))));
+        $albumYears = collect($this->albums()->whereNotNull('date')->get()->map(fn($a) => (int) date('Y', strtotime($a->date))));
+        $tourYears = collect($this->tours()->whereNotNull('date1')->get()->flatMap(fn($t) => array_filter([
             (int) date('Y', strtotime($t->date1)),
             $t->date2 ? (int) date('Y', strtotime($t->date2)) : null,
-        ]));
+        ])));
         return $singleYears->merge($albumYears)->merge($tourYears)->unique()->sort()->values()->map(fn($y) => (object)['year' => $y]);
     }
 
