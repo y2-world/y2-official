@@ -6,6 +6,7 @@ use App\Models\ExternalUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
 
 class ExternalAuthController extends Controller
@@ -79,8 +80,21 @@ class ExternalAuthController extends Controller
 
         $data = $request->validateWithBag('profile', [
             'name' => ['nullable', 'string', 'max:255'],
+            'bio' => ['nullable', 'string', 'max:500'],
             'email' => ['required', 'email', 'max:255', 'unique:external_users,email,' . $user->id],
+            'avatar' => ['nullable', 'image', 'max:5120'],
         ]);
+
+        // 管理画面のOfficialProfileResource等と同じ方式（Cloudinary、ULIDでファイル名衝突を避ける）
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->storeAs(
+                'avatars',
+                (string) str()->ulid(),
+                'cloudinary'
+            );
+            $data['avatar_url'] = Storage::disk('cloudinary')->url($path);
+        }
+        unset($data['avatar']);
 
         $user->update($data);
 

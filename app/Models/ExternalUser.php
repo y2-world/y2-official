@@ -12,6 +12,8 @@ class ExternalUser extends Authenticatable
 
     protected $fillable = [
         'name',
+        'bio',
+        'avatar_url',
         'email',
         'password',
     ];

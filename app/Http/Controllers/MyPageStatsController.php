@@ -7,9 +7,11 @@ use App\Http\Controllers\Concerns\SplitsKindRef;
 use App\Models\Artist;
 use App\Models\DbSetlist;
 use App\Models\DbSong;
+use App\Models\ExternalUser;
 use App\Models\UserArtist;
 use App\Models\UserSetlist;
 use App\Models\UserSong;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class MyPageStatsController extends Controller
@@ -260,31 +262,38 @@ class MyPageStatsController extends Controller
         ));
     }
 
-    // アーティストのdatabase楽曲カタログを台紙にした、自分専用のスタンプ帳。
+    // アーティストのdatabase楽曲カタログを台紙にしたスタンプ帳。
     // $artistId は "official-{id}" / "user-{id}" 形式。
-    public function stamps($artistId)
+    // ?user={id} クエリで他ユーザーのスタンプ帳も閲覧できる（プロフィールページのリンク先）。
+    // 省略時はログイン中の自分。
+    public function stamps(Request $request, $artistId)
     {
         [$kind, $id] = $this->splitRef($artistId);
 
+        $viewedUserId = $request->query('user');
+        $externalUser = $viewedUserId
+            ? ExternalUser::findOrFail($viewedUserId)
+            : Auth::guard('external')->user();
+
         if ($kind === 'official') {
-            return $this->officialStamps($id);
+            return $this->officialStamps($id, $externalUser);
         }
 
-        return $this->userStamps($id);
+        return $this->userStamps($id, $externalUser);
     }
 
     // 判定基準はStatsController::getStampBookと同じ考え方だが、「演奏済み」の元データが
     // SlSetlist（Yuki本人の記録）ではなく、自分が記録したExternalUserAttendanceになる。
     // db_setlistsはSlSetlistと違いフェス形式（block/interleaved）を持たず、songキーが
     // 直接db_song_idを指すため、SlSong経由の変換やフェス展開は不要でシンプルになる。
-    private function officialStamps($artistId)
+    private function officialStamps($artistId, $externalUser)
     {
         $artist = Artist::find($artistId);
         if (!$artist) {
             abort(404);
         }
 
-        $attendedSetlistIds = Auth::guard('external')->user()
+        $attendedSetlistIds = $externalUser
             ->attendances()
             ->whereHas('dbSetlist.tour', fn ($q) => $q->where('artist_id', $artistId))
             ->pluck('db_setlist_id');
@@ -325,20 +334,20 @@ class MyPageStatsController extends Controller
             ];
         });
 
-        return $this->renderStampsView($artist, $stamps);
+        return $this->renderStampsView($artist, $stamps, $externalUser);
     }
 
     // ユーザー登録アーティストのスタンプ帳。演奏記録の元がYuki本人の公式記録ではなく
     // ユーザー自身の申告（UserSong/UserSetlist）のため、「未演奏」区分は設けず
     // 「自分が参加したセットリストで演奏された曲か」だけのシンプルな2値判定にする。
-    private function userStamps($artistId)
+    private function userStamps($artistId, $externalUser)
     {
         $artist = UserArtist::find($artistId);
         if (!$artist) {
             abort(404);
         }
 
-        $attendedSetlistIds = Auth::guard('external')->user()
+        $attendedSetlistIds = $externalUser
             ->attendances()
             ->whereHas('userSetlist.concert', fn ($q) => $q->where('user_artist_id', $artistId))
             ->pluck('user_setlist_id');
@@ -358,7 +367,7 @@ class MyPageStatsController extends Controller
         $stamps = $userSongs->map(function (UserSong $song) use ($playedUserSongIds) {
             return [
                 'song_id' => $song->id,
-                'song_url' => null,
+                'song_url' => route('mypage.attendances.index', ['song_id' => 'user-' . $song->id]),
                 'title' => $song->title,
                 'done' => isset($playedUserSongIds[$song->id]),
                 'never_performed' => false,
@@ -366,10 +375,10 @@ class MyPageStatsController extends Controller
             ];
         });
 
-        return $this->renderStampsView($artist, $stamps);
+        return $this->renderStampsView($artist, $stamps, $externalUser);
     }
 
-    private function renderStampsView($artist, $stamps)
+    private function renderStampsView($artist, $stamps, $externalUser)
     {
         $totalCount = $stamps->count();
         $doneCount = $stamps->where('done', true)->count();
@@ -378,6 +387,8 @@ class MyPageStatsController extends Controller
         $performedCount = $stamps->where('never_performed', false)->count();
         $performedPercentage = $performedCount > 0 ? round(($doneCount / $performedCount) * 100, 1) : 0;
 
+        $isOwner = $externalUser->id === Auth::guard('external')->id();
+
         return view('mypage.stats.stamps', compact(
             'artist',
             'stamps',
@@ -385,7 +396,9 @@ class MyPageStatsController extends Controller
             'doneCount',
             'percentage',
             'performedCount',
-            'performedPercentage'
+            'performedPercentage',
+            'externalUser',
+            'isOwner'
         ));
     }
 }

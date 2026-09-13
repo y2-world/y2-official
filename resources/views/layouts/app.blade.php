@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', 'Yuki Official')</title>
 
@@ -160,6 +161,203 @@ function showAppToast(message) {
         showAppToast(@json(session('success')));
     });
 @endif
+
+// Timelineの星評価編集・コメント投稿/削除。timeline/index.blade.phpとattendances/show.blade.phpで
+// 同じ「.timeline-card」構造を共有し、この初期化関数から呼び出す。
+// 一覧画面ではカード自体が個別ページへのリンク（<a>）になっているため、
+// 星評価やユーザー名などカード内のクリック可能要素は stopPropagation でリンク遷移を防ぐ。
+// コメント投稿フォームは個別ページ（attendances/show.blade.php）にしか無いため、
+// 要素が無ければその部分の初期化はスキップする。
+function initTimelineCard(card) {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    const starsDisplay = card.querySelector('.timeline-stars-display');
+    const ratingEl = card.querySelector('.timeline-rating');
+
+    // カード自体がリンク（<a>）の一覧画面で、ユーザー名・アーティスト名だけ別ページに
+    // 飛ばしたい箇所（data-nav-url）。バブリングでカード本体のリンクへ遷移してしまわないよう
+    // ここでpreventDefault/stopPropagationしてから明示的に遷移する。
+    card.querySelectorAll('[data-nav-url]').forEach(function (el) {
+        el.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.location.href = el.dataset.navUrl;
+        });
+    });
+
+    function renderStars(container, rating) {
+        container.querySelectorAll('i').forEach(function (star, index) {
+            star.classList.toggle('is-filled', index < rating);
+        });
+    }
+
+    // 星評価（投稿者本人のみ編集可）：is-editableな星をクリックすると即座にその評価で保存する
+    if (starsDisplay.classList.contains('is-editable')) {
+        const updateUrl = ratingEl.dataset.updateUrl;
+        const stars = starsDisplay.querySelectorAll('i');
+
+        stars.forEach(function (star, index) {
+            star.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const newRating = index + 1;
+                renderStars(starsDisplay, newRating);
+                starsDisplay.dataset.rating = newRating;
+
+                fetch(updateUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ rating: newRating }),
+                })
+                    .then(function (res) { return res.json(); })
+                    .then(function (data) {
+                        showAppToast(data.message);
+                    });
+            });
+        });
+    }
+
+    const commentForm = card.querySelector('.timeline-comment-form');
+    const commentFormInput = card.querySelector('.timeline-comment-form-input');
+    const commentsContainer = card.querySelector('.timeline-comments');
+    const commentCount = card.querySelector('.timeline-card-comment-count');
+    let noCommentsMessage = card.querySelector('.timeline-no-comments');
+
+    function updateCommentCount(delta) {
+        if (!commentCount) return;
+        const current = parseInt(commentCount.textContent.trim(), 10) || 0;
+        commentCount.innerHTML = '<i class="fa-regular fa-comment"></i> ' + (current + delta);
+    }
+
+    function setupCommentDelete(btn) {
+        if (!btn.dataset.deleteUrl) return;
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (!confirm('このコメントを削除しますか？')) return;
+            fetch(btn.dataset.deleteUrl, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                },
+            })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    btn.closest('.timeline-comment-item').remove();
+                    updateCommentCount(-1);
+                    showAppToast(data.message);
+                });
+        });
+    }
+
+    function setupCommentEdit(btn) {
+        if (!btn.dataset.updateUrl) return;
+        const item = btn.closest('.timeline-comment-item');
+        const bodyDisplay = item.querySelector('.timeline-comment-body');
+        const bodyInput = item.querySelector('.timeline-comment-body-input');
+        const penIcon = btn.querySelector('.fa-pen');
+        const checkIcon = btn.querySelector('.fa-check');
+        let isEditing = false;
+
+        const startEdit = function () {
+            isEditing = true;
+            bodyDisplay.hidden = true;
+            bodyInput.hidden = false;
+            bodyInput.focus();
+            bodyInput.select();
+            penIcon.hidden = true;
+            checkIcon.hidden = false;
+        };
+
+        const commitEdit = function () {
+            const newBody = bodyInput.value.trim();
+            if (!newBody) return;
+
+            fetch(btn.dataset.updateUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ body: newBody }),
+            })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    isEditing = false;
+                    bodyDisplay.textContent = data.body;
+                    bodyInput.value = data.body;
+                    bodyInput.hidden = true;
+                    bodyDisplay.hidden = false;
+                    penIcon.hidden = false;
+                    checkIcon.hidden = true;
+                    showAppToast(data.message);
+                });
+        };
+
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (isEditing) {
+                commitEdit();
+            } else {
+                startEdit();
+            }
+        });
+        bodyInput.addEventListener('click', function (e) { e.stopPropagation(); });
+        bodyInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') { e.preventDefault(); commitEdit(); }
+        });
+    }
+
+    if (commentForm) {
+        commentForm.addEventListener('click', function (e) { e.stopPropagation(); });
+        commentForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const body = commentFormInput.value.trim();
+            if (!body) return;
+
+            fetch(commentForm.dataset.postUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ body: body }),
+            })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (noCommentsMessage) {
+                        noCommentsMessage.remove();
+                        noCommentsMessage = null;
+                    }
+                    const item = document.createElement('div');
+                    item.className = 'timeline-comment-item';
+                    item.dataset.commentId = data.comment.id;
+                    item.innerHTML = '<span class="timeline-comment-user"></span>'
+                        + '<span class="timeline-comment-body"></span>'
+                        + '<input type="text" class="form-control timeline-comment-body-input" maxlength="1000" hidden>'
+                        + '<button type="button" class="timeline-comment-edit" data-update-url="' + data.comment.update_url + '" title="編集"><i class="fa-solid fa-pen"></i><i class="fa-solid fa-check" hidden></i></button>'
+                        + '<button type="button" class="timeline-comment-delete" data-delete-url="' + data.comment.delete_url + '" title="削除"><i class="fa-solid fa-trash"></i></button>';
+                    item.querySelector('.timeline-comment-user').textContent = data.comment.user_name;
+                    item.querySelector('.timeline-comment-body').textContent = data.comment.body;
+                    item.querySelector('.timeline-comment-body-input').value = data.comment.body;
+                    commentsContainer.appendChild(item);
+                    setupCommentEdit(item.querySelector('.timeline-comment-edit'));
+                    setupCommentDelete(item.querySelector('.timeline-comment-delete'));
+                    commentFormInput.value = '';
+                    updateCommentCount(1);
+                    showAppToast(data.message);
+                });
+        });
+    }
+
+    card.querySelectorAll('.timeline-comment-edit').forEach(setupCommentEdit);
+    card.querySelectorAll('.timeline-comment-delete').forEach(setupCommentDelete);
+}
 </script>
 
 <!-- JS -->

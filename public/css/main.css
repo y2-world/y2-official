@@ -3708,3 +3708,158 @@ a.setlist-card:hover {
 .app-toast i {
     color: #4ade80;
 }
+
+/* Timeline: 星評価・コメント（timeline/index.blade.php と attendances/show.blade.php で共有） */
+.timeline-card {
+    position: relative;
+    display: block;
+    border-radius: 14px;
+    margin-bottom: 16px;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    padding: 18px 20px;
+    transition: all 0.2s ease;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.timeline-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(102, 126, 234, 0.18);
+    border-color: rgba(102, 126, 234, 0.3);
+}
+
+/* attendances/show.blade.php でセクションとして埋め込むときの見た目（カード枠・hover演出なし） */
+.timeline-card--plain {
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    cursor: default;
+}
+
+.timeline-card--plain:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: transparent;
+}
+
+.timeline-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 10px;
+}
+
+.timeline-card-footer-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.timeline-card-posted-at {
+    flex-shrink: 0;
+    color: #bbb;
+    font-size: 0.7rem;
+}
+
+.timeline-stars {
+    display: inline-flex;
+    gap: 4px;
+}
+
+.timeline-stars i {
+    color: #ddd;
+    font-size: 0.95rem;
+}
+
+.timeline-stars i.is-filled {
+    color: #ffb400;
+}
+
+.timeline-stars-input i {
+    cursor: pointer;
+}
+
+.timeline-stars-display.is-editable i {
+    cursor: pointer;
+}
+
+.timeline-card-comment-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #999;
+    font-size: 0.85rem;
+    line-height: 1;
+}
+
+.timeline-thread {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.timeline-comments {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.timeline-no-comments {
+    color: #999;
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+}
+
+.timeline-comment-item {
+    position: relative;
+    font-size: 0.8rem;
+    background: #f8f8f8;
+    border-radius: 8px;
+    padding: 6px 10px;
+}
+
+.timeline-comment-user {
+    display: block;
+    font-weight: 700;
+    color: #764ba2;
+    margin-bottom: 2px;
+}
+
+.timeline-comment-body {
+    display: block;
+    color: #333;
+    word-break: break-word;
+    padding-right: 44px;
+}
+
+.timeline-comment-body-input {
+    margin-right: 44px;
+}
+
+.timeline-comment-edit,
+.timeline-comment-delete {
+    position: absolute;
+    top: 6px;
+    background: none;
+    border: none;
+    color: #bbb;
+    cursor: pointer;
+    padding: 2px 4px;
+}
+
+.timeline-comment-edit {
+    right: 24px;
+}
+
+.timeline-comment-delete {
+    right: 2px;
+}
+
+.timeline-comment-form-input.form-control {
+    font-size: 0.8rem;
+}

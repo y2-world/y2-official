@@ -12,6 +12,7 @@ class ExternalUserAttendance extends Model
         'user_setlist_id',
         'attended_date',
         'venue',
+        'rating',
     ];
 
     protected $casts = [
@@ -21,6 +22,11 @@ class ExternalUserAttendance extends Model
     public function externalUser()
     {
         return $this->belongsTo(ExternalUser::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(TimelineComment::class)->with('externalUser')->orderBy('created_at');
     }
 
     public function dbSetlist()

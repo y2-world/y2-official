@@ -24,12 +24,23 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('mypage.settings.profile') }}">
+                <form method="POST" action="{{ route('mypage.settings.profile') }}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
+                    <div class="mb-3" style="text-align: center;">
+                        @if (auth('external')->user()->avatar_url)
+                            <img src="{{ auth('external')->user()->avatar_url }}" alt="" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+                        @endif
+                        <label for="avatar" class="form-label d-block">プロフィール画像</label>
+                        <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
+                    </div>
                     <div class="mb-3">
                         <label for="name" class="form-label">ユーザ名</label>
                         <input type="text" class="form-control" id="name" name="name" value="{{ old('name', auth('external')->user()->name) }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="bio" class="form-label">自己紹介</label>
+                        <textarea class="form-control" id="bio" name="bio" rows="3" maxlength="500">{{ old('bio', auth('external')->user()->bio) }}</textarea>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">メールアドレス</label>

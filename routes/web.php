@@ -18,6 +18,7 @@ use App\Http\Controllers\MyPageHubController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\MyPageStatsController;
 use App\Http\Controllers\ManageController;
+use App\Http\Controllers\TimelineController;
 
 /*
 |--------------------------------------------------------------------------
@@ -132,6 +133,15 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
 
         Route::get('/', [MyPageHubController::class, 'index'])->name('index');
         Route::get('stats', [MyPageController::class, 'index'])->name('stats');
+        Route::get('users/{user}/stats', [MyPageController::class, 'show'])->name('users.stats');
+
+        Route::prefix('timeline')->name('timeline.')->group(function () {
+            Route::get('/', [TimelineController::class, 'index'])->name('index');
+            Route::post('{attendance}', [TimelineController::class, 'update'])->name('update');
+            Route::post('{attendance}/comments', [TimelineController::class, 'storeComment'])->name('comments.store');
+            Route::put('comments/{comment}', [TimelineController::class, 'updateComment'])->name('comments.update');
+            Route::delete('comments/{comment}', [TimelineController::class, 'destroyComment'])->name('comments.destroy');
+        });
 
         Route::prefix('attendances')->name('attendances.')->group(function () {
             // アーティスト/ツアーIDは "official-{id}" / "user-{id}" / "new" のいずれか

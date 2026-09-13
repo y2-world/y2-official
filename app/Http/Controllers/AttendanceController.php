@@ -607,36 +607,42 @@ class AttendanceController extends Controller
             ->with('success', 'セットリストを追加しました。');
     }
 
+    // 参加記録の詳細（セットリスト表示）。Timeline経由で誰でも他人の投稿を閲覧できるが、
+    // 前後ナビゲーション・編集操作は本人の記録内でのみ意味を持つため、本人閲覧時だけ表示する。
     public function show(ExternalUserAttendance $attendance)
     {
-        $this->authorizeOwnership($attendance);
+        $userId = Auth::guard('external')->id();
+        $isOwner = $attendance->external_user_id === $userId;
 
-        $attendance->load(['dbSetlist.tour.artist', 'userSetlist.concert.artist']);
+        $attendance->load(['externalUser', 'dbSetlist.tour.artist', 'userSetlist.concert.artist', 'comments']);
         $isOfficial = (bool) $attendance->db_setlist_id;
         $tourSetlists = collect([$isOfficial ? $attendance->dbSetlist : $attendance->userSetlist]);
         $tour = $isOfficial ? $attendance->dbSetlist->tour : $attendance->userSetlist->concert;
         $artist = $tour->artist;
         $songs = $isOfficial ? DbSong::orderBy('id', 'asc')->get() : UserSong::where('user_artist_id', $artist->id)->orderBy('id', 'asc')->get();
 
-        $userId = Auth::guard('external')->id();
-        $previous = ExternalUserAttendance::where('external_user_id', $userId)
-            ->where(function ($q) use ($attendance) {
-                $q->where('attended_date', '<', $attendance->attended_date)
-                    ->orWhere(function ($q2) use ($attendance) {
-                        $q2->where('attended_date', $attendance->attended_date)->where('id', '<', $attendance->id);
-                    });
-            })
-            ->orderByDesc('attended_date')->orderByDesc('id')->first();
-        $next = ExternalUserAttendance::where('external_user_id', $userId)
-            ->where(function ($q) use ($attendance) {
-                $q->where('attended_date', '>', $attendance->attended_date)
-                    ->orWhere(function ($q2) use ($attendance) {
-                        $q2->where('attended_date', $attendance->attended_date)->where('id', '>', $attendance->id);
-                    });
-            })
-            ->orderBy('attended_date')->orderBy('id')->first();
+        $previous = null;
+        $next = null;
+        if ($isOwner) {
+            $previous = ExternalUserAttendance::where('external_user_id', $userId)
+                ->where(function ($q) use ($attendance) {
+                    $q->where('attended_date', '<', $attendance->attended_date)
+                        ->orWhere(function ($q2) use ($attendance) {
+                            $q2->where('attended_date', $attendance->attended_date)->where('id', '<', $attendance->id);
+                        });
+                })
+                ->orderByDesc('attended_date')->orderByDesc('id')->first();
+            $next = ExternalUserAttendance::where('external_user_id', $userId)
+                ->where(function ($q) use ($attendance) {
+                    $q->where('attended_date', '>', $attendance->attended_date)
+                        ->orWhere(function ($q2) use ($attendance) {
+                            $q2->where('attended_date', $attendance->attended_date)->where('id', '>', $attendance->id);
+                        });
+                })
+                ->orderBy('attended_date')->orderBy('id')->first();
+        }
 
-        return view('mypage.attendances.show', compact('attendance', 'tourSetlists', 'tour', 'artist', 'isOfficial', 'songs', 'previous', 'next'));
+        return view('mypage.attendances.show', compact('attendance', 'tourSetlists', 'tour', 'artist', 'isOfficial', 'songs', 'previous', 'next', 'isOwner'));
     }
 
     public function edit(ExternalUserAttendance $attendance)

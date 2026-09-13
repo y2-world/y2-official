@@ -24,7 +24,7 @@
                     </div>
 
                     <div class="select-card-list" style="margin-top: 12px;">
-                        <a href="#" class="select-card" title="準備中">
+                        <a href="{{ route('mypage.timeline.index') }}" class="select-card">
                             <span class="select-card-body">
                                 <span class="select-card-title"><i class="fa-solid fa-stream" style="margin-right: 10px;"></i> Timeline</span>
                             </span>

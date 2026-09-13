@@ -10,11 +10,21 @@
             <div class="col-xl-10">
                 <div class="element js-fadein">
                     <div class="breadcrumb-nav">
-                        <a href="{{ route('mypage.stamps.index') }}">← Back to My Stamp Books</a>
+                        @if ($isOwner)
+                            <a href="{{ route('mypage.stamps.index') }}">← Back to My Stamp Books</a>
+                        @else
+                            <a href="{{ route('mypage.users.stats', $externalUser->id) }}">← Back to {{ $externalUser->name ?: 'ゲスト' }}'s Profile</a>
+                        @endif
                     </div>
 
                     <h1 class="stats-title">{{ $artist->name }}</h1>
-                    <p class="stats-subtitle">My Live Stamp Book</p>
+                    <p class="stats-subtitle">
+                        @if ($isOwner)
+                            My Live Stamp Book
+                        @else
+                            {{ $externalUser->name ?: 'ゲスト' }}'s Live Stamp Book
+                        @endif
+                    </p>
 
                     <div class="stamp-summary"
                         data-total="{{ $totalCount }}"
