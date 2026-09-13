@@ -144,7 +144,7 @@ class DbConcertResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('type')
                     ->label('タイプ')
-                    ->formatStateUsing(fn ($state) => match($state) {
+                    ->formatStateUsing(fn ($state) => match((int) $state) {
                         0 => 'ツアー',
                         1 => '単発ライブ',
                         2 => 'イベント',
