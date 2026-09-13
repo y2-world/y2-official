@@ -54,6 +54,19 @@
                         </div>
                     @endforeach
                 @endif
+
+                <div style="margin-top: 24px; text-align: center;">
+                    <form method="POST" action="{{ route('mypage.attendances.setlists.new_pattern', $tour->id) }}">
+                        @csrf
+                        <button type="submit" class="mypage-add-button" title="新しいセットリストパターンを追加" style="border: none;">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <div style="text-align: center; margin-top: 24px;">
+                    <a href="{{ route('mypage.attendances.tours', $tour->artist_id) }}" class="btn btn-outline-secondary">戻る</a>
+                </div>
             </div>
         </div>
     </div>

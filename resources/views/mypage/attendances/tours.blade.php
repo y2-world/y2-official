@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Yuki Official - ' . $artist->name . ' ツアーを選択')
+@section('title', 'Yuki Official - ' . $artistName . ' ツアーを選択')
 
 @section('content')
     <div class="database-hero database-hero--detail">
@@ -7,10 +7,10 @@
             @include('database._breadcrumb', ['breadcrumbs' => [
                 ['label' => 'My Page', 'url' => route('mypage.index')],
                 ['label' => 'セットリスト登録', 'url' => route('mypage.attendances.create')],
-                ['label' => $artist->name],
+                ['label' => $artistName],
             ]])
             <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">セットリスト登録</p>
-            <h1 class="database-title" style="text-align: center;">{{ $artist->name }}</h1>
+            <h1 class="database-title" style="text-align: center;">{{ $artistName }}</h1>
             <p class="database-subtitle" style="text-align: center;">ツアーを選択</p>
         </div>
     </div>
@@ -18,8 +18,18 @@
     <div class="container database-content">
         <div class="row justify-content-center">
             <div class="col-lg-10">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul style="margin-bottom: 0; padding-left: 20px;">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 @if ($tours->isEmpty())
-                    <p>このアーティストにはまだツアーが登録されていません。</p>
+                    <p id="noToursMessage">このアーティストにはまだツアーが登録されていません。</p>
                 @else
                     <div class="select-card-list">
                         @foreach ($tours as $tour)
@@ -39,6 +49,36 @@
                         @endforeach
                     </div>
                 @endif
+
+                <div style="margin-top: 24px; text-align: center;">
+                    <a href="#" id="newTourToggle" class="mypage-add-button" title="新しいツアー・ライブを追加" style="display: inline-flex;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newTourForm').hidden = false; this.hidden = true; var msg = document.getElementById('noToursMessage'); if (msg) { msg.hidden = true; }" @else hidden @endif>
+                        <i class="fas fa-plus"></i>
+                    </a>
+                    <form id="newTourForm" method="POST" action="{{ route('mypage.attendances.tours.new', $artistId) }}" @if(!$errors->any()) hidden @endif style="max-width: 360px; margin: 16px auto 0; text-align: left;">
+                        @csrf
+                        @if ($artistId === 'new')
+                            <input type="hidden" name="name" value="{{ $artistName }}">
+                        @endif
+                        <div class="mb-3">
+                            <label for="new_tour_title" class="form-label">ツアー・ライブ名</label>
+                            <input type="text" class="form-control" id="new_tour_title" name="title" value="{{ old('title') }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_tour_date1" class="form-label">開始日（任意）</label>
+                            <input type="date" class="form-control" id="new_tour_date1" name="date1" value="{{ old('date1') }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_tour_date2" class="form-label">終了日（任意・単発の場合は空欄）</label>
+                            <input type="date" class="form-control" id="new_tour_date2" name="date2" value="{{ old('date2') }}">
+                        </div>
+                        <button type="submit" class="btn btn-outline-dark w-100">追加</button>
+                        <div style="text-align: center; margin-top: 8px;">
+                            <button type="button" onclick="document.getElementById('newTourForm').hidden = true; document.getElementById('newTourToggle').hidden = false; var msg = document.getElementById('noToursMessage'); if (msg) { msg.hidden = false; }" style="background: none; border: none; color: #999; cursor: pointer; padding: 4px;" title="閉じる">
+                                <i class="fa-solid fa-xmark" style="font-size: 20px;"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
