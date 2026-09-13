@@ -18,6 +18,18 @@ class StatsController extends Controller
 {
     use ComputesDbSongStamps;
 
+    // MySQL/PostgreSQL両対応：日付から年・月を取り出すSQL関数式を接続ドライバに応じて返す。
+    // MySQLはYEAR()/MONTH()、PostgreSQLはEXTRACT(... FROM ...)と構文が異なるため。
+    private function dateExtractRaw(string $column, string $part): string
+    {
+        if (DB::connection()->getDriverName() === 'pgsql') {
+            return "EXTRACT({$part} FROM {$column})";
+        }
+
+        $fn = strtoupper($part) === 'YEAR' ? 'YEAR' : 'MONTH';
+        return "{$fn}({$column})";
+    }
+
     // フェスのセットリスト（fes_setlist/fes_encore）は、通常の曲を直接並べた形式（interleaved）と、
     // アーティストごとに曲をまとめたブロック形式（type: 'block', songs: [...]）が混在し得る。
     // ブロック形式の要素はそれ自体に song キーを持たず、ネストされた songs 配列の中に曲がある。
@@ -350,7 +362,7 @@ class StatsController extends Controller
         // 月別の参加公演数分布
         $today = now()->toDateString();
         $monthCounts = SlSetlist::where('date', '<=', $today)
-            ->select(DB::raw('MONTH(date) as month'), DB::raw('count(*) as count'))
+            ->select(DB::raw($this->dateExtractRaw('date', 'MONTH') . ' as month'), DB::raw('count(*) as count'))
             ->whereNotNull('date')
             ->groupBy('month')
             ->get()
@@ -481,7 +493,7 @@ class StatsController extends Controller
     private function getDatabaseYearStats(int $artistId)
     {
         return DbConcert::where('artist_id', $artistId)
-            ->select(DB::raw('YEAR(date1) as year'), DB::raw('count(*) as count'))
+            ->select(DB::raw($this->dateExtractRaw('date1', 'YEAR') . ' as year'), DB::raw('count(*) as count'))
             ->whereNotNull('date1')
             ->groupBy('year')
             ->orderBy('count', 'desc')

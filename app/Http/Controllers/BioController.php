@@ -60,8 +60,8 @@ class BioController extends Controller
 
         $tours = DbConcert::where('artist_id', $artistId)
             ->where(function ($q) use ($year) {
-                $q->whereRaw('YEAR(date1) = ?', [$year])
-                  ->orWhereRaw('YEAR(date2) = ?', [$year]);
+                $q->whereYear('date1', $year)
+                  ->orWhereYear('date2', $year);
             })
             ->orderBy('date1', 'asc')
             ->get();

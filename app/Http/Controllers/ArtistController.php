@@ -5,9 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Artist;
 use App\Models\SlSetlist;
+use Illuminate\Support\Facades\DB;
 
 class ArtistController extends Controller
 {
+    // fes_setlist/fes_encore（JSON配列、各要素が {"artist": "...", ...}）の中に
+    // 指定したartistIdを含む要素が1つでもあるかを判定するwhereRaw用のSQL文字列を返す。
+    // MySQLはJSON_SEARCHで一発検索できるが、PostgreSQL（json型）には相当関数が無いため
+    // json_array_elements で展開してEXISTSするサブクエリに書き換える。
+    private function jsonArrayContainsArtistSql(string $column): string
+    {
+        if (DB::connection()->getDriverName() === 'pgsql') {
+            return "EXISTS (SELECT 1 FROM json_array_elements({$column}) AS elem WHERE elem->>'artist' = ?)";
+        }
+
+        return "JSON_SEARCH({$column}, 'one', ?, NULL, '\$[*].artist') IS NOT NULL";
+    }
     /**
      * Display a listing of the resource.
      *
@@ -84,8 +97,8 @@ class ArtistController extends Controller
         // 指定されたアーティストのセットリストを取得
         $setlists = SlSetlist::where('artist_id', $artist->id)
         ->orWhere(function ($query) use ($artistId) {
-            $query->whereRaw("JSON_SEARCH(fes_setlist, 'one', ?, NULL, '\$[*].artist') IS NOT NULL", [$artistId])
-            ->orWhereRaw("JSON_SEARCH(fes_encore, 'one', ?, NULL, '\$[*].artist') IS NOT NULL", [$artistId]);
+            $query->whereRaw($this->jsonArrayContainsArtistSql('fes_setlist'), [$artistId])
+            ->orWhereRaw($this->jsonArrayContainsArtistSql('fes_encore'), [$artistId]);
         })
         ->orderBy('date', 'asc')
         ->paginate(100);

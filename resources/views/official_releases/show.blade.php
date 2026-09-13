@@ -110,7 +110,7 @@
                             @endif
                         </div>
                         <div class="show_button">
-                            <a href="#" onclick="window.history.back(); return false;"> <i class="fa-solid fa-arrow-left fa-lg"></i></a>
+                            <a href="#" onclick="window.history.back(); return false;"> <i class="fa-solid fa-arrow-left fa-lg"></i> Back</a>
                         </div>
                     </div>
                 </div>

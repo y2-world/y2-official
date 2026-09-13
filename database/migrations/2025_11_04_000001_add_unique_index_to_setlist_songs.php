@@ -8,14 +8,24 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // 重複行を除去（IDが小さい方を残す）
-        DB::statement('
-            DELETE s1 FROM setlist_songs s1
-            INNER JOIN setlist_songs s2
-            WHERE s1.id > s2.id
-              AND s1.artist_id = s2.artist_id
-              AND s1.title = s2.title
-        ');
+        // 重複行を除去（IDが小さい方を残す）。MySQLとPostgreSQLでマルチテーブルDELETEの構文が異なる。
+        if (DB::connection()->getDriverName() === 'pgsql') {
+            DB::statement('
+                DELETE FROM setlist_songs s1
+                USING setlist_songs s2
+                WHERE s1.id > s2.id
+                  AND s1.artist_id = s2.artist_id
+                  AND s1.title = s2.title
+            ');
+        } else {
+            DB::statement('
+                DELETE s1 FROM setlist_songs s1
+                INNER JOIN setlist_songs s2
+                WHERE s1.id > s2.id
+                  AND s1.artist_id = s2.artist_id
+                  AND s1.title = s2.title
+            ');
+        }
 
         Schema::table('setlist_songs', function (Blueprint $table) {
             // 同一アーティスト+タイトルの重複登録を防止

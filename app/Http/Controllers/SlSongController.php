@@ -152,7 +152,7 @@ class SlSongController extends Controller
 
             $songs = SlSong::query()
                 ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
-                ->whereRaw('LOWER(setlist_songs.title) LIKE LOWER(?)', [$escapedQuery . '%'])
+                ->whereRaw('LOWER(sl_songs.title) LIKE LOWER(?)', [$escapedQuery . '%'])
                 ->orderBy('sl_songs.title')
                 ->limit(10)
                 ->get([

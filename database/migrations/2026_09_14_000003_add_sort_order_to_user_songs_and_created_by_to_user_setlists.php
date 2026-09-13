@@ -32,12 +32,22 @@ return new class extends Migration
                 ->constrained('external_users')->nullOnDelete();
         });
 
-        // 既存のuser_setlists行には、親ツアー（user_concerts）の作成者を引き継がせる
-        DB::statement('
-            UPDATE user_setlists
-            JOIN user_concerts ON user_setlists.user_concert_id = user_concerts.id
-            SET user_setlists.external_user_id = user_concerts.external_user_id
-        ');
+        // 既存のuser_setlists行には、親ツアー（user_concerts）の作成者を引き継がせる。
+        // MySQLとPostgreSQLでUPDATE JOINの構文が異なる。
+        if (DB::connection()->getDriverName() === 'pgsql') {
+            DB::statement('
+                UPDATE user_setlists
+                SET external_user_id = user_concerts.external_user_id
+                FROM user_concerts
+                WHERE user_setlists.user_concert_id = user_concerts.id
+            ');
+        } else {
+            DB::statement('
+                UPDATE user_setlists
+                JOIN user_concerts ON user_setlists.user_concert_id = user_concerts.id
+                SET user_setlists.external_user_id = user_concerts.external_user_id
+            ');
+        }
     }
 
     /**

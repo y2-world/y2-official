@@ -126,24 +126,26 @@
                 </div>
 
                 {{-- 前後リンク --}}
-                <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
-                    @if (!empty($previous))
-                        <a href="{{ route('mypage.attendances.show', $previous->id) }}" rel="prev"
-                           style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
-                            <i class="fa-solid fa-arrow-left" style="margin-right: 8px;"></i>
-                            Previous
-                        </a>
-                    @else
-                        <div></div>
-                    @endif
-                    @if (!empty($next))
-                        <a href="{{ route('mypage.attendances.show', $next->id) }}" rel="next"
-                           style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
-                            Next
-                            <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
-                        </a>
-                    @endif
-                </div>
+                @if (!empty($previous) || !empty($next))
+                    <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
+                        @if (!empty($previous))
+                            <a href="{{ route('mypage.attendances.show', $previous->id) }}" rel="prev"
+                               style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
+                                <i class="fa-solid fa-arrow-left" style="margin-right: 8px;"></i>
+                                Previous
+                            </a>
+                        @else
+                            <div></div>
+                        @endif
+                        @if (!empty($next))
+                            <a href="{{ route('mypage.attendances.show', $next->id) }}" rel="next"
+                               style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
+                                Next
+                                <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
+                            </a>
+                        @endif
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -153,7 +155,7 @@
             <div class="col-xl-9">
                 <div style="text-align: center; margin-top: 1rem;">
                     <a href="{{ route('mypage.index') }}" style="color: #888; font-size: 0.9rem;" onclick="event.preventDefault(); history.back();">
-                        <i class="fa-solid fa-arrow-left"></i>
+                        <i class="fa-solid fa-arrow-left"></i> Back
                     </a>
                 </div>
             </div>

@@ -30,7 +30,11 @@ class AppServiceProvider extends ServiceProvider
             error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
         }
 
-        Schema::defaultStringLength(191);
+        // 191文字制限はMySQL（utf8mb4でのインデックスキー長制限対策）のためのもの。
+        // PostgreSQLにはこの制限がないため、Postgres接続時は標準の255のままにする。
+        if (config('database.default') !== 'pgsql') {
+            Schema::defaultStringLength(191);
+        }
         Paginator::useBootstrap(); // ← Bootstrapで表示したい場合
 
         if (config('app.env') === 'production') {
