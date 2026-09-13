@@ -7,7 +7,7 @@
             @if ($song)
                 {{-- 曲単位の絞り込み：sl_songs/show.blade.php と全く同じシンプルな構造 --}}
                 @include('database._breadcrumb', ['breadcrumbs' => [
-                    ['label' => 'My Page', 'url' => route('mypage.index')],
+                    ['label' => 'My Page', 'url' => route('mypage.stats')],
                     ['label' => $song->title],
                 ]])
                 @if ($songNumber)
@@ -18,7 +18,7 @@
                 <div style="font-size: 1rem; color: rgba(255, 255, 255, 0.9); line-height: 1.8;">
                     @if ($song->artist)
                         <div style="">
-                            <a href="{{ route('mypage.attendances.index', ['artist_id' => $song->artist_id]) }}"
+                            <a href="{{ route('mypage.attendances.index', ['artist_id' => $songKind . '-' . $song->artist->id]) }}"
                                 style="color: white; text-decoration: underline;">
                                 {{ $song->artist->name }}
                             </a>
@@ -71,8 +71,13 @@
                         </button>
                         <select class="year-select" name="select" onchange="if (this.value) window.location.href=this.value; else window.location.href='{{ route('mypage.attendances.index', array_filter(['year' => $year])) }}';">
                             <option value="" {{ $artistId ? '' : 'selected' }}>All Artists</option>
-                            @foreach ($artists as $artist)
-                                <option value="{{ route('mypage.attendances.index', array_filter(['artist_id' => $artist->id, 'year' => $year])) }}" {{ (string)$artistId === (string)$artist->id ? 'selected' : '' }}>{{ $artist->name }}</option>
+                            @foreach ($officialArtists as $artist)
+                                @php $ref = 'official-' . $artist->id; @endphp
+                                <option value="{{ route('mypage.attendances.index', array_filter(['artist_id' => $ref, 'year' => $year])) }}" {{ $artistId === $ref ? 'selected' : '' }}>{{ $artist->name }}</option>
+                            @endforeach
+                            @foreach ($myArtists as $artist)
+                                @php $ref = 'user-' . $artist->id; @endphp
+                                <option value="{{ route('mypage.attendances.index', array_filter(['artist_id' => $ref, 'year' => $year])) }}" {{ $artistId === $ref ? 'selected' : '' }}>{{ $artist->name }}</option>
                             @endforeach
                         </select>
                         <select class="year-select" name="select" onchange="if (this.value) window.location.href=this.value; else window.location.href='{{ route('mypage.attendances.index', array_filter(['artist_id' => $artistId])) }}';">
@@ -116,7 +121,7 @@
                             <tr>
                                 <td></td>
                                 <td>{{ $attendance->attended_date?->format('Y.m.d') ?? '-' }}</td>
-                                <td><a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $attendance->dbSetlist->tour->title ?? '-' }}</a></td>
+                                <td><a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $attendance->attendedTour->title ?? '-' }}</a></td>
                                 <td class="pc">{{ $attendance->venue }}</td>
                             </tr>
                         @endforeach
@@ -138,25 +143,28 @@
                     <tbody>
                         @foreach ($attendances as $attendance)
                             @php
-                                $isFes = in_array((int)($attendance->dbSetlist?->tour?->type ?? 0), [2, 3, 4], true);
+                                $isOfficial = (bool) $attendance->db_setlist_id;
+                                $tour = $attendance->attendedTour;
+                                $isFes = in_array((int) ($tour?->type ?? 0), [2, 3, 4], true);
+                                $artistRef = $tour?->artist ? ($isOfficial ? 'official' : 'user') . '-' . $tour->artist->id : null;
                             @endphp
                             <tr>
                                 <td></td>
                                 <td>{{ $attendance->attended_date?->format('Y.m.d') ?? '-' }}</td>
-                                @if ($attendance->dbSetlist?->tour?->artist && !$isFes)
+                                @if ($tour?->artist && !$isFes)
                                     <td class="pc">
-                                        <a href="{{ route('mypage.attendances.index', ['artist_id' => $attendance->dbSetlist->tour->artist_id]) }}">{{ $attendance->dbSetlist->tour->artist->name }}</a>
+                                        <a href="{{ route('mypage.attendances.index', ['artist_id' => $artistRef]) }}">{{ $tour->artist->name }}</a>
                                     </td>
                                     <td class="sp">
-                                        <a href="{{ route('mypage.attendances.index', ['artist_id' => $attendance->dbSetlist->tour->artist_id]) }}">{{ $attendance->dbSetlist->tour->artist->name }}</a>
+                                        <a href="{{ route('mypage.attendances.index', ['artist_id' => $artistRef]) }}">{{ $tour->artist->name }}</a>
                                         /
-                                        <a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $attendance->dbSetlist->tour->title ?? '-' }}</a>
+                                        <a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $tour->title ?? '-' }}</a>
                                     </td>
                                 @else
                                     <td class="pc"></td>
-                                    <td class="sp"><a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $attendance->dbSetlist->tour->title ?? '-' }}</a></td>
+                                    <td class="sp"><a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $tour->title ?? '-' }}</a></td>
                                 @endif
-                                <td class="pc"><a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $attendance->dbSetlist->tour->title ?? '-' }}</a></td>
+                                <td class="pc"><a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $tour->title ?? '-' }}</a></td>
                                 <td class="pc">{{ $attendance->venue }}</td>
                             </tr>
                         @endforeach
@@ -178,28 +186,31 @@
                     <tbody>
                         @foreach ($attendances as $index => $attendance)
                             @php
-                                $isFes = in_array((int)($attendance->dbSetlist?->tour?->type ?? 0), [2, 3, 4], true);
+                                $isOfficial = (bool) $attendance->db_setlist_id;
+                                $tour = $attendance->attendedTour;
+                                $isFes = in_array((int) ($tour?->type ?? 0), [2, 3, 4], true);
+                                $artistRef = $tour?->artist ? ($isOfficial ? 'official' : 'user') . '-' . $tour->artist->id : null;
                             @endphp
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $attendance->attended_date?->format('Y.m.d') ?? '-' }}</td>
-                                @if ($attendance->dbSetlist?->tour?->artist && !$isFes)
+                                @if ($tour?->artist && !$isFes)
                                     <td class="sp">
-                                        <a href="{{ route('mypage.attendances.index', ['artist_id' => $attendance->dbSetlist->tour->artist_id]) }}">{{ $attendance->dbSetlist->tour->artist->name }}</a>
+                                        <a href="{{ route('mypage.attendances.index', ['artist_id' => $artistRef]) }}">{{ $tour->artist->name }}</a>
                                         /
-                                        <a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $attendance->dbSetlist->tour->title ?? '-' }}</a>
+                                        <a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $tour->title ?? '-' }}</a>
                                     </td>
                                     <td class="pc td_artist">
-                                        <a href="{{ route('mypage.attendances.index', ['artist_id' => $attendance->dbSetlist->tour->artist_id]) }}">{{ $attendance->dbSetlist->tour->artist->name }}</a>
+                                        <a href="{{ route('mypage.attendances.index', ['artist_id' => $artistRef]) }}">{{ $tour->artist->name }}</a>
                                     </td>
                                 @else
                                     <td class="sp">
-                                        <a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $attendance->dbSetlist->tour->title ?? '-' }}</a>
+                                        <a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $tour->title ?? '-' }}</a>
                                     </td>
                                     <td class="pc"></td>
                                 @endif
                                 <td class="pc">
-                                    <a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $attendance->dbSetlist->tour->title ?? '-' }}</a>
+                                    <a href="{{ route('mypage.attendances.show', $attendance) }}">{{ $tour->title ?? '-' }}</a>
                                 </td>
                                 <td class="pc">{{ $attendance->venue }}</td>
                             </tr>
@@ -213,7 +224,7 @@
             {{-- 前後リンク（初めて聴いた順） --}}
             <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
                 @if ($previousSong)
-                    <a href="{{ route('mypage.attendances.index', ['song_id' => $previousSong->id]) }}" rel="prev"
+                    <a href="{{ route('mypage.attendances.index', ['song_id' => $songKind . '-' . $previousSong->id]) }}" rel="prev"
                        style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
                         <i class="fa-solid fa-arrow-left" style="margin-right: 8px;"></i>
                         Previous
@@ -222,7 +233,7 @@
                     <div></div>
                 @endif
                 @if ($nextSong)
-                    <a href="{{ route('mypage.attendances.index', ['song_id' => $nextSong->id]) }}" rel="next"
+                    <a href="{{ route('mypage.attendances.index', ['song_id' => $songKind . '-' . $nextSong->id]) }}" rel="next"
                        style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
                         Next
                         <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>

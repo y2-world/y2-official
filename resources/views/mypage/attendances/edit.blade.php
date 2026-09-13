@@ -5,14 +5,18 @@
     <div class="database-hero database-hero--detail">
         <div class="container">
             @include('database._breadcrumb', ['breadcrumbs' => [
-                ['label' => 'My Page', 'url' => route('mypage.index')],
+                ['label' => 'My Page', 'url' => route('mypage.stats')],
                 ['label' => 'セットリストを編集'],
             ]])
+            @php
+                $editSetlist = $attendance->db_setlist_id ? $attendance->dbSetlist : $attendance->userSetlist;
+                $editTour = $attendance->db_setlist_id ? $editSetlist?->tour : $editSetlist?->concert;
+            @endphp
             <h1 class="database-title" style="text-align: center;">セットリストを編集</h1>
             <p class="database-subtitle" style="text-align: center;">
-                {{ $attendance->dbSetlist->tour->title ?? '-' }}
-                @if ($attendance->dbSetlist?->subtitle)
-                    - {{ $attendance->dbSetlist->subtitle }}
+                {{ $editTour->title ?? '-' }}
+                @if ($editSetlist?->subtitle)
+                    - {{ $editSetlist->subtitle }}
                 @endif
             </p>
         </div>

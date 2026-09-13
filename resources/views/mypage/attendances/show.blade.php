@@ -1,22 +1,22 @@
 @extends('layouts.app')
-@section('title', 'Yuki Official - ' . ($attendance->dbSetlist->tour->title ?? 'セットリスト'))
+@section('title', 'Yuki Official - ' . ($tour->title ?? 'セットリスト'))
 
 @section('content')
     <div class="database-hero database-hero--detail">
         <div class="container">
             @include('database._breadcrumb', ['breadcrumbs' => [
-                ['label' => 'My Page', 'url' => route('mypage.index')],
-                ['label' => $attendance->dbSetlist->tour->title ?? 'セットリスト'],
+                ['label' => 'My Page', 'url' => route('mypage.stats')],
+                ['label' => $tour->title ?? 'セットリスト'],
             ]])
             <p class="database-subtitle" style="">
                 {{-- type=0（ツアー）・1（単発ライブ）以外は複数アーティスト出演のフェス等のため、単独アーティスト名は表示しない --}}
-                @if ($attendance->dbSetlist->tour->artist && !in_array((int)$attendance->dbSetlist->tour->type, [2, 3, 4], true))
-                    <a href="{{ route('mypage.attendances.index', ['artist_id' => $attendance->dbSetlist->tour->artist_id]) }}" style="color: white; text-decoration: none;">
-                        {{ $attendance->dbSetlist->tour->artist->name }}
+                @if ($artist && !in_array((int) $tour->type, [2, 3, 4], true))
+                    <a href="{{ route('mypage.attendances.index', ['artist_id' => ($isOfficial ? 'official' : 'user') . '-' . $artist->id]) }}" style="color: white; text-decoration: none;">
+                        {{ $artist->name }}
                     </a>
                 @endif
             </p>
-            <h1 class="database-title" style="">{{ $attendance->dbSetlist->tour->title ?? '' }}</h1>
+            <h1 class="database-title" style="">{{ $tour->title ?? '' }}</h1>
             <p class="database-subtitle" id="attendanceDisplay" style="@if ($errors->any()) display: none; @endif">
                 @if ($attendance->attended_date)
                     {{ $attendance->attended_date->format('Y.m.d') }}
@@ -73,7 +73,7 @@
         <div class="row justify-content-center">
             <div class="col-xl-9">
                 <div class="setlist" style="width: 100%;">
-                    @include('mypage.attendances._setlist_cards', ['setlistModel' => $attendance->dbSetlist, 'songs' => $songs])
+                    @include('mypage.attendances._setlist_cards', ['setlistModel' => $isOfficial ? $attendance->dbSetlist : $attendance->userSetlist, 'songs' => $songs, 'kind' => $isOfficial ? 'official' : 'user'])
                 </div>
 
                 {{-- 前後リンク --}}
@@ -103,7 +103,7 @@
         <div class="row justify-content-center">
             <div class="col-xl-9">
                 <div style="text-align: center; margin-top: 1rem;">
-                    <a href="{{ route('mypage.index') }}" style="color: #888; font-size: 0.9rem;">
+                    <a href="{{ route('mypage.stats') }}" style="color: #888; font-size: 0.9rem;">
                         <i class="fa-solid fa-arrow-left"></i> Back to My Page
                     </a>
                 </div>

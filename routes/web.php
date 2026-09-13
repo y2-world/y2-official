@@ -14,6 +14,7 @@ use App\Http\Controllers\OfficialNewsController;
 use App\Http\Controllers\LyricController;
 use App\Http\Controllers\ExternalAuthController;
 use App\Http\Controllers\MyPageController;
+use App\Http\Controllers\MyPageHubController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\MyPageStatsController;
 
@@ -128,20 +129,22 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
     Route::middleware('auth:external')->group(function () {
         Route::post('logout', [ExternalAuthController::class, 'logout'])->name('logout');
 
-        Route::get('/', [MyPageController::class, 'index'])->name('index');
+        Route::get('/', [MyPageHubController::class, 'index'])->name('index');
+        Route::get('stats', [MyPageController::class, 'index'])->name('stats');
 
         Route::prefix('attendances')->name('attendances.')->group(function () {
+            // アーティスト/ツアーIDは "official-{id}" / "user-{id}" / "new" のいずれか
             Route::get('/', [AttendanceController::class, 'index'])->name('index');
             Route::get('create', [AttendanceController::class, 'create'])->name('create');
             Route::post('create/artists', [AttendanceController::class, 'newArtist'])->name('artists.new');
-            Route::get('create/artists/{artistId}/tours', [AttendanceController::class, 'tours'])->name('tours')->where('artistId', '[0-9]+|new');
-            Route::post('create/artists/{artistId}/tours', [AttendanceController::class, 'newTour'])->name('tours.new')->where('artistId', '[0-9]+|new');
-            Route::get('create/tours/{tourId}/setlists', [AttendanceController::class, 'setlists'])->name('setlists')->where('tourId', '[0-9]+');
-            Route::post('create/tours/{tourId}/setlists/new-pattern', [AttendanceController::class, 'newSetlistPattern'])->name('setlists.new_pattern')->where('tourId', '[0-9]+');
-            Route::get('create/artists/{artistId}/tours/{tourId}/setlist', [AttendanceController::class, 'setlistCreate'])->name('setlist_create')->where(['artistId' => '[0-9]+|new', 'tourId' => '[0-9]+|new']);
-            Route::post('create/artists/{artistId}/tours/{tourId}/setlist', [AttendanceController::class, 'setlistConfirm'])->name('setlist_create.confirm')->where(['artistId' => '[0-9]+|new', 'tourId' => '[0-9]+|new']);
-            Route::post('create/artists/{artistId}/tours/{tourId}/confirm', [AttendanceController::class, 'setlistStore'])->name('setlist_create.store')->where(['artistId' => '[0-9]+|new', 'tourId' => '[0-9]+|new']);
-            Route::get('create/setlists/{dbSetlistId}', [AttendanceController::class, 'form'])->name('form')->where('dbSetlistId', '[0-9]+');
+            Route::get('create/artists/{artistId}/tours', [AttendanceController::class, 'tours'])->name('tours')->where('artistId', '(official|user)-[0-9]+|new');
+            Route::post('create/artists/{artistId}/tours', [AttendanceController::class, 'newTour'])->name('tours.new')->where('artistId', '(official|user)-[0-9]+|new');
+            Route::get('create/tours/{tourId}/setlists', [AttendanceController::class, 'setlists'])->name('setlists')->where('tourId', '(official|user)-[0-9]+');
+            Route::post('create/tours/{tourId}/setlists/new-pattern', [AttendanceController::class, 'newSetlistPattern'])->name('setlists.new_pattern')->where('tourId', '(official|user)-[0-9]+');
+            Route::get('create/artists/{artistId}/tours/{tourId}/setlist', [AttendanceController::class, 'setlistCreate'])->name('setlist_create')->where(['artistId' => '(official|user)-[0-9]+|new', 'tourId' => '(official|user)-[0-9]+|new']);
+            Route::post('create/artists/{artistId}/tours/{tourId}/setlist', [AttendanceController::class, 'setlistConfirm'])->name('setlist_create.confirm')->where(['artistId' => '(official|user)-[0-9]+|new', 'tourId' => '(official|user)-[0-9]+|new']);
+            Route::post('create/artists/{artistId}/tours/{tourId}/confirm', [AttendanceController::class, 'setlistStore'])->name('setlist_create.store')->where(['artistId' => '(official|user)-[0-9]+|new', 'tourId' => '(official|user)-[0-9]+|new']);
+            Route::get('create/setlists/{setlistId}', [AttendanceController::class, 'form'])->name('form')->where('setlistId', '(official|user)-[0-9]+');
             Route::post('/', [AttendanceController::class, 'store'])->name('store');
             Route::get('{attendance}/edit', [AttendanceController::class, 'edit'])->name('edit');
             Route::put('{attendance}', [AttendanceController::class, 'update'])->name('update');
@@ -149,6 +152,7 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
             Route::get('{attendance}', [AttendanceController::class, 'show'])->name('show');
         });
 
+        Route::get('stamp-books', [MyPageStatsController::class, 'index'])->name('stamps.index');
         Route::get('stats/artist/{artistId}', [MyPageStatsController::class, 'artist'])->name('stats.artist');
         Route::get('stats/artist/{artistId}/stamps', [MyPageStatsController::class, 'stamps'])->name('stats.stamps');
 

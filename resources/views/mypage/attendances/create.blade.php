@@ -5,7 +5,7 @@
     <div class="database-hero database-hero--detail">
         <div class="container">
             @include('database._breadcrumb', ['breadcrumbs' => [
-                ['label' => 'My Page', 'url' => route('mypage.index')],
+                ['label' => 'My Page', 'url' => route('mypage.stats')],
                 ['label' => 'セットリスト登録'],
             ]])
             <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">セットリスト登録</p>
@@ -26,12 +26,30 @@
                     </div>
                 @endif
 
-                @if ($artists->isEmpty())
+                @if ($officialArtists->isEmpty() && $myArtists->isEmpty())
                     <p>選択できるアーティストがまだありません。</p>
-                @else
+                @endif
+
+                @if ($officialArtists->isNotEmpty())
                     <div class="pick-card-grid">
-                        @foreach ($artists as $artist)
-                            <a href="{{ route('mypage.attendances.tours', $artist->id) }}" class="pick-card">
+                        @foreach ($officialArtists as $artist)
+                            <a href="{{ route('mypage.attendances.tours', 'official-' . $artist->id) }}" class="pick-card">
+                                <div class="pick-card-header">
+                                    <span class="select-card-icon"><i class="fa-solid fa-music"></i></span>
+                                    <span class="select-card-body">
+                                        <span class="select-card-title">{{ $artist->name }}</span>
+                                    </span>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                @endif
+
+                @if ($myArtists->isNotEmpty())
+                    <hr style="margin: 32px 0;">
+                    <div class="pick-card-grid">
+                        @foreach ($myArtists as $artist)
+                            <a href="{{ route('mypage.attendances.tours', 'user-' . $artist->id) }}" class="pick-card">
                                 <div class="pick-card-header">
                                     <span class="select-card-icon"><i class="fa-solid fa-music"></i></span>
                                     <span class="select-card-body">

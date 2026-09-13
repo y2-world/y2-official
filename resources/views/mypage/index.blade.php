@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'My Page')
-@section('og_title', 'My Page - Yuki Official')
+@section('title', 'My Statistics')
+@section('og_title', 'My Statistics - Yuki Official')
 
 @section('content')
 <div class="stats-wrapper">
@@ -9,17 +9,13 @@
         <div class="row justify-content-center">
             <div class="col-xl-10">
                 <div class="element js-fadein">
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-                        <h1 class="stats-title" style="margin-bottom: 0;">
-                            @if (Auth::guard('external')->user()->name)
-                                {{ Auth::guard('external')->user()->name }}'s My Page
-                            @else
-                                My Page
-                            @endif
-                        </h1>
-                        <a href="{{ route('mypage.settings') }}" title="アカウント設定" style="color: inherit;">
-                            <i class="fa-solid fa-gear"></i>
+                    <div style="text-align: left; margin-bottom: 16px;">
+                        <a href="{{ route('mypage.index') }}" style="color: rgba(255, 255, 255, 0.9); font-size: 0.9rem;">
+                            <i class="fa-solid fa-arrow-left"></i> Back to My Page
                         </a>
+                    </div>
+                    <div style="text-align: center;">
+                        <h1 class="stats-title" style="margin-bottom: 0;">My Statistics</h1>
                     </div>
                     <p class="stats-subtitle" style="margin-top: 10px;">参加したライブの記録</p>
 
@@ -260,23 +256,6 @@
                         </div>
                     </div>
 
-                    @if ($artists->isNotEmpty())
-                        <div class="stats-section visible">
-                            <div class="section-title-wrapper">
-                                <h2 class="section-title">
-                                    <i class="fas fa-stamp"></i> Live Stamp Book
-                                </h2>
-                            </div>
-                            <div class="stamp-book-link-wrapper" style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-start;">
-                                @foreach ($artists as $artist)
-                                    <a href="{{ route('mypage.stats.stamps', $artist->id) }}" class="stamp-book-link">
-                                        <i class="fas fa-stamp"></i> {{ $artist->name }}
-                                    </a>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
-
                     @if ($artistSongStats->isNotEmpty())
                         <!-- Unique Songs by Artist Section -->
                         <div class="stats-section visible">
@@ -418,13 +397,6 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-
-                    <div style="text-align: center; margin-top: 40px;">
-                        <form method="POST" action="{{ route('mypage.logout') }}">
-                            @csrf
-                            <button type="submit" class="stamp-book-link" style="border: none; cursor: pointer;">ログアウト</button>
-                        </form>
                     </div>
 
                 </div>

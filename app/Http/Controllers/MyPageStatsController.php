@@ -12,6 +12,23 @@ class MyPageStatsController extends Controller
 {
     use ComputesDbSongStamps;
 
+    // My Stamp Books一覧（アーティストごとのスタンプ帳への入り口）。
+    // 対象は自分が出席記録を残しているアーティストのみ。
+    public function index()
+    {
+        $attendedArtistIds = Auth::guard('external')->user()
+            ->attendances()
+            ->with('dbSetlist.tour')
+            ->get()
+            ->pluck('dbSetlist.tour.artist_id')
+            ->filter()
+            ->unique();
+
+        $artists = Artist::whereIn('id', $attendedArtistIds)->orderBy('name')->get();
+
+        return view('mypage.stats.stamps_index', compact('artists'));
+    }
+
     // アーティスト別の自分専用統計（/stats/artist/{id} のMy Page版）。
     // 集計対象は自分が記録したExternalUserAttendance経由のdb_setlistsのみ。
     public function artist($artistId)

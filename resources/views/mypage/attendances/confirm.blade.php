@@ -16,7 +16,7 @@
                 }
             @endphp
             @include('database._breadcrumb', ['breadcrumbs' => [
-                ['label' => 'My Page', 'url' => route('mypage.index')],
+                ['label' => 'My Page', 'url' => route('mypage.stats')],
                 ['label' => 'セットリスト登録', 'url' => route('mypage.attendances.create')],
                 ['label' => $artistName, 'url' => route('mypage.attendances.tours', $artistId === 'new' ? ['artistId' => 'new', 'name' => $artistName] : $artistId)],
                 ['label' => $tourTitle, 'url' => route('mypage.attendances.setlist_create', $setlistCreateParams)],

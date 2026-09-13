@@ -5,17 +5,17 @@
     <div class="database-hero database-hero--detail">
         <div class="container">
             @include('database._breadcrumb', ['breadcrumbs' => [
-                ['label' => 'My Page', 'url' => route('mypage.index')],
+                ['label' => 'My Page', 'url' => route('mypage.stats')],
                 ['label' => 'セットリスト登録', 'url' => route('mypage.attendances.create')],
-                ['label' => $dbSetlist->tour->artist->name, 'url' => route('mypage.attendances.tours', $dbSetlist->tour->artist_id)],
-                ['label' => $dbSetlist->tour->title, 'url' => route('mypage.attendances.setlists', $dbSetlist->tour_id)],
+                ['label' => $tour->artist->name, 'url' => route('mypage.attendances.tours', $kind . '-' . $tour->artist->id)],
+                ['label' => $tour->title, 'url' => route('mypage.attendances.setlists', $kind . '-' . $tour->id)],
                 ['label' => '参加日・会場を入力'],
             ]])
             <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">セットリスト登録</p>
-            <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">{{ $dbSetlist->tour->artist->name }}</p>
-            <h1 class="database-title" style="text-align: center;">{{ $dbSetlist->tour->title }}</h1>
-            @if ($dbSetlist->subtitle)
-                <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">{{ $dbSetlist->subtitle }}</p>
+            <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">{{ $tour->artist->name }}</p>
+            <h1 class="database-title" style="text-align: center;">{{ $tour->title }}</h1>
+            @if ($setlist->subtitle)
+                <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">{{ $setlist->subtitle }}</p>
             @endif
             <p class="database-subtitle" style="text-align: center;">参加日・会場を入力</p>
         </div>
@@ -37,7 +37,7 @@
                 @if (count($scheduleOptions) === 1)
                     <form method="POST" action="{{ route('mypage.attendances.store') }}">
                         @csrf
-                        <input type="hidden" name="db_setlist_id" value="{{ $dbSetlist->id }}">
+                        <input type="hidden" name="setlist_id" value="{{ $setlistId }}">
                         <input type="hidden" name="attended_date" value="{{ $scheduleOptions[0]['date'] }}">
                         <input type="hidden" name="venue" value="{{ $scheduleOptions[0]['venue'] }}">
                         <div class="mb-3">
@@ -53,7 +53,7 @@
                 @elseif (count($scheduleOptions) > 1)
                     <form method="POST" action="{{ route('mypage.attendances.store') }}">
                         @csrf
-                        <input type="hidden" name="db_setlist_id" value="{{ $dbSetlist->id }}">
+                        <input type="hidden" name="setlist_id" value="{{ $setlistId }}">
                         <input type="hidden" id="attended_date" name="attended_date" value="{{ old('attended_date') }}">
                         <input type="hidden" id="venue" name="venue" value="{{ old('venue') }}">
                         <div class="mb-3">
@@ -79,14 +79,14 @@
                 @else
                     <form method="POST" action="{{ route('mypage.attendances.store') }}">
                         @csrf
-                        <input type="hidden" name="db_setlist_id" value="{{ $dbSetlist->id }}">
+                        <input type="hidden" name="setlist_id" value="{{ $setlistId }}">
                         <div class="mb-3">
                             <label for="attended_date" class="form-label">参加日</label>
                             <input type="date" class="form-control" id="attended_date" name="attended_date" value="{{ old('attended_date', $defaultAttendedDate) }}" required>
                         </div>
                         <div class="mb-3">
                             <label for="venue" class="form-label">会場</label>
-                            <input type="text" class="form-control" id="venue" name="venue" value="{{ old('venue', $dbSetlist->tour->venue) }}">
+                            <input type="text" class="form-control" id="venue" name="venue" value="{{ old('venue', $tour->venue ?? '') }}">
                         </div>
                         <button type="submit" class="btn btn-outline-dark w-100">登録</button>
                     </form>
