@@ -262,10 +262,16 @@ function initTimelineCard(card) {
         const checkIcon = btn.querySelector('.fa-check');
         let isEditing = false;
 
+        const resizeBodyInput = function () {
+            bodyInput.style.height = 'auto';
+            bodyInput.style.height = bodyInput.scrollHeight + 'px';
+        };
+
         const startEdit = function () {
             isEditing = true;
             bodyDisplay.hidden = true;
             bodyInput.hidden = false;
+            resizeBodyInput();
             bodyInput.focus();
             bodyInput.select();
             penIcon.hidden = true;
@@ -307,13 +313,28 @@ function initTimelineCard(card) {
             }
         });
         bodyInput.addEventListener('click', function (e) { e.stopPropagation(); });
+        bodyInput.addEventListener('input', resizeBodyInput);
         bodyInput.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') { e.preventDefault(); commitEdit(); }
+            if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); commitEdit(); }
         });
     }
 
     if (commentForm) {
         commentForm.addEventListener('click', function (e) { e.stopPropagation(); });
+
+        function autoResizeCommentInput() {
+            commentFormInput.style.height = 'auto';
+            commentFormInput.style.height = commentFormInput.scrollHeight + 'px';
+        }
+        commentFormInput.addEventListener('input', autoResizeCommentInput);
+
+        commentFormInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
+                e.preventDefault();
+                commentForm.requestSubmit();
+            }
+        });
+
         commentForm.addEventListener('submit', function (e) {
             e.preventDefault();
             const body = commentFormInput.value.trim();
@@ -339,7 +360,7 @@ function initTimelineCard(card) {
                     item.dataset.commentId = data.comment.id;
                     item.innerHTML = '<span class="timeline-comment-user"></span>'
                         + '<span class="timeline-comment-body"></span>'
-                        + '<input type="text" class="form-control timeline-comment-body-input" maxlength="1000" hidden>'
+                        + '<textarea class="form-control timeline-comment-body-input" maxlength="1000" rows="1" hidden></textarea>'
                         + '<button type="button" class="timeline-comment-edit" data-update-url="' + data.comment.update_url + '" title="編集"><i class="fa-solid fa-pen"></i><i class="fa-solid fa-check" hidden></i></button>'
                         + '<button type="button" class="timeline-comment-delete" data-delete-url="' + data.comment.delete_url + '" title="削除"><i class="fa-solid fa-trash"></i></button>';
                     item.querySelector('.timeline-comment-user').textContent = data.comment.user_name;
@@ -349,6 +370,7 @@ function initTimelineCard(card) {
                     setupCommentEdit(item.querySelector('.timeline-comment-edit'));
                     setupCommentDelete(item.querySelector('.timeline-comment-delete'));
                     commentFormInput.value = '';
+                    autoResizeCommentInput();
                     updateCommentCount(1);
                     showAppToast(data.message);
                 });

@@ -104,7 +104,7 @@
                             <div class="timeline-comment-item" data-comment-id="{{ $comment->id }}">
                                 <span class="timeline-comment-user">{{ $comment->externalUser->name ?: 'ゲスト' }}</span>
                                 <span class="timeline-comment-body">{{ $comment->body }}</span>
-                                <input type="text" class="form-control timeline-comment-body-input" value="{{ $comment->body }}" maxlength="1000" hidden>
+                                <textarea class="form-control timeline-comment-body-input" maxlength="1000" rows="1" hidden>{{ $comment->body }}</textarea>
                                 @if ($comment->external_user_id === Auth::guard('external')->id())
                                     <button type="button" class="timeline-comment-edit" data-update-url="{{ route('mypage.timeline.comments.update', $comment) }}" title="編集">
                                         <i class="fa-solid fa-pen"></i>
@@ -121,7 +121,7 @@
                     </div>
 
                     <form class="timeline-comment-form" data-post-url="{{ route('mypage.timeline.comments.store', $attendance) }}">
-                        <input type="text" class="form-control timeline-comment-form-input" placeholder="コメントする" maxlength="1000">
+                        <textarea class="form-control timeline-comment-form-input" placeholder="コメントする（Shift+Enterで改行）" maxlength="1000" rows="1"></textarea>
                     </form>
                 </div>
 

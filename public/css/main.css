@@ -3834,6 +3834,7 @@ a.setlist-card:hover {
     display: block;
     color: #333;
     word-break: break-word;
+    white-space: pre-wrap;
     padding-right: 44px;
 }
 
@@ -3862,4 +3863,11 @@ a.setlist-card:hover {
 
 .timeline-comment-form-input.form-control {
     font-size: 0.8rem;
+    resize: none;
+    overflow: hidden;
+}
+
+.timeline-comment-body-input.form-control {
+    resize: none;
+    overflow: hidden;
 }
