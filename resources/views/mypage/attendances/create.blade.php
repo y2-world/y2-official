@@ -61,10 +61,6 @@
                         </div>
                     </form>
                 </div>
-
-                <div style="text-align: center; margin-top: 24px;">
-                    <a href="{{ route('mypage.index') }}" class="btn btn-outline-secondary">戻る</a>
-                </div>
             </div>
         </div>
     </div>
