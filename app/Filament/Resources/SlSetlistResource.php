@@ -842,7 +842,7 @@ class SlSetlistResource extends Resource
                                 3 => 'ap bank fes',
                                 4 => 'ソロ',
                             ])
-                            ->default(1)
+                            ->default(0)
                             ->required(),
 
                         Forms\Components\DatePicker::make('date1')
@@ -867,7 +867,7 @@ class SlSetlistResource extends Resource
                     ->fillForm(fn (SlSetlist $record) => [
                         'artist_id' => $record->artist_id,
                         'title' => $record->title,
-                        'type' => 1,
+                        'type' => 0,
                         'date1' => $record->date,
                         'venue' => $record->venue,
                     ])
