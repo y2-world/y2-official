@@ -3863,11 +3863,32 @@ a.setlist-card:hover {
 
 .timeline-comment-form-input.form-control {
     font-size: 0.8rem;
+    min-height: 76px;
+    line-height: 1.5;
     resize: none;
     overflow: hidden;
 }
 
 .timeline-comment-body-input.form-control {
+    min-height: 38px;
+    line-height: 1.5;
     resize: none;
     overflow: hidden;
+}
+
+.timeline-comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.timeline-comment-form-submit {
+    align-self: center;
+    padding: 6px 20px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
 }

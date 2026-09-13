@@ -328,13 +328,6 @@ function initTimelineCard(card) {
         }
         commentFormInput.addEventListener('input', autoResizeCommentInput);
 
-        commentFormInput.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
-                e.preventDefault();
-                commentForm.requestSubmit();
-            }
-        });
-
         commentForm.addEventListener('submit', function (e) {
             e.preventDefault();
             const body = commentFormInput.value.trim();

@@ -121,7 +121,8 @@
                     </div>
 
                     <form class="timeline-comment-form" data-post-url="{{ route('mypage.timeline.comments.store', $attendance) }}">
-                        <textarea class="form-control timeline-comment-form-input" placeholder="コメントする（Shift+Enterで改行）" maxlength="1000" rows="1"></textarea>
+                        <textarea class="form-control timeline-comment-form-input" placeholder="コメントする" maxlength="1000" rows="3"></textarea>
+                        <button type="submit" class="timeline-comment-form-submit">送信</button>
                     </form>
                 </div>
 
