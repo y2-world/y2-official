@@ -38,7 +38,7 @@
                             }
                         @endphp
                         <div class="pick-card">
-                            <button type="button" class="pick-card-header setlist-pick-expand" aria-expanded="false" onclick="toggleSetlistPick(this)" style="width: 100%; background: none; border: none; cursor: pointer; text-align: left; font: inherit; color: inherit;">
+                            <button type="button" class="pick-card-header setlist-pick-expand" aria-expanded="{{ $tourSetlists->count() === 1 ? 'true' : 'false' }}" onclick="toggleSetlistPick(this)" style="width: 100%; background: none; border: none; cursor: pointer; text-align: left; font: inherit; color: inherit;">
                                 <span class="select-card-icon"><i class="fa-solid fa-music"></i></span>
                                 <span class="select-card-body">
                                     @if ($label)
@@ -48,7 +48,7 @@
                                 </span>
                                 <i class="fa-solid fa-chevron-down"></i>
                             </button>
-                            <div class="setlist-pick-body" hidden>
+                            <div class="setlist-pick-body" @if ($tourSetlists->count() !== 1) hidden @endif>
                                 @include('db_concerts._setlist_rows', ['tourSetlists' => collect([$setlist]), 'songs' => $songs])
                                 <div class="setlist-pick-confirm">
                                     <a href="{{ route('mypage.attendances.form', $kind . '-' . $setlist->id) }}" class="btn-pill">
