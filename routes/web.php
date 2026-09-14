@@ -21,6 +21,7 @@ use App\Http\Controllers\ManageController;
 use App\Http\Controllers\ManageDbSongController;
 use App\Http\Controllers\TimelineController;
 use App\Http\Controllers\UserConcertController;
+use App\Http\Controllers\UserSongController;
 
 /*
 |--------------------------------------------------------------------------
@@ -141,6 +142,7 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
         // 誰が登録したかに関わらず全ツアーが並ぶ、認可制限のない一覧・詳細。
         Route::get('artists/{artistId}/live', [UserConcertController::class, 'index'])->name('user_artists.live');
         Route::get('live/{id}', [UserConcertController::class, 'show'])->name('user_concerts.show');
+        Route::get('songs/{id}', [UserSongController::class, 'show'])->name('user_songs.show');
 
         Route::prefix('timeline')->name('timeline.')->group(function () {
             Route::get('/', [TimelineController::class, 'index'])->name('index');

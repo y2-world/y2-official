@@ -34,8 +34,7 @@
         <div class="row justify-content-center">
             <div class="{{ $colClass }}">
                 <div class="setlist" style="width: 100%;">
-                    {{-- ユーザー登録曲には誰でも見られる単独の詳細ページが無いため、曲名にリンクは張らない --}}
-                    @include('db_concerts._setlist_rows', ['tourSetlists' => $tourSetlists, 'songs' => $songs, 'songLinkResolver' => fn ($song) => null])
+                    @include('db_concerts._setlist_rows', ['tourSetlists' => $tourSetlists, 'songs' => $songs, 'songLinkResolver' => fn ($song) => route('mypage.user_songs.show', $song->id)])
                 </div>
             </div>
         </div>

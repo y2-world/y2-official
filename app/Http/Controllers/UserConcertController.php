@@ -19,8 +19,6 @@ class UserConcertController extends Controller
         $artist = UserArtist::findOrFail($artistId);
 
         $tours = UserConcert::where('user_artist_id', $artistId)
-            ->withCount('setlists')
-            ->with('externalUser')
             ->orderByDesc('date1')
             ->orderByDesc('id')
             ->get();

@@ -20,7 +20,6 @@
                     <th class="mobile">#</th>
                     <th class="mobile">開催日</th>
                     <th class="mobile">タイトル</th>
-                    <th class="pc">登録者</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,11 +34,10 @@
                             @endif
                         </td>
                         <td><a href="{{ route('mypage.user_concerts.show', $tour->id) }}">{{ $tour->title }}</a></td>
-                        <td class="pc">{{ $tour->externalUser->name ?: 'ゲスト' }}</td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="text-center">ライブ情報がありません</td>
+                        <td colspan="3" class="text-center">ライブ情報がありません</td>
                     </tr>
                 @endforelse
             </tbody>
