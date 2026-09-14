@@ -17,7 +17,7 @@
 
     <div class="container database-content">
         <div class="row justify-content-center">
-            <div class="col-lg-10">
+            <div class="col-lg-8">
                 @if ($artists->isEmpty())
                     <p style="text-align: center; color: #999;">まだアーティストを登録していません。</p>
                 @else

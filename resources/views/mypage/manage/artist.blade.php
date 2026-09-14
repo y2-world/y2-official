@@ -18,7 +18,7 @@
 
     <div class="container database-content">
         <div class="row justify-content-center">
-            <div class="col-lg-10">
+            <div class="col-lg-8">
                 <div class="select-card-list">
                     <a href="{{ route('mypage.manage.songs', $artist->id) }}" class="select-card">
                         <span class="select-card-body">

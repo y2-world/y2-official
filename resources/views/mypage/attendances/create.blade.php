@@ -15,7 +15,7 @@
 
     <div class="container database-content">
         <div class="row justify-content-center">
-            <div class="col-lg-10">
+            <div class="col-lg-8">
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul style="margin-bottom: 0; padding-left: 20px;">

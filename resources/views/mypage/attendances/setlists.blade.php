@@ -21,7 +21,7 @@
 
     <div class="container database-content">
         <div class="row justify-content-center">
-            <div class="col-lg-10">
+            <div class="col-lg-8">
                 @if ($tourSetlists->isEmpty())
                     <p>このツアーにはまだセットリストが登録されていません。</p>
                 @else
