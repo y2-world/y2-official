@@ -92,6 +92,18 @@ class DbConcert extends Model
                 continue;
             }
 
+            // "2022/10/22(土) 三重県営サンアリーナ" / "2022.11.22(火) ..." 形式（年/月/日、年.月.日）
+            if (preg_match('/^(\d{4})[.\/](\d{1,2})[.\/](\d{1,2})\s*(?:\([^)]*\))?\s+(.+)$/u', $line, $m)) {
+                $currentYear = (int)$m[1];
+                $lastMonth = (int)$m[2];
+                $venue = trim(preg_replace('/[（(][^）)]*[）)]\s*$/u', '', $m[4]));
+                $date = $this->buildDate($currentYear, (int)$m[2], (int)$m[3]);
+                if ($date && $venue !== '') {
+                    $entries[] = ['date' => $date, 'venue' => $venue];
+                }
+                continue;
+            }
+
             // "06.18(月) Zepp Sapporo" / "05.14(土) マリンメッセ福岡A館" / "06/18(月) Zepp Sapporo" 形式
             if (preg_match('/^(\d{1,2})[.\/](\d{1,2})\s*(?:\([^)]*\))?\s+(.+)$/u', $line, $m)) {
                 $advanceYearIfMonthWrapped((int)$m[1]);
