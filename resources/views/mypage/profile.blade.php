@@ -10,7 +10,7 @@
             <div class="col-xl-8">
                 <div class="element js-fadein">
                     <div style="text-align: left; margin-bottom: 16px;">
-                        <a href="{{ url()->previous() }}" style="color: rgba(255, 255, 255, 0.9); font-size: 0.9rem;">
+                        <a href="{{ url()->previous() }}" class="back-link" style="color: rgba(255, 255, 255, 0.9); font-size: 0.9rem;">
                             <i class="fa-solid fa-arrow-left"></i> Back
                         </a>
                     </div>

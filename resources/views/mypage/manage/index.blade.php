@@ -4,7 +4,7 @@
 @section('og_title', 'Manage My Artists & Setlists - Yuki Official')
 
 @section('content')
-    <div class="database-hero database-hero--detail">
+    <div class="database-hero database-hero--detail manage-page">
         <div class="container">
             @include('database._breadcrumb', ['breadcrumbs' => [
                 ['label' => 'My Page', 'url' => route('mypage.index')],
@@ -39,11 +39,19 @@
                     </div>
                 @endif
 
-                <div style="text-align: center; margin-top: 30px;">
-                    <a href="{{ route('mypage.index') }}" style="color: #888; font-size: 0.9rem;">
-                        <i class="fa-solid fa-arrow-left"></i> Back to My Page
-                    </a>
-                </div>
+                @if ($isDatabaseManager)
+                    <hr style="margin: 40px 0;">
+                    <div class="select-card-list">
+                        @foreach ($databaseArtists as $dbArtist)
+                            <a href="{{ route('mypage.manage.database_songs', $dbArtist->id) }}" class="select-card">
+                                <span class="select-card-body">
+                                    <span class="select-card-title">{{ $dbArtist->name }}</span>
+                                </span>
+                                <i class="fa-solid fa-chevron-right select-card-arrow"></i>
+                            </a>
+                        @endforeach
+                    </div>
+                @endif
             </div>
         </div>
     </div>

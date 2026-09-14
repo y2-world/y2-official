@@ -302,7 +302,7 @@ class AttendanceController extends Controller
             }
         }
 
-        $songs = $kind === 'official' ? DbSong::orderBy('id', 'asc')->get() : UserSong::where('user_artist_id', $tour->user_artist_id)->orderBy('id', 'asc')->get();
+        $songs = $kind === 'official' ? DbSong::orderBy('sort_order', 'asc')->get() : UserSong::where('user_artist_id', $tour->user_artist_id)->orderBy('id', 'asc')->get();
 
         return view('mypage.attendances.setlists', compact('tour', 'tourSetlists', 'songs', 'kind', 'tourId'));
     }
@@ -337,7 +337,7 @@ class AttendanceController extends Controller
             if ($artistKind === 'official') {
                 $artist = Artist::findOrFail($artistDbId);
                 $artistName = $artist->name;
-                $songOptions = DbSong::where('artist_id', $artistDbId)->orderBy('id', 'asc')->pluck('title');
+                $songOptions = DbSong::where('artist_id', $artistDbId)->orderBy('sort_order', 'asc')->pluck('title');
             } else {
                 $artist = UserArtist::findOrFail($artistDbId);
                 $artistName = $artist->name;
@@ -619,7 +619,7 @@ class AttendanceController extends Controller
         $tourSetlists = collect([$isOfficial ? $attendance->dbSetlist : $attendance->userSetlist]);
         $tour = $isOfficial ? $attendance->dbSetlist->tour : $attendance->userSetlist->concert;
         $artist = $tour->artist;
-        $songs = $isOfficial ? DbSong::orderBy('id', 'asc')->get() : UserSong::where('user_artist_id', $artist->id)->orderBy('id', 'asc')->get();
+        $songs = $isOfficial ? DbSong::orderBy('sort_order', 'asc')->get() : UserSong::where('user_artist_id', $artist->id)->orderBy('id', 'asc')->get();
 
         $previous = null;
         $next = null;

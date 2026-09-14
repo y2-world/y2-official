@@ -80,7 +80,7 @@
                 </form>
 
                 <div style="text-align: center; margin-top: 30px;">
-                    <a href="{{ route('mypage.index') }}" style="color: #888; font-size: 0.9rem;">
+                    <a href="{{ route('mypage.index') }}" class="back-link" style="color: #888; font-size: 0.9rem;">
                         <i class="fa-solid fa-arrow-left"></i> Back to My Page
                     </a>
                 </div>

@@ -30,12 +30,6 @@
                     </div>
                 @endif
 
-                <datalist id="songTitleOptions">
-                    @foreach ($songOptions as $title)
-                        <option value="{{ $title }}"></option>
-                    @endforeach
-                </datalist>
-
                 <form method="POST" action="{{ route('mypage.attendances.setlist_create.confirm', ['artistId' => $artistId, 'tourId' => $tourId]) }}">
                     @csrf
                     @if ($artistId === 'new')
@@ -127,6 +121,8 @@
     }
     </style>
     <script>
+    const songTitleOptions = @json($songOptions->values());
+
     function addSongRow(containerId, fieldName) {
         const container = document.getElementById(containerId);
         const row = document.createElement('div');
@@ -137,7 +133,7 @@
                 <button type="button" class="song-row-reorder-down" title="下へ"><i class="fa-solid fa-chevron-down"></i></button>
             </div>
             <span class="song-row-number"></span>
-            <input type="text" class="form-control" name="${fieldName}[]" list="songTitleOptions" placeholder="曲名">
+            <input type="text" class="form-control" name="${fieldName}[]" placeholder="曲名">
             <button type="button" class="remove-row-btn" title="削除" onclick="this.closest('.setlist-song-row').remove(); renumberRows('${containerId}');">
                 <i class="fa-solid fa-trash"></i>
             </button>
@@ -145,7 +141,10 @@
         container.appendChild(row);
         setupSongRowDrag(row, container);
         renumberRows(containerId);
-        row.querySelector('input').focus();
+        const input = row.querySelector('input');
+        input.dataset.autocompleteOptions = JSON.stringify(songTitleOptions);
+        initAutocomplete(input);
+        input.focus();
     }
 
     // --- 上下ボタンで1つずつ順位を入れ替える（ドラッグ操作は誤操作が多いため） ---
@@ -171,8 +170,13 @@
         });
     }
 
-    // 初期表示時に本編・アンコールそれぞれ1行ずつ用意しておく
-    addSongRow('setlistRows', 'setlist');
-    addSongRow('encoreRows', 'encore');
+    // initAutocompleteはlayouts/app.blade.php側の<script>で定義されるが、
+    // そちらは@yield('content')より後にレンダリングされるため、ここでの即時実行では
+    // 未定義エラーになる。DOMContentLoadedまで遅らせて確実に定義済みの状態で呼び出す。
+    document.addEventListener('DOMContentLoaded', function () {
+        // 初期表示時に本編・アンコールそれぞれ1行ずつ用意しておく
+        addSongRow('setlistRows', 'setlist');
+        addSongRow('encoreRows', 'encore');
+    });
     </script>
 @endsection

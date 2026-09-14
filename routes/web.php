@@ -18,6 +18,7 @@ use App\Http\Controllers\MyPageHubController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\MyPageStatsController;
 use App\Http\Controllers\ManageController;
+use App\Http\Controllers\ManageDbSongController;
 use App\Http\Controllers\TimelineController;
 
 /*
@@ -183,6 +184,14 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
             Route::match(['post', 'delete'], 'artists/{artistId}', [ManageController::class, 'destroyArtist'])->name('artists.destroy');
             Route::match(['post', 'delete'], 'artists/{artistId}/concerts/{concertId}', [ManageController::class, 'destroyConcert'])->name('concerts.destroy');
             Route::match(['post', 'delete'], 'artists/{artistId}/concerts/{concertId}/setlists/{setlistId}', [ManageController::class, 'destroySetlist'])->name('setlists.destroy');
+
+            // Yuki本人だけがアクセスできる、公式データベース（db_songs）の直接編集。
+            // ManageDbSongController側で毎回isDatabaseManager()を確認する。
+            Route::get('database-artists/{artistId}/songs', [ManageDbSongController::class, 'songs'])->name('database_songs');
+            Route::post('database-artists/{artistId}/songs', [ManageDbSongController::class, 'storeSong'])->name('database_songs.store');
+            Route::post('database-artists/{artistId}/songs/reorder', [ManageDbSongController::class, 'reorderSongs'])->name('database_songs.reorder');
+            Route::post('database-artists/{artistId}/songs/{songId}/edit', [ManageDbSongController::class, 'updateSong'])->name('database_songs.update');
+            Route::match(['post', 'delete'], 'database-artists/{artistId}/songs/{songId}', [ManageDbSongController::class, 'destroySong'])->name('database_songs.destroy');
         });
 
         Route::get('settings', [ExternalAuthController::class, 'showSettings'])->name('settings');

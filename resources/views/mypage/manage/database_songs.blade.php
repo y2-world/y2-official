@@ -9,7 +9,6 @@
             @include('database._breadcrumb', ['breadcrumbs' => [
                 ['label' => 'My Page', 'url' => route('mypage.index')],
                 ['label' => 'Manage My Artists & Setlists', 'url' => route('mypage.manage.index')],
-                ['label' => $artist->name, 'url' => route('mypage.manage.artist', $artist->id)],
                 ['label' => '曲を管理'],
             ]])
             <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">{{ $artist->name }}</p>
@@ -30,7 +29,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('mypage.manage.songs.store', $artist->id) }}" style="margin-bottom: 24px; display: flex; gap: 8px;">
+                <form method="POST" action="{{ route('mypage.manage.database_songs.store', $artist->id) }}" style="margin-bottom: 24px; display: flex; gap: 8px;">
                     @csrf
                     <input type="text" name="title" class="form-control" placeholder="新しい曲名" required>
                     <button type="submit" class="mypage-add-button" title="曲を追加" style="border: none; flex-shrink: 0;">
@@ -47,11 +46,11 @@
                             </div>
                             <span class="manage-row-title" data-title="{{ $song->title }}">{{ $song->title }}</span>
                             <input type="text" class="manage-row-title-input" value="{{ $song->title }}" hidden>
-                            <button type="button" class="manage-edit-btn" data-update-url="{{ route('mypage.manage.songs.update', [$artist->id, $song->id]) }}" title="編集">
+                            <button type="button" class="manage-edit-btn" data-update-url="{{ route('mypage.manage.database_songs.update', [$artist->id, $song->id]) }}" title="編集">
                                 <i class="fa-solid fa-pen"></i>
                                 <i class="fa-solid fa-check" hidden></i>
                             </button>
-                            <button type="button" class="manage-delete-btn" data-delete-url="{{ route('mypage.manage.songs.destroy', [$artist->id, $song->id]) }}" title="削除">
+                            <button type="button" class="manage-delete-btn" data-delete-url="{{ route('mypage.manage.database_songs.destroy', [$artist->id, $song->id]) }}" title="削除">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </div>
@@ -80,6 +79,18 @@
                 if (!next) return;
                 songList.insertBefore(next, row);
                 persistSongOrder();
+            });
+        }
+
+        function persistSongOrder() {
+            const songIds = Array.from(songList.querySelectorAll('.manage-row')).map((row) => row.dataset.songId);
+            fetch('{{ route('mypage.manage.database_songs.reorder', $artist->id) }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                },
+                body: JSON.stringify({ song_ids: songIds }),
             });
         }
 
@@ -161,18 +172,6 @@
             titleInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') { e.preventDefault(); commitEdit(); }
                 if (e.key === 'Escape') { titleInput.value = titleSpan.dataset.title; commitEdit(); }
-            });
-        }
-
-        function persistSongOrder() {
-            const songIds = Array.from(songList.querySelectorAll('.manage-row')).map((row) => row.dataset.songId);
-            fetch('{{ route('mypage.manage.songs.reorder', $artist->id) }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                },
-                body: JSON.stringify({ song_ids: songIds }),
             });
         }
 

@@ -845,7 +845,7 @@ class StatsController extends Controller
         // ここに含まれない曲は「ライブでそもそも未演奏」として台紙自体をグレー表示する。
         $everPerformedDbSongIds = $this->everPerformedDbSongIds((int)$artistId);
 
-        $dbSongs = DbSong::where('artist_id', $artistId)->orderBy('id')->get();
+        $dbSongs = DbSong::where('artist_id', $artistId)->orderBy('sort_order')->get();
         $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds, $fesOnlyDbSongIds) {
             return [
                 'song_id' => $song->id,

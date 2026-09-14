@@ -2444,6 +2444,12 @@ h2 {
         padding-top: 30px;
     }
 
+    /* My Statistics・My Stamp Booksは.stats-wrapper自体のpadding-top(20px)と
+       合わせて余白が大きくなりすぎるため、この2画面だけ詰める。 */
+    .stats-wrapper .element.js-fadein.compact-top {
+        padding-top: 0;
+    }
+
     /* Stats Tabs - Keep horizontal on mobile */
     .stats-tabs {
         display: flex;
@@ -3912,4 +3918,54 @@ a.setlist-card:hover {
    同じ詳細度で[hidden]のUA既定スタイルを上書きしてしまうことがあるため、明示的に固定する。 */
 [hidden] {
     display: none !important;
+}
+
+.app-autocomplete-list {
+    z-index: 2000;
+    max-height: 220px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.app-autocomplete-item {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    color: #333;
+    cursor: pointer;
+}
+
+.app-autocomplete-item:hover,
+.app-autocomplete-item.is-active {
+    background: #f0edfa;
+}
+
+/* PCではbreadcrumbで戻れるため非表示にし、スマホでのみMy Statisticsと同様に
+   ヒーローエリア左上に「Back」を表示する。 */
+.mobile-only-back-link {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile-only-back-link {
+        display: block;
+        text-align: left;
+        margin-top: -20px;
+        margin-bottom: 6px;
+    }
+    .mobile-only-back-link a {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.85rem;
+    }
+}
+
+/* 「戻る」リンク全般は、ホバー時・訪問済みでも下線を出さない。 */
+.back-link,
+.back-link:hover,
+.back-link:visited,
+.back-link:active {
+    text-decoration: none !important;
 }

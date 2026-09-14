@@ -31,4 +31,11 @@ class ExternalUser extends Authenticatable
     {
         return $this->hasMany(ExternalUserAttendance::class);
     }
+
+    // Yuki本人（サイト運営者）だけが、Manage画面から公式データベース（db_songs等）を
+    // 直接編集できるようにするための判定。
+    public function isDatabaseManager(): bool
+    {
+        return $this->email === 'yuki92496@gmail.com';
+    }
 }

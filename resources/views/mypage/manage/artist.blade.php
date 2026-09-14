@@ -4,7 +4,7 @@
 @section('og_title', $artist->name . ' - Manage My Artists & Setlists - Yuki Official')
 
 @section('content')
-    <div class="database-hero database-hero--detail">
+    <div class="database-hero database-hero--detail manage-page">
         <div class="container">
             @include('database._breadcrumb', ['breadcrumbs' => [
                 ['label' => 'My Page', 'url' => route('mypage.index')],

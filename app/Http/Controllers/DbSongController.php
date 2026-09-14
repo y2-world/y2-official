@@ -102,12 +102,12 @@ class DbSongController extends Controller
         $tours = $tourSetlists->pluck('tour')->filter()->unique('id')->values();
 
         // その他データ
-        $allSongs = DbSong::orderBy('id')->get();
+        $allSongs = DbSong::orderBy('sort_order')->get();
         $albums = DbAlbum::orderBy('id')->get();
         $singles = DbSingle::orderBy('id')->get();
-        $previous = DbSong::where('artist_id', $songs->artist_id)->where('id', '<', $songs->id)->orderBy('id', 'desc')->first();
-        $next = DbSong::where('artist_id', $songs->artist_id)->where('id', '>', $songs->id)->orderBy('id')->first();
-        $songNumber = DbSong::where('artist_id', $songs->artist_id)->where('id', '<=', $songs->id)->count();
+        $previous = DbSong::where('artist_id', $songs->artist_id)->where('sort_order', '<', $songs->sort_order)->orderBy('sort_order', 'desc')->first();
+        $next = DbSong::where('artist_id', $songs->artist_id)->where('sort_order', '>', $songs->sort_order)->orderBy('sort_order')->first();
+        $songNumber = DbSong::where('artist_id', $songs->artist_id)->where('sort_order', '<=', $songs->sort_order)->count();
 
         return view('db_songs.show', compact(
             'songs',

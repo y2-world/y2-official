@@ -51,7 +51,7 @@ class DbConcertController extends Controller
     {
         $tours = DbConcert::findOrFail($id);
         $artist = $tours->artist;
-        $songs = DbSong::orderBy('id', 'asc')->get();
+        $songs = DbSong::orderBy('sort_order', 'asc')->get();
         $tourSetlists = DbSetlist::where('tour_id', $id)->orderBy('order_no', 'asc')->get();
         $previous = DbConcert::where('artist_id', $tours->artist_id)
             ->where(function ($q) use ($tours) {

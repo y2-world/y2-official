@@ -18,6 +18,8 @@
         .bc-current { flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         @media (max-width: 768px) {
             .db-breadcrumb { display: none; }
+            /* Manage画面はスマホでもbreadcrumbを表示してみる（検証中） */
+            .manage-page .db-breadcrumb { display: flex; }
         }
     </style>
 @endif

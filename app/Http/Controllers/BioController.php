@@ -56,7 +56,7 @@ class BioController extends Controller
                 $albumSongIds = $albumSongIds->merge($ids->diff($previousIds));
             });
         $songIds = $singleSongIds->merge($albumSongIds)->unique()->filter()->values();
-        $songs = DbSong::where('artist_id', $artistId)->whereIn('id', $songIds)->orderBy('id', 'asc')->get();
+        $songs = DbSong::where('artist_id', $artistId)->whereIn('id', $songIds)->orderBy('sort_order', 'asc')->get();
 
         $tours = DbConcert::where('artist_id', $artistId)
             ->where(function ($q) use ($year) {

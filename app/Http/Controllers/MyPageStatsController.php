@@ -322,7 +322,7 @@ class MyPageStatsController extends Controller
 
         $everPerformedDbSongIds = $this->everPerformedDbSongIds((int) $artistId);
 
-        $dbSongs = DbSong::where('artist_id', $artistId)->orderBy('id')->get();
+        $dbSongs = DbSong::where('artist_id', $artistId)->orderBy('sort_order')->get();
         $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds, $fesOnlyDbSongIds) {
             return [
                 'song_id' => $song->id,
