@@ -3920,28 +3920,6 @@ a.setlist-card:hover {
     display: none !important;
 }
 
-.app-autocomplete-list {
-    z-index: 2000;
-    max-height: 220px;
-    overflow-y: auto;
-    background: white;
-    border: 1px solid #ddd;
-    border-top: none;
-    border-radius: 0 0 8px 8px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-}
-
-.app-autocomplete-item {
-    padding: 8px 12px;
-    font-size: 0.9rem;
-    color: #333;
-    cursor: pointer;
-}
-
-.app-autocomplete-item:hover,
-.app-autocomplete-item.is-active {
-    background: #f0edfa;
-}
 
 /* PCではbreadcrumbで戻れるため非表示にし、スマホでのみMy Statisticsと同様に
    ヒーローエリア左上に「Back」を表示する。 */

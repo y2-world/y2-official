@@ -46,6 +46,11 @@
                     </div>
                 @endif
 
+                <datalist id="songTitleOptions">
+                    @foreach ($songTitles as $title)
+                        <option value="{{ $title }}"></option>
+                    @endforeach
+                </datalist>
 
                 <form method="POST" action="{{ route('mypage.manage.concerts.update', [$artist->id, $concert->id]) }}" id="concertInfoForm" hidden style="margin-bottom: 24px;">
                     @csrf
@@ -103,8 +108,8 @@
                                             <button type="button" class="song-row-reorder-down" title="下へ"><i class="fa-solid fa-chevron-down"></i></button>
                                         </div>
                                         <span class="song-row-number"></span>
-                                        <input type="text" class="form-control song-title-input" name="setlist[]" placeholder="曲名" value="{{ $songTitles[$item['song']] ?? '' }}">
-                                        <button type="button" class="remove-row-btn" title="削除" onclick="this.closest('.setlist-song-row').remove(); renumberRows(this.closest('.setlist-song-rows'));">
+                                        <input type="text" class="form-control" name="setlist[]" list="songTitleOptions" placeholder="曲名" value="{{ $songTitles[$item['song']] ?? '' }}">
+                                        <button type="button" class="remove-row-btn" title="削除" onclick="const c = this.closest('.setlist-song-rows'); this.closest('.setlist-song-row').remove(); renumberRows(c);">
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
                                     </div>
@@ -125,8 +130,8 @@
                                             <button type="button" class="song-row-reorder-down" title="下へ"><i class="fa-solid fa-chevron-down"></i></button>
                                         </div>
                                         <span class="song-row-number"></span>
-                                        <input type="text" class="form-control song-title-input" name="encore[]" placeholder="曲名" value="{{ $songTitles[$item['song']] ?? '' }}">
-                                        <button type="button" class="remove-row-btn" title="削除" onclick="this.closest('.setlist-song-row').remove(); renumberRows(this.closest('.setlist-song-rows'));">
+                                        <input type="text" class="form-control" name="encore[]" list="songTitleOptions" placeholder="曲名" value="{{ $songTitles[$item['song']] ?? '' }}">
+                                        <button type="button" class="remove-row-btn" title="削除" onclick="const c = this.closest('.setlist-song-rows'); this.closest('.setlist-song-row').remove(); renumberRows(c);">
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
                                     </div>
@@ -211,8 +216,6 @@
     </style>
 
     <script>
-    const songTitleOptions = @json($songTitles->values());
-
     function addSetlistSongRow(button, fieldName) {
         const container = button.closest('div').previousElementSibling;
         const row = document.createElement('div');
@@ -223,18 +226,15 @@
                 <button type="button" class="song-row-reorder-down" title="下へ"><i class="fa-solid fa-chevron-down"></i></button>
             </div>
             <span class="song-row-number"></span>
-            <input type="text" class="form-control song-title-input" name="${fieldName}[]" placeholder="曲名">
-            <button type="button" class="remove-row-btn" title="削除" onclick="this.closest('.setlist-song-row').remove(); renumberRows(this.closest('.setlist-song-rows'));">
+            <input type="text" class="form-control" name="${fieldName}[]" list="songTitleOptions" placeholder="曲名">
+            <button type="button" class="remove-row-btn" title="削除" onclick="const c = this.closest('.setlist-song-rows'); this.closest('.setlist-song-row').remove(); renumberRows(c);">
                 <i class="fa-solid fa-trash"></i>
             </button>
         `;
         container.appendChild(row);
         setupSongRowDrag(row, container);
         renumberRows(container);
-        const input = row.querySelector('input');
-        input.dataset.autocompleteOptions = JSON.stringify(songTitleOptions);
-        initAutocomplete(input);
-        input.focus();
+        row.querySelector('input').focus();
     }
 
     // --- 上下ボタンで1つずつ順位を入れ替える（ドラッグ操作は誤操作が多いため） ---
@@ -262,16 +262,6 @@
     document.querySelectorAll('.setlist-song-rows').forEach((container) => {
         container.querySelectorAll('.setlist-song-row').forEach((row) => setupSongRowDrag(row, container));
         renumberRows(container);
-    });
-
-    // initAutocompleteはlayouts/app.blade.php側の<script>で定義されるが、
-    // そちらは@yield('content')より後にレンダリングされるため、ここでの即時実行では
-    // 未定義エラーになる。DOMContentLoadedまで遅らせて確実に定義済みの状態で呼び出す。
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.song-title-input').forEach((input) => {
-            input.dataset.autocompleteOptions = JSON.stringify(songTitleOptions);
-            initAutocomplete(input);
-        });
     });
 
     document.getElementById('concertInfoEditToggle').addEventListener('click', () => {

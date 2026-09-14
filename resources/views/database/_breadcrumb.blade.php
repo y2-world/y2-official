@@ -13,9 +13,17 @@
         @endforeach
     </nav>
     <style>
-        .db-breadcrumb { display: flex; align-items: center; flex-wrap: nowrap; overflow: hidden; }
-        .db-breadcrumb a, .bc-sep { flex-shrink: 0; }
-        .bc-current { flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .db-breadcrumb {
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .db-breadcrumb::-webkit-scrollbar { display: none; }
+        .db-breadcrumb a, .bc-sep, .bc-current { flex-shrink: 0; white-space: nowrap; }
         @media (max-width: 768px) {
             .db-breadcrumb { display: none; }
             /* Manage画面はスマホでもbreadcrumbを表示してみる（検証中） */

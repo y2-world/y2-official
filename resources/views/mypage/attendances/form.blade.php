@@ -2,7 +2,7 @@
 @section('title', 'Yuki Official - 参加日・会場を入力')
 
 @section('content')
-    <div class="database-hero database-hero--detail">
+    <div class="database-hero database-hero--detail manage-page">
         <div class="container">
             @include('database._breadcrumb', ['breadcrumbs' => [
                 ['label' => 'My Page', 'url' => route('mypage.index')],

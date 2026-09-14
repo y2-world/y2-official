@@ -2,7 +2,7 @@
 @section('title', 'Yuki Official - 参加日・会場を入力')
 
 @section('content')
-    <div class="database-hero database-hero--detail">
+    <div class="database-hero database-hero--detail manage-page">
         <div class="container">
             @php
                 $setlistCreateParams = ['artistId' => $artistId, 'tourId' => $tourId];
@@ -68,7 +68,6 @@
                         <input type="text" class="form-control" id="venue" name="venue" value="{{ old('venue') }}" required>
                     </div>
                     <div class="d-flex gap-2">
-                        <a href="#" onclick="event.preventDefault(); history.back();" class="btn btn-outline-secondary w-100">戻る</a>
                         <button type="submit" class="btn btn-outline-dark w-100">登録</button>
                     </div>
                 </form>

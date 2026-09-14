@@ -2,7 +2,7 @@
 @section('title', 'Yuki Official - ' . $tour->title . ' セットリストパターンを選択')
 
 @section('content')
-    <div class="database-hero database-hero--detail">
+    <div class="database-hero database-hero--detail manage-page">
         <div class="container">
             @php
                 $artistRef = $kind . '-' . ($kind === 'official' ? $tour->artist_id : $tour->user_artist_id);
@@ -70,12 +70,6 @@
                         </form>
                     </div>
                 @endif
-
-                <div style="text-align: center; margin-top: 1rem;">
-                    <a href="{{ route('mypage.attendances.tours', $artistRef) }}" style="color: #888; font-size: 0.9rem;">
-                        <i class="fa-solid fa-arrow-left"></i> 戻る
-                    </a>
-                </div>
             </div>
         </div>
     </div>
