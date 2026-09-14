@@ -260,6 +260,13 @@ function initAutocomplete(input) {
     });
     window.addEventListener('resize', () => { if (!list.hidden) positionList(); });
     window.addEventListener('scroll', () => { if (!list.hidden) positionList(); }, true);
+
+    // スマホでinputにフォーカスするとソフトキーボードが開き、レイアウトが変わる。
+    // visualViewportのresizeはキーボードの開閉アニメーション完了後に発火するため、
+    // ここでも再計算しないと候補リストの位置がずれたままになる。
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => { if (!list.hidden) positionList(); });
+    }
 }
 
 // Timelineの星評価編集・コメント投稿/削除。timeline/index.blade.phpとattendances/show.blade.phpで
