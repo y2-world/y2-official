@@ -340,6 +340,8 @@ class MyPageStatsController extends Controller
     // ユーザー登録アーティストのスタンプ帳。演奏記録の元がYuki本人の公式記録ではなく
     // ユーザー自身の申告（UserSong/UserSetlist）のため、「未演奏」区分は設けず
     // 「自分が参加したセットリストで演奏された曲か」だけのシンプルな2値判定にする。
+    // ただしtype（0=ツアー・1=単発ライブ以外はフェス扱い）は公式側と同様に区別し、
+    // フェスでしか演奏されていない曲はfes_onlyとして台紙上で区別できるようにする。
     private function userStamps($artistId, $externalUser)
     {
         $artist = UserArtist::find($artistId);
@@ -352,26 +354,35 @@ class MyPageStatsController extends Controller
             ->whereHas('userSetlist.concert', fn ($q) => $q->where('user_artist_id', $artistId))
             ->pluck('user_setlist_id');
 
-        $setlists = UserSetlist::whereIn('id', $attendedSetlistIds)->get();
+        $setlists = UserSetlist::whereIn('id', $attendedSetlistIds)->with('concert')->get();
 
-        $playedUserSongIds = [];
+        $playedUserSongIdsNormal = [];
+        $playedUserSongIdsFes = [];
         foreach ($setlists as $setlist) {
+            $isFes = !in_array((int) ($setlist->concert->type ?? 0), [0, 1], true);
             foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
                 if (isset($s['song']) && is_numeric($s['song'])) {
-                    $playedUserSongIds[(int) $s['song']] = true;
+                    if ($isFes) {
+                        $playedUserSongIdsFes[(int) $s['song']] = true;
+                    } else {
+                        $playedUserSongIdsNormal[(int) $s['song']] = true;
+                    }
                 }
             }
         }
 
+        $playedUserSongIds = $playedUserSongIdsNormal + $playedUserSongIdsFes;
+        $fesOnlyUserSongIds = array_diff_key($playedUserSongIdsFes, $playedUserSongIdsNormal);
+
         $userSongs = UserSong::where('user_artist_id', $artistId)->orderBy('sort_order')->get();
-        $stamps = $userSongs->map(function (UserSong $song) use ($playedUserSongIds) {
+        $stamps = $userSongs->map(function (UserSong $song) use ($playedUserSongIds, $fesOnlyUserSongIds) {
             return [
                 'song_id' => $song->id,
                 'song_url' => route('mypage.attendances.index', ['song_id' => 'user-' . $song->id]),
                 'title' => $song->title,
                 'done' => isset($playedUserSongIds[$song->id]),
                 'never_performed' => false,
-                'fes_only' => false,
+                'fes_only' => isset($fesOnlyUserSongIds[$song->id]),
             ];
         });
 
