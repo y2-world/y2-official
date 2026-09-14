@@ -48,10 +48,14 @@ class ManageDbSongController extends Controller
 
         $nextSortOrder = (DbSong::where('artist_id', $artist->id)->max('sort_order') ?? -1) + 1;
 
-        DbSong::firstOrCreate(
+        $song = DbSong::firstOrCreate(
             ['artist_id' => $artist->id, 'title' => $request->input('title')],
             ['sort_order' => $nextSortOrder]
         );
+
+        if (!$song->wasRecentlyCreated) {
+            return back()->withErrors(['title' => 'この曲名は既に登録されています。'])->withInput();
+        }
 
         return redirect()->route('mypage.manage.database_songs', $artistId)->with('success', '曲を追加しました。');
     }

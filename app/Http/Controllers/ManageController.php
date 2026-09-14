@@ -203,10 +203,14 @@ class ManageController extends Controller
 
         $nextSortOrder = (UserSong::where('user_artist_id', $artistId)->max('sort_order') ?? -1) + 1;
 
-        UserSong::firstOrCreate(
+        $song = UserSong::firstOrCreate(
             ['user_artist_id' => $artistId, 'title' => $request->input('title')],
             ['sort_order' => $nextSortOrder]
         );
+
+        if (!$song->wasRecentlyCreated) {
+            return back()->withErrors(['title' => 'この曲名は既に登録されています。'])->withInput();
+        }
 
         return redirect()->route('mypage.manage.songs', $artistId)->with('success', '曲を追加しました。');
     }
