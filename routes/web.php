@@ -137,9 +137,10 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
         Route::get('stats', [MyPageController::class, 'index'])->name('stats');
         Route::get('users/{user}/stats', [MyPageController::class, 'show'])->name('users.stats');
 
-        // ユーザー登録アーティストの「データベース」的な閲覧ページ（公式のdatabase.live相当）。
-        // 誰が登録したかに関わらず全ツアーが並ぶ、認可制限のない一覧。
+        // ユーザー登録アーティストの「データベース」的な閲覧ページ（公式のdatabase.live/live.show相当）。
+        // 誰が登録したかに関わらず全ツアーが並ぶ、認可制限のない一覧・詳細。
         Route::get('artists/{artistId}/live', [UserConcertController::class, 'index'])->name('user_artists.live');
+        Route::get('live/{id}', [UserConcertController::class, 'show'])->name('user_concerts.show');
 
         Route::prefix('timeline')->name('timeline.')->group(function () {
             Route::get('/', [TimelineController::class, 'index'])->name('index');

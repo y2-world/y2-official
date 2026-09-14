@@ -34,7 +34,7 @@
                                 {{ date('Y.m.d', strtotime($tour->date1)) }}
                             @endif
                         </td>
-                        <td><a href="{{ route('mypage.attendances.setlists', 'user-' . $tour->id) }}">{{ $tour->title }}</a></td>
+                        <td><a href="{{ route('mypage.user_concerts.show', $tour->id) }}">{{ $tour->title }}</a></td>
                         <td class="pc">{{ $tour->externalUser->name ?: 'ゲスト' }}</td>
                     </tr>
                 @empty
