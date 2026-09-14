@@ -62,7 +62,7 @@
                     <!-- Attendances Section -->
                     <div class="stats-section visible">
                         <div class="section-title-wrapper" style="flex-direction: row !important; flex-wrap: nowrap; align-items: center; min-width: 0;">
-                            <h2 class="section-title" style="text-align: left !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; flex: 1 1 auto; margin-bottom: 0;">
+                            <h2 class="section-title" style="text-align: center !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; flex: 1 1 auto; margin-bottom: 0;">
                                 <i class="fas fa-calendar-check"></i> My Live Attendances
                             </h2>
                             <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-button" title="セットリストを追加" style="flex: 0 0 auto;">
