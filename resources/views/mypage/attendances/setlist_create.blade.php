@@ -45,6 +45,7 @@
                         <input type="hidden" name="tour_title" value="{{ $tourTitle }}">
                         <input type="hidden" name="tour_date1" value="{{ $tourDate1 }}">
                         <input type="hidden" name="tour_date2" value="{{ $tourDate2 }}">
+                        <input type="hidden" name="is_fes" value="{{ $isFes ? 1 : 0 }}">
                     @endif
 
                     <div id="setlistRows" class="setlist-song-rows"></div>

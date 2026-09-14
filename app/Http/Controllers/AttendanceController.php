@@ -270,6 +270,9 @@ class AttendanceController extends Controller
         if (!empty($data['date2'])) {
             $params['date2'] = $data['date2'];
         }
+        if ($request->boolean('is_fes')) {
+            $params['is_fes'] = 1;
+        }
         if ($artistId === 'new') {
             $params['name'] = $request->query('name', $request->input('name'));
         }
@@ -348,6 +351,7 @@ class AttendanceController extends Controller
             abort_if($artistName === '', 404);
         }
 
+        $isFes = false;
         if ($tourId !== 'new') {
             [$tourKind, $tourDbId] = $this->splitRef($tourId);
             if ($tourKind === 'official') {
@@ -362,9 +366,10 @@ class AttendanceController extends Controller
             abort_if($tourTitle === '', 404);
             $tourDate1 = $request->query('date1');
             $tourDate2 = $request->query('date2');
+            $isFes = $request->boolean('is_fes');
         }
 
-        return view('mypage.attendances.setlist_create', compact('artistId', 'artistName', 'tourId', 'tourTitle', 'tourDate1', 'tourDate2', 'songOptions'));
+        return view('mypage.attendances.setlist_create', compact('artistId', 'artistName', 'tourId', 'tourTitle', 'tourDate1', 'tourDate2', 'songOptions', 'isFes'));
     }
 
     // 曲目入力の次の画面（参加日・会場の入力）。まだDBには何も保存しない。
@@ -393,11 +398,13 @@ class AttendanceController extends Controller
             $tourTitle = $request->input('tour_title');
             $tourDate1 = $request->input('tour_date1');
             $tourDate2 = $request->input('tour_date2');
+            $isFes = $request->boolean('is_fes');
         } else {
             [$tourKind, $tourDbId] = $this->splitRef($tourId);
             $tourTitle = $tourKind === 'official' ? DbConcert::findOrFail($tourDbId)->title : UserConcert::findOrFail($tourDbId)->title;
             $tourDate1 = null;
             $tourDate2 = null;
+            $isFes = false;
         }
 
         $setlist = array_values(array_filter($request->input('setlist', []), fn ($t) => trim((string) $t) !== ''));
@@ -407,7 +414,7 @@ class AttendanceController extends Controller
         $defaultAttendedDate = $tourDate1 && !$tourDate2 ? $tourDate1 : null;
 
         return view('mypage.attendances.confirm', compact(
-            'artistId', 'artistName', 'tourId', 'tourTitle', 'tourDate1', 'tourDate2', 'setlist', 'encore', 'defaultAttendedDate'
+            'artistId', 'artistName', 'tourId', 'tourTitle', 'tourDate1', 'tourDate2', 'setlist', 'encore', 'defaultAttendedDate', 'isFes'
         ));
     }
 
@@ -451,11 +458,15 @@ class AttendanceController extends Controller
 
             // ツアーとセットリストパターンを確定させる
             if ($tourId === 'new') {
+                // 本人が個別に追加する時点ではツアーか単発かは判別できないため既定は単発（1）。
+                // 「フェス・複数アーティスト出演イベント」にチェックがあればイベント（2）扱いにし、
+                // スタンプ帳集計で他アーティストのゲスト出演として扱われるようにする。
+                $tourType = $request->boolean('is_fes') ? 2 : 1;
                 $tour = UserConcert::create([
                     'external_user_id' => $userId,
                     'user_artist_id' => $userArtist->id,
                     'title' => $request->input('tour_title'),
-                    'type' => 1, // 単発ライブ（本人が個別に追加する時点ではツアーか単発かは判別できないため既定は単発）
+                    'type' => $tourType,
                     'date1' => $request->input('tour_date1') ?: null,
                     'date2' => $request->input('tour_date2') ?: null,
                 ]);

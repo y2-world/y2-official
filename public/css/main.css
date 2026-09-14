@@ -3942,8 +3942,11 @@ a.setlist-card:hover {
 
 /* 「戻る」リンク全般は、ホバー時・訪問済みでも下線を出さない。 */
 .back-link,
-.back-link:hover,
 .back-link:visited,
 .back-link:active {
     text-decoration: none !important;
+}
+.back-link:hover {
+    text-decoration: none !important;
+    opacity: 0.65;
 }
