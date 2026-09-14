@@ -20,6 +20,7 @@ use App\Http\Controllers\MyPageStatsController;
 use App\Http\Controllers\ManageController;
 use App\Http\Controllers\ManageDbSongController;
 use App\Http\Controllers\TimelineController;
+use App\Http\Controllers\UserConcertController;
 
 /*
 |--------------------------------------------------------------------------
@@ -135,6 +136,10 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
         Route::get('/', [MyPageHubController::class, 'index'])->name('index');
         Route::get('stats', [MyPageController::class, 'index'])->name('stats');
         Route::get('users/{user}/stats', [MyPageController::class, 'show'])->name('users.stats');
+
+        // ユーザー登録アーティストの「データベース」的な閲覧ページ（公式のdatabase.live相当）。
+        // 誰が登録したかに関わらず全ツアーが並ぶ、認可制限のない一覧。
+        Route::get('artists/{artistId}/live', [UserConcertController::class, 'index'])->name('user_artists.live');
 
         Route::prefix('timeline')->name('timeline.')->group(function () {
             Route::get('/', [TimelineController::class, 'index'])->name('index');
