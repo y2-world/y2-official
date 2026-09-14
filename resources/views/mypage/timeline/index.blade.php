@@ -16,14 +16,11 @@
                     @foreach ($attendances as $attendance)
                         @php
                             $tour = $attendance->attendedTour;
-                            $artistRef = $attendance->db_setlist_id
-                                ? 'official-' . $tour?->artist_id
-                                : 'user-' . $tour?->user_artist_id;
                             // 公式アーティストはDatabase側のライブ一覧へ、ユーザー登録アーティストは
-                            // Database側に対応するページが無いため従来通り参加記録一覧へ遷移する。
+                            // 対応するツアー一覧（誰でも閲覧できる、全ユーザー分のツアーが並ぶ画面）へ遷移する。
                             $artistNavUrl = $attendance->db_setlist_id
                                 ? route('database.live', $tour?->artist_id)
-                                : route('mypage.attendances.index', ['artist_id' => $artistRef]);
+                                : route('mypage.attendances.tours', 'user-' . $tour?->user_artist_id);
                             $isOwner = $attendance->external_user_id === \Illuminate\Support\Facades\Auth::guard('external')->id();
                         @endphp
                         <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'timeline']) }}" class="timeline-card" data-attendance-id="{{ $attendance->id }}">
