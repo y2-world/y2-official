@@ -24,7 +24,10 @@ class UserSongController extends Controller
             ->where('sort_order', '>', $song->sort_order)
             ->orderBy('sort_order')
             ->first();
+        $songNumber = UserSong::where('user_artist_id', $song->user_artist_id)
+            ->where('sort_order', '<=', $song->sort_order)
+            ->count();
 
-        return view('mypage.user_songs.show', compact('song', 'tours', 'previous', 'next'));
+        return view('mypage.user_songs.show', compact('song', 'tours', 'previous', 'next', 'songNumber'));
     }
 }

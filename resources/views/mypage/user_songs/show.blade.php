@@ -12,6 +12,7 @@
             <p class="database-subtitle">
                 <a href="{{ route('mypage.user_artists.live', $song->user_artist_id) }}">{{ $song->artist->name }}</a>
             </p>
+            <p class="database-subtitle"># {{ $songNumber }}</p>
             <h1 class="database-title">{{ $song->title }}</h1>
         </div>
     </div>
