@@ -14,6 +14,7 @@ class DbSong extends Model
         'title',
         'artist_id',
         'text',
+        'sort_order',
     ];
 
     protected static function booted()
