@@ -11,6 +11,7 @@ use App\Models\ExternalUser;
 use App\Models\UserArtist;
 use App\Models\UserSetlist;
 use App\Models\UserSong;
+use App\Support\JapaneseNameSorter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -37,8 +38,8 @@ class MyPageStatsController extends Controller
             ->filter()
             ->unique();
 
-        $officialArtists = Artist::whereIn('id', $attendedOfficialArtistIds)->orderBy('name')->get();
-        $userArtists = UserArtist::whereIn('id', $attendedUserArtistIds)->orderBy('name')->get();
+        $officialArtists = JapaneseNameSorter::sortBy(Artist::whereIn('id', $attendedOfficialArtistIds)->get());
+        $userArtists = JapaneseNameSorter::sortBy(UserArtist::whereIn('id', $attendedUserArtistIds)->get());
 
         return view('mypage.stats.stamps_index', compact('officialArtists', 'userArtists'));
     }

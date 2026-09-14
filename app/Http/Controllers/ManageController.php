@@ -7,6 +7,7 @@ use App\Models\UserArtist;
 use App\Models\UserConcert;
 use App\Models\UserSetlist;
 use App\Models\UserSong;
+use App\Support\JapaneseNameSorter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -24,10 +25,11 @@ class ManageController extends Controller
     {
         $user = Auth::guard('external')->user();
 
-        $artists = UserArtist::where('external_user_id', $user->id)
-            ->withCount(['concerts', 'songs'])
-            ->orderBy('name')
-            ->get();
+        $artists = JapaneseNameSorter::sortBy(
+            UserArtist::where('external_user_id', $user->id)
+                ->withCount(['concerts', 'songs'])
+                ->get()
+        );
 
         // Yuki本人だけ、公式データベース（db_songs）を直接編集する導線も表示する。
         $isDatabaseManager = $user->isDatabaseManager();

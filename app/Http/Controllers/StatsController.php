@@ -12,6 +12,7 @@ use App\Models\DbSingle;
 use App\Models\DbAlbum;
 use App\Models\SlSong;
 use App\Http\Controllers\Concerns\ComputesDbSongStamps;
+use App\Support\JapaneseNameSorter;
 use Illuminate\Support\Facades\DB;
 
 class StatsController extends Controller
@@ -56,7 +57,7 @@ class StatsController extends Controller
         if ($tab === 'database') {
             $artistId = $request->get('artist_id');
             if (!$artistId) {
-                $dbArtists = Artist::whereHas('tours')->orderBy('name')->get();
+                $dbArtists = JapaneseNameSorter::sortBy(Artist::whereHas('tours')->get());
                 $tab = 'database';
                 return view('stats.database', compact('dbArtists', 'tab'));
             }
@@ -388,7 +389,7 @@ class StatsController extends Controller
     private function getDatabaseStats(int $artistId)
     {
         $artist = Artist::findOrFail($artistId);
-        $dbArtists = Artist::whereHas('tours')->orderBy('name')->get();
+        $dbArtists = JapaneseNameSorter::sortBy(Artist::whereHas('tours')->get());
 
         $overallStats = $this->getDatabaseOverallStats($artistId);
         $songStats = $this->getDatabaseSongStats($artistId);

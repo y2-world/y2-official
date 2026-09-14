@@ -12,6 +12,7 @@ use App\Models\UserArtist;
 use App\Models\UserConcert;
 use App\Models\UserSetlist;
 use App\Models\UserSong;
+use App\Support\JapaneseNameSorter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -148,23 +149,22 @@ class AttendanceController extends Controller
 
         $userId = Auth::guard('external')->id();
 
-        $officialArtists = Artist::whereHas('tours', function ($q) use ($userId) {
+        $officialArtists = JapaneseNameSorter::sortBy(Artist::whereHas('tours', function ($q) use ($userId) {
             $q->whereHas('tourSetlists', function ($q2) use ($userId) {
                 $q2->whereHas('attendances', function ($q3) use ($userId) {
                     $q3->where('external_user_id', $userId);
                 });
             });
-        })->orderBy('name')->get();
+        })->get());
 
-        $myArtists = UserArtist::whereHas('concerts', function ($q) use ($userId) {
+        $myArtists = JapaneseNameSorter::sortBy(UserArtist::whereHas('concerts', function ($q) use ($userId) {
                 $q->whereHas('setlists', function ($q2) use ($userId) {
                     $q2->whereHas('attendances', function ($q3) use ($userId) {
                         $q3->where('external_user_id', $userId);
                     });
                 });
             })
-            ->orderBy('name')
-            ->get();
+            ->get());
 
         $years = Auth::guard('external')->user()
             ->attendances()
@@ -186,8 +186,8 @@ class AttendanceController extends Controller
     // ユーザー登録アーティストは誰が登録したかに関わらず全ユーザーが閲覧・選択できる。
     public function create()
     {
-        $officialArtists = Artist::whereHas('tours')->orderBy('name')->get();
-        $myArtists = UserArtist::orderBy('name')->get();
+        $officialArtists = JapaneseNameSorter::sortBy(Artist::whereHas('tours')->get());
+        $myArtists = JapaneseNameSorter::sortBy(UserArtist::get());
 
         return view('mypage.attendances.create', compact('officialArtists', 'myArtists'));
     }
