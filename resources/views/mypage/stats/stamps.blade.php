@@ -11,9 +11,9 @@
                 <div class="element js-fadein">
                     <div class="breadcrumb-nav">
                         @if ($isOwner)
-                            <a href="{{ route('mypage.stamps.index') }}">← Back to My Stamp Books</a>
+                            <a href="{{ route('mypage.stamps.index') }}" class="back-link">← Back to My Stamp Books</a>
                         @else
-                            <a href="{{ route('mypage.users.stats', $externalUser->id) }}">← Back to {{ $externalUser->name ?: 'ゲスト' }}'s Profile</a>
+                            <a href="{{ route('mypage.users.stats', $externalUser->id) }}" class="back-link">← Back to {{ $externalUser->name ?: 'ゲスト' }}'s Profile</a>
                         @endif
                     </div>
 

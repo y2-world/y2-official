@@ -53,20 +53,28 @@
                         <tr>
                             <td></td>
                             <td class="td_search_date">{{ date('Y.m.d', strtotime($result->date)) }}</td>
-                            @if (isset($result->artist_id))
+                            @if ($result->artist_name)
                             <td class="pc">
-                                <a href="{{ url('/setlists/artists', $result->artist_id) }}">{{ $result->artist->name }}</a>
+                                @if ($result->artist_url)
+                                    <a href="{{ $result->artist_url }}">{{ $result->artist_name }}</a>
+                                @else
+                                    {{ $result->artist_name }}
+                                @endif
                             </td>
                             <td class="sp">
-                                <a href="{{ url('/setlists/artists', $result->artist_id) }}">{{ $result->artist->name }}</a> /
-                                <a href="{{ route('setlists.show', $result->id) }}">{{ $result->title }}</a>
+                                @if ($result->artist_url)
+                                    <a href="{{ $result->artist_url }}">{{ $result->artist_name }}</a>
+                                @else
+                                    {{ $result->artist_name }}
+                                @endif
+                                /
+                                <a href="{{ $result->url }}">{{ $result->title }}</a>
                             </td>
                         @else
                             <td class="pc"></td>
-                            <td class="sp"><a
-                                    href="{{ route('setlists.show', $result->id) }}">{{ $result->title }}</a></td>
+                            <td class="sp"><a href="{{ $result->url }}">{{ $result->title }}</a></td>
                         @endif
-                        <td class="pc"><a href="{{ route('setlists.show', $result->id) }}">{{ $result->title }}</a>
+                        <td class="pc"><a href="{{ $result->url }}">{{ $result->title }}</a>
                         </td>
                         </tr>
                     @endforeach

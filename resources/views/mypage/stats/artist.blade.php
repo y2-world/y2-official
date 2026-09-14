@@ -10,7 +10,7 @@
             <div class="col-xl-10">
                 <div class="element js-fadein">
                     <div class="breadcrumb-nav">
-                        <a href="{{ route('mypage.stats') }}">← Back to My Page</a>
+                        <a href="{{ route('mypage.stats') }}" class="back-link">← Back to My Page</a>
                     </div>
 
                     <h1 class="stats-title">{{ $artist->name }}</h1>
