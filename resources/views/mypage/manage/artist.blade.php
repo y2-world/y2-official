@@ -12,14 +12,17 @@
                 ['label' => $artist->name],
             ]])
             <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">Manage My Artists & Setlists</p>
-            <h1 class="database-title" style="text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                <span class="manage-artist-name" data-title="{{ $artist->name }}">{{ $artist->name }}</span>
-                <input type="text" class="manage-artist-name-input form-control" value="{{ $artist->name }}" hidden style="max-width: 320px; display: inline-block; font-size: 1rem;">
-                <button type="button" class="manage-edit-btn" data-update-url="{{ route('mypage.manage.artists.update', $artist->id) }}" title="編集" style="color: white;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <span style="width: 1rem; flex-shrink: 0;"></span>
+                <h1 class="database-title" style="text-align: center; margin-bottom: 0;">
+                    <span class="manage-artist-name" data-title="{{ $artist->name }}">{{ $artist->name }}</span>
+                </h1>
+                <input type="text" class="manage-artist-name-input form-control" value="{{ $artist->name }}" hidden style="max-width: 320px; font-size: 1rem;">
+                <button type="button" class="manage-edit-btn" data-update-url="{{ route('mypage.manage.artists.update', $artist->id) }}" title="編集" style="color: white; font-size: 1rem; flex-shrink: 0; width: 1rem;">
                     <i class="fa-solid fa-pen"></i>
                     <i class="fa-solid fa-check" hidden></i>
                 </button>
-            </h1>
+            </div>
         </div>
     </div>
 
