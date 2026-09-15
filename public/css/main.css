@@ -2082,7 +2082,8 @@ h2 {
 .hidden-row-artist,
 .hidden-row-top-songs,
 .hidden-row-songs,
-.hidden-row-attendances {
+.hidden-row-attendances,
+.hidden-row-recent-shows {
     display: none;
 }
 

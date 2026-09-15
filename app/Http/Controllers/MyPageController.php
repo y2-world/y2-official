@@ -180,15 +180,11 @@ class MyPageController extends Controller
             'total_venues' => $totalVenues,
         ];
 
-        // 参戦データ一覧（新しい順）。直近3件だけ常時表示し、残りは「もっと見る」で展開する。
+        // 参戦データ一覧（新しい順）。My Live Attendances（mypage.index）と同じテーブル構成で、
+        // 直近3件だけ常時表示し、残りは「もっと見る」で展開する。
         $recentShows = $attendances
             ->sortByDesc(fn ($a) => $a->attended_date?->format('Y-m-d') ?? '')
-            ->values()
-            ->map(fn ($a) => [
-                'date' => $a->attended_date?->format('Y.m.d'),
-                'title' => $a->attendedTour?->title,
-                'venue' => $a->venue,
-            ]);
+            ->values();
 
         return view('mypage.profile', compact('user', 'overallStats', 'topArtists', 'topSongs', 'topVenues', 'stampBooks', 'recentShows'));
     }

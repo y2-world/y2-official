@@ -62,32 +62,61 @@
                     @if ($recentShows->isNotEmpty())
                         <div class="stats-section visible" style="margin-top: 20px;">
                             <h2 class="section-title" style="font-size: 1.1rem;">
-                                <i class="fas fa-ticket-alt"></i> Recent Shows
+                                <i class="fas fa-calendar-check"></i> My Live Attendances
                             </h2>
-                            <div class="stats-table-container">
-                                <table class="stats-table">
-                                    <tbody id="recentShowsBody">
-                                        @foreach ($recentShows as $index => $show)
-                                            <tr class="recent-show-row" @if ($index >= 3) hidden @endif>
-                                                <td class="song-title">{{ $show['title'] ?? '-' }}</td>
-                                                <td class="count-col" style="white-space: nowrap;">
-                                                    {{ $show['date'] ?? '-' }}
-                                                    @if ($show['venue'])
-                                                        <br><span style="color: #999; font-size: 0.85em;">{{ $show['venue'] }}</span>
+                            <div class="database-year-content" style="padding: 0;">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th class="mobile">#</th>
+                                            <th class="mobile">開催日</th>
+                                            <th class="sp">アーティスト / タイトル</th>
+                                            <th class="pc td_artist">アーティスト</th>
+                                            <th class="pc">タイトル</th>
+                                            <th class="pc">会場</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php $recentShowsStart = $recentShows->count(); @endphp
+                                        @foreach ($recentShows as $index => $attendance)
+                                            @php
+                                                $tour = $attendance->attendedTour;
+                                                $isFes = in_array((int) ($tour?->type ?? 0), [2, 3, 4], true);
+                                                $artistRef = $attendance->db_setlist_id
+                                                    ? 'official-' . $tour?->artist_id
+                                                    : 'user-' . $tour?->user_artist_id;
+                                            @endphp
+                                            <tr class="{{ $index >= 3 ? 'hidden-row-recent-shows' : '' }}">
+                                                <td>{{ $recentShowsStart - $index }}</td>
+                                                <td>{{ $attendance->attended_date?->format('Y.m.d') ?? '-' }}</td>
+                                                <td class="sp">
+                                                    @if ($tour?->artist && !$isFes)
+                                                        <a href="{{ route('mypage.attendances.index', ['artist_id' => $artistRef]) }}" class="stats-link">{{ $tour->artist->name }}</a>
+                                                        /
+                                                    @endif
+                                                    <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'stats']) }}" class="stats-link">{{ $tour->title ?? '-' }}</a>
+                                                </td>
+                                                <td class="pc td_artist">
+                                                    @if ($tour?->artist && !$isFes)
+                                                        <a href="{{ route('mypage.attendances.index', ['artist_id' => $artistRef]) }}" class="stats-link">{{ $tour->artist->name }}</a>
                                                     @endif
                                                 </td>
+                                                <td class="pc">
+                                                    <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'stats']) }}" class="stats-link">{{ $tour->title ?? '-' }}</a>
+                                                </td>
+                                                <td class="pc">{{ $attendance->venue }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
+                                @if ($recentShows->count() > 3)
+                                    <div class="show-more-container">
+                                        <button class="show-more-btn" onclick="toggleRecentShowRows(this)">
+                                            Show More <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                    </div>
+                                @endif
                             </div>
-                            @if ($recentShows->count() > 3)
-                                <div style="text-align: center; margin-top: 12px;">
-                                    <button type="button" id="recentShowsMoreBtn" class="stats-link" style="background: none; border: none; cursor: pointer;" onclick="document.querySelectorAll('.recent-show-row[hidden]').forEach(row => row.hidden = false); this.hidden = true;">
-                                        もっと見る（残り{{ $recentShows->count() - 3 }}件）
-                                    </button>
-                                </div>
-                            @endif
                         </div>
                     @endif
 
@@ -250,4 +279,20 @@
     white-space: pre-wrap;
 }
 </style>
+
+<script>
+function toggleRecentShowRows(button) {
+    const hiddenRows = document.querySelectorAll('.hidden-row-recent-shows');
+    const isExpanded = button.classList.contains('expanded');
+
+    hiddenRows.forEach(row => {
+        row.style.display = isExpanded ? 'none' : 'table-row';
+    });
+
+    button.classList.toggle('expanded');
+    button.innerHTML = isExpanded
+        ? 'Show More <i class="fas fa-chevron-down"></i>'
+        : 'Show Less <i class="fas fa-chevron-up"></i>';
+}
+</script>
 @endsection
