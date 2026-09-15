@@ -676,7 +676,12 @@ class AttendanceController extends Controller
             default => route('mypage.index'),
         };
 
-        return view('mypage.attendances.show', compact('attendance', 'tourSetlists', 'tour', 'artist', 'isOfficial', 'songs', 'previous', 'next', 'isOwner', 'backUrl'));
+        // Timeline経由は「データベースとして見る」文脈（誰でも見られる情報が主役）、
+        // それ以外（My Stats等）は「自分の参加記録として見る」文脈。
+        // ページ構成は共通のまま、アーティスト名・曲名のリンク先だけこの文脈で出し分ける。
+        $isFromTimeline = $request->query('from') === 'timeline';
+
+        return view('mypage.attendances.show', compact('attendance', 'tourSetlists', 'tour', 'artist', 'isOfficial', 'songs', 'previous', 'next', 'isOwner', 'backUrl', 'isFromTimeline'));
     }
 
     public function edit(ExternalUserAttendance $attendance)

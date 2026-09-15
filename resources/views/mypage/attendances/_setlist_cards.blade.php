@@ -1,9 +1,12 @@
 {{-- $setlistModel（DbSetlistまたはUserSetlist 1件）と $songs（該当する曲のコレクション）、
      $kind（'official' または 'user'）を受け取り、曲ごとにカード化して表示する。
-     My Pageのセットリスト詳細（1パターンのみ表示）専用。 --}}
+     My Pageのセットリスト詳細（1パターンのみ表示）専用。
+     $isFromTimeline: Timeline経由（データベース的な曲詳細へリンク）か、それ以外
+     （My Stats等、自分の参加記録一覧へリンク）かで曲名の遷移先を出し分ける。 --}}
 @php
     $setlist = is_array($setlistModel->setlist) ? $setlistModel->setlist : [];
     $encore = is_array($setlistModel->encore) ? $setlistModel->encore : [];
+    $isFromTimeline = $isFromTimeline ?? false;
 @endphp
 
 @foreach ([['label' => null, 'items' => $setlist], ['label' => 'ENCORE', 'items' => $encore]] as $section)
@@ -23,7 +26,15 @@
                 if ($isNumericSong) {
                     $songModel = $songs->find($data['song']);
                     $title = $alternativeTitle ?: ($songModel->title ?? 'Unknown Song');
-                    $link = $songModel ? route('mypage.attendances.index', ['song_id' => $kind . '-' . $songModel->id]) : null;
+                    if ($songModel && $isFromTimeline) {
+                        $link = $kind === 'official'
+                            ? route('songs.show', $songModel->id)
+                            : route('mypage.user_songs.show', $songModel->id);
+                    } elseif ($songModel) {
+                        $link = route('mypage.attendances.index', ['song_id' => $kind . '-' . $songModel->id]);
+                    } else {
+                        $link = null;
+                    }
                 } else {
                     $title = $alternativeTitle ?: $data['song'];
                     $link = null;
