@@ -175,7 +175,7 @@ class ManageController extends Controller
         $concert = UserConcert::where('user_artist_id', $artistId)->findOrFail($concertId);
 
         $nextOrderNo = (UserSetlist::where('user_concert_id', $concert->id)->max('order_no') ?? 0) + 1;
-        UserSetlist::create([
+        $setlist = UserSetlist::create([
             'user_concert_id' => $concert->id,
             'external_user_id' => $userId,
             'order_no' => $nextOrderNo,
@@ -184,7 +184,9 @@ class ManageController extends Controller
             'encore' => [],
         ]);
 
-        return redirect()->route('mypage.manage.setlists', [$artistId, $concertId])->with('success', 'セットリストパターンを追加しました。');
+        return redirect()
+            ->route('mypage.manage.setlists', [$artistId, $concertId, 'open' => $setlist->id])
+            ->with('success', 'セットリストパターンを追加しました。');
     }
 
     // セットリストパターンの曲目を編集（setlist_create画面と同じ形式のtitle配列を受け取る）

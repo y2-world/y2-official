@@ -98,7 +98,7 @@
                         <form method="POST" action="{{ route('mypage.manage.setlists.update', [$artist->id, $concert->id, $setlist->id]) }}" class="setlist-pattern-form" hidden style="margin-top: 16px;">
                             @csrf
                             <div class="mb-3">
-                                <input type="text" class="form-control setlist-pattern-title-input" name="subtitle" placeholder="パターン名を入力" value="{{ $setlist->subtitle }}">
+                                <input type="text" class="form-control setlist-pattern-title-input" name="subtitle" placeholder="パターン名を入力（任意）" value="{{ $setlist->subtitle }}">
                             </div>
                             <div class="setlist-song-rows" data-field="setlist">
                                 @foreach ($setlist->setlist ?? [] as $item)
@@ -322,5 +322,21 @@
                 });
         });
     });
+
+    // 新規パターン追加直後（?open=<setlistId>）は、そのカードの編集フォームを開いた状態で表示する
+    (function () {
+        const params = new URLSearchParams(window.location.search);
+        const openId = params.get('open');
+        if (!openId) return;
+
+        const row = document.querySelector(`[data-setlist-id="${openId}"]`);
+        const editBtn = row?.querySelector('.setlist-pattern-edit-toggle');
+        editBtn?.click();
+        row?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        const url = new URL(window.location.href);
+        url.searchParams.delete('open');
+        window.history.replaceState({}, '', url);
+    })();
     </script>
 @endsection
