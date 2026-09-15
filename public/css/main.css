@@ -3502,10 +3502,8 @@ h2 {
     color: #dc3545;
 }
 
-/* アーティスト一覧：select-cardのリンクに削除ボタンを併置する行 */
-.manage-artist-row .select-card {
-    margin-bottom: 14px;
-}
+/* アーティスト一覧：select-cardのリンクに削除ボタンを併置する行。
+   間隔は親.select-card-listのgapに任せる（ここでmargin-bottomを足すと二重になる）。 */
 
 .manage-artist-delete {
     flex: 0 0 auto;
