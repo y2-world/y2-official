@@ -164,8 +164,27 @@ class ManageController extends Controller
         return view('mypage.manage.setlists', compact('artist', 'concert', 'setlists', 'songTitles'));
     }
 
-    // 新しい（曲目未入力の）セットリストパターンを追加する。曲目はこの一覧画面でそのまま編集する。
-    public function storeSetlist($artistId, $concertId)
+    // 曲名の配列（setlist_create画面と同じ形式）を、無ければ新規作成しつつsong_idの配列に変換する
+    private function songTitlesToSetlistItems(array $titles, $artistId): array
+    {
+        $items = [];
+        foreach ($titles as $title) {
+            $title = trim((string) $title);
+            if ($title === '') {
+                continue;
+            }
+            $song = UserSong::firstOrCreate(
+                ['user_artist_id' => $artistId, 'title' => $title],
+                ['sort_order' => (UserSong::where('user_artist_id', $artistId)->max('sort_order') ?? -1) + 1]
+            );
+            $items[] = ['song' => (string) $song->id];
+        }
+        return $items;
+    }
+
+    // 新しいセットリストパターンを、曲目データと一緒に作成する（「＋」ボタン自体は保存せず、
+    // その場で開いた曲目編集フォームの「保存」を押した時点で初めてDBに書き込む）。
+    public function storeSetlist(Request $request, $artistId, $concertId)
     {
         $userId = Auth::guard('external')->id();
 
@@ -174,17 +193,30 @@ class ManageController extends Controller
 
         $concert = UserConcert::where('user_artist_id', $artistId)->findOrFail($concertId);
 
+        $validator = Validator::make($request->all(), [
+            'subtitle' => ['nullable', 'string', 'max:255'],
+            'setlist' => ['array'],
+            'setlist.*' => ['nullable', 'string', 'max:255'],
+            'encore' => ['array'],
+            'encore.*' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
         $nextOrderNo = (UserSetlist::where('user_concert_id', $concert->id)->max('order_no') ?? 0) + 1;
-        $setlist = UserSetlist::create([
+        UserSetlist::create([
             'user_concert_id' => $concert->id,
             'external_user_id' => $userId,
             'order_no' => $nextOrderNo,
             'row' => 1,
-            'setlist' => [],
-            'encore' => [],
+            'subtitle' => $request->input('subtitle') ?: null,
+            'setlist' => $this->songTitlesToSetlistItems($request->input('setlist', []), $artistId),
+            'encore' => $this->songTitlesToSetlistItems($request->input('encore', []), $artistId),
         ]);
 
-        return redirect()->route('mypage.manage.setlists', [$artistId, $concertId, 'open' => $setlist->id]);
+        return redirect()->route('mypage.manage.setlists', [$artistId, $concertId]);
     }
 
     // セットリストパターンの曲目を編集（setlist_create画面と同じ形式のtitle配列を受け取る）
@@ -211,26 +243,10 @@ class ManageController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        $toSongIds = function (array $titles) use ($artistId) {
-            $items = [];
-            foreach ($titles as $title) {
-                $title = trim((string) $title);
-                if ($title === '') {
-                    continue;
-                }
-                $song = UserSong::firstOrCreate(
-                    ['user_artist_id' => $artistId, 'title' => $title],
-                    ['sort_order' => (UserSong::where('user_artist_id', $artistId)->max('sort_order') ?? -1) + 1]
-                );
-                $items[] = ['song' => (string) $song->id];
-            }
-            return $items;
-        };
-
         $setlist->update([
             'subtitle' => $request->input('subtitle') ?: null,
-            'setlist' => $toSongIds($request->input('setlist', [])),
-            'encore' => $toSongIds($request->input('encore', [])),
+            'setlist' => $this->songTitlesToSetlistItems($request->input('setlist', []), $artistId),
+            'encore' => $this->songTitlesToSetlistItems($request->input('encore', []), $artistId),
         ]);
 
         return redirect()->route('mypage.manage.setlists', [$artistId, $concertId])->with('success', 'セットリストを更新しました。');

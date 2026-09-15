@@ -71,6 +71,7 @@
                     <button type="submit" class="btn btn-outline-dark w-100">保存</button>
                 </form>
 
+                <div id="setlistList">
                 @foreach ($setlists as $setlist)
                     <div class="manage-row" style="display: block;" data-setlist-id="{{ $setlist->id }}">
                         <div class="setlist-pattern-summary">
@@ -147,17 +148,47 @@
                         </form>
                     </div>
                 @endforeach
+                </div>
 
                 <p id="noSetlistsMessage" style="text-align: center; color: #999;" @if ($setlists->isNotEmpty()) hidden @endif>まだセットリストパターンがありません。</p>
 
                 <div style="margin-top: 24px; text-align: center;">
-                    <form method="POST" action="{{ route('mypage.manage.setlists.store', [$artist->id, $concert->id]) }}">
-                        @csrf
-                        <button type="submit" class="mypage-add-button" title="セットリストパターンを追加" style="border: none;">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </form>
+                    <button type="button" id="newSetlistPatternBtn" class="mypage-add-button" title="セットリストパターンを追加" style="border: none;">
+                        <i class="fas fa-plus"></i>
+                    </button>
                 </div>
+
+                {{-- 新規パターン用フォームの雛形。「＋」を押した時にこれを複製して表示する。
+                     押しただけではDBに何も作らず、この中の「保存」を押した時点で初めてstoreSetlistへ送信する。 --}}
+                <template id="newSetlistPatternTemplate">
+                    <div class="manage-row" style="display: block;">
+                        <form method="POST" action="{{ route('mypage.manage.setlists.store', [$artist->id, $concert->id]) }}" class="setlist-pattern-form" style="margin-top: 16px;">
+                            @csrf
+                            <div class="mb-3">
+                                <input type="text" class="form-control setlist-pattern-title-input" name="subtitle" placeholder="パターン名を入力（任意）">
+                            </div>
+                            <div class="setlist-song-rows" data-field="setlist"></div>
+                            <div style="text-align: center; margin-bottom: 16px;">
+                                <button type="button" class="mypage-add-button" title="曲を追加" style="border: none;" onclick="addSetlistSongRow(this, 'setlist')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+
+                            <h5 style="font-size: 0.9rem; color: #999; letter-spacing: 1px;">ENCORE</h5>
+                            <div class="setlist-song-rows" data-field="encore"></div>
+                            <div style="text-align: center; margin-bottom: 16px;">
+                                <button type="button" class="mypage-add-button" title="曲を追加" style="border: none;" onclick="addSetlistSongRow(this, 'encore')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-outline-secondary w-100 new-setlist-pattern-cancel">キャンセル</button>
+                                <button type="submit" class="btn btn-outline-dark w-100">保存</button>
+                            </div>
+                        </form>
+                    </div>
+                </template>
             </div>
         </div>
     </div>
@@ -323,20 +354,30 @@
         });
     });
 
-    // 新規パターン追加直後（?open=<setlistId>）は、そのカードの編集フォームを開いた状態で表示する
-    (function () {
-        const params = new URLSearchParams(window.location.search);
-        const openId = params.get('open');
-        if (!openId) return;
+    // 「＋」を押しても何も保存せず、曲目編集フォーム（template）を複製して開いた状態で挿入するだけ。
+    // この中の「保存」を押した時点で初めてstoreSetlistへ送信され、DBに書き込まれる。
+    // 「キャンセル」または他のパターン追加を押した場合は、DOMから取り除くだけで何も残らない。
+    document.getElementById('newSetlistPatternBtn').addEventListener('click', () => {
+        // 既に開いている未保存フォームがあれば、二重に増やさず先に片付ける
+        document.querySelector('.new-setlist-pattern-row')?.remove();
 
-        const row = document.querySelector(`[data-setlist-id="${openId}"]`);
-        const editBtn = row?.querySelector('.setlist-pattern-edit-toggle');
-        editBtn?.click();
-        row?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const template = document.getElementById('newSetlistPatternTemplate');
+        const fragment = template.content.cloneNode(true);
+        const row = fragment.querySelector('.manage-row');
+        row.classList.add('new-setlist-pattern-row');
 
-        const url = new URL(window.location.href);
-        url.searchParams.delete('open');
-        window.history.replaceState({}, '', url);
-    })();
+        const setlistList = document.getElementById('setlistList');
+        setlistList.appendChild(fragment);
+        document.getElementById('noSetlistsMessage').hidden = true;
+
+        row.querySelector('.new-setlist-pattern-cancel').addEventListener('click', () => {
+            row.remove();
+            if (!document.querySelector('[data-setlist-id]')) {
+                document.getElementById('noSetlistsMessage').hidden = false;
+            }
+        });
+        row.querySelector('.setlist-pattern-title-input').focus();
+        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
     </script>
 @endsection
