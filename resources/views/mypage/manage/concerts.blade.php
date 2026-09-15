@@ -58,8 +58,8 @@
                 </div>
                 <p id="noConcertsMessage" style="text-align: center; color: #999; margin-top: 0;" @if ($concerts->isNotEmpty() || $errors->any()) hidden @endif>まだツアーがありません。</p>
 
-                <div style="margin-top: 24px; text-align: center;">
-                    <a href="#" id="newConcertToggle" class="mypage-add-button" title="ツアーを追加" style="display: inline-flex;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newConcertForm').hidden = false; document.getElementById('noConcertsMessage').hidden = true; this.hidden = true;" @else hidden @endif>
+                <div style="text-align: center;">
+                    <a href="#" id="newConcertToggle" class="mypage-add-button" title="ツアーを追加" style="display: inline-flex; margin-top: 24px;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newConcertForm').hidden = false; document.getElementById('noConcertsMessage').hidden = true; this.hidden = true;" @else hidden @endif>
                         <i class="fas fa-plus"></i>
                     </a>
                     <form id="newConcertForm" method="POST" action="{{ route('mypage.manage.concerts.store', $artist->id) }}" @if(!$errors->any()) hidden @endif class="new-item-form @unless($errors->any()) new-item-form--via-toggle @endunless">

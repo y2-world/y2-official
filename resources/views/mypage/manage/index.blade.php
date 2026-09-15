@@ -49,8 +49,8 @@
                     </div>
                 @endif
 
-                <div style="margin-top: 24px; text-align: center;">
-                    <a href="#" id="newArtistToggle" class="mypage-add-button" title="アーティストを追加" style="display: inline-flex;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newArtistForm').hidden = false; this.hidden = true;" @else hidden @endif>
+                <div style="text-align: center;">
+                    <a href="#" id="newArtistToggle" class="mypage-add-button" title="アーティストを追加" style="display: inline-flex; margin-top: 24px;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newArtistForm').hidden = false; this.hidden = true;" @else hidden @endif>
                         <i class="fas fa-plus"></i>
                     </a>
                     <form id="newArtistForm" method="POST" action="{{ route('mypage.manage.artists.store') }}" @if(!$errors->any()) hidden @endif class="new-item-form @unless($errors->any()) new-item-form--via-toggle @endunless">

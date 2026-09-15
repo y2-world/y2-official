@@ -12,7 +12,7 @@
                 ['label' => $artist->name],
             ]])
             <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">Manage My Artists & Setlists</p>
-            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 28px;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 12px;">
                 <span style="width: 1rem; flex-shrink: 0;"></span>
                 <h1 class="database-title" style="text-align: center; margin-bottom: 0;">
                     <span class="manage-artist-name" data-title="{{ $artist->name }}">{{ $artist->name }}</span>
