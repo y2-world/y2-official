@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <div class="container database-content" style="padding-top: 24px;">
+    <div class="container database-content">
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 @if ($errors->any())
@@ -62,7 +62,7 @@
                     <a href="#" id="newConcertToggle" class="mypage-add-button" title="ツアーを追加" style="display: inline-flex;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newConcertForm').hidden = false; document.getElementById('noConcertsMessage').hidden = true; this.hidden = true;" @else hidden @endif>
                         <i class="fas fa-plus"></i>
                     </a>
-                    <form id="newConcertForm" method="POST" action="{{ route('mypage.manage.concerts.store', $artist->id) }}" @if(!$errors->any()) hidden @endif style="max-width: 360px; margin: 16px auto 0; text-align: left;">
+                    <form id="newConcertForm" method="POST" action="{{ route('mypage.manage.concerts.store', $artist->id) }}" @if(!$errors->any()) hidden @endif style="max-width: 360px; margin: {{ $errors->any() ? '0' : '16px' }} auto 0; text-align: left;">
                         @csrf
                         <div class="mb-3">
                             <label for="new_concert_title" class="form-label">ツアー名</label>
@@ -84,8 +84,8 @@
                         </div>
                         <button type="submit" class="btn btn-outline-dark w-100">追加</button>
                         <div style="text-align: center; margin-top: 8px;">
-                            <button type="button" onclick="document.getElementById('newConcertForm').hidden = true; document.getElementById('newConcertToggle').hidden = false; if (!document.querySelector('#concertList .manage-artist-row')) { document.getElementById('noConcertsMessage').hidden = false; }" style="background: none; border: none; color: #999; cursor: pointer; padding: 8px;" title="閉じる">
-                                <i class="fa-solid fa-xmark" style="font-size: 26px;"></i>
+                            <button type="button" onclick="document.getElementById('newConcertForm').hidden = true; document.getElementById('newConcertToggle').hidden = false; if (!document.querySelector('#concertList .manage-artist-row')) { document.getElementById('noConcertsMessage').hidden = false; }" style="background: none; border: none; color: #999; cursor: pointer; padding: 20px;" title="閉じる">
+                                <i class="fa-regular fa-xmark" style="font-size: 40px;"></i>
                             </button>
                         </div>
                     </form>
