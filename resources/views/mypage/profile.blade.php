@@ -91,14 +91,14 @@
                                                 <td>{{ $attendance->attended_date?->format('Y.m.d') ?? '-' }}</td>
                                                 <td class="sp">
                                                     @if ($tour?->artist && !$isFes)
-                                                        <a href="{{ route('mypage.attendances.index', ['artist_id' => $artistRef]) }}" class="stats-link">{{ $tour->artist->name }}</a>
+                                                        <a href="{{ route('mypage.attendances.index', ['user_id' => $user->id, 'artist_id' => $artistRef]) }}" class="stats-link">{{ $tour->artist->name }}</a>
                                                         /
                                                     @endif
                                                     <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'stats']) }}" class="stats-link">{{ $tour->title ?? '-' }}</a>
                                                 </td>
                                                 <td class="pc td_artist">
                                                     @if ($tour?->artist && !$isFes)
-                                                        <a href="{{ route('mypage.attendances.index', ['artist_id' => $artistRef]) }}" class="stats-link">{{ $tour->artist->name }}</a>
+                                                        <a href="{{ route('mypage.attendances.index', ['user_id' => $user->id, 'artist_id' => $artistRef]) }}" class="stats-link">{{ $tour->artist->name }}</a>
                                                     @endif
                                                 </td>
                                                 <td class="pc">

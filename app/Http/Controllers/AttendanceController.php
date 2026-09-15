@@ -33,9 +33,15 @@ class AttendanceController extends Controller
 {
     use SplitsKindRef;
 
+    // ?user_id= で他ユーザーの一覧も同じ画面で見られる（プロフィール画面のアーティストリンク等から）。
+    // 省略時はログイン中の自分。
     public function index(Request $request)
     {
-        $query = Auth::guard('external')->user()
+        $targetUser = $request->filled('user_id')
+            ? \App\Models\ExternalUser::findOrFail($request->input('user_id'))
+            : Auth::guard('external')->user();
+
+        $query = $targetUser
             ->attendances()
             ->with(['dbSetlist.tour.artist', 'userSetlist.concert.artist']);
 
@@ -74,10 +80,10 @@ class AttendanceController extends Controller
             $song = $songKind === 'official' ? DbSong::find($songIdValue) : UserSong::find($songIdValue);
 
             if ($song) {
-                // 自分の参加記録を古い順に見ていったとき、そのアーティストの曲の中で
-                // 何番目に初めて自分のリストに登場したかを#として表示する
+                // 対象ユーザーの参加記録を古い順に見ていったとき、そのアーティストの曲の中で
+                // 何番目に初めて彼らのリストに登場したかを#として表示する
                 if ($songKind === 'official') {
-                    $orderedAttendances = Auth::guard('external')->user()
+                    $orderedAttendances = $targetUser
                         ->attendances()
                         ->whereHas('dbSetlist.tour', fn ($q) => $q->where('artist_id', $song->artist_id))
                         ->with('dbSetlist')
@@ -85,7 +91,7 @@ class AttendanceController extends Controller
                         ->get();
                     $songKey = fn ($setlist) => array_merge($setlist->setlist ?? [], $setlist->encore ?? []);
                 } else {
-                    $orderedAttendances = Auth::guard('external')->user()
+                    $orderedAttendances = $targetUser
                         ->attendances()
                         ->whereHas('userSetlist.concert', fn ($q) => $q->where('user_artist_id', $song->user_artist_id))
                         ->with('userSetlist')
@@ -152,7 +158,7 @@ class AttendanceController extends Controller
         }
         $attendances = $query->get();
 
-        $userId = Auth::guard('external')->id();
+        $userId = $targetUser->id;
 
         $officialArtists = JapaneseNameSorter::sortBy(Artist::whereHas('tours', function ($q) use ($userId) {
             $q->whereHas('tourSetlists', function ($q2) use ($userId) {
@@ -171,7 +177,7 @@ class AttendanceController extends Controller
             })
             ->get());
 
-        $years = Auth::guard('external')->user()
+        $years = $targetUser
             ->attendances()
             ->whereNotNull('attended_date')
             ->get()
@@ -182,7 +188,7 @@ class AttendanceController extends Controller
             ->values();
 
         return view('mypage.attendances.index', compact(
-            'attendances', 'officialArtists', 'myArtists', 'artistId', 'song', 'songKind', 'songNumber', 'filterArtist', 'years', 'year', 'previousSong', 'nextSong', 'venue'
+            'attendances', 'officialArtists', 'myArtists', 'artistId', 'song', 'songKind', 'songNumber', 'filterArtist', 'years', 'year', 'previousSong', 'nextSong', 'venue', 'targetUser'
         ));
     }
 
