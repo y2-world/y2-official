@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <div class="container database-content">
+    <div class="container database-content" style="padding-top: 24px;">
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 @if ($errors->any())
