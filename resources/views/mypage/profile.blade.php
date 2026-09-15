@@ -59,6 +59,17 @@
                         </div>
                     </div>
 
+                    <div style="text-align: center; margin-top: 20px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                        <a href="{{ route('mypage.timeline.index', ['user_id' => $user->id]) }}" class="stats-link">
+                            <i class="fa-regular fa-comment"></i> 投稿一覧を見る
+                        </a>
+                        @if ($user->id === \Illuminate\Support\Facades\Auth::guard('external')->id())
+                            <a href="{{ route('mypage.attendances.index') }}" class="stats-link">
+                                <i class="fa-solid fa-list"></i> すべての参戦データを見る
+                            </a>
+                        @endif
+                    </div>
+
                     @if ($topArtists->isNotEmpty())
                         <div class="stats-section visible" style="margin-top: 20px;">
                             <h2 class="section-title" style="font-size: 1.1rem;">

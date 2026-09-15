@@ -12,20 +12,30 @@ class TimelineController extends Controller
 {
     // 全ユーザーの参加記録を投稿（登録）した順に並べたタイムライン。
     // 各カードにはアーティスト名・ツアー名・会場・日程・投稿者・星評価・コメントを表示する。
-    public function index()
+    // ?user_id= を指定すると、そのユーザーの投稿だけの「自分の投稿一覧」としても使える。
+    public function index(Request $request)
     {
-        $attendances = ExternalUserAttendance::with([
+        $query = ExternalUserAttendance::with([
             'externalUser',
             'dbSetlist.tour.artist',
             'userSetlist.concert.artist',
             'comments',
-        ])
+        ]);
+
+        $userId = $request->input('user_id');
+        $filterUser = null;
+        if ($userId) {
+            $filterUser = \App\Models\ExternalUser::find($userId);
+            $query->where('external_user_id', $userId);
+        }
+
+        $attendances = $query
             ->orderByDesc('created_at')
             ->orderByDesc('id')
             ->limit(50)
             ->get();
 
-        return view('mypage.timeline.index', compact('attendances'));
+        return view('mypage.timeline.index', compact('attendances', 'filterUser'));
     }
 
     // 星評価（投稿者本人の自己評価）の更新（インライン編集からのAjax）
