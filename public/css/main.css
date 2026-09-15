@@ -3985,8 +3985,8 @@ a.setlist-card:hover {
 }
 /* 「+」ボタンをクリックして開いた場合：ボタン自身は非表示になり高さが0になる。
    リストが空のときはページ上端の.database-content padding-topだけでも十分な余白があるため、
-   ここでの追加分は最小限（8px）に留める（以前の16pxは、空リスト時にpaddingと二重に
-   積み上がって想定より大きな空白になっていた）。 */
+   ここでは追加しない（以前の16px/8pxは、空リスト時にpaddingと二重に積み上がって
+   想定より大きな空白になっていた）。 */
 .new-item-form--via-toggle {
-    margin-top: 8px;
+    margin-top: 0;
 }
