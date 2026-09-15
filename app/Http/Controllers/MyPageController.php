@@ -180,7 +180,17 @@ class MyPageController extends Controller
             'total_venues' => $totalVenues,
         ];
 
-        return view('mypage.profile', compact('user', 'overallStats', 'topArtists', 'topSongs', 'topVenues', 'stampBooks'));
+        // 参戦データ一覧（新しい順）。直近3件だけ常時表示し、残りは「もっと見る」で展開する。
+        $recentShows = $attendances
+            ->sortByDesc(fn ($a) => $a->attended_date?->format('Y-m-d') ?? '')
+            ->values()
+            ->map(fn ($a) => [
+                'date' => $a->attended_date?->format('Y.m.d'),
+                'title' => $a->attendedTour?->title,
+                'venue' => $a->venue,
+            ]);
+
+        return view('mypage.profile', compact('user', 'overallStats', 'topArtists', 'topSongs', 'topVenues', 'stampBooks', 'recentShows'));
     }
 
     private function render(ExternalUser $user)

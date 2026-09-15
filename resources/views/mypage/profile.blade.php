@@ -59,16 +59,37 @@
                         </div>
                     </div>
 
-                    <div style="text-align: center; margin-top: 20px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-                        <a href="{{ route('mypage.timeline.index', ['user_id' => $user->id]) }}" class="stats-link">
-                            <i class="fa-regular fa-comment"></i> 投稿一覧を見る
-                        </a>
-                        @if ($user->id === \Illuminate\Support\Facades\Auth::guard('external')->id())
-                            <a href="{{ route('mypage.attendances.index') }}" class="stats-link">
-                                <i class="fa-solid fa-list"></i> すべての参戦データを見る
-                            </a>
-                        @endif
-                    </div>
+                    @if ($recentShows->isNotEmpty())
+                        <div class="stats-section visible" style="margin-top: 20px;">
+                            <h2 class="section-title" style="font-size: 1.1rem;">
+                                <i class="fas fa-ticket-alt"></i> Recent Shows
+                            </h2>
+                            <div class="stats-table-container">
+                                <table class="stats-table">
+                                    <tbody id="recentShowsBody">
+                                        @foreach ($recentShows as $index => $show)
+                                            <tr class="recent-show-row" @if ($index >= 3) hidden @endif>
+                                                <td class="song-title">{{ $show['title'] ?? '-' }}</td>
+                                                <td class="count-col" style="white-space: nowrap;">
+                                                    {{ $show['date'] ?? '-' }}
+                                                    @if ($show['venue'])
+                                                        <br><span style="color: #999; font-size: 0.85em;">{{ $show['venue'] }}</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            @if ($recentShows->count() > 3)
+                                <div style="text-align: center; margin-top: 12px;">
+                                    <button type="button" id="recentShowsMoreBtn" class="stats-link" style="background: none; border: none; cursor: pointer;" onclick="document.querySelectorAll('.recent-show-row[hidden]').forEach(row => row.hidden = false); this.hidden = true;">
+                                        もっと見る（残り{{ $recentShows->count() - 3 }}件）
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
+                    @endif
 
                     @if ($topArtists->isNotEmpty())
                         <div class="stats-section visible" style="margin-top: 20px;">
