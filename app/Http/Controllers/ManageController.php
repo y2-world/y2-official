@@ -54,6 +54,34 @@ class ManageController extends Controller
         return view('mypage.manage.artist', compact('artist', 'songsCount', 'concertsCount'));
     }
 
+    // アーティスト名のインライン編集（曲名編集と同じUI・Ajaxパターン）
+    public function updateArtist(Request $request, $artistId)
+    {
+        $userId = Auth::guard('external')->id();
+
+        $artist = UserArtist::findOrFail($artistId);
+        abort_unless($artist->external_user_id === $userId, 403);
+
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:255'],
+        ]);
+
+        if ($validator->fails()) {
+            if ($request->wantsJson()) {
+                return response()->json(['error' => $validator->errors()->first()], 422);
+            }
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $artist->update(['name' => $request->input('name')]);
+
+        if ($request->wantsJson()) {
+            return response()->json(['message' => 'アーティスト名を変更しました。', 'name' => $artist->name]);
+        }
+
+        return redirect()->route('mypage.manage.artist', $artistId)->with('success', 'アーティスト名を変更しました。');
+    }
+
     // 曲一覧画面（並べ替え・削除・追加）
     public function songs($artistId)
     {
