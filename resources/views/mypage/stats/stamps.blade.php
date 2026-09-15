@@ -8,7 +8,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-10">
-                <div class="element js-fadein">
+                <div class="element js-fadein compact-top">
                     <div class="breadcrumb-nav">
                         @if ($isOwner)
                             <a href="{{ route('mypage.stamps.index') }}" class="back-link">← Back to My Stamp Books</a>
