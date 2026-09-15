@@ -12,17 +12,15 @@
     <div class="container database-content" style="padding-top: 24px;">
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <div style="text-align: center; margin-bottom: 20px;">
-                    @if ($filterUser)
-                        <h1 class="database-title" style="font-size: 1.4rem;">{{ $filterUser->name ?: 'ゲスト' }}の投稿</h1>
-                        <a href="{{ route('mypage.timeline.index') }}" class="back-link" style="font-size: 0.9rem; color: #999;">
-                            <i class="fa-solid fa-xmark"></i> 絞り込みを解除
-                        </a>
-                    @else
-                        <a href="{{ route('mypage.timeline.index', ['user_id' => \Illuminate\Support\Facades\Auth::guard('external')->id()]) }}" class="stats-link" style="font-size: 0.9rem;">
-                            <i class="fa-solid fa-filter"></i> 自分の投稿のみ表示
-                        </a>
-                    @endif
+                <div class="timeline-filter-row">
+                    <select class="timeline-user-select" onchange="if (this.value) window.location.href=this.value;">
+                        <option value="{{ route('mypage.timeline.index') }}" {{ $filterUser ? '' : 'selected' }}>すべての投稿</option>
+                        <option value="{{ route('mypage.timeline.index', ['user_id' => \Illuminate\Support\Facades\Auth::guard('external')->id()]) }}" {{ $filterUser && $filterUser->id === \Illuminate\Support\Facades\Auth::guard('external')->id() ? 'selected' : '' }}>自分の投稿のみ</option>
+                        @foreach ($postingUsers as $postingUser)
+                            @continue($postingUser->id === \Illuminate\Support\Facades\Auth::guard('external')->id())
+                            <option value="{{ route('mypage.timeline.index', ['user_id' => $postingUser->id]) }}" {{ $filterUser?->id === $postingUser->id ? 'selected' : '' }}>{{ $postingUser->name ?: 'ゲスト' }}の投稿</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div id="timelineList">
                     @foreach ($attendances as $attendance)
@@ -79,6 +77,31 @@
     </div>
 
     <style>
+    .timeline-filter-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+    .timeline-user-select {
+        padding: 6px 28px 6px 12px;
+        border: 1px solid #ddd;
+        border-radius: 25px;
+        background: #fff;
+        color: #333;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        -webkit-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23999' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+    }
+    .timeline-user-select:hover {
+        border-color: #bbb;
+    }
     .timeline-pull-indicator {
         display: flex;
         align-items: center;
