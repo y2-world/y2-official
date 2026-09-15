@@ -45,10 +45,10 @@
                                     @endif
                                     <span class="timeline-card-title">{{ $tour->title ?? '-' }}</span>
                                     <span class="timeline-card-sub">
-                                        {{ $attendance->attended_date?->format('Y.m.d') ?? '-' }}
                                         @if ($attendance->venue)
-                                            ・{{ $attendance->venue }}
+                                            {{ $attendance->venue }} ・
                                         @endif
+                                        {{ $attendance->attended_date?->format('Y.m.d') ?? '-' }}
                                     </span>
                                 </div>
                             </div>
