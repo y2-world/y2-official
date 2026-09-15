@@ -8,15 +8,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-10">
-                <div class="element js-fadein compact-top">
-                    <div class="breadcrumb-nav">
-                        @if ($isOwner)
-                            <a href="{{ route('mypage.stamps.index') }}" class="back-link">← Back to My Stamp Books</a>
-                        @else
-                            <a href="{{ route('mypage.users.stats', $externalUser->id) }}" class="back-link">← Back to {{ $externalUser->name ?: 'ゲスト' }}'s Profile</a>
-                        @endif
-                    </div>
-
+                <div class="element js-fadein">
                     <h1 class="stats-title">{{ $artist->name }}</h1>
                     <p class="stats-subtitle">
                         @if ($isOwner)

@@ -9,10 +9,6 @@
         <div class="row justify-content-center">
             <div class="col-xl-10">
                 <div class="element js-fadein">
-                    <div class="breadcrumb-nav">
-                        <a href="{{ route('stats.index') }}" class="back-link">← Back to Dashboard</a>
-                    </div>
-
                     <h1 class="stats-title">{{ $artist->name }}</h1>
                     <p class="stats-subtitle">Artist Statistics</p>
 

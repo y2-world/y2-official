@@ -8,11 +8,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-10">
-                <div class="element js-fadein compact-top">
-                    <div class="breadcrumb-nav">
-                        <a href="{{ route('mypage.stats') }}" class="back-link">← Back to My Page</a>
-                    </div>
-
+                <div class="element js-fadein">
                     <h1 class="stats-title">{{ $artist->name }}</h1>
                     <p class="stats-subtitle">My Artist Statistics</p>
 

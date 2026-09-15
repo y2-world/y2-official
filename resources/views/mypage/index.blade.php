@@ -8,12 +8,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-10">
-                <div class="element js-fadein compact-top">
-                    <div style="text-align: left; margin-bottom: 16px;">
-                        <a href="{{ route('mypage.index') }}" class="back-link" style="color: rgba(255, 255, 255, 0.9); font-size: 0.9rem;">
-                            <i class="fa-solid fa-arrow-left"></i> Back to My Page
-                        </a>
-                    </div>
+                <div class="element js-fadein">
                     <div style="text-align: center;">
                         <h1 class="stats-title" style="margin-bottom: 0;">My Statistics</h1>
                     </div>

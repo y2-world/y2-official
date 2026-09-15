@@ -8,11 +8,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-10">
-                <div class="element js-fadein compact-top">
-                    <div class="breadcrumb-nav">
-                        <a href="{{ route('mypage.index') }}" class="back-link">← Back to My Page</a>
-                    </div>
-
+                <div class="element js-fadein">
                     <h1 class="stats-title">My Stamp Books</h1>
                     <p class="stats-subtitle">参加したライブのアーティストごとに、演奏された曲を集めよう</p>
 

@@ -2445,13 +2445,6 @@ h2 {
         padding-top: 30px;
     }
 
-    /* My Statistics・My Stamp Books・My Artist Stats・Stamp Book詳細・プロフィールは
-       .stats-wrapper自体のpadding-top(20px)と合わせて余白が大きくなりすぎるため詰める
-       （My Pageのハブ画面だけはこの対象外）。 */
-    .stats-wrapper .element.js-fadein.compact-top {
-        padding-top: 0;
-    }
-
     /* Stats Tabs - Keep horizontal on mobile */
     .stats-tabs {
         display: flex;
