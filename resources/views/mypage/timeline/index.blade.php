@@ -12,12 +12,15 @@
     <div class="container database-content" style="padding-top: 24px;">
         <div class="row justify-content-center">
             <div class="col-lg-8">
+                @php
+                    $myId = \Illuminate\Support\Facades\Auth::guard('external')->id();
+                @endphp
                 <div class="timeline-filter-row">
                     <select class="timeline-user-select" onchange="if (this.value) window.location.href=this.value;">
-                        <option value="{{ route('mypage.timeline.index') }}" {{ $filterUser ? '' : 'selected' }}>すべての投稿</option>
-                        <option value="{{ route('mypage.timeline.index', ['user_id' => \Illuminate\Support\Facades\Auth::guard('external')->id()]) }}" {{ $filterUser && $filterUser->id === \Illuminate\Support\Facades\Auth::guard('external')->id() ? 'selected' : '' }}>自分の投稿のみ</option>
+                        <option value="{{ route('mypage.timeline.index', ['user_id' => $myId]) }}" {{ $filterUser && $filterUser->id === $myId ? 'selected' : '' }}>自分の投稿</option>
+                        <option value="{{ route('mypage.timeline.index', ['user_id' => 'all']) }}" {{ $filterUser ? '' : 'selected' }}>すべての投稿</option>
                         @foreach ($postingUsers as $postingUser)
-                            @continue($postingUser->id === \Illuminate\Support\Facades\Auth::guard('external')->id())
+                            @continue($postingUser->id === $myId)
                             <option value="{{ route('mypage.timeline.index', ['user_id' => $postingUser->id]) }}" {{ $filterUser?->id === $postingUser->id ? 'selected' : '' }}>{{ $postingUser->name ?: 'ゲスト' }}の投稿</option>
                         @endforeach
                     </select>

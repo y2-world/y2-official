@@ -13,6 +13,8 @@ class TimelineController extends Controller
     // 全ユーザーの参加記録を投稿（登録）した順に並べたタイムライン。
     // 各カードにはアーティスト名・ツアー名・会場・日程・投稿者・星評価・コメントを表示する。
     // ?user_id= を指定すると、そのユーザーの投稿だけの「自分の投稿一覧」としても使える。
+    // user_idを何も指定せずアクセスした初回表示では、デフォルトで自分の投稿だけに絞る
+    // （?user_id=all で明示的に「すべての投稿」を選んだ場合のみ絞り込みを解除する）。
     public function index(Request $request)
     {
         $query = ExternalUserAttendance::with([
@@ -22,9 +24,9 @@ class TimelineController extends Controller
             'comments',
         ]);
 
-        $userId = $request->input('user_id');
+        $userId = $request->has('user_id') ? $request->input('user_id') : Auth::guard('external')->id();
         $filterUser = null;
-        if ($userId) {
+        if ($userId && $userId !== 'all') {
             $filterUser = \App\Models\ExternalUser::find($userId);
             $query->where('external_user_id', $userId);
         }
