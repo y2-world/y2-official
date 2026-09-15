@@ -149,6 +149,15 @@
                 @endforeach
 
                 <p id="noSetlistsMessage" style="text-align: center; color: #999;" @if ($setlists->isNotEmpty()) hidden @endif>まだセットリストパターンがありません。</p>
+
+                <div style="margin-top: 24px; text-align: center;">
+                    <form method="POST" action="{{ route('mypage.manage.setlists.store', [$artist->id, $concert->id]) }}">
+                        @csrf
+                        <button type="submit" class="mypage-add-button" title="セットリストパターンを追加" style="border: none;">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

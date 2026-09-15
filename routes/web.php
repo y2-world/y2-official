@@ -184,6 +184,7 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
             Route::get('artists/{artistId}/concerts', [ManageController::class, 'concerts'])->name('concerts');
             Route::post('artists/{artistId}/concerts', [ManageController::class, 'storeConcert'])->name('concerts.store');
             Route::get('artists/{artistId}/concerts/{concertId}/setlists', [ManageController::class, 'setlists'])->name('setlists');
+            Route::post('artists/{artistId}/concerts/{concertId}/setlists', [ManageController::class, 'storeSetlist'])->name('setlists.store');
             Route::post('artists/{artistId}/concerts/{concertId}/edit', [ManageController::class, 'updateConcert'])->name('concerts.update');
             Route::post('artists/{artistId}/concerts/{concertId}/setlists/{setlistId}/edit', [ManageController::class, 'updateSetlist'])->name('setlists.update');
             Route::post('artists/{artistId}/songs', [ManageController::class, 'storeSong'])->name('songs.store');

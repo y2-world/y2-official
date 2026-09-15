@@ -164,6 +164,29 @@ class ManageController extends Controller
         return view('mypage.manage.setlists', compact('artist', 'concert', 'setlists', 'songTitles'));
     }
 
+    // 新しい（曲目未入力の）セットリストパターンを追加する。曲目はこの一覧画面でそのまま編集する。
+    public function storeSetlist($artistId, $concertId)
+    {
+        $userId = Auth::guard('external')->id();
+
+        $artist = UserArtist::findOrFail($artistId);
+        abort_unless($artist->external_user_id === $userId, 403);
+
+        $concert = UserConcert::where('user_artist_id', $artistId)->findOrFail($concertId);
+
+        $nextOrderNo = (UserSetlist::where('user_concert_id', $concert->id)->max('order_no') ?? 0) + 1;
+        UserSetlist::create([
+            'user_concert_id' => $concert->id,
+            'external_user_id' => $userId,
+            'order_no' => $nextOrderNo,
+            'row' => 1,
+            'setlist' => [],
+            'encore' => [],
+        ]);
+
+        return redirect()->route('mypage.manage.setlists', [$artistId, $concertId])->with('success', 'セットリストパターンを追加しました。');
+    }
+
     // セットリストパターンの曲目を編集（setlist_create画面と同じ形式のtitle配列を受け取る）
     public function updateSetlist(Request $request, $artistId, $concertId, $setlistId)
     {

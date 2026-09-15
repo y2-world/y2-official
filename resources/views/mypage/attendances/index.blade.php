@@ -71,7 +71,7 @@
                             <p class="database-subtitle" style="margin: 4px 0 0;">この年の{{ $viewerLabel }}</p>
                         @elseif ($venue)
                             <h1 class="database-title" style="white-space: nowrap;">{{ $venue }}</h1>
-                            <p class="database-subtitle" style="margin: 4px 0 0;">この会場の{{ $viewerLabel }}</p>
+                            <p class="database-subtitle" style="margin: 4px 0 0;">{{ $viewerLabel }}</p>
                         @else
                             <h1 class="database-title" style="white-space: nowrap;">{{ $isSelf ? 'My Live Attendances' : ($targetUser->name ?: 'ゲスト') . ' Live Attendances' }}</h1>
                             <p class="database-subtitle" style="margin: 4px 0 0;">{{ $viewerLabel }}</p>
