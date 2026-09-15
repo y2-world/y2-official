@@ -57,7 +57,7 @@
                         </div>
                     @endforeach
                 </div>
-                <p id="noSongsMessage" style="text-align: center; color: #999;" @if ($songs->isNotEmpty()) hidden @endif>まだ曲がありません。</p>
+                <p id="noSongsMessage" style="text-align: center; color: #999; margin-top: 0;" @if ($songs->isNotEmpty()) hidden @endif>まだ曲がありません。</p>
             </div>
         </div>
     </div>

@@ -56,7 +56,7 @@
                         </div>
                     @endforeach
                 </div>
-                <p id="noConcertsMessage" style="text-align: center; color: #999;" @if ($concerts->isNotEmpty()) hidden @endif>まだツアーがありません。</p>
+                <p id="noConcertsMessage" style="text-align: center; color: #999; margin-top: 0;" @if ($concerts->isNotEmpty()) hidden @endif>まだツアーがありません。</p>
 
                 <div style="margin-top: 24px; text-align: center;">
                     <a href="#" id="newConcertToggle" class="mypage-add-button" title="ツアーを追加" style="display: inline-flex;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newConcertForm').hidden = false; document.getElementById('noConcertsMessage').hidden = true; this.hidden = true;" @else hidden @endif>
@@ -85,7 +85,7 @@
                         <button type="submit" class="btn btn-outline-dark w-100">追加</button>
                         <div style="text-align: center; margin-top: 8px;">
                             <button type="button" onclick="document.getElementById('newConcertForm').hidden = true; document.getElementById('newConcertToggle').hidden = false; if (!document.querySelector('#concertList .manage-artist-row')) { document.getElementById('noConcertsMessage').hidden = false; }" style="background: none; border: none; color: #999; cursor: pointer; padding: 4px;" title="閉じる">
-                                <i class="fa-solid fa-xmark" style="font-size: 20px;"></i>
+                                <i class="fa-solid fa-xmark" style="font-size: 24px;"></i>
                             </button>
                         </div>
                     </form>

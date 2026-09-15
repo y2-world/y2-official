@@ -150,7 +150,7 @@
                 @endforeach
                 </div>
 
-                <p id="noSetlistsMessage" style="text-align: center; color: #999;" @if ($setlists->isNotEmpty()) hidden @endif>まだセットリストパターンがありません。</p>
+                <p id="noSetlistsMessage" style="text-align: center; color: #999; margin-top: 0;" @if ($setlists->isNotEmpty()) hidden @endif>まだセットリストパターンがありません。</p>
 
                 <div style="margin-top: 24px; text-align: center;">
                     <button type="button" id="newSetlistPatternBtn" class="mypage-add-button" title="セットリストパターンを追加" style="border: none;">

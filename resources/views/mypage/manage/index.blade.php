@@ -62,7 +62,7 @@
                         <button type="submit" class="btn btn-outline-dark w-100">追加</button>
                         <div style="text-align: center; margin-top: 8px;">
                             <button type="button" onclick="document.getElementById('newArtistForm').hidden = true; document.getElementById('newArtistToggle').hidden = false;" style="background: none; border: none; color: #999; cursor: pointer; padding: 4px;" title="閉じる">
-                                <i class="fa-solid fa-xmark" style="font-size: 20px;"></i>
+                                <i class="fa-solid fa-xmark" style="font-size: 24px;"></i>
                             </button>
                         </div>
                     </form>
