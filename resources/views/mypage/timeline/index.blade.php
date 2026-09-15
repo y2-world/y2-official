@@ -12,14 +12,18 @@
     <div class="container database-content" style="padding-top: 24px;">
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                @if ($filterUser)
-                    <div style="text-align: center; margin-bottom: 20px;">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    @if ($filterUser)
                         <h1 class="database-title" style="font-size: 1.4rem;">{{ $filterUser->name ?: 'ゲスト' }}の投稿</h1>
                         <a href="{{ route('mypage.timeline.index') }}" class="back-link" style="font-size: 0.9rem; color: #999;">
                             <i class="fa-solid fa-xmark"></i> 絞り込みを解除
                         </a>
-                    </div>
-                @endif
+                    @else
+                        <a href="{{ route('mypage.timeline.index', ['user_id' => \Illuminate\Support\Facades\Auth::guard('external')->id()]) }}" class="stats-link" style="font-size: 0.9rem;">
+                            <i class="fa-solid fa-filter"></i> 自分の投稿のみ表示
+                        </a>
+                    @endif
+                </div>
                 <div id="timelineList">
                     @foreach ($attendances as $attendance)
                         @php
