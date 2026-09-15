@@ -36,12 +36,7 @@ class TimelineController extends Controller
             ->limit(50)
             ->get();
 
-        // 絞り込みドロップダウンの選択肢：実際に投稿したことがあるユーザーのみ
-        $postingUsers = \App\Models\ExternalUser::whereHas('attendances')
-            ->orderBy('name')
-            ->get();
-
-        return view('mypage.timeline.index', compact('attendances', 'filterUser', 'postingUsers'));
+        return view('mypage.timeline.index', compact('attendances', 'filterUser'));
     }
 
     // 星評価（投稿者本人の自己評価）の更新（インライン編集からのAjax）
