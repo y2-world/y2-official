@@ -84,6 +84,39 @@ class ManageController extends Controller
         return view('mypage.manage.concerts', compact('artist', 'concerts'));
     }
 
+    // ツアー・ライブ情報だけを登録する（参加記録やセットリストは無しでもよい）。
+    // 「行ってはいないが情報としては知っているツアー」をデータベースに残したいケース向け。
+    public function storeConcert(Request $request, $artistId)
+    {
+        $userId = Auth::guard('external')->id();
+
+        $artist = UserArtist::findOrFail($artistId);
+        abort_unless($artist->external_user_id === $userId, 403);
+
+        $validator = Validator::make($request->all(), [
+            'title' => ['required', 'string', 'max:255'],
+            'date1' => ['required', 'date'],
+            'date2' => ['nullable', 'date', 'after_or_equal:date1'],
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $data = $validator->validated();
+
+        UserConcert::create([
+            'external_user_id' => $userId,
+            'user_artist_id' => $artist->id,
+            'title' => $data['title'],
+            'type' => $request->boolean('is_fes') ? 2 : 1,
+            'date1' => $data['date1'],
+            'date2' => $data['date2'] ?? null,
+        ]);
+
+        return redirect()->route('mypage.manage.concerts', $artistId)->with('success', 'ツアーを追加しました。');
+    }
+
     // ツアー配下のセットリストパターン一覧画面（削除）
     public function setlists($artistId, $concertId)
     {
