@@ -59,7 +59,7 @@
                         <a href="#" id="newTourToggle" class="mypage-add-button" title="新しいツアーを追加" style="display: inline-flex;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newTourForm').hidden = false; this.hidden = true; var msg = document.getElementById('noToursMessage'); if (msg) { msg.hidden = true; }" @else hidden @endif>
                             <i class="fas fa-plus"></i>
                         </a>
-                        <form id="newTourForm" method="POST" action="{{ route('mypage.attendances.tours.new', $artistId) }}" @if(!$errors->any()) hidden @endif style="max-width: 360px; margin: 16px auto 0; text-align: left;">
+                        <form id="newTourForm" method="POST" action="{{ route('mypage.attendances.tours.new', $artistId) }}" @if(!$errors->any()) hidden @endif class="new-item-form @unless($errors->any()) new-item-form--via-toggle @endunless">
                             @csrf
                             @if ($artistId === 'new')
                                 <input type="hidden" name="name" value="{{ $artistName }}">

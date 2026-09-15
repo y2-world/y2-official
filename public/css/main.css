@@ -3974,3 +3974,16 @@ a.setlist-card:hover {
 .close-x-thin::after {
     transform: rotate(-45deg);
 }
+
+/* Manage/セットリスト登録フローの「新規追加」フォーム共通。max-width/text-alignのみ既定にし、
+   間隔は用途別のmodifierクラスに任せる（同じmargin値をボタン開始時・エラー再表示時で共有すると、
+   フォームが最初から開いた状態のときに直前の「+」ボタン分の余白が余ってしまうため）。 */
+.new-item-form {
+    max-width: 360px;
+    margin: 0 auto;
+    text-align: left;
+}
+/* 「+」ボタンをクリックして開いた場合：ボタンとの間隔を確保する */
+.new-item-form--via-toggle {
+    margin-top: 16px;
+}

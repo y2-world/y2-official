@@ -53,7 +53,7 @@
                     <a href="#" id="newArtistToggle" class="mypage-add-button" title="アーティストを追加" style="display: inline-flex;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newArtistForm').hidden = false; this.hidden = true;" @else hidden @endif>
                         <i class="fas fa-plus"></i>
                     </a>
-                    <form id="newArtistForm" method="POST" action="{{ route('mypage.manage.artists.store') }}" @if(!$errors->any()) hidden @endif style="max-width: 360px; margin: 16px auto 0;">
+                    <form id="newArtistForm" method="POST" action="{{ route('mypage.manage.artists.store') }}" @if(!$errors->any()) hidden @endif class="new-item-form @unless($errors->any()) new-item-form--via-toggle @endunless">
                         @csrf
                         <div class="mb-3">
                             <label for="new_artist_name" class="form-label">アーティスト名</label>
