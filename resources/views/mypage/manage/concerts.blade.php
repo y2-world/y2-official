@@ -56,7 +56,7 @@
                         </div>
                     @endforeach
                 </div>
-                <p id="noConcertsMessage" style="text-align: center; color: #999; margin-top: 0;" @if ($concerts->isNotEmpty() || $errors->any()) hidden @endif>まだツアーがありません。</p>
+                <p id="noConcertsMessage" style="text-align: center; color: #999; margin-top: 0; margin-bottom: 0;" @if ($concerts->isNotEmpty() || $errors->any()) hidden @endif>まだツアーがありません。</p>
 
                 <div style="text-align: center;">
                     <a href="#" id="newConcertToggle" class="mypage-add-button" title="ツアーを追加" style="display: inline-flex; margin-top: 24px;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newConcertForm').hidden = false; document.getElementById('noConcertsMessage').hidden = true; this.hidden = true;" @else hidden @endif>
