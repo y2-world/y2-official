@@ -12,12 +12,12 @@
                 ['label' => $artist->name],
             ]])
             <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">Manage My Artists & Setlists</p>
-            <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 16px;">
                 <span style="width: 1rem; flex-shrink: 0;"></span>
                 <h1 class="database-title" style="text-align: center; margin-bottom: 0;">
                     <span class="manage-artist-name" data-title="{{ $artist->name }}">{{ $artist->name }}</span>
                 </h1>
-                <input type="text" class="manage-artist-name-input form-control" value="{{ $artist->name }}" hidden style="max-width: 320px; font-size: 1rem;">
+                <input type="text" class="manage-artist-name-input form-control" value="{{ $artist->name }}" hidden style="max-width: 420px; width: 100%; font-size: 1rem; padding: 10px 14px;">
                 <button type="button" class="manage-edit-btn" data-update-url="{{ route('mypage.manage.artists.update', $artist->id) }}" title="編集" style="color: white; font-size: 1rem; flex-shrink: 0; width: 1rem;">
                     <i class="fa-solid fa-pen"></i>
                     <i class="fa-solid fa-check" hidden></i>
