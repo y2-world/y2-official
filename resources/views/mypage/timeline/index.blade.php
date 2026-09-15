@@ -17,8 +17,8 @@
                 @endphp
                 <div class="timeline-filter-row">
                     <select class="timeline-user-select" onchange="if (this.value) window.location.href=this.value;">
-                        <option value="{{ route('mypage.timeline.index', ['user_id' => $myId]) }}" {{ $filterUser && $filterUser->id === $myId ? 'selected' : '' }}>自分の投稿</option>
                         <option value="{{ route('mypage.timeline.index', ['user_id' => 'all']) }}" {{ $filterUser ? '' : 'selected' }}>すべての投稿</option>
+                        <option value="{{ route('mypage.timeline.index', ['user_id' => $myId]) }}" {{ $filterUser && $filterUser->id === $myId ? 'selected' : '' }}>自分の投稿</option>
                     </select>
                 </div>
                 <div id="timelineList">
