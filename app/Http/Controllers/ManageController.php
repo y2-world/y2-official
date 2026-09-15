@@ -40,6 +40,27 @@ class ManageController extends Controller
         return view('mypage.manage.index', compact('artists', 'isDatabaseManager', 'databaseArtists'));
     }
 
+    // 新しいアーティストを追加する
+    public function storeArtist(Request $request)
+    {
+        $userId = Auth::guard('external')->id();
+
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:255'],
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $artist = UserArtist::create([
+            'external_user_id' => $userId,
+            'name' => $request->input('name'),
+        ]);
+
+        return redirect()->route('mypage.manage.artist', $artist->id);
+    }
+
     // アーティスト詳細（入り口）：「曲を管理」「ツアーを管理」への案内のみ
     public function artist($artistId)
     {

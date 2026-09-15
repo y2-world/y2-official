@@ -18,6 +18,16 @@
     <div class="container database-content">
         <div class="row justify-content-center">
             <div class="col-lg-8">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul style="margin-bottom: 0; padding-left: 20px;">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 @if ($artists->isEmpty())
                     <p style="text-align: center; color: #999;">まだアーティストを登録していません。</p>
                 @else
@@ -38,6 +48,25 @@
                         @endforeach
                     </div>
                 @endif
+
+                <div style="margin-top: 24px; text-align: center;">
+                    <a href="#" id="newArtistToggle" class="mypage-add-button" title="アーティストを追加" style="display: inline-flex;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newArtistForm').hidden = false; this.hidden = true;" @else hidden @endif>
+                        <i class="fas fa-plus"></i>
+                    </a>
+                    <form id="newArtistForm" method="POST" action="{{ route('mypage.manage.artists.store') }}" @if(!$errors->any()) hidden @endif style="max-width: 360px; margin: 16px auto 0;">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="new_artist_name" class="form-label">アーティスト名</label>
+                            <input type="text" class="form-control" id="new_artist_name" name="name" value="{{ old('name') }}" required>
+                        </div>
+                        <button type="submit" class="btn btn-outline-dark w-100">追加</button>
+                        <div style="text-align: center; margin-top: 8px;">
+                            <button type="button" onclick="document.getElementById('newArtistForm').hidden = true; document.getElementById('newArtistToggle').hidden = false;" style="background: none; border: none; color: #999; cursor: pointer; padding: 4px;" title="閉じる">
+                                <i class="fa-solid fa-xmark" style="font-size: 20px;"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
 
                 @if ($isDatabaseManager)
                     <hr style="margin: 40px 0;">

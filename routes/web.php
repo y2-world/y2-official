@@ -178,6 +178,7 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
 
         Route::prefix('manage')->name('manage.')->group(function () {
             Route::get('/', [ManageController::class, 'index'])->name('index');
+            Route::post('artists', [ManageController::class, 'storeArtist'])->name('artists.store');
             Route::get('artists/{artistId}', [ManageController::class, 'artist'])->name('artist');
             Route::post('artists/{artistId}/edit', [ManageController::class, 'updateArtist'])->name('artists.update');
             Route::get('artists/{artistId}/songs', [ManageController::class, 'songs'])->name('songs');
