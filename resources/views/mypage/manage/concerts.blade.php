@@ -85,7 +85,7 @@
                         <button type="submit" class="btn btn-outline-dark w-100">追加</button>
                         <div style="text-align: center; margin-top: 8px;">
                             <button type="button" onclick="document.getElementById('newConcertForm').hidden = true; document.getElementById('newConcertToggle').hidden = false; if (!document.querySelector('#concertList .manage-artist-row')) { document.getElementById('noConcertsMessage').hidden = false; }" style="background: none; border: none; color: #999; cursor: pointer; padding: 20px;" title="閉じる">
-                                <i class="fa-solid fa-xmark" style="font-size: 40px;"></i>
+                                <span class="close-x-thin" style="font-size: 30px;"></span>
                             </button>
                         </div>
                     </form>

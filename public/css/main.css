@@ -3949,3 +3949,28 @@ a.setlist-card:hover {
     text-decoration: none !important;
     opacity: 0.65;
 }
+
+/* CSS自作の細い「×」。Font Awesome Kitがfa-light/fa-regularのxmarkを提供していないため、
+   線の太さを自由に指定できるこの方式にしている（fa-solidは太すぎる）。 */
+.close-x-thin {
+    position: relative;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+}
+.close-x-thin::before,
+.close-x-thin::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+}
+.close-x-thin::before {
+    transform: rotate(45deg);
+}
+.close-x-thin::after {
+    transform: rotate(-45deg);
+}
