@@ -30,7 +30,7 @@ class ExternalAuthController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        Auth::guard('external')->login($user);
+        Auth::guard('external')->login($user, true);
         $request->session()->regenerate();
 
         return redirect()->route('mypage.index');
@@ -48,7 +48,9 @@ class ExternalAuthController extends Controller
             'password' => ['required'],
         ]);
 
-        if (! Auth::guard('external')->attempt($credentials)) {
+        // remember=trueで常にremember_tokenを発行し、セッション有効期限（cookie: SESSION_LIFETIME）が
+        // 切れても長期間（Laravel既定で5年）ログイン状態を保つ。頻繁に再ログインを求められる不満への対応。
+        if (! Auth::guard('external')->attempt($credentials, true)) {
             return back()->withErrors([
                 'email' => 'メールアドレスまたはパスワードが正しくありません。',
             ])->onlyInput('email');
