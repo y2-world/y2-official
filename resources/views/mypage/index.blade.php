@@ -353,7 +353,7 @@
                                                 @endif
                                             </td>
                                             <td class="venue-name">
-                                                <a href="{{ url('/venue') }}?keyword={{ urlencode($venue->venue) }}" class="stats-link">{{ $venue->venue }}</a>
+                                                <a href="{{ route('mypage.attendances.index', ['venue' => $venue->venue]) }}" class="stats-link">{{ $venue->venue }}</a>
                                             </td>
                                             <td class="count-col">
                                                 <span class="count-badge">{{ $venue->count }}</span>

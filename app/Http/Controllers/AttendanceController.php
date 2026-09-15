@@ -58,6 +58,11 @@ class AttendanceController extends Controller
             $query->whereYear('attended_date', $year);
         }
 
+        $venue = $request->input('venue');
+        if ($venue) {
+            $query->where('venue', $venue);
+        }
+
         $songId = $request->input('song_id'); // "official-{id}" or "user-{id}"
         $song = null;
         $songKind = null;
@@ -177,7 +182,7 @@ class AttendanceController extends Controller
             ->values();
 
         return view('mypage.attendances.index', compact(
-            'attendances', 'officialArtists', 'myArtists', 'artistId', 'song', 'songKind', 'songNumber', 'filterArtist', 'years', 'year', 'previousSong', 'nextSong'
+            'attendances', 'officialArtists', 'myArtists', 'artistId', 'song', 'songKind', 'songNumber', 'filterArtist', 'years', 'year', 'previousSong', 'nextSong', 'venue'
         ));
     }
 

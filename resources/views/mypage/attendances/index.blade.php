@@ -59,6 +59,9 @@
                         @elseif ($year)
                             <h1 class="database-title" style="white-space: nowrap;">{{ $year }}</h1>
                             <p class="database-subtitle" style="margin: 4px 0 0;">この年のすべてのセットリスト</p>
+                        @elseif ($venue)
+                            <h1 class="database-title" style="white-space: nowrap;">{{ $venue }}</h1>
+                            <p class="database-subtitle" style="margin: 4px 0 0;">この会場のすべてのセットリスト</p>
                         @else
                             <h1 class="database-title" style="white-space: nowrap;">My Live Attendances</h1>
                             <p class="database-subtitle" style="margin: 4px 0 0;">すべてのセットリスト</p>
@@ -127,8 +130,8 @@
                         @endforeach
                     </tbody>
                 </table>
-            @elseif ($year)
-                {{-- 年単位の絞り込み：years.show と同じ構成（table.count、pc:アーティストが先） --}}
+            @elseif ($year || $venue)
+                {{-- 年単位・会場単位の絞り込み：years.show と同じ構成（table.count、pc:アーティストが先） --}}
                 <table class="table table-striped count">
                     <thead>
                         <tr>
