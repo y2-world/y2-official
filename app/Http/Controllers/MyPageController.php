@@ -171,7 +171,9 @@ class MyPageController extends Controller
                 'percentage' => round($doneSongs / $totalSongs * 100, 1),
             ]);
         }
-        $stampBooks = $stampBooks->sortByDesc('percentage')->take(3)->values();
+        // Live Stamp Bookセクション（stats/index.blade.phpと同じ形式）はバッジを全件並べるだけなので、
+        // My Statisticsの他セクションのような上位3件への絞り込みは行わない。
+        $stampBooks = $stampBooks->sortByDesc('percentage')->values();
 
         $overallStats = [
             'total_shows' => $totalShows,

@@ -204,30 +204,14 @@
                     @if ($stampBooks->isNotEmpty())
                         <div class="stats-section visible" style="margin-top: 20px;">
                             <h2 class="section-title" style="font-size: 1.1rem;">
-                                <i class="fas fa-stamp"></i> My Stamps
+                                <i class="fas fa-stamp"></i> Live Stamp Book
                             </h2>
-                            <div class="stats-table-container">
-                                <table class="stats-table">
-                                    <tbody>
-                                        @foreach ($stampBooks as $stampBook)
-                                            <tr>
-                                                <td class="rank-col">
-                                                    @if ($loop->iteration === 1)
-                                                        <span class="rank-badge gold">🏆</span>
-                                                    @elseif ($loop->iteration === 2)
-                                                        <span class="rank-badge silver">🥈</span>
-                                                    @else
-                                                        <span class="rank-badge bronze">🥉</span>
-                                                    @endif
-                                                </td>
-                                                <td class="artist-name">
-                                                    <a href="{{ route('mypage.stats.stamps', [$stampBook['artist_ref'], 'user' => $user->id]) }}" class="stats-link">{{ $stampBook['name'] }}</a>
-                                                </td>
-                                                <td class="count-col"><span class="count-badge">{{ $stampBook['percentage'] }}%</span></td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                            <div class="stamp-book-link-wrapper" style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-start;">
+                                @foreach ($stampBooks as $stampBook)
+                                    <a href="{{ route('mypage.stats.stamps', [$stampBook['artist_ref'], 'user' => $user->id]) }}" class="stamp-book-link">
+                                        <i class="fas fa-stamp"></i> {{ $stampBook['name'] }}
+                                    </a>
+                                @endforeach
                             </div>
                         </div>
                     @endif
