@@ -228,10 +228,10 @@
         margin-bottom: 10px;
         background: #f8f8f8;
         border: 1px solid #eee;
-        padding: 10px 16px;
+        padding: 10px 12px;
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 8px;
     }
     .setlist-song-row .song-row-reorder-buttons {
         display: flex;
@@ -253,16 +253,18 @@
     }
     .setlist-song-row .song-row-number {
         flex: 0 0 auto;
-        width: 1.6em;
+        width: 1.4em;
         text-align: right;
         color: #999;
-        font-size: 0.9em;
+        font-size: 0.85em;
     }
     .setlist-song-row input[type="text"] {
         flex: 1;
+        min-width: 0;
         border: none;
         padding: 4px 0;
         background: transparent;
+        font-size: 0.9em;
     }
     .setlist-song-row input[type="text"]:focus {
         outline: none;
