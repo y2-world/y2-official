@@ -393,6 +393,9 @@
 
     // パターン自体（セットリストパターンの表示順）を上下ボタンで1つずつ入れ替える。
     // 曲行の並べ替えと同じ考え方（ドラッグは誤操作が多いため上下ボタン方式）。
+    // 「パターンN」フォールバック表示はサーバー側で順序に応じて算出されるため、
+    // ここではDOM上の並び替えとorder_noの保存だけ行い、番号表示はユーザーが
+    // 手動でページを再読み込みした時点で正しい値になる。
     function persistSetlistOrder() {
         const setlistList = document.getElementById('setlistList');
         const setlistIds = Array.from(setlistList.querySelectorAll('[data-setlist-id]')).map((row) => row.dataset.setlistId);
