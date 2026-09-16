@@ -473,4 +473,61 @@ class ManageController extends Controller
 
         return redirect()->route('mypage.manage.concerts', $artistId)->with('success', 'セットリストを削除しました。');
     }
+
+    // セットリストパターンの並べ替え（曲の並べ替えと同じ、上下ボタン→order_no一括更新のAjax）
+    public function reorderSetlists(Request $request, $artistId, $concertId)
+    {
+        $userId = Auth::guard('external')->id();
+
+        $artist = UserArtist::findOrFail($artistId);
+        abort_unless($artist->external_user_id === $userId, 403);
+
+        $validator = Validator::make($request->all(), [
+            'setlist_ids' => ['required', 'array'],
+            'setlist_ids.*' => ['integer'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => 'invalid request'], 422);
+        }
+
+        $setlistIds = $request->input('setlist_ids');
+        $ownedIds = UserSetlist::where('user_concert_id', $concertId)->pluck('id')->all();
+        abort_unless(count(array_diff($setlistIds, $ownedIds)) === 0, 403);
+
+        foreach ($setlistIds as $index => $setlistId) {
+            UserSetlist::where('id', $setlistId)->update(['order_no' => $index]);
+        }
+
+        return response()->json(['status' => 'ok']);
+    }
+
+    // セットリストパターンの複製（曲目・パターン名をそのままコピーした新しいパターンを末尾に追加する）
+    public function duplicateSetlist(Request $request, $artistId, $concertId, $setlistId)
+    {
+        $userId = Auth::guard('external')->id();
+
+        $artist = UserArtist::findOrFail($artistId);
+        abort_unless($artist->external_user_id === $userId, 403);
+
+        $concert = UserConcert::where('user_artist_id', $artistId)->findOrFail($concertId);
+        $original = UserSetlist::where('user_concert_id', $concertId)->findOrFail($setlistId);
+
+        $nextOrderNo = (UserSetlist::where('user_concert_id', $concert->id)->max('order_no') ?? 0) + 1;
+        $copy = UserSetlist::create([
+            'user_concert_id' => $concert->id,
+            'external_user_id' => $userId,
+            'order_no' => $nextOrderNo,
+            'row' => $original->row,
+            'subtitle' => $original->subtitle,
+            'setlist' => $original->setlist,
+            'encore' => $original->encore,
+        ]);
+
+        if ($request->wantsJson()) {
+            return response()->json(['message' => 'セットリストパターンを複製しました。', 'redirect' => route('mypage.manage.setlists', [$artistId, $concertId, 'open' => $copy->id])]);
+        }
+
+        return redirect()->route('mypage.manage.setlists', [$artistId, $concertId, 'open' => $copy->id])->with('success', 'セットリストパターンを複製しました。');
+    }
 }

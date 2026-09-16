@@ -188,6 +188,8 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
             Route::post('artists/{artistId}/concerts/{concertId}/setlists', [ManageController::class, 'storeSetlist'])->name('setlists.store');
             Route::post('artists/{artistId}/concerts/{concertId}/edit', [ManageController::class, 'updateConcert'])->name('concerts.update');
             Route::post('artists/{artistId}/concerts/{concertId}/setlists/{setlistId}/edit', [ManageController::class, 'updateSetlist'])->name('setlists.update');
+            Route::post('artists/{artistId}/concerts/{concertId}/setlists/reorder', [ManageController::class, 'reorderSetlists'])->name('setlists.reorder');
+            Route::post('artists/{artistId}/concerts/{concertId}/setlists/{setlistId}/duplicate', [ManageController::class, 'duplicateSetlist'])->name('setlists.duplicate');
             Route::post('artists/{artistId}/songs', [ManageController::class, 'storeSong'])->name('songs.store');
             Route::post('artists/{artistId}/songs/reorder', [ManageController::class, 'reorderSongs'])->name('songs.reorder');
             Route::post('artists/{artistId}/songs/{songId}/edit', [ManageController::class, 'updateSong'])->name('songs.update');
