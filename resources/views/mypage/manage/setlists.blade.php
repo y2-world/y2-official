@@ -100,7 +100,7 @@
                                 <span class="setlist-pattern-song-count" style="color: #999; font-size: 0.85rem; display: block;">{{ $songCount }}曲</span>
                             </span>
                             <div class="setlist-pattern-actions">
-                                <button type="button" class="manage-edit-btn setlist-pattern-edit-toggle" title="編集" style="font-size: 0.75rem;">
+                                <button type="button" class="manage-edit-btn setlist-pattern-edit-toggle" title="編集">
                                     <i class="fa-solid fa-pen"></i>
                                     <i class="fa-solid fa-chevron-down" hidden></i>
                                 </button>
@@ -219,7 +219,7 @@
     .setlist-pattern-actions {
         display: flex;
         align-items: center;
-        gap: 0;
+        gap: 8px;
         flex-shrink: 0;
     }
     .setlist-song-row {
