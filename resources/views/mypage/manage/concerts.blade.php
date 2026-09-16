@@ -30,7 +30,7 @@
                     </div>
                 @endif
 
-                <div id="concertList">
+                <div id="concertList" class="select-card-list">
                     @foreach ($concerts as $concert)
                         <div class="manage-artist-row">
                             <a href="{{ route('mypage.manage.setlists', [$artist->id, $concert->id]) }}" class="select-card">

@@ -34,7 +34,7 @@ class DbAlbumResource extends Resource
             ->schema([
                 Forms\Components\Select::make('artist_id')
                     ->label('アーティスト')
-                    ->options(fn() => \App\Models\Artist::pluck('name', 'id'))
+                    ->options(fn() => \App\Support\JapaneseNameSorter::sortOptions(\App\Models\Artist::pluck('name', 'id')->all()))
                     ->required()
                     ->native(false)
                     ->searchable(),
@@ -170,7 +170,7 @@ class DbAlbumResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('artist_id')
                     ->label('アーティスト')
-                    ->options(fn() => \App\Models\Artist::pluck('name', 'id')),
+                    ->options(fn() => \App\Support\JapaneseNameSorter::sortOptions(\App\Models\Artist::pluck('name', 'id')->all())),
                 Tables\Filters\TernaryFilter::make('best')
                     ->label('ベストアルバム')
                     ->placeholder('すべて')

@@ -34,7 +34,7 @@ class DbSingleResource extends Resource
             ->schema([
                 Forms\Components\Select::make('artist_id')
                     ->label('アーティスト')
-                    ->options(fn() => \App\Models\Artist::pluck('name', 'id'))
+                    ->options(fn() => \App\Support\JapaneseNameSorter::sortOptions(\App\Models\Artist::pluck('name', 'id')->all()))
                     ->required()
                     ->native(false)
                     ->searchable(),
@@ -138,7 +138,7 @@ class DbSingleResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('artist_id')
                     ->label('アーティスト')
-                    ->options(fn() => \App\Models\Artist::pluck('name', 'id')),
+                    ->options(fn() => \App\Support\JapaneseNameSorter::sortOptions(\App\Models\Artist::pluck('name', 'id')->all())),
                 Tables\Filters\TernaryFilter::make('download')
                     ->label('種別')
                     ->placeholder('すべて')

@@ -380,7 +380,7 @@ class SlSetlistResource extends Resource
                                 // artist は song/block 共通キー
                                 Forms\Components\Select::make('artist')
                                     ->label('アーティスト')
-                                    ->options(fn() => \App\Models\Artist::pluck('name', 'id'))
+                                    ->options(fn() => \App\Support\JapaneseNameSorter::sortOptions(\App\Models\Artist::pluck('name', 'id')->all()))
                                     ->searchable()
                                     ->native(false)
                                     ->nullable()
@@ -578,7 +578,7 @@ class SlSetlistResource extends Resource
 
                                 Forms\Components\Select::make('artist')
                                     ->label('アーティスト')
-                                    ->options(fn() => \App\Models\Artist::pluck('name', 'id'))
+                                    ->options(fn() => \App\Support\JapaneseNameSorter::sortOptions(\App\Models\Artist::pluck('name', 'id')->all()))
                                     ->searchable()
                                     ->native(false)
                                     ->nullable()
@@ -823,7 +823,7 @@ class SlSetlistResource extends Resource
                     ->form([
                         Forms\Components\Select::make('artist_id')
                             ->label('アーティスト')
-                            ->options(fn () => \App\Models\Artist::pluck('name', 'id'))
+                            ->options(fn () => \App\Support\JapaneseNameSorter::sortOptions(\App\Models\Artist::pluck('name', 'id')->all()))
                             ->required()
                             ->native(false)
                             ->searchable(),

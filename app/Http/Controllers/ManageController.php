@@ -237,7 +237,7 @@ class ManageController extends Controller
             'encore' => $this->songTitlesToSetlistItems($request->input('encore', []), $artistId),
         ]);
 
-        return redirect()->route('mypage.manage.setlists', [$artistId, $concertId]);
+        return redirect()->route('mypage.manage.setlists', [$artistId, $concertId])->with('success', 'セットリストパターンを追加しました。');
     }
 
     // セットリストパターンの曲目を編集（setlist_create画面と同じ形式のtitle配列を受け取る）

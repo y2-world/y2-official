@@ -88,7 +88,7 @@
                                                         <a href="{{ route('mypage.attendances.index', ['user_id' => $user->id, 'artist_id' => $artistRef]) }}" class="stats-link">{{ $tour->artist->name }}</a>
                                                         /
                                                     @endif
-                                                    <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'stats']) }}" class="stats-link">{{ $tour->title ?? '-' }}</a>
+                                                    <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'profile-' . $user->id]) }}" class="stats-link">{{ $tour->title ?? '-' }}</a>
                                                 </td>
                                                 <td class="pc td_artist">
                                                     @if ($tour?->artist && !$isFes)
@@ -96,7 +96,7 @@
                                                     @endif
                                                 </td>
                                                 <td class="pc">
-                                                    <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'stats']) }}" class="stats-link">{{ $tour->title ?? '-' }}</a>
+                                                    <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'profile-' . $user->id]) }}" class="stats-link">{{ $tour->title ?? '-' }}</a>
                                                 </td>
                                                 <td class="pc">{{ $attendance->venue }}</td>
                                             </tr>

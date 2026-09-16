@@ -669,12 +669,20 @@ class AttendanceController extends Controller
         // ままの古いURL等）を指してしまい404になることがある。そのため各リンク側で
         // 明示的に「戻り先」を?from=で指定してもらい、ここでは既知の値だけをホワイトリストで
         // 受け付ける。指定が無い・未知の値の場合は常にMy Pageトップへ安全にフォールバックする。
-        $backUrl = match ($request->query('from')) {
-            'timeline' => route('mypage.timeline.index'),
-            'stats' => route('mypage.stats'),
-            'attendances' => route('mypage.attendances.index'),
-            default => route('mypage.index'),
-        };
+        $from = $request->query('from');
+        if (is_string($from) && str_starts_with($from, 'profile-')) {
+            $profileUserId = substr($from, strlen('profile-'));
+            $backUrl = ctype_digit($profileUserId)
+                ? route('mypage.users.stats', $profileUserId)
+                : route('mypage.index');
+        } else {
+            $backUrl = match ($from) {
+                'timeline' => route('mypage.timeline.index'),
+                'stats' => route('mypage.stats'),
+                'attendances' => route('mypage.attendances.index'),
+                default => route('mypage.index'),
+            };
+        }
 
         // Timeline経由は「データベースとして見る」文脈（誰でも見られる情報が主役）、
         // それ以外（My Stats等）は「自分の参加記録として見る」文脈。
