@@ -328,26 +328,32 @@
     });
 
     // 編集アイコンをクリックすると、パターン名の見出し表示を隠し、
-    // 曲目・パターン名をまとめて編集できるフォームを表示する（もう一度押すと閉じる）。
+    // 曲目・パターン名をまとめて編集できるフォームを表示する。
+    // もう一度（チェックアイコンの状態で）押すと、フォームを閉じるだけでなく実際に保存する
+    // （「保存」ボタンを別途押さなくても、チェックアイコン＝保存の直感的な挙動にするため）。
     document.querySelectorAll('.setlist-pattern-edit-toggle').forEach((btn) => {
         const row = btn.closest('.manage-row');
-        const titleDisplay = row.querySelector('.setlist-pattern-title-display');
-        const titleFallback = row.querySelector('.setlist-pattern-title-fallback');
-        const songCount = row.querySelector('.setlist-pattern-song-count');
         const form = row.querySelector('.setlist-pattern-form');
         const penIcon = btn.querySelector('.fa-pen');
         const checkIcon = btn.querySelector('.fa-check');
 
         btn.addEventListener('click', () => {
-            const willEdit = form.hidden;
-            form.hidden = !willEdit;
-            titleDisplay.hidden = willEdit ? true : !titleDisplay.dataset.title;
-            if (titleFallback) {
-                titleFallback.hidden = willEdit;
+            if (form.hidden) {
+                const titleDisplay = row.querySelector('.setlist-pattern-title-display');
+                const titleFallback = row.querySelector('.setlist-pattern-title-fallback');
+                const songCount = row.querySelector('.setlist-pattern-song-count');
+
+                form.hidden = false;
+                titleDisplay.hidden = true;
+                if (titleFallback) {
+                    titleFallback.hidden = true;
+                }
+                songCount.hidden = true;
+                penIcon.hidden = true;
+                checkIcon.hidden = false;
+            } else {
+                form.requestSubmit();
             }
-            songCount.hidden = willEdit;
-            penIcon.hidden = willEdit;
-            checkIcon.hidden = !willEdit;
         });
     });
 
