@@ -521,10 +521,7 @@ class AttendanceController extends Controller
                     if ($title === '') {
                         continue;
                     }
-                    $song = UserSong::firstOrCreate(
-                        ['user_artist_id' => $userArtist->id, 'title' => $title],
-                        ['sort_order' => (UserSong::where('user_artist_id', $userArtist->id)->max('sort_order') ?? -1) + 1]
-                    );
+                    $song = UserSong::firstOrCreateByTitle($userArtist->id, $title);
                     $items[] = ['song' => (string) $song->id];
                 }
                 return $items;

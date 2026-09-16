@@ -194,10 +194,7 @@ class ManageController extends Controller
             if ($title === '') {
                 continue;
             }
-            $song = UserSong::firstOrCreate(
-                ['user_artist_id' => $artistId, 'title' => $title],
-                ['sort_order' => (UserSong::where('user_artist_id', $artistId)->max('sort_order') ?? -1) + 1]
-            );
+            $song = UserSong::firstOrCreateByTitle((int) $artistId, $title);
             $items[] = ['song' => (string) $song->id];
         }
         return $items;
@@ -326,16 +323,20 @@ class ManageController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        $nextSortOrder = (UserSong::where('user_artist_id', $artistId)->max('sort_order') ?? -1) + 1;
+        $title = $request->input('title');
+        $duplicate = UserSong::where('user_artist_id', $artistId)
+            ->whereRaw('LOWER(title) = LOWER(?)', [$title])
+            ->exists();
 
-        $song = UserSong::firstOrCreate(
-            ['user_artist_id' => $artistId, 'title' => $request->input('title')],
-            ['sort_order' => $nextSortOrder]
-        );
-
-        if (!$song->wasRecentlyCreated) {
+        if ($duplicate) {
             return back()->withErrors(['title' => 'この曲名は既に登録されています。'])->withInput();
         }
+
+        $song = UserSong::create([
+            'user_artist_id' => $artistId,
+            'title' => $title,
+            'sort_order' => (UserSong::where('user_artist_id', $artistId)->max('sort_order') ?? -1) + 1,
+        ]);
 
         return redirect()->route('mypage.manage.songs', $artistId)->with('success', '曲を追加しました。');
     }

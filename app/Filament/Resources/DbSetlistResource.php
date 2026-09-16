@@ -68,6 +68,13 @@ class DbSetlistResource extends Resource
                             ->native(false)
                             ->required(),
 
+                        Forms\Components\TextInput::make('row')
+                            ->label('段')
+                            ->numeric()
+                            ->default(1)
+                            ->minValue(1)
+                            ->required(),
+
                         Forms\Components\TextInput::make('order_no')
                             ->label('パターン番号')
                             ->numeric()
@@ -81,13 +88,6 @@ class DbSetlistResource extends Resource
                             ->validationMessages([
                                 'unique' => 'この段ではすでに使われているパターン番号です。',
                             ]),
-
-                        Forms\Components\TextInput::make('row')
-                            ->label('段')
-                            ->numeric()
-                            ->default(1)
-                            ->minValue(1)
-                            ->required(),
 
                         Forms\Components\Textarea::make('subtitle')
                             ->label('タイトル（日付や説明）')
@@ -122,7 +122,7 @@ class DbSetlistResource extends Resource
                                         return \App\Models\DbSong::when(
                                             $get('../../_artist_id'),
                                             fn($q, $id) => $q->whereIn('artist_id', static::songArtistIds($id))
-                                        )->where('title', 'like', "%{$search}%")
+                                        )->whereRaw('LOWER(title) LIKE LOWER(?)', ["%{$search}%"])
                                             ->orderBy('title')
                                             ->limit(50)
                                             ->pluck('title', 'id');
@@ -239,7 +239,7 @@ class DbSetlistResource extends Resource
                                         return \App\Models\DbSong::when(
                                             $get('../../_artist_id'),
                                             fn($q, $id) => $q->whereIn('artist_id', static::songArtistIds($id))
-                                        )->where('title', 'like', "%{$search}%")
+                                        )->whereRaw('LOWER(title) LIKE LOWER(?)', ["%{$search}%"])
                                             ->orderBy('title')
                                             ->limit(50)
                                             ->pluck('title', 'id');

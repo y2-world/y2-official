@@ -46,16 +46,20 @@ class ManageDbSongController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        $nextSortOrder = (DbSong::where('artist_id', $artist->id)->max('sort_order') ?? -1) + 1;
+        $title = $request->input('title');
+        $duplicate = DbSong::where('artist_id', $artist->id)
+            ->whereRaw('LOWER(title) = LOWER(?)', [$title])
+            ->exists();
 
-        $song = DbSong::firstOrCreate(
-            ['artist_id' => $artist->id, 'title' => $request->input('title')],
-            ['sort_order' => $nextSortOrder]
-        );
-
-        if (!$song->wasRecentlyCreated) {
+        if ($duplicate) {
             return back()->withErrors(['title' => 'この曲名は既に登録されています。'])->withInput();
         }
+
+        $song = DbSong::create([
+            'artist_id' => $artist->id,
+            'title' => $title,
+            'sort_order' => (DbSong::where('artist_id', $artist->id)->max('sort_order') ?? -1) + 1,
+        ]);
 
         return redirect()->route('mypage.manage.database_songs', $artistId)->with('success', '曲を追加しました。');
     }
