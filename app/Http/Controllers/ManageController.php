@@ -519,7 +519,8 @@ class ManageController extends Controller
             'external_user_id' => $userId,
             'order_no' => $nextOrderNo,
             'row' => $original->row,
-            'subtitle' => $original->subtitle,
+            // パターン名は複製元と同じままだと区別がつきにくいため、複製時は空にする（曲目のみコピー）。
+            'subtitle' => null,
             'setlist' => $original->setlist,
             'encore' => $original->encore,
         ]);

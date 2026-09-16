@@ -102,6 +102,7 @@
                             <div class="setlist-pattern-actions">
                                 <button type="button" class="manage-edit-btn setlist-pattern-edit-toggle" title="編集" style="font-size: 0.75rem;">
                                     <i class="fa-solid fa-pen"></i>
+                                    <i class="fa-solid fa-chevron-down" hidden></i>
                                 </button>
                                 <button type="button" class="manage-edit-btn setlist-pattern-duplicate" data-duplicate-url="{{ route('mypage.manage.setlists.duplicate', [$artist->id, $concert->id, $setlist->id]) }}" title="複製">
                                     <i class="fa-solid fa-copy"></i>
@@ -335,7 +336,8 @@
     });
 
     // 鉛筆アイコンをクリックすると、パターン名の見出し表示を隠し、
-    // 曲目・パターン名をまとめて編集できるフォームを表示する。
+    // 曲目・パターン名をまとめて編集できるフォームを表示する（アイコンは鉛筆→下矢印に変わり、
+    // 開いている状態であることを示す）。
     // もう一度押すと、保存はせずフォームを閉じてキャンセルする
     // （実際の保存はフォーム下部の「保存」ボタンでのみ行う）。
     document.querySelectorAll('.setlist-pattern-edit-toggle').forEach((btn) => {
@@ -345,6 +347,8 @@
         const songCount = row.querySelector('.setlist-pattern-song-count');
         const form = row.querySelector('.setlist-pattern-form');
         const titleInput = form.querySelector('.setlist-pattern-title-input');
+        const penIcon = btn.querySelector('.fa-pen');
+        const chevronIcon = btn.querySelector('.fa-chevron-down');
 
         btn.addEventListener('click', () => {
             const willEdit = form.hidden;
@@ -354,6 +358,8 @@
                 titleFallback.hidden = willEdit;
             }
             songCount.hidden = willEdit;
+            penIcon.hidden = willEdit;
+            chevronIcon.hidden = !willEdit;
 
             // 閉じるとき（キャンセル）は、パターン名の未保存な変更を編集前の値に戻す
             // （曲目の追加・削除の取り消しは対象外。曲目を編集した場合は保存するか
