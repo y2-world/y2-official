@@ -8,8 +8,8 @@
                 ['label' => 'My Page', 'url' => route('mypage.index')],
                 ['label' => $artist->name],
             ]])
-            <h1 class="database-title" style="text-align: center;">{{ $artist->name }}</h1>
-            <p class="database-subtitle" style="text-align: center;">すべてのツアー・ライブ情報</p>
+            <h1 class="database-title" style="text-align: center;">Live</h1>
+            <p class="database-subtitle" style="text-align: center;">{{ $artist->name }} — すべてのツアー・ライブ情報</p>
         </div>
     </div>
 

@@ -20,6 +20,7 @@
                         @if ($artist->kana)
                             <p class="card-description">{{ $artist->kana }}</p>
                         @endif
+                        <p class="card-description">{{ $artist->songs_count }}曲 / {{ $artist->tours_count }}ツアー</p>
                         <div class="card-links">
                             <a href="{{ route('database.live', $artist->id) }}" class="database-link">
                                 <span>Live</span>
