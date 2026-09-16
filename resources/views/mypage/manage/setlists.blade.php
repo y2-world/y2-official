@@ -99,16 +99,17 @@
                                 @endphp
                                 <span class="setlist-pattern-song-count" style="color: #999; font-size: 0.85rem; display: block;">{{ $songCount }}曲</span>
                             </span>
-                            <button type="button" class="manage-edit-btn setlist-pattern-edit-toggle" title="編集">
-                                <i class="fa-solid fa-pen"></i>
-                                <i class="fa-solid fa-check" hidden></i>
-                            </button>
-                            <button type="button" class="manage-edit-btn setlist-pattern-duplicate" data-duplicate-url="{{ route('mypage.manage.setlists.duplicate', [$artist->id, $concert->id, $setlist->id]) }}" title="複製">
-                                <i class="fa-solid fa-copy"></i>
-                            </button>
-                            <button type="button" class="manage-delete-btn setlist-pattern-delete" data-delete-url="{{ route('mypage.manage.setlists.destroy', [$artist->id, $concert->id, $setlist->id]) }}" title="削除">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
+                            <div class="setlist-pattern-actions">
+                                <button type="button" class="manage-edit-btn setlist-pattern-edit-toggle" title="編集" style="font-size: 0.75rem;">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <button type="button" class="manage-edit-btn setlist-pattern-duplicate" data-duplicate-url="{{ route('mypage.manage.setlists.duplicate', [$artist->id, $concert->id, $setlist->id]) }}" title="複製">
+                                    <i class="fa-solid fa-copy"></i>
+                                </button>
+                                <button type="button" class="manage-delete-btn setlist-pattern-delete" data-delete-url="{{ route('mypage.manage.setlists.destroy', [$artist->id, $concert->id, $setlist->id]) }}" title="削除">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
                         </div>
 
                         <form method="POST" action="{{ route('mypage.manage.setlists.update', [$artist->id, $concert->id, $setlist->id]) }}" class="setlist-pattern-form" hidden style="margin-top: 16px;">
@@ -213,6 +214,12 @@
         display: flex;
         align-items: center;
         gap: 12px;
+    }
+    .setlist-pattern-actions {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        flex-shrink: 0;
     }
     .setlist-song-row {
         position: relative;
@@ -327,32 +334,32 @@
         }
     });
 
-    // 編集アイコンをクリックすると、パターン名の見出し表示を隠し、
+    // 鉛筆アイコンをクリックすると、パターン名の見出し表示を隠し、
     // 曲目・パターン名をまとめて編集できるフォームを表示する。
-    // もう一度（チェックアイコンの状態で）押すと、フォームを閉じるだけでなく実際に保存する
-    // （「保存」ボタンを別途押さなくても、チェックアイコン＝保存の直感的な挙動にするため）。
+    // もう一度押すと、保存はせずフォームを閉じてキャンセルする
+    // （実際の保存はフォーム下部の「保存」ボタンでのみ行う）。
     document.querySelectorAll('.setlist-pattern-edit-toggle').forEach((btn) => {
         const row = btn.closest('.manage-row');
+        const titleDisplay = row.querySelector('.setlist-pattern-title-display');
+        const titleFallback = row.querySelector('.setlist-pattern-title-fallback');
+        const songCount = row.querySelector('.setlist-pattern-song-count');
         const form = row.querySelector('.setlist-pattern-form');
-        const penIcon = btn.querySelector('.fa-pen');
-        const checkIcon = btn.querySelector('.fa-check');
+        const titleInput = form.querySelector('.setlist-pattern-title-input');
 
         btn.addEventListener('click', () => {
-            if (form.hidden) {
-                const titleDisplay = row.querySelector('.setlist-pattern-title-display');
-                const titleFallback = row.querySelector('.setlist-pattern-title-fallback');
-                const songCount = row.querySelector('.setlist-pattern-song-count');
+            const willEdit = form.hidden;
+            form.hidden = !willEdit;
+            titleDisplay.hidden = willEdit ? true : !titleDisplay.dataset.title;
+            if (titleFallback) {
+                titleFallback.hidden = willEdit;
+            }
+            songCount.hidden = willEdit;
 
-                form.hidden = false;
-                titleDisplay.hidden = true;
-                if (titleFallback) {
-                    titleFallback.hidden = true;
-                }
-                songCount.hidden = true;
-                penIcon.hidden = true;
-                checkIcon.hidden = false;
-            } else {
-                form.requestSubmit();
+            // 閉じるとき（キャンセル）は、パターン名の未保存な変更を編集前の値に戻す
+            // （曲目の追加・削除の取り消しは対象外。曲目を編集した場合は保存するか
+            // ページを再読み込みしてリセットしてほしい）。
+            if (!willEdit) {
+                titleInput.value = titleDisplay.dataset.title;
             }
         });
     });
