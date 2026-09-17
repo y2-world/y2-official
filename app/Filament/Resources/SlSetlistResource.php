@@ -905,9 +905,15 @@ class SlSetlistResource extends Resource
                         // 同じツアー（artist_id + title）の他の公演日も含めて
                         // 「コピー済み」にする。同じツアーへ複数回行った場合でも
                         // ツアー自体は1回コピーすれば十分なため。
+                        // タイトルの完全一致ではなく正規化した上での比較にするのは、
+                        // スマートクォート("")と直引用符("")のような表記ゆれがあると
+                        // 完全一致では同一ツアーの別公演を見つけられず、片方だけ
+                        // コピー済みになったままボタンが消えない事故が起きるため。
+                        $normalizedTitle = static::normalizeTourTitle($record->title);
                         SlSetlist::where('artist_id', $record->artist_id)
-                            ->where('title', $record->title)
-                            ->update(['db_concert_id' => $dbSetlist->tour_id]);
+                            ->get(['id', 'title'])
+                            ->filter(fn (SlSetlist $s) => static::normalizeTourTitle($s->title) === $normalizedTitle)
+                            ->each(fn (SlSetlist $s) => $s->update(['db_concert_id' => $dbSetlist->tour_id]));
 
                         Notification::make()
                             ->success()
@@ -942,6 +948,18 @@ class SlSetlistResource extends Resource
             'create' => Pages\CreateSlSetlist::route('/create'),
             'edit' => Pages\EditSlSetlist::route('/{record}/edit'),
         ];
+    }
+
+    // 同じツアーかどうかを判定するためのタイトル正規化。SongTitleNormalizer（曲名専用）とは
+    // 別に用意する。スマートクォート("")と直引用符("")、波ダッシュ・全角チルダ、
+    // 空白の有無といった表記ゆれを吸収し、db_concert_idの一括紐付け判定にのみ使う。
+    private static function normalizeTourTitle(string $title): string
+    {
+        $title = mb_convert_kana($title, 'as');
+        $title = str_replace(["\u{201C}", "\u{201D}", "\u{2018}", "\u{2019}", "'"], '"', $title);
+        $title = preg_replace('/[\x{301C}\x{FF5E}~]/u', '', $title);
+        $title = preg_replace('/\s+/u', '', $title);
+        return mb_strtolower($title);
     }
 
     // SlSetlist（公開セトリ投稿）1件を、新しいDbConcert（database側のツアー・ライブ）+
