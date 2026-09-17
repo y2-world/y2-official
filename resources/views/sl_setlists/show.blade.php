@@ -100,7 +100,7 @@
                             $parts = splitAnnotation($songTitle);
                             $main = $parts['main'];
                             $annotation = $parts['annotation'];
-                            $keyword = $main;
+                            $keyword = !empty($data['alternative_title']) ? $data['alternative_title'] : $main;
 
                             // 共演者・別名義アーティストがある場合は曲名の後に追加
                             $featuringType = $data['featuring_type'] ?? 'guest';
@@ -112,9 +112,6 @@
                                 $featuring = '';
                             }
 
-                            // バージョン違いがある場合は共演者の後に追加
-                            $version = !empty($data['version']) ? ' <span style="color:#999;font-size:0.75em;">' . $data['version'] . '</span>' : '';
-
                             $isMedley = !empty($data['medley']) && $data['medley'] == 1;
 
                             if ($isMedley) {
@@ -125,9 +122,6 @@
                                 }
                                 if (!empty($featuring)) {
                                     echo $featuring;
-                                }
-                                if (!empty($version)) {
-                                    echo $version;
                                 }
                                 if (!empty($annotation)) {
                                     echo ' ' . $annotation;
@@ -143,9 +137,6 @@
                                 }
                                 if (!empty($featuring)) {
                                     echo $featuring;
-                                }
-                                if (!empty($version)) {
-                                    echo $version;
                                 }
                                 if (!empty($annotation)) {
                                     echo ' ' . $annotation;
@@ -199,7 +190,7 @@
                             $parts = splitAnnotation($songTitle);
                             $main = $parts['main'];
                             $annotation = $parts['annotation'];
-                            $keyword = $main;
+                            $keyword = !empty($data['alternative_title']) ? $data['alternative_title'] : $main;
 
                             // 共演者・別名義アーティストがある場合は曲名の後に追加
                             $featuringType = $data['featuring_type'] ?? 'guest';
@@ -211,9 +202,6 @@
                                 $featuring = '';
                             }
 
-                            // バージョン違いがある場合は共演者の後に追加
-                            $version = !empty($data['version']) ? ' <span style="color:#999;font-size:0.75em;">' . $data['version'] . '</span>' : '';
-
                             $isMedley = !empty($data['medley']) && $data['medley'] == 1;
 
                             if ($isMedley) {
@@ -224,9 +212,6 @@
                                 }
                                 if (!empty($featuring)) {
                                     echo $featuring;
-                                }
-                                if (!empty($version)) {
-                                    echo $version;
                                 }
                                 if (!empty($annotation)) {
                                     echo ' ' . $annotation;
@@ -242,9 +227,6 @@
                                 }
                                 if (!empty($featuring)) {
                                     echo $featuring;
-                                }
-                                if (!empty($version)) {
-                                    echo $version;
                                 }
                                 if (!empty($annotation)) {
                                     echo ' ' . $annotation;
@@ -318,22 +300,21 @@
                                             $url = $sm ? url('/setlists/songs/' . $sm->id) : '#';
                                         }
                                         $parts = splitAnnotation($title);
-                                        $keyword = $parts['main'];
+                                        $keyword = !empty($song['alternative_title']) ? $song['alternative_title'] : $parts['main'];
                                         $annotation = $parts['annotation'];
                                         $songFeaturingType = $song['featuring_type'] ?? 'guest';
                                         $feat = !empty($song['featuring'])
                                             ? ' <span style="color:#999;font-size:0.75em;">' . ($songFeaturingType === 'artist' ? '/ ' : '') . htmlspecialchars($song['featuring'], ENT_COMPAT, 'UTF-8') . '</span>'
                                             : '';
-                                        $ver = !empty($song['version']) ? ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($song['version'], ENT_COMPAT, 'UTF-8') . '</span>' : '';
                                         $isMedley = !empty($song['medley']) && $song['medley'] == 1;
                                         if ($isMedley) {
                                             echo '- ';
                                             echo ($url !== '#') ? '<a href="' . $url . '">' . htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8') . '</a>' : htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8');
-                                            echo $feat . $ver . (!empty($annotation) ? ' ' . $annotation : '') . '<br>';
+                                            echo $feat . (!empty($annotation) ? ' ' . $annotation : '') . '<br>';
                                         } else {
                                             echo '<li>';
                                             echo ($url !== '#') ? '<a href="' . $url . '">' . htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8') . '</a>' : htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8');
-                                            echo $feat . $ver . (!empty($annotation) ? ' ' . $annotation : '') . '</li>';
+                                            echo $feat . (!empty($annotation) ? ' ' . $annotation : '') . '</li>';
                                         }
                                     }
                                     echo '</ol></div>';
@@ -357,7 +338,7 @@
                                         $url = $sm ? url('/setlists/songs/' . $sm->id) : '#';
                                     }
                                     $parts = splitAnnotation($title);
-                                    $keyword = $parts['main'];
+                                    $keyword = !empty($data['alternative_title']) ? $data['alternative_title'] : $parts['main'];
                                     $annotation = $parts['annotation'];
                                     $isMedley = !empty($data['medley']) && $data['medley'] == 1;
                                     $artistDisplay = '';

@@ -157,6 +157,12 @@ class DbSetlistResource extends Resource
                                             ->inline(false)
                                             ->live(),
 
+                                        Forms\Components\Toggle::make('medley')
+                                            ->label('メドレー')
+                                            ->default(false)
+                                            ->inline(false)
+                                            ->live(),
+
                                         Forms\Components\TextInput::make('daily_note')
                                             ->label('日替わり説明')
                                             ->placeholder('例: 9.30')
@@ -197,11 +203,11 @@ class DbSetlistResource extends Resource
 
                                 $number = 0;
                                 foreach ($items as $item) {
-                                    $isDaily = !empty($item['is_daily']);
+                                    $isSkipped = !empty($item['is_daily']) || !empty($item['medley']);
                                     $uuid = $item['_uuid'] ?? null;
 
                                     if ($uuid === $currentUuid) {
-                                        if ($isDaily) {
+                                        if ($isSkipped) {
                                             return '';
                                         } else {
                                             $number++;
@@ -209,7 +215,7 @@ class DbSetlistResource extends Resource
                                         }
                                     }
 
-                                    if (!$isDaily) {
+                                    if (!$isSkipped) {
                                         $number++;
                                     }
                                 }
@@ -279,6 +285,12 @@ class DbSetlistResource extends Resource
                                             ->inline(false)
                                             ->live(),
 
+                                        Forms\Components\Toggle::make('medley')
+                                            ->label('メドレー')
+                                            ->default(false)
+                                            ->inline(false)
+                                            ->live(),
+
                                         Forms\Components\TextInput::make('daily_note')
                                             ->label('日替わり説明')
                                             ->placeholder('例: 9.30')
@@ -314,7 +326,7 @@ class DbSetlistResource extends Resource
                                 $setlistItems = $get('setlist') ?? [];
                                 $setlistCount = 0;
                                 foreach ($setlistItems as $item) {
-                                    if (empty($item['is_daily'])) {
+                                    if (empty($item['is_daily']) && empty($item['medley'])) {
                                         $setlistCount++;
                                     }
                                 }
@@ -327,11 +339,11 @@ class DbSetlistResource extends Resource
 
                                 $number = $setlistCount;
                                 foreach ($items as $item) {
-                                    $isDaily = !empty($item['is_daily']);
+                                    $isSkipped = !empty($item['is_daily']) || !empty($item['medley']);
                                     $uuid = $item['_uuid'] ?? null;
 
                                     if ($uuid === $currentUuid) {
-                                        if ($isDaily) {
+                                        if ($isSkipped) {
                                             return '';
                                         } else {
                                             $number++;
@@ -339,7 +351,7 @@ class DbSetlistResource extends Resource
                                         }
                                     }
 
-                                    if (!$isDaily) {
+                                    if (!$isSkipped) {
                                         $number++;
                                     }
                                 }

@@ -62,29 +62,32 @@
                             @foreach ($section as $data)
                                 @php
                                     $isDaily = isset($data['is_daily']) && $data['is_daily'];
+                                    $isMedley = isset($data['medley']) && $data['medley'];
+                                    $isInline = $isDaily || $isMedley;
                                     $dailyNote = isset($data['daily_note']) ? $data['daily_note'] : '';
                                     $featuringType = $data['featuring_type'] ?? 'guest';
                                     $featuring = isset($data['featuring']) ? $data['featuring'] : '';
                                     $featuringDisplay = $featuring !== '' && $featuringType === 'artist' ? '/ ' . $featuring : $featuring;
                                     $alternativeTitle = isset($data['alternative_title']) ? $data['alternative_title'] : '';
-                                    $isNumericSong = is_numeric($data['song'] ?? '');
+                                    // is_numericだけでは、"20180908"のような数字だけの曲名（DbSongとして
+                                    // 登録せず生文字列のまま保存された曲）を誤ってDbSong.idの参照と
+                                    // 解釈してしまい、該当id不在でUnknown Songになる。数字かどうかではなく、
+                                    // 実際にそのidのDbSongが存在するかどうかで判定する。
+                                    $songModel = is_numeric($data['song'] ?? '') ? $songs->find($data['song']) : null;
                                     $title = '';
                                     $link = null;
                                     $isUnique = $commonSongs !== null && !in_array($data['song'] ?? '', $commonSongs);
 
-                                    if ($isNumericSong) {
-                                        $songModel = $songs->find($data['song']);
-                                        $title = !empty($alternativeTitle) ? $alternativeTitle : ($songModel->title ?? 'Unknown Song');
-                                        $link = $songModel
-                                            ? ($songLinkResolver ? $songLinkResolver($songModel) : url('/database/songs', $data['song']))
-                                            : null;
+                                    if ($songModel) {
+                                        $title = !empty($alternativeTitle) ? $alternativeTitle : $songModel->title;
+                                        $link = $songLinkResolver ? $songLinkResolver($songModel) : url('/database/songs', $data['song']);
                                     } else {
                                         $title = !empty($alternativeTitle) ? $alternativeTitle : $data['song'];
                                         $link = null;
                                     }
                                 @endphp
 
-                                @if ($isDaily)
+                                @if ($isInline)
                                     -
                                     @if ($link)
                                         <a href="{{ $link }}" @if($isUnique) style="font-weight:bold;" @endif>{{ $title }}</a>

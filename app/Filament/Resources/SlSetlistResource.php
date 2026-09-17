@@ -198,9 +198,9 @@ class SlSetlistResource extends Resource
                                             ->label('共演者・アーティスト')
                                             ->placeholder('例: ゲスト名')
                                             ->maxLength(255),
-                                        Forms\Components\TextInput::make('version')
-                                            ->label('バージョン')
-                                            ->placeholder('例: (Acoustic Version)')
+                                        Forms\Components\TextInput::make('alternative_title')
+                                            ->label('別表記')
+                                            ->placeholder('例: I\'LL BE')
                                             ->maxLength(255),
                                     ])
                                     ->collapsible() // ← 折りたたみ可能
@@ -315,9 +315,9 @@ class SlSetlistResource extends Resource
                                             ->label('共演者・アーティスト')
                                             ->placeholder('例: ゲスト名')
                                             ->maxLength(255),
-                                        Forms\Components\TextInput::make('version')
-                                            ->label('バージョン')
-                                            ->placeholder('例: (Acoustic Version)')
+                                        Forms\Components\TextInput::make('alternative_title')
+                                            ->label('別表記')
+                                            ->placeholder('例: I\'LL BE')
                                             ->maxLength(255),
                                     ])
                                     ->collapsible() // ← 折りたたみ可能
@@ -465,8 +465,8 @@ class SlSetlistResource extends Resource
                                                 ->maxLength(255)
                                                 ->dehydrated(),
                                         ]),
-                                        Forms\Components\TextInput::make('version')
-                                            ->label('バージョン')
+                                        Forms\Components\TextInput::make('alternative_title')
+                                            ->label('別表記')
                                             ->maxLength(255)
                                             ->dehydrated(),
                                     ])
@@ -535,8 +535,8 @@ class SlSetlistResource extends Resource
                                             ->default('guest')
                                             ->inline()
                                             ->dehydrated(),
-                                        Forms\Components\TextInput::make('version')
-                                            ->label('バージョン')
+                                        Forms\Components\TextInput::make('alternative_title')
+                                            ->label('別表記')
                                             ->maxLength(255)
                                             ->dehydrated(),
                                     ])
@@ -662,8 +662,8 @@ class SlSetlistResource extends Resource
                                                 ->maxLength(255)
                                                 ->dehydrated(),
                                         ]),
-                                        Forms\Components\TextInput::make('version')
-                                            ->label('バージョン')
+                                        Forms\Components\TextInput::make('alternative_title')
+                                            ->label('別表記')
                                             ->maxLength(255)
                                             ->dehydrated(),
                                     ])
@@ -731,8 +731,8 @@ class SlSetlistResource extends Resource
                                             ->default('guest')
                                             ->inline()
                                             ->dehydrated(),
-                                        Forms\Components\TextInput::make('version')
-                                            ->label('バージョン')
+                                        Forms\Components\TextInput::make('alternative_title')
+                                            ->label('別表記')
                                             ->maxLength(255)
                                             ->dehydrated(),
                                     ])
@@ -1002,7 +1002,19 @@ class SlSetlistResource extends Resource
                     $dbSongId = $dbSong->id;
                 }
 
-                $result[] = ['song' => (string) $dbSongId];
+                $newItem = ['song' => (string) $dbSongId];
+                if (!empty($item['medley'])) {
+                    $newItem['medley'] = true;
+                }
+                if (!empty($item['featuring'])) {
+                    $newItem['featuring'] = $item['featuring'];
+                    $newItem['featuring_type'] = $item['featuring_type'] ?? 'guest';
+                }
+                if (!empty($item['alternative_title'])) {
+                    $newItem['alternative_title'] = $item['alternative_title'];
+                }
+
+                $result[] = $newItem;
             }
             return $result;
         };
