@@ -165,7 +165,8 @@ class DbConcertResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('artist_id')
                     ->label('アーティスト')
-                    ->options(fn() => \App\Support\JapaneseNameSorter::sortOptions(\App\Models\Artist::pluck('name', 'id')->all())),
+                    ->options(fn() => \App\Support\JapaneseNameSorter::sortOptions(\App\Models\Artist::pluck('name', 'id')->all()))
+                    ->searchable(),
                 Tables\Filters\SelectFilter::make('type')
                     ->label('タイプ')
                     ->options([

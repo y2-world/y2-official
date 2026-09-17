@@ -164,7 +164,8 @@ class DbSongResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('artist_id')
                     ->label('アーティスト')
-                    ->options(fn() => \App\Support\JapaneseNameSorter::sortOptions(\App\Models\Artist::pluck('name', 'id')->all())),
+                    ->options(fn() => \App\Support\JapaneseNameSorter::sortOptions(\App\Models\Artist::pluck('name', 'id')->all()))
+                    ->searchable(),
                 Tables\Filters\TernaryFilter::make('sl_songs_linked')
                     ->label('セットリスト楽曲紐付け状態')
                     ->nullable()
