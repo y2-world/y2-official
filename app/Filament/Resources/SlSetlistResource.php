@@ -93,6 +93,20 @@ class SlSetlistResource extends Resource
                                 return $data['venue'];
                             }),
 
+                        Forms\Components\Select::make('db_concert_id')
+                            ->label('database側のツアーとの紐付け')
+                            ->helperText('同じツアーの別公演がすでに「DBにコピー」済みの場合、ここで紐付けると重複コピーを防げます')
+                            ->options(function (Forms\Get $get) {
+                                $artistId = $get('artist_id');
+                                if (!$artistId) return [];
+                                return DbConcert::where('artist_id', $artistId)->orderByDesc('date1')->pluck('title', 'id');
+                            })
+                            ->searchable()
+                            ->preload()
+                            ->native(false)
+                            ->nullable()
+                            ->columnSpanFull(),
+
                     ])
                     ->columns(2),
 
@@ -784,6 +798,12 @@ class SlSetlistResource extends Resource
                     ->label('年')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\IconColumn::make('db_concert_id')
+                    ->label('DB紐付け')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check-circle')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->getStateUsing(fn (SlSetlist $record) => $record->db_concert_id !== null),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('作成日')
                     ->dateTime('Y-m-d H:i')
@@ -810,13 +830,22 @@ class SlSetlistResource extends Resource
                             ->orderBy('year', 'desc')
                             ->pluck('year', 'year');
                     }),
+                Tables\Filters\TernaryFilter::make('db_concert_id')
+                    ->label('DB紐付け状態')
+                    ->nullable()
+                    ->trueLabel('紐付け済み')
+                    ->falseLabel('未紐付け')
+                    ->queries(
+                        true: fn ($query) => $query->whereNotNull('db_concert_id'),
+                        false: fn ($query) => $query->whereNull('db_concert_id'),
+                    ),
             ])
             ->actions([
                 Tables\Actions\Action::make('copyToDatabase')
                     ->label('DBにコピー')
                     ->icon('heroicon-o-document-duplicate')
                     ->color('gray')
-                    ->visible(fn (SlSetlist $record) => !$record->fes && (!empty($record->setlist) || !empty($record->encore)))
+                    ->visible(fn (SlSetlist $record) => !$record->fes && !$record->db_concert_id && (!empty($record->setlist) || !empty($record->encore)))
                     ->modalHeading('データベースにコピー')
                     ->modalDescription('このセットリストを新しいツアー・ライブとしてデータベース（database側）にコピーします。曲目はSlSong側の紐付け（db_song_id）があればそれを使い、無ければ同名のDbSongを新規作成します。')
                     ->modalSubmitActionLabel('コピーする')
@@ -873,6 +902,13 @@ class SlSetlistResource extends Resource
                     ])
                     ->action(function (array $data, SlSetlist $record) {
                         $dbSetlist = static::copySlSetlistToDatabase($record, $data);
+
+                        // 同じツアー（artist_id + title）の他の公演日も含めて
+                        // 「コピー済み」にする。同じツアーへ複数回行った場合でも
+                        // ツアー自体は1回コピーすれば十分なため。
+                        SlSetlist::where('artist_id', $record->artist_id)
+                            ->where('title', $record->title)
+                            ->update(['db_concert_id' => $dbSetlist->tour_id]);
 
                         Notification::make()
                             ->success()

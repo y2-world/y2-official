@@ -23,6 +23,7 @@ class SlSetlist extends Model
 
     protected $fillable = [
         'artist_id',
+        'db_concert_id',
         'title',
         'date',
         'year',
@@ -113,6 +114,11 @@ class SlSetlist extends Model
     public function artist()
     {
         return $this->belongsTo(Artist::class);
+    }
+
+    public function dbConcert()
+    {
+        return $this->belongsTo(DbConcert::class);
     }
 
     // dateが設定されたら自動的にyearも設定
