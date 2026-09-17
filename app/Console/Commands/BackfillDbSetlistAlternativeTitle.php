@@ -85,11 +85,15 @@ class BackfillDbSetlistAlternativeTitle extends Command
                 $setlist = $dbSetlist->setlist ?? [];
                 $encore = $dbSetlist->encore ?? [];
 
+                $changesForLog = [];
+
                 foreach ([&$setlist, &$encore] as &$items) {
                     foreach ($items as &$item) {
                         $songId = (string) ($item['song'] ?? '');
                         if ($songId !== '' && empty($item['alternative_title']) && isset($dbSongIdByAlt[$songId])) {
+                            $originalTitle = DbSong::find($songId)?->title ?? $songId;
                             $item['alternative_title'] = $dbSongIdByAlt[$songId];
+                            $changesForLog[] = "{$originalTitle} -> {$dbSongIdByAlt[$songId]}";
                             $changed = true;
                             $updatedItems++;
                         }
@@ -100,6 +104,9 @@ class BackfillDbSetlistAlternativeTitle extends Command
 
                 if ($changed) {
                     $this->line("db_setlist #{$dbSetlist->id} (tour #{$dbConcert->id} \"{$dbConcert->title}\")");
+                    foreach ($changesForLog as $c) {
+                        $this->line("  {$c}");
+                    }
                     $updatedSetlists++;
                     if (!$dryRun) {
                         $dbSetlist->setlist = $setlist;
