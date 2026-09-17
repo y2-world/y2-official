@@ -147,9 +147,8 @@ class DbSongResource extends Resource
                     ->searchable(),
                 Tables\Columns\IconColumn::make('sl_songs_linked')
                     ->label('セットリスト楽曲紐付け')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-check-circle')
-                    ->falseIcon('heroicon-o-x-circle')
+                    ->icon(fn (DbSong $record) => $record->slSongs->isNotEmpty() ? 'heroicon-o-check-circle' : null)
+                    ->color('success')
                     ->getStateUsing(fn (DbSong $record) => $record->slSongs->isNotEmpty()),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y.m.d H:i')

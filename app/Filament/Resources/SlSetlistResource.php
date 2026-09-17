@@ -104,6 +104,7 @@ class SlSetlistResource extends Resource
                             ->preload()
                             ->native(false)
                             ->nullable()
+                            ->hidden(fn (Forms\Get $get) => (bool) $get('fes'))
                             ->columnSpanFull(),
 
                     ])
@@ -799,9 +800,8 @@ class SlSetlistResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\IconColumn::make('db_concert_id')
                     ->label('DB紐付け')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-check-circle')
-                    ->falseIcon('heroicon-o-x-circle')
+                    ->icon(fn (SlSetlist $record) => $record->fes ? null : ($record->db_concert_id !== null ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle'))
+                    ->color(fn (SlSetlist $record) => $record->db_concert_id !== null ? 'success' : 'danger')
                     ->getStateUsing(fn (SlSetlist $record) => $record->db_concert_id !== null),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('作成日')
@@ -833,10 +833,10 @@ class SlSetlistResource extends Resource
                     ->label('DB紐付け状態')
                     ->nullable()
                     ->trueLabel('紐付け済み')
-                    ->falseLabel('未紐付け')
+                    ->falseLabel('未紐付け（フェス除く）')
                     ->queries(
                         true: fn ($query) => $query->whereNotNull('db_concert_id'),
-                        false: fn ($query) => $query->whereNull('db_concert_id'),
+                        false: fn ($query) => $query->whereNull('db_concert_id')->where('fes', 0),
                     ),
             ])
             ->actions([
