@@ -95,7 +95,6 @@ class SlSetlistResource extends Resource
 
                         Forms\Components\Select::make('db_concert_id')
                             ->label('database側のツアーとの紐付け')
-                            ->helperText('同じツアーの別公演がすでに「DBにコピー」済みの場合、ここで紐付けると重複コピーを防げます')
                             ->options(function (Forms\Get $get) {
                                 $artistId = $get('artist_id');
                                 if (!$artistId) return [];
