@@ -138,20 +138,21 @@ class SlSetlistResource extends Resource
                                         $songs = \App\Models\SlSong::query()
                                             ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
                                             ->select('sl_songs.id', 'sl_songs.title', 'artists.name as artist_name')
-                                            ->orderBy('sl_songs.title')
                                             ->get();
-                                        
+
                                         // タイトルごとの出現回数をカウント
                                         $titleCounts = $songs->groupBy('title')->map->count();
-                                        
-                                        return $songs->mapWithKeys(function ($song) use ($titleCounts) {
+
+                                        $options = $songs->mapWithKeys(function ($song) use ($titleCounts) {
                                             $label = $song->title;
                                             // 重複している場合のみアーティスト名を追加
                                             if ($titleCounts[$song->title] > 1 && $song->artist_name) {
                                                 $label .= ' - ' . $song->artist_name;
                                             }
                                             return [$song->id => $label];
-                                        });
+                                        })->all();
+
+                                        return \App\Support\JapaneseNameSorter::sortOptions($options);
                                     })
                                     ->searchable()
                                     ->native(false)
@@ -255,20 +256,21 @@ class SlSetlistResource extends Resource
                                         $songs = \App\Models\SlSong::query()
                                             ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
                                             ->select('sl_songs.id', 'sl_songs.title', 'artists.name as artist_name')
-                                            ->orderBy('sl_songs.title')
                                             ->get();
-                                        
+
                                         // タイトルごとの出現回数をカウント
                                         $titleCounts = $songs->groupBy('title')->map->count();
-                                        
-                                        return $songs->mapWithKeys(function ($song) use ($titleCounts) {
+
+                                        $options = $songs->mapWithKeys(function ($song) use ($titleCounts) {
                                             $label = $song->title;
                                             // 重複している場合のみアーティスト名を追加
                                             if ($titleCounts[$song->title] > 1 && $song->artist_name) {
                                                 $label .= ' - ' . $song->artist_name;
                                             }
                                             return [$song->id => $label];
-                                        });
+                                        })->all();
+
+                                        return \App\Support\JapaneseNameSorter::sortOptions($options);
                                     })
                                     ->searchable()
                                     ->native(false)
@@ -418,16 +420,17 @@ class SlSetlistResource extends Resource
                                         $songs = \App\Models\SlSong::query()
                                             ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
                                             ->select('sl_songs.id', 'sl_songs.title', 'artists.name as artist_name')
-                                            ->orderBy('sl_songs.title')
                                             ->get();
                                         $titleCounts = $songs->groupBy('title')->map->count();
-                                        return $songs->mapWithKeys(function ($song) use ($titleCounts) {
+                                        $options = $songs->mapWithKeys(function ($song) use ($titleCounts) {
                                             $label = $song->title;
                                             if ($titleCounts[$song->title] > 1 && $song->artist_name) {
                                                 $label .= ' - ' . $song->artist_name;
                                             }
                                             return [$song->id => $label];
-                                        });
+                                        })->all();
+
+                                        return \App\Support\JapaneseNameSorter::sortOptions($options);
                                     })
                                     ->afterStateHydrated(fn(Forms\Components\Select $component, $state) => $component->state($state !== null ? (int)$state : null))
                                     ->searchable()
@@ -487,16 +490,17 @@ class SlSetlistResource extends Resource
                                                 $songs = \App\Models\SlSong::query()
                                                     ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
                                                     ->select('sl_songs.id', 'sl_songs.title', 'artists.name as artist_name')
-                                                    ->orderBy('sl_songs.title')
                                                     ->get();
                                                 $titleCounts = $songs->groupBy('title')->map->count();
-                                                return $songs->mapWithKeys(function ($song) use ($titleCounts) {
+                                                $options = $songs->mapWithKeys(function ($song) use ($titleCounts) {
                                                     $label = $song->title;
                                                     if ($titleCounts[$song->title] > 1 && $song->artist_name) {
                                                         $label .= ' - ' . $song->artist_name;
                                                     }
                                                     return [$song->id => $label];
-                                                });
+                                                })->all();
+
+                                                return \App\Support\JapaneseNameSorter::sortOptions($options);
                                             })
                                             ->searchable()
                                             ->native(false)
@@ -615,16 +619,17 @@ class SlSetlistResource extends Resource
                                         $songs = \App\Models\SlSong::query()
                                             ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
                                             ->select('sl_songs.id', 'sl_songs.title', 'artists.name as artist_name')
-                                            ->orderBy('sl_songs.title')
                                             ->get();
                                         $titleCounts = $songs->groupBy('title')->map->count();
-                                        return $songs->mapWithKeys(function ($song) use ($titleCounts) {
+                                        $options = $songs->mapWithKeys(function ($song) use ($titleCounts) {
                                             $label = $song->title;
                                             if ($titleCounts[$song->title] > 1 && $song->artist_name) {
                                                 $label .= ' - ' . $song->artist_name;
                                             }
                                             return [$song->id => $label];
-                                        });
+                                        })->all();
+
+                                        return \App\Support\JapaneseNameSorter::sortOptions($options);
                                     })
                                     ->afterStateHydrated(fn(Forms\Components\Select $component, $state) => $component->state($state !== null ? (int)$state : null))
                                     ->searchable()
@@ -683,16 +688,17 @@ class SlSetlistResource extends Resource
                                                 $songs = \App\Models\SlSong::query()
                                                     ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
                                                     ->select('sl_songs.id', 'sl_songs.title', 'artists.name as artist_name')
-                                                    ->orderBy('sl_songs.title')
                                                     ->get();
                                                 $titleCounts = $songs->groupBy('title')->map->count();
-                                                return $songs->mapWithKeys(function ($song) use ($titleCounts) {
+                                                $options = $songs->mapWithKeys(function ($song) use ($titleCounts) {
                                                     $label = $song->title;
                                                     if ($titleCounts[$song->title] > 1 && $song->artist_name) {
                                                         $label .= ' - ' . $song->artist_name;
                                                     }
                                                     return [$song->id => $label];
-                                                });
+                                                })->all();
+
+                                                return \App\Support\JapaneseNameSorter::sortOptions($options);
                                             })
                                             ->searchable()
                                             ->native(false)
