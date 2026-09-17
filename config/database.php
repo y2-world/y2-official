@@ -75,6 +75,9 @@ return [
             'prefix_indexes' => true,
             'schema' => 'public',
             'sslmode' => env('DB_SSLMODE', 'prefer'),
+            'options' => [
+                PDO::ATTR_PERSISTENT => env('DB_PERSISTENT', false),
+            ],
         ],
 
         'sqlsrv' => [
