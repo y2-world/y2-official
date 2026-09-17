@@ -180,7 +180,7 @@ class ManageController extends Controller
             ->orderBy('order_no')
             ->get();
 
-        $songTitles = UserSong::where('user_artist_id', $artistId)->pluck('title', 'id');
+        $songTitles = UserSong::where('user_artist_id', $artistId)->orderBy('sort_order')->pluck('title', 'id');
 
         return view('mypage.manage.setlists', compact('artist', 'concert', 'setlists', 'songTitles'));
     }

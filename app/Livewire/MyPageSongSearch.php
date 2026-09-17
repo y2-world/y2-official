@@ -46,12 +46,14 @@ class MyPageSongSearch extends Component
 
     public function loadInitialSongs()
     {
-        $this->songs = DbSong::with('artist')
+        $songs = DbSong::with('artist')
             ->whereIn('id', $this->heardSongIds())
-            ->orderBy('title')
-            ->limit(10)
-            ->get()
+            ->get();
+
+        $this->songs = \App\Support\JapaneseNameSorter::sortBy($songs, 'title')
+            ->take(10)
             ->map(fn($song) => ['id' => $song->id, 'title' => $song->title, 'artist' => $song->artist?->name])
+            ->values()
             ->toArray();
     }
 
@@ -64,13 +66,15 @@ class MyPageSongSearch extends Component
 
         $escaped = str_replace(['%', '_'], ['\%', '\_'], $this->search);
 
-        $this->songs = DbSong::with('artist')
+        $songs = DbSong::with('artist')
             ->whereIn('id', $this->heardSongIds())
             ->whereRaw('LOWER(title) LIKE LOWER(?)', [$escaped . '%'])
-            ->orderBy('title')
-            ->limit(10)
-            ->get()
+            ->get();
+
+        $this->songs = \App\Support\JapaneseNameSorter::sortBy($songs, 'title')
+            ->take(10)
             ->map(fn($song) => ['id' => $song->id, 'title' => $song->title, 'artist' => $song->artist?->name])
+            ->values()
             ->toArray();
     }
 

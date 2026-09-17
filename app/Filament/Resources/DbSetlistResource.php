@@ -110,22 +110,25 @@ class DbSetlistResource extends Resource
                                 // 曲名（横いっぱい）
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
-                                    ->options(fn(Get $get) => \App\Models\DbSong::when(
-                                        $get('../../_artist_id'),
-                                        fn($q, $id) => $q->whereIn('artist_id', static::songArtistIds($id))
-                                    )->orderBy('title')->pluck('title', 'id'))
+                                    ->options(fn(Get $get) => \App\Support\JapaneseNameSorter::sortOptions(
+                                        \App\Models\DbSong::when(
+                                            $get('../../_artist_id'),
+                                            fn($q, $id) => $q->whereIn('artist_id', static::songArtistIds($id))
+                                        )->pluck('title', 'id')->all()
+                                    ))
                                     ->searchable()
                                     ->native(false)
                                     ->required()
                                     ->allowHtml()
                                     ->getSearchResultsUsing(function (string $search, Get $get) {
-                                        return \App\Models\DbSong::when(
+                                        $options = \App\Models\DbSong::when(
                                             $get('../../_artist_id'),
                                             fn($q, $id) => $q->whereIn('artist_id', static::songArtistIds($id))
                                         )->whereRaw('LOWER(title) LIKE LOWER(?)', ["%{$search}%"])
-                                            ->orderBy('title')
-                                            ->limit(50)
-                                            ->pluck('title', 'id');
+                                            ->pluck('title', 'id')
+                                            ->all();
+
+                                        return array_slice(\App\Support\JapaneseNameSorter::sortOptions($options), 0, 50, true);
                                     })
                                     ->getOptionLabelUsing(function ($value) {
                                         if (is_numeric($value)) {
@@ -227,22 +230,25 @@ class DbSetlistResource extends Resource
                                 // 曲名
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
-                                    ->options(fn(Get $get) => \App\Models\DbSong::when(
-                                        $get('../../_artist_id'),
-                                        fn($q, $id) => $q->whereIn('artist_id', static::songArtistIds($id))
-                                    )->orderBy('title')->pluck('title', 'id'))
+                                    ->options(fn(Get $get) => \App\Support\JapaneseNameSorter::sortOptions(
+                                        \App\Models\DbSong::when(
+                                            $get('../../_artist_id'),
+                                            fn($q, $id) => $q->whereIn('artist_id', static::songArtistIds($id))
+                                        )->pluck('title', 'id')->all()
+                                    ))
                                     ->searchable()
                                     ->native(false)
                                     ->required()
                                     ->allowHtml()
                                     ->getSearchResultsUsing(function (string $search, Get $get) {
-                                        return \App\Models\DbSong::when(
+                                        $options = \App\Models\DbSong::when(
                                             $get('../../_artist_id'),
                                             fn($q, $id) => $q->whereIn('artist_id', static::songArtistIds($id))
                                         )->whereRaw('LOWER(title) LIKE LOWER(?)', ["%{$search}%"])
-                                            ->orderBy('title')
-                                            ->limit(50)
-                                            ->pluck('title', 'id');
+                                            ->pluck('title', 'id')
+                                            ->all();
+
+                                        return array_slice(\App\Support\JapaneseNameSorter::sortOptions($options), 0, 50, true);
                                     })
                                     ->getOptionLabelUsing(function ($value) {
                                         if (is_numeric($value)) {

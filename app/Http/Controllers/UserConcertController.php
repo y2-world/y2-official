@@ -32,7 +32,7 @@ class UserConcertController extends Controller
     {
         $tour = UserConcert::findOrFail($id);
         $artist = $tour->artist;
-        $songs = UserSong::where('user_artist_id', $tour->user_artist_id)->orderBy('id', 'asc')->get();
+        $songs = UserSong::where('user_artist_id', $tour->user_artist_id)->orderBy('sort_order', 'asc')->get();
         $tourSetlists = UserSetlist::where('user_concert_id', $id)->orderBy('row', 'asc')->orderBy('order_no', 'asc')->get();
 
         $previous = UserConcert::where('user_artist_id', $tour->user_artist_id)

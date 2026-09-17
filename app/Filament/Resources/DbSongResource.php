@@ -62,7 +62,9 @@ class DbSongResource extends Resource
                         if (!$artistId) {
                             return [];
                         }
-                        return \App\Models\SlSong::where('artist_id', $artistId)->orderBy('title')->pluck('title', 'id');
+                        return \App\Support\JapaneseNameSorter::sortOptions(
+                            \App\Models\SlSong::where('artist_id', $artistId)->pluck('title', 'id')->all()
+                        );
                     })
                     // 編集画面ではEditRecord::fillFormWithDataAndCallHooksが$record->attributesToArray()を
                     // まるごとLivewireのdataにdata_setするため、default()の分岐（$hydratedDefaultStateがnullの

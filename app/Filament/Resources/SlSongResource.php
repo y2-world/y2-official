@@ -49,7 +49,9 @@ class SlSongResource extends Resource
                     ->options(function (Forms\Get $get) {
                         $artistId = $get('artist_id');
                         if (!$artistId) return [];
-                        return DbSong::where('artist_id', $artistId)->orderBy('title')->pluck('title', 'id');
+                        return \App\Support\JapaneseNameSorter::sortOptions(
+                            DbSong::where('artist_id', $artistId)->pluck('title', 'id')->all()
+                        );
                     })
                     ->searchable()
                     ->preload()

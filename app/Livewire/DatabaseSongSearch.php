@@ -19,11 +19,12 @@ class DatabaseSongSearch extends Component
 
     public function loadInitialSongs()
     {
-        $this->songs = DbSong::when($this->artistId, fn($q) => $q->where('artist_id', $this->artistId))
-            ->orderBy('title')
-            ->limit(10)
-            ->get()
+        $songs = DbSong::when($this->artistId, fn($q) => $q->where('artist_id', $this->artistId))->get();
+
+        $this->songs = \App\Support\JapaneseNameSorter::sortBy($songs, 'title')
+            ->take(10)
             ->map(fn($song) => ['id' => $song->id, 'title' => $song->title])
+            ->values()
             ->toArray();
     }
 
@@ -36,12 +37,14 @@ class DatabaseSongSearch extends Component
 
         $escaped = str_replace(['%', '_'], ['\%', '\_'], $this->search);
 
-        $this->songs = DbSong::when($this->artistId, fn($q) => $q->where('artist_id', $this->artistId))
+        $songs = DbSong::when($this->artistId, fn($q) => $q->where('artist_id', $this->artistId))
             ->whereRaw('LOWER(title) LIKE LOWER(?)', [$escaped . '%'])
-            ->orderBy('title')
-            ->limit(10)
-            ->get()
+            ->get();
+
+        $this->songs = \App\Support\JapaneseNameSorter::sortBy($songs, 'title')
+            ->take(10)
             ->map(fn($song) => ['id' => $song->id, 'title' => $song->title])
+            ->values()
             ->toArray();
     }
 

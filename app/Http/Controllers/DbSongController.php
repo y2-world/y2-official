@@ -176,9 +176,9 @@ class DbSongController extends Controller
             // 空文字列の場合はA-Z順に最初の10件を返す
             if ($query === '') {
                 \Log::info('Query is empty, returning songs in alphabetical order');
-                $songs = DbSong::orderBy('title')
-                    ->limit(10)
-                    ->get()
+                $songs = \App\Support\JapaneseNameSorter::sortBy(DbSong::all(), 'title')
+                    ->take(10)
+                    ->values()
                     ->map(function ($song) {
                         return [
                             'id' => $song->id,
@@ -195,10 +195,12 @@ class DbSongController extends Controller
             \Log::info('Escaped query: "' . $escapedQuery . '"');
             \Log::info('Search pattern: "' . $escapedQuery . '%"');
 
-            $songs = DbSong::whereRaw('LOWER(title) LIKE LOWER(?)', [$escapedQuery . '%'])
-                ->orderBy('title')
-                ->limit(10)
-                ->get()
+            $songs = \App\Support\JapaneseNameSorter::sortBy(
+                DbSong::whereRaw('LOWER(title) LIKE LOWER(?)', [$escapedQuery . '%'])->get(),
+                'title'
+            )
+                ->take(10)
+                ->values()
                 ->map(function ($song) {
                     return [
                         'id' => $song->id,

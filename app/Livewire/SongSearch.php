@@ -27,28 +27,25 @@ class SongSearch extends Component
         if ($this->artistId) {
             $query->where('sl_songs.artist_id', $this->artistId);
 
-            $this->songs = $query
-                ->orderBy('sl_songs.title')
-                ->limit(10)
-                ->get([
-                    'sl_songs.id as id',
-                    'sl_songs.title as title',
-                ])
-                ->toArray();
+            $songs = $query->get([
+                'sl_songs.id as id',
+                'sl_songs.title as title',
+            ]);
         } else {
             // アーティストIDが指定されていない場合は全楽曲をアーティスト名付きで表示
             $query->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id');
 
-            $this->songs = $query
-                ->orderBy('sl_songs.title')
-                ->limit(10)
-                ->get([
-                    'sl_songs.id as id',
-                    'sl_songs.title as title',
-                    'artists.name as artist',
-                ])
-                ->toArray();
+            $songs = $query->get([
+                'sl_songs.id as id',
+                'sl_songs.title as title',
+                'artists.name as artist',
+            ]);
         }
+
+        $this->songs = \App\Support\JapaneseNameSorter::sortBy($songs, 'title')
+            ->take(10)
+            ->values()
+            ->toArray();
     }
 
     public function updatedSearch()
@@ -67,28 +64,25 @@ class SongSearch extends Component
         if ($this->artistId) {
             $query->where('sl_songs.artist_id', $this->artistId);
 
-            $this->songs = $query
-                ->orderBy('sl_songs.title')
-                ->limit(10)
-                ->get([
-                    'sl_songs.id as id',
-                    'sl_songs.title as title',
-                ])
-                ->toArray();
+            $songs = $query->get([
+                'sl_songs.id as id',
+                'sl_songs.title as title',
+            ]);
         } else {
             // アーティストIDが指定されていない場合は全楽曲をアーティスト名付きで表示
             $query->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id');
 
-            $this->songs = $query
-                ->orderBy('sl_songs.title')
-                ->limit(10)
-                ->get([
-                    'sl_songs.id as id',
-                    'sl_songs.title as title',
-                    'artists.name as artist',
-                ])
-                ->toArray();
+            $songs = $query->get([
+                'sl_songs.id as id',
+                'sl_songs.title as title',
+                'artists.name as artist',
+            ]);
         }
+
+        $this->songs = \App\Support\JapaneseNameSorter::sortBy($songs, 'title')
+            ->take(10)
+            ->values()
+            ->toArray();
 
         $this->selectedIndex = -1;
     }
