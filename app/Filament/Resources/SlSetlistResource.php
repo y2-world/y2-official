@@ -40,8 +40,7 @@ class SlSetlistResource extends Resource
                             ->relationship('artist', 'name')
                             ->searchable()
                             ->preload()
-                            ->native(false)
-                            ->live(),
+                            ->native(false),
 
                         Forms\Components\TextInput::make('title')
                             ->label('タイトル')
