@@ -43,9 +43,12 @@
                     $subtitleRendered = renderSubtitleWithGreyedVenues($setlistModel->subtitle ?? '');
                     $subtitleRenderedLines = $subtitleRendered['lines'];
                     $subtitleFontSize = $subtitleRendered['font_size'];
+                    $patternLabel = trim(strip_tags($setlistModel->subtitle ?? '')) !== ''
+                        ? trim(strip_tags($setlistModel->subtitle))
+                        : 'パターン' . $loop->iteration;
                 @endphp
                 @if (count($setlist) || count($encore))
-                    <div class="live-column-wrap">
+                    <div class="live-column-wrap" id="setlist-pattern-{{ $setlistModel->id }}" data-pattern-label="{{ $patternLabel }}">
                         <div class="setlist-subtitle-area">
                             @if (count($subtitleRenderedLines))
                                 <h5 style="margin: 0.25rem;">@if ($subtitleFontSize)<span style="font-size: {{ $subtitleFontSize }};">{!! implode('<br>', $subtitleRenderedLines) !!}</span>@else{!! implode('<br>', $subtitleRenderedLines) !!}@endif</h5>

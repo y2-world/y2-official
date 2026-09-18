@@ -58,6 +58,18 @@
                 <br>
                 {{ $tours->venue }}
             </p>
+
+            @if ($totalOlCount >= 2)
+                {{-- パターン一覧アイコン（SP表示のみ、見出しブロックの右下）：ネイティブのselectを重ねて、タップするとOS標準の選択メニューが開く --}}
+                <div class="sp" style="position: absolute; bottom: 8px; right: 8px; width: 36px; height: 36px;">
+                    <div style="pointer-events: none; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-bars" style="font-size: 14px;"></i>
+                    </div>
+                    <select id="spPatternListSelect" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: none; cursor: pointer;">
+                        <option value="" selected disabled>パターンを選択</option>
+                    </select>
+                </div>
+            @endif
         </div>
     </div>
 
@@ -124,6 +136,29 @@ document.addEventListener('DOMContentLoaded', function () {
         areas.forEach(function (a) { a.style.height = 'auto'; maxH = Math.max(maxH, a.scrollHeight); });
         areas.forEach(function (a) { a.style.height = maxH + 'px'; });
     });
+
+    var patternSelect = document.getElementById('spPatternListSelect');
+    if (patternSelect) {
+        var wraps = document.querySelectorAll('.live-column-wrap[data-pattern-label]');
+        wraps.forEach(function (wrap, index) {
+            var option = document.createElement('option');
+            option.value = String(index);
+            option.textContent = wrap.getAttribute('data-pattern-label');
+            patternSelect.appendChild(option);
+        });
+        patternSelect.addEventListener('change', function () {
+            var wrap = wraps[Number(patternSelect.value)];
+            if (wrap) {
+                wrap.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'start' });
+                var header = document.querySelector('nav.fixed-top');
+                var headerHeight = header ? header.getBoundingClientRect().height : 0;
+                window.setTimeout(function () {
+                    window.scrollBy({ top: -(headerHeight + 12), behavior: 'smooth' });
+                }, 300);
+            }
+            patternSelect.value = '';
+        });
+    }
 });
 </script>
 @endsection
