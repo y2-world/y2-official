@@ -132,9 +132,20 @@ document.addEventListener('DOMContentLoaded', function () {
             row.style.justifyContent = 'flex-start';
         }
         var areas = row.querySelectorAll('.setlist-subtitle-area');
-        var maxH = 0;
-        areas.forEach(function (a) { a.style.height = 'auto'; maxH = Math.max(maxH, a.scrollHeight); });
-        areas.forEach(function (a) { a.style.height = maxH + 'px'; });
+        var recalcSubtitleHeights = function () {
+            var maxH = 0;
+            areas.forEach(function (a) { a.style.height = 'auto'; maxH = Math.max(maxH, a.scrollHeight); });
+            areas.forEach(function (a) { a.style.height = maxH + 'px'; });
+        };
+        recalcSubtitleHeights();
+
+        // 日付・地名を1行目のみ表示している見出しを展開/折りたたみしたら、
+        // カード間で揃えている高さも再計算する
+        row.querySelectorAll('.setlist-subtitle-collapsible').forEach(function (heading) {
+            heading.addEventListener('click', function () {
+                recalcSubtitleHeights();
+            });
+        });
 
         // 横スクロール中、画面中央に見えているグループのタイトルを追従表示する
         var stickyTitle = row.previousElementSibling;

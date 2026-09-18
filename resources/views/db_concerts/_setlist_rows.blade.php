@@ -55,7 +55,7 @@
             $rowHasGroupTitle = collect($groups)->contains(fn($g) => !empty($g['title']));
         @endphp
         @if ($rowHasGroupTitle)
-            <h4 class="setlist-group-title-sticky sp"></h4>
+            <h4 class="setlist-group-title-sticky"></h4>
         @endif
         <div class="setlist-row" style="justify-content: safe center;">
             @foreach ($groups as $group)
@@ -83,7 +83,18 @@
                                 <div class="live-column-wrap" id="setlist-pattern-{{ $setlistModel->id }}" data-pattern-label="{{ $patternLabel }}">
                                     <div class="setlist-subtitle-area">
                                         @if (count($subtitleRenderedLines))
-                                            <h5 class="setlist-subtitle-heading">@if ($subtitleFontSize)<span style="font-size: {{ $subtitleFontSize }};">{!! implode('<br>', $subtitleRenderedLines) !!}</span>@else{!! implode('<br>', $subtitleRenderedLines) !!}@endif</h5>
+                                            @php
+                                                $firstLine = $subtitleRenderedLines[0];
+                                                $restLines = array_slice($subtitleRenderedLines, 1);
+                                            @endphp
+                                            <h5 class="setlist-subtitle-heading {{ count($restLines) ? 'setlist-subtitle-collapsible' : '' }}"
+                                                @if (count($restLines)) onclick="this.classList.toggle('is-expanded')" @endif>
+                                                @if ($subtitleFontSize)<span style="font-size: {{ $subtitleFontSize }};">
+                                                    {!! $firstLine !!}@if (count($restLines))<span class="setlist-subtitle-rest"><br>{!! implode('<br>', $restLines) !!}</span>@endif
+                                                </span>@else
+                                                    {!! $firstLine !!}@if (count($restLines))<span class="setlist-subtitle-rest"><br>{!! implode('<br>', $restLines) !!}</span>@endif
+                                                @endif
+                                            </h5>
                                         @endif
                                     </div>
                                 <ol class="live-column {{ $totalItems >= 20 ? 'live-column-two-col' : '' }}">

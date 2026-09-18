@@ -1607,6 +1607,36 @@ h2 {
     margin-top: 0;
 }
 
+.setlist-group-title {
+    display: none;
+}
+
+.setlist-group-title-sticky {
+    position: sticky;
+    top: 0;
+    left: 0;
+    text-align: center;
+    margin: 0;
+    background: white;
+    z-index: 1;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.setlist-row + .setlist-group-title-sticky {
+    margin-top: 24px;
+}
+
+.setlist-group-title-sticky:empty {
+    display: none;
+}
+
+@media (max-width: 991px) {
+    h5.setlist-subtitle-heading {
+        margin: 0;
+    }
+}
+
 @media (max-width: 768px) {
     .database-content {
         padding: 30px 15px;
@@ -1614,34 +1644,6 @@ h2 {
 
     .database-content.sp-pt-24 {
         padding-top: 24px;
-    }
-
-    .setlist-group-title {
-        display: none;
-    }
-
-    .setlist-group-title-sticky {
-        position: sticky;
-        top: 0;
-        left: 0;
-        text-align: center;
-        margin: 0;
-        background: white;
-        z-index: 1;
-        font-size: 1.1rem;
-        font-weight: 700;
-    }
-
-    .setlist-row + .setlist-group-title-sticky {
-        margin-top: 24px;
-    }
-
-    .setlist-group-title-sticky:empty {
-        display: none;
-    }
-
-    h5.setlist-subtitle-heading {
-        margin: 0;
     }
 
     .database-card {
@@ -1862,6 +1864,23 @@ h2 {
 
 h5.setlist-subtitle-heading {
     margin: 0.25rem;
+}
+
+.setlist-subtitle-collapsible {
+    cursor: pointer;
+}
+
+.setlist-subtitle-collapsible .setlist-subtitle-rest {
+    display: none;
+}
+
+.setlist-subtitle-collapsible.is-expanded .setlist-subtitle-rest {
+    display: inline;
+}
+
+.setlist-subtitle-collapsible:not(.is-expanded)::after {
+    content: '…';
+    color: #999;
 }
 
 
