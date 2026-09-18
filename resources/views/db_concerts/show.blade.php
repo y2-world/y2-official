@@ -195,11 +195,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // グループ見出しを含むグループ全体（.setlist-group-wrap）の先頭を
                 // 基準にスクロールする（PCは見出しが子要素として表示され、モバイルは
-                // 見出し自体は隠れていてもラッパーの位置は変わらない）
+                // 見出し自体は隠れていてもラッパーの位置は変わらない）。
+                // 見出しが無いグループは、その分オフセットを少なくする。
                 var groupWrap = wrap.closest('.setlist-group-wrap');
+                var hasGroupTitle = groupWrap && !!groupWrap.querySelector('.setlist-group-title');
                 var scrollAnchorRect = groupWrap ? groupWrap.getBoundingClientRect() : wrapRect;
+                var extraOffset = hasGroupTitle ? 30 : 12;
 
-                var targetTop = window.scrollY + scrollAnchorRect.top - (headerHeight + 30);
+                var targetTop = window.scrollY + scrollAnchorRect.top - (headerHeight + extraOffset);
                 window.scrollTo({ top: targetTop, behavior: 'smooth' });
 
                 var scrollParent = wrap.closest('.setlist-row');
