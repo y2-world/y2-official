@@ -149,12 +149,19 @@ document.addEventListener('DOMContentLoaded', function () {
         patternSelect.addEventListener('change', function () {
             var wrap = wraps[Number(patternSelect.value)];
             if (wrap) {
-                wrap.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'start' });
                 var header = document.querySelector('nav.fixed-top');
                 var headerHeight = header ? header.getBoundingClientRect().height : 0;
-                window.setTimeout(function () {
-                    window.scrollBy({ top: -(headerHeight + 12), behavior: 'smooth' });
-                }, 300);
+                var wrapRect = wrap.getBoundingClientRect();
+                var targetTop = window.scrollY + wrapRect.top - (headerHeight + 12);
+                window.scrollTo({ top: targetTop, behavior: 'smooth' });
+
+                var scrollParent = wrap.closest('.setlist-row');
+                if (scrollParent) {
+                    var parentRect = scrollParent.getBoundingClientRect();
+                    var targetLeft = scrollParent.scrollLeft + wrapRect.left - parentRect.left
+                        - (parentRect.width - wrapRect.width) / 2;
+                    scrollParent.scrollTo({ left: targetLeft, behavior: 'smooth' });
+                }
             }
             patternSelect.value = '';
         });
