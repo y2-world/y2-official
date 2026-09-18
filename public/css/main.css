@@ -1607,11 +1607,6 @@ h2 {
     margin-top: 0;
 }
 
-.setlist-subtitle-heading {
-    margin: 0.25rem;
-    font-size: 1rem;
-}
-
 @media (max-width: 768px) {
     .database-content {
         padding: 30px 15px;
@@ -1645,7 +1640,7 @@ h2 {
         display: none;
     }
 
-    .setlist-subtitle-heading {
+    h5.setlist-subtitle-heading {
         margin: 0;
     }
 
@@ -1863,6 +1858,10 @@ h2 {
     color: #2d3748;
     margin-bottom: 20px;
     /* margin-top: 30px; */
+}
+
+h5.setlist-subtitle-heading {
+    margin: 0.25rem;
 }
 
 
