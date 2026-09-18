@@ -774,6 +774,10 @@ select {
     justify-content: flex-start;
 }
 
+.setlist-group-wrap {
+    flex-shrink: 0;
+}
+
 .setlist-row + .setlist-row {
     margin-top: 24px;
 }
@@ -1594,9 +1598,46 @@ h2 {
     border-radius: 3px;
 }
 
+.setlist-group-title {
+    text-align: center;
+    margin: 0 0 10px;
+}
+
+.setlist-subtitle-heading {
+    margin: 0.25rem;
+}
+
 @media (max-width: 768px) {
     .database-content {
         padding: 40px 15px;
+    }
+
+    .database-content.sp-pt-24 {
+        padding-top: 24px;
+    }
+
+    .setlist-group-title {
+        display: none;
+    }
+
+    .setlist-group-title-sticky {
+        position: sticky;
+        top: 0;
+        left: 0;
+        text-align: center;
+        margin: 0;
+        background: white;
+        z-index: 1;
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+
+    .setlist-group-title-sticky:empty {
+        display: none;
+    }
+
+    .setlist-subtitle-heading {
+        margin: 0;
     }
 
     .database-card {

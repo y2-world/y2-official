@@ -8,7 +8,15 @@
         </div>
     </div>
 
-    <div class="container database-content">
+    <div class="container database-content sp-pt-24">
+        <div class="timeline-filter-row sp">
+            <select class="timeline-user-select" onchange="if (this.value) window.location.href=this.value;">
+                <option value="{{ url('/database') }}" selected>すべて</option>
+                @foreach ($artists as $artist)
+                    <option value="{{ route('database.artist', $artist->id) }}">{{ $artist->name }}</option>
+                @endforeach
+            </select>
+        </div>
         <div class="row justify-content-center">
             @foreach ($artists as $artist)
                 <div class="col-lg-4 mb-4">

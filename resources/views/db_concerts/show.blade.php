@@ -61,7 +61,7 @@
 
             @if ($totalOlCount >= 2)
                 {{-- パターン一覧アイコン（SP表示のみ、見出しブロックの右下）：ネイティブのselectを重ねて、タップするとOS標準の選択メニューが開く --}}
-                <div class="sp" style="position: absolute; bottom: 8px; right: 8px; width: 36px; height: 36px;">
+                <div class="sp" style="position: absolute; bottom: -14px; right: 8px; width: 36px; height: 36px;">
                     <div style="pointer-events: none; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
                         <i class="fa-solid fa-bars" style="font-size: 14px;"></i>
                     </div>
@@ -135,16 +135,56 @@ document.addEventListener('DOMContentLoaded', function () {
         var maxH = 0;
         areas.forEach(function (a) { a.style.height = 'auto'; maxH = Math.max(maxH, a.scrollHeight); });
         areas.forEach(function (a) { a.style.height = maxH + 'px'; });
+
+        // 横スクロール中、画面中央に見えているグループのタイトルを追従表示する
+        var stickyTitle = row.previousElementSibling;
+        if (stickyTitle && stickyTitle.classList.contains('setlist-group-title-sticky')) {
+            var groupWraps = row.querySelectorAll('.setlist-group-wrap[data-group-title]');
+            var updateStickyTitle = function () {
+                var rowRect = row.getBoundingClientRect();
+                var centerX = rowRect.left + rowRect.width / 2;
+                var currentTitle = '';
+                groupWraps.forEach(function (wrap) {
+                    var rect = wrap.getBoundingClientRect();
+                    if (rect.left <= centerX && rect.right >= centerX) {
+                        currentTitle = wrap.getAttribute('data-group-title') || '';
+                    }
+                });
+                if (!currentTitle && groupWraps.length) {
+                    currentTitle = groupWraps[0].getAttribute('data-group-title') || '';
+                }
+                stickyTitle.textContent = currentTitle;
+            };
+            updateStickyTitle();
+            row.addEventListener('scroll', updateStickyTitle, { passive: true });
+        }
     });
 
     var patternSelect = document.getElementById('spPatternListSelect');
     if (patternSelect) {
         var wraps = document.querySelectorAll('.live-column-wrap[data-pattern-label]');
+        var currentOptgroup = null;
+        var currentGroupTitle = null;
         wraps.forEach(function (wrap, index) {
+            var groupWrap = wrap.closest('.setlist-group-wrap');
+            var groupTitle = groupWrap ? groupWrap.getAttribute('data-group-title') : null;
+
             var option = document.createElement('option');
             option.value = String(index);
             option.textContent = wrap.getAttribute('data-pattern-label');
-            patternSelect.appendChild(option);
+
+            if (groupTitle) {
+                if (groupTitle !== currentGroupTitle) {
+                    currentOptgroup = document.createElement('optgroup');
+                    currentOptgroup.label = groupTitle;
+                    patternSelect.appendChild(currentOptgroup);
+                    currentGroupTitle = groupTitle;
+                }
+                currentOptgroup.appendChild(option);
+            } else {
+                currentGroupTitle = null;
+                patternSelect.appendChild(option);
+            }
         });
         patternSelect.addEventListener('change', function () {
             var wrap = wraps[Number(patternSelect.value)];
@@ -163,7 +203,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     scrollParent.scrollTo({ left: targetLeft, behavior: 'smooth' });
                 }
             }
-            patternSelect.value = '';
         });
     }
 });
