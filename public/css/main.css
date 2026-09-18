@@ -1600,11 +1600,16 @@ h2 {
 
 .setlist-group-title {
     text-align: center;
-    margin: 0 0 10px;
+    margin: 0 0 4px;
+}
+
+.setlist-group-columns > .live-column-wrap {
+    margin-top: 0;
 }
 
 .setlist-subtitle-heading {
     margin: 0.25rem;
+    font-size: 1rem;
 }
 
 @media (max-width: 768px) {
