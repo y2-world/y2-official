@@ -128,9 +128,10 @@ class DbSong extends Model
     {
         $id = $this->id;
         $title = $this->title;
+        $artistId = $this->artist_id;
 
         return DbSetlist::with('tour')->get()
-            ->filter(function ($setlistModel) use ($id, $title) {
+            ->filter(function ($setlistModel) use ($id, $title, $artistId) {
                 $lists = array_merge($setlistModel->setlist ?? [], $setlistModel->encore ?? []);
 
                 foreach ($lists as $entry) {
@@ -141,6 +142,11 @@ class DbSong extends Model
                         return true;
                     }
                     if (!is_numeric($entry['song'])) {
+                        // 曲名の文字列一致は同名異アーティスト曲を拾ってしまうため、
+                        // このセットリストのツアーが自分と同じアーティストのものである場合に限定する
+                        if (optional($setlistModel->tour)->artist_id !== $artistId) {
+                            continue;
+                        }
                         $entryTitle = preg_replace('/\s*\[[^\]]+\]/u', '', $entry['song']);
                         if (trim($entryTitle) === $title) {
                             return true;
