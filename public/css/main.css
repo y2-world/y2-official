@@ -1609,7 +1609,7 @@ h2 {
 
 @media (max-width: 768px) {
     .database-content {
-        padding: 40px 15px;
+        padding: 30px 15px;
     }
 
     .database-content.sp-pt-24 {
@@ -1630,6 +1630,10 @@ h2 {
         z-index: 1;
         font-size: 1.1rem;
         font-weight: 700;
+    }
+
+    .setlist-row + .setlist-group-title-sticky {
+        margin-top: 24px;
     }
 
     .setlist-group-title-sticky:empty {

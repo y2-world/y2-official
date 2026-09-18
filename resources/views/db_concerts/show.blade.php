@@ -192,7 +192,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 var header = document.querySelector('nav.fixed-top');
                 var headerHeight = header ? header.getBoundingClientRect().height : 0;
                 var wrapRect = wrap.getBoundingClientRect();
-                var targetTop = window.scrollY + wrapRect.top - (headerHeight + 12);
+
+                // グループ見出しを含むグループ全体（.setlist-group-wrap）の先頭を
+                // 基準にスクロールする（PCは見出しが子要素として表示され、モバイルは
+                // 見出し自体は隠れていてもラッパーの位置は変わらない）
+                var groupWrap = wrap.closest('.setlist-group-wrap');
+                var scrollAnchorRect = groupWrap ? groupWrap.getBoundingClientRect() : wrapRect;
+
+                var targetTop = window.scrollY + scrollAnchorRect.top - (headerHeight + 30);
                 window.scrollTo({ top: targetTop, behavior: 'smooth' });
 
                 var scrollParent = wrap.closest('.setlist-row');

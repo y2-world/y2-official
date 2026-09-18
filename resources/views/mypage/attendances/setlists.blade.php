@@ -47,7 +47,7 @@
                             $groupTitle = $groupTitlesByRowAndOrderNo[$setlist->row][$setlist->order_no] ?? null;
                         @endphp
                         @if ($groupTitle)
-                            <h4 class="setlist-pick-group-title" style="text-align: center; margin: {{ $loop->first ? '0 0 10px' : '24px 0 10px' }};">{{ $groupTitle }}</h4>
+                            <h4 class="setlist-pick-group-title" style="text-align: center; font-size: 1rem; margin: {{ $loop->first ? '0 0 10px' : '24px 0 10px' }};">{{ $groupTitle }}</h4>
                         @endif
                         <div class="pick-card">
                             <button type="button" class="pick-card-header setlist-pick-expand" aria-expanded="{{ $tourSetlists->count() === 1 ? 'true' : 'false' }}" onclick="toggleSetlistPick(this)" style="width: 100%; background: none; border: none; cursor: pointer; text-align: left; font: inherit; color: inherit;">
