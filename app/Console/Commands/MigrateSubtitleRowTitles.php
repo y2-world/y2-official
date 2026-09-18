@@ -32,11 +32,10 @@ class MigrateSubtitleRowTitles extends Command
 
         $setlists = DbSetlist::orderBy('tour_id')->orderBy('row')->orderBy('order_no')->get();
 
-        // tour_id + row ごとに、その段の最初のパターン（order_noが最小のもの）だけを対象にする
-        $firstByRow = $setlists->groupBy(fn ($s) => $s->tour_id . '-' . $s->row)
-            ->map(fn ($group) => $group->sortBy('order_no')->first());
-
-        foreach ($firstByRow as $setlist) {
+        // 1つのrow内に複数のグループタイトルが埋め込まれていることがある
+        // （例: order_no=1「アリーナ公演」...、order_no=3「ドーム公演」...）ため、
+        // rowの最初のパターンだけでなく、条件に合う全パターンを対象にする。
+        foreach ($setlists as $setlist) {
             $lines = preg_split('/\r\n|\r|\n/', trim($setlist->subtitle ?? ''));
             $lines = array_values(array_filter($lines, fn ($line) => trim($line) !== ''));
 
@@ -52,7 +51,7 @@ class MigrateSubtitleRowTitles extends Command
             }
 
             $tour = $setlist->tour;
-            $this->line("tour #{$setlist->tour_id} \"" . ($tour->title ?? '?') . "\" row={$setlist->row}: \"{$firstLine}\"");
+            $this->line("tour #{$setlist->tour_id} \"" . ($tour->title ?? '?') . "\" row={$setlist->row} order_no={$setlist->order_no}: \"{$firstLine}\"");
             $migrated++;
 
             if ($dryRun) {
@@ -60,7 +59,7 @@ class MigrateSubtitleRowTitles extends Command
             }
 
             DbSetlistRow::updateOrCreate(
-                ['tour_id' => $setlist->tour_id, 'row' => $setlist->row],
+                ['tour_id' => $setlist->tour_id, 'row' => $setlist->row, 'order_no' => $setlist->order_no],
                 ['title' => $firstLine]
             );
 
