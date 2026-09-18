@@ -556,10 +556,15 @@ class AttendanceController extends Controller
             $setlist = UserSetlist::findOrFail($id);
         }
 
-        $allClusters = array_merge(
-            groupDailySongClusters($setlist->setlist ?? []),
+        $setlistClusters = array_map(
+            fn ($c) => $c + ['section' => 'setlist'],
+            groupDailySongClusters($setlist->setlist ?? [])
+        );
+        $encoreClusters = array_map(
+            fn ($c) => $c + ['section' => 'encore'],
             groupDailySongClusters($setlist->encore ?? [])
         );
+        $allClusters = array_merge($setlistClusters, $encoreClusters);
 
         // 候補が1曲しかない枠は選ぶ意味が無いので、自動的にその1曲を選択済み扱いにする。
         // 実際に選んでもらう必要がある（候補2曲以上の）枠だけを画面に出す。

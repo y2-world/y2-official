@@ -19,8 +19,13 @@
                         <input type="hidden" name="auto_selected_daily_songs[]" value="{{ $songUuid }}">
                     @endforeach
                     @foreach ($clusters as $clusterIndex => $cluster)
+                        @php
+                            $clusterLabel = $cluster['section'] === 'encore'
+                                ? 'EN' . ($cluster['after_number'] + 1)
+                                : $cluster['after_number'] + 1;
+                        @endphp
                         <div class="daily-song-cluster">
-                            <div class="daily-song-cluster-label">{{ $cluster['after_number'] + 1 }}</div>
+                            <div class="daily-song-cluster-label">{{ $clusterLabel }}</div>
                             @foreach ($cluster['items'] as $itemIndex => $item)
                                 @php
                                     $isNumericSong = is_numeric($item['song'] ?? null);

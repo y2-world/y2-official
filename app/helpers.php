@@ -123,6 +123,49 @@ if (!function_exists('groupDailySongClusters')) {
     }
 }
 
+if (!function_exists('countActualSongs')) {
+    // setlist/encoreのitem配列から、実際に演奏される曲数を数える。medleyの曲は
+    // カウントせず（直前の通常曲の一部として扱う）、is_dailyの候補グループ
+    // （groupDailySongClustersと同じ単位：直前の通常曲1つ + is_dailyが連続する曲群）は
+    // 1グループにつき1曲としてカウントする。
+    function countActualSongs(array $items): int
+    {
+        $dailyClusterItemUuids = [];
+        foreach (groupDailySongClusters($items) as $cluster) {
+            foreach ($cluster['items'] as $clusterItem) {
+                if (isset($clusterItem['_uuid'])) {
+                    $dailyClusterItemUuids[$clusterItem['_uuid']] = true;
+                }
+            }
+        }
+
+        $count = 0;
+        $countedClusterStart = false;
+
+        foreach ($items as $item) {
+            $uuid = $item['_uuid'] ?? null;
+            $isInDailyCluster = $uuid !== null && isset($dailyClusterItemUuids[$uuid]);
+
+            if ($isInDailyCluster) {
+                if (!$countedClusterStart) {
+                    $count++;
+                    $countedClusterStart = true;
+                }
+                continue;
+            }
+            $countedClusterStart = false;
+
+            if (!empty($item['medley'])) {
+                continue;
+            }
+
+            $count++;
+        }
+
+        return $count;
+    }
+}
+
 if (!function_exists('ordinal')) {
     function ordinal(int $n): string
     {

@@ -87,9 +87,6 @@
                 @if (!empty($featuring))
                     <span class="setlist-card-meta">{{ $featuringDisplay }}</span>
                 @endif
-                @if (!empty($data['daily_note']))
-                    <span class="setlist-card-meta">{{ $data['daily_note'] }}</span>
-                @endif
             @if ($link)
                 </a>
             @else

@@ -35,7 +35,7 @@
                     @endphp
                     @foreach ($tourSetlists as $setlist)
                         @php
-                            $songCount = count($setlist->setlist ?? []) + count($setlist->encore ?? []);
+                            $songCount = countActualSongs($setlist->setlist ?? []) + countActualSongs($setlist->encore ?? []);
                             if ($setlist->subtitle) {
                                 $labelRendered = renderSubtitleWithGreyedVenues($setlist->subtitle);
                                 $label = implode('<br>', $labelRendered['lines']);
