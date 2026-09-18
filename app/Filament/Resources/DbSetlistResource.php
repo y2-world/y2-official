@@ -31,20 +31,6 @@ class DbSetlistResource extends Resource
         return [$artistId];
     }
 
-    // tour_id/row/order_noの変更に合わせて、row_titleフィールドを対応するDbSetlistRowの値に同期する
-    protected static function syncRowTitleField(Get $get, $set): void
-    {
-        $tourId = $get('tour_id');
-        $row = $get('row') ?? 1;
-        $orderNo = $get('order_no');
-
-        $title = ($tourId && $orderNo)
-            ? \App\Models\DbSetlistRow::where('tour_id', $tourId)->where('row', $row)->where('order_no', $orderNo)->value('title')
-            : null;
-
-        $set('row_title', $title ?? '');
-    }
-
     protected static ?string $navigationLabel = 'セットリスト';
 
     protected static ?string $modelLabel = 'セットリスト';
@@ -80,25 +66,19 @@ class DbSetlistResource extends Resource
                             )->orderBy('date1', 'asc')->pluck('title', 'id'))
                             ->searchable()
                             ->native(false)
-                            ->required()
-                            ->live()
-                            ->afterStateUpdated(fn(Get $get, $set) => static::syncRowTitleField($get, $set)),
+                            ->required(),
 
                         Forms\Components\TextInput::make('row')
                             ->label('段')
                             ->numeric()
                             ->default(1)
                             ->minValue(1)
-                            ->required()
-                            ->live()
-                            ->afterStateUpdated(fn(Get $get, $set) => static::syncRowTitleField($get, $set)),
+                            ->required(),
 
                         Forms\Components\TextInput::make('order_no')
                             ->label('パターン番号')
                             ->numeric()
                             ->required()
-                            ->live()
-                            ->afterStateUpdated(fn(Get $get, $set) => static::syncRowTitleField($get, $set))
                             ->rules(fn(Get $get, $record) => [
                                 Rule::unique('db_setlists', 'order_no')
                                     ->where('tour_id', $get('tour_id'))
@@ -111,20 +91,18 @@ class DbSetlistResource extends Resource
 
                         Forms\Components\TextInput::make('row_title')
                             ->label('段のグループタイトル')
-                            ->placeholder('例: アリーナ公演')
+                            ->placeholder('例: アリーナ公演（このグループの1つ目のパターンにのみ入力）')
                             ->maxLength(255)
                             ->columnSpanFull()
-                            ->afterStateHydrated(function ($set, Get $get, $record) {
-                                $tourId = $record?->tour_id ?? $get('tour_id');
-                                $row = $record?->row ?? $get('row') ?? 1;
-                                $orderNo = $record?->order_no ?? $get('order_no');
-                                if ($tourId && $orderNo) {
-                                    $title = \App\Models\DbSetlistRow::where('tour_id', $tourId)
-                                        ->where('row', $row)
-                                        ->where('order_no', $orderNo)
-                                        ->value('title');
-                                    $set('row_title', $title ?? '');
+                            ->afterStateHydrated(function ($set, $record) {
+                                if (!$record) {
+                                    return;
                                 }
+                                $title = \App\Models\DbSetlistRow::where('tour_id', $record->tour_id)
+                                    ->where('row', $record->row)
+                                    ->where('order_no', $record->order_no)
+                                    ->value('title');
+                                $set('row_title', $title ?? '');
                             }),
 
                         Forms\Components\Textarea::make('subtitle')
@@ -452,7 +430,10 @@ class DbSetlistResource extends Resource
                 Tables\Actions\ReplicateAction::make()
                     ->modalHidden()
                     ->beforeReplicaSaved(function ($replica) {
-                        $replica->order_no = 0;
+                        $maxOrderNo = (int) \App\Models\DbSetlist::where('tour_id', $replica->tour_id)
+                            ->where('row', $replica->row)
+                            ->max('order_no');
+                        $replica->order_no = $maxOrderNo + 1;
                         $replica->subtitle = null;
                     })
                     ->after(function ($replica) {
