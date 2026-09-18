@@ -39,10 +39,8 @@
                             if ($setlist->subtitle) {
                                 $labelRendered = renderSubtitleWithGreyedVenues($setlist->subtitle);
                                 $label = implode('<br>', $labelRendered['lines']);
-                                $labelFontSize = $labelRendered['font_size'];
                             } else {
                                 $label = null;
-                                $labelFontSize = null;
                             }
                             $groupTitle = $groupTitlesByRowAndOrderNo[$setlist->row][$setlist->order_no] ?? null;
                         @endphp
@@ -54,7 +52,7 @@
                                 <span class="select-card-icon"><i class="fa-solid fa-music"></i></span>
                                 <span class="select-card-body">
                                     @if ($label)
-                                        <span class="select-card-title" @if ($labelFontSize) style="font-size: {{ $labelFontSize }};" @endif>{!! $label !!}</span>
+                                        <span class="select-card-title">{!! $label !!}</span>
                                     @endif
                                     <span class="select-card-meta">{{ $songCount }}曲</span>
                                 </span>
@@ -63,7 +61,7 @@
                             <div class="setlist-pick-body" @if ($tourSetlists->count() !== 1) hidden @endif>
                                 @include('db_concerts._setlist_rows', ['tourSetlists' => collect([$setlist]), 'songs' => $songs])
                                 <div class="setlist-pick-confirm">
-                                    <a href="{{ route('mypage.attendances.form', $kind . '-' . $setlist->id) }}" class="btn-pill">
+                                    <a href="{{ route('mypage.attendances.daily_songs', $kind . '-' . $setlist->id) }}" class="btn-pill">
                                         選択
                                     </a>
                                 </div>

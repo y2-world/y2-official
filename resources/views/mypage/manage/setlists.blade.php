@@ -93,7 +93,7 @@
                                 @if ($fallbackPatternLabel)
                                     <span class="setlist-pattern-title-fallback" style="color: #999;">{{ $fallbackPatternLabel }}</span>
                                 @endif
-                                <span class="setlist-pattern-title-display" data-title="{{ $setlist->subtitle }}" @if (!$setlist->subtitle) hidden @endif @if ($subtitleRendered['font_size']) style="font-size: {{ $subtitleRendered['font_size'] }};" @endif>{!! $subtitleHtml !!}</span>
+                                <span class="setlist-pattern-title-display" data-title="{{ $setlist->subtitle }}" @if (!$setlist->subtitle) hidden @endif>{!! $subtitleHtml !!}</span>
                                 @php
                                     $songCount = count($setlist->setlist ?? []) + count($setlist->encore ?? []);
                                 @endphp

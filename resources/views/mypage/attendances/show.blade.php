@@ -89,7 +89,7 @@
         <div class="row justify-content-center">
             <div class="col-xl-9">
                 <div class="setlist" style="width: 100%;">
-                    @include('mypage.attendances._setlist_cards', ['setlistModel' => $isOfficial ? $attendance->dbSetlist : $attendance->userSetlist, 'songs' => $songs, 'kind' => $isOfficial ? 'official' : 'user', 'isFromTimeline' => $isFromTimeline])
+                    @include('mypage.attendances._setlist_cards', ['setlistModel' => $isOfficial ? $attendance->dbSetlist : $attendance->userSetlist, 'songs' => $songs, 'kind' => $isOfficial ? 'official' : 'user', 'isFromTimeline' => $isFromTimeline, 'selectedDailySongs' => $attendance->selected_daily_songs ?? []])
                 </div>
 
                 <div class="timeline-card timeline-card--plain" style="margin-top: 40px;">

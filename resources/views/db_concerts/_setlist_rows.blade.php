@@ -74,7 +74,6 @@
                             @php
                                 $subtitleRendered = renderSubtitleWithGreyedVenues($setlistModel->subtitle ?? '');
                                 $subtitleRenderedLines = $subtitleRendered['lines'];
-                                $subtitleFontSize = $subtitleRendered['font_size'];
                                 $patternLabel = trim(strip_tags($setlistModel->subtitle ?? '')) !== ''
                                     ? trim(strip_tags($setlistModel->subtitle))
                                     : 'パターン' . $loop->iteration;
@@ -89,11 +88,7 @@
                                             @endphp
                                             <h5 class="setlist-subtitle-heading {{ count($restLines) ? 'setlist-subtitle-collapsible' : '' }}"
                                                 @if (count($restLines)) onclick="this.classList.toggle('is-expanded')" @endif>
-                                                @if ($subtitleFontSize)<span style="font-size: {{ $subtitleFontSize }};">
-                                                    {!! $firstLine !!}@if (count($restLines))<span class="setlist-subtitle-rest"><br>{!! implode('<br>', $restLines) !!}</span>@endif
-                                                </span>@else
-                                                    {!! $firstLine !!}@if (count($restLines))<span class="setlist-subtitle-rest"><br>{!! implode('<br>', $restLines) !!}</span>@endif
-                                                @endif
+                                                {!! $firstLine !!}@if (count($restLines))<span class="setlist-subtitle-rest"><br>{!! implode('<br>', $restLines) !!}</span>@endif
                                             </h5>
                                         @endif
                                     </div>

@@ -71,6 +71,58 @@ if (!function_exists('renderSubtitleWithGreyedVenues')) {
     }
 }
 
+if (!function_exists('groupDailySongClusters')) {
+    // setlist/encoreのitem配列から、日替わりの候補曲グループを順番に抽出する。
+    // 登録運用上、1曲目（is_dailyなし・通常表示される曲）の直後に2曲目以降の
+    // 候補（is_daily=true、"-"付きインライン表示）が続く形で日替わりが表現されるため、
+    // 「is_dailyの塊」＋「その直前にある通常曲1つ」をまとめて1つの選択肢グループにする。
+    // 各グループは、直前の通常曲の番号（1始まり、無ければnull）と、選択肢item一覧を持つ。
+    function groupDailySongClusters(array $items): array
+    {
+        $clusters = [];
+        $currentCluster = null;
+        $number = 0;
+        $pendingNormalItem = null;
+        $pendingNormalNumber = null;
+
+        foreach ($items as $item) {
+            $isDaily = !empty($item['is_daily']);
+
+            if ($isDaily) {
+                if ($currentCluster === null) {
+                    $currentCluster = [
+                        'after_number' => $pendingNormalNumber !== null ? $pendingNormalNumber - 1 : $number,
+                        'items' => [],
+                    ];
+                    if ($pendingNormalItem !== null) {
+                        $currentCluster['items'][] = $pendingNormalItem;
+                        $pendingNormalItem = null;
+                        $pendingNormalNumber = null;
+                    }
+                }
+                $currentCluster['items'][] = $item;
+                continue;
+            }
+
+            if ($currentCluster !== null) {
+                $clusters[] = $currentCluster;
+                $currentCluster = null;
+            }
+
+            $number++;
+            // この通常曲は、次にis_dailyの塊が現れたときにグループの先頭候補として使う
+            $pendingNormalItem = $item;
+            $pendingNormalNumber = $number;
+        }
+
+        if ($currentCluster !== null) {
+            $clusters[] = $currentCluster;
+        }
+
+        return $clusters;
+    }
+}
+
 if (!function_exists('ordinal')) {
     function ordinal(int $n): string
     {

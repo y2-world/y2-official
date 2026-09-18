@@ -12,11 +12,13 @@ class ExternalUserAttendance extends Model
         'user_setlist_id',
         'attended_date',
         'venue',
+        'selected_daily_songs',
         'rating',
     ];
 
     protected $casts = [
         'attended_date' => 'date',
+        'selected_daily_songs' => 'array',
     ];
 
     public function externalUser()

@@ -3682,6 +3682,11 @@ h5.setlist-subtitle-heading {
 
 .setlist-pick-body .setlist-row {
     flex-wrap: wrap;
+    justify-content: flex-start !important;
+}
+
+.setlist-pick-body .setlist-group-columns {
+    justify-content: flex-start !important;
 }
 
 .setlist-pick-body[hidden] {

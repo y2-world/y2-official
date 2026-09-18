@@ -543,6 +543,79 @@ class AttendanceController extends Controller
             ->with('success', 'セットリストを追加しました。');
     }
 
+    // ステップ3.5: 日替わり曲の選択（選んだパターンにis_dailyの曲が1つでもある場合のみ）。
+    // 会場・日時を入れる前に、その日実際に演奏された日替わり曲を選んでもらう。
+    // is_dailyの曲が無ければ何もせずform画面へ直接進める。
+    public function dailySongs($setlistId)
+    {
+        [$kind, $id] = $this->splitRef($setlistId);
+
+        if ($kind === 'official') {
+            $setlist = DbSetlist::findOrFail($id);
+        } else {
+            $setlist = UserSetlist::findOrFail($id);
+        }
+
+        $allClusters = array_merge(
+            groupDailySongClusters($setlist->setlist ?? []),
+            groupDailySongClusters($setlist->encore ?? [])
+        );
+
+        // 候補が1曲しかない枠は選ぶ意味が無いので、自動的にその1曲を選択済み扱いにする。
+        // 実際に選んでもらう必要がある（候補2曲以上の）枠だけを画面に出す。
+        $autoSelected = [];
+        $clusters = [];
+        foreach ($allClusters as $cluster) {
+            if (count($cluster['items']) <= 1) {
+                if (isset($cluster['items'][0]['_uuid'])) {
+                    $autoSelected[] = $cluster['items'][0]['_uuid'];
+                }
+                continue;
+            }
+            $clusters[] = $cluster;
+        }
+
+        if (empty($clusters)) {
+            return redirect()->route('mypage.attendances.form', array_filter([
+                'setlistId' => $setlistId,
+                'selected_daily_songs' => $autoSelected,
+            ]));
+        }
+
+        $songs = $kind === 'official'
+            ? DbSong::whereIn('id', $this->collectDailyClusterSongIds($clusters))->get()->keyBy('id')
+            : UserSong::whereIn('id', $this->collectDailyClusterSongIds($clusters))->get()->keyBy('id');
+
+        return view('mypage.attendances.daily_songs', compact('setlistId', 'kind', 'setlist', 'clusters', 'songs', 'autoSelected'));
+    }
+
+    // 日替わり選択item配列から、DbSong/UserSongのidとして解決できるsongの値だけを集める
+    private function collectDailyClusterSongIds(array $clusters): array
+    {
+        $ids = [];
+        foreach ($clusters as $cluster) {
+            foreach ($cluster['items'] as $item) {
+                if (is_numeric($item['song'] ?? null)) {
+                    $ids[] = (int) $item['song'];
+                }
+            }
+        }
+        return $ids;
+    }
+
+    // 選ばれた日替わり曲（各塊の_uuid）を受け取り、form画面へhidden inputとして引き継ぐ
+    public function dailySongsConfirm(Request $request, $setlistId)
+    {
+        $selected = array_values(array_filter((array) $request->input('selected_daily_songs', [])));
+        $autoSelected = array_values(array_filter((array) $request->input('auto_selected_daily_songs', [])));
+        $selected = array_values(array_unique(array_merge($selected, $autoSelected)));
+
+        return redirect()->route('mypage.attendances.form', array_filter([
+            'setlistId' => $setlistId,
+            'selected_daily_songs' => $selected,
+        ]));
+    }
+
     // ステップ4: 参加日・会場の入力フォーム（既存のセットリストパターンを選んだ場合に使用）。
     // setlistId は "official-{id}" / "user-{id}"。
     public function form($setlistId)
@@ -564,7 +637,9 @@ class AttendanceController extends Controller
         // パースできる行のみ候補になり、パース失敗時は従来通り手入力にフォールバックできる。
         $scheduleOptions = $tour->parseScheduleEntries();
 
-        return view('mypage.attendances.form', compact('setlistId', 'kind', 'setlist', 'tour', 'defaultAttendedDate', 'scheduleOptions'));
+        $selectedDailySongs = request('selected_daily_songs', []);
+
+        return view('mypage.attendances.form', compact('setlistId', 'kind', 'setlist', 'tour', 'defaultAttendedDate', 'scheduleOptions', 'selectedDailySongs'));
     }
 
     public function store(Request $request)
@@ -600,6 +675,8 @@ class AttendanceController extends Controller
 
         $tour = $kind === 'official' ? $setlist->tour : $setlist->concert;
 
+        $selectedDailySongs = array_values(array_filter((array) $request->input('selected_daily_songs', [])));
+
         if ($validator->fails()) {
             // セッションフラッシュ経由のリダイレクトだと、setlists()（一覧選択画面）の
             // 自動リダイレクト（パターンが1つしかない場合）が間に挟まってエラーが失われることがあるため、
@@ -611,7 +688,7 @@ class AttendanceController extends Controller
             $errorBag->put('default', $validator->errors());
 
             return response()
-                ->view('mypage.attendances.form', compact('setlistId', 'kind', 'setlist', 'tour', 'defaultAttendedDate', 'scheduleOptions') + [
+                ->view('mypage.attendances.form', compact('setlistId', 'kind', 'setlist', 'tour', 'defaultAttendedDate', 'scheduleOptions', 'selectedDailySongs') + [
                     'errors' => $errorBag,
                 ])
                 ->setStatusCode(422);
@@ -619,6 +696,7 @@ class AttendanceController extends Controller
 
         $data = $validator->validated();
         $data[$kind === 'official' ? 'db_setlist_id' : 'user_setlist_id'] = $id;
+        $data['selected_daily_songs'] = $selectedDailySongs;
 
         $attendance = Auth::guard('external')->user()->attendances()->create($data);
 

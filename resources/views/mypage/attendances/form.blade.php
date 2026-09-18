@@ -40,6 +40,9 @@
                         <input type="hidden" name="setlist_id" value="{{ $setlistId }}">
                         <input type="hidden" name="attended_date" value="{{ $scheduleOptions[0]['date'] }}">
                         <input type="hidden" name="venue" value="{{ $scheduleOptions[0]['venue'] }}">
+                        @foreach ($selectedDailySongs ?? [] as $songUuid)
+                            <input type="hidden" name="selected_daily_songs[]" value="{{ $songUuid }}">
+                        @endforeach
                         <div class="mb-3">
                             <label class="form-label">参加日</label>
                             <div class="form-control" style="background-color: #f8f9fa;">{{ \Carbon\Carbon::parse($scheduleOptions[0]['date'])->format('Y.m.d') }}</div>
@@ -56,6 +59,9 @@
                         <input type="hidden" name="setlist_id" value="{{ $setlistId }}">
                         <input type="hidden" id="attended_date" name="attended_date" value="{{ old('attended_date') }}">
                         <input type="hidden" id="venue" name="venue" value="{{ old('venue') }}">
+                        @foreach ($selectedDailySongs ?? [] as $songUuid)
+                            <input type="hidden" name="selected_daily_songs[]" value="{{ $songUuid }}">
+                        @endforeach
                         <div class="mb-3">
                             <label for="schedule_select" class="form-label">参加日・会場を選択</label>
                             <select class="form-control" id="schedule_select" required>
@@ -80,6 +86,9 @@
                     <form method="POST" action="{{ route('mypage.attendances.store') }}">
                         @csrf
                         <input type="hidden" name="setlist_id" value="{{ $setlistId }}">
+                        @foreach ($selectedDailySongs ?? [] as $songUuid)
+                            <input type="hidden" name="selected_daily_songs[]" value="{{ $songUuid }}">
+                        @endforeach
                         <div class="mb-3">
                             <label for="attended_date" class="form-label">参加日</label>
                             <input type="date" class="form-control" id="attended_date" name="attended_date" value="{{ old('attended_date', $defaultAttendedDate) }}" required>
