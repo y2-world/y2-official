@@ -11,6 +11,13 @@ body {
     font-weight: 400;
     font-style: normal;
 }
+/* Zen Old Minchoは400と900のウェイトしか提供されておらず、
+   ブラウザ既定のbold(700)を指定すると太字ウェイトが読み込まれず
+   Chromeで太字が見えにくくなるため、900に統一する */
+b,
+strong {
+    font-weight: 900;
+}
 a {
     background-color: transparent;
 }

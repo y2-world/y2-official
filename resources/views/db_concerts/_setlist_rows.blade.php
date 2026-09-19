@@ -131,7 +131,7 @@
                                             @if ($isInline)
                                                 -
                                                 @if ($link)
-                                                    <a href="{{ $link }}" @if($isUnique) style="font-weight:bold;" @endif>{{ $title }}</a>
+                                                    <a href="{{ $link }}" @if($isUnique) style="font-weight:900;" @endif>{{ $title }}</a>
                                                 @else
                                                     @if($isUnique)<strong>{{ $title }}</strong>@else{{ $title }}@endif
                                                 @endif
@@ -143,7 +143,7 @@
                                                 @endif
                                                 <br>
                                             @else
-                                                <li @if($isUnique) style="font-weight:bold;" @endif>
+                                                <li @if($isUnique) style="font-weight:900;" @endif>
                                                     @if ($link)
                                                         <a href="{{ $link }}">{{ $title }}</a>
                                                     @else
