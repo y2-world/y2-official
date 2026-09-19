@@ -48,6 +48,7 @@ class DbSetlistResource extends Resource
                         Forms\Components\Select::make('_artist_id')
                             ->label('アーティスト')
                             ->options(fn() => \App\Support\JapaneseNameSorter::sortOptions(\App\Models\Artist::pluck('name', 'id')->all()))
+                            ->default(fn() => session(\App\Filament\Resources\DbSetlistResource\Pages\CreateDbSetlist::SESSION_KEY))
                             ->searchable()
                             ->native(false)
                             ->live()

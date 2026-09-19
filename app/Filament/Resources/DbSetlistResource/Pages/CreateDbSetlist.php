@@ -11,12 +11,16 @@ class CreateDbSetlist extends CreateRecord
 {
     protected static string $resource = DbSetlistResource::class;
 
+    public const SESSION_KEY = 'db_setlist_create_last_artist_id';
+
     private ?string $pendingRowTitle = null;
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $this->pendingRowTitle = $data['row_title'] ?? null;
         unset($data['row_title']);
+
+        session()->put(self::SESSION_KEY, $this->form->getRawState()['_artist_id'] ?? null);
 
         return $data;
     }
