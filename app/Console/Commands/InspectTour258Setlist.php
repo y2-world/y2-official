@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\DbSetlist;
+use App\Models\DbSong;
 use Illuminate\Console\Command;
 
 class InspectTour258Setlist extends Command
@@ -14,6 +15,7 @@ class InspectTour258Setlist extends Command
     public function handle(): void
     {
         $sl = DbSetlist::where('tour_id', 258)->where('row', 1)->orderBy('order_no')->get();
+        $songTitles = DbSong::pluck('title', 'id');
 
         foreach ($sl as $s) {
             $this->line("=== setlist_id={$s->id} order_no={$s->order_no} subtitle={$s->subtitle} ===");
@@ -25,9 +27,11 @@ class InspectTour258Setlist extends Command
                     $n++;
                 }
                 $label = $isSkipped ? '  -  ' : '  ' . $n . '  ';
+                $songId = $item['song'] ?? '?';
+                $songTitle = is_numeric($songId) ? ($songTitles[$songId] ?? 'NOT FOUND') : $songId;
                 $altTitle = !empty($item['alternative_title']) ? ' [' . $item['alternative_title'] . ']' : '';
                 $uuid = $item['_uuid'] ?? '?';
-                $this->line($label . ($item['song'] ?? '?') . $altTitle . ' (uuid=' . $uuid . ')');
+                $this->line($label . $songId . ':' . $songTitle . $altTitle . ' (uuid=' . $uuid . ')');
             }
         }
     }
