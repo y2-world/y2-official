@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Artist;
 use App\Models\UserArtist;
 use App\Models\UserConcert;
 use App\Models\UserSetlist;
@@ -31,13 +30,7 @@ class ManageController extends Controller
                 ->get()
         );
 
-        // Yuki本人だけ、公式データベース（db_songs）を直接編集する導線も表示する。
-        $isDatabaseManager = $user->isDatabaseManager();
-        $databaseArtists = $isDatabaseManager
-            ? Artist::where('visible', 1)->withCount('songs')->orderBy('id')->get()
-            : collect();
-
-        return view('mypage.manage.index', compact('artists', 'isDatabaseManager', 'databaseArtists'));
+        return view('mypage.manage.index', compact('artists'));
     }
 
     // 新しいアーティストを追加する

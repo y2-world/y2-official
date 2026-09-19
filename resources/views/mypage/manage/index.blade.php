@@ -67,21 +67,6 @@
                         </div>
                     </form>
                 </div>
-
-                @if ($isDatabaseManager)
-                    <hr style="margin: 40px 0;">
-                    <div class="select-card-list">
-                        @foreach ($databaseArtists as $dbArtist)
-                            <a href="{{ route('mypage.manage.database_songs', $dbArtist->id) }}" class="select-card">
-                                <span class="select-card-body">
-                                    <span class="select-card-title">{{ $dbArtist->name }}</span>
-                                    <span class="select-card-meta">{{ $dbArtist->songs_count }}曲</span>
-                                </span>
-                                <i class="fa-solid fa-chevron-right select-card-arrow"></i>
-                            </a>
-                        @endforeach
-                    </div>
-                @endif
             </div>
         </div>
     </div>

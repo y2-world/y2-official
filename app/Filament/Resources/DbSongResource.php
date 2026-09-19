@@ -206,6 +206,7 @@ class DbSongResource extends Resource
             'index' => Pages\ListDbSongs::route('/'),
             'create' => Pages\CreateDbSong::route('/create'),
             'edit' => Pages\EditDbSong::route('/{record}/edit'),
+            'manage-artist' => Pages\ManageArtistSongs::route('/manage/{artistId}'),
         ];
     }
 }
