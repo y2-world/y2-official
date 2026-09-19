@@ -8,12 +8,23 @@ use Illuminate\Console\Command;
 
 class InspectTour258Setlist extends Command
 {
-    protected $signature = 'inspect:tour258-setlist';
+    protected $signature = 'inspect:tour258-setlist {--search-title= : Search for a song title instead}';
 
-    protected $description = 'Debug: show row 1 setlists for tour 258';
+    protected $description = 'Debug: show row 1 setlists for tour 258, or search a song title';
 
     public function handle(): void
     {
+        if ($search = $this->option('search-title')) {
+            $songs = DbSong::where('title', 'like', "%{$search}%")->get(['id', 'title', 'artist_id']);
+            foreach ($songs as $s) {
+                $this->line("id={$s->id} title={$s->title} artist_id={$s->artist_id}");
+            }
+            if ($songs->isEmpty()) {
+                $this->line('no matches');
+            }
+            return;
+        }
+
         $sl = DbSetlist::where('tour_id', 258)->where('row', 1)->orderBy('order_no')->get();
         $songTitles = DbSong::pluck('title', 'id');
 
