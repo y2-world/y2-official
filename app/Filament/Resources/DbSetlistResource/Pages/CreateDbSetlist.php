@@ -11,8 +11,6 @@ class CreateDbSetlist extends CreateRecord
 {
     protected static string $resource = DbSetlistResource::class;
 
-    public const SESSION_KEY = 'db_setlist_create_last_artist_id';
-
     private ?string $pendingRowTitle = null;
 
     protected function mutateFormDataBeforeCreate(array $data): array
@@ -20,9 +18,21 @@ class CreateDbSetlist extends CreateRecord
         $this->pendingRowTitle = $data['row_title'] ?? null;
         unset($data['row_title']);
 
-        session()->put(self::SESSION_KEY, $this->form->getRawState()['_artist_id'] ?? null);
-
         return $data;
+    }
+
+    // 「保存して次を作成」の直後だけ、続けて同じアーティストのセットリストを登録しやすいよう
+    // _artist_idを引き継ぐ。一覧から改めて新規作成を開いた場合はここを通らないため、
+    // 通常通り未選択に戻る。
+    public function create(bool $another = false): void
+    {
+        $artistId = $another ? $this->form->getRawState()['_artist_id'] ?? null : null;
+
+        parent::create($another);
+
+        if ($another && $artistId) {
+            $this->form->fill(['_artist_id' => $artistId]);
+        }
     }
 
     protected function afterCreate(): void
