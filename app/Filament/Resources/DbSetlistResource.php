@@ -91,7 +91,7 @@ class DbSetlistResource extends Resource
 
                         Forms\Components\TextInput::make('row_title')
                             ->label('段のグループタイトル')
-                            ->placeholder('例: アリーナ公演（このグループの1つ目のパターンにのみ入力）')
+                            ->placeholder('例: アリーナ公演')
                             ->maxLength(255)
                             ->columnSpanFull()
                             ->afterStateHydrated(function ($set, $record) {
