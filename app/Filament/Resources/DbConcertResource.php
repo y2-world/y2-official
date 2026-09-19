@@ -36,6 +36,7 @@ class DbConcertResource extends Resource
                         Forms\Components\Select::make('artist_id')
                             ->label('アーティスト')
                             ->options(fn() => \App\Support\JapaneseNameSorter::sortOptions(\App\Models\Artist::pluck('name', 'id')->all()))
+                            ->default(fn() => session(\App\Filament\Resources\DbConcertResource\Pages\CreateDbConcert::SESSION_KEY))
                             ->required()
                             ->native(false)
                             ->searchable()
