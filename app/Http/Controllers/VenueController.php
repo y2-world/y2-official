@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Artist;
-use App\Models\ExternalUserAttendance;
 use Illuminate\Http\Request;
 use App\Models\SlSetlist;
 
@@ -35,33 +34,6 @@ class VenueController extends Controller
                 'title' => $setlist->title,
                 'url' => route('setlists.show', $setlist->id),
             ]);
-
-        // ユーザー登録セトリの参加記録も、公式演奏記録と同じ形式に整形して混ぜる。
-        // 会場はユーザーが自由入力した文字列のため、公式側と表記が完全一致するとは限らない。
-        if (!empty($keyword)) {
-            $userAttendances = ExternalUserAttendance::where('venue', 'like', "%{$keyword}%")
-                ->with(['dbSetlist.tour.artist', 'userSetlist.concert.artist'])
-                ->get()
-                ->map(function (ExternalUserAttendance $attendance) {
-                    $isOfficial = (bool) $attendance->db_setlist_id;
-                    $tour = $isOfficial ? $attendance->dbSetlist?->tour : $attendance->userSetlist?->concert;
-                    $artistId = $isOfficial ? $tour?->artist_id : $tour?->user_artist_id;
-                    $artistRef = $artistId ? ($isOfficial ? 'official-' : 'user-') . $artistId : null;
-
-                    return (object) [
-                        'kind' => 'attendance',
-                        'date' => $attendance->attended_date,
-                        'artist_name' => $tour?->artist?->name,
-                        'artist_url' => $artistRef ? route('mypage.attendances.index', ['artist_id' => $artistRef]) : null,
-                        'title' => $tour?->title,
-                        'url' => route('mypage.attendances.show', $attendance),
-                    ];
-                });
-
-            $data = $data->concat($userAttendances);
-        }
-
-        $data = $data->sortByDesc('date')->values();
 
         return view('venue', compact('artists', 'data', 'keyword'));
     }
