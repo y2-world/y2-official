@@ -242,6 +242,12 @@ class ImportSukimaswitchDiscography extends Command
     {
         return [
             [
+                'title' => '君の話',
+                'date' => '2003-09-17',
+                'mini' => true,
+                'tracks' => ['君の話', '太陽', 'メロドラマ', '君のこと全部', 'view〜オーヴァードライヴMIX〜', 'ただそれだけの風景'],
+            ],
+            [
                 'title' => '夏雲ノイズ',
                 'date' => '2004-06-23',
                 'tracks' => ['螺旋（らせん）', 'ふれて未来を', '桜夜風', 'view', 'きみがいいなら', 'ドーシタトースター', '君の話 〜エヴォリューションMix〜', '僕の話', '種を蒔く人', 'キミドリ色の世界', 'えんぴつケシゴム 〜overture〜', '奏（かなで）'],
@@ -359,8 +365,6 @@ class ImportSukimaswitchDiscography extends Command
     private function singlesData(): array
     {
         return [
-            // ミニアルバム扱い→シングル区分（EP）
-            ['title' => '君の話', 'date' => '2003-09-17', 'ep' => true, 'tracks' => ['君の話', '太陽', 'メロドラマ', '君のこと全部', 'view〜オーヴァードライヴMIX〜', 'ただそれだけの風景']],
             // 配信限定EP
             ['title' => 'Anniversary EP', 'date' => '2024-02-28', 'ep' => true, 'download' => true, 'tracks' => ['藍 Live at Asylum Chapel (South London)', '奏（かなで） Live at Asylum Chapel (South London)', '未来花 for Anniversary', 'ボクノート ～for 20th Anniversary with Orchestra～']],
             // CDシングル
