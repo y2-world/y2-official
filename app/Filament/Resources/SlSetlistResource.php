@@ -979,7 +979,7 @@ class SlSetlistResource extends Resource
         };
 
         $options = $slSongs->mapWithKeys(fn($song) => [(string) $song->id => $buildLabel($song)])->all();
-        $options += $unlinkedDbSongs->mapWithKeys(fn($song) => ['db-' . $song->id => $buildLabel($song) . '（未登録）'])->all();
+        $options += $unlinkedDbSongs->mapWithKeys(fn($song) => ['db-' . $song->id => $buildLabel($song)])->all();
 
         return \App\Support\JapaneseNameSorter::sortOptions($options);
     }
