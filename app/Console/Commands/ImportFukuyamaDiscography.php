@@ -26,9 +26,22 @@ class ImportFukuyamaDiscography extends Command
         return $title;
     }
 
+    // 表記が全く異なるため自動マッチングできない曲の手動対応表（例: 中国語版タイトル → 基本曲名）
+    private const MANUAL_TITLE_ALIASES = [
+        '破曉' => '暁',
+    ];
+
     // 曲titleに対して、[DbSong.id, 基本形と表記が異なる場合はその原文表記(exception用)] を返す
     private function findSong(array $songsByNormalizedTitle, array $songTitlesById, string $title): ?array
     {
+        if (isset(self::MANUAL_TITLE_ALIASES[$title])) {
+            $baseTitle = self::MANUAL_TITLE_ALIASES[$title];
+            $normalizedBase = $this->normalize($baseTitle);
+            if (isset($songsByNormalizedTitle[$normalizedBase])) {
+                return ['id' => $songsByNormalizedTitle[$normalizedBase], 'exception' => $title];
+            }
+        }
+
         $normalized = $this->normalize($title);
         if (isset($songsByNormalizedTitle[$normalized])) {
             $id = $songsByNormalizedTitle[$normalized];
