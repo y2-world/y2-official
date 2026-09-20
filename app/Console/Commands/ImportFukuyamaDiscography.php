@@ -29,8 +29,6 @@ class ImportFukuyamaDiscography extends Command
     // 表記が全く異なるため自動マッチングできない曲の手動対応表（例: 中国語版タイトル → 基本曲名）
     private const MANUAL_TITLE_ALIASES = [
         '破曉' => '暁',
-        'ON AND ON 09' => 'ON AND ON',
-        '蜜柑色の夏休み2015' => '蜜柑色の夏休み',
     ];
 
     // 曲titleに対して、[DbSong.id, 基本形と表記が異なる場合はその原文表記(exception用)] を返す
@@ -66,12 +64,22 @@ class ImportFukuyamaDiscography extends Command
     {
         $dryRun = (bool) $this->option('dry-run');
 
-        // 過去の実行で全角スラッシュ表記だった頃に作られた重複レコードを削除する
-        $staleSingles = DbSingle::where('artist_id', self::ARTIST_ID)->where('title', 'like', '%／%')->get(['id', 'title']);
-        foreach ($staleSingles as $stale) {
-            $this->warn("Removing stale duplicate single: id={$stale->id} title={$stale->title}");
-            if (!$dryRun) {
-                $stale->delete();
+        // titleの表記ゆれ修正のたびにupdateOrCreateのキーがずれて重複レコードが増えてきたため、
+        // 同じ日付に複数レコードがある場合はID最大（＝最後に作られた最新のもの）以外を削除する
+        $singlesByDate = DbSingle::where('artist_id', self::ARTIST_ID)->orderBy('id')->get(['id', 'date', 'title'])->groupBy('date');
+        foreach ($singlesByDate as $date => $group) {
+            if ($group->count() <= 1) {
+                continue;
+            }
+            $keep = $group->last();
+            foreach ($group as $dupe) {
+                if ($dupe->id === $keep->id) {
+                    continue;
+                }
+                $this->warn("Removing duplicate single: id={$dupe->id} date={$date} title={$dupe->title}");
+                if (!$dryRun) {
+                    $dupe->delete();
+                }
             }
         }
 
@@ -117,9 +125,17 @@ class ImportFukuyamaDiscography extends Command
             $this->line("=== {$albumData['title']} ({$albumData['date']}) === matched " . count($trackIds) . '/' . count($albumData['tracks']));
 
             if (!$dryRun) {
+                // タイトル表記はWikipedia側の修正で変わりうるためキーにしない。
+                // album_id（オリジナルのみ採番）があればそれで一意に識別し、
+                // ベスト/ミニ（番号なし）はdateのみで識別する（同日複数リリースは今のところ無い前提）。
+                $key = ['artist_id' => self::ARTIST_ID, 'date' => $albumData['date']];
+                if ($isOriginal) {
+                    $key['album_id'] = $albumId;
+                }
                 DbAlbum::updateOrCreate(
-                    ['artist_id' => self::ARTIST_ID, 'title' => $albumData['title'], 'date' => $albumData['date']],
+                    $key,
                     [
+                        'title' => $albumData['title'],
                         'album_id' => $isOriginal ? $albumId : null,
                         'best' => $albumData['best'] ?? false,
                         'mini' => $albumData['mini'] ?? false,
@@ -155,9 +171,15 @@ class ImportFukuyamaDiscography extends Command
             $this->line("=== [single] {$singleData['title']} ({$singleData['date']}) === matched " . count($trackIds) . '/' . count($singleData['tracks']));
 
             if (!$dryRun) {
+                // アルバムと同様、タイトル表記はキーにせずsingle_id（CDシングルのみ採番）+dateで識別する
+                $key = ['artist_id' => self::ARTIST_ID, 'date' => $singleData['date']];
+                if ($isCd) {
+                    $key['single_id'] = $singleId;
+                }
                 DbSingle::updateOrCreate(
-                    ['artist_id' => self::ARTIST_ID, 'title' => $singleData['title'], 'date' => $singleData['date']],
+                    $key,
                     [
+                        'title' => $singleData['title'],
                         'single_id' => $isCd ? $singleId : null,
                         'download' => $singleData['download'] ?? false,
                         'tracklist' => $trackIds,
@@ -207,27 +229,27 @@ class ImportFukuyamaDiscography extends Command
             [
                 'title' => 'ON AND ON',
                 'date' => '1994-06-09',
-                'tracks' => ['ON AND ON', "IT'S ONLY LOVE", 'BLOOD', '1985年 Factory Street 夏', '熱いくちづけ', '雨を聴きながら', 'Dear', 'ダンスしないか', '明日へのマーチ', 'GLOAMING WAY', 'ぼくの朝'],
+                'tracks' => ['ON AND ON', "IT'S ONLY LOVE (ALBUM MIX)", 'BLOOD', '1985年 Factory Street 夏', '熱いくちづけ', '雨を聴きながら', 'Dear', 'ダンスしないか', '明日へのマーチ', 'GLOAMING WAY', 'ぼくの朝'],
             ],
             [
                 'title' => 'SING A SONG',
                 'date' => '1998-06-24',
-                'tracks' => ['愛は風のように', 'Heart', 'Good Job', 'you', '僕らの愛は今日も忙しい', 'You Can Dance', '遠い旅', 'Hard Luck Lover', '80 Proof', '巻き戻した夏', 'Like A Hurricane', 'Fellow'],
+                'tracks' => ['愛は風のように', 'Heart', 'Good Job', 'you', '僕らの愛は今日も忙しい', 'You Can Dance', '遠い旅', 'Hard Luck Lover', '80 Proof', '巻き戻した夏', 'Like A Hurricane (Album Mix)', 'Fellow'],
             ],
             [
                 'title' => 'f',
                 'date' => '2001-04-25',
-                'tracks' => ['友よ', 'HEAVEN', 'Venus', '蜜柑色の夏休み', '桜坂', 'Escape', 'HEY!', 'Gang★', 'dogi-magi', 'Blues', 'Carnival', '家路', '春夏秋冬'],
+                'tracks' => ['友よ', 'HEAVEN', 'Venus', '蜜柑色の夏休み', '桜坂', 'Escape', 'HEY! (New Century Mix)', 'Gang★', 'dogi-magi', 'Blues', 'Carnival', '家路', '春夏秋冬'],
             ],
             [
                 'title' => '5年モノ',
                 'date' => '2006-12-06',
-                'tracks' => ['FREEDOM', 'THE EDGE OF CHAOS 〜愛の一撃〜', '虹', 'ひまわり', 'それがすべてさ', '泣いたりしないで', 'RED×BLUE', '東京', 'milk tea', '美しき花', 'LOVE TRAIN', 'あの夏も 海も 空も', 'BEAUTIFUL DAY', 'わたしは風になる'],
+                'tracks' => ['FREEDOM', 'THE EDGE OF CHAOS 〜愛の一撃〜', '虹', 'ひまわり', 'それがすべてさ', '泣いたりしないで', 'RED×BLUE', '東京', 'milk tea', '美しき花', 'LOVE TRAIN', 'あの夏も 海も 空も', 'BEAUTIFUL DAY', 'わたしは風になる (LIVE VERSION)', 'Sandy'],
             ],
             [
                 'title' => '残響',
                 'date' => '2009-06-30',
-                'tracks' => ['群青 〜ultramarine〜', '化身', '明日の☆SHOW', 'ながれ星', '幸福論', '18 〜eighteen〜', '最愛', '想 -new love new world-', 'phantom', 'survivor', '今夜、君を抱いて', '旅人', '東京にもあったんだ', '道標'],
+                'tracks' => ['群青 〜ultramarine〜', '化身', '明日の☆SHOW', 'ながれ星', '幸福論', '18 〜eighteen〜', '最愛', '想 -new love new world-', 'phantom', 'survivor', '今夜、君を抱いて', '旅人', '東京にもあったんだ', '道標', '99'],
             ],
             [
                 'title' => 'HUMAN',
@@ -245,7 +267,7 @@ class ImportFukuyamaDiscography extends Command
             [
                 'title' => '超新星',
                 'date' => '2026-09-09',
-                'tracks' => ['SUPERNOVA', 'ウシュクベーハー', '邂逅', '拍手喝采', '木星 feat. 稲葉浩志', '龍', '幻界', '未来絵', 'クスノキ', 'Great Freedom', '万有引力', 'ひとみ', '想望', 'Walking with you', '光', '妖', 'ヒトツボシ'],
+                'tracks' => ['SUPERNOVA', 'ウシュクベーハー', '邂逅', '拍手喝采', '木星 feat. 稲葉浩志', '龍', '幻界', '未来絵', 'クスノキ', 'Great Freedom', '万有引力', 'ひとみ', '想望', 'Walking with you', '光', '妖', 'ヒトツボシ', '拍手喝采（Piano ver.）'],
             ],
             // ベストアルバム
             [
@@ -262,15 +284,15 @@ class ImportFukuyamaDiscography extends Command
                 'date' => '1999-12-08',
                 'best' => true,
                 'tracks' => [
-                    ['追憶の雨の中 (remix)', 'Disc-1'], ['風をさがしてる (TV Special/95 style)', 'Disc-1'], ['ただ僕がかわった (remix)', 'Disc-1'], ['Good night (remix)', 'Disc-1'], ['約束の丘 (remix)', 'Disc-1'], ['MELODY (remix)', 'Disc-1'], ['恋人 (remix)', 'Disc-1'], ['遠くへ (remix)', 'Disc-1'], ["Marcy's Song (remix)", 'Disc-1'], ["IT'S ONLY LOVE (remix)", 'Disc-1'], ['1985年 Factory Street 夏 (remix)', 'Disc-1'], ['GLOAMING WAY (remix)', 'Disc-1'], ['明日へのマーチ (remix)', 'Disc-1'], ['Dear (remix)', 'Disc-1'],
-                    ['HELLO', 'Disc-2'], ['Message', 'Disc-2'], ['今 このひとときが 遠い夢のように', 'Disc-2'], ['Heart', 'Disc-2'], ['you', 'Disc-2'], ['Like A Hurricane', 'Disc-2'], ['巻き戻した夏', 'Disc-2'], ['Peach!!', 'Disc-2'], ['Squall', 'Disc-2'], ['DEAD BODY (Live/95 Style)', 'Disc-2'], ['BLOOD (Live/95 Style)', 'Disc-2'], ['Good Luck (Live/95 Style)', 'Disc-2'], ['SORRY BABY (Live/98 Style)', 'Disc-2'], ['もっとそばにきて (Santa Monica Blvd./99 Style)', 'Disc-2'],
+                    ['追憶の雨の中 (remix)', 'Disc-1'], ["風をさがしてる (TV Special/'95 style)", 'Disc-1'], ['ただ僕がかわった (remix)', 'Disc-1'], ['Good night (remix)', 'Disc-1'], ['約束の丘 (remix)', 'Disc-1'], ['MELODY (remix)', 'Disc-1'], ['恋人 (remix)', 'Disc-1'], ['遠くへ (remix)', 'Disc-1'], ["Marcy's Song (remix)", 'Disc-1'], ["IT'S ONLY LOVE (remix)", 'Disc-1'], ['1985年 Factory Street 夏 (remix)', 'Disc-1'], ['GLOAMING WAY (remix)', 'Disc-1'], ['明日へのマーチ (remix)', 'Disc-1'], ['Dear (remix)', 'Disc-1'],
+                    ['HELLO', 'Disc-2'], ['Message', 'Disc-2'], ['今 このひとときが 遠い夢のように', 'Disc-2'], ['Heart', 'Disc-2'], ['you', 'Disc-2'], ['Like A Hurricane', 'Disc-2'], ['巻き戻した夏', 'Disc-2'], ['Peach!!', 'Disc-2'], ['Squall', 'Disc-2'], ["DEAD BODY (Live/'95 Style)", 'Disc-2'], ["BLOOD (Live/'95 Style)", 'Disc-2'], ["Good Luck (Live/'95 Style)", 'Disc-2'], ["SORRY BABY (Live/'98 Style)", 'Disc-2'], ["もっとそばにきて (Santa Monica Blvd./'99 Style)", 'Disc-2'],
                 ],
             ],
             [
                 'title' => 'MAGNUM COLLECTION "SLOW"',
                 'date' => '2003-08-27',
                 'best' => true,
-                'tracks' => ['Good night', 'Girl', '雨のメインストリート', 'Hold on Me', '恋人', "IT'S ONLY LOVE", 'Good Luck', 'GLOAMING WAY', 'Dear', 'ぼくの朝', 'そのままで…', 'you', '遠い旅', '巻き戻した夏', 'Squall'],
+                'tracks' => ['Good night', 'Girl', "雨のメインストリート ('95 Style)", 'Hold on Me', '恋人', "IT'S ONLY LOVE", 'Good Luck', 'GLOAMING WAY', 'Dear', 'ぼくの朝', 'そのままで…', 'you', '遠い旅', '巻き戻した夏', 'Squall'],
             ],
             [
                 'title' => 'THE BEST BANG!!',
@@ -280,7 +302,7 @@ class ImportFukuyamaDiscography extends Command
                     ['追憶の雨の中', 'Disc 1'], ['逃げられない', 'Disc 1'], ['約束の丘', 'Disc 1'], ['HARD RAIN', 'Disc 1'], ['Good night', 'Disc 1'], ['MELODY', 'Disc 1'], ['All My Loving', 'Disc 1'], ['遠くへ', 'Disc 1'], ['恋人', 'Disc 1'], ["Marcy's Song", 'Disc 1'], ["IT'S ONLY LOVE", 'Disc 1'], ['HELLO', 'Disc 1'], ['Good Luck', 'Disc 1'], ['Message', 'Disc 1'], ['Heart', 'Disc 1'], ['you', 'Disc 1'],
                     ['HEAVEN', 'Disc 2'], ['Peach!!', 'Disc 2'], ['Squall', 'Disc 2'], ['Gang★', 'Disc 2'], ['桜坂', 'Disc 2'], ['蜜柑色の夏休み', 'Disc 2'], ['虹', 'Disc 2'], ['ひまわり', 'Disc 2'], ['それがすべてさ', 'Disc 2'], ['泣いたりしないで', 'Disc 2'], ['RED×BLUE', 'Disc 2'], ['あの夏も 海も 空も', 'Disc 2'], ['milk tea', 'Disc 2'], ['東京にもあったんだ', 'Disc 2'],
                     ['THE EDGE OF CHAOS 〜愛の一撃〜', 'Disc 3'], ['明日の☆SHOW', 'Disc 3'], ['最愛', 'Disc 3'], ['想 -new love new world-', 'Disc 3'], ['化身', 'Disc 3'], ['はつ恋', 'Disc 3'], ['KISSして', 'Disc 3'], ['少年', 'Disc 3'], ['蛍', 'Disc 3'], ['群青 〜ultramarine〜', 'Disc 3'], ['vs. 〜知覚と快楽の螺旋〜', 'Disc 3'], ['覚醒モーメント', 'Disc 3'], ['でんでらりゅうば', 'Disc 3'], ['99', 'Disc 3'], ['Revolution//Evolution', 'Disc 3'], ['アンモナイトの夢', 'Disc 3'],
-                    ['心color 〜a song for the wonderful year〜', 'Disc 4'], ['石塊のプライド', 'Disc 4'], ['道標 (2010)', 'Disc 4'],
+                    ['心color 〜a song for the wonderful year〜', 'Disc 4'], ['石塊のプライド', 'Disc 4'], ['道標 2010', 'Disc 4'], ['心color 〜a song for the wonderful year〜 (Original Karaoke)', 'Disc 4'], ['石塊のプライド (Original Karaoke)', 'Disc 4'], ['道標 2010 (Original Karaoke)', 'Disc 4'],
                 ],
             ],
             [
@@ -288,9 +310,9 @@ class ImportFukuyamaDiscography extends Command
                 'date' => '2015-12-23',
                 'best' => true,
                 'tracks' => [
-                    ['I am a HERO', 'Reel.1'], ['何度でも花が咲くように私を生きよう', 'Reel.1'], ['クスノキ', 'Reel.1'], ['Prelude', 'Reel.1'], ['HUMAN', 'Reel.1'], ['暁', 'Reel.1'], ['Get the groove', 'Reel.1'], ['誕生日には真白な百合を', 'Reel.1'], ['GAME', 'Reel.1'], ['Beautiful life', 'Reel.1'], ['生きてる生きてく', 'Reel.1'], ['家族になろうよ', 'Reel.1'], ['fighting pose', 'Reel.1'], ['vs. 〜知覚と快楽の螺旋〜 (2013)', 'Reel.1'], ['蛍', 'Reel.1'], ['少年', 'Reel.1'], ['破曉', 'Reel.1'],
+                    ['I am a HERO', 'Reel.1'], ['何度でも花が咲くように私を生きよう', 'Reel.1'], ['クスノキ', 'Reel.1'], ['Prelude', 'Reel.1'], ['HUMAN', 'Reel.1'], ['暁', 'Reel.1'], ['Get the groove', 'Reel.1'], ['誕生日には真白な百合を', 'Reel.1'], ['GAME', 'Reel.1'], ['Beautiful life', 'Reel.1'], ['生きてる生きてく', 'Reel.1'], ['家族になろうよ', 'Reel.1'], ['fighting pose', 'Reel.1'], ['vs.2013 〜知覚と快楽の螺旋〜', 'Reel.1'], ['蛍', 'Reel.1'], ['少年', 'Reel.1'], ['破曉 (Bonus track)', 'Reel.1'],
                     ['Revolution//Evolution', 'Reel.2'], ['はつ恋', 'Reel.2'], ['18 〜eighteen〜', 'Reel.2'], ['ながれ星', 'Reel.2'], ['幸福論', 'Reel.2'], ['最愛', 'Reel.2'], ['KISSして', 'Reel.2'], ['化身', 'Reel.2'], ['道標', 'Reel.2'], ['明日の☆SHOW', 'Reel.2'], ['想 -new love new world-', 'Reel.2'], ['東京にもあったんだ', 'Reel.2'], ['BEAUTIFUL DAY', 'Reel.2'], ['milk tea', 'Reel.2'], ['あの夏も 海も 空も', 'Reel.2'],
-                    ['東京', 'Reel.3'], ['虹', 'Reel.3'], ['ひまわり', 'Reel.3'], ['それがすべてさ', 'Reel.3'], ['Gang★', 'Reel.3'], ['HEY!', 'Reel.3'], ['桜坂', 'Reel.3'], ['HELLO', 'Reel.3'], ["IT'S ONLY LOVE", 'Reel.3'], ['Squall (Live)', 'Reel.3'], ['恋人 (Live)', 'Reel.3'], ['Good night (Live)', 'Reel.3'], ['Good Luck (Live)', 'Reel.3'], ['追憶の雨の中 (Live)', 'Reel.3'],
+                    ['東京', 'Reel.3'], ['虹', 'Reel.3'], ['ひまわり', 'Reel.3'], ['それがすべてさ', 'Reel.3'], ['Gang★', 'Reel.3'], ['HEY!', 'Reel.3'], ['桜坂', 'Reel.3'], ['HELLO', 'Reel.3'], ["IT'S ONLY LOVE", 'Reel.3'], ['Squall (「WE\'RE BROS.TOUR 2014 in ASIA」LIVE音源)', 'Reel.3'], ['恋人 (「WE\'RE BROS.TOUR 2014 in ASIA」LIVE音源)', 'Reel.3'], ['Good night (「福山☆冬の大感謝祭 其の十二」LIVE音源)', 'Reel.3'], ['Good Luck (「福山☆冬の大感謝祭 其の十四」LIVE音源)', 'Reel.3'], ['追憶の雨の中 (「福山☆冬の大感謝祭 其の十四」LIVE音源)', 'Reel.3'],
                 ],
             ],
         ];
@@ -303,33 +325,37 @@ class ImportFukuyamaDiscography extends Command
             ['title' => 'アクセス', 'date' => '1990-11-07', 'tracks' => ['アクセス', 'Radio Days 〜1943…〜']],
             ['title' => '風をさがしてる', 'date' => '1991-02-21', 'tracks' => ['風をさがしてる', '逃げられない']],
             ['title' => 'WOH WOW / ただ僕がかわった', 'date' => '1991-10-21', 'tracks' => ['WOH WOW', 'ただ僕がかわった']],
-            ['title' => 'Good night', 'date' => '1992-05-21', 'tracks' => ['Good night', 'ひとりきり歩いてく帰り道で']],
-            ['title' => '約束の丘', 'date' => '1992-10-28', 'tracks' => ['約束の丘', 'ふたつの鼓動']],
-            ['title' => 'MELODY / BABY BABY', 'date' => '1993-06-02', 'tracks' => ['MELODY', 'BABY BABY']],
-            ['title' => 'All My Loving / 恋人', 'date' => '1993-09-29', 'tracks' => ['All My Loving', '恋人', 'All My Loving (Original Karaoke)', '恋人 (Original Karaoke)']],
-            ['title' => "IT'S ONLY LOVE/SORRY BABY", 'date' => '1994-03-24', 'tracks' => ["IT'S ONLY LOVE", 'SORRY BABY']],
-            ['title' => 'HELLO', 'date' => '1995-02-06', 'tracks' => ['HELLO', 'そのままで…', 'Pa Pa Pa']],
-            ['title' => 'Message / 今 このひとときが 遠い夢のように', 'date' => '1995-10-02', 'tracks' => ['Message', '今 このひとときが 遠い夢のように']],
-            ['title' => 'Heart / you', 'date' => '1998-04-30', 'tracks' => ['Heart', 'you', 'Like A Hurricane']],
-            ['title' => 'Peach!! / Heart of Xmas', 'date' => '1998-11-05', 'tracks' => ['Peach!!', 'Heart of Xmas']],
-            ['title' => 'HEAVEN / Squall', 'date' => '1999-11-17', 'tracks' => ['HEAVEN', 'Squall']],
-            ['title' => '桜坂', 'date' => '2000-04-26', 'tracks' => ['桜坂', '春夏秋冬']],
-            ['title' => 'HEY!', 'date' => '2000-10-12', 'tracks' => ['HEY!', '家路', 'HEY! (The victory run)', '家路 (Putting on the laurel crown)']],
-            ['title' => 'Gang★', 'date' => '2001-03-28', 'tracks' => ['Gang★', 'Sweet Darling']],
-            ['title' => '虹 / ひまわり / それがすべてさ', 'date' => '2003-08-27', 'tracks' => ['虹', 'ひまわり', 'それがすべてさ', 'ひまわり (fields of toscana)']],
-            ['title' => '泣いたりしないで / RED×BLUE', 'date' => '2004-12-01', 'tracks' => ['泣いたりしないで', 'RED×BLUE']],
-            ['title' => '東京', 'date' => '2005-08-17', 'tracks' => ['東京', 'わたしは風になる']],
-            ['title' => 'milk tea / 美しき花', 'date' => '2006-05-24', 'tracks' => ['milk tea', '美しき花', 'LOVE TRAIN', 'あの夏も 海も 空も']],
-            ['title' => '東京にもあったんだ / 無敵のキミ', 'date' => '2007-04-11', 'tracks' => ['東京にもあったんだ', '無敵のキミ']],
-            ['title' => '想 -new love new world-', 'date' => '2008-10-22', 'tracks' => ['想 -new love new world-']],
-            ['title' => '化身', 'date' => '2009-05-20', 'tracks' => ['化身', '道標', '追憶の雨の中 (Live)']],
-            ['title' => 'はつ恋', 'date' => '2009-12-16', 'tracks' => ['はつ恋', 'ON AND ON 09', 'アンモナイトの夢']],
-            ['title' => '蛍 / 少年', 'date' => '2010-08-11', 'tracks' => ['蛍', '少年', 'Revolution//Evolution']],
-            ['title' => '家族になろうよ / fighting pose', 'date' => '2011-08-31', 'tracks' => ['家族になろうよ', 'fighting pose', 'HARD RAIN (Live)', '家族になろうよ (Wedding Ver.)']],
-            ['title' => '生きてる生きてく', 'date' => '2012-03-28', 'tracks' => ['生きてる生きてく', 'Around the world', 'Dear (Live)', '逃げられない (Live)']],
-            ['title' => 'Beautiful life / GAME', 'date' => '2012-10-10', 'tracks' => ['Beautiful life', 'GAME', 'Girl (2012)', 'Beautiful life (Sing with the piano ver.)']],
-            ['title' => '誕生日には真白な百合を / Get the groove', 'date' => '2013-04-10', 'tracks' => ['誕生日には真白な百合を', 'Get the groove', '愛は風のように (Live)', 'Good Job (Live)']],
-            ['title' => 'I am a HERO', 'date' => '2015-08-19', 'tracks' => ['I am a HERO', 'ステージの魔物', 'その笑顔が見たい', '何度でも花が咲くように私を生きよう', '蜜柑色の夏休み2015', 'I LOVE YOU (BROS.盤)']],
+            ['title' => 'Good night', 'date' => '1992-05-21', 'tracks' => ['Good night', 'ひとりきり歩いてく帰り道で', 'Good night Original Karaoke']],
+            ['title' => '約束の丘', 'date' => '1992-10-28', 'tracks' => ['約束の丘', 'ふたつの鼓動', '約束の丘 (Original Karaoke)']],
+            ['title' => 'MELODY / BABY BABY', 'date' => '1993-06-02', 'tracks' => ['MELODY', 'BABY BABY', 'MELODY Original Karaoke']],
+            ['title' => 'All My Loving / 恋人', 'date' => '1993-09-29', 'tracks' => ['All My Loving', '恋人', 'All My Loving (original karaoke)', '恋人 (original karaoke)']],
+            ['title' => "IT'S ONLY LOVE/SORRY BABY", 'date' => '1994-03-24', 'tracks' => ["IT'S ONLY LOVE", 'SORRY BABY', "IT'S ONLY LOVE (original karaoke)", 'SORRY BABY  (original karaoke)']],
+            ['title' => 'HELLO', 'date' => '1995-02-06', 'tracks' => ['HELLO', 'そのままで…', 'Pa Pa Pa', 'HELLO (オリジナル・カラオケ)', 'そのままで… (オリジナル・カラオケ)', 'Pa Pa Pa (オリジナル・カラオケ)']],
+            ['title' => 'Message / 今 このひとときが 遠い夢のように', 'date' => '1995-10-02', 'tracks' => ['Message', '今 このひとときが 遠い夢のように', 'Message ORIGINAL KARAOKE', '今 このひとときが 遠い夢のように ORIGINAL KARAOKE']],
+            ['title' => 'Heart / you', 'date' => '1998-04-30', 'tracks' => ['Heart', 'you', 'Like A Hurricane', 'Heart (original karaoke)', 'you (original karaoke)', 'Like A Hurricane (original karaoke)']],
+            ['title' => 'Peach!! / Heart of Xmas', 'date' => '1998-11-05', 'tracks' => ['Peach!!', 'Heart of Xmas', 'Peach!! (original karaoke)', 'Heart of Xmas (original karaoke)']],
+            ['title' => 'HEAVEN / Squall', 'date' => '1999-11-17', 'tracks' => ['HEAVEN', 'Squall', 'HEAVEN (original karaoke)', 'Squall (original karaoke)']],
+            // 通常盤の後に初回盤の追加曲を並べる
+            ['title' => '桜坂', 'date' => '2000-04-26', 'tracks' => ['桜坂', 'DRIVE-IN THEATERでくちづけを', '桜坂 (nayuta version/instrumental)', 'DRIVE-IN THEATERでくちづけを (nomozaki version/instrumental)', '桜坂 (original karaoke)', 'DRIVE-IN THEATERでくちづけを (original karaoke)', '春夏秋冬', '春夏秋冬 (original karaoke)']],
+            ['title' => 'HEY!', 'date' => '2000-10-12', 'tracks' => ['HEY!', '家路', 'HEY! (The victory run)', '家路 (Putting on the laurel crown)', 'HEY! (original karaoke)', '家路 (original karaoke)']],
+            ['title' => 'Gang★', 'date' => '2001-03-28', 'tracks' => ['Gang★', 'Sweet Darling', 'Gang★（オリジナルカラオケ）', 'Sweet Darling（オリジナルカラオケ）']],
+            ['title' => '虹 / ひまわり / それがすべてさ', 'date' => '2003-08-27', 'tracks' => ['虹', 'ひまわり', 'それがすべてさ', 'ひまわり 〜fields of toscana〜', '虹 〜シンクロナイズドMIX〜', '虹 (Original Karaoke)', 'ひまわり (Original Karaoke)', 'それがすべてさ (Original Karaoke)']],
+            ['title' => '泣いたりしないで / RED×BLUE', 'date' => '2004-12-01', 'tracks' => ['泣いたりしないで', 'RED×BLUE', '泣いたりしないで (ORIGINAL KARAOKE)', 'RED×BLUE (ORIGINAL KARAOKE)']],
+            ['title' => '東京', 'date' => '2005-08-17', 'tracks' => ['東京', 'わたしは風になる', '東京 (ORIGINAL KARAOKE)', 'わたしは風になる (ORIGINAL KARAOKE)']],
+            ['title' => 'milk tea / 美しき花', 'date' => '2006-05-24', 'tracks' => ['milk tea', '美しき花', 'LOVE TRAIN', 'あの夏も 海も 空も', 'milk tea (Original Karaoke)', '美しき花 (Original Karaoke)', 'LOVE TRAIN (Original Karaoke)', 'あの夏も 海も 空も (Original Karaoke)']],
+            ['title' => '東京にもあったんだ / 無敵のキミ', 'date' => '2007-04-11', 'tracks' => ['東京にもあったんだ', '無敵のキミ', '東京にもあったんだ (Original Karaoke)', '無敵のキミ (Original Karaoke)']],
+            ['title' => '想 -new love new world-', 'date' => '2008-10-22', 'tracks' => ['想 -new love new world-', '明日の☆SHOW', 'HIGHER STAGE', '想 -new love new world- (Original Karaoke)', '明日の☆SHOW (Original Karaoke)', 'HIGHER STAGE (Original Karaoke)']],
+            // 通常盤・初回限定DVD盤の後に、初回限定「祝20周年突入!! スペシャル・タオル付」盤の追加曲を並べる
+            ['title' => '化身', 'date' => '2009-05-20', 'tracks' => ['化身', '道標', 'KISSして', '化身 (Original Karaoke)', '道標 (Original Karaoke)', 'KISSして (Original Karaoke)', '追憶の雨の中 福山☆冬の大感謝祭 其の九 ライヴテイク']],
+            ['title' => 'はつ恋', 'date' => '2009-12-16', 'tracks' => ['はつ恋', 'ON AND ON 09', 'アンモナイトの夢', 'はつ恋 Original Karaoke', 'ON AND ON 09 Original Karaoke']],
+            // 通常盤の後に初回限定「32Pスペシャルフォトブックレット+ボーナスディスクCD」盤のボーナスCDを並べる
+            ['title' => '蛍 / 少年', 'date' => '2010-08-11', 'tracks' => ['蛍', '少年', 'Revolution//Evolution', '蛍 (Original Karaoke)', '少年 (Original Karaoke)', '蛍 -piano ver.-', '蛍 -piano ver.- (Original Karaoke)']],
+            ['title' => '家族になろうよ / fighting pose', 'date' => '2011-08-31', 'tracks' => ['家族になろうよ', 'fighting pose', 'HARD RAIN from WE\'RE BROS. TOUR 2011「THE LIVE BANG!!」', '家族になろうよ Wedding Ver.', '家族になろうよ (Original Karaoke)', 'fighting pose (Original Karaoke)', '家族になろうよ Wedding Ver. (Original Karaoke)']],
+            // 3形態（WOWOW大開局祭盤／Music Clip&ライブ映像盤／通常盤）でライヴ音源1曲のみ異なる。通常盤を採用
+            ['title' => '生きてる生きてく', 'date' => '2012-03-28', 'tracks' => ['生きてる生きてく', 'Around the world', 'Dear from 冬の大感謝祭 其の十一', 'まぼろし from 冬の大感謝祭 其の十一', '生きてる生きてく (Original Karaoke)']],
+            ['title' => 'Beautiful life / GAME', 'date' => '2012-10-10', 'tracks' => ['Beautiful life', 'GAME', 'Girl 2012', 'Beautiful life (Sing with the piano ver.)', 'Beautiful life (Original Karaoke)', 'GAME (Original Karaoke)', 'Girl 2012 (Original Karaoke)']],
+            ['title' => '誕生日には真白な百合を / Get the groove', 'date' => '2013-04-10', 'tracks' => ['誕生日には真白な百合を', 'Get the groove', '愛は風のように (from 冬の大感謝祭 其の十二)', 'Good Job (from 冬の大感謝祭 其の十二)', '誕生日には真白な百合を (Original Karaoke)', 'Get the groove (Original Karaoke)']],
+            ['title' => 'I am a HERO', 'date' => '2015-08-19', 'tracks' => ['I am a HERO', 'ステージの魔物', 'その笑顔が見たい', '何度でも花が咲くように私を生きよう', '蜜柑色の夏休み 2015', 'I LOVE YOU（ファンクラブ限定「BROS.盤」のみ収録）']],
             ['title' => '聖域', 'date' => '2017-09-13', 'tracks' => ['聖域', 'jazzとHepburnと君と', 'Humbucker vs. Single-Coil', '聖域 (弾き語り)', 'jazzとHepburnと君と (弾き語り)']],
             // デジタルシングル
             ['title' => '何度でも花が咲くように私を生きよう', 'date' => '2015-03-25', 'download' => true, 'tracks' => ['何度でも花が咲くように私を生きよう']],
