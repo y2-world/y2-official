@@ -26,18 +26,22 @@ class ImportFukuyamaDiscography extends Command
         return $title;
     }
 
-    private function findSongId(array $songsByNormalizedTitle, string $title): ?int
+    // 曲titleに対して、[DbSong.id, 基本形と表記が異なる場合はその原文表記(exception用)] を返す
+    private function findSong(array $songsByNormalizedTitle, array $songTitlesById, string $title): ?array
     {
         $normalized = $this->normalize($title);
         if (isset($songsByNormalizedTitle[$normalized])) {
-            return $songsByNormalizedTitle[$normalized];
+            $id = $songsByNormalizedTitle[$normalized];
+            $baseTitle = $songTitlesById[$id];
+            return ['id' => $id, 'exception' => ($baseTitle === $title) ? null : $title];
         }
 
         // バージョン違い表記（例: "Good night (remix)"）は括弧以降を除いた基本形で再検索
         $stripped = preg_replace('/[\(（].*$/u', '', $title);
         $strippedNormalized = $this->normalize($stripped);
         if ($strippedNormalized !== $normalized && isset($songsByNormalizedTitle[$strippedNormalized])) {
-            return $songsByNormalizedTitle[$strippedNormalized];
+            $id = $songsByNormalizedTitle[$strippedNormalized];
+            return ['id' => $id, 'exception' => $title];
         }
 
         return null;
@@ -49,22 +53,41 @@ class ImportFukuyamaDiscography extends Command
 
         $songs = DbSong::where('artist_id', self::ARTIST_ID)->get(['id', 'title']);
         $songsByNormalizedTitle = [];
+        $songTitlesById = [];
         foreach ($songs as $s) {
             $songsByNormalizedTitle[$this->normalize($s->title)] = $s->id;
+            $songTitlesById[$s->id] = $s->title;
         }
 
         $albums = $this->albumsData();
         $unmatched = [];
+        $albumId = 0;
 
         foreach ($albums as $albumData) {
             $trackIds = [];
-            foreach ($albumData['tracks'] as $trackTitle) {
-                $id = $this->findSongId($songsByNormalizedTitle, $trackTitle);
-                if ($id === null) {
+            foreach ($albumData['tracks'] as $trackEntry) {
+                // tracksの各要素は曲名の文字列、または ['曲名', ディスク番号] の配列（複数ディスク構成のアルバム用）
+                $trackTitle = is_array($trackEntry) ? $trackEntry[0] : $trackEntry;
+                $disc = is_array($trackEntry) ? $trackEntry[1] : null;
+
+                $match = $this->findSong($songsByNormalizedTitle, $songTitlesById, $trackTitle);
+                if ($match === null) {
                     $unmatched[] = $albumData['title'] . ' / ' . $trackTitle;
                     continue;
                 }
-                $trackIds[] = ['id' => $id];
+                $track = ['id' => $match['id']];
+                if ($disc !== null) {
+                    $track['disc'] = $disc;
+                }
+                if ($match['exception']) {
+                    $track['exception'] = $match['exception'];
+                }
+                $trackIds[] = $track;
+            }
+
+            $isOriginal = empty($albumData['best']) && empty($albumData['mini']);
+            if ($isOriginal) {
+                $albumId++;
             }
 
             $this->line("=== {$albumData['title']} ({$albumData['date']}) === matched " . count($trackIds) . '/' . count($albumData['tracks']));
@@ -73,6 +96,7 @@ class ImportFukuyamaDiscography extends Command
                 DbAlbum::updateOrCreate(
                     ['artist_id' => self::ARTIST_ID, 'title' => $albumData['title'], 'date' => $albumData['date']],
                     [
+                        'album_id' => $isOriginal ? $albumId : null,
                         'best' => $albumData['best'] ?? false,
                         'mini' => $albumData['mini'] ?? false,
                         'tracklist' => $trackIds,
@@ -82,16 +106,26 @@ class ImportFukuyamaDiscography extends Command
         }
 
         $singles = $this->singlesData();
+        $singleId = 0;
 
         foreach ($singles as $singleData) {
             $trackIds = [];
             foreach ($singleData['tracks'] as $trackTitle) {
-                $id = $this->findSongId($songsByNormalizedTitle, $trackTitle);
-                if ($id === null) {
+                $match = $this->findSong($songsByNormalizedTitle, $songTitlesById, $trackTitle);
+                if ($match === null) {
                     $unmatched[] = $singleData['title'] . ' / ' . $trackTitle;
                     continue;
                 }
-                $trackIds[] = ['id' => $id];
+                $track = ['id' => $match['id']];
+                if ($match['exception']) {
+                    $track['exception'] = $match['exception'];
+                }
+                $trackIds[] = $track;
+            }
+
+            $isCd = empty($singleData['download']);
+            if ($isCd) {
+                $singleId++;
             }
 
             $this->line("=== [single] {$singleData['title']} ({$singleData['date']}) === matched " . count($trackIds) . '/' . count($singleData['tracks']));
@@ -100,6 +134,7 @@ class ImportFukuyamaDiscography extends Command
                 DbSingle::updateOrCreate(
                     ['artist_id' => self::ARTIST_ID, 'title' => $singleData['title'], 'date' => $singleData['date']],
                     [
+                        'single_id' => $isCd ? $singleId : null,
                         'download' => $singleData['download'] ?? false,
                         'tracklist' => $trackIds,
                     ]
@@ -173,7 +208,10 @@ class ImportFukuyamaDiscography extends Command
             [
                 'title' => 'HUMAN',
                 'date' => '2014-04-02',
-                'tracks' => ['クスノキ', 'Prelude', 'HUMAN', 'とりビー!', 'ミスキャスト', '246', 'Cherry', '暁', '昭和やったね', '家族になろうよ', 'fighting pose', '生きてる生きてく', 'Around the world', 'Beautiful life', 'GAME', '誕生日には真白な百合を', 'Get the groove', '恋の魔力'],
+                'tracks' => [
+                    ['クスノキ', 1], ['Prelude', 1], ['HUMAN', 1], ['とりビー!', 1], ['ミスキャスト', 1], ['246', 1], ['Cherry', 1], ['暁', 1], ['昭和やったね', 1],
+                    ['家族になろうよ', 2], ['fighting pose', 2], ['生きてる生きてく', 2], ['Around the world', 2], ['Beautiful life', 2], ['GAME', 2], ['誕生日には真白な百合を', 2], ['Get the groove', 2], ['恋の魔力', 2],
+                ],
             ],
             [
                 'title' => 'AKIRA',
@@ -190,13 +228,19 @@ class ImportFukuyamaDiscography extends Command
                 'title' => 'M-COLLECTION 風をさがしてる',
                 'date' => '1995-06-09',
                 'best' => true,
-                'tracks' => ['追憶の雨の中', 'かなしみは…', 'アクセス', 'Radio Days 〜1943…〜', '風をさがしてる', '逃げられない', 'WOH WOW', 'ただ僕がかわった', 'Good night', 'ひとりきり歩いてく帰り道で', '約束の丘', 'ふたつの鼓動', 'MELODY', 'BABY BABY', 'All My Loving', '恋人', "IT'S ONLY LOVE", 'SORRY BABY', 'HELLO', 'そのままで…', 'Pa Pa Pa'],
+                'tracks' => [
+                    ['追憶の雨の中', 1], ['かなしみは…', 1], ['アクセス', 1], ['Radio Days 〜1943…〜', 1], ['風をさがしてる', 1], ['逃げられない', 1], ['WOH WOW', 1], ['ただ僕がかわった', 1], ['Good night', 1], ['ひとりきり歩いてく帰り道で', 1],
+                    ['約束の丘', 2], ['ふたつの鼓動', 2], ['MELODY', 2], ['BABY BABY', 2], ['All My Loving', 2], ['恋人', 2], ["IT'S ONLY LOVE", 2], ['SORRY BABY', 2], ['HELLO', 2], ['そのままで…', 2], ['Pa Pa Pa', 2], ["IT'S ONLY LOVE (Strings Version)", 2],
+                ],
             ],
             [
                 'title' => 'MAGNUM COLLECTION 1999 "Dear"',
                 'date' => '1999-12-08',
                 'best' => true,
-                'tracks' => ['追憶の雨の中', '風をさがしてる', 'ただ僕がかわった', 'Good night', '約束の丘', 'MELODY', '恋人', '遠くへ', "Marcy's Song", "IT'S ONLY LOVE", '1985年 Factory Street 夏', 'GLOAMING WAY', '明日へのマーチ', 'Dear', 'HELLO', 'Message', '今 このひとときが 遠い夢のように', 'Heart', 'you', 'Like A Hurricane', '巻き戻した夏', 'Peach!!', 'Squall', 'DEAD BODY', 'BLOOD', 'Good Luck', 'SORRY BABY', 'もっとそばにきて'],
+                'tracks' => [
+                    ['追憶の雨の中 (remix)', 1], ['風をさがしてる (TV Special/95 style)', 1], ['ただ僕がかわった (remix)', 1], ['Good night (remix)', 1], ['約束の丘 (remix)', 1], ['MELODY (remix)', 1], ['恋人 (remix)', 1], ['遠くへ (remix)', 1], ["Marcy's Song (remix)", 1], ["IT'S ONLY LOVE (remix)", 1], ['1985年 Factory Street 夏 (remix)', 1], ['GLOAMING WAY (remix)', 1], ['明日へのマーチ (remix)', 1], ['Dear (remix)', 1],
+                    ['HELLO', 2], ['Message', 2], ['今 このひとときが 遠い夢のように', 2], ['Heart', 2], ['you', 2], ['Like A Hurricane', 2], ['巻き戻した夏', 2], ['Peach!!', 2], ['Squall', 2], ['DEAD BODY (Live/95 Style)', 2], ['BLOOD (Live/95 Style)', 2], ['Good Luck (Live/95 Style)', 2], ['SORRY BABY (Live/98 Style)', 2], ['もっとそばにきて (Santa Monica Blvd./99 Style)', 2],
+                ],
             ],
             [
                 'title' => 'MAGNUM COLLECTION "SLOW"',
@@ -208,20 +252,22 @@ class ImportFukuyamaDiscography extends Command
                 'title' => 'THE BEST BANG!!',
                 'date' => '2010-11-17',
                 'best' => true,
-                'tracks' => ['追憶の雨の中', '逃げられない', '約束の丘', 'HARD RAIN', 'Good night', 'MELODY', 'All My Loving', '遠くへ', '恋人', "Marcy's Song", "IT'S ONLY LOVE", 'HELLO', 'Good Luck', 'Message', 'Heart', 'you', 'HEAVEN', 'Peach!!', 'Squall', 'Gang★', '桜坂', '蜜柑色の夏休み', '虹', 'ひまわり', 'それがすべてさ', '泣いたりしないで', 'RED×BLUE', 'あの夏も 海も 空も', 'milk tea', '東京にもあったんだ', 'THE EDGE OF CHAOS 〜愛の一撃〜', '明日の☆SHOW', '最愛', '想 -new love new world-', '化身', 'はつ恋', 'KISSして', '少年', '蛍', '群青 〜ultramarine〜', 'vs. 〜知覚と快楽の螺旋〜', '覚醒モーメント', 'でんでらりゅうば', '99', 'Revolution//Evolution', 'アンモナイトの夢', '心color 〜a song for the wonderful year〜', '石塊のプライド', '道標'],
+                'tracks' => [
+                    ['追憶の雨の中', 1], ['逃げられない', 1], ['約束の丘', 1], ['HARD RAIN', 1], ['Good night', 1], ['MELODY', 1], ['All My Loving', 1], ['遠くへ', 1], ['恋人', 1], ["Marcy's Song", 1], ["IT'S ONLY LOVE", 1], ['HELLO', 1], ['Good Luck', 1], ['Message', 1], ['Heart', 1], ['you', 1],
+                    ['HEAVEN', 2], ['Peach!!', 2], ['Squall', 2], ['Gang★', 2], ['桜坂', 2], ['蜜柑色の夏休み', 2], ['虹', 2], ['ひまわり', 2], ['それがすべてさ', 2], ['泣いたりしないで', 2], ['RED×BLUE', 2], ['あの夏も 海も 空も', 2], ['milk tea', 2], ['東京にもあったんだ', 2],
+                    ['THE EDGE OF CHAOS 〜愛の一撃〜', 3], ['明日の☆SHOW', 3], ['最愛', 3], ['想 -new love new world-', 3], ['化身', 3], ['はつ恋', 3], ['KISSして', 3], ['少年', 3], ['蛍', 3], ['群青 〜ultramarine〜', 3], ['vs. 〜知覚と快楽の螺旋〜', 3], ['覚醒モーメント', 3], ['でんでらりゅうば', 3], ['99', 3], ['Revolution//Evolution', 3], ['アンモナイトの夢', 3],
+                    ['心color 〜a song for the wonderful year〜', 4], ['石塊のプライド', 4], ['道標 (2010)', 4],
+                ],
             ],
             [
                 'title' => '福の音',
                 'date' => '2015-12-23',
                 'best' => true,
-                'tracks' => ['I am a HERO', '何度でも花が咲くように私を生きよう', 'クスノキ', 'Prelude', 'HUMAN', '暁', 'Get the groove', '誕生日には真白な百合を', 'GAME', 'Beautiful life', '生きてる生きてく', '家族になろうよ', 'fighting pose', 'vs. 〜知覚と快楽の螺旋〜', '蛍', '少年', 'Revolution//Evolution', 'はつ恋', '18 〜eighteen〜', 'ながれ星', '幸福論', '最愛', 'KISSして', '化身', '道標', '明日の☆SHOW', '想 -new love new world-', '東京にもあったんだ', 'BEAUTIFUL DAY', 'milk tea', 'あの夏も 海も 空も', '東京', '虹', 'ひまわり', 'それがすべてさ', 'Gang★', 'HEY!', '桜坂', 'HELLO', "IT'S ONLY LOVE", 'Squall', '恋人', 'Good night', 'Good Luck', '追憶の雨の中'],
-            ],
-            // ミニアルバム
-            [
-                'title' => 'ヒトツボシ 〜ガリレオ Collection 2007-2022〜',
-                'date' => '2022-09-14',
-                'mini' => true,
-                'tracks' => ['ヒトツボシ', 'KISSして', '最愛', '恋の魔力', '99', 'ヒトツボシ'],
+                'tracks' => [
+                    ['I am a HERO', 1], ['何度でも花が咲くように私を生きよう', 1], ['クスノキ', 1], ['Prelude', 1], ['HUMAN', 1], ['暁', 1], ['Get the groove', 1], ['誕生日には真白な百合を', 1], ['GAME', 1], ['Beautiful life', 1], ['生きてる生きてく', 1], ['家族になろうよ', 1], ['fighting pose', 1], ['vs. 〜知覚と快楽の螺旋〜 (2013)', 1], ['蛍', 1], ['少年', 1], ['破曉', 1],
+                    ['Revolution//Evolution', 2], ['はつ恋', 2], ['18 〜eighteen〜', 2], ['ながれ星', 2], ['幸福論', 2], ['最愛', 2], ['KISSして', 2], ['化身', 2], ['道標', 2], ['明日の☆SHOW', 2], ['想 -new love new world-', 2], ['東京にもあったんだ', 2], ['BEAUTIFUL DAY', 2], ['milk tea', 2], ['あの夏も 海も 空も', 2],
+                    ['東京', 3], ['虹', 3], ['ひまわり', 3], ['それがすべてさ', 3], ['Gang★', 3], ['HEY!', 3], ['桜坂', 3], ['HELLO', 3], ["IT'S ONLY LOVE", 3], ['Squall (Live)', 3], ['恋人 (Live)', 3], ['Good night (Live)', 3], ['Good Luck (Live)', 3], ['追憶の雨の中 (Live)', 3],
+                ],
             ],
         ];
     }
@@ -232,33 +278,33 @@ class ImportFukuyamaDiscography extends Command
             ['title' => '追憶の雨の中', 'date' => '1990-03-21', 'tracks' => ['追憶の雨の中', 'かなしみは…']],
             ['title' => 'アクセス', 'date' => '1990-11-07', 'tracks' => ['アクセス', 'Radio Days 〜1943…〜']],
             ['title' => '風をさがしてる', 'date' => '1991-02-21', 'tracks' => ['風をさがしてる', '逃げられない']],
-            ['title' => 'WOH WOW／ただ僕がかわった', 'date' => '1991-10-21', 'tracks' => ['WOH WOW', 'ただ僕がかわった']],
+            ['title' => 'WOH WOW/ただ僕がかわった', 'date' => '1991-10-21', 'tracks' => ['WOH WOW', 'ただ僕がかわった']],
             ['title' => 'Good night', 'date' => '1992-05-21', 'tracks' => ['Good night', 'ひとりきり歩いてく帰り道で']],
             ['title' => '約束の丘', 'date' => '1992-10-28', 'tracks' => ['約束の丘', 'ふたつの鼓動']],
-            ['title' => 'MELODY／BABY BABY', 'date' => '1993-06-02', 'tracks' => ['MELODY', 'BABY BABY']],
-            ['title' => 'All My Loving／恋人', 'date' => '1993-09-29', 'tracks' => ['All My Loving', '恋人']],
-            ['title' => "IT'S ONLY LOVE／SORRY BABY", 'date' => '1994-03-24', 'tracks' => ["IT'S ONLY LOVE", 'SORRY BABY']],
+            ['title' => 'MELODY/BABY BABY', 'date' => '1993-06-02', 'tracks' => ['MELODY', 'BABY BABY']],
+            ['title' => 'All My Loving/恋人', 'date' => '1993-09-29', 'tracks' => ['All My Loving', '恋人']],
+            ['title' => "IT'S ONLY LOVE/SORRY BABY", 'date' => '1994-03-24', 'tracks' => ["IT'S ONLY LOVE", 'SORRY BABY']],
             ['title' => 'HELLO', 'date' => '1995-02-06', 'tracks' => ['HELLO', 'そのままで…', 'Pa Pa Pa']],
-            ['title' => 'Message／今 このひとときが 遠い夢のように', 'date' => '1995-10-02', 'tracks' => ['Message', '今 このひとときが 遠い夢のように']],
-            ['title' => 'Heart／you', 'date' => '1998-04-30', 'tracks' => ['Heart', 'you', 'Like A Hurricane']],
-            ['title' => 'Peach!!／Heart of Xmas', 'date' => '1998-11-05', 'tracks' => ['Peach!!', 'Heart of Xmas']],
-            ['title' => 'HEAVEN／Squall', 'date' => '1999-11-17', 'tracks' => ['HEAVEN', 'Squall']],
+            ['title' => 'Message/今 このひとときが 遠い夢のように', 'date' => '1995-10-02', 'tracks' => ['Message', '今 このひとときが 遠い夢のように']],
+            ['title' => 'Heart/you', 'date' => '1998-04-30', 'tracks' => ['Heart', 'you', 'Like A Hurricane']],
+            ['title' => 'Peach!!/Heart of Xmas', 'date' => '1998-11-05', 'tracks' => ['Peach!!', 'Heart of Xmas']],
+            ['title' => 'HEAVEN/Squall', 'date' => '1999-11-17', 'tracks' => ['HEAVEN', 'Squall']],
             ['title' => '桜坂', 'date' => '2000-04-26', 'tracks' => ['桜坂', '春夏秋冬']],
             ['title' => 'HEY!', 'date' => '2000-10-12', 'tracks' => ['HEY!', '家路']],
             ['title' => 'Gang★', 'date' => '2001-03-28', 'tracks' => ['Gang★', 'Sweet Darling']],
-            ['title' => '虹／ひまわり／それがすべてさ', 'date' => '2003-08-27', 'tracks' => ['虹', 'ひまわり', 'それがすべてさ']],
-            ['title' => '泣いたりしないで／RED×BLUE', 'date' => '2004-12-01', 'tracks' => ['泣いたりしないで', 'RED×BLUE']],
+            ['title' => '虹/ひまわり/それがすべてさ', 'date' => '2003-08-27', 'tracks' => ['虹', 'ひまわり', 'それがすべてさ']],
+            ['title' => '泣いたりしないで/RED×BLUE', 'date' => '2004-12-01', 'tracks' => ['泣いたりしないで', 'RED×BLUE']],
             ['title' => '東京', 'date' => '2005-08-17', 'tracks' => ['東京', 'わたしは風になる']],
-            ['title' => 'milk tea／美しき花', 'date' => '2006-05-24', 'tracks' => ['milk tea', '美しき花', 'LOVE TRAIN', 'あの夏も 海も 空も']],
-            ['title' => '東京にもあったんだ／無敵のキミ', 'date' => '2007-04-11', 'tracks' => ['東京にもあったんだ', '無敵のキミ']],
+            ['title' => 'milk tea/美しき花', 'date' => '2006-05-24', 'tracks' => ['milk tea', '美しき花', 'LOVE TRAIN', 'あの夏も 海も 空も']],
+            ['title' => '東京にもあったんだ/無敵のキミ', 'date' => '2007-04-11', 'tracks' => ['東京にもあったんだ', '無敵のキミ']],
             ['title' => '想 -new love new world-', 'date' => '2008-10-22', 'tracks' => ['想 -new love new world-']],
             ['title' => '化身', 'date' => '2009-05-20', 'tracks' => ['化身', '道標']],
             ['title' => 'はつ恋', 'date' => '2009-12-16', 'tracks' => ['はつ恋', 'アンモナイトの夢']],
-            ['title' => '蛍／少年', 'date' => '2010-08-11', 'tracks' => ['蛍', '少年', 'Revolution//Evolution']],
-            ['title' => '家族になろうよ／fighting pose', 'date' => '2011-08-31', 'tracks' => ['家族になろうよ', 'fighting pose']],
+            ['title' => '蛍/少年', 'date' => '2010-08-11', 'tracks' => ['蛍', '少年', 'Revolution//Evolution']],
+            ['title' => '家族になろうよ/fighting pose', 'date' => '2011-08-31', 'tracks' => ['家族になろうよ', 'fighting pose']],
             ['title' => '生きてる生きてく', 'date' => '2012-03-28', 'tracks' => ['生きてる生きてく', 'Around the world']],
-            ['title' => 'Beautiful life／GAME', 'date' => '2012-10-10', 'tracks' => ['Beautiful life', 'GAME']],
-            ['title' => '誕生日には真白な百合を／Get the groove', 'date' => '2013-04-10', 'tracks' => ['誕生日には真白な百合を', 'Get the groove']],
+            ['title' => 'Beautiful life/GAME', 'date' => '2012-10-10', 'tracks' => ['Beautiful life', 'GAME']],
+            ['title' => '誕生日には真白な百合を/Get the groove', 'date' => '2013-04-10', 'tracks' => ['誕生日には真白な百合を', 'Get the groove']],
             ['title' => 'I am a HERO', 'date' => '2015-08-19', 'tracks' => ['I am a HERO', 'ステージの魔物', 'その笑顔が見たい', '何度でも花が咲くように私を生きよう']],
             ['title' => '聖域', 'date' => '2017-09-13', 'tracks' => ['聖域', 'jazzとHepburnと君と', 'Humbucker vs. Single-Coil']],
             // デジタルシングル
