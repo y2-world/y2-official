@@ -145,7 +145,10 @@ class ImportFukuyamaDiscography extends Command
                     $unmatched[] = $albumData['title'] . ' / ' . $trackTitle;
                     continue;
                 }
-                $track = ['id' => $match['id']];
+                // カラオケ・インストゥルメンタルは実演奏音源ではないため、idを持たせず
+                // exceptionのみのプレーンテキスト表示にする（曲詳細ページへのリンクを無効化）
+                $isKaraoke = isKaraokeTrack($match['exception']);
+                $track = $isKaraoke ? [] : ['id' => $match['id']];
                 if ($disc !== null) {
                     $track['disc'] = $disc;
                 }
@@ -194,7 +197,8 @@ class ImportFukuyamaDiscography extends Command
                     $unmatched[] = $singleData['title'] . ' / ' . $trackTitle;
                     continue;
                 }
-                $track = ['id' => $match['id']];
+                $isKaraoke = isKaraokeTrack($match['exception']);
+                $track = $isKaraoke ? [] : ['id' => $match['id']];
                 if ($match['exception']) {
                     $track['exception'] = $match['exception'];
                 }

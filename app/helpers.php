@@ -166,6 +166,19 @@ if (!function_exists('countActualSongs')) {
     }
 }
 
+if (!function_exists('isKaraokeTrack')) {
+    // アルバム/シングルのtracklist内、exception表記がカラオケ・インストゥルメンタルの
+    // バージョンかどうかを判定する。カラオケ曲は実演奏音源ではないため、
+    // 曲詳細ページへのリンクを張らない（プレーンテキスト表示にする）。
+    function isKaraokeTrack(?string $exceptionText): bool
+    {
+        if (!$exceptionText) {
+            return false;
+        }
+        return (bool) preg_match('/karaoke|カラオケ/ui', $exceptionText);
+    }
+}
+
 if (!function_exists('ordinal')) {
     function ordinal(int $n): string
     {
