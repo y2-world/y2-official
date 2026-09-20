@@ -36,6 +36,7 @@ class ImportSukimaswitchDiscography extends Command
     // 表記が全く異なるため自動マッチングできない曲の手動対応表（キーは前方一致で判定）
     private const MANUAL_TITLE_ALIASES = [
         'I-T-A-Z-U-R-A' => 'I-TA-ZU-RA',
+        '弦楽四重奏のための『ドーシタトースター』' => 'ドーシタトースター',
     ];
 
     // CDシングルのカップリングとしてのみ存在するインストゥルメンタル専用曲・
@@ -46,7 +47,6 @@ class ImportSukimaswitchDiscography extends Command
         'Intro ～for Compact Disc～',
         '蕾のテーマ<Instrumental>',
         '天白川を行く<Instrumental>',
-        '弦楽四重奏のための『ドーシタトースター』',
         '追伸(instrumental)',
         '花曇りの午後(instrumental)',
         '安曇野にて(instrumental)',
