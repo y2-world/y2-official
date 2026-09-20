@@ -42,6 +42,8 @@ class ImportSukimaswitchDiscography extends Command
     // その他DbSongに本曲登録が無いトラック。カラオケと同様、idを持たせず
     // exceptionのみで表示する（曲詳細ページへのリンクを無効化）
     private const NON_SONG_TRACKS = [
+        '空創トリップ',
+        'Intro ～for Compact Disc～',
         '蕾のテーマ<Instrumental>',
         '天白川を行く<Instrumental>',
         '弦楽四重奏のための『ドーシタトースター』',
