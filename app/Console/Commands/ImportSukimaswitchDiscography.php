@@ -27,6 +27,8 @@ class ImportSukimaswitchDiscography extends Command
         $title = mb_convert_kana($title, 'as');
         $title = str_replace(['’', '‘'], "'", $title);
         $title = preg_replace('/[･・.]{2,}|…+/u', '…', $title);
+        // 「奏 (かなで)」のような開き括弧直前の半角スペースの有無だけの表記ゆれを吸収する
+        $title = preg_replace('/ \(/u', '(', $title);
         $title = mb_strtolower($title, 'UTF-8');
         return $title;
     }
@@ -36,8 +38,42 @@ class ImportSukimaswitchDiscography extends Command
         'I-T-A-Z-U-R-A' => 'I-TA-ZU-RA',
     ];
 
+    // CDシングルのカップリングとしてのみ存在するインストゥルメンタル専用曲・
+    // その他DbSongに本曲登録が無いトラック。カラオケと同様、idを持たせず
+    // exceptionのみで表示する（曲詳細ページへのリンクを無効化）
+    private const NON_SONG_TRACKS = [
+        '蕾のテーマ<Instrumental>',
+        '天白川を行く<Instrumental>',
+        '弦楽四重奏のための『ドーシタトースター』',
+        '追伸(instrumental)',
+        '花曇りの午後(instrumental)',
+        '安曇野にて(instrumental)',
+        '若葉<instrumental>',
+        'ピーカンブギ<instrumental>',
+        '夕間暮れ<instrumental>',
+        'ノウムの調べ<instrumental>',
+        'Human relations',
+        'ガレポンク<Instrumental>',
+        'フォノグラフ(Instrumental)',
+        '10th(instrumental)',
+        '10th -typeII-(instrumental)',
+        'passage（from 新宿LOFT 2014.4.9）',
+        'ミッドナイト・グッドモーニン!!のテーマ（instrumental）',
+        'スキマスイッチのミッドナイト・グッドモーニン!!',
+        'スキマスイッチのミッドナイト・グッドモーニン!! -2-',
+        '糸',
+        'This Christmas',
+        'The Christmas Song',
+        'Crazy Love',
+        'えんぴつケシゴム 〜overture〜',
+    ];
+
     private function findSong(array $songsByNormalizedTitle, array $songTitlesById, string $title): ?array
     {
+        if (in_array($title, self::NON_SONG_TRACKS, true)) {
+            return ['id' => null, 'exception' => $title];
+        }
+
         foreach (self::MANUAL_TITLE_ALIASES as $aliasFrom => $baseTitle) {
             if (!str_starts_with($title, $aliasFrom)) {
                 continue;
