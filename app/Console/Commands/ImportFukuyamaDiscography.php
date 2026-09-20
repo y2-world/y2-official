@@ -222,8 +222,8 @@ class ImportFukuyamaDiscography extends Command
                 'title' => 'HUMAN',
                 'date' => '2014-04-02',
                 'tracks' => [
-                    ['クスノキ', 1], ['Prelude', 1], ['HUMAN', 1], ['とりビー!', 1], ['ミスキャスト', 1], ['246', 1], ['Cherry', 1], ['暁', 1], ['昭和やったね', 1],
-                    ['家族になろうよ', 2], ['fighting pose', 2], ['生きてる生きてく', 2], ['Around the world', 2], ['Beautiful life', 2], ['GAME', 2], ['誕生日には真白な百合を', 2], ['Get the groove', 2], ['恋の魔力', 2],
+                    ['クスノキ', 'Disc 1'], ['Prelude', 'Disc 1'], ['HUMAN', 'Disc 1'], ['とりビー!', 'Disc 1'], ['ミスキャスト', 'Disc 1'], ['246', 'Disc 1'], ['Cherry', 'Disc 1'], ['暁', 'Disc 1'], ['昭和やったね', 'Disc 1'],
+                    ['家族になろうよ', 'Disc 2'], ['fighting pose', 'Disc 2'], ['生きてる生きてく', 'Disc 2'], ['Around the world', 'Disc 2'], ['Beautiful life', 'Disc 2'], ['GAME', 'Disc 2'], ['誕生日には真白な百合を', 'Disc 2'], ['Get the groove', 'Disc 2'], ['恋の魔力', 'Disc 2'],
                 ],
             ],
             [
@@ -242,8 +242,8 @@ class ImportFukuyamaDiscography extends Command
                 'date' => '1995-06-09',
                 'best' => true,
                 'tracks' => [
-                    ['追憶の雨の中', 1], ['かなしみは…', 1], ['アクセス', 1], ['Radio Days 〜1943…〜', 1], ['風をさがしてる', 1], ['逃げられない', 1], ['WOH WOW', 1], ['ただ僕がかわった', 1], ['Good night', 1], ['ひとりきり歩いてく帰り道で', 1],
-                    ['約束の丘', 2], ['ふたつの鼓動', 2], ['MELODY', 2], ['BABY BABY', 2], ['All My Loving', 2], ['恋人', 2], ["IT'S ONLY LOVE", 2], ['SORRY BABY', 2], ['HELLO', 2], ['そのままで…', 2], ['Pa Pa Pa', 2], ["IT'S ONLY LOVE (Strings Version)", 2],
+                    ['追憶の雨の中', 'Disc-1'], ['かなしみは…', 'Disc-1'], ['アクセス', 'Disc-1'], ['Radio Days 〜1943…〜', 'Disc-1'], ['風をさがしてる', 'Disc-1'], ['逃げられない', 'Disc-1'], ['WOH WOW', 'Disc-1'], ['ただ僕がかわった', 'Disc-1'], ['Good night', 'Disc-1'], ['ひとりきり歩いてく帰り道で', 'Disc-1'],
+                    ['約束の丘', 'Disc-2'], ['ふたつの鼓動', 'Disc-2'], ['MELODY', 'Disc-2'], ['BABY BABY', 'Disc-2'], ['All My Loving', 'Disc-2'], ['恋人', 'Disc-2'], ["IT'S ONLY LOVE", 'Disc-2'], ['SORRY BABY', 'Disc-2'], ['HELLO', 'Disc-2'], ['そのままで…', 'Disc-2'], ['Pa Pa Pa', 'Disc-2'], ["IT'S ONLY LOVE (Strings Version)", 'Disc-2'],
                 ],
             ],
             [
@@ -251,8 +251,8 @@ class ImportFukuyamaDiscography extends Command
                 'date' => '1999-12-08',
                 'best' => true,
                 'tracks' => [
-                    ['追憶の雨の中 (remix)', 1], ['風をさがしてる (TV Special/95 style)', 1], ['ただ僕がかわった (remix)', 1], ['Good night (remix)', 1], ['約束の丘 (remix)', 1], ['MELODY (remix)', 1], ['恋人 (remix)', 1], ['遠くへ (remix)', 1], ["Marcy's Song (remix)", 1], ["IT'S ONLY LOVE (remix)", 1], ['1985年 Factory Street 夏 (remix)', 1], ['GLOAMING WAY (remix)', 1], ['明日へのマーチ (remix)', 1], ['Dear (remix)', 1],
-                    ['HELLO', 2], ['Message', 2], ['今 このひとときが 遠い夢のように', 2], ['Heart', 2], ['you', 2], ['Like A Hurricane', 2], ['巻き戻した夏', 2], ['Peach!!', 2], ['Squall', 2], ['DEAD BODY (Live/95 Style)', 2], ['BLOOD (Live/95 Style)', 2], ['Good Luck (Live/95 Style)', 2], ['SORRY BABY (Live/98 Style)', 2], ['もっとそばにきて (Santa Monica Blvd./99 Style)', 2],
+                    ['追憶の雨の中 (remix)', 'Disc-1'], ['風をさがしてる (TV Special/95 style)', 'Disc-1'], ['ただ僕がかわった (remix)', 'Disc-1'], ['Good night (remix)', 'Disc-1'], ['約束の丘 (remix)', 'Disc-1'], ['MELODY (remix)', 'Disc-1'], ['恋人 (remix)', 'Disc-1'], ['遠くへ (remix)', 'Disc-1'], ["Marcy's Song (remix)", 'Disc-1'], ["IT'S ONLY LOVE (remix)", 'Disc-1'], ['1985年 Factory Street 夏 (remix)', 'Disc-1'], ['GLOAMING WAY (remix)', 'Disc-1'], ['明日へのマーチ (remix)', 'Disc-1'], ['Dear (remix)', 'Disc-1'],
+                    ['HELLO', 'Disc-2'], ['Message', 'Disc-2'], ['今 このひとときが 遠い夢のように', 'Disc-2'], ['Heart', 'Disc-2'], ['you', 'Disc-2'], ['Like A Hurricane', 'Disc-2'], ['巻き戻した夏', 'Disc-2'], ['Peach!!', 'Disc-2'], ['Squall', 'Disc-2'], ['DEAD BODY (Live/95 Style)', 'Disc-2'], ['BLOOD (Live/95 Style)', 'Disc-2'], ['Good Luck (Live/95 Style)', 'Disc-2'], ['SORRY BABY (Live/98 Style)', 'Disc-2'], ['もっとそばにきて (Santa Monica Blvd./99 Style)', 'Disc-2'],
                 ],
             ],
             [
@@ -266,10 +266,10 @@ class ImportFukuyamaDiscography extends Command
                 'date' => '2010-11-17',
                 'best' => true,
                 'tracks' => [
-                    ['追憶の雨の中', 1], ['逃げられない', 1], ['約束の丘', 1], ['HARD RAIN', 1], ['Good night', 1], ['MELODY', 1], ['All My Loving', 1], ['遠くへ', 1], ['恋人', 1], ["Marcy's Song", 1], ["IT'S ONLY LOVE", 1], ['HELLO', 1], ['Good Luck', 1], ['Message', 1], ['Heart', 1], ['you', 1],
-                    ['HEAVEN', 2], ['Peach!!', 2], ['Squall', 2], ['Gang★', 2], ['桜坂', 2], ['蜜柑色の夏休み', 2], ['虹', 2], ['ひまわり', 2], ['それがすべてさ', 2], ['泣いたりしないで', 2], ['RED×BLUE', 2], ['あの夏も 海も 空も', 2], ['milk tea', 2], ['東京にもあったんだ', 2],
-                    ['THE EDGE OF CHAOS 〜愛の一撃〜', 3], ['明日の☆SHOW', 3], ['最愛', 3], ['想 -new love new world-', 3], ['化身', 3], ['はつ恋', 3], ['KISSして', 3], ['少年', 3], ['蛍', 3], ['群青 〜ultramarine〜', 3], ['vs. 〜知覚と快楽の螺旋〜', 3], ['覚醒モーメント', 3], ['でんでらりゅうば', 3], ['99', 3], ['Revolution//Evolution', 3], ['アンモナイトの夢', 3],
-                    ['心color 〜a song for the wonderful year〜', 4], ['石塊のプライド', 4], ['道標 (2010)', 4],
+                    ['追憶の雨の中', 'Disc 1'], ['逃げられない', 'Disc 1'], ['約束の丘', 'Disc 1'], ['HARD RAIN', 'Disc 1'], ['Good night', 'Disc 1'], ['MELODY', 'Disc 1'], ['All My Loving', 'Disc 1'], ['遠くへ', 'Disc 1'], ['恋人', 'Disc 1'], ["Marcy's Song", 'Disc 1'], ["IT'S ONLY LOVE", 'Disc 1'], ['HELLO', 'Disc 1'], ['Good Luck', 'Disc 1'], ['Message', 'Disc 1'], ['Heart', 'Disc 1'], ['you', 'Disc 1'],
+                    ['HEAVEN', 'Disc 2'], ['Peach!!', 'Disc 2'], ['Squall', 'Disc 2'], ['Gang★', 'Disc 2'], ['桜坂', 'Disc 2'], ['蜜柑色の夏休み', 'Disc 2'], ['虹', 'Disc 2'], ['ひまわり', 'Disc 2'], ['それがすべてさ', 'Disc 2'], ['泣いたりしないで', 'Disc 2'], ['RED×BLUE', 'Disc 2'], ['あの夏も 海も 空も', 'Disc 2'], ['milk tea', 'Disc 2'], ['東京にもあったんだ', 'Disc 2'],
+                    ['THE EDGE OF CHAOS 〜愛の一撃〜', 'Disc 3'], ['明日の☆SHOW', 'Disc 3'], ['最愛', 'Disc 3'], ['想 -new love new world-', 'Disc 3'], ['化身', 'Disc 3'], ['はつ恋', 'Disc 3'], ['KISSして', 'Disc 3'], ['少年', 'Disc 3'], ['蛍', 'Disc 3'], ['群青 〜ultramarine〜', 'Disc 3'], ['vs. 〜知覚と快楽の螺旋〜', 'Disc 3'], ['覚醒モーメント', 'Disc 3'], ['でんでらりゅうば', 'Disc 3'], ['99', 'Disc 3'], ['Revolution//Evolution', 'Disc 3'], ['アンモナイトの夢', 'Disc 3'],
+                    ['心color 〜a song for the wonderful year〜', 'Disc 4'], ['石塊のプライド', 'Disc 4'], ['道標 (2010)', 'Disc 4'],
                 ],
             ],
             [
@@ -277,9 +277,9 @@ class ImportFukuyamaDiscography extends Command
                 'date' => '2015-12-23',
                 'best' => true,
                 'tracks' => [
-                    ['I am a HERO', 1], ['何度でも花が咲くように私を生きよう', 1], ['クスノキ', 1], ['Prelude', 1], ['HUMAN', 1], ['暁', 1], ['Get the groove', 1], ['誕生日には真白な百合を', 1], ['GAME', 1], ['Beautiful life', 1], ['生きてる生きてく', 1], ['家族になろうよ', 1], ['fighting pose', 1], ['vs. 〜知覚と快楽の螺旋〜 (2013)', 1], ['蛍', 1], ['少年', 1], ['破曉', 1],
-                    ['Revolution//Evolution', 2], ['はつ恋', 2], ['18 〜eighteen〜', 2], ['ながれ星', 2], ['幸福論', 2], ['最愛', 2], ['KISSして', 2], ['化身', 2], ['道標', 2], ['明日の☆SHOW', 2], ['想 -new love new world-', 2], ['東京にもあったんだ', 2], ['BEAUTIFUL DAY', 2], ['milk tea', 2], ['あの夏も 海も 空も', 2],
-                    ['東京', 3], ['虹', 3], ['ひまわり', 3], ['それがすべてさ', 3], ['Gang★', 3], ['HEY!', 3], ['桜坂', 3], ['HELLO', 3], ["IT'S ONLY LOVE", 3], ['Squall (Live)', 3], ['恋人 (Live)', 3], ['Good night (Live)', 3], ['Good Luck (Live)', 3], ['追憶の雨の中 (Live)', 3],
+                    ['I am a HERO', 'Reel.1'], ['何度でも花が咲くように私を生きよう', 'Reel.1'], ['クスノキ', 'Reel.1'], ['Prelude', 'Reel.1'], ['HUMAN', 'Reel.1'], ['暁', 'Reel.1'], ['Get the groove', 'Reel.1'], ['誕生日には真白な百合を', 'Reel.1'], ['GAME', 'Reel.1'], ['Beautiful life', 'Reel.1'], ['生きてる生きてく', 'Reel.1'], ['家族になろうよ', 'Reel.1'], ['fighting pose', 'Reel.1'], ['vs. 〜知覚と快楽の螺旋〜 (2013)', 'Reel.1'], ['蛍', 'Reel.1'], ['少年', 'Reel.1'], ['破曉', 'Reel.1'],
+                    ['Revolution//Evolution', 'Reel.2'], ['はつ恋', 'Reel.2'], ['18 〜eighteen〜', 'Reel.2'], ['ながれ星', 'Reel.2'], ['幸福論', 'Reel.2'], ['最愛', 'Reel.2'], ['KISSして', 'Reel.2'], ['化身', 'Reel.2'], ['道標', 'Reel.2'], ['明日の☆SHOW', 'Reel.2'], ['想 -new love new world-', 'Reel.2'], ['東京にもあったんだ', 'Reel.2'], ['BEAUTIFUL DAY', 'Reel.2'], ['milk tea', 'Reel.2'], ['あの夏も 海も 空も', 'Reel.2'],
+                    ['東京', 'Reel.3'], ['虹', 'Reel.3'], ['ひまわり', 'Reel.3'], ['それがすべてさ', 'Reel.3'], ['Gang★', 'Reel.3'], ['HEY!', 'Reel.3'], ['桜坂', 'Reel.3'], ['HELLO', 'Reel.3'], ["IT'S ONLY LOVE", 'Reel.3'], ['Squall (Live)', 'Reel.3'], ['恋人 (Live)', 'Reel.3'], ['Good night (Live)', 'Reel.3'], ['Good Luck (Live)', 'Reel.3'], ['追憶の雨の中 (Live)', 'Reel.3'],
                 ],
             ],
         ];
