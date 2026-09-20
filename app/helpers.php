@@ -175,7 +175,7 @@ if (!function_exists('isKaraokeTrack')) {
         if (!$exceptionText) {
             return false;
         }
-        return (bool) preg_match('/karaoke|カラオケ|instrumental/ui', $exceptionText);
+        return (bool) preg_match('/karaoke|カラオケ|instrumental|backing track/ui', $exceptionText);
     }
 }
 
