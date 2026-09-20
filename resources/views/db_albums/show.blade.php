@@ -61,7 +61,7 @@
                         @if (!$loop->first)
                             </ol> {{-- 前の ol を閉じる --}}
                         @endif
-                        <div style="font-weight: 600; color: #2d3748; margin-top: 15px; margin-bottom: 5px;">
+                        <div style="font-weight: 400; color: #2d3748; margin-top: 15px; margin-bottom: 5px;">
                             {{ $currentDisc }}
                         </div>
                         <ol style="margin: 0; padding-left: 25px; font-size: 15px; line-height: 2;">

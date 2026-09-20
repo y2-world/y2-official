@@ -69,6 +69,15 @@
                         <option value="" selected disabled>パターンを選択</option>
                     </select>
                 </div>
+                {{-- パターン一覧アイコン（PC表示）：横スクロールが発生している時だけJSで表示する --}}
+                <div id="pcPatternListIconWrap" class="pc" style="display: none; position: absolute; bottom: -14px; right: 8px; width: 36px; height: 36px;">
+                    <div style="pointer-events: none; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-bars" style="font-size: 14px;"></i>
+                    </div>
+                    <select id="pcPatternListSelect" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: none; cursor: pointer;">
+                        <option value="" selected disabled>パターンを選択</option>
+                    </select>
+                </div>
             @endif
         </div>
     </div>
@@ -171,8 +180,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    var patternSelect = document.getElementById('spPatternListSelect');
-    if (patternSelect) {
+    function setupPatternSelect(selectId) {
+        var patternSelect = document.getElementById(selectId);
+        if (!patternSelect) {
+            return;
+        }
         var wraps = document.querySelectorAll('.live-column-wrap[data-pattern-label]');
         var currentOptgroup = null;
         var currentGroupTitle = null;
@@ -223,8 +235,35 @@ document.addEventListener('DOMContentLoaded', function () {
                         - (parentRect.width - wrapRect.width) / 2;
                     scrollParent.scrollTo({ left: targetLeft, behavior: 'smooth' });
                 }
+                patternSelect.value = '';
             }
         });
+    }
+
+    setupPatternSelect('spPatternListSelect');
+    setupPatternSelect('pcPatternListSelect');
+
+    // PCでは、セットリストが横に並びきらずスクロールが発生している場合だけ
+    // パターン一覧アイコンを表示する（ウィンドウ幅やパターン数によって変わるため実測する）。
+    var pcIconWrap = document.getElementById('pcPatternListIconWrap');
+    if (pcIconWrap) {
+        var updatePcIconVisibility = function () {
+            // .pcクラス自体がmax-width:991pxで非表示になる想定のため、
+            // モバイル幅ではインラインstyleで上書きしないよう判定自体をスキップする
+            if (window.innerWidth < 992) {
+                pcIconWrap.style.display = 'none';
+                return;
+            }
+            var hasScrollingRow = Array.prototype.some.call(
+                document.querySelectorAll('.setlist-row'),
+                function (row) {
+                    return row.scrollWidth > row.clientWidth + 1;
+                }
+            );
+            pcIconWrap.style.display = hasScrollingRow ? 'flex' : 'none';
+        };
+        updatePcIconVisibility();
+        window.addEventListener('resize', updatePcIconVisibility);
     }
 });
 </script>

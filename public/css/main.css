@@ -11,13 +11,6 @@ body {
     font-weight: 400;
     font-style: normal;
 }
-/* Zen Old Minchoは400と900のウェイトしか提供されておらず、
-   ブラウザ既定のbold(700)を指定すると太字ウェイトが読み込まれず
-   Chromeで太字が見えにくくなるため、900に統一する */
-b,
-strong {
-    font-weight: 900;
-}
 a {
     background-color: transparent;
 }
@@ -80,7 +73,7 @@ video {
     justify-content: center;
 }
 .font-semibold {
-    font-weight: 600;
+    font-weight: 400;
 }
 .h-5 {
     height: 1.25rem;
@@ -609,7 +602,7 @@ img {
     transform: translate(-50%, -50%);
     color: black;
     font-size: 24px;
-    font-weight: bold;
+    font-weight: 400;
     text-align: center;
     opacity: 0;
     transition: opacity 0.5s ease;
@@ -822,7 +815,7 @@ select {
 
 .fes-block-artist {
     font-size: 0.85rem;
-    font-weight: 600;
+    font-weight: 400;
     color: #888;
     letter-spacing: 1px;
     margin: 0 0 4px 0;
@@ -919,7 +912,7 @@ th {
 
 .tt-suggestion .tt-highlight {
     color: black;
-    font-weight: bold;
+    font-weight: 400;
 }
 
 h2 {
@@ -1404,7 +1397,7 @@ h2 {
 /* ========== Title / Subtitle ========== */
 .database-title {
     font-size: 1.8rem;
-    font-weight: 700;
+    font-weight: 400;
     margin: 0 0 4px;
     letter-spacing: -0.5px;
     line-height: 1.4;
@@ -1519,7 +1512,7 @@ h2 {
 
 .card-title {
     font-size: 1.8rem;
-    font-weight: 700;
+    font-weight: 400;
     margin-bottom: 12px;
     text-align: center;
     color: #2d3748;
@@ -1583,7 +1576,7 @@ h2 {
     border-radius: 10px;
     text-decoration: none;
     color: #2d3748;
-    font-weight: 600;
+    font-weight: 400;
     text-align: center;
     transition: all 0.3s ease;
     font-size: 14px;
@@ -1627,7 +1620,7 @@ h2 {
     background: white;
     z-index: 1;
     font-size: 1.1rem;
-    font-weight: 700;
+    font-weight: 400;
 }
 
 .setlist-row + .setlist-group-title-sticky {
@@ -1863,7 +1856,7 @@ h2 {
 
 .database-year-content h5 {
     font-size: 1.5rem;
-    font-weight: 700;
+    font-weight: 400;
     color: #2d3748;
     margin-bottom: 20px;
     /* margin-top: 30px; */
@@ -1908,7 +1901,7 @@ h5.setlist-subtitle-heading {
 .database-year-content .table thead th {
     border: none;
     padding: 15px;
-    font-weight: 600;
+    font-weight: 400;
     white-space: nowrap;
 }
 
@@ -2060,7 +2053,7 @@ h5.setlist-subtitle-heading {
 
 .stats-title {
     font-size: 3rem;
-    font-weight: 700;
+    font-weight: 400;
     color: white;
     text-align: center;
     margin-bottom: 10px;
@@ -2088,7 +2081,7 @@ h5.setlist-subtitle-heading {
     color: white;
     border-radius: 25px;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 1rem;
     transition: all 0.3s ease;
     border: 2px solid transparent;
@@ -2137,7 +2130,7 @@ h5.setlist-subtitle-heading {
 
 .stat-value {
     font-size: 2.5rem;
-    font-weight: 700;
+    font-weight: 400;
     color: #333;
     margin-bottom: 5px;
 }
@@ -2179,7 +2172,7 @@ h5.setlist-subtitle-heading {
     padding: 12px 30px;
     border-radius: 25px;
     font-size: 0.95rem;
-    font-weight: 600;
+    font-weight: 400;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
@@ -2218,7 +2211,7 @@ h5.setlist-subtitle-heading {
 
 .section-title {
     font-size: 1.8rem;
-    font-weight: 600;
+    font-weight: 400;
     color: #333;
     margin-bottom: 25px;
     padding-bottom: 15px;
@@ -2255,7 +2248,7 @@ h5.setlist-subtitle-heading {
     color: white;
     padding: 15px;
     text-align: left;
-    font-weight: 600;
+    font-weight: 400;
     text-transform: uppercase;
     font-size: 0.85rem;
     letter-spacing: 0.5px;
@@ -2346,12 +2339,12 @@ h5.setlist-subtitle-heading {
 
 .rank-number {
     font-size: 1.2rem;
-    font-weight: 600;
+    font-weight: 400;
     color: #666;
 }
 
 .song-title {
-    font-weight: 600;
+    font-weight: 400;
     color: #333;
 }
 
@@ -2371,7 +2364,7 @@ h5.setlist-subtitle-heading {
     color: white;
     padding: 5px 15px;
     border-radius: 20px;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 0.95rem;
     display: inline-block;
     vertical-align: middle;
@@ -2395,7 +2388,7 @@ h5.setlist-subtitle-heading {
 
 /* Year Stats Bar Chart */
 .year-col {
-    font-weight: 600;
+    font-weight: 400;
     color: #333;
     font-size: 1.1rem;
 }
@@ -2423,7 +2416,7 @@ h5.setlist-subtitle-heading {
 }
 
 .year-count {
-    font-weight: 600;
+    font-weight: 400;
     color: #333;
     white-space: nowrap;
     flex-shrink: 0;
@@ -2897,7 +2890,7 @@ h5.setlist-subtitle-heading {
 
 .stats-section-title {
     font-size: 2rem;
-    font-weight: 700;
+    font-weight: 400;
     color: #2d3748;
     margin-bottom: 30px;
     text-align: center;
@@ -2932,7 +2925,7 @@ h5.setlist-subtitle-heading {
 
 .db-stat-value {
     font-size: 2.5rem;
-    font-weight: 700;
+    font-weight: 400;
     color: #2d3748;
     margin-bottom: 10px;
 }
@@ -2942,7 +2935,7 @@ h5.setlist-subtitle-heading {
     color: #718096;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 /* Chart Cards */
@@ -2956,7 +2949,7 @@ h5.setlist-subtitle-heading {
 
 .db-chart-title {
     font-size: 1.2rem;
-    font-weight: 600;
+    font-weight: 400;
     color: #2d3748;
     margin-bottom: 20px;
     padding-bottom: 15px;
@@ -2979,7 +2972,7 @@ h5.setlist-subtitle-heading {
 
 .db-chart-label {
     font-size: 0.9rem;
-    font-weight: 600;
+    font-weight: 400;
     color: #4a5568;
     margin-bottom: 8px;
 }
@@ -3008,7 +3001,7 @@ h5.setlist-subtitle-heading {
     top: 50%;
     transform: translateY(-50%);
     font-size: 0.85rem;
-    font-weight: 600;
+    font-weight: 400;
     color: #2d3748;
     z-index: 1;
 }
@@ -3036,7 +3029,7 @@ h5.setlist-subtitle-heading {
 
 .db-tour-date {
     font-size: 0.9rem;
-    font-weight: 600;
+    font-weight: 400;
     color: #667eea;
     min-width: 100px;
     margin-right: 20px;
@@ -3048,7 +3041,7 @@ h5.setlist-subtitle-heading {
 
 .db-tour-title {
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 400;
     color: #2d3748;
     margin-bottom: 5px;
 }
@@ -3124,7 +3117,7 @@ h5.setlist-subtitle-heading {
     color: #764ba2;
     border-radius: 25px;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 0.95rem;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -3167,7 +3160,7 @@ h5.setlist-subtitle-heading {
 }
 
 .stamp-summary-count {
-    font-weight: 700;
+    font-weight: 400;
     margin-bottom: 12px;
 }
 
@@ -3212,7 +3205,7 @@ h5.setlist-subtitle-heading {
 .stamp-summary-percentage {
     font-size: 0.9rem;
     color: #999;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .stamp-summary-toggle.unique-tour-label {
@@ -3329,7 +3322,7 @@ h5.setlist-subtitle-heading {
 }
 
 .stamp-mark-text {
-    font-weight: 700;
+    font-weight: 400;
     font-size: 0.85rem;
     letter-spacing: 2px;
 }
@@ -3368,7 +3361,7 @@ h5.setlist-subtitle-heading {
 
 .stamp-slot.is-stamped .stamp-slot-title {
     color: #333;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .stamp-slot.is-stamped .stamp-slot-title:hover {
@@ -3460,7 +3453,7 @@ h5.setlist-subtitle-heading {
 
 .select-card-title {
     display: block;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 0.95rem;
     overflow-wrap: break-word;
     word-break: break-word;
@@ -3490,7 +3483,7 @@ h5.setlist-subtitle-heading {
 
 .select-group-title {
     font-size: 0.85rem;
-    font-weight: 600;
+    font-weight: 400;
     color: #888;
     letter-spacing: 1px;
     margin: 4px 0 14px;
@@ -3660,7 +3653,7 @@ h5.setlist-subtitle-heading {
     border-radius: 999px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 0.9rem;
     text-decoration: none;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -3703,7 +3696,7 @@ h5.setlist-subtitle-heading {
 /* My Page attendance detail - setlist as cards */
 .setlist-card-section-label {
     color: #999;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 0.9rem;
     letter-spacing: 2px;
     margin: 24px 0 12px;
@@ -3745,7 +3738,7 @@ a.setlist-card:hover {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     font-size: 0.65rem;
-    font-weight: 600;
+    font-weight: 400;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3754,7 +3747,7 @@ a.setlist-card:hover {
 .setlist-card-title {
     flex: 1 1 auto;
     min-width: 0;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 0.75rem;
     overflow-wrap: break-word;
     word-break: break-word;
@@ -3915,7 +3908,7 @@ a.setlist-card:hover {
 
 .timeline-comment-user {
     display: block;
-    font-weight: 700;
+    font-weight: 400;
     color: #764ba2;
     margin-bottom: 2px;
 }
@@ -3984,7 +3977,7 @@ a.setlist-card:hover {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     font-size: 0.8rem;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 /* Font Awesome Kit（JS版）が<i>をSVGに差し替える際、Bootstrap等のライブラリCSSが

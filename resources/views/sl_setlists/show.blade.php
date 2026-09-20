@@ -250,7 +250,7 @@
                     @if (!empty($setlists->encore))
                         <br>
                         <div style="margin: 0;">
-                            <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
+                            <span style="color: #999; font-weight: 400; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
                         </div>
                         @php
                             $count += renderEncoreSetlist($setlists->encore, $setlists->artist_id);
@@ -369,7 +369,7 @@
 
                     @if (!empty($setlists->fes_encore))
                         <div style="margin: 0;">
-                            <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
+                            <span style="color: #999; font-weight: 400; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
                         </div>
                         @php renderFesMixed($setlists->fes_encore, $artistIdToName, $setlists->title); @endphp
                     @endif

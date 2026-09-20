@@ -124,21 +124,21 @@
         display: inline-block;
         color: #333;
         font-size: 0.9rem;
-        font-weight: 700;
+        font-weight: 400;
         cursor: pointer;
     }
     .timeline-card-artist {
         display: inline-block;
         color: #764ba2;
         font-size: 0.85rem;
-        font-weight: 600;
+        font-weight: 400;
         cursor: pointer;
     }
     .timeline-card-title {
         display: block;
         color: #333;
         font-size: 1.1rem;
-        font-weight: 600;
+        font-weight: 400;
     }
     .timeline-card-sub {
         color: #999;

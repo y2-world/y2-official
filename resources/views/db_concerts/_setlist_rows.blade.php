@@ -133,7 +133,7 @@
                                                 @if ($link)
                                                     <a href="{{ $link }}" @if($isUnique) style="font-weight:900;" @endif>{{ $title }}</a>
                                                 @else
-                                                    @if($isUnique)<strong>{{ $title }}</strong>@else{{ $title }}@endif
+                                                    @if($isUnique)<span style="font-weight:900;">{{ $title }}</span>@else{{ $title }}@endif
                                                 @endif
                                                 @if(!empty($featuring))
                                                     <span style="color:#999;font-size:0.75em;">{{ $featuringDisplay }}</span>

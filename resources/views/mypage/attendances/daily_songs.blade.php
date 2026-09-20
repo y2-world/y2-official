@@ -56,7 +56,7 @@
         margin-bottom: 20px;
     }
     .daily-song-cluster-label {
-        font-weight: 600;
+        font-weight: 400;
         color: #999;
         font-size: 0.85rem;
         margin-bottom: 6px;
