@@ -32,6 +32,8 @@ class ImportFukuyamaDiscography extends Command
     ];
 
     // 曲titleに対して、[DbSong.id, 基本形と表記が異なる場合はその原文表記(exception用)] を返す
+    // 表記はWikipedia原文のまま一切変更しない方針のため、末尾に付く様々な形のバージョン注記
+    // （括弧、波ダッシュ、ハイフン囲み、スペース区切りの語句・年号、from〜など）に対応する。
     private function findSong(array $songsByNormalizedTitle, array $songTitlesById, string $title): ?array
     {
         if (isset(self::MANUAL_TITLE_ALIASES[$title])) {
@@ -49,12 +51,33 @@ class ImportFukuyamaDiscography extends Command
             return ['id' => $id, 'exception' => ($baseTitle === $title) ? null : $title];
         }
 
-        // バージョン違い表記（例: "Good night (remix)"）は括弧以降を除いた基本形で再検索
-        $stripped = preg_replace('/[\(（].*$/u', '', $title);
-        $strippedNormalized = $this->normalize($stripped);
-        if ($strippedNormalized !== $normalized && isset($songsByNormalizedTitle[$strippedNormalized])) {
-            $id = $songsByNormalizedTitle[$strippedNormalized];
-            return ['id' => $id, 'exception' => $title];
+        // 既存曲名のうち、この曲titleが「その曲名で始まっている」ものを探す
+        // （例: "MELODY Original Karaoke" は基本曲"MELODY"で始まる／
+        //   "蛍 -piano ver.-" は基本曲"蛍"で始まる／"Girl 2012"は基本曲"Girl"で始まる）。
+        // 複数の既存曲がその曲titleの接頭辞になりうる場合は、最も長く一致するものを採用する。
+        $bestMatchId = null;
+        $bestMatchLength = 0;
+        foreach ($songTitlesById as $id => $songTitle) {
+            $songTitle = (string) $songTitle;
+            if ($songTitle === '') {
+                continue;
+            }
+            if (!str_starts_with($title, $songTitle)) {
+                continue;
+            }
+            // 次の文字が英数字の場合は別の曲名の一部である可能性が高いため、
+            // 区切り文字（スペース・括弧・ハイフン・波ダッシュ等）が続く場合のみ一致とみなす
+            $rest = mb_substr($title, mb_strlen($songTitle, 'UTF-8'), null, 'UTF-8');
+            if ($rest !== '' && !preg_match('/^[\s\(（\-〜～]/u', $rest)) {
+                continue;
+            }
+            if (mb_strlen($songTitle, 'UTF-8') > $bestMatchLength) {
+                $bestMatchId = $id;
+                $bestMatchLength = mb_strlen($songTitle, 'UTF-8');
+            }
+        }
+        if ($bestMatchId !== null) {
+            return ['id' => $bestMatchId, 'exception' => $title];
         }
 
         return null;
