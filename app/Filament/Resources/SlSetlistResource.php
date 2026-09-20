@@ -131,32 +131,17 @@ class SlSetlistResource extends Resource
                                 Forms\Components\Hidden::make('_uuid')
                                     ->default(fn() => \Illuminate\Support\Str::uuid()->toString()),
                                 // 🎵 曲名セレクト
+                                // 候補にはSlSong（既存のセットリスト楽曲）に加え、DbSongのうちまだ
+                                // どのSlSongとも紐付いていないもの（セットリスト楽曲としては未登録）も
+                                // 出す。候補に無ければ今まで通りcreateOptionFormから新規作成する。
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
                                     ->required()
-                                    ->options(function () {
-                                        $songs = \App\Models\SlSong::query()
-                                            ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
-                                            ->select('sl_songs.id', 'sl_songs.title', 'artists.name as artist_name')
-                                            ->get();
-
-                                        // タイトルごとの出現回数をカウント
-                                        $titleCounts = $songs->groupBy('title')->map->count();
-
-                                        $options = $songs->mapWithKeys(function ($song) use ($titleCounts) {
-                                            $label = $song->title;
-                                            // 重複している場合のみアーティスト名を追加
-                                            if ($titleCounts[$song->title] > 1 && $song->artist_name) {
-                                                $label .= ' - ' . $song->artist_name;
-                                            }
-                                            return [$song->id => $label];
-                                        })->all();
-
-                                        return \App\Support\JapaneseNameSorter::sortOptions($options);
-                                    })
+                                    ->options(fn() => static::songOptionsWithUnlinkedDbSongs())
                                     ->searchable()
                                     ->native(false)
                                     ->live()
+                                    ->afterStateUpdated(fn($state, $set) => $set('song', static::resolveSongOptionValue($state)))
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('title')
                                             ->label('新しい曲名')
@@ -249,32 +234,17 @@ class SlSetlistResource extends Resource
                                     ->default(fn() => \Illuminate\Support\Str::uuid()->toString()),
 
                                 // 🎵 曲名セレクト
+                                // 候補にはSlSong（既存のセットリスト楽曲）に加え、DbSongのうちまだ
+                                // どのSlSongとも紐付いていないもの（セットリスト楽曲としては未登録）も
+                                // 出す。候補に無ければ今まで通りcreateOptionFormから新規作成する。
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
                                     ->required()
-                                    ->options(function () {
-                                        $songs = \App\Models\SlSong::query()
-                                            ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
-                                            ->select('sl_songs.id', 'sl_songs.title', 'artists.name as artist_name')
-                                            ->get();
-
-                                        // タイトルごとの出現回数をカウント
-                                        $titleCounts = $songs->groupBy('title')->map->count();
-
-                                        $options = $songs->mapWithKeys(function ($song) use ($titleCounts) {
-                                            $label = $song->title;
-                                            // 重複している場合のみアーティスト名を追加
-                                            if ($titleCounts[$song->title] > 1 && $song->artist_name) {
-                                                $label .= ' - ' . $song->artist_name;
-                                            }
-                                            return [$song->id => $label];
-                                        })->all();
-
-                                        return \App\Support\JapaneseNameSorter::sortOptions($options);
-                                    })
+                                    ->options(fn() => static::songOptionsWithUnlinkedDbSongs())
                                     ->searchable()
                                     ->native(false)
                                     ->live()
+                                    ->afterStateUpdated(fn($state, $set) => $set('song', static::resolveSongOptionValue($state)))
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('title')
                                             ->label('新しい曲名')
@@ -416,26 +386,12 @@ class SlSetlistResource extends Resource
                                 // type:'song' のみ表示
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
-                                    ->options(function () {
-                                        $songs = \App\Models\SlSong::query()
-                                            ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
-                                            ->select('sl_songs.id', 'sl_songs.title', 'artists.name as artist_name')
-                                            ->get();
-                                        $titleCounts = $songs->groupBy('title')->map->count();
-                                        $options = $songs->mapWithKeys(function ($song) use ($titleCounts) {
-                                            $label = $song->title;
-                                            if ($titleCounts[$song->title] > 1 && $song->artist_name) {
-                                                $label .= ' - ' . $song->artist_name;
-                                            }
-                                            return [$song->id => $label];
-                                        })->all();
-
-                                        return \App\Support\JapaneseNameSorter::sortOptions($options);
-                                    })
+                                    ->options(fn() => static::songOptionsWithUnlinkedDbSongs())
                                     ->afterStateHydrated(fn(Forms\Components\Select $component, $state) => $component->state($state !== null ? (int)$state : null))
                                     ->searchable()
                                     ->native(false)
                                     ->live()
+                                    ->afterStateUpdated(fn($state, $set) => $set('song', static::resolveSongOptionValue($state)))
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('title')
                                             ->label('曲名')
@@ -486,24 +442,11 @@ class SlSetlistResource extends Resource
                                             ->label('曲名')
                                             ->required()
                                             ->afterStateHydrated(fn(Forms\Components\Select $component, $state) => $component->state($state !== null ? (int)$state : null))
-                                            ->options(function () {
-                                                $songs = \App\Models\SlSong::query()
-                                                    ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
-                                                    ->select('sl_songs.id', 'sl_songs.title', 'artists.name as artist_name')
-                                                    ->get();
-                                                $titleCounts = $songs->groupBy('title')->map->count();
-                                                $options = $songs->mapWithKeys(function ($song) use ($titleCounts) {
-                                                    $label = $song->title;
-                                                    if ($titleCounts[$song->title] > 1 && $song->artist_name) {
-                                                        $label .= ' - ' . $song->artist_name;
-                                                    }
-                                                    return [$song->id => $label];
-                                                })->all();
-
-                                                return \App\Support\JapaneseNameSorter::sortOptions($options);
-                                            })
+                                            ->options(fn() => static::songOptionsWithUnlinkedDbSongs())
                                             ->searchable()
                                             ->native(false)
+                                            ->live()
+                                            ->afterStateUpdated(fn($state, $set) => $set('song', static::resolveSongOptionValue($state)))
                                             ->createOptionForm([
                                                 Forms\Components\TextInput::make('title')
                                                     ->label('曲名')
@@ -615,26 +558,12 @@ class SlSetlistResource extends Resource
 
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
-                                    ->options(function () {
-                                        $songs = \App\Models\SlSong::query()
-                                            ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
-                                            ->select('sl_songs.id', 'sl_songs.title', 'artists.name as artist_name')
-                                            ->get();
-                                        $titleCounts = $songs->groupBy('title')->map->count();
-                                        $options = $songs->mapWithKeys(function ($song) use ($titleCounts) {
-                                            $label = $song->title;
-                                            if ($titleCounts[$song->title] > 1 && $song->artist_name) {
-                                                $label .= ' - ' . $song->artist_name;
-                                            }
-                                            return [$song->id => $label];
-                                        })->all();
-
-                                        return \App\Support\JapaneseNameSorter::sortOptions($options);
-                                    })
+                                    ->options(fn() => static::songOptionsWithUnlinkedDbSongs())
                                     ->afterStateHydrated(fn(Forms\Components\Select $component, $state) => $component->state($state !== null ? (int)$state : null))
                                     ->searchable()
                                     ->native(false)
                                     ->live()
+                                    ->afterStateUpdated(fn($state, $set) => $set('song', static::resolveSongOptionValue($state)))
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('title')
                                             ->label('曲名')
@@ -684,24 +613,11 @@ class SlSetlistResource extends Resource
                                             ->label('曲名')
                                             ->required()
                                             ->afterStateHydrated(fn(Forms\Components\Select $component, $state) => $component->state($state !== null ? (int)$state : null))
-                                            ->options(function () {
-                                                $songs = \App\Models\SlSong::query()
-                                                    ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
-                                                    ->select('sl_songs.id', 'sl_songs.title', 'artists.name as artist_name')
-                                                    ->get();
-                                                $titleCounts = $songs->groupBy('title')->map->count();
-                                                $options = $songs->mapWithKeys(function ($song) use ($titleCounts) {
-                                                    $label = $song->title;
-                                                    if ($titleCounts[$song->title] > 1 && $song->artist_name) {
-                                                        $label .= ' - ' . $song->artist_name;
-                                                    }
-                                                    return [$song->id => $label];
-                                                })->all();
-
-                                                return \App\Support\JapaneseNameSorter::sortOptions($options);
-                                            })
+                                            ->options(fn() => static::songOptionsWithUnlinkedDbSongs())
                                             ->searchable()
                                             ->native(false)
+                                            ->live()
+                                            ->afterStateUpdated(fn($state, $set) => $set('song', static::resolveSongOptionValue($state)))
                                             ->createOptionForm([
                                                 Forms\Components\TextInput::make('title')
                                                     ->label('曲名')
@@ -1032,5 +948,69 @@ class SlSetlistResource extends Resource
             'setlist' => $toDbSongItems($record->setlist ?? []),
             'encore' => $toDbSongItems($record->encore ?? []),
         ]);
+    }
+
+    // 曲名セレクトの選択肢。SlSong（既存のセットリスト楽曲）に加え、DbSongのうち
+    // まだどのSlSongとも紐付いていないもの（＝セットリスト楽曲としては未登録）も候補に出す。
+    // DbSong由来の候補は"db-{id}"というキーにしてSlSong.idとの衝突を避ける。
+    protected static function songOptionsWithUnlinkedDbSongs(): array
+    {
+        $slSongs = SlSong::query()
+            ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
+            ->select('sl_songs.id', 'sl_songs.title', 'artists.name as artist_name')
+            ->get();
+
+        $unlinkedDbSongs = DbSong::query()
+            ->whereDoesntHave('slSongs')
+            ->leftJoin('artists', 'artists.id', '=', 'db_songs.artist_id')
+            ->select('db_songs.id', 'db_songs.title', 'artists.name as artist_name')
+            ->get();
+
+        $titleCounts = $slSongs->pluck('title')
+            ->merge($unlinkedDbSongs->pluck('title'))
+            ->countBy();
+
+        $buildLabel = function ($song) use ($titleCounts) {
+            $label = $song->title;
+            if ($titleCounts[$song->title] > 1 && $song->artist_name) {
+                $label .= ' - ' . $song->artist_name;
+            }
+            return $label;
+        };
+
+        $options = $slSongs->mapWithKeys(fn($song) => [(string) $song->id => $buildLabel($song)])->all();
+        $options += $unlinkedDbSongs->mapWithKeys(fn($song) => ['db-' . $song->id => $buildLabel($song) . '（未登録）'])->all();
+
+        return \App\Support\JapaneseNameSorter::sortOptions($options);
+    }
+
+    // 曲名セレクトで選択された値を保存用に解決する。"db-{id}"形式（＝DbSong由来の
+    // 未登録候補）が選ばれた場合は、その場でSlSongを新規作成し、db_song_idを
+    // 紐付けた上でそのSlSong.idを返す。通常のSlSong.idはそのまま返す。
+    protected static function resolveSongOptionValue(?string $state): ?string
+    {
+        if ($state === null || $state === '') {
+            return $state;
+        }
+
+        if (!str_starts_with($state, 'db-')) {
+            return $state;
+        }
+
+        $dbSongId = (int) substr($state, 3);
+        $dbSong = DbSong::find($dbSongId);
+        if (!$dbSong) {
+            return $state;
+        }
+
+        $slSong = SlSong::firstOrCreate(
+            ['title' => $dbSong->title, 'artist_id' => $dbSong->artist_id],
+            ['db_song_id' => $dbSong->id]
+        );
+        if (!$slSong->db_song_id) {
+            $slSong->update(['db_song_id' => $dbSong->id]);
+        }
+
+        return (string) $slSong->id;
     }
 }
