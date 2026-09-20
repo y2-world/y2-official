@@ -36,8 +36,24 @@ class DbAlbumController extends Controller
         $albums = DbAlbum::findOrFail($id);
         $artist = $albums->artist;
         $songs = DbSong::where('artist_id', $albums->artist_id)->get()->keyBy('id');
-        $previous = DbAlbum::where('artist_id', $albums->artist_id)->where('id', '<', $albums->id)->orderBy('id', 'desc')->first();
-        $next = DbAlbum::where('artist_id', $albums->artist_id)->where('id', '>', $albums->id)->orderBy('id')->first();
+        // idは作成順であり発売順とは限らない（データ修正等でずれるとオリジナル/ベスト/ミニの並びが崩れる）ため、
+        // 発売日(date)を基準に前後を判定する。同日発売の場合はidで副次的に順序を安定させる。
+        $previous = DbAlbum::where('artist_id', $albums->artist_id)
+            ->where(function ($q) use ($albums) {
+                $q->where('date', '<', $albums->date)
+                    ->orWhere(function ($q2) use ($albums) {
+                        $q2->where('date', $albums->date)->where('id', '<', $albums->id);
+                    });
+            })
+            ->orderByDesc('date')->orderByDesc('id')->first();
+        $next = DbAlbum::where('artist_id', $albums->artist_id)
+            ->where(function ($q) use ($albums) {
+                $q->where('date', '>', $albums->date)
+                    ->orWhere(function ($q2) use ($albums) {
+                        $q2->where('date', $albums->date)->where('id', '>', $albums->id);
+                    });
+            })
+            ->orderBy('date')->orderBy('id')->first();
 
         return view('db_albums.show', compact('songs', 'albums', 'previous', 'next', 'artist'));
     }
