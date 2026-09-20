@@ -29,6 +29,8 @@ class ImportFukuyamaDiscography extends Command
     // 表記が全く異なるため自動マッチングできない曲の手動対応表（例: 中国語版タイトル → 基本曲名）
     private const MANUAL_TITLE_ALIASES = [
         '破曉' => '暁',
+        'ON AND ON 09' => 'ON AND ON',
+        '蜜柑色の夏休み2015' => '蜜柑色の夏休み',
     ];
 
     // 曲titleに対して、[DbSong.id, 基本形と表記が異なる場合はその原文表記(exception用)] を返す
