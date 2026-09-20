@@ -161,7 +161,9 @@ class ImportHigedanDiscography extends Command
                 $trackIds[] = $track;
             }
 
-            $isCd = empty($singleData['download']);
+            // EPはCD/配信いずれの形態でもCDシングルの通し番号(single_id)には含めない
+            $isEp = !empty($singleData['ep']);
+            $isCd = empty($singleData['download']) && !$isEp;
             if ($isCd) {
                 $singleId++;
             }
@@ -217,38 +219,6 @@ class ImportHigedanDiscography extends Command
                 'mini' => true,
                 'tracks' => ['始まりの朝', '犬かキャットかで死ぬまで喧嘩しよう！', '異端なスター', '55', 'Rolling', 'イコール', 'Trailer'],
             ],
-            // CD EP
-            [
-                'title' => "What's Going On?",
-                'date' => '2016-11-02',
-                'mini' => true,
-                'tracks' => ["What's Going On?", '未完成なままで', 'ニットの帽子', '黄色い車'],
-            ],
-            [
-                'title' => 'Stand By You EP',
-                'date' => '2018-10-17',
-                'mini' => true,
-                'tracks' => ['Stand By You', 'FIRE GROUND', 'バッドフォーミー', 'Stand By You (Acoustic ver.)'],
-            ],
-            [
-                'title' => 'HELLO EP',
-                'date' => '2020-08-05',
-                'mini' => true,
-                'tracks' => ['HELLO', 'パラボラ', 'Laughter', '夏模様の猫'],
-            ],
-            [
-                'title' => 'ミックスナッツ EP',
-                'date' => '2022-06-22',
-                'mini' => true,
-                'tracks' => ['ミックスナッツ', 'Anarchy', 'Choral A', '破顔'],
-            ],
-            // 配信限定EP
-            [
-                'title' => 'LADY',
-                'date' => '2017-10-13',
-                'mini' => true,
-                'tracks' => ['LADY', 'Driver', 'Tell Me Baby', 'ブラザーズ'],
-            ],
             // フルアルバム
             [
                 'title' => 'エスカパレード',
@@ -282,10 +252,17 @@ class ImportHigedanDiscography extends Command
             ['title' => '宿命', 'date' => '2019-07-31', 'tracks' => ['宿命', '宿命 (Instrumental)']],
             ['title' => 'I LOVE...', 'date' => '2020-02-12', 'tracks' => ['I LOVE...', 'I LOVE...（Instrumental）']],
             ['title' => 'Universe', 'date' => '2021-02-24', 'tracks' => ['Universe', 'Universe -Instrumental-']],
-            ['title' => 'Chessboard/日常', 'date' => '2023-09-13', 'tracks' => ['Chessboard', '日常', 'Chessboard -Instrumental-', '日常 -Instrumental-']],
-            ['title' => 'スターダスト/エルダーフラワー', 'date' => '2026-04-22', 'tracks' => ['スターダスト', 'エルダーフラワー', 'スターダスト -Instrumental-', 'エルダーフラワー -Instrumental-']],
+            ['title' => 'Chessboard / 日常', 'date' => '2023-09-13', 'tracks' => ['Chessboard', '日常', 'Chessboard -Instrumental-', '日常 -Instrumental-']],
+            ['title' => 'スターダスト / エルダーフラワー', 'date' => '2026-04-22', 'tracks' => ['スターダスト', 'エルダーフラワー', 'スターダスト -Instrumental-', 'エルダーフラワー -Instrumental-']],
+            // CD EP
+            ['title' => "What's Going On?", 'date' => '2016-11-02', 'ep' => true, 'tracks' => ["What's Going On?", '未完成なままで', 'ニットの帽子', '黄色い車']],
+            ['title' => 'Stand By You EP', 'date' => '2018-10-17', 'ep' => true, 'tracks' => ['Stand By You', 'FIRE GROUND', 'バッドフォーミー', 'Stand By You (Acoustic ver.)']],
+            ['title' => 'HELLO EP', 'date' => '2020-08-05', 'ep' => true, 'tracks' => ['HELLO', 'パラボラ', 'Laughter', '夏模様の猫']],
+            ['title' => 'ミックスナッツ EP', 'date' => '2022-06-22', 'ep' => true, 'tracks' => ['ミックスナッツ', 'Anarchy', 'Choral A', '破顔']],
+            // 配信限定EP
+            ['title' => 'LADY', 'date' => '2017-10-13', 'ep' => true, 'download' => true, 'tracks' => ['LADY', 'Driver', 'Tell Me Baby', 'ブラザーズ']],
             // 配信限定シングル
-            ['title' => 'Tell Me Baby/ブラザーズ', 'date' => '2017-07-21', 'download' => true, 'tracks' => ['Tell Me Baby', 'ブラザーズ']],
+            ['title' => 'Tell Me Baby / ブラザーズ', 'date' => '2017-07-21', 'download' => true, 'tracks' => ['Tell Me Baby', 'ブラザーズ']],
             ['title' => 'バッドフォーミー', 'date' => '2018-08-06', 'download' => true, 'tracks' => ['バッドフォーミー']],
             ['title' => 'パラボラ', 'date' => '2020-04-10', 'download' => true, 'tracks' => ['パラボラ']],
             ['title' => 'Laughter', 'date' => '2020-07-10', 'download' => true, 'tracks' => ['Laughter']],
