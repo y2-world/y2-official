@@ -402,7 +402,7 @@ class ImportSukimaswitchDiscography extends Command
             ['title' => 'センチメンタル ホームタウン', 'date' => '2011-07-09', 'download' => true, 'tracks' => ['センチメンタル ホームタウン']],
             ['title' => '石コロDays', 'date' => '2011-08-13', 'download' => true, 'tracks' => ['石コロDays']],
             ['title' => 'さよならエスケープ', 'date' => '2017-01-16', 'download' => true, 'tracks' => ['さよならエスケープ']],
-            ['title' => '未来花(ミライカ) for Anniversary', 'date' => '2018-05-09', 'download' => true, 'tracks' => ['未来花(ミライカ) for Anniversary']],
+            ['title' => '未来花 (ミライカ) for Anniversary', 'date' => '2018-05-09', 'download' => true, 'tracks' => ['未来花 (ミライカ) for Anniversary']],
             ['title' => 'クリスマスがやってくる', 'date' => '2018-12-05', 'download' => true, 'tracks' => ['クリスマスがやってくる']],
             ['title' => '青春', 'date' => '2019-03-28', 'download' => true, 'tracks' => ['青春']],
             ['title' => '全力少年 Remastered', 'date' => '2020-04-03', 'download' => true, 'tracks' => ['全力少年 Remastered']],
