@@ -22,7 +22,7 @@ class DbSongController extends Controller
         $artist = Artist::findOrFail($artistId);
 
         $songs = DbSong::where('artist_id', $artistId)
-            ->orderBy('id', 'asc')
+            ->orderBy('sort_order', 'asc')
             ->paginate(10);
         $totalCount = $songs->total();
 
