@@ -81,6 +81,32 @@ class ImportFukuyamaDiscography extends Command
             }
         }
 
+        $singles = $this->singlesData();
+
+        foreach ($singles as $singleData) {
+            $trackIds = [];
+            foreach ($singleData['tracks'] as $trackTitle) {
+                $id = $this->findSongId($songsByNormalizedTitle, $trackTitle);
+                if ($id === null) {
+                    $unmatched[] = $singleData['title'] . ' / ' . $trackTitle;
+                    continue;
+                }
+                $trackIds[] = ['id' => $id];
+            }
+
+            $this->line("=== [single] {$singleData['title']} ({$singleData['date']}) === matched " . count($trackIds) . '/' . count($singleData['tracks']));
+
+            if (!$dryRun) {
+                DbSingle::updateOrCreate(
+                    ['artist_id' => self::ARTIST_ID, 'title' => $singleData['title'], 'date' => $singleData['date']],
+                    [
+                        'download' => $singleData['download'] ?? false,
+                        'tracklist' => $trackIds,
+                    ]
+                );
+            }
+        }
+
         if (count($unmatched)) {
             $this->warn('--- Unmatched tracks ---');
             foreach ($unmatched as $u) {
@@ -197,6 +223,61 @@ class ImportFukuyamaDiscography extends Command
                 'mini' => true,
                 'tracks' => ['ヒトツボシ', 'KISSして', '最愛', '恋の魔力', '99', 'ヒトツボシ'],
             ],
+        ];
+    }
+
+    private function singlesData(): array
+    {
+        return [
+            ['title' => '追憶の雨の中', 'date' => '1990-03-21', 'tracks' => ['追憶の雨の中', 'かなしみは…']],
+            ['title' => 'アクセス', 'date' => '1990-11-07', 'tracks' => ['アクセス', 'Radio Days 〜1943…〜']],
+            ['title' => '風をさがしてる', 'date' => '1991-02-21', 'tracks' => ['風をさがしてる', '逃げられない']],
+            ['title' => 'WOH WOW／ただ僕がかわった', 'date' => '1991-10-21', 'tracks' => ['WOH WOW', 'ただ僕がかわった']],
+            ['title' => 'Good night', 'date' => '1992-05-21', 'tracks' => ['Good night', 'ひとりきり歩いてく帰り道で']],
+            ['title' => '約束の丘', 'date' => '1992-10-28', 'tracks' => ['約束の丘', 'ふたつの鼓動']],
+            ['title' => 'MELODY／BABY BABY', 'date' => '1993-06-02', 'tracks' => ['MELODY', 'BABY BABY']],
+            ['title' => 'All My Loving／恋人', 'date' => '1993-09-29', 'tracks' => ['All My Loving', '恋人']],
+            ['title' => "IT'S ONLY LOVE／SORRY BABY", 'date' => '1994-03-24', 'tracks' => ["IT'S ONLY LOVE", 'SORRY BABY']],
+            ['title' => 'HELLO', 'date' => '1995-02-06', 'tracks' => ['HELLO', 'そのままで…', 'Pa Pa Pa']],
+            ['title' => 'Message／今 このひとときが 遠い夢のように', 'date' => '1995-10-02', 'tracks' => ['Message', '今 このひとときが 遠い夢のように']],
+            ['title' => 'Heart／you', 'date' => '1998-04-30', 'tracks' => ['Heart', 'you', 'Like A Hurricane']],
+            ['title' => 'Peach!!／Heart of Xmas', 'date' => '1998-11-05', 'tracks' => ['Peach!!', 'Heart of Xmas']],
+            ['title' => 'HEAVEN／Squall', 'date' => '1999-11-17', 'tracks' => ['HEAVEN', 'Squall']],
+            ['title' => '桜坂', 'date' => '2000-04-26', 'tracks' => ['桜坂', '春夏秋冬']],
+            ['title' => 'HEY!', 'date' => '2000-10-12', 'tracks' => ['HEY!', '家路']],
+            ['title' => 'Gang★', 'date' => '2001-03-28', 'tracks' => ['Gang★', 'Sweet Darling']],
+            ['title' => '虹／ひまわり／それがすべてさ', 'date' => '2003-08-27', 'tracks' => ['虹', 'ひまわり', 'それがすべてさ']],
+            ['title' => '泣いたりしないで／RED×BLUE', 'date' => '2004-12-01', 'tracks' => ['泣いたりしないで', 'RED×BLUE']],
+            ['title' => '東京', 'date' => '2005-08-17', 'tracks' => ['東京', 'わたしは風になる']],
+            ['title' => 'milk tea／美しき花', 'date' => '2006-05-24', 'tracks' => ['milk tea', '美しき花', 'LOVE TRAIN', 'あの夏も 海も 空も']],
+            ['title' => '東京にもあったんだ／無敵のキミ', 'date' => '2007-04-11', 'tracks' => ['東京にもあったんだ', '無敵のキミ']],
+            ['title' => '想 -new love new world-', 'date' => '2008-10-22', 'tracks' => ['想 -new love new world-']],
+            ['title' => '化身', 'date' => '2009-05-20', 'tracks' => ['化身', '道標']],
+            ['title' => 'はつ恋', 'date' => '2009-12-16', 'tracks' => ['はつ恋', 'アンモナイトの夢']],
+            ['title' => '蛍／少年', 'date' => '2010-08-11', 'tracks' => ['蛍', '少年', 'Revolution//Evolution']],
+            ['title' => '家族になろうよ／fighting pose', 'date' => '2011-08-31', 'tracks' => ['家族になろうよ', 'fighting pose']],
+            ['title' => '生きてる生きてく', 'date' => '2012-03-28', 'tracks' => ['生きてる生きてく', 'Around the world']],
+            ['title' => 'Beautiful life／GAME', 'date' => '2012-10-10', 'tracks' => ['Beautiful life', 'GAME']],
+            ['title' => '誕生日には真白な百合を／Get the groove', 'date' => '2013-04-10', 'tracks' => ['誕生日には真白な百合を', 'Get the groove']],
+            ['title' => 'I am a HERO', 'date' => '2015-08-19', 'tracks' => ['I am a HERO', 'ステージの魔物', 'その笑顔が見たい', '何度でも花が咲くように私を生きよう']],
+            ['title' => '聖域', 'date' => '2017-09-13', 'tracks' => ['聖域', 'jazzとHepburnと君と', 'Humbucker vs. Single-Coil']],
+            // デジタルシングル
+            ['title' => '何度でも花が咲くように私を生きよう', 'date' => '2015-03-25', 'download' => true, 'tracks' => ['何度でも花が咲くように私を生きよう']],
+            ['title' => '1461日', 'date' => '2016-08-05', 'download' => true, 'tracks' => ['1461日']],
+            ['title' => 'トモエ学園', 'date' => '2017-12-01', 'download' => true, 'tracks' => ['トモエ学園']],
+            ['title' => '零 -ZERO-', 'date' => '2018-04-07', 'download' => true, 'tracks' => ['零 -ZERO-']],
+            ['title' => '甲子園', 'date' => '2018-08-27', 'download' => true, 'tracks' => ['甲子園']],
+            ['title' => '心音', 'date' => '2020-11-09', 'download' => true, 'tracks' => ['心音']],
+            ['title' => '道標 2022', 'date' => '2022-02-06', 'download' => true, 'tracks' => ['道標']],
+            ['title' => '妖', 'date' => '2022-12-05', 'download' => true, 'tracks' => ['妖']],
+            ['title' => '想望', 'date' => '2023-12-04', 'download' => true, 'tracks' => ['想望']],
+            ['title' => 'ひとみ', 'date' => '2024-02-19', 'download' => true, 'tracks' => ['ひとみ']],
+            ['title' => 'クスノキ', 'date' => '2025-06-30', 'download' => true, 'tracks' => ['クスノキ']],
+            ['title' => '幻界', 'date' => '2025-09-08', 'download' => true, 'tracks' => ['幻界']],
+            ['title' => '万有引力', 'date' => '2025-09-25', 'download' => true, 'tracks' => ['万有引力']],
+            ['title' => '龍', 'date' => '2025-11-29', 'download' => true, 'tracks' => ['龍']],
+            ['title' => '木星 feat. 稲葉浩志', 'date' => '2025-12-24', 'download' => true, 'tracks' => ['木星 feat. 稲葉浩志']],
+            ['title' => '邂逅', 'date' => '2026-08-10', 'download' => true, 'tracks' => ['邂逅']],
         ];
     }
 }
