@@ -17,18 +17,28 @@ class ImportFukuyamaDiscography extends Command
 
     private function normalize(string $title): string
     {
+        $title = $this->normalizeKeepingSpaces($title);
+        $title = preg_replace('/\s+/u', '', $title);
+        return $title;
+    }
+
+    // normalize()から空白除去を除いたもの。前方一致判定で「区切り文字があるか」を
+    // 見極める必要があるため、スペース自体は残しつつ表記ゆれ（引用符・省略記号等）だけを吸収する。
+    private function normalizeKeepingSpaces(string $title): string
+    {
         $title = mb_convert_kana($title, 'as');
         $title = str_replace(['’', '‘'], "'", $title);
         // ｢…｣｢･･･｣｢・・・｣など、中点/ドットが2つ以上連続するものは全て省略記号として統一する
         $title = preg_replace('/[･・.]{2,}|…+/u', '…', $title);
-        $title = preg_replace('/\s+/u', '', $title);
         $title = mb_strtolower($title, 'UTF-8');
         return $title;
     }
 
-    // 表記が全く異なるため自動マッチングできない曲の手動対応表（例: 中国語版タイトル → 基本曲名）
+    // 表記が全く異なるため自動マッチングできない曲の手動対応表（例: 中国語版タイトル → 基本曲名、
+    // 基本曲名から始まらない年号付きバージョン表記 → 基本曲名）。キーは前方一致で判定する。
     private const MANUAL_TITLE_ALIASES = [
         '破曉' => '暁',
+        'vs.2013 〜知覚と快楽の螺旋〜' => 'vs. 〜知覚と快楽の螺旋〜',
     ];
 
     // 曲titleに対して、[DbSong.id, 基本形と表記が異なる場合はその原文表記(exception用)] を返す
@@ -36,8 +46,10 @@ class ImportFukuyamaDiscography extends Command
     // （括弧、波ダッシュ、ハイフン囲み、スペース区切りの語句・年号、from〜など）に対応する。
     private function findSong(array $songsByNormalizedTitle, array $songTitlesById, string $title): ?array
     {
-        if (isset(self::MANUAL_TITLE_ALIASES[$title])) {
-            $baseTitle = self::MANUAL_TITLE_ALIASES[$title];
+        foreach (self::MANUAL_TITLE_ALIASES as $aliasFrom => $baseTitle) {
+            if (!str_starts_with($title, $aliasFrom)) {
+                continue;
+            }
             $normalizedBase = $this->normalize($baseTitle);
             if (isset($songsByNormalizedTitle[$normalizedBase])) {
                 return ['id' => $songsByNormalizedTitle[$normalizedBase], 'exception' => $title];
@@ -54,7 +66,9 @@ class ImportFukuyamaDiscography extends Command
         // 既存曲名のうち、この曲titleが「その曲名で始まっている」ものを探す
         // （例: "MELODY Original Karaoke" は基本曲"MELODY"で始まる／
         //   "蛍 -piano ver.-" は基本曲"蛍"で始まる／"Girl 2012"は基本曲"Girl"で始まる）。
+        // 表記ゆれ（引用符・省略記号等）を吸収するため、比較はnormalizeKeepingSpaces後の文字列で行う。
         // 複数の既存曲がその曲titleの接頭辞になりうる場合は、最も長く一致するものを採用する。
+        $titleForPrefixMatch = $this->normalizeKeepingSpaces($title);
         $bestMatchId = null;
         $bestMatchLength = 0;
         foreach ($songTitlesById as $id => $songTitle) {
@@ -62,18 +76,19 @@ class ImportFukuyamaDiscography extends Command
             if ($songTitle === '') {
                 continue;
             }
-            if (!str_starts_with($title, $songTitle)) {
+            $normalizedSongTitle = $this->normalizeKeepingSpaces($songTitle);
+            if (!str_starts_with($titleForPrefixMatch, $normalizedSongTitle)) {
                 continue;
             }
             // 次の文字が英数字の場合は別の曲名の一部である可能性が高いため、
             // 区切り文字（スペース・括弧・ハイフン・波ダッシュ等）が続く場合のみ一致とみなす
-            $rest = mb_substr($title, mb_strlen($songTitle, 'UTF-8'), null, 'UTF-8');
+            $rest = mb_substr($titleForPrefixMatch, mb_strlen($normalizedSongTitle, 'UTF-8'), null, 'UTF-8');
             if ($rest !== '' && !preg_match('/^[\s\(（\-〜～]/u', $rest)) {
                 continue;
             }
-            if (mb_strlen($songTitle, 'UTF-8') > $bestMatchLength) {
+            if (mb_strlen($normalizedSongTitle, 'UTF-8') > $bestMatchLength) {
                 $bestMatchId = $id;
-                $bestMatchLength = mb_strlen($songTitle, 'UTF-8');
+                $bestMatchLength = mb_strlen($normalizedSongTitle, 'UTF-8');
             }
         }
         if ($bestMatchId !== null) {
