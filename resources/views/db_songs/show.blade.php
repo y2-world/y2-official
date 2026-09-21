@@ -21,9 +21,9 @@
                  sort_order順位（常に存在、初期表示）。2つ目のタブ（未ログインなら存在しない）中は、
                  'yuki'なら対応するSlSongのid順位（まだSlSongに紐付いていなければ非表示）、
                  'mine'なら自分の参加記録内での初登場順（まだ聴いた記録がなければ非表示）。 --}}
-            <p class="database-subtitle song-number-performances" style="{{ $initialTab === 'mine' ? 'display: none;' : '' }}"># {{ $songNumber }}</p>
+            <p class="database-subtitle song-number-performances" style="{{ $initialTab !== 'performances' ? 'display: none;' : '' }}"># {{ $songNumber }}</p>
             @if ($secondTabSongNumber)
-                <p class="database-subtitle song-number-second" style="{{ $initialTab === 'mine' ? '' : 'display: none;' }}"># {{ $secondTabSongNumber }}</p>
+                <p class="database-subtitle song-number-second" style="{{ $initialTab !== 'performances' ? '' : 'display: none;' }}"># {{ $secondTabSongNumber }}</p>
             @endif
             <h1 class="database-title sp" style="margin-bottom: 4px; cursor: pointer;"
                 onclick="document.getElementById('spSearchFormSongs').style.display='block'; document.querySelector('.database-title.sp').style.display='none';">
@@ -92,8 +92,8 @@
                     style="padding: 8px 16px; border-radius: 20px; font-weight: 500; cursor: pointer; {{ $initialTab === 'performances' ? 'border: none; background: #667eea; color: white;' : 'border: 1px solid #667eea; background: white; color: #667eea;' }}">
                     Live Performances
                 </button>
-                <button type="button" class="song-performance-tab-btn @if($initialTab === 'mine') is-active @endif" data-tab-target="second-tab-panel"
-                    style="padding: 8px 16px; border-radius: 20px; font-weight: 500; cursor: pointer; {{ $initialTab === 'mine' ? 'border: none; background: #667eea; color: white;' : 'border: 1px solid #667eea; background: white; color: #667eea;' }}">
+                <button type="button" class="song-performance-tab-btn @if($initialTab !== 'performances') is-active @endif" data-tab-target="second-tab-panel"
+                    style="padding: 8px 16px; border-radius: 20px; font-weight: 500; cursor: pointer; {{ $initialTab !== 'performances' ? 'border: none; background: #667eea; color: white;' : 'border: 1px solid #667eea; background: white; color: #667eea;' }}">
                     {{ $secondTab === 'yuki' ? "Yuki's Live Attendances" : 'My Live Attendances' }}
                 </button>
             </div>
@@ -101,7 +101,7 @@
             <h3 style="margin-top: 0; margin-bottom: 15px;">Live Performances</h3>
         @endif
 
-        <div id="live-performances-panel" style="display: {{ $initialTab === 'mine' ? 'none' : 'block' }};">
+        <div id="live-performances-panel" style="display: {{ $initialTab !== 'performances' ? 'none' : 'block' }};">
             @if ($tours->isEmpty())
                 <p style="color: #718096; text-align: center;">演奏記録がありません。</p>
             @else
@@ -133,7 +133,7 @@
         </div>
 
         @if ($secondTab)
-        <div id="second-tab-panel" style="display: {{ $initialTab === 'mine' ? 'block' : 'none' }};">
+        <div id="second-tab-panel" style="display: {{ $initialTab !== 'performances' ? 'block' : 'none' }};">
             @if ($secondTabSetlists->isEmpty())
                 <p style="color: #718096; text-align: center;">参加記録がありません。</p>
             @else
@@ -167,7 +167,7 @@
              初めて聴いた順の前後のDbSongへ直接リンクする（タブを切り替えたままページ間を
              移動できるようにするため）。未ログイン（$secondTabがnull）の場合はLive Performances
              のみなので、常にこちら（song-nav-performances）を表示する。 --}}
-        <div class="song-nav-performances" style="display: {{ $initialTab === 'mine' ? 'none' : 'flex' }}; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
+        <div class="song-nav-performances" style="display: {{ $initialTab !== 'performances' ? 'none' : 'flex' }}; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
             @if (isset($previous))
                 <a href="{{ route('songs.show', $previous->id) }}" rel="prev"
                     style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
@@ -186,7 +186,7 @@
             @endif
         </div>
         @if ($secondTabSongNumber)
-            <div class="song-nav-second" style="display: {{ $initialTab === 'mine' ? 'flex' : 'none' }}; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
+            <div class="song-nav-second" style="display: {{ $initialTab !== 'performances' ? 'flex' : 'none' }}; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
                 @if ($secondTabPrevious)
                     <a href="{{ $secondTab === 'mine' ? route('songs.show', ['id' => $secondTabPrevious->id, 'tab' => 'mine']) : url('/setlists/songs', $secondTabPrevious->id) }}" rel="prev"
                         style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">

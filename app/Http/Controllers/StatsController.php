@@ -13,6 +13,7 @@ use App\Models\DbAlbum;
 use App\Models\SlSong;
 use App\Http\Controllers\Concerns\ComputesDbSongStamps;
 use App\Support\JapaneseNameSorter;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class StatsController extends Controller
@@ -52,7 +53,16 @@ class StatsController extends Controller
 
     public function index(Request $request)
     {
-        $tab = $request->get('tab', 'personal');
+        // personalタブ（Yuki本人のセットリストサイト全体の記録）はYuki本人のみ閲覧可能。
+        // 他のユーザー（未ログイン・外部ユーザー）がpersonalを見ようとした場合はdatabaseタブへ
+        // 誘導する（デフォルトのタブ自体もYuki以外はdatabaseにする）。
+        $externalUser = Auth::guard('external')->user();
+        $isYuki = $externalUser && $externalUser->is_yuki;
+
+        $tab = $request->get('tab', $isYuki ? 'personal' : 'database');
+        if ($tab === 'personal' && !$isYuki) {
+            $tab = 'database';
+        }
 
         if ($tab === 'database') {
             $artistId = $request->get('artist_id');

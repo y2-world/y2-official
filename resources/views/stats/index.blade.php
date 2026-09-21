@@ -15,10 +15,13 @@
 
                     <!-- Tab Navigation -->
                     <div class="stats-tabs">
-                        <a href="{{ route('stats.index', ['tab' => 'personal']) }}"
-                           class="stats-tab {{ $tab === 'personal' ? 'active' : '' }}">
-                            <i class="fas fa-user"></i> Personal
-                        </a>
+                        {{-- PersonalタブはYuki本人（is_yuki）のみ見られる --}}
+                        @if (\Illuminate\Support\Facades\Auth::guard('external')->user()?->is_yuki)
+                            <a href="{{ route('stats.index', ['tab' => 'personal']) }}"
+                               class="stats-tab {{ $tab === 'personal' ? 'active' : '' }}">
+                                <i class="fas fa-user"></i> Personal
+                            </a>
+                        @endif
                         <a href="{{ route('stats.index', ['tab' => 'database']) }}"
                            class="stats-tab {{ $tab === 'database' ? 'active' : '' }}">
                             <i class="fas fa-database"></i> Database

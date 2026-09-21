@@ -125,23 +125,11 @@ class AttendanceController extends Controller
                 }
 
                 // 「Live Performances」（この曲が演奏された全ライブ）と「My Live Attendances」
-                // （自分の参加記録、既存の$attendances）の2タブのうち、どちらを最初に見せるかを
-                // 遷移元によって切り替える。My Page内のセットリスト詳細（自分の参戦記録の1件）
-                // から曲名をクリックした場合は「自分の参加記録」の続きを見ている文脈なので
-                // My Live Attendancesをデフォルトにし、それ以外（Database/Stats等、曲そのものを
-                // 見に来た文脈）はLive Performancesをデフォルトにする。
-                // Previous/Nextで選んだタブをキープしたまま移動できるよう、?tab=mine が明示的に
-                // 指定されていればRefererより優先する。
-                if ($request->query('tab') === 'mine') {
-                    $secondTab = 'mine';
-                } elseif ($request->query('tab') === 'performances') {
-                    $secondTab = 'performances';
-                } else {
-                    $referer = request()->headers->get('referer', '');
-                    $refererPath = $referer ? parse_url($referer, PHP_URL_PATH) : null;
-                    $fromAttendanceShow = $refererPath && preg_match('#^/mypage/attendances/\d+$#', $refererPath);
-                    $secondTab = $fromAttendanceShow ? 'mine' : 'performances';
-                }
+                // （自分の参加記録、既存の$attendances）の2タブのうち、どちらを最初に見せるか。
+                // このページは認証必須（mypage配下）で常にログイン中なので、基本はMy Live
+                // Attendancesをデフォルトにする。Live Performancesを見ていたところから
+                // Previous/Nextで移動した場合だけ、?tab=performances を引き継いで維持する。
+                $secondTab = $request->query('tab') === 'performances' ? 'performances' : 'mine';
             }
         }
 

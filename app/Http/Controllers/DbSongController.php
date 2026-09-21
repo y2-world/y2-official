@@ -127,9 +127,10 @@ class DbSongController extends Controller
             $secondTabSetlists = $songs->myAttendedTours($tourSetlists);
         }
 
-        // Previous/Nextで選んだタブをキープしたまま移動できるよう、?tab=mine をURLで引き継ぐ
-        // （2つ目のタブの種類自体はログイン中ユーザーで固定なので、'mine'かどうかだけ見る）
-        $initialTab = $secondTab && $request->query('tab') === 'mine' ? 'mine' : 'performances';
+        // ログイン中（2つ目のタブが存在する）なら、まず自分（またはYuki）の参加記録を見せる。
+        // Live Performancesを見ていたところからPrevious/Nextで移動した場合だけ、
+        // ?tab=performances を引き継いでLive Performancesを維持する。
+        $initialTab = $secondTab && $request->query('tab') !== 'performances' ? $secondTab : 'performances';
 
         $secondTabSongNumber = null;
         $secondTabPrevious = null;
