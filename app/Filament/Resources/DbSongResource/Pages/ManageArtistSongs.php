@@ -26,7 +26,7 @@ class ManageArtistSongs extends ListRecords
 
     public function getTitle(): string
     {
-        return (Artist::find($this->artistId)?->name ?? '') . ' の楽曲管理';
+        return (Artist::find($this->artistId)?->name ?? '') . ' 楽曲管理';
     }
 
     protected function getHeaderActions(): array
