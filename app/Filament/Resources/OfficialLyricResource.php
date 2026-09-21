@@ -35,16 +35,6 @@ class OfficialLyricResource extends Resource
                     ->label('タイトル')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('album_id')
-                    ->label('アルバム名')
-                    ->options(fn() => \App\Models\OfficialRelease::where('type', 1)->orderBy('date', 'asc')->pluck('title', 'id'))
-                    ->searchable()
-                    ->native(false),
-                Forms\Components\Select::make('single_id')
-                    ->label('シングル名')
-                    ->options(fn() => \App\Models\OfficialRelease::where('type', 0)->orderBy('date', 'asc')->pluck('title', 'id'))
-                    ->searchable()
-                    ->native(false),
                 Forms\Components\Textarea::make('lyrics')
                     ->label('歌詞')
                     ->rows(20)
