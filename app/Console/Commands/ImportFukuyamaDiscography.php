@@ -39,6 +39,13 @@ class ImportFukuyamaDiscography extends Command
     private const MANUAL_TITLE_ALIASES = [
         '破曉' => '暁',
         'vs.2013 〜知覚と快楽の螺旋〜' => 'vs. 〜知覚と快楽の螺旋〜',
+        // MAGNUM CLASSICSは既存曲を英語タイトルで再収録しているための対応
+        'Sakura-zaka' => '桜坂',
+        'Hello' => 'HELLO',
+        "It's only love" => "IT'S ONLY LOVE",
+        "Marcy's song" => "Marcy's Song",
+        'Heaven' => 'HEAVEN',
+        'Gloaming way' => 'GLOAMING WAY',
     ];
 
     // 曲titleに対して、[DbSong.id, 基本形と表記が異なる場合はその原文表記(exception用)] を返す
@@ -158,7 +165,9 @@ class ImportFukuyamaDiscography extends Command
                 $trackIds[] = $track;
             }
 
-            $isOriginal = empty($albumData['best']) && empty($albumData['mini']);
+            // specialは既存曲のクラシック・アレンジ集等、ベスト/ミニ/オリジナルの
+            // いずれにも当たらない企画盤。album_idを振らずラベルなしで表示する
+            $isOriginal = empty($albumData['best']) && empty($albumData['mini']) && empty($albumData['special']);
             if ($isOriginal) {
                 $albumId++;
             }
@@ -277,6 +286,12 @@ class ImportFukuyamaDiscography extends Command
                 'title' => 'SING A SONG',
                 'date' => '1998-06-24',
                 'tracks' => ['愛は風のように', 'Heart', 'Good Job', 'you', '僕らの愛は今日も忙しい', 'You Can Dance', '遠い旅', 'Hard Luck Lover', '80 Proof', '巻き戻した夏', 'Like A Hurricane (Album Mix)', 'Fellow'],
+            ],
+            [
+                'title' => "fukuyama presents MAGNUM CLASSICS Kissin' in the holy night",
+                'date' => '2000-12-06',
+                'special' => true,
+                'tracks' => ['Sakura-zaka', 'Hello', 'Squall', 'Good night', "It's only love", "Marcy's song", 'Heaven', 'Heart of Xmas', 'Sakura-zaka 〜winter fragrance〜', 'Gloaming way', "Kissin' in the holy night"],
             ],
             [
                 'title' => 'f',
