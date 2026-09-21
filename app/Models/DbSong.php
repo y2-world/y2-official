@@ -113,9 +113,13 @@ class DbSong extends Model
         return $albums->where('best', false)->whereNull('album_id')->first($contains);
     }
 
+    // 「Disc 1」「DISC-2」「Reel.3」「CD」「ボーナスCD」のような、単なる収録媒体の分割を
+    // 示すだけの定型discラベルにマッチする。これらはアルバム名の代わりにはならない
+    private const GENERIC_DISC_LABEL_PATTERN = '/^(disc|reel)[\s\-.]*\d*$|^cd$|^ボーナスcd$/ui';
+
     // 曲一覧・曲詳細でアルバム名として表示する文字列。通常はアルバム自体のtitleだが、
-    // 収録トラックにdiscラベル（例:「Slow Collection」のような、アルバム本編とは別の
-    // 呼称を持つボーナスディスク）が付いている場合はそちらを優先表示する
+    // 収録トラックのdiscラベルが「Disc 1」等の定型分割ラベルではなく、「Slow Collection」
+    // のようなアルバム本編とは別の固有の呼称を持つボーナスディスクの場合はそちらを優先表示する
     // （例: AKIRA初回限定盤ボーナスCD収録の新録曲は「AKIRA」ではなく「Slow Collection」として見せたい）
     public function getAlbumDisplayTitleFromTracklistAttribute()
     {
@@ -126,8 +130,13 @@ class DbSong extends Model
 
         $songId = (string) $this->id;
         $track = collect($album->tracklist ?? [])->first(fn($t) => isset($t['id']) && (string) $t['id'] === $songId);
+        $disc = $track['disc'] ?? null;
 
-        return ($track['disc'] ?? null) ?: $album->title;
+        if ($disc && !preg_match(self::GENERIC_DISC_LABEL_PATTERN, $disc)) {
+            return $disc;
+        }
+
+        return $album->title;
     }
 
     public function getSingleFromTracklistAttribute()
