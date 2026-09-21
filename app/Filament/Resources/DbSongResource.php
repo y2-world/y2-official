@@ -49,6 +49,41 @@ class DbSongResource extends Resource
                     ->rows(5)
                     ->columnSpanFull(),
 
+                // 曲一覧・曲詳細ページの「収録アルバム」「収録シングル」表示は、本来は
+                // 日付が最も早いリリースを自動選択するが、同じ曲がリミックス盤等の別
+                // リリースにも収録されていて自動判定だけでは正しい初出を選べない場合に、
+                // ここで明示的に上書き指定できる（未指定なら自動選択のまま）
+                Forms\Components\Select::make('album_id')
+                    ->label('収録アルバム（手動指定）')
+                    ->helperText('未指定の場合、この曲を収録するアルバムのうち発売日が最も早いものが自動的に表示されます')
+                    ->options(function (Get $get) {
+                        $artistId = $get('artist_id');
+                        if (!$artistId) {
+                            return [];
+                        }
+                        return DbAlbum::where('artist_id', $artistId)->orderBy('date')->pluck('title', 'id')->all();
+                    })
+                    ->searchable()
+                    ->preload()
+                    ->native(false)
+                    ->placeholder('自動選択')
+                    ->nullable(),
+                Forms\Components\Select::make('single_id')
+                    ->label('収録シングル（手動指定）')
+                    ->helperText('未指定の場合、この曲を収録するシングルのうち発売日が最も早いものが自動的に表示されます')
+                    ->options(function (Get $get) {
+                        $artistId = $get('artist_id');
+                        if (!$artistId) {
+                            return [];
+                        }
+                        return \App\Models\DbSingle::where('artist_id', $artistId)->orderBy('date')->pluck('title', 'id')->all();
+                    })
+                    ->searchable()
+                    ->preload()
+                    ->native(false)
+                    ->placeholder('自動選択')
+                    ->nullable(),
+
                 // DbSongとSlSongは基本1対1（バージョン違いはセットリスト側の別カラムで表現するため、
                 // SlSongのタイトルは常にオリジナルタイトルになる）。DbSong::slSongs()自体はhasMany定義だが、
                 // ここでは単一選択のみを許可する。Filament標準のrelationship()保存は

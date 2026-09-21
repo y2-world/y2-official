@@ -16,6 +16,8 @@ class DbSong extends Model
         'artist_id',
         'text',
         'sort_order',
+        'album_id',
+        'single_id',
     ];
 
     protected static function booted()
@@ -95,23 +97,23 @@ class DbSong extends Model
 
     public function getAlbumFromTracklistAttribute()
     {
-        $songId = $this->id;
-        $albums = DbAlbum::where('artist_id', $this->artist_id)
-            ->orderBy('date', 'asc')
-            ->get();
+        // 管理画面で収録アルバムが手動指定されていれば最優先する（同じ曲がリミックス盤等の
+        // 別アルバムにも収録されていて、日付順の自動判定だけでは正しい初出を選べない場合の
+        // 上書き手段。手動指定が無ければ日付が最も早いものにフォールバックする）
+        if ($this->album_id) {
+            $manual = DbAlbum::find($this->album_id);
+            if ($manual) {
+                return $manual;
+            }
+        }
 
+        $songId = $this->id;
         $contains = fn($album) => collect($album->tracklist ?? [])->pluck('id')->contains((string) $songId);
 
-        // album_idあり（オリジナル・ミニ）を優先
-        $original = $albums->where('best', false)->whereNotNull('album_id')->first($contains);
-        if ($original) return $original;
-
-        // ベストアルバムでフォールバック
-        $best = $albums->where('best', true)->first($contains);
-        if ($best) return $best;
-
-        // best/mini/album_idのいずれにも当たらない企画盤（クラシック・アレンジ集等）
-        return $albums->where('best', false)->whereNull('album_id')->first($contains);
+        return DbAlbum::where('artist_id', $this->artist_id)
+            ->orderBy('date', 'asc')
+            ->get()
+            ->first($contains);
     }
 
     // 「Disc 1」「DISC-2」「Reel.3」「CD」「ボーナスCD」のような、単なる収録媒体の分割を
@@ -142,13 +144,21 @@ class DbSong extends Model
 
     public function getSingleFromTracklistAttribute()
     {
+        // 収録アルバムと同様、手動指定があれば最優先する
+        if ($this->single_id) {
+            $manual = DbSingle::find($this->single_id);
+            if ($manual) {
+                return $manual;
+            }
+        }
+
         $songId = $this->id;
+        $contains = fn($single) => collect($single->tracklist ?? [])->pluck('id')->contains((string) $songId);
+
         return DbSingle::where('artist_id', $this->artist_id)
+            ->orderBy('date', 'asc')
             ->get()
-            ->first(function ($single) use ($songId) {
-                $tracklist = $single->tracklist ?? [];
-                return collect($tracklist)->pluck('id')->contains((string) $songId);
-            });
+            ->first($contains);
     }
 
     // この曲（db_songs.id）が実際に演奏されたDbSetlist（setlist/encore列内に自分のidまたは
