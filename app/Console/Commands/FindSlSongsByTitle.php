@@ -7,13 +7,29 @@ use Illuminate\Console\Command;
 
 class FindSlSongsByTitle extends Command
 {
-    protected $signature = 'discography:find-sl-songs {titles*}';
+    protected $signature = 'discography:find-sl-songs {titles?*} {--unlinked : List all SlSong with no db_song_id} {--artist=}';
 
-    protected $description = 'Look up SlSong records by title and show their db_song_id linkage';
+    protected $description = 'Look up SlSong records by title, or list all unlinked SlSong for an artist';
 
     public function handle(): void
     {
         $titles = $this->argument('titles');
+        $unlinked = (bool) $this->option('unlinked');
+        $artistFilter = $this->option('artist');
+
+        if ($unlinked) {
+            $query = SlSong::with('artist')->whereNull('db_song_id');
+            if ($artistFilter) {
+                $query->whereHas('artist', fn($q) => $q->where('name', $artistFilter));
+            }
+            $songs = $query->orderBy('title')->get();
+            foreach ($songs as $s) {
+                $artist = optional($s->artist)->name ?? '?';
+                $this->line("sl_song_id={$s->id} title={$s->title} artist={$artist}");
+            }
+            $this->info('Total unlinked: ' . $songs->count());
+            return;
+        }
 
         foreach ($titles as $title) {
             $songs = SlSong::with('artist', 'dbSong')->where('title', $title)->get();
