@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - ' . $tours->title)
+@section('turbo_enabled', 'true')
 
 @section('og_title', $tours->title . ' - Yuki Official')
 @section('og_description', 'Tour: ' . $tours->title . ($tours->date1 ? ' (' . date('Y', strtotime($tours->date1)) . ')' : ''))

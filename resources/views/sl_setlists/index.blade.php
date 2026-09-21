@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - Setlists')
+@section('turbo_enabled', 'true')
 
 @section('og_title', 'Setlists - Yuki Official')
 @section('og_description', 'Browse all setlists from Yuki Yoshida performances')

@@ -47,11 +47,13 @@
 
     @livewireStyles
 </head>
-{{-- Turbo Driveはデフォルト無効。無限スクロール一覧5ページとその詳細ページ間の
-     遷移のみ、個別に data-turbo="true" を付けたリンクで有効化する（範囲限定導入）。
-     サイトの他の大部分のページはDOMContentLoaded依存のJSをTurbo対応させていないため、
-     全体で有効化すると2回目以降のページ遷移でJSが動かなくなる箇所がある --}}
-<body data-turbo="false">
+{{-- Turbo Driveはデフォルト無効。無限スクロール一覧5ページとその詳細ページのみ、
+     各ビューで @section('turbo_enabled', 'true') を指定して有効化する（範囲限定導入）。
+     data-turboはリンク元ではなく「遷移先ページ」のbody属性で判定されるため、
+     一覧・詳細の両方に付ける必要がある。サイトの他の大部分のページは
+     DOMContentLoaded依存のJSをTurbo対応させていないため、全体で有効化すると
+     2回目以降のページ遷移でJSが動かなくなる箇所がある --}}
+<body data-turbo="@yield('turbo_enabled', 'false')">
 <div class="container">
     <div class="nav">
         <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">

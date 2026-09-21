@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - ' . $albums->title)
+@section('turbo_enabled', 'true')
 @section('content')
     <div class="database-hero database-hero--detail">
         <div class="container" style="position: relative;">
