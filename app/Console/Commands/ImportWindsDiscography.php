@@ -31,10 +31,40 @@ class ImportWindsDiscography extends Command
         return $title;
     }
 
-    // DbSongに存在しないリミックス違いのトラック（別バージョンとして正式にDbSong化はしない）。
-    // カラオケと同様、実演奏曲ではないためidを持たせずexceptionのみで表示する。
+    // DbSongに存在しないリミックス違い・イントロトラック（別バージョンや導入トラックとして
+    // 正式にDbSong化はしない）。カラオケと同様、実演奏曲ではないためidを持たせずexceptionのみで表示する。
     private const NON_SONG_TRACKS = [
         'SUPER LOVER〜movin’ pleasure mix〜',
+        'Intercode',
+        // w-inds.Single Mega-Mix（2007-03-21）はM1「Single Mega-Mix」・M2「同Radio Edit
+        // Version」の2トラックに既存シングル曲をメドレーで繋いだ構成。単体の曲ページへ
+        // リンクする意味がないため、まとめてプレーンテキスト表示にする（Fire Flowerのみ通常収録）。
+        'Forever Memories (Single Mega-Mix)',
+        'Feel The Fate (Single Mega-Mix)',
+        'Paradox (Single Mega-Mix)',
+        'try your emotion (Single Mega-Mix)',
+        'Another Days (Single Mega-Mix)',
+        'Because of you (Single Mega-Mix)',
+        'NEW PARADISE (Single Mega-Mix)',
+        'SUPER LOVER 〜I need you tonight〜 (Single Mega-Mix)',
+        'Love is message (Single Mega-Mix)',
+        'Long Road (Single Mega-Mix)',
+        'Pieces (Single Mega-Mix)',
+        'キレイだ (Single Mega-Mix)',
+        '四季 (Single Mega-Mix)',
+        '夢の場所へ (Single Mega-Mix)',
+        '変わりゆく空 (Single Mega-Mix)',
+        '十六夜の月 (Single Mega-Mix)',
+        '約束のカケラ (Single Mega-Mix)',
+        'IT’S IN THE STARS (Single Mega-Mix)',
+        'TRIAL (Single Mega-Mix)',
+        'ブギウギ66 (Single Mega-Mix)',
+        'ハナムケ (Single Mega-Mix)',
+        'Forever Memories (Single Mega-Mix / Radio Edit Version)',
+        'try your emotion (Single Mega-Mix / Radio Edit Version)',
+        'SUPER LOVER 〜I need you tonight〜 (Single Mega-Mix / Radio Edit Version)',
+        'キレイだ (Single Mega-Mix / Radio Edit Version)',
+        'ブギウギ66 (Single Mega-Mix / Radio Edit Version)',
     ];
 
     private function findSong(array $songsByNormalizedTitle, array $songTitlesById, string $title): ?array
@@ -103,10 +133,20 @@ class ImportWindsDiscography extends Command
 
                 $match = $this->findSong($songsByNormalizedTitle, $songTitlesById, $trackTitle);
                 if ($match === null) {
+                    // 他アーティストとのオムニバス盤（'omnibus' => true）は、w-inds.以外の
+                    // アーティストの曲も収録されているため、リンクなしのプレーンテキストとして扱う
+                    if (!empty($albumData['omnibus'])) {
+                        $track = ['exception' => $trackTitle];
+                        if ($disc !== null) {
+                            $track['disc'] = $disc;
+                        }
+                        $trackIds[] = $track;
+                        continue;
+                    }
                     $unmatched[] = $albumData['title'] . ' / ' . $trackTitle;
                     continue;
                 }
-                $isKaraoke = isKaraokeTrack($match['exception']);
+                $isKaraoke = $match['id'] === null || isKaraokeTrack($match['exception']);
                 $track = $isKaraoke ? [] : ['id' => $match['id']];
                 if ($disc !== null) {
                     $track['disc'] = $disc;
@@ -117,7 +157,9 @@ class ImportWindsDiscography extends Command
                 $trackIds[] = $track;
             }
 
-            $isOriginal = empty($albumData['best']) && empty($albumData['mini']);
+            // specialは他アーティストとのオムニバス盤等、ベスト/ミニ/オリジナルの
+            // いずれにも当たらない企画盤。album_idを振らずラベルなしで表示する
+            $isOriginal = empty($albumData['best']) && empty($albumData['mini']) && empty($albumData['special']);
             if ($isOriginal) {
                 $albumId++;
             }
@@ -128,6 +170,10 @@ class ImportWindsDiscography extends Command
                 $key = ['artist_id' => self::ARTIST_ID, 'date' => $albumData['date']];
                 if ($isOriginal) {
                     $key['album_id'] = $albumId;
+                } else {
+                    // ベスト/ミニは基本dateのみで識別するが、同日に複数リリースがある場合は
+                    // titleもキーに含めて区別する（例: We dance for everyone-とWe sing for you-が同日）
+                    $key['title'] = $albumData['title'];
                 }
                 DbAlbum::updateOrCreate(
                     $key,
@@ -150,10 +196,16 @@ class ImportWindsDiscography extends Command
             foreach ($singleData['tracks'] as $trackTitle) {
                 $match = $this->findSong($songsByNormalizedTitle, $songTitlesById, $trackTitle);
                 if ($match === null) {
+                    // 他アーティストとのユニット名義曲（'omnibus' => true）は、w-inds.以外の
+                    // 曲も収録されているため、リンクなしのプレーンテキストとして扱う
+                    if (!empty($singleData['omnibus'])) {
+                        $trackIds[] = ['exception' => $trackTitle];
+                        continue;
+                    }
                     $unmatched[] = $singleData['title'] . ' / ' . $trackTitle;
                     continue;
                 }
-                $isKaraoke = isKaraokeTrack($match['exception']);
+                $isKaraoke = $match['id'] === null || isKaraokeTrack($match['exception']);
                 $track = $isKaraoke ? [] : ['id' => $match['id']];
                 if ($match['exception']) {
                     $track['exception'] = $match['exception'];
@@ -161,9 +213,11 @@ class ImportWindsDiscography extends Command
                 $trackIds[] = $track;
             }
 
-            // EPはCD/配信いずれの形態でもCDシングルの通し番号(single_id)には含めない
+            // EPや、DVD/Blu-ray等の円盤に同梱されたボーナスCD（bonus）は、CD/配信いずれの
+            // 形態でもCDシングルの通し番号(single_id)には含めない
             $isEp = !empty($singleData['ep']);
-            $isCd = empty($singleData['download']) && !$isEp;
+            $isBonus = !empty($singleData['bonus']);
+            $isCd = empty($singleData['download']) && !$isEp && !$isBonus;
             if ($isCd) {
                 $singleId++;
             }
@@ -231,6 +285,27 @@ class ImportWindsDiscography extends Command
                 'tracks' => ['THIS IS OUR SHOW', 'Top Secret', 'Is that you', 'Crazy for You', 'Devil', 'TRIAL', '遠い記憶', 'Milky Way', 'Journey', 'メッセージ', '地図なき旅路', 'Celebration (2007)', 'ブギウギ66', 'TRIANGLE', 'ハナムケ'],
             ],
             [
+                'title' => 'w-inds.Single Mega-Mix',
+                'date' => '2007-03-21',
+                'special' => true,
+                'omnibus' => true,
+                'tracks' => [
+                    'Forever Memories (Single Mega-Mix)', 'Feel The Fate (Single Mega-Mix)', 'Paradox (Single Mega-Mix)', 'try your emotion (Single Mega-Mix)', 'Another Days (Single Mega-Mix)', 'Because of you (Single Mega-Mix)', 'NEW PARADISE (Single Mega-Mix)', 'SUPER LOVER 〜I need you tonight〜 (Single Mega-Mix)', 'Love is message (Single Mega-Mix)', 'Long Road (Single Mega-Mix)', 'Pieces (Single Mega-Mix)', 'キレイだ (Single Mega-Mix)', '四季 (Single Mega-Mix)', '夢の場所へ (Single Mega-Mix)', '変わりゆく空 (Single Mega-Mix)', '十六夜の月 (Single Mega-Mix)', '約束のカケラ (Single Mega-Mix)', 'IT’S IN THE STARS (Single Mega-Mix)', 'TRIAL (Single Mega-Mix)', 'ブギウギ66 (Single Mega-Mix)', 'ハナムケ (Single Mega-Mix)',
+                    'Forever Memories (Single Mega-Mix / Radio Edit Version)', 'try your emotion (Single Mega-Mix / Radio Edit Version)', 'SUPER LOVER 〜I need you tonight〜 (Single Mega-Mix / Radio Edit Version)', 'キレイだ (Single Mega-Mix / Radio Edit Version)', 'ブギウギ66 (Single Mega-Mix / Radio Edit Version)',
+                    'Fire Flower',
+                ],
+            ],
+            [
+                'title' => 'CHRISTMAS HARMONY 〜VISION FACTORY presents〜',
+                'date' => '2007-11-21',
+                'special' => true,
+                'omnibus' => true,
+                'tracks' => [
+                    ['Wishing on a groove (三浦大知)', 'Disc-1'], ['Ding Dong (Lead)', 'Disc-1'], ['No.1〜Your Lady〜 (MAX)', 'Disc-1'], ['Christmas Night (English Version) (DA PUMP)', 'Disc-1'], ['雪空Letter (今井絵理子)', 'Disc-1'], ['Story telling', 'Disc-1'], ['白い薔薇 〜恋の吐息〜 (橘美緒)', 'Disc-1'], ['It’s your time (FLAME)', 'Disc-1'], ['SANTA CLAUS LIVES IN TOKYO (安名奈々)', 'Disc-1'], ['My Darling Santa Claus (橘美緒)', 'Disc-1'],
+                    ['OkiDoki Christmas (Lead)', 'Disc-2'], ['Moon Cry (西村俊彦)', 'Disc-2'], ['X’mas Melody (Vanilla Mood)', 'Disc-2'], ['白い雪 (伊沢麻未)', 'Disc-2'], ['Merry my love (高橋真純)', 'Disc-2'], ['True My Heart (谷村奈南)', 'Disc-2'], ['僕らの光 (阿久津仁愛)', 'Disc-2'], ['愛のキズナ (TUFF PEAK BROS. from FLAME)', 'Disc-2'], ['あなたがそばに (橘美緒)', 'Disc-2'], ['FREEDOM SKY', 'Disc-2'],
+                ],
+            ],
+            [
                 'title' => 'Seventh Ave.',
                 'date' => '2008-07-02',
                 'tracks' => ['Spinning Around', 'RELOADED', 'Hello', 'TOKYO', 'New Day', 'LOVE', 'Urban Dance', 'Rock it', 'アメあと', 'LOVE IS THE GREATEST THING', 'Stay', 'Don’t Give Up', 'Hand in Hand', 'Beautiful Life', 'Summer Days'],
@@ -238,7 +313,7 @@ class ImportWindsDiscography extends Command
             [
                 'title' => 'Another World',
                 'date' => '2010-03-10',
-                'tracks' => ['Message', 'New World', 'CAN’T GET BACK', 'Re:vision', 'Nothing Is Impossible', 'Rain Is Fallin’', 'Some More', 'Don’t remind me', 'In The Red', 'Truth 〜最後の真実〜', 'HYBRID DREAM', 'Cos Of You', 'Prayer', 'Spiral', 'Everyday'],
+                'tracks' => ['Intercode', 'New World', 'CAN’T GET BACK', 'Re:vision', 'Nothing Is Impossible', 'Rain Is Fallin’', 'Some More', 'Don’t remind me', 'In The Red', 'Truth 〜最後の真実〜', 'HYBRID DREAM', 'Cos Of You', 'Prayer', 'Spiral', 'Everyday'],
             ],
             [
                 'title' => 'MOVE LIKE THIS',
@@ -295,8 +370,8 @@ class ImportWindsDiscography extends Command
                 'date' => '2008-01-01',
                 'best' => true,
                 'tracks' => [
-                    ['四季', 'MVP'], ['夢の場所へ', 'MVP'], ['変わりゆく空', 'MVP'], ['十六夜の月', 'MVP'], ['約束のカケラ', 'MVP'], ['IT’S IN THE STARS', 'MVP'], ['TRIAL', 'MVP'], ['ブギウギ66', 'MVP'], ['ハナムケ', 'MVP'], ['LOVE IS THE GREATEST THING', 'MVP'], ['Beautiful Life', 'MVP'],
-                    ['INNOVATOR', 'SUPER SUB'], ['Past Tense', 'SUPER SUB'], ['Shangri-La', 'SUPER SUB'], ['Forever Memories 〜2007 Live version〜', 'SUPER SUB'],
+                    '四季', '夢の場所へ', '変わりゆく空', '十六夜の月', '約束のカケラ', 'IT’S IN THE STARS', 'TRIAL', 'ブギウギ66', 'ハナムケ', 'LOVE IS THE GREATEST THING', 'Beautiful Life',
+                    'INNOVATOR', 'Past Tense', 'Shangri-La', 'Forever Memories 〜2007 Live version〜',
                 ],
             ],
             [
@@ -305,7 +380,9 @@ class ImportWindsDiscography extends Command
                 'best' => true,
                 'tracks' => [
                     ['Paradox', 'Disc-1'], ['Love you anymore', 'Disc-1'], ['try your emotion', 'Disc-1'], ['Because of you', 'Disc-1'], ['NEW PARADISE', 'Disc-1'], ['Break Down, Build Up', 'Disc-1'], ['SUPER LOVER 〜I need you tonight〜', 'Disc-1'], ['W.O.L. (Wonder Of Love)', 'Disc-1'], ['キレイだ', 'Disc-1'], ['song 4 U', 'Disc-1'], ['IT’S IN THE STARS', 'Disc-1'], ['Back At One', 'Disc-1'], ['ブギウギ66', 'Disc-1'], ['Want ya', 'Disc-1'],
-                    ['LOVE IS THE GREATEST THING', 'Disc-2'], ['Beautiful Life', 'Disc-2'], ['I’m a Man', 'Disc-2'], ['CAN’T GET BACK', 'Disc-2'], ['Rain Is Fallin’', 'Disc-2'], ['HYBRID DREAM', 'Disc-2'], ['New World', 'Disc-2'], ['Truth 〜最後の真実〜', 'Disc-2'], ['Addicted to love', 'Disc-2'], ['Let’s get it on', 'Disc-2'], ['Nothing Is Impossible', 'Disc-2'], ['Some More', 'Disc-2'], ['NOTHING IS GONNA CHANGE IT', 'Disc-2'], ['NO DOUBTS', 'Disc-2'],
+                    ['LOVE IS THE GREATEST THING', 'Disc-2'], ['Beautiful Life', 'Disc-2'], ['I’m a Man', 'Disc-2'], ['CAN’T GET BACK', 'Disc-2'], ['Rain Is Fallin’', 'Disc-2'], ['HYBRID DREAM', 'Disc-2'], ['New World', 'Disc-2'], ['Truth 〜最後の真実〜', 'Disc-2'], ['Addicted to love', 'Disc-2'], ['Let’s get it on', 'Disc-2'], ['Nothing Is Impossible', 'Disc-2'], ['Some More', 'Disc-2'],
+                    // 初回限定盤の後に通常盤のみの曲を並べる
+                    ['You make me crazy', 'Disc-2'], ['SWEAR DOWN', 'Disc-2'], ['NOTHING GONNA CHANGE IT', 'Disc-2'], ['NO DOUBTS', 'Disc-2'],
                 ],
             ],
             [
@@ -314,7 +391,9 @@ class ImportWindsDiscography extends Command
                 'best' => true,
                 'tracks' => [
                     ['Forever Memories', 'Disc-1'], ['Feel The Fate', 'Disc-1'], ['will be there 〜恋心', 'Disc-1'], ['Somewhere in Time', 'Disc-1'], ['Graduation', 'Disc-1'], ['Another Days', 'Disc-1'], ['Best of My Love', 'Disc-1'], ['Baby Maybe', 'Disc-1'], ['Love is message', 'Disc-1'], ['Long Road', 'Disc-1'], ['Love Train', 'Disc-1'], ['Deny', 'Disc-1'], ['Pieces', 'Disc-1'], ['四季', 'Disc-1'],
-                    ['夢の場所へ', 'Disc-2'], ['Perfect Day', 'Disc-2'], ['変わりゆく空', 'Disc-2'], ['夏空の恋の詩', 'Disc-2'], ['ageha', 'Disc-2'], ['十六夜の月', 'Disc-2'], ['約束のカケラ', 'Disc-2'], ['蝉時雨', 'Disc-2'], ['TRIAL', 'Disc-2'], ['ハナムケ', 'Disc-2'], ['アメあと', 'Disc-2'], ['Everyday', 'Disc-2'], ['Be As One', 'Disc-2'], ['NOTHING IS GONNA CHANGE IT', 'Disc-2'],
+                    ['夢の場所へ', 'Disc-2'], ['Perfect Day', 'Disc-2'], ['変わりゆく空', 'Disc-2'], ['夏空の恋の詩', 'Disc-2'], ['ageha', 'Disc-2'], ['十六夜の月', 'Disc-2'], ['約束のカケラ', 'Disc-2'], ['蝉時雨', 'Disc-2'], ['TRIAL', 'Disc-2'], ['ハナムケ', 'Disc-2'], ['アメあと', 'Disc-2'], ['Everyday', 'Disc-2'], ['Be As One', 'Disc-2'],
+                    // 初回限定盤の後に通常盤のみの曲を並べる
+                    ['RAINBOW HILL', 'Disc-2'], ['WHAT’S THE DIFFERENCE', 'Disc-2'],
                 ],
             ],
             [
@@ -338,6 +417,7 @@ class ImportWindsDiscography extends Command
             ['title' => 'Paradox', 'date' => '2001-10-17', 'tracks' => ['Paradox', 'Somewhere in Time', 'Paradox 〜ZA DOWNTOWN STREET RUMOR REMIX〜', 'Paradox 〜Instrumental〜']],
             ['title' => 'try your emotion', 'date' => '2002-02-20', 'tracks' => ['try your emotion', 'Graduation', 'try your emotion 〜MoFO★NARUSE Remix〜', 'try your emotion 〜Instrumental〜']],
             ['title' => 'Another Days', 'date' => '2002-05-22', 'tracks' => ['Another Days', 'Show me your style', 'Another Days 〜Another side mix〜', 'Another Days 〜Instrumental〜']],
+            ['title' => 'World Needs Love', 'date' => '2002-08-07', 'omnibus' => true, 'tracks' => ['World Needs Love', 'I’ll be there', 'World Needs Love (Hyper Fantasista Mix)', 'World Needs Love (Instrumental)']],
             ['title' => 'Because of you', 'date' => '2002-08-21', 'tracks' => ['Because of you', 'close to you', 'Because of you 〜j\'adore party style〜', 'Because of you (Instrumental)']],
             ['title' => 'NEW PARADISE', 'date' => '2002-11-13', 'tracks' => ['NEW PARADISE', 'Best of My Love', 'NEW PARADISE 〜CANDY Future remix〜', 'NEW PARADISE 〜Instrumental〜']],
             ['title' => 'SUPER LOVER 〜I need you tonight〜', 'date' => '2003-05-21', 'tracks' => ['SUPER LOVER 〜I need you tonight〜', 'no one else', 'SUPER LOVER 〜I need you tonight〜 (Instrumental)', 'no one else (Instrumental)']],
@@ -359,6 +439,7 @@ class ImportWindsDiscography extends Command
             ['title' => 'アメあと', 'date' => '2008-04-23', 'tracks' => ['アメあと', 'One Love', 'leave me alone', 'アメあと (Instrumental)']],
             ['title' => 'Everyday/CAN’T GET BACK', 'date' => '2008-11-26', 'tracks' => ['Everyday', 'CAN’T GET BACK', 'Color', 'YES or NO', 'Everyday (Instrumental)', 'CAN’T GET BACK (Instrumental)']],
             ['title' => 'Rain Is Fallin’/HYBRID DREAM', 'date' => '2009-05-13', 'tracks' => ['Rain Is Fallin’', 'HYBRID DREAM', 'Upside Down', 'You are…', 'Rain Is Fallin’ (Instrumental)', 'HYBRID DREAM (Instrumental)']],
+            ['title' => 'Message', 'date' => '2009-11-18', 'download' => true, 'tracks' => ['Message']],
             ['title' => 'New World/Truth〜最後の真実〜', 'date' => '2009-12-09', 'tracks' => ['New World', 'Truth 〜最後の真実〜', 'Fighting For Love', 'Tribute', 'New World (Radio Mix)']],
             ['title' => 'Addicted to love', 'date' => '2010-06-23', 'tracks' => ['Addicted to love', 'Love or Leave', 'Now You’re Gone', 'Rain', 'Addicted to love (Instrumental)']],
             ['title' => 'Be As One/Let’s get it on', 'date' => '2011-01-26', 'tracks' => ['Be As One', 'Let’s get it on', 'Noise', 'To My Fans']],
@@ -384,6 +465,7 @@ class ImportWindsDiscography extends Command
             ['title' => 'FAKE IT', 'date' => '2024-02-14', 'download' => true, 'tracks' => ['FAKE IT']],
             ['title' => 'Imagination', 'date' => '2024-05-01', 'download' => true, 'tracks' => ['Imagination']],
             ['title' => 'Who’s the Liar', 'date' => '2025-02-26', 'download' => true, 'tracks' => ['Who’s the Liar']],
+            ['title' => 'w-inds. LIVE TOUR 2025 "Rewind to winderlust"', 'date' => '2026-02-18', 'bonus' => true, 'tracks' => ['ORIGINALISM', 'The End of Waiting']],
         ];
     }
 }
