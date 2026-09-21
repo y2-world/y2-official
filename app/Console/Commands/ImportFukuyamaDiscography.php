@@ -322,7 +322,7 @@ class ImportFukuyamaDiscography extends Command
                 'tracks' => [
                     'AKIRA', '暗闇の中で飛べ', '革命', 'Popstar', '漂流せよ', 'トモエ学園', '失敗学', '甲子園', 'ボーッ', '心音', '幸せのサラダ', '1461日', '聖域', 'いってらっしゃい', '零 -ZERO-', '始まりがまた始まってゆく', '彼方で',
                     // 初回限定盤付属ボーナスCD「30th Anniv. バラード作品集『Slow Collection』」
-                    ['最愛', 'Slow Collection'], ['恋の中(弾き語りver.)', 'Slow Collection'], ['ながれ星', 'Slow Collection'], ['蛍', 'Slow Collection'], ['好きよ 好きよ 好きよ(弾き語りver.)', 'Slow Collection'], ['milk tea', 'Slow Collection'], ['道標', 'Slow Collection'], ['はつ恋', 'Slow Collection'], ['あの夏も 海も 空も', 'Slow Collection'], ['桜坂', 'Slow Collection'], ['家族になろうよ', 'Slow Collection'], ['Dear(「DOME LIVE 2018 -暗闇の中で飛べ-」ver.)', 'Slow Collection'], ['Squall(「福山☆夏の大創業祭2015 日産スタジアム」ver.)', 'Slow Collection'], ['Good night(「福山雅治 五十祭!!」ver.)', 'Slow Collection'], ['7月7日(「福山☆冬の大感謝祭 其の十五」ver.)', 'Slow Collection'], ['恋人(「福山☆冬の大感謝祭 其の十七」ver.)', 'Slow Collection'],
+                    ['最愛', 'Slow Collection'], ['恋の中 (弾き語りver.)', 'Slow Collection'], ['ながれ星', 'Slow Collection'], ['蛍', 'Slow Collection'], ['好きよ 好きよ 好きよ (弾き語りver.)', 'Slow Collection'], ['milk tea', 'Slow Collection'], ['道標', 'Slow Collection'], ['はつ恋', 'Slow Collection'], ['あの夏も 海も 空も', 'Slow Collection'], ['桜坂', 'Slow Collection'], ['家族になろうよ', 'Slow Collection'], ['Dear (「DOME LIVE 2018 -暗闇の中で飛べ-」ver.)', 'Slow Collection'], ['Squall (「福山☆夏の大創業祭2015 日産スタジアム」ver.)', 'Slow Collection'], ['Good night (「福山雅治 五十祭!!」ver.)', 'Slow Collection'], ['7月7日 (「福山☆冬の大感謝祭 其の十五」ver.)', 'Slow Collection'], ['恋人 (「福山☆冬の大感謝祭 其の十七」ver.)', 'Slow Collection'],
                 ],
             ],
             [
