@@ -112,6 +112,43 @@ class ImportWindsDiscography extends Command
     {
         $dryRun = (bool) $this->option('dry-run');
 
+        // titleの表記ゆれ修正のたびにupdateOrCreateのキーがずれて重複レコードが増えてきたため、
+        // 同じ日付（同日複数リリースがある場合はtitleも含めて同一キー）に複数レコードがある場合は
+        // ID最大（＝最後に作られた最新のもの）以外を削除する
+        $singlesByKey = DbSingle::where('artist_id', self::ARTIST_ID)->orderBy('id')->get(['id', 'date', 'title'])->groupBy('date');
+        foreach ($singlesByKey as $date => $group) {
+            if ($group->count() <= 1) {
+                continue;
+            }
+            $keep = $group->last();
+            foreach ($group as $dupe) {
+                if ($dupe->id === $keep->id) {
+                    continue;
+                }
+                $this->warn("Removing duplicate single: id={$dupe->id} date={$date} title={$dupe->title}");
+                if (!$dryRun) {
+                    $dupe->delete();
+                }
+            }
+        }
+
+        $albumsByKey = DbAlbum::where('artist_id', self::ARTIST_ID)->orderBy('id')->get(['id', 'date', 'title'])->groupBy(fn ($a) => $a->date . '|' . $a->title);
+        foreach ($albumsByKey as $key => $group) {
+            if ($group->count() <= 1) {
+                continue;
+            }
+            $keep = $group->last();
+            foreach ($group as $dupe) {
+                if ($dupe->id === $keep->id) {
+                    continue;
+                }
+                $this->warn("Removing duplicate album: id={$dupe->id} key={$key}");
+                if (!$dryRun) {
+                    $dupe->delete();
+                }
+            }
+        }
+
         $songs = DbSong::where('artist_id', self::ARTIST_ID)->get(['id', 'title']);
         $songsByNormalizedTitle = [];
         $songTitlesById = [];
@@ -255,17 +292,17 @@ class ImportWindsDiscography extends Command
     {
         return [
             [
-                'title' => 'w-inds.〜1st message〜',
+                'title' => 'w-inds. 〜1st message〜',
                 'date' => '2001-12-19',
                 'tracks' => ['You can’t get away', 'Winding Road', 'Feel The Fate', 'Winter Story', 'Give you my heart', 'Paradox (rumor style)', 'The New Generation', 'Forever Memories', 'Love you anymore', 'ROUND & ROUND', 'Endless Moment', 'New-age Dreams'],
             ],
             [
-                'title' => 'w-inds.〜THE SYSTEM OF ALIVE〜',
+                'title' => 'w-inds. 〜THE SYSTEM OF ALIVE〜',
                 'date' => '2002-12-18',
                 'tracks' => ['Break Down, Build Up', 'NEW PARADISE', 'SOMEHOW', 'fever', 'Baby Maybe', 'THE SYSTEM OF ALIVE', 'Because of you', 'try your emotion 〜next side version〜', 'THANK YOU', 'I still love you', 'Find Myself', 'Another Days', 'This Time 〜願い〜', 'Top of the world'],
             ],
             [
-                'title' => 'w-inds.〜PRIME OF LIFE〜',
+                'title' => 'w-inds. 〜PRIME OF LIFE〜',
                 'date' => '2003-12-17',
                 'tracks' => ['Love Train', 'SUPER LOVER 〜I need you tonight〜', 'whose is that girl?', 'W.O.L. (Wonder Of Love)', 'Long Road', '空から降りてきた白い星', 'GAME', 'so what?', 'Love is message', 'Ex-Girlfriend', 'Dedicated to You', 'INFINITY', 'Deny', 'SUPER LOVER〜movin’ pleasure mix〜'],
             ],
@@ -285,7 +322,7 @@ class ImportWindsDiscography extends Command
                 'tracks' => ['THIS IS OUR SHOW', 'Top Secret', 'Is that you', 'Crazy for You', 'Devil', 'TRIAL', '遠い記憶', 'Milky Way', 'Journey', 'メッセージ', '地図なき旅路', 'Celebration (2007)', 'ブギウギ66', 'TRIANGLE', 'ハナムケ'],
             ],
             [
-                'title' => 'w-inds.Single Mega-Mix',
+                'title' => 'w-inds. Single Mega-Mix',
                 'date' => '2007-03-21',
                 'special' => true,
                 'omnibus' => true,
@@ -318,7 +355,7 @@ class ImportWindsDiscography extends Command
             [
                 'title' => 'MOVE LIKE THIS',
                 'date' => '2012-07-04',
-                'tracks' => ['T2P', 'Let’s get it on', 'FLY HIGH', 'Listen to the Rain', 'You & I', 'MAKE IT ROCK', 'Addicted to love', 'Superstar', '黄昏One Way', 'Be As One', 'SAY YES', 'Touch The Sky'],
+                'tracks' => ['T2P', 'Let’s get it on', 'FLY HIGH', 'Listen to the Rain', 'You & I', 'MAKE IT ROCK', 'Addicted to love', 'Superstar', '黄昏One Way', 'Be As One', 'SAY YES', 'Touch The Sky', 'Put your hands up!!! -DEXPISTOLS REMIX-'],
             ],
             [
                 'title' => 'Timeless',
@@ -333,7 +370,7 @@ class ImportWindsDiscography extends Command
             [
                 'title' => 'INVISIBLE',
                 'date' => '2017-03-15',
-                'tracks' => ['Boom Word Up', 'Come Back to Bed', 'Complicated', 'We Don’t Need To Talk Anymore', 'CAMOUFLAGE', 'Backstage', 'Separate Way', 'ORIGINAL LOVE', 'In your warmth', 'wind wind blow', 'TABOO', 'Players'],
+                'tracks' => ['Boom Word Up', 'Come Back to Bed', 'Complicated', 'We Don’t Need To Talk Anymore', 'CAMOUFLAGE', 'Backstage', 'Separate Way', 'ORIGINAL LOVE', 'In your warmth', 'wind wind blow', 'TABOO', 'Players', 'We Don’t Need To Talk Anymore (DMD Remix)'],
             ],
             [
                 'title' => '100',
@@ -348,7 +385,7 @@ class ImportWindsDiscography extends Command
             [
                 'title' => 'Beyond',
                 'date' => '2023-03-14',
-                'tracks' => ['Unforgettable', 'FIND ME', 'Bang! Bang! (feat. CrazyBoy)', 'Fighting For You', 'Over The Years', 'Blessings', 'I Swear', 'Delete Enter', 'Lost & Found'],
+                'tracks' => ['Unforgettable', 'FIND ME', 'Bang! Bang! (feat. CrazyBoy)', 'Fighting For You', 'Over The Years', 'Blessings', 'I Swear', 'Delete Enter', 'Lost & Found', 'Bang! Bang! (feat. CrazyBoy) (REMIX)'],
             ],
             [
                 'title' => 'winderlust',
@@ -357,7 +394,7 @@ class ImportWindsDiscography extends Command
             ],
             // ベストアルバム
             [
-                'title' => 'w-inds.〜bestracks〜',
+                'title' => 'w-inds. 〜bestracks〜',
                 'date' => '2004-07-14',
                 'best' => true,
                 'tracks' => [
@@ -366,7 +403,7 @@ class ImportWindsDiscography extends Command
                 ],
             ],
             [
-                'title' => 'w-inds.Single Collection "BEST ELEVEN"',
+                'title' => 'w-inds. Single Collection "BEST ELEVEN"',
                 'date' => '2008-01-01',
                 'best' => true,
                 'tracks' => [
@@ -417,7 +454,7 @@ class ImportWindsDiscography extends Command
             ['title' => 'Paradox', 'date' => '2001-10-17', 'tracks' => ['Paradox', 'Somewhere in Time', 'Paradox 〜ZA DOWNTOWN STREET RUMOR REMIX〜', 'Paradox 〜Instrumental〜']],
             ['title' => 'try your emotion', 'date' => '2002-02-20', 'tracks' => ['try your emotion', 'Graduation', 'try your emotion 〜MoFO★NARUSE Remix〜', 'try your emotion 〜Instrumental〜']],
             ['title' => 'Another Days', 'date' => '2002-05-22', 'tracks' => ['Another Days', 'Show me your style', 'Another Days 〜Another side mix〜', 'Another Days 〜Instrumental〜']],
-            ['title' => 'World Needs Love', 'date' => '2002-08-07', 'omnibus' => true, 'tracks' => ['World Needs Love', 'I’ll be there', 'World Needs Love (Hyper Fantasista Mix)', 'World Needs Love (Instrumental)']],
+            ['title' => 'World needs love', 'date' => '2002-08-07', 'omnibus' => true, 'bonus' => true, 'tracks' => ['World needs love', 'I’ll be there', 'World needs love (Hyper Fantasista Mix)', 'World needs love (Instrumental)']],
             ['title' => 'Because of you', 'date' => '2002-08-21', 'tracks' => ['Because of you', 'close to you', 'Because of you 〜j\'adore party style〜', 'Because of you (Instrumental)']],
             ['title' => 'NEW PARADISE', 'date' => '2002-11-13', 'tracks' => ['NEW PARADISE', 'Best of My Love', 'NEW PARADISE 〜CANDY Future remix〜', 'NEW PARADISE 〜Instrumental〜']],
             ['title' => 'SUPER LOVER 〜I need you tonight〜', 'date' => '2003-05-21', 'tracks' => ['SUPER LOVER 〜I need you tonight〜', 'no one else', 'SUPER LOVER 〜I need you tonight〜 (Instrumental)', 'no one else (Instrumental)']],
@@ -437,12 +474,12 @@ class ImportWindsDiscography extends Command
             ['title' => 'LOVE IS THE GREATEST THING', 'date' => '2007-07-04', 'tracks' => ['LOVE IS THE GREATEST THING', 'SHINING STAR', '夏祭り', 'LOVE IS THE GREATEST THING (Instrumental)']],
             ['title' => 'Beautiful Life', 'date' => '2007-11-07', 'tracks' => ['Beautiful Life', 'Space Drifter', 'I’m a Man', 'Beautiful Life (Instrumental)']],
             ['title' => 'アメあと', 'date' => '2008-04-23', 'tracks' => ['アメあと', 'One Love', 'leave me alone', 'アメあと (Instrumental)']],
-            ['title' => 'Everyday/CAN’T GET BACK', 'date' => '2008-11-26', 'tracks' => ['Everyday', 'CAN’T GET BACK', 'Color', 'YES or NO', 'Everyday (Instrumental)', 'CAN’T GET BACK (Instrumental)']],
-            ['title' => 'Rain Is Fallin’/HYBRID DREAM', 'date' => '2009-05-13', 'tracks' => ['Rain Is Fallin’', 'HYBRID DREAM', 'Upside Down', 'You are…', 'Rain Is Fallin’ (Instrumental)', 'HYBRID DREAM (Instrumental)']],
+            ['title' => 'Everyday / CAN’T GET BACK', 'date' => '2008-11-26', 'tracks' => ['Everyday', 'CAN’T GET BACK', 'Color', 'YES or NO', 'Everyday (Instrumental)', 'CAN’T GET BACK (Instrumental)']],
+            ['title' => 'Rain Is Fallin’ / HYBRID DREAM', 'date' => '2009-05-13', 'tracks' => ['Rain Is Fallin’', 'HYBRID DREAM', 'Upside Down', 'You are…', 'Rain Is Fallin’ (Instrumental)', 'HYBRID DREAM (Instrumental)']],
             ['title' => 'Message', 'date' => '2009-11-18', 'download' => true, 'tracks' => ['Message']],
-            ['title' => 'New World/Truth〜最後の真実〜', 'date' => '2009-12-09', 'tracks' => ['New World', 'Truth 〜最後の真実〜', 'Fighting For Love', 'Tribute', 'New World (Radio Mix)']],
+            ['title' => 'New World / Truth〜最後の真実〜', 'date' => '2009-12-09', 'tracks' => ['New World', 'Truth 〜最後の真実〜', 'Fighting For Love', 'Tribute', 'New World (Radio Mix)']],
             ['title' => 'Addicted to love', 'date' => '2010-06-23', 'tracks' => ['Addicted to love', 'Love or Leave', 'Now You’re Gone', 'Rain', 'Addicted to love (Instrumental)']],
-            ['title' => 'Be As One/Let’s get it on', 'date' => '2011-01-26', 'tracks' => ['Be As One', 'Let’s get it on', 'Noise', 'To My Fans']],
+            ['title' => 'Be As One / Let’s get it on', 'date' => '2011-01-26', 'tracks' => ['Be As One', 'Let’s get it on', 'Noise', 'To My Fans']],
             ['title' => 'You & I', 'date' => '2011-08-17', 'tracks' => ['You & I', 'Chillin’ in the Daydream', 'Humanizer', 'I vs. I']],
             ['title' => 'FLY HIGH', 'date' => '2012-02-22', 'tracks' => ['FLY HIGH', 'Put your hands up!!!', 'Zirconia 〜ジルコニア〜', 'More than words']],
             ['title' => 'A Little Bit', 'date' => '2013-10-30', 'tracks' => ['A Little Bit', 'Rock Your Body', 'Tell Me What You’re Waiting For', 'We’ll Be Alright']],
@@ -451,11 +488,11 @@ class ImportWindsDiscography extends Command
             ['title' => 'In Love With The Music', 'date' => '2015-06-10', 'tracks' => ['In Love With The Music', 'HEADS UP', 'Ring Off The Hook', 'Sail away']],
             ['title' => 'Boom Word Up', 'date' => '2016-05-03', 'tracks' => ['Boom Word Up', 'Smile Smile Smile', 'ヒマワリ', 'FUNTIME']],
             ['title' => 'Backstage', 'date' => '2016-08-31', 'tracks' => ['Backstage', 'Treasure', 'Drop Drop', 'No matter where you are']],
-            ['title' => 'We Don’t Need To Talk Anymore', 'date' => '2017-01-11', 'tracks' => ['We Don’t Need To Talk Anymore', 'Again']],
-            ['title' => 'Time Has Gone', 'date' => '2017-09-27', 'tracks' => ['Time Has Gone', 'This Love', 'A Trip In My Hard Days']],
-            ['title' => 'Dirty Talk', 'date' => '2018-03-14', 'tracks' => ['Dirty Talk', 'If I said I loved you']],
-            ['title' => 'Get Down', 'date' => '2019-07-31', 'tracks' => ['Get Down', 'Take It Slow', 'Femme Fatale']],
-            ['title' => 'DoU', 'date' => '2020-01-22', 'tracks' => ['DoU', 'CANDY', 'We Don’t Need To Talk Anymore Remix feat.SKY-HI']],
+            ['title' => 'We Don’t Need To Talk Anymore', 'date' => '2017-01-11', 'tracks' => ['We Don’t Need To Talk Anymore', 'Again', 'We Don’t Need To Talk Anymore (Instrumental)', 'Again (Instrumental)']],
+            ['title' => 'Time Has Gone', 'date' => '2017-09-27', 'tracks' => ['Time Has Gone', 'This Love', 'A Trip In My Hard Days', 'Time Has Gone (Instrumental)', 'This Love (Instrumental)', 'A Trip In My Hard Days (Instrumental)']],
+            ['title' => 'Dirty Talk', 'date' => '2018-03-14', 'tracks' => ['Dirty Talk', 'If I said I loved you', 'Dirty Talk (Instrumental)', 'If I said I loved you (Instrumental)']],
+            ['title' => 'Get Down', 'date' => '2019-07-31', 'tracks' => ['Get Down', 'Take It Slow', 'Femme Fatale', 'Get Down (Instrumental)', 'Take It Slow (Instrumental)', 'Femme Fatale (Instrumental)']],
+            ['title' => 'DoU', 'date' => '2020-01-22', 'tracks' => ['DoU', 'CANDY', 'We Don’t Need To Talk Anymore Remix feat.SKY-HI', 'DoU (Instrumental)', 'CANDY (Instrumental)', 'We Don’t Need To Talk Anymore Remix (Instrumental)']],
             ['title' => 'Beautiful Now', 'date' => '2020-12-02', 'download' => true, 'tracks' => ['Beautiful Now']],
             ['title' => 'Strip', 'date' => '2021-09-24', 'download' => true, 'tracks' => ['Strip']],
             ['title' => 'Little', 'date' => '2021-10-22', 'download' => true, 'tracks' => ['Little']],
