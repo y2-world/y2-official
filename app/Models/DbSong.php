@@ -105,8 +105,12 @@ class DbSong extends Model
         $original = $albums->where('best', false)->whereNotNull('album_id')->first($contains);
         if ($original) return $original;
 
-        // ベストアルバムのみフォールバック
-        return $albums->where('best', true)->first($contains);
+        // ベストアルバムでフォールバック
+        $best = $albums->where('best', true)->first($contains);
+        if ($best) return $best;
+
+        // best/mini/album_idのいずれにも当たらない企画盤（クラシック・アレンジ集等）
+        return $albums->where('best', false)->whereNull('album_id')->first($contains);
     }
 
     public function getSingleFromTracklistAttribute()
