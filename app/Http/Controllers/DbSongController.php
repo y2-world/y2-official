@@ -127,10 +127,11 @@ class DbSongController extends Controller
             $secondTabSetlists = $songs->myAttendedTours($tourSetlists);
         }
 
-        // ログイン中（2つ目のタブが存在する）なら、まず自分（またはYuki）の参加記録を見せる。
-        // Live Performancesを見ていたところからPrevious/Nextで移動した場合だけ、
-        // ?tab=performances を引き継いでLive Performancesを維持する。
-        $initialTab = $secondTab && $request->query('tab') !== 'performances' ? $secondTab : 'performances';
+        // Databaseを直接見に来た場合はLive Performancesがデフォルト。Timeline経由の
+        // リンクや、自分（またはYukiの）参加記録タブを見ていたところからPrevious/Nextで
+        // 移動した場合だけ、?tab=mine を引き継いでそちらを維持する（2つ目のタブの種類は
+        // mine/yukiどちらもログイン中ユーザーで決まるため、URL上は常にtab=mineで表す）。
+        $initialTab = $secondTab && $request->query('tab') === 'mine' ? $secondTab : 'performances';
 
         $secondTabSongNumber = null;
         $secondTabPrevious = null;
