@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - ' . $songs->title)
-@section('turbo_enabled', 'true')
 
 @section('og_title', $songs->title . ' - Yuki Official')
 @section('og_description', 'Song ID: ' . $songs->id . ' - ' . $songs->title)

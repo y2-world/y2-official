@@ -1,9 +1,7 @@
 @foreach ($songs as $song)
     <tr>
-        {{-- 通常のAJAX追記（1ページ分のみ渡される場合）はcurrentPageからのオフセットが必要だが、
-             ブラウザの戻る対応で1〜Nページ目をまとめて渡す場合はitems内の通し番号がそのまま正しい --}}
-        <td>{{ ($accumulated ?? false) ? $loop->iteration : ($songs->currentPage() - 1) * $songs->perPage() + $loop->iteration }}</td>
-        <td><a href="{{ route('songs.show', $song->id) }}" data-turbo="true">{{ $song->title }}</a></td>
+        <td>{{ ($songs->currentPage() - 1) * $songs->perPage() + $loop->iteration }}</td>
+        <td><a href="{{ route('songs.show', $song->id) }}">{{ $song->title }}</a></td>
         @php
             $single = $song->singleFromTracklist;
             $album = $song->albumFromTracklist;

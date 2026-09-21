@@ -20,14 +20,6 @@ var InfiniteScroll = /*#__PURE__*/function () {
   function InfiniteScroll(options) {
     _classCallCheck(this, InfiniteScroll);
     console.log('InfiniteScroll initialized with options:', options);
-
-    // ブラウザの「戻る/進む」時、そのページで最後にいたスクロール位置を自動復元する
-    // 標準機能を明示的に有効化しておく（history.replaceStateを使うため、一部ブラウザで
-    // デフォルトがmanualに変わってしまう可能性への保険）
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'auto';
-    }
-
     this.container = document.querySelector(options.container);
     this.nextPageUrl = options.nextPageUrl;
     this.loading = false;
@@ -151,14 +143,8 @@ var InfiniteScroll = /*#__PURE__*/function () {
               this.loading = true;
               this.loadingEl.style.display = 'block';
               _context.prev = 5;
-              // AJAX判定をヘッダーだけに頼らず、専用クエリパラメータでも明示する。
-              // ブラウザの「戻る」操作が過去のfetchリクエストのヘッダーをそのまま
-              // 再現してしまうケースがあり、通常のページ遷移をAJAXと誤判定して
-              // JSONをそのまま表示してしまう事故が起きた
-              this._fetchUrl = new URL(this.nextPageUrl, window.location.href);
-              this._fetchUrl.searchParams.set('ajax', '1');
               _context.next = 8;
-              return fetch(this._fetchUrl, {
+              return fetch(this.nextPageUrl, {
                 headers: {
                   'X-Requested-With': 'XMLHttpRequest',
                   'Accept': 'application/json'
@@ -192,17 +178,6 @@ var InfiniteScroll = /*#__PURE__*/function () {
                 this.nextPageUrl = data.next_page_url;
               }
               this.hasMore = data.next_page_url !== null;
-
-              // 現在表示されている最終ページ番号をURLに反映しておく（履歴は増やさずreplace）。
-              // これにより、詳細ページ等に遷移してブラウザの「戻る」で戻ってきたとき、
-              // サーバー側がこのpage番号までの全件をまとめて返すため、読み込み済みだった分が
-              // 保持された状態でロードされる
-              if (data.current_page) {
-                var _url = new URL(window.location.href);
-                _url.searchParams.set('page', data.current_page);
-                _url.searchParams.delete('ajax');
-                history.replaceState(history.state, '', _url);
-              }
               _context.next = 24;
               break;
             case 21:

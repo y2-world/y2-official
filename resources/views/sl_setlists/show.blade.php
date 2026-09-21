@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - ' . $setlists->title)
-@section('turbo_enabled', 'true')
 
 @section('og_title', $setlists->title)
 @section('og_description', date('Y.m.d', strtotime($setlists->date)) . ' - ' . $setlists->venue)

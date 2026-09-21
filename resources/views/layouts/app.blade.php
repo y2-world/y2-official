@@ -6,12 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    {{-- Turbo Drive: ページ内リンク遷移をAjax化し、bodyだけ差し替えることで
-         フルリロードなしのSPA的なナビゲーションを実現する。無限スクロールページから
-         詳細ページへ遷移してブラウザの「戻る」で戻った際、DOM・スクロール位置が
-         保持されたまま復元される --}}
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@8/dist/turbo.es2017-esm.min.js"></script>
-
     <title>@yield('title', 'Yuki Official')</title>
 
     @php
@@ -47,13 +41,7 @@
 
     @livewireStyles
 </head>
-{{-- Turbo Driveはデフォルト無効。無限スクロール一覧5ページとその詳細ページのみ、
-     各ビューで @section('turbo_enabled', 'true') を指定して有効化する（範囲限定導入）。
-     data-turboはリンク元ではなく「遷移先ページ」のbody属性で判定されるため、
-     一覧・詳細の両方に付ける必要がある。サイトの他の大部分のページは
-     DOMContentLoaded依存のJSをTurbo対応させていないため、全体で有効化すると
-     2回目以降のページ遷移でJSが動かなくなる箇所がある --}}
-<body data-turbo="@yield('turbo_enabled', 'false')">
+<body>
 <div class="container">
     <div class="nav">
         <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
@@ -169,12 +157,8 @@ function showAppToast(message) {
 }
 
 @if (session('success'))
-    // Turbo適用ページ（turbo:load）・非適用ページ（DOMContentLoaded）どちらでも
-    // 初回表示時に一度だけ表示されるよう両方をリッスンする
-    ['DOMContentLoaded', 'turbo:load'].forEach(function (eventName) {
-        document.addEventListener(eventName, function () {
-            showAppToast(@json(session('success')));
-        }, { once: true });
+    document.addEventListener('DOMContentLoaded', function () {
+        showAppToast(@json(session('success')));
     });
 @endif
 

@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - ' . $artist->name . ' Albums')
-@section('turbo_enabled', 'true')
 @section('content')
     <div class="database-hero database-hero--nav">
         <div class="container" style="position: relative;">
@@ -74,9 +73,9 @@
 @endsection
 
 @section('page-script')
-    <script src="{{ asset('/js/infinite-scroll.js?v=20260921') }}"></script>
+    <script src="{{ asset('/js/infinite-scroll.js?v=20251101') }}"></script>
     <script>
-        document.addEventListener('turbo:load', function() {
+        document.addEventListener('DOMContentLoaded', function() {
             @if($albums->hasMorePages())
                 let nextUrl = '{!! $albums->nextPageUrl() !!}';
                 if (window.location.protocol === 'https:') {
@@ -86,10 +85,7 @@
                     container: '#albums-container',
                     nextPageUrl: nextUrl
                 });
-            @elseif(!($accumulated && $albums->currentPage() > 1))
-                {{-- 累積取得（ブラウザの戻るボタン対応）で最後のページまで読み終えた場合は、
-                     元々スクロールで表示していたのと同じ内容なのでページネーションは不要。
-                     本当に1ページしかない（そもそもスクロールが発生しない）場合のみ表示する --}}
+            @else
                 const pagination = document.getElementById('pagination-links');
                 if (pagination) {
                     pagination.style.display = 'block';

@@ -39,37 +39,7 @@ class SlSetlistController extends Controller
             $pastQuery->whereIn('fes', [1, 2]);
         }
 
-        $pastQuery->with('artist');
-
-        $perPage = 10;
-        // wantsJson()（Acceptヘッダー依存）だけで判定すると、ブラウザの「戻る」操作が
-        // 過去のfetchリクエストのヘッダーをそのまま再現してしまうケースで、通常の
-        // ページ遷移をAJAXと誤判定してJSONを返してしまう事故が起きる。
-        // フロント側が明示的に付与するクエリパラメータを正とする
-        $isAjax = request()->query('ajax') === '1';
-        $page = max(1, (int) request('page', 1));
-        $accumulated = !$isAjax;
-
-        if ($isAjax) {
-            // スクロールでの追加読み込み: 従来通りそのページ分のみ返す
-            $pastSetlists = $pastQuery->paginate($perPage);
-        } else {
-            // 通常のページロード（直接アクセス・リロード・ブラウザの戻るボタン含む）:
-            // 1ページ目からこのページまでをまとめて返す。無限スクロールで読み進めた際に
-            // history.replaceStateでURLのpageを更新しておくことで、戻るボタンで
-            // 該当ページのURLに戻ったときにも読み込み済みだった分がまとめて表示され、
-            // 先頭に戻ってしまう問題を避けられる
-            $total = (clone $pastQuery)->count();
-            $items = $pastQuery->take($page * $perPage)->get();
-            $pastSetlists = new \Illuminate\Pagination\LengthAwarePaginator(
-                $items,
-                $total,
-                $perPage,
-                $page,
-                ['path' => request()->url(), 'query' => request()->query()]
-            );
-        }
-
+        $pastSetlists = $pastQuery->with('artist')->paginate(10);
         $pastTotalCount = $pastSetlists->total();
 
         // アーティスト、全てのアーティスト、年のデータを取得する
@@ -89,12 +59,11 @@ class SlSetlistController extends Controller
             });
 
         // AJAXリクエストの場合はJSON形式で返す（過去のライブのみページネーション対応）
-        if ($isAjax) {
+        if (request()->wantsJson() || request()->ajax()) {
             $html = view('sl_setlists._list', [
                 'setlists' => $pastSetlists,
                 'totalCount' => $pastTotalCount,
-                'type' => $type,
-                'accumulated' => $accumulated,
+                'type' => $type
             ])->render();
             return response()->json([
                 'html' => $html,
@@ -123,7 +92,7 @@ class SlSetlistController extends Controller
             ->toArray();
 
         // ビューにデータを渡して表示する
-        return view('sl_setlists.index', compact('artists', 'allArtists', 'liveArtists', 'fesArtists', 'upcomingSetlists', 'pastSetlists', 'upcomingTotalCount', 'pastTotalCount', 'years', 'type', 'suggestions', 'accumulated'));
+        return view('sl_setlists.index', compact('artists', 'allArtists', 'liveArtists', 'fesArtists', 'upcomingSetlists', 'pastSetlists', 'upcomingTotalCount', 'pastTotalCount', 'years', 'type', 'suggestions'));
     }
 
     /**

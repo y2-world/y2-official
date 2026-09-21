@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - ' . $tours->title)
-@section('turbo_enabled', 'true')
 
 @section('og_title', $tours->title . ' - Yuki Official')
 @section('og_description', 'Tour: ' . $tours->title . ($tours->date1 ? ' (' . date('Y', strtotime($tours->date1)) . ')' : ''))
@@ -136,7 +135,7 @@
 
 @section('page-script')
 <script>
-document.addEventListener('turbo:load', function () {
+document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.setlist-row').forEach(function (row) {
         if (row.scrollWidth > row.clientWidth) {
             row.style.justifyContent = 'flex-start';

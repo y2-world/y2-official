@@ -12,43 +12,14 @@ class DbSingleController extends Controller
     public function index($artistId)
     {
         $artist = Artist::findOrFail($artistId);
-
-        $perPage = 10;
-        // wantsJson()（Acceptヘッダー依存）だけで判定すると、ブラウザの「戻る」操作が
-        // 過去のfetchリクエストのヘッダーをそのまま再現してしまうケースで、通常の
-        // ページ遷移をAJAXと誤判定してJSONを返してしまう事故が起きる。
-        // フロント側が明示的に付与するクエリパラメータを正とする
-        $isAjax = request()->query('ajax') === '1';
-        $page = max(1, (int) request('page', 1));
-
-        $query = DbSingle::where('artist_id', $artistId)->orderBy('date', 'asc');
-        $accumulated = !$isAjax;
-
-        if ($isAjax) {
-            // スクロールでの追加読み込み: 従来通りそのページ分のみ返す
-            $singles = $query->paginate($perPage);
-        } else {
-            // 通常のページロード（直接アクセス・リロード・ブラウザの戻るボタン含む）:
-            // 1ページ目からこのページまでをまとめて返す。無限スクロールで読み進めた際に
-            // history.replaceStateでURLのpageを更新しておくことで、戻るボタンで
-            // 該当ページのURLに戻ったときにも読み込み済みだった分がまとめて表示され、
-            // 先頭に戻ってしまう問題を避けられる
-            $total = (clone $query)->count();
-            $items = $query->take($page * $perPage)->get();
-            $singles = new \Illuminate\Pagination\LengthAwarePaginator(
-                $items,
-                $total,
-                $perPage,
-                $page,
-                ['path' => request()->url(), 'query' => request()->query()]
-            );
-        }
-
+        $singles = DbSingle::where('artist_id', $artistId)
+            ->orderBy('date', 'asc')
+            ->paginate(10);
         $totalCount = $singles->total();
         $bios = $artist->years;
 
-        if ($isAjax) {
-            $html = view('db_singles._list', compact('singles', 'totalCount', 'accumulated'))->render();
+        if (request()->wantsJson() || request()->ajax()) {
+            $html = view('db_singles._list', compact('singles', 'totalCount'))->render();
             return response()->json([
                 'html' => $html,
                 'next_page_url' => $singles->nextPageUrl(),
@@ -57,7 +28,7 @@ class DbSingleController extends Controller
             ]);
         }
 
-        return view('db_singles.index', compact('singles', 'bios', 'totalCount', 'artist', 'accumulated'));
+        return view('db_singles.index', compact('singles', 'bios', 'totalCount', 'artist'));
     }
 
     public function show($id)

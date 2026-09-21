@@ -31,40 +31,11 @@ class DbConcertController extends Controller
         }
 
         $bios = $artist->years;
-
-        $perPage = 10;
-        // wantsJson()（Acceptヘッダー依存）だけで判定すると、ブラウザの「戻る」操作が
-        // 過去のfetchリクエストのヘッダーをそのまま再現してしまうケースで、通常の
-        // ページ遷移をAJAXと誤判定してJSONを返してしまう事故が起きる。
-        // フロント側が明示的に付与するクエリパラメータを正とする
-        $isAjax = request()->query('ajax') === '1';
-        $page = max(1, (int) request('page', 1));
-        $accumulated = !$isAjax;
-
-        if ($isAjax) {
-            // スクロールでの追加読み込み: 従来通りそのページ分のみ返す
-            $tours = $liveQuery->paginate($perPage);
-        } else {
-            // 通常のページロード（直接アクセス・リロード・ブラウザの戻るボタン含む）:
-            // 1ページ目からこのページまでをまとめて返す。無限スクロールで読み進めた際に
-            // history.replaceStateでURLのpageを更新しておくことで、戻るボタンで
-            // 該当ページのURLに戻ったときにも読み込み済みだった分がまとめて表示され、
-            // 先頭に戻ってしまう問題を避けられる
-            $total = (clone $liveQuery)->count();
-            $items = $liveQuery->take($page * $perPage)->get();
-            $tours = new \Illuminate\Pagination\LengthAwarePaginator(
-                $items,
-                $total,
-                $perPage,
-                $page,
-                ['path' => request()->url(), 'query' => request()->query()]
-            );
-        }
-
+        $tours = $liveQuery->paginate(10);
         $totalCount = $tours->total();
 
-        if ($isAjax) {
-            $html = view('db_concerts._list', compact('tours', 'totalCount', 'type', 'accumulated'))->render();
+        if (request()->wantsJson() || request()->ajax()) {
+            $html = view('db_concerts._list', compact('tours', 'totalCount', 'type'))->render();
             return response()->json([
                 'html' => $html,
                 'next_page_url' => $tours->appends(['type' => $type])->nextPageUrl(),
@@ -73,7 +44,7 @@ class DbConcertController extends Controller
             ]);
         }
 
-        return view('db_concerts.index', compact('tours', 'bios', 'type', 'totalCount', 'artist', 'accumulated'));
+        return view('db_concerts.index', compact('tours', 'bios', 'type', 'totalCount', 'artist'));
     }
 
     public function show($id)

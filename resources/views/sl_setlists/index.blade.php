@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - Setlists')
-@section('turbo_enabled', 'true')
 
 @section('og_title', 'Setlists - Yuki Official')
 @section('og_description', 'Browse all setlists from Yuki Yoshida performances')
@@ -152,7 +151,7 @@
                 </tr>
             </thead>
             <tbody id="setlists-container">
-                @include('sl_setlists._list', ['setlists' => $pastSetlists, 'totalCount' => $pastTotalCount, 'type' => $type, 'accumulated' => $accumulated])
+                @include('sl_setlists._list', ['setlists' => $pastSetlists, 'totalCount' => $pastTotalCount, 'type' => $type])
             </tbody>
         </table>
         <div class="pagination" id="pagination-links" style="display: none;">
@@ -163,9 +162,9 @@
 @endsection
 
 @section('page-script')
-    <script src="{{ asset('/js/infinite-scroll.js?v=20260921') }}"></script>
+    <script src="{{ asset('/js/infinite-scroll.js?v=20251110e') }}"></script>
     <script>
-        document.addEventListener('turbo:load', function() {
+        document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM loaded');
             console.log('Has more pages: {{ $pastSetlists->hasMorePages() ? "true" : "false" }}');
             console.log('InfiniteScroll class available:', typeof InfiniteScroll);
@@ -182,11 +181,9 @@
                     nextPageUrl: nextUrl
                 });
                 console.log('InfiniteScroll instance:', infiniteScroll);
-            @elseif(!($accumulated && $pastSetlists->currentPage() > 1))
-                {{-- 累積取得（ブラウザの戻るボタン対応）で最後のページまで読み終えた場合は、
-                     元々スクロールで表示していたのと同じ内容なのでページネーションは不要。
-                     本当に1ページしかない（そもそもスクロールが発生しない）場合のみ表示する --}}
+            @else
                 console.log('No more pages, skipping InfiniteScroll initialization');
+                // ページがない場合はページネーションを表示
                 const pagination = document.getElementById('pagination-links');
                 if (pagination) {
                     pagination.style.display = 'block';
