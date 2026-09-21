@@ -1,8 +1,8 @@
 {{-- $setlistModel（DbSetlistまたはUserSetlist 1件）と $songs（該当する曲のコレクション）、
      $kind（'official' または 'user'）を受け取り、曲ごとにカード化して表示する。
      My Pageのセットリスト詳細（1パターンのみ表示）専用。
-     $isFromTimeline: Timeline経由（データベース的な曲詳細へリンク）か、それ以外
-     （My Stats等、自分の参加記録一覧へリンク）かで曲名の遷移先を出し分ける。 --}}
+     $isFromTimeline: Timeline経由（曲詳細ページへリンク。My Live Attendancesタブがデフォルト）か、
+     それ以外（My Stats等、自分の参加記録一覧へリンク）かで曲名の遷移先を出し分ける。 --}}
 @php
     $setlist = is_array($setlistModel->setlist) ? $setlistModel->setlist : [];
     $encore = is_array($setlistModel->encore) ? $setlistModel->encore : [];
@@ -65,7 +65,7 @@
                     $title = $alternativeTitle ?: ($songModel->title ?? 'Unknown Song');
                     if ($songModel && $isFromTimeline) {
                         $link = $kind === 'official'
-                            ? route('songs.show', $songModel->id)
+                            ? route('songs.show', ['id' => $songModel->id, 'tab' => 'mine'])
                             : route('mypage.user_songs.show', ['id' => $songModel->id, 'tab' => 'mine']);
                     } elseif ($songModel) {
                         $link = route('mypage.attendances.index', ['song_id' => $kind . '-' . $songModel->id]);

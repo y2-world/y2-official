@@ -23,7 +23,9 @@
         </div>
     </div>
 
-    <div class="container-lg database-year-content">
+    <div class="container database-year-content">
+        <div class="row justify-content-center">
+        <div class="col-xl-9">
         <style>
             @media (max-width: 768px) {
                 .song-performance-tabs {
@@ -141,6 +143,8 @@
                     <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
                 </a>
             @endif
+        </div>
+        </div>
         </div>
     </div>
 @endsection

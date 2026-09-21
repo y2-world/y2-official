@@ -12,11 +12,8 @@
                 {{-- type=0（ツアー）・1（単発ライブ）以外は複数アーティスト出演のフェス等のため、単独アーティスト名は表示しない --}}
                 @if ($artist && !in_array((int) $tour->type, [2, 3, 4], true))
                     @php
-                        // Timeline経由：データベース的な一覧（誰でも見られる、全ツアー）。
-                        // My Stats等経由：自分の参加記録一覧（フィルタ済み）。
-                        $artistLink = $isFromTimeline
-                            ? ($isOfficial ? route('database.live', $artist->id) : route('mypage.user_artists.live', $artist->id))
-                            : route('mypage.attendances.index', ['artist_id' => ($isOfficial ? 'official-' : 'user-') . $artist->id]);
+                        // アーティスト名は常に自分の参加記録一覧（フィルタ済み）へのリンクにする。
+                        $artistLink = route('mypage.attendances.index', ['artist_id' => ($isOfficial ? 'official-' : 'user-') . $artist->id]);
                     @endphp
                     <a href="{{ $artistLink }}" style="color: white; text-decoration: none;">
                         {{ $artist->name }}

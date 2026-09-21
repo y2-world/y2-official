@@ -65,20 +65,20 @@
                 <div class="setlists-header-row">
                     <div style="flex-shrink: 0;">
                         @php
-                            $viewerLabel = $isSelf ? 'すべてのセットリスト' : ($targetUser->name ?: 'ゲスト') . 'の参加記録';
+                            $viewerLabel = $isSelf ? 'My Live Attendances' : ($targetUser->name ?: 'ゲスト') . 'の参加記録';
+                            $viewerLabelWithYear = $isSelf ? 'My Live Attendances' : 'この年の' . $viewerLabel;
                         @endphp
                         @if ($filterArtist)
                             <h1 class="database-title" style="white-space: nowrap;">{{ $filterArtist->name }}</h1>
                             <p class="database-subtitle" style="margin: 4px 0 0;">{{ $viewerLabel }}</p>
                         @elseif ($year)
                             <h1 class="database-title" style="white-space: nowrap;">{{ $year }}</h1>
-                            <p class="database-subtitle" style="margin: 4px 0 0;">この年の{{ $viewerLabel }}</p>
+                            <p class="database-subtitle" style="margin: 4px 0 0;">{{ $viewerLabelWithYear }}</p>
                         @elseif ($venue)
                             <h1 class="database-title" style="white-space: nowrap;">{{ $venue }}</h1>
                             <p class="database-subtitle" style="margin: 4px 0 0;">{{ $viewerLabel }}</p>
                         @else
                             <h1 class="database-title" style="white-space: nowrap;">{{ $isSelf ? 'My Live Attendances' : ($targetUser->name ?: 'ゲスト') . ' Live Attendances' }}</h1>
-                            <p class="database-subtitle" style="margin: 4px 0 0;">{{ $viewerLabel }}</p>
                         @endif
                     </div>
                     <div class="header-selects" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; overflow-x: auto; max-width: 100%;">
@@ -117,7 +117,7 @@
         </div>
     </div>
 
-    <div class="container-lg database-year-content">
+    <div class="container database-year-content">
         @if ($song && $secondTab)
             {{-- 曲単位の絞り込み：「Live Performances」（この曲が演奏された全ライブ）と
                  「My Live Attendances」（自分の参加記録）をタブで切り替える。
@@ -129,6 +129,8 @@
                     }
                 }
             </style>
+            <div class="row justify-content-center">
+            <div class="col-xl-9">
             <div class="song-performance-tabs" style="display: flex; gap: 8px; margin-bottom: 15px;">
                 <button type="button" class="song-performance-tab-btn @if($secondTab === 'performances') is-active @endif" data-tab-target="live-performances-panel"
                     style="padding: 8px 16px; border: none; border-radius: 20px; font-weight: 500; cursor: pointer; {{ $secondTab === 'performances' ? 'background: #667eea; color: white;' : 'background: white; color: #667eea; border: 1px solid #667eea;' }}">
@@ -203,6 +205,8 @@
                         </tbody>
                     </table>
                 @endif
+            </div>
+            </div>
             </div>
         @endif
 
