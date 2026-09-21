@@ -66,7 +66,7 @@
                     if ($songModel && $isFromTimeline) {
                         $link = $kind === 'official'
                             ? route('songs.show', $songModel->id)
-                            : route('mypage.user_songs.show', $songModel->id);
+                            : route('mypage.user_songs.show', ['id' => $songModel->id, 'tab' => 'mine']);
                     } elseif ($songModel) {
                         $link = route('mypage.attendances.index', ['song_id' => $kind . '-' . $songModel->id]);
                     } else {

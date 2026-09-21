@@ -407,7 +407,7 @@ class MyPageController extends Controller
                 ];
             });
 
-        $artistStats = $officialArtistStats->merge($userArtistStats)->sortByDesc('show_count')->values();
+        $artistStats = collect($officialArtistStats)->merge($userArtistStats)->sortByDesc('show_count')->values();
 
         $venueStats = $attendances
             ->filter(fn ($a) => $a->venue)
