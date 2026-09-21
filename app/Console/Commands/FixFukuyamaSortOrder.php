@@ -27,6 +27,9 @@ class FixFukuyamaSortOrder extends Command
         // 192: 想望(2023-12-04) の前と後
         ['before' => '想望', 'songs' => ['炎のファイター 〜Carry on the fighting spirit〜']],
         ['before' => 'ひとみ', 'songs' => ['無礼者たちへ']],
+        // 「ガリレオ オリジナル・サウンドトラック」(2007-11-21)収録の2曲。
+        // 123: 無敵のキミ(2007-04)の後、124: 想 -new love new world-(2008-10)の前
+        ['before' => '想 -new love new world-', 'songs' => ['vs. 〜知覚と快楽の螺旋〜', '覚醒モーメント']],
     ];
 
     public function handle(): void

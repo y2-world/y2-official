@@ -125,7 +125,7 @@ class DbSong extends Model
         }
 
         $songId = (string) $this->id;
-        $track = collect($album->tracklist ?? [])->first(fn($t) => ($t['id'] ?? null) === $songId);
+        $track = collect($album->tracklist ?? [])->first(fn($t) => isset($t['id']) && (string) $t['id'] === $songId);
 
         return ($track['disc'] ?? null) ?: $album->title;
     }
