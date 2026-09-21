@@ -18,22 +18,23 @@ class FindAlternativeTitles extends Command
 
         $occurrences = [];
 
-        SlSetlist::with('tour.artist')->get(['id', 'tour_id', 'setlist', 'encore'])->each(function ($s) use ($targets, $listAll, &$occurrences) {
-            foreach (['setlist', 'encore'] as $field) {
-                foreach ((array) ($s->$field ?? []) as $item) {
-                    if (!isset($item['alternative_title']) || $item['alternative_title'] === '') {
-                        continue;
+        SlSetlist::with('artist')->get(['id', 'artist_id', 'title', 'setlist', 'encore', 'fes_setlist', 'fes_encore'])
+            ->each(function ($s) use ($targets, $listAll, &$occurrences) {
+                foreach (['setlist', 'encore', 'fes_setlist', 'fes_encore'] as $field) {
+                    foreach ((array) ($s->$field ?? []) as $item) {
+                        if (!is_array($item) || !isset($item['alternative_title']) || $item['alternative_title'] === '') {
+                            continue;
+                        }
+                        $alt = $item['alternative_title'];
+                        if (!$listAll && !in_array($alt, $targets, true)) {
+                            continue;
+                        }
+                        $artist = optional($s->artist)->name ?? '?';
+                        $songRef = $item['song'] ?? '?';
+                        $occurrences[] = "setlist_id={$s->id} title={$s->title} field={$field} artist={$artist} alt={$alt} song_ref={$songRef}";
                     }
-                    $alt = $item['alternative_title'];
-                    if (!$listAll && !in_array($alt, $targets, true)) {
-                        continue;
-                    }
-                    $artist = optional(optional($s->tour)->artist)->name ?? '?';
-                    $songRef = $item['song'] ?? '?';
-                    $occurrences[] = "setlist_id={$s->id} field={$field} artist={$artist} alt={$alt} song_ref={$songRef}";
                 }
-            }
-        });
+            });
 
         foreach ($occurrences as $line) {
             $this->line($line);
