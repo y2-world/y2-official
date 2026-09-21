@@ -27,6 +27,27 @@
                     {{ date('Y.m.d', strtotime($tour->date1)) }}
                 @endif
             </p>
+
+            @if ($totalOlCount >= 2)
+                {{-- パターン一覧アイコン（SP表示のみ、見出しブロックの右下）：ネイティブのselectを重ねて、タップするとOS標準の選択メニューが開く --}}
+                <div class="sp" style="position: absolute; bottom: -14px; right: 8px; width: 36px; height: 36px;">
+                    <div style="pointer-events: none; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-bars" style="font-size: 14px;"></i>
+                    </div>
+                    <select id="spPatternListSelect" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: none; cursor: pointer;">
+                        <option value="" selected disabled>パターンを選択</option>
+                    </select>
+                </div>
+                {{-- パターン一覧アイコン（PC表示）：横スクロールが発生している時だけJSで表示する --}}
+                <div id="pcPatternListIconWrap" class="pc" style="display: none; position: absolute; bottom: -14px; right: 8px; width: 36px; height: 36px;">
+                    <div style="pointer-events: none; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-bars" style="font-size: 14px;"></i>
+                    </div>
+                    <select id="pcPatternListSelect" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: none; cursor: pointer;">
+                        <option value="" selected disabled>パターンを選択</option>
+                    </select>
+                </div>
+            @endif
         </div>
     </div>
 
@@ -78,6 +99,92 @@ document.addEventListener('DOMContentLoaded', function () {
         areas.forEach(function (a) { a.style.height = 'auto'; maxH = Math.max(maxH, a.scrollHeight); });
         areas.forEach(function (a) { a.style.height = maxH + 'px'; });
     });
+
+    function setupPatternSelect(selectId) {
+        var patternSelect = document.getElementById(selectId);
+        if (!patternSelect) {
+            return;
+        }
+        var wraps = document.querySelectorAll('.live-column-wrap[data-pattern-label]');
+        var currentOptgroup = null;
+        var currentGroupTitle = null;
+        wraps.forEach(function (wrap, index) {
+            var groupWrap = wrap.closest('.setlist-group-wrap');
+            var groupTitle = groupWrap ? groupWrap.getAttribute('data-group-title') : null;
+
+            var option = document.createElement('option');
+            option.value = String(index);
+            option.textContent = wrap.getAttribute('data-pattern-label');
+
+            if (groupTitle) {
+                if (groupTitle !== currentGroupTitle) {
+                    currentOptgroup = document.createElement('optgroup');
+                    currentOptgroup.label = groupTitle;
+                    patternSelect.appendChild(currentOptgroup);
+                    currentGroupTitle = groupTitle;
+                }
+                currentOptgroup.appendChild(option);
+            } else {
+                currentGroupTitle = null;
+                patternSelect.appendChild(option);
+            }
+        });
+        patternSelect.addEventListener('change', function () {
+            var wrap = wraps[Number(patternSelect.value)];
+            if (wrap) {
+                var header = document.querySelector('nav.fixed-top');
+                var headerHeight = header ? header.getBoundingClientRect().height : 0;
+                var wrapRect = wrap.getBoundingClientRect();
+
+                // グループ見出しを含むグループ全体（.setlist-group-wrap）の先頭を
+                // 基準にスクロールする（PCは見出しが子要素として表示され、モバイルは
+                // 見出し自体は隠れていてもラッパーの位置は変わらない）。
+                // 見出しが無いグループは、その分オフセットを少なくする。
+                var groupWrap = wrap.closest('.setlist-group-wrap');
+                var hasGroupTitle = groupWrap && !!groupWrap.querySelector('.setlist-group-title');
+                var scrollAnchorRect = groupWrap ? groupWrap.getBoundingClientRect() : wrapRect;
+                var extraOffset = hasGroupTitle ? 30 : 12;
+
+                var targetTop = window.scrollY + scrollAnchorRect.top - (headerHeight + extraOffset);
+                window.scrollTo({ top: targetTop, behavior: 'smooth' });
+
+                var scrollParent = wrap.closest('.setlist-row');
+                if (scrollParent) {
+                    var parentRect = scrollParent.getBoundingClientRect();
+                    var targetLeft = scrollParent.scrollLeft + wrapRect.left - parentRect.left
+                        - (parentRect.width - wrapRect.width) / 2;
+                    scrollParent.scrollTo({ left: targetLeft, behavior: 'smooth' });
+                }
+                patternSelect.value = '';
+            }
+        });
+    }
+
+    setupPatternSelect('spPatternListSelect');
+    setupPatternSelect('pcPatternListSelect');
+
+    // PCでは、セットリストが横に並びきらずスクロールが発生している場合だけ
+    // パターン一覧アイコンを表示する（ウィンドウ幅やパターン数によって変わるため実測する）。
+    var pcIconWrap = document.getElementById('pcPatternListIconWrap');
+    if (pcIconWrap) {
+        var updatePcIconVisibility = function () {
+            // .pcクラス自体がmax-width:991pxで非表示になる想定のため、
+            // モバイル幅ではインラインstyleで上書きしないよう判定自体をスキップする
+            if (window.innerWidth < 992) {
+                pcIconWrap.style.display = 'none';
+                return;
+            }
+            var hasScrollingRow = Array.prototype.some.call(
+                document.querySelectorAll('.setlist-row'),
+                function (row) {
+                    return row.scrollWidth > row.clientWidth + 1;
+                }
+            );
+            pcIconWrap.style.display = hasScrollingRow ? 'flex' : 'none';
+        };
+        updatePcIconVisibility();
+        window.addEventListener('resize', updatePcIconVisibility);
+    }
 });
 </script>
 @endsection
