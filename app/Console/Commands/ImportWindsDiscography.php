@@ -96,7 +96,11 @@ class ImportWindsDiscography extends Command
 
         foreach ($albums as $albumData) {
             $trackIds = [];
-            foreach ($albumData['tracks'] as $trackTitle) {
+            foreach ($albumData['tracks'] as $trackEntry) {
+                // tracksの各要素は曲名の文字列、または ['曲名', ディスク番号] の配列（複数ディスク構成のアルバム用）
+                $trackTitle = is_array($trackEntry) ? $trackEntry[0] : $trackEntry;
+                $disc = is_array($trackEntry) ? $trackEntry[1] : null;
+
                 $match = $this->findSong($songsByNormalizedTitle, $songTitlesById, $trackTitle);
                 if ($match === null) {
                     $unmatched[] = $albumData['title'] . ' / ' . $trackTitle;
@@ -104,6 +108,9 @@ class ImportWindsDiscography extends Command
                 }
                 $isKaraoke = isKaraokeTrack($match['exception']);
                 $track = $isKaraoke ? [] : ['id' => $match['id']];
+                if ($disc !== null) {
+                    $track['disc'] = $disc;
+                }
                 if ($match['exception']) {
                     $track['exception'] = $match['exception'];
                 }
@@ -288,8 +295,8 @@ class ImportWindsDiscography extends Command
                 'date' => '2008-01-01',
                 'best' => true,
                 'tracks' => [
-                    '四季', '夢の場所へ', '変わりゆく空', '十六夜の月', '約束のカケラ', 'IT’S IN THE STARS', 'TRIAL', 'ブギウギ66', 'ハナムケ', 'LOVE IS THE GREATEST THING',
-                    'Beautiful Life',
+                    ['四季', 'MVP'], ['夢の場所へ', 'MVP'], ['変わりゆく空', 'MVP'], ['十六夜の月', 'MVP'], ['約束のカケラ', 'MVP'], ['IT’S IN THE STARS', 'MVP'], ['TRIAL', 'MVP'], ['ブギウギ66', 'MVP'], ['ハナムケ', 'MVP'], ['LOVE IS THE GREATEST THING', 'MVP'], ['Beautiful Life', 'MVP'],
+                    ['INNOVATOR', 'SUPER SUB'], ['Past Tense', 'SUPER SUB'], ['Shangri-La', 'SUPER SUB'], ['Forever Memories 〜2007 Live version〜', 'SUPER SUB'],
                 ],
             ],
             [
@@ -297,9 +304,8 @@ class ImportWindsDiscography extends Command
                 'date' => '2011-06-22',
                 'best' => true,
                 'tracks' => [
-                    'Paradox', 'Love you anymore', 'try your emotion', 'Because of you', 'NEW PARADISE', 'Break Down, Build Up', 'SUPER LOVER 〜I need you tonight〜', 'W.O.L. (Wonder Of Love)', 'キレイだ', 'song 4 U',
-                    'IT’S IN THE STARS', 'Beautiful Life', 'CAN’T GET BACK', 'Rain Is Fallin’', 'HYBRID DREAM', 'New World', 'Truth 〜最後の真実〜', 'Addicted to love', 'Let’s get it on', 'Nothing Is Impossible',
-                    'Some More',
+                    ['Paradox', 'Disc-1'], ['Love you anymore', 'Disc-1'], ['try your emotion', 'Disc-1'], ['Because of you', 'Disc-1'], ['NEW PARADISE', 'Disc-1'], ['Break Down, Build Up', 'Disc-1'], ['SUPER LOVER 〜I need you tonight〜', 'Disc-1'], ['W.O.L. (Wonder Of Love)', 'Disc-1'], ['キレイだ', 'Disc-1'], ['song 4 U', 'Disc-1'], ['IT’S IN THE STARS', 'Disc-1'], ['Back At One', 'Disc-1'], ['ブギウギ66', 'Disc-1'], ['Want ya', 'Disc-1'],
+                    ['LOVE IS THE GREATEST THING', 'Disc-2'], ['Beautiful Life', 'Disc-2'], ['I’m a Man', 'Disc-2'], ['CAN’T GET BACK', 'Disc-2'], ['Rain Is Fallin’', 'Disc-2'], ['HYBRID DREAM', 'Disc-2'], ['New World', 'Disc-2'], ['Truth 〜最後の真実〜', 'Disc-2'], ['Addicted to love', 'Disc-2'], ['Let’s get it on', 'Disc-2'], ['Nothing Is Impossible', 'Disc-2'], ['Some More', 'Disc-2'], ['NOTHING IS GONNA CHANGE IT', 'Disc-2'], ['NO DOUBTS', 'Disc-2'],
                 ],
             ],
             [
@@ -307,8 +313,8 @@ class ImportWindsDiscography extends Command
                 'date' => '2011-06-22',
                 'best' => true,
                 'tracks' => [
-                    'Forever Memories', 'Feel The Fate', 'Somewhere in Time', 'Another Days', 'Baby Maybe', 'Love is message', 'Long Road', 'Deny', 'Pieces', '四季',
-                    '夢の場所へ', '変わりゆく空', '十六夜の月', '約束のカケラ', 'TRIAL', 'ハナムケ',
+                    ['Forever Memories', 'Disc-1'], ['Feel The Fate', 'Disc-1'], ['will be there 〜恋心', 'Disc-1'], ['Somewhere in Time', 'Disc-1'], ['Graduation', 'Disc-1'], ['Another Days', 'Disc-1'], ['Best of My Love', 'Disc-1'], ['Baby Maybe', 'Disc-1'], ['Love is message', 'Disc-1'], ['Long Road', 'Disc-1'], ['Love Train', 'Disc-1'], ['Deny', 'Disc-1'], ['Pieces', 'Disc-1'], ['四季', 'Disc-1'],
+                    ['夢の場所へ', 'Disc-2'], ['Perfect Day', 'Disc-2'], ['変わりゆく空', 'Disc-2'], ['夏空の恋の詩', 'Disc-2'], ['ageha', 'Disc-2'], ['十六夜の月', 'Disc-2'], ['約束のカケラ', 'Disc-2'], ['蝉時雨', 'Disc-2'], ['TRIAL', 'Disc-2'], ['ハナムケ', 'Disc-2'], ['アメあと', 'Disc-2'], ['Everyday', 'Disc-2'], ['Be As One', 'Disc-2'], ['NOTHING IS GONNA CHANGE IT', 'Disc-2'],
                 ],
             ],
             [
@@ -316,9 +322,9 @@ class ImportWindsDiscography extends Command
                 'date' => '2021-03-14',
                 'best' => true,
                 'tracks' => [
-                    'Forever Memories', 'Feel The Fate', 'Paradox', 'try your emotion', 'Another Days', 'Because of you', 'NEW PARADISE', 'SUPER LOVER 〜I need you tonight〜', 'Love is message', 'Long Road', 'Pieces', 'キレイだ', '四季', '夢の場所へ', '変わりゆく空',
-                    '十六夜の月', '約束のカケラ', 'IT’S IN THE STARS', 'TRIAL', 'ブギウギ66', 'ハナムケ', 'LOVE IS THE GREATEST THING', 'Beautiful Life', 'アメあと', 'Everyday', 'CAN’T GET BACK', 'Rain Is Fallin’', 'HYBRID DREAM', 'New World', 'Truth 〜最後の真実〜', 'Addicted to love',
-                    'Be As One', 'Let’s get it on', 'You & I', 'FLY HIGH', 'A Little Bit', '夢で逢えるのに 〜Sometimes I Cry〜', 'FANTASY', 'In Love With The Music', 'Boom Word Up', 'Backstage', 'We Don’t Need To Talk Anymore', 'Time Has Gone', 'Dirty Talk', 'Get Down', 'DoU', 'Beautiful Now',
+                    ['Forever Memories', 'Disc-1'], ['Feel The Fate', 'Disc-1'], ['Paradox', 'Disc-1'], ['try your emotion', 'Disc-1'], ['Another Days', 'Disc-1'], ['Because of you', 'Disc-1'], ['NEW PARADISE', 'Disc-1'], ['SUPER LOVER 〜I need you tonight〜', 'Disc-1'], ['Love is message', 'Disc-1'], ['Long Road', 'Disc-1'], ['Pieces', 'Disc-1'], ['キレイだ', 'Disc-1'], ['四季', 'Disc-1'], ['夢の場所へ', 'Disc-1'], ['変わりゆく空', 'Disc-1'],
+                    ['十六夜の月', 'Disc-2'], ['約束のカケラ', 'Disc-2'], ['IT’S IN THE STARS', 'Disc-2'], ['TRIAL', 'Disc-2'], ['ブギウギ66', 'Disc-2'], ['ハナムケ', 'Disc-2'], ['LOVE IS THE GREATEST THING', 'Disc-2'], ['Beautiful Life', 'Disc-2'], ['アメあと', 'Disc-2'], ['Everyday', 'Disc-2'], ['CAN’T GET BACK', 'Disc-2'], ['Rain Is Fallin’', 'Disc-2'], ['HYBRID DREAM', 'Disc-2'], ['New World', 'Disc-2'], ['Truth 〜最後の真実〜', 'Disc-2'], ['Addicted to love', 'Disc-2'],
+                    ['Be As One', 'Disc-3'], ['Let’s get it on', 'Disc-3'], ['You & I', 'Disc-3'], ['FLY HIGH', 'Disc-3'], ['A Little Bit', 'Disc-3'], ['夢で逢えるのに 〜Sometimes I Cry〜', 'Disc-3'], ['FANTASY', 'Disc-3'], ['In Love With The Music', 'Disc-3'], ['Boom Word Up', 'Disc-3'], ['Backstage', 'Disc-3'], ['We Don’t Need To Talk Anymore', 'Disc-3'], ['Time Has Gone', 'Disc-3'], ['Dirty Talk', 'Disc-3'], ['Get Down', 'Disc-3'], ['DoU', 'Disc-3'], ['Beautiful Now', 'Disc-3'],
                 ],
             ],
         ];
@@ -327,48 +333,48 @@ class ImportWindsDiscography extends Command
     private function singlesData(): array
     {
         return [
-            ['title' => 'Forever Memories', 'date' => '2001-03-14', 'tracks' => ['Forever Memories', 'Moon Clock']],
-            ['title' => 'Feel The Fate', 'date' => '2001-07-04', 'tracks' => ['Feel The Fate', 'will be there 〜恋心']],
-            ['title' => 'Paradox', 'date' => '2001-10-17', 'tracks' => ['Paradox', 'Somewhere in Time']],
-            ['title' => 'try your emotion', 'date' => '2002-02-20', 'tracks' => ['try your emotion', 'Graduation']],
-            ['title' => 'Another Days', 'date' => '2002-05-22', 'tracks' => ['Another Days', 'Show me your style']],
-            ['title' => 'Because of you', 'date' => '2002-08-21', 'tracks' => ['Because of you', 'close to you']],
-            ['title' => 'NEW PARADISE', 'date' => '2002-11-13', 'tracks' => ['NEW PARADISE', 'Best of My Love']],
-            ['title' => 'SUPER LOVER 〜I need you tonight〜', 'date' => '2003-05-21', 'tracks' => ['SUPER LOVER 〜I need you tonight〜', 'no one else']],
-            ['title' => 'Love is message', 'date' => '2003-08-20', 'tracks' => ['Love is message', 'Night Flight 〜夜間飛行〜']],
-            ['title' => 'Long Road', 'date' => '2003-10-29', 'tracks' => ['Long Road', 'NEVER MIND']],
-            ['title' => 'Pieces', 'date' => '2004-03-10', 'tracks' => ['Pieces', 'move your body']],
-            ['title' => 'キレイだ', 'date' => '2004-06-02', 'tracks' => ['キレイだ', 'ふたりがふたりで']],
-            ['title' => '四季', 'date' => '2004-10-06', 'tracks' => ['四季', '永遠の途中']],
-            ['title' => '夢の場所へ', 'date' => '2005-01-01', 'tracks' => ['夢の場所へ', 'Perfect day']],
-            ['title' => '変わりゆく空', 'date' => '2005-03-16', 'tracks' => ['変わりゆく空', 'いつか、虹の下で']],
-            ['title' => '十六夜の月', 'date' => '2005-08-31', 'tracks' => ['十六夜の月', 'ジレンマ']],
-            ['title' => '約束のカケラ', 'date' => '2005-11-23', 'tracks' => ['約束のカケラ', 'デジャヴ', 'Pearl Dance']],
-            ['title' => 'IT’S IN THE STARS', 'date' => '2006-02-22', 'tracks' => ['IT’S IN THE STARS', 'Philosophy', 'Special Thanx!']],
-            ['title' => 'TRIAL', 'date' => '2006-05-24', 'tracks' => ['TRIAL', 'Back At One', '風詩 -KAZAUTA-']],
-            ['title' => 'ブギウギ66', 'date' => '2006-09-06', 'tracks' => ['ブギウギ66', 'Drive-Me-Crazy', 'If…']],
-            ['title' => 'ハナムケ', 'date' => '2007-01-17', 'tracks' => ['ハナムケ', 'Want ya', '勿忘草']],
-            ['title' => 'LOVE IS THE GREATEST THING', 'date' => '2007-07-04', 'tracks' => ['LOVE IS THE GREATEST THING', 'SHINING STAR', '夏祭り']],
-            ['title' => 'Beautiful Life', 'date' => '2007-11-07', 'tracks' => ['Beautiful Life', 'Space Drifter', 'I’m a Man']],
-            ['title' => 'アメあと', 'date' => '2008-04-23', 'tracks' => ['アメあと', 'One love', 'leave me alone']],
-            ['title' => 'Everyday/CAN’T GET BACK', 'date' => '2008-11-26', 'tracks' => ['Everyday', 'CAN’T GET BACK', 'Color', 'YES or NO']],
-            ['title' => 'Rain Is Fallin’/HYBRID DREAM', 'date' => '2009-05-13', 'tracks' => ['Rain Is Fallin’', 'HYBRID DREAM', 'Upside Down', 'You are…']],
-            ['title' => 'New World/Truth〜最後の真実〜', 'date' => '2009-12-09', 'tracks' => ['New World', 'Truth 〜最後の真実〜', 'Fighting For Love', 'Tribute']],
-            ['title' => 'Addicted to love', 'date' => '2010-06-23', 'tracks' => ['Addicted to love', 'Love or Leave', 'Now You’re Gone']],
+            ['title' => 'Forever Memories', 'date' => '2001-03-14', 'tracks' => ['Forever Memories', 'Moon Clock', 'Forever Memories (Za Downtown Street Remix)', 'Forever Memories (Instrumental)']],
+            ['title' => 'Feel The Fate', 'date' => '2001-07-04', 'tracks' => ['Feel The Fate', 'will be there 〜恋心', 'Feel The Fate (ZA DOWNTOWN GROOVE-MASTER REMIX)', 'Feel The Fate (Instrumental)']],
+            ['title' => 'Paradox', 'date' => '2001-10-17', 'tracks' => ['Paradox', 'Somewhere in Time', 'Paradox 〜ZA DOWNTOWN STREET RUMOR REMIX〜', 'Paradox 〜Instrumental〜']],
+            ['title' => 'try your emotion', 'date' => '2002-02-20', 'tracks' => ['try your emotion', 'Graduation', 'try your emotion 〜MoFO★NARUSE Remix〜', 'try your emotion 〜Instrumental〜']],
+            ['title' => 'Another Days', 'date' => '2002-05-22', 'tracks' => ['Another Days', 'Show me your style', 'Another Days 〜Another side mix〜', 'Another Days 〜Instrumental〜']],
+            ['title' => 'Because of you', 'date' => '2002-08-21', 'tracks' => ['Because of you', 'close to you', 'Because of you 〜j\'adore party style〜', 'Because of you (Instrumental)']],
+            ['title' => 'NEW PARADISE', 'date' => '2002-11-13', 'tracks' => ['NEW PARADISE', 'Best of My Love', 'NEW PARADISE 〜CANDY Future remix〜', 'NEW PARADISE 〜Instrumental〜']],
+            ['title' => 'SUPER LOVER 〜I need you tonight〜', 'date' => '2003-05-21', 'tracks' => ['SUPER LOVER 〜I need you tonight〜', 'no one else', 'SUPER LOVER 〜I need you tonight〜 (Instrumental)', 'no one else (Instrumental)']],
+            ['title' => 'Love is message', 'date' => '2003-08-20', 'tracks' => ['Love is message', 'Night Flight 〜夜間飛行〜', 'Love is message (Instrumental)', 'Night Flight 〜夜間飛行〜 (Instrumental)']],
+            ['title' => 'Long Road', 'date' => '2003-10-29', 'tracks' => ['Long Road', 'NEVER MIND', 'Long Road (Instrumental)', 'NEVER MIND (Instrumental)']],
+            ['title' => 'Pieces', 'date' => '2004-03-10', 'tracks' => ['Pieces', 'move your body', 'Pieces (Instrumental)', 'move your body (Instrumental)']],
+            ['title' => 'キレイだ', 'date' => '2004-06-02', 'tracks' => ['キレイだ', 'ふたりがふたりで', 'キレイだ (Instrumental)', 'ふたりがふたりで (Instrumental)']],
+            ['title' => '四季', 'date' => '2004-10-06', 'tracks' => ['四季', '永遠の途中', '四季 (Instrumental)', '永遠の途中 (Instrumental)']],
+            ['title' => '夢の場所へ', 'date' => '2005-01-01', 'tracks' => ['夢の場所へ', 'Perfect day', '夢の場所へ (Instrumental)', 'Perfect day (Instrumental)']],
+            ['title' => '変わりゆく空', 'date' => '2005-03-16', 'tracks' => ['変わりゆく空', 'いつか、虹の下で', '変わりゆく空 (Instrumental)', 'いつか、虹の下で (Instrumental)']],
+            ['title' => '十六夜の月', 'date' => '2005-08-31', 'tracks' => ['十六夜の月', 'ジレンマ', '十六夜の月 (Instrumental)', 'ジレンマ (Instrumental)']],
+            ['title' => '約束のカケラ', 'date' => '2005-11-23', 'tracks' => ['約束のカケラ', 'デジャヴ', 'Pearl Dance', '約束のカケラ (Instrumental)', 'デジャヴ (Instrumental)', 'Pearl Dance (Instrumental)']],
+            ['title' => 'IT’S IN THE STARS', 'date' => '2006-02-22', 'tracks' => ['IT’S IN THE STARS', 'Philosophy', 'Special Thanx!', 'IT’S IN THE STARS (Instrumental)']],
+            ['title' => 'TRIAL', 'date' => '2006-05-24', 'tracks' => ['TRIAL', 'Back At One', '風詩 -KAZAUTA-', 'TRIAL (Instrumental)']],
+            ['title' => 'ブギウギ66', 'date' => '2006-09-06', 'tracks' => ['ブギウギ66', 'Drive-Me-Crazy', 'If…', 'ブギウギ66 (Instrumental)']],
+            ['title' => 'ハナムケ', 'date' => '2007-01-17', 'tracks' => ['ハナムケ', 'Want ya', '勿忘草', 'ハナムケ (Instrumental)']],
+            ['title' => 'LOVE IS THE GREATEST THING', 'date' => '2007-07-04', 'tracks' => ['LOVE IS THE GREATEST THING', 'SHINING STAR', '夏祭り', 'LOVE IS THE GREATEST THING (Instrumental)']],
+            ['title' => 'Beautiful Life', 'date' => '2007-11-07', 'tracks' => ['Beautiful Life', 'Space Drifter', 'I’m a Man', 'Beautiful Life (Instrumental)']],
+            ['title' => 'アメあと', 'date' => '2008-04-23', 'tracks' => ['アメあと', 'One Love', 'leave me alone', 'アメあと (Instrumental)']],
+            ['title' => 'Everyday/CAN’T GET BACK', 'date' => '2008-11-26', 'tracks' => ['Everyday', 'CAN’T GET BACK', 'Color', 'YES or NO', 'Everyday (Instrumental)', 'CAN’T GET BACK (Instrumental)']],
+            ['title' => 'Rain Is Fallin’/HYBRID DREAM', 'date' => '2009-05-13', 'tracks' => ['Rain Is Fallin’', 'HYBRID DREAM', 'Upside Down', 'You are…', 'Rain Is Fallin’ (Instrumental)', 'HYBRID DREAM (Instrumental)']],
+            ['title' => 'New World/Truth〜最後の真実〜', 'date' => '2009-12-09', 'tracks' => ['New World', 'Truth 〜最後の真実〜', 'Fighting For Love', 'Tribute', 'New World (Radio Mix)']],
+            ['title' => 'Addicted to love', 'date' => '2010-06-23', 'tracks' => ['Addicted to love', 'Love or Leave', 'Now You’re Gone', 'Rain', 'Addicted to love (Instrumental)']],
             ['title' => 'Be As One/Let’s get it on', 'date' => '2011-01-26', 'tracks' => ['Be As One', 'Let’s get it on', 'Noise', 'To My Fans']],
-            ['title' => 'You & I', 'date' => '2011-08-17', 'tracks' => ['You & I', 'Chillin’ in the Daydream', 'Humanizer']],
-            ['title' => 'FLY HIGH', 'date' => '2012-02-22', 'tracks' => ['FLY HIGH', 'Put your hands up!!!']],
-            ['title' => 'A Little Bit', 'date' => '2013-10-30', 'tracks' => ['A Little Bit', 'Rock Your Body']],
-            ['title' => '夢で逢えるのに 〜Sometimes I Cry〜', 'date' => '2014-06-11', 'tracks' => ['夢で逢えるのに 〜Sometimes I Cry〜', 'Turned up', 'Together Now']],
-            ['title' => 'FANTASY', 'date' => '2015-01-21', 'tracks' => ['FANTASY', 'Million Dollar Girl']],
-            ['title' => 'In Love With The Music', 'date' => '2015-06-10', 'tracks' => ['In Love With The Music', 'HEADS UP']],
-            ['title' => 'Boom Word Up', 'date' => '2016-05-03', 'tracks' => ['Boom Word Up', 'Smile Smile Smile']],
-            ['title' => 'Backstage', 'date' => '2016-08-31', 'tracks' => ['Backstage', 'Treasure']],
+            ['title' => 'You & I', 'date' => '2011-08-17', 'tracks' => ['You & I', 'Chillin’ in the Daydream', 'Humanizer', 'I vs. I']],
+            ['title' => 'FLY HIGH', 'date' => '2012-02-22', 'tracks' => ['FLY HIGH', 'Put your hands up!!!', 'Zirconia 〜ジルコニア〜', 'More than words']],
+            ['title' => 'A Little Bit', 'date' => '2013-10-30', 'tracks' => ['A Little Bit', 'Rock Your Body', 'Tell Me What You’re Waiting For', 'We’ll Be Alright']],
+            ['title' => '夢で逢えるのに 〜Sometimes I Cry〜', 'date' => '2014-06-11', 'tracks' => ['夢で逢えるのに 〜Sometimes I Cry〜', 'Turned up', 'Together Now', 'Say so long']],
+            ['title' => 'FANTASY', 'date' => '2015-01-21', 'tracks' => ['FANTASY', 'Million Dollar Girl', 'Frozen in my heart', 'Sweetest love']],
+            ['title' => 'In Love With The Music', 'date' => '2015-06-10', 'tracks' => ['In Love With The Music', 'HEADS UP', 'Ring Off The Hook', 'Sail away']],
+            ['title' => 'Boom Word Up', 'date' => '2016-05-03', 'tracks' => ['Boom Word Up', 'Smile Smile Smile', 'ヒマワリ', 'FUNTIME']],
+            ['title' => 'Backstage', 'date' => '2016-08-31', 'tracks' => ['Backstage', 'Treasure', 'Drop Drop', 'No matter where you are']],
             ['title' => 'We Don’t Need To Talk Anymore', 'date' => '2017-01-11', 'tracks' => ['We Don’t Need To Talk Anymore', 'Again']],
-            ['title' => 'Time Has Gone', 'date' => '2017-09-27', 'tracks' => ['Time Has Gone', 'This Love']],
+            ['title' => 'Time Has Gone', 'date' => '2017-09-27', 'tracks' => ['Time Has Gone', 'This Love', 'A Trip In My Hard Days']],
             ['title' => 'Dirty Talk', 'date' => '2018-03-14', 'tracks' => ['Dirty Talk', 'If I said I loved you']],
-            ['title' => 'Get Down', 'date' => '2019-07-31', 'tracks' => ['Get Down', 'Take It Slow']],
-            ['title' => 'DoU', 'date' => '2020-01-22', 'tracks' => ['DoU', 'CANDY']],
+            ['title' => 'Get Down', 'date' => '2019-07-31', 'tracks' => ['Get Down', 'Take It Slow', 'Femme Fatale']],
+            ['title' => 'DoU', 'date' => '2020-01-22', 'tracks' => ['DoU', 'CANDY', 'We Don’t Need To Talk Anymore Remix feat.SKY-HI']],
             ['title' => 'Beautiful Now', 'date' => '2020-12-02', 'download' => true, 'tracks' => ['Beautiful Now']],
             ['title' => 'Strip', 'date' => '2021-09-24', 'download' => true, 'tracks' => ['Strip']],
             ['title' => 'Little', 'date' => '2021-10-22', 'download' => true, 'tracks' => ['Little']],

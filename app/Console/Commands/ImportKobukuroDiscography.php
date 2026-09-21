@@ -31,8 +31,18 @@ class ImportKobukuroDiscography extends Command
         return $title;
     }
 
+    // DbSongに存在しない企画曲（既存曲をメドレー的に繋いだオーケストラアレンジ等）。
+    // 単独の新曲として登録する性質のものではないため、idを持たせずexceptionのみで表示する。
+    private const NON_SONG_TRACKS = [
+        '交響曲第5296番',
+    ];
+
     private function findSong(array $songsByNormalizedTitle, array $songTitlesById, string $title): ?array
     {
+        if (in_array($title, self::NON_SONG_TRACKS, true)) {
+            return ['id' => null, 'exception' => $title];
+        }
+
         $normalized = $this->normalize($title);
         if (isset($songsByNormalizedTitle[$normalized])) {
             $id = $songsByNormalizedTitle[$normalized];
@@ -86,14 +96,31 @@ class ImportKobukuroDiscography extends Command
 
         foreach ($albums as $albumData) {
             $trackIds = [];
-            foreach ($albumData['tracks'] as $trackTitle) {
+            foreach ($albumData['tracks'] as $trackEntry) {
+                // tracksの各要素は曲名の文字列、または ['曲名', ディスク番号] の配列（複数ディスク構成のアルバム用）
+                $trackTitle = is_array($trackEntry) ? $trackEntry[0] : $trackEntry;
+                $disc = is_array($trackEntry) ? $trackEntry[1] : null;
+
                 $match = $this->findSong($songsByNormalizedTitle, $songTitlesById, $trackTitle);
                 if ($match === null) {
+                    // 他アーティストのカバー曲を収録したアルバム（'covers' => true）は、
+                    // DbSongに存在しない曲ばかりのため、リンクなしのプレーンテキストとして扱う
+                    if (!empty($albumData['covers'])) {
+                        $track = ['exception' => $trackTitle];
+                        if ($disc !== null) {
+                            $track['disc'] = $disc;
+                        }
+                        $trackIds[] = $track;
+                        continue;
+                    }
                     $unmatched[] = $albumData['title'] . ' / ' . $trackTitle;
                     continue;
                 }
-                $isKaraoke = isKaraokeTrack($match['exception']);
+                $isKaraoke = $match['id'] === null || isKaraokeTrack($match['exception']);
                 $track = $isKaraoke ? [] : ['id' => $match['id']];
+                if ($disc !== null) {
+                    $track['disc'] = $disc;
+                }
                 if ($match['exception']) {
                     $track['exception'] = $match['exception'];
                 }
@@ -111,6 +138,10 @@ class ImportKobukuroDiscography extends Command
                 $key = ['artist_id' => self::ARTIST_ID, 'date' => $albumData['date']];
                 if ($isOriginal) {
                     $key['album_id'] = $albumId;
+                } else {
+                    // ベスト/ミニは基本dateのみで識別するが、同日に複数リリースがある場合は
+                    // titleもキーに含めて区別する（例: ALL SINGLES BEST 2とFAN'S MADE BESTが同日）
+                    $key['title'] = $albumData['title'];
                 }
                 DbAlbum::updateOrCreate(
                     $key,
@@ -136,12 +167,16 @@ class ImportKobukuroDiscography extends Command
                     $unmatched[] = $singleData['title'] . ' / ' . $trackTitle;
                     continue;
                 }
-                $isKaraoke = isKaraokeTrack($match['exception']);
+                $isKaraoke = $match['id'] === null || isKaraokeTrack($match['exception']);
                 $track = $isKaraoke ? [] : ['id' => $match['id']];
                 if ($match['exception']) {
                     $track['exception'] = $match['exception'];
                 }
                 $trackIds[] = $track;
+            }
+            // Blue Birdのデモ音源はDbSongに存在しない（正式収録曲ではないため登録しない）
+            if ($singleData['title'] === 'Blue Bird') {
+                $trackIds[] = ['exception' => 'ラブレター【demo】'];
             }
 
             // EPはCD/配信いずれの形態でもCDシングルの通し番号(single_id)には含めない
@@ -183,6 +218,25 @@ class ImportKobukuroDiscography extends Command
     private function albumsData(): array
     {
         return [
+            // インディーズ盤（メジャーデビュー前、MINOSUKE RECORDSから自主制作でリリース）
+            [
+                'title' => 'Saturday 8:pm',
+                'date' => '1999-07-21',
+                'mini' => true,
+                'tracks' => ['ボクノイバショ', '夢唄', 'ストリートのテーマ', '虹の真下', '遠くで・・'],
+            ],
+            [
+                'title' => 'Root of my mind',
+                'date' => '2000-03-04',
+                'mini' => true,
+                'tracks' => ['2人', 'LOVE', 'DOOR', 'Bye Bye Oh! Dear My Lover', '桜', '轍-わだち-', '赤い糸'],
+            ],
+            [
+                'title' => 'ANSWER',
+                'date' => '2000-12-19',
+                'mini' => true,
+                'tracks' => ['遠まわり', '光', '心に笑みを', '坂道', '神風', 'そばにいれるなら', 'Moon Light Party!!'],
+            ],
             [
                 'title' => 'Roadmade',
                 'date' => '2001-08-29',
@@ -236,7 +290,13 @@ class ImportKobukuroDiscography extends Command
             [
                 'title' => 'QUARTER CENTURY',
                 'date' => '2024-09-04',
-                'tracks' => ['RAISE THE ANCHOR', 'エンベロープ', 'Mr.GLORY', 'Soul to Soul (布袋寅泰 feat.コブクロ)', 'Blame It On The Love Song', '雨', '足跡', 'ベテルギウス', '雨粒と花火', 'Moon Light Party!!', 'Days', 'この地球の続きを'],
+                'tracks' => ['RAISE THE ANCHOR', 'エンベロープ', 'Mr.GLORY', 'Soul to Soul (布袋寅泰 feat. コブクロ)', 'Blame It On The Love Song', '雨', '足跡', 'ベテルギウス', '雨粒と花火', 'Moon Light Party!!', 'Days', 'この地球の続きを'],
+            ],
+            [
+                'title' => 'THIS IS MY HOMETOWN',
+                'date' => '2025-07-16',
+                'mini' => true,
+                'tracks' => ['THIS IS MY HOMETOWN', 'この地球の続きを', '大阪恋物語 -Refined the live take-', '42.195km', 'おさかなにわ', '大阪SOUL'],
             ],
             // ベストアルバム
             [
@@ -244,8 +304,18 @@ class ImportKobukuroDiscography extends Command
                 'date' => '2006-09-27',
                 'best' => true,
                 'tracks' => [
-                    '君という名の翼', 'あなたへと続く道', 'ここにしか咲かない花', '毎朝、ボクの横にいて -Sweet drip mix-', 'Million Films', '永遠にともに', 'blue blue', '宝島', '雪の降らない街', '願いの詩',
-                    '風', 'YOU', 'miss you', 'YELL〜エール〜', 'Bell', '轍-わだち-', 'DOOR', '太陽', '桜', '未来への帰り道',
+                    ['君という名の翼', 'Disc-1'], ['あなたへと続く道', 'Disc-1'], ['ここにしか咲かない花', 'Disc-1'], ['毎朝、ボクの横にいて -Sweet drip mix-', 'Disc-1'], ['Million Films', 'Disc-1'], ['永遠にともに', 'Disc-1'], ['blue blue', 'Disc-1'], ['宝島', 'Disc-1'], ['雪の降らない街', 'Disc-1'], ['願いの詩', 'Disc-1'],
+                    ['風', 'Disc-2'], ['YOU', 'Disc-2'], ['miss you', 'Disc-2'], ['YELL〜エール〜', 'Disc-2'], ['Bell', 'Disc-2'], ['轍-わだち-', 'Disc-2'], ['DOOR', 'Disc-2'], ['太陽', 'Disc-2'], ['桜', 'Disc-2'], ['未来への帰り道', 'Disc-2'],
+                ],
+            ],
+            [
+                'title' => 'ALL COVERS BEST',
+                'date' => '2010-08-25',
+                'best' => true,
+                'covers' => true,
+                'tracks' => [
+                    ['奇跡の地球', 'Disc-1'], ['I LOVE YOU', 'Disc-1'], ['いつまでも変わらぬ愛を', 'Disc-1'], ['SUPERSTITION', 'Disc-1'], ['ALONE AGAIN (NATURALLY)', 'Disc-1'], ['遠い恋のリフレイン', 'Disc-1'], ['もうひとつの土曜日', 'Disc-1'], ['The Thrill is gone', 'Disc-1'], ['Lovin\' you', 'Disc-1'], ['こんな風にして終わるもの', 'Disc-1'], ['THE ONLY THING THAT LOOKS GOOD ON ME IS YOU', 'Disc-1'], ['CALIFORNIA SUN', 'Disc-1'], ['ANSWER', 'Disc-1'],
+                    ['WHAT A WONDERFUL WORLD', 'Disc-2'], ['三日月', 'Disc-2'], ['DESPERADO', 'Disc-2'], ['Pink Prisoner', 'Disc-2'], ['気球に乗って', 'Disc-2'], ['ON MY BEAT', 'Disc-2'], ['IF IT MAKES YOU HAPPY', 'Disc-2'], ['LAYLA', 'Disc-2'], ['卒業写真', 'Disc-2'], ['運命船サラバ号出発', 'Disc-2'], ['The Love We Make', 'Disc-2'], ['しあわせのランプ', 'Disc-2'],
                 ],
             ],
             [
@@ -253,8 +323,17 @@ class ImportKobukuroDiscography extends Command
                 'date' => '2012-09-05',
                 'best' => true,
                 'tracks' => [
-                    '蕾', '風見鶏', '蒼く 優しく', '時の足音', '赤い糸', 'ベテルギウス', '虹', 'Summer rain', 'STAY',
-                    '流星', 'Blue Bird', '君への主題歌', 'あの太陽が、この世界を照らし続けるように。', 'シルエット', '蜜蜂', '焚き火の様な歌', 'ココロの羽',
+                    ['蕾', 'Disc-1'], ['風見鶏', 'Disc-1'], ['蒼く 優しく', 'Disc-1'], ['時の足音', 'Disc-1'], ['赤い糸', 'Disc-1'], ['ベテルギウス', 'Disc-1'], ['虹', 'Disc-1'], ['Summer rain', 'Disc-1'], ['STAY', 'Disc-1'], ['WINDING ROAD', 'Disc-1'], ['あなたと', 'Disc-1'],
+                    ['流星', 'Disc-2'], ['Blue Bird', 'Disc-2'], ['君への主題歌', 'Disc-2'], ['あの太陽が、この世界を照らし続けるように。', 'Disc-2'], ['シルエット', 'Disc-2'], ['蜜蜂', 'Disc-2'], ['焚き火の様な歌', 'Disc-2'], ['ココロの羽', 'Disc-2'], ['太陽のメロディー', 'Disc-2'], ['交響曲第5296番', 'Disc-2'],
+                ],
+            ],
+            [
+                'title' => "FAN'S MADE BEST",
+                'date' => '2012-09-05',
+                'best' => true,
+                'tracks' => [
+                    ['ココロの羽', 'Disc-1'], ['夜空', 'Disc-1'], ['NOTE', 'Disc-1'], ['潮騒ドライブ', 'Disc-1'], ['ストリートのテーマ', 'Disc-1'], ['光の粒', 'Disc-1'], ['今と未来を繋ぐもの', 'Disc-1'], ['どんな空でも', 'Disc-1'], ['夢唄〜Back to street〜', 'Disc-1'], ['そばにいれるなら', 'Disc-1'], ['ANSWER', 'Disc-1'], ['光', 'Disc-1'],
+                    ['手紙', 'Disc-2'], ['向かい風', 'Disc-2'], ['エピローグ', 'Disc-2'], ['To calling of love (CALLING LIVE ver.)', 'Disc-2'], ['遠くで・・(NAMELESS WORLD LIVE ver.)', 'Disc-2'], ['Happy Birthday', 'Disc-2'], ['彼方へ', 'Disc-2'], ['同じ窓から見てた空', 'Disc-2'], ['神風', 'Disc-2'], ['愛する人よ', 'Disc-2'], ['WHITE DAYS', 'Disc-2'], ['Flag', 'Disc-2'],
                 ],
             ],
             [
@@ -262,10 +341,10 @@ class ImportKobukuroDiscography extends Command
                 'date' => '2018-12-05',
                 'best' => true,
                 'tracks' => [
-                    '桜', '赤い糸', '太陽', '轍-わだち-', 'DOOR', 'Bell', 'ココロの羽', 'YELL〜エール〜', 'miss you', '光', 'ANSWER', 'YOU', '風', '願いの詩',
-                    '雪の降らない街', '愛する人よ', '宝島', 'blue blue', '手紙', '永遠にともに', 'Million Films', 'ここにしか咲かない花', 'あなたへと続く道', '君という名の翼', '風見鶏', '蕾', 'WHITE DAYS', '蒼く 優しく',
-                    '時の足音', '虹', 'STAY', 'To calling of love', '流星', 'Blue Bird', 'あの太陽が、この世界を照らし続けるように。', '蜜蜂', '紙飛行機', 'One Song From Two Hearts', 'ダイヤモンド', '今、咲き誇る花たちよ', '陽だまりの道', 'Twilight', '42.195km',
-                    '奇跡', 'hana', '未来', 'SNIFF OUT!', 'STAGE', '心', 'バトン', '君になれ', 'ONE TIMES ONE', '晴々', '風をみつめて',
+                    ['桜', 'Disc-1'], ['赤い糸', 'Disc-1'], ['太陽', 'Disc-1'], ['轍-わだち-', 'Disc-1'], ['DOOR', 'Disc-1'], ['Bell', 'Disc-1'], ['ココロの羽', 'Disc-1'], ['YELL〜エール〜', 'Disc-1'], ['miss you', 'Disc-1'], ['光', 'Disc-1'], ['ANSWER', 'Disc-1'], ['YOU', 'Disc-1'], ['風', 'Disc-1'], ['願いの詩', 'Disc-1'],
+                    ['雪の降らない街', 'Disc-2'], ['愛する人よ', 'Disc-2'], ['宝島', 'Disc-2'], ['blue blue', 'Disc-2'], ['手紙', 'Disc-2'], ['永遠にともに', 'Disc-2'], ['Million Films', 'Disc-2'], ['ここにしか咲かない花', 'Disc-2'], ['あなたへと続く道', 'Disc-2'], ['君という名の翼', 'Disc-2'], ['風見鶏', 'Disc-2'], ['蕾', 'Disc-2'], ['WHITE DAYS', 'Disc-2'], ['蒼く 優しく', 'Disc-2'],
+                    ['時の足音', 'Disc-3'], ['虹', 'Disc-3'], ['STAY', 'Disc-3'], ['To calling of love', 'Disc-3'], ['流星', 'Disc-3'], ['Blue Bird', 'Disc-3'], ['あの太陽が、この世界を照らし続けるように。', 'Disc-3'], ['蜜蜂', 'Disc-3'], ['紙飛行機', 'Disc-3'], ['One Song From Two Hearts', 'Disc-3'], ['ダイヤモンド', 'Disc-3'], ['今、咲き誇る花たちよ', 'Disc-3'], ['陽だまりの道', 'Disc-3'], ['Twilight', 'Disc-3'], ['42.195km', 'Disc-3'],
+                    ['奇跡', 'Disc-4'], ['hana', 'Disc-4'], ['未来', 'Disc-4'], ['SNIFF OUT!', 'Disc-4'], ['STAGE', 'Disc-4'], ['心', 'Disc-4'], ['バトン', 'Disc-4'], ['君になれ', 'Disc-4'], ['ONE TIMES ONE', 'Disc-4'], ['晴々', 'Disc-4'], ['風をみつめて', 'Disc-4'], ['木蘭の涙', 'Disc-4'], ['WINDING ROAD', 'Disc-4'], ['太陽のメロディー', 'Disc-4'], ['桜-1st demo tape-', 'Disc-4'],
                 ],
             ],
             [
@@ -273,10 +352,10 @@ class ImportKobukuroDiscography extends Command
                 'date' => '2024-03-20',
                 'best' => true,
                 'tracks' => [
-                    '桜', '蕾', '未来', 'YELL〜エール〜', '轍-わだち-', '風', '虹', '卒業', '風見鶏', 'ここにしか咲かない花',
-                    '君という名の翼', '願いの詩', '太陽', 'ダイヤモンド', '同じ窓から見てた空', 'Summer rain', '潮騒ドライブ', 'memory', 'HUMMING LIFE', '夏の雫', 'LOVER’S SURF', '晴々',
-                    'Million Films', '未来への帰り道', 'blue blue', '風をみつめて', 'NOTE', 'コイン', '2人', '何故、旅をするのだろう', 'FREEDOM TRAIN', '夕紅', '紙飛行機', '陽だまりの道',
-                    '赤い糸', '流星', '今、咲き誇る花たちよ', 'STAY', 'あなたへと続く道', 'WHITE DAYS', 'Twilight', '雪の降らない街', '東京の冬', '天使達の歌', '白雪', '海に降る雪', '光の粒',
+                    ['桜', 'Disc-1'], ['蕾', 'Disc-1'], ['未来', 'Disc-1'], ['YELL〜エール〜', 'Disc-1'], ['轍-わだち-', 'Disc-1'], ['風', 'Disc-1'], ['虹', 'Disc-1'], ['卒業', 'Disc-1'], ['風見鶏', 'Disc-1'], ['WINDING ROAD（絢香×コブクロ）', 'Disc-1'], ['卒業（SANA from TWICE×コブクロ）', 'Disc-1'], ['ここにしか咲かない花', 'Disc-1'],
+                    ['君という名の翼', 'Disc-2'], ['願いの詩', 'Disc-2'], ['太陽', 'Disc-2'], ['ダイヤモンド', 'Disc-2'], ['同じ窓から見てた空', 'Disc-2'], ['Summer rain', 'Disc-2'], ['潮騒ドライブ', 'Disc-2'], ['memory', 'Disc-2'], ['HUMMING LIFE', 'Disc-2'], ['夏の雫', 'Disc-2'], ['LOVER’S SURF', 'Disc-2'], ['晴々', 'Disc-2'],
+                    ['Million Films', 'Disc-3'], ['未来への帰り道', 'Disc-3'], ['blue blue', 'Disc-3'], ['風をみつめて', 'Disc-3'], ['NOTE', 'Disc-3'], ['コイン', 'Disc-3'], ['2人', 'Disc-3'], ['何故、旅をするのだろう', 'Disc-3'], ['FREEDOM TRAIN', 'Disc-3'], ['夕紅', 'Disc-3'], ['紙飛行機', 'Disc-3'], ['陽だまりの道', 'Disc-3'],
+                    ['赤い糸', 'Disc-4'], ['流星', 'Disc-4'], ['今、咲き誇る花たちよ', 'Disc-4'], ['STAY', 'Disc-4'], ['あなたへと続く道', 'Disc-4'], ['WHITE DAYS', 'Disc-4'], ['Twilight', 'Disc-4'], ['雪の降らない街', 'Disc-4'], ['東京の冬', 'Disc-4'], ['天使達の歌', 'Disc-4'], ['白雪', 'Disc-4'], ['海に降る雪', 'Disc-4'], ['光の粒', 'Disc-4'],
                 ],
             ],
         ];
@@ -314,21 +393,21 @@ class ImportKobukuroDiscography extends Command
             ['title' => '42.195km', 'date' => '2014-10-15', 'download' => true, 'tracks' => ['42.195km']],
             ['title' => 'Twilight', 'date' => '2014-11-08', 'download' => true, 'tracks' => ['Twilight']],
             ['title' => '奇跡', 'date' => '2015-03-04', 'tracks' => ['奇跡', 'Twilight', '信呼吸', '奇跡 (Instrumental)', 'Twilight (Instrumental)', '信呼吸 (Instrumental)']],
-            ['title' => 'hana', 'date' => '2015-04-20', 'download' => true, 'tracks' => ['hana']],
+            ['title' => 'hana', 'date' => '2015-04-20', 'download' => true, 'tracks' => ['hana', 'hana (Instrumental)']],
             ['title' => '未来', 'date' => '2015-12-16', 'tracks' => ['未来', '未来 (Instrumental)']],
             ['title' => 'SNIFF OUT!', 'date' => '2016-02-10', 'download' => true, 'tracks' => ['SNIFF OUT!']],
             ['title' => '心', 'date' => '2017-05-24', 'tracks' => ['心', 'HELLO, NEW DAY', 'LIFE', '心 (Instrumental)', 'HELLO, NEW DAY (Instrumental)', 'LIFE (Instrumental)']],
-            ['title' => 'ONE TIMES ONE', 'date' => '2018-04-11', 'tracks' => ['ONE TIMES ONE', 'バトン', '君になれ', 'ONE TIMES ONE (Instrumental)', 'バトン (Instrumental)', '君になれ (Instrumental)']],
+            ['title' => 'ONE TIMES ONE', 'date' => '2018-04-11', 'tracks' => ['ONE TIMES ONE', 'バトン', '君になれ', '君という名の翼 (LIVE from 2017.8.21 東京国際フォーラムA)', '蒼く 優しく (LIVE from 2017.8.22 東京国際フォーラムA)', '心 (LIVE from 2017.8.22 東京国際フォーラムA)', '蕾 (LIVE from 2017.10.28 東京ドーム)', 'STAGE Acoustic ver. (LIVE from 2016.6.7 シダックスカルチャーホール)', 'ONE TIMES ONE (Instrumental)', 'バトン (Instrumental)', '君になれ (Instrumental)']],
             ['title' => '晴々', 'date' => '2018-09-17', 'download' => true, 'tracks' => ['晴々']],
             ['title' => '風をみつめて', 'date' => '2018-11-07', 'tracks' => ['風をみつめて', '夏の雫', '白雪', '風をみつめて (Instrumental)', '夏の雫 (Instrumental)', '白雪 (Instrumental)']],
             ['title' => '大阪SOUL', 'date' => '2019-12-04', 'download' => true, 'tracks' => ['大阪SOUL']],
-            ['title' => '卒業', 'date' => '2020-03-18', 'tracks' => ['卒業', '大阪SOUL', '卒業 (Instrumental)', '大阪SOUL (Instrumental)']],
+            ['title' => '卒業', 'date' => '2020-03-18', 'tracks' => ['卒業', '大阪SOUL', '卒業〜合唱〜', '卒業 (Instrumental)', '大阪SOUL (Instrumental)']],
             ['title' => '灯ル祈リ', 'date' => '2020-10-14', 'tracks' => ['灯ル祈リ', 'Lullaby', '灯ル祈リ (Instrumental)', 'Lullaby (Instrumental)']],
-            ['title' => '両忘', 'date' => '2021-07-07', 'tracks' => ['両忘', '両忘 (Instrumental)']],
+            ['title' => '両忘', 'date' => '2021-07-07', 'tracks' => ['両忘', 'STAY（ツマビクウタゴエver.）', 'YOU（ツマビクウタゴエver.）', '両忘 (Instrumental)']],
             ['title' => 'Days', 'date' => '2022-03-30', 'download' => true, 'tracks' => ['Days']],
             ['title' => 'この地球の続きを', 'date' => '2022-07-19', 'download' => true, 'tracks' => ['この地球の続きを']],
-            ['title' => 'この地球の続きを', 'date' => '2022-10-19', 'tracks' => ['この地球の続きを', 'Days', 'この地球の続きを (Instrumental)', 'Days (Instrumental)']],
-            ['title' => 'エンベロープ', 'date' => '2023-03-01', 'tracks' => ['エンベロープ', 'エンベロープ (Instrumental)']],
+            ['title' => 'この地球の続きを', 'date' => '2022-10-19', 'tracks' => ['この地球の続きを', 'Days', '恋愛観測 (LIVE ver. from KOBUKURO LIVE TOUR 2011)', 'この地球の続きを (Instrumental)', 'Days (Instrumental)']],
+            ['title' => 'エンベロープ', 'date' => '2023-03-01', 'tracks' => ['エンベロープ', 'ベテルギウス (LIVE at 大阪城ホール 2022.11.01)', 'あの太陽が、この世界を照らし続けるように。 (LIVE at さいたまスーパーアリーナ 2022.11.20)', '時の足音 (LIVE at さいたまスーパーアリーナ 2022.11.20)', 'エンベロープ (Instrumental)']],
             ['title' => 'Starry Smile Story', 'date' => '2026-03-22', 'download' => true, 'tracks' => ['Starry Smile Story']],
             ['title' => '霞日和／Starry Smile Story', 'date' => '2026-07-22', 'tracks' => ['霞日和', 'Starry Smile Story', 'Message Card', '霞日和 (Instrumental)', 'Starry Smile Story (Instrumental)', 'Message Card (Instrumental)']],
         ];
