@@ -14,7 +14,11 @@ class DbAlbumController extends Controller
         $artist = Artist::findOrFail($artistId);
 
         $perPage = 10;
-        $isAjax = request()->wantsJson() || request()->ajax();
+        // wantsJson()（Acceptヘッダー依存）だけで判定すると、ブラウザの「戻る」操作が
+        // 過去のfetchリクエストのヘッダーをそのまま再現してしまうケースで、通常の
+        // ページ遷移をAJAXと誤判定してJSONを返してしまう事故が起きる。
+        // フロント側が明示的に付与するクエリパラメータを正とする
+        $isAjax = request()->query('ajax') === '1';
         $page = max(1, (int) request('page', 1));
 
         $query = DbAlbum::where('artist_id', $artistId)->orderBy('date', 'asc');

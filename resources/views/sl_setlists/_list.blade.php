@@ -15,14 +15,14 @@
                 <td class="sp">
                     <a href="{{ url('/setlists/artists', $setlist->artist_id) }}">{{ $setlist->artist->name }}</a>
                     /
-                    <a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a>
+                    <a href="{{ route('setlists.show', $setlist->id) }}" data-turbo="true">{{ $setlist->title }}</a>
                 </td>
                 <td class="pc td_artist">
                     <a href="{{ url('/setlists/artists', $setlist->artist_id) }}">{{ $setlist->artist->name }}</a>
                 </td>
             @else
                 <td class="sp">
-                    <a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a>
+                    <a href="{{ route('setlists.show', $setlist->id) }}" data-turbo="true">{{ $setlist->title }}</a>
                 </td>
                 <td class="pc"></td>
             @endif
@@ -30,14 +30,14 @@
         @if (request('type') == 2)
             <td class="pc"></td>
             <td class="sp">
-                <a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a>
+                <a href="{{ route('setlists.show', $setlist->id) }}" data-turbo="true">{{ $setlist->title }}</a>
             </td>
             <td class="pc">
-                <a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a>
+                <a href="{{ route('setlists.show', $setlist->id) }}" data-turbo="true">{{ $setlist->title }}</a>
             </td>
         @else
             <td class="pc">
-                <a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a>
+                <a href="{{ route('setlists.show', $setlist->id) }}" data-turbo="true">{{ $setlist->title }}</a>
             </td>
         @endif
         <td class="pc">

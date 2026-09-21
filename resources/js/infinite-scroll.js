@@ -142,7 +142,16 @@ class InfiniteScroll {
         this.loadingEl.style.display = 'block';
 
         try {
-            const response = await fetch(this.nextPageUrl, {
+            // AJAX判定をヘッダーだけに頼らず、専用クエリパラメータでも明示する。
+            // ブラウザの「戻る」操作が過去のfetchリクエスト（Acceptヘッダー等）を
+            // そのまま再現してしまうケースがあり、ヘッダーのみの判定だとサーバー側が
+            // 通常のページ遷移をAJAXと誤判定してJSONをそのまま表示してしまう事故が起きた。
+            // このURLはhistory.replaceStateには使わない（あくまでfetch専用）ため、
+            // ブラウザのアドレスバー・履歴にajax=1が残ることはない
+            const fetchUrl = new URL(this.nextPageUrl, window.location.href);
+            fetchUrl.searchParams.set('ajax', '1');
+
+            const response = await fetch(fetchUrl, {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
                     'Accept': 'application/json'
@@ -179,6 +188,7 @@ class InfiniteScroll {
             if (data.current_page) {
                 const url = new URL(window.location.href);
                 url.searchParams.set('page', data.current_page);
+                url.searchParams.delete('ajax');
                 history.replaceState(history.state, '', url);
             }
 

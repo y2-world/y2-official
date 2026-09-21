@@ -164,7 +164,7 @@
 @section('page-script')
     <script src="{{ asset('/js/infinite-scroll.js?v=20260921') }}"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('turbo:load', function() {
             console.log('DOM loaded');
             console.log('Has more pages: {{ $pastSetlists->hasMorePages() ? "true" : "false" }}');
             console.log('InfiniteScroll class available:', typeof InfiniteScroll);
@@ -181,9 +181,11 @@
                     nextPageUrl: nextUrl
                 });
                 console.log('InfiniteScroll instance:', infiniteScroll);
-            @else
+            @elseif(!($accumulated && $pastSetlists->currentPage() > 1))
+                {{-- 累積取得（ブラウザの戻るボタン対応）で最後のページまで読み終えた場合は、
+                     元々スクロールで表示していたのと同じ内容なのでページネーションは不要。
+                     本当に1ページしかない（そもそもスクロールが発生しない）場合のみ表示する --}}
                 console.log('No more pages, skipping InfiniteScroll initialization');
-                // ページがない場合はページネーションを表示
                 const pagination = document.getElementById('pagination-links');
                 if (pagination) {
                     pagination.style.display = 'block';

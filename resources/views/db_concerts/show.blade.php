@@ -135,7 +135,7 @@
 
 @section('page-script')
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('turbo:load', function () {
     document.querySelectorAll('.setlist-row').forEach(function (row) {
         if (row.scrollWidth > row.clientWidth) {
             row.style.justifyContent = 'flex-start';

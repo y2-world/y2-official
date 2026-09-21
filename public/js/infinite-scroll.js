@@ -151,8 +151,14 @@ var InfiniteScroll = /*#__PURE__*/function () {
               this.loading = true;
               this.loadingEl.style.display = 'block';
               _context.prev = 5;
+              // AJAX判定をヘッダーだけに頼らず、専用クエリパラメータでも明示する。
+              // ブラウザの「戻る」操作が過去のfetchリクエストのヘッダーをそのまま
+              // 再現してしまうケースがあり、通常のページ遷移をAJAXと誤判定して
+              // JSONをそのまま表示してしまう事故が起きた
+              this._fetchUrl = new URL(this.nextPageUrl, window.location.href);
+              this._fetchUrl.searchParams.set('ajax', '1');
               _context.next = 8;
-              return fetch(this.nextPageUrl, {
+              return fetch(this._fetchUrl, {
                 headers: {
                   'X-Requested-With': 'XMLHttpRequest',
                   'Accept': 'application/json'
@@ -194,6 +200,7 @@ var InfiniteScroll = /*#__PURE__*/function () {
               if (data.current_page) {
                 var _url = new URL(window.location.href);
                 _url.searchParams.set('page', data.current_page);
+                _url.searchParams.delete('ajax');
                 history.replaceState(history.state, '', _url);
               }
               _context.next = 24;
