@@ -188,4 +188,60 @@ class DbSong extends Model
             ->sortByDesc(fn ($setlistModel) => optional($setlistModel->tour)->date1)
             ->values();
     }
+
+    // この曲（db_songs.id）に紐づくSlSong（複数の可能性あり）を演奏している
+    // SlSetlist（セットリストサイト側の全記録＝運営者本人のライブ参加履歴）を、
+    // 日付降順で返す。SlSongController@showの抽出ロジックと同じ考え方。
+    public function performedSlSetlists()
+    {
+        $slSongIds = $this->slSongs()->pluck('id')->map(fn ($id) => (string) $id)->all();
+        $title = $this->title;
+
+        if (empty($slSongIds)) {
+            return collect();
+        }
+
+        $expandFes = function ($items) {
+            $result = [];
+            foreach ($items as $item) {
+                if (($item['type'] ?? 'song') === 'block') {
+                    foreach ($item['songs'] ?? [] as $s) {
+                        $result[] = $s;
+                    }
+                } else {
+                    $result[] = $item;
+                }
+            }
+            return $result;
+        };
+
+        return SlSetlist::all()
+            ->filter(function ($setlist) use ($slSongIds, $title, $expandFes) {
+                $allLists = array_merge(
+                    $setlist->setlist ?? [],
+                    $setlist->encore ?? [],
+                    $expandFes($setlist->fes_setlist ?? []),
+                    $expandFes($setlist->fes_encore ?? [])
+                );
+
+                foreach ($allLists as $entry) {
+                    $song = $entry['song'] ?? null;
+                    if ($song === null) {
+                        continue;
+                    }
+                    if (is_numeric($song) && in_array((string) (int) $song, $slSongIds, true)) {
+                        return true;
+                    }
+                    if (!is_numeric($song)) {
+                        $entryTitle = preg_replace('/\s*\[[^\]]+\]/u', '', $song);
+                        if (trim($entryTitle) === $title) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            })
+            ->sortByDesc('date')
+            ->values();
+    }
 }

@@ -9,6 +9,7 @@ use App\Models\DbSingle;
 use App\Models\DbConcert;
 use Illuminate\Http\Request;
 use App\Models\DbSetlist;
+use Illuminate\Support\Facades\Auth;
 
 class DbSongController extends Controller
 {
@@ -109,6 +110,36 @@ class DbSongController extends Controller
         $next = DbSong::where('artist_id', $songs->artist_id)->where('sort_order', '>', $songs->sort_order)->orderBy('sort_order')->first();
         $songNumber = DbSong::where('artist_id', $songs->artist_id)->where('sort_order', '<=', $songs->sort_order)->count();
 
+        // 「Live Performances」の隣に出す2つ目のタブの種類を、認証不要の統計ページ（/stats配下）
+        // 経由の遷移かどうかで切り替える。/stats経由なら誰でも見られる「Yukiの参加履歴」
+        // （セットリストサイト全体＝運営者本人が行ったライブの記録）、それ以外はログイン中の
+        // 外部ユーザー本人の参戦記録（マイページの参加履歴と同じデータ）を出す。
+        $referer = request()->headers->get('referer', '');
+        $fromStats = $referer && parse_url($referer, PHP_URL_PATH) && str_starts_with(parse_url($referer, PHP_URL_PATH), '/stats');
+
+        $secondTab = null; // null=タブなし, 'yuki'=Yukiの参加履歴, 'mine'=自分の参加履歴
+        $secondTabSetlists = collect();
+
+        if ($fromStats) {
+            $secondTab = 'yuki';
+            $secondTabSetlists = $songs->performedSlSetlists();
+        } elseif (Auth::guard('external')->check()) {
+            $secondTab = 'mine';
+            $matchingSetlistIds = $tourSetlists->pluck('id');
+            // $tours（Live Performances）と同じ形（DbConcertのコレクション）に揃えるため、
+            // attendances -> dbSetlist -> tour の順にたどる
+            $secondTabSetlists = Auth::guard('external')->user()
+                ->attendances()
+                ->whereIn('db_setlist_id', $matchingSetlistIds)
+                ->with('dbSetlist.tour')
+                ->get()
+                ->pluck('dbSetlist.tour')
+                ->filter()
+                ->unique('id')
+                ->sortByDesc(fn ($tour) => $tour->date1)
+                ->values();
+        }
+
         return view('db_songs.show', compact(
             'songs',
             'allSongs',
@@ -118,7 +149,9 @@ class DbSongController extends Controller
             'next',
             'tourSetlists',
             'tours',
-            'songNumber'
+            'songNumber',
+            'secondTab',
+            'secondTabSetlists'
         ));
     }
 
