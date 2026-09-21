@@ -12,14 +12,39 @@ class DbAlbumController extends Controller
     public function index($artistId)
     {
         $artist = Artist::findOrFail($artistId);
-        $albums = DbAlbum::where('artist_id', $artistId)
-            ->orderBy('date', 'asc')
-            ->paginate(10);
+
+        $perPage = 10;
+        $isAjax = request()->wantsJson() || request()->ajax();
+        $page = max(1, (int) request('page', 1));
+
+        $query = DbAlbum::where('artist_id', $artistId)->orderBy('date', 'asc');
+        $accumulated = !$isAjax;
+
+        if ($isAjax) {
+            // スクロールでの追加読み込み: 従来通りそのページ分のみ返す
+            $albums = $query->paginate($perPage);
+        } else {
+            // 通常のページロード（直接アクセス・リロード・ブラウザの戻るボタン含む）:
+            // 1ページ目からこのページまでをまとめて返す。無限スクロールで読み進めた際に
+            // history.replaceStateでURLのpageを更新しておくことで、戻るボタンで
+            // 該当ページのURLに戻ったときにも読み込み済みだった分がまとめて表示され、
+            // 先頭に戻ってしまう問題を避けられる
+            $total = (clone $query)->count();
+            $items = $query->take($page * $perPage)->get();
+            $albums = new \Illuminate\Pagination\LengthAwarePaginator(
+                $items,
+                $total,
+                $perPage,
+                $page,
+                ['path' => request()->url(), 'query' => request()->query()]
+            );
+        }
+
         $totalCount = $albums->total();
         $bios = $artist->years;
 
-        if (request()->wantsJson() || request()->ajax()) {
-            $html = view('db_albums._list', compact('albums', 'totalCount'))->render();
+        if ($isAjax) {
+            $html = view('db_albums._list', compact('albums', 'totalCount', 'accumulated'))->render();
             return response()->json([
                 'html' => $html,
                 'next_page_url' => $albums->nextPageUrl(),
@@ -28,7 +53,7 @@ class DbAlbumController extends Controller
             ]);
         }
 
-        return view('db_albums.index', compact('albums', 'bios', 'totalCount', 'artist'));
+        return view('db_albums.index', compact('albums', 'bios', 'totalCount', 'artist', 'accumulated'));
     }
 
     public function show($id)

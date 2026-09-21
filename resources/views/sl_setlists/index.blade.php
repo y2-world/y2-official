@@ -151,7 +151,7 @@
                 </tr>
             </thead>
             <tbody id="setlists-container">
-                @include('sl_setlists._list', ['setlists' => $pastSetlists, 'totalCount' => $pastTotalCount, 'type' => $type])
+                @include('sl_setlists._list', ['setlists' => $pastSetlists, 'totalCount' => $pastTotalCount, 'type' => $type, 'accumulated' => $accumulated])
             </tbody>
         </table>
         <div class="pagination" id="pagination-links" style="display: none;">
@@ -162,8 +162,7 @@
 @endsection
 
 @section('page-script')
-    <script src="{{ asset('/js/infinite-scroll.js?v=20251110e') }}"></script>
-    <script src="{{ asset('/js/infinite-scroll-restore.js?v=20260921') }}"></script>
+    <script src="{{ asset('/js/infinite-scroll.js?v=20260921') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM loaded');

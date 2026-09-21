@@ -73,8 +73,7 @@
 @endsection
 
 @section('page-script')
-    <script src="{{ asset('/js/infinite-scroll.js?v=20251101') }}"></script>
-    <script src="{{ asset('/js/infinite-scroll-restore.js?v=20260921') }}"></script>
+    <script src="{{ asset('/js/infinite-scroll.js?v=20260921') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             @if($albums->hasMorePages())

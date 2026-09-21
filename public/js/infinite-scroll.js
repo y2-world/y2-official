@@ -20,6 +20,14 @@ var InfiniteScroll = /*#__PURE__*/function () {
   function InfiniteScroll(options) {
     _classCallCheck(this, InfiniteScroll);
     console.log('InfiniteScroll initialized with options:', options);
+
+    // ブラウザの「戻る/進む」時、そのページで最後にいたスクロール位置を自動復元する
+    // 標準機能を明示的に有効化しておく（history.replaceStateを使うため、一部ブラウザで
+    // デフォルトがmanualに変わってしまう可能性への保険）
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'auto';
+    }
+
     this.container = document.querySelector(options.container);
     this.nextPageUrl = options.nextPageUrl;
     this.loading = false;
@@ -178,6 +186,16 @@ var InfiniteScroll = /*#__PURE__*/function () {
                 this.nextPageUrl = data.next_page_url;
               }
               this.hasMore = data.next_page_url !== null;
+
+              // 現在表示されている最終ページ番号をURLに反映しておく（履歴は増やさずreplace）。
+              // これにより、詳細ページ等に遷移してブラウザの「戻る」で戻ってきたとき、
+              // サーバー側がこのpage番号までの全件をまとめて返すため、読み込み済みだった分が
+              // 保持された状態でロードされる
+              if (data.current_page) {
+                var _url = new URL(window.location.href);
+                _url.searchParams.set('page', data.current_page);
+                history.replaceState(history.state, '', _url);
+              }
               _context.next = 24;
               break;
             case 21:

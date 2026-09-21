@@ -31,11 +31,36 @@ class DbConcertController extends Controller
         }
 
         $bios = $artist->years;
-        $tours = $liveQuery->paginate(10);
+
+        $perPage = 10;
+        $isAjax = request()->wantsJson() || request()->ajax();
+        $page = max(1, (int) request('page', 1));
+        $accumulated = !$isAjax;
+
+        if ($isAjax) {
+            // スクロールでの追加読み込み: 従来通りそのページ分のみ返す
+            $tours = $liveQuery->paginate($perPage);
+        } else {
+            // 通常のページロード（直接アクセス・リロード・ブラウザの戻るボタン含む）:
+            // 1ページ目からこのページまでをまとめて返す。無限スクロールで読み進めた際に
+            // history.replaceStateでURLのpageを更新しておくことで、戻るボタンで
+            // 該当ページのURLに戻ったときにも読み込み済みだった分がまとめて表示され、
+            // 先頭に戻ってしまう問題を避けられる
+            $total = (clone $liveQuery)->count();
+            $items = $liveQuery->take($page * $perPage)->get();
+            $tours = new \Illuminate\Pagination\LengthAwarePaginator(
+                $items,
+                $total,
+                $perPage,
+                $page,
+                ['path' => request()->url(), 'query' => request()->query()]
+            );
+        }
+
         $totalCount = $tours->total();
 
-        if (request()->wantsJson() || request()->ajax()) {
-            $html = view('db_concerts._list', compact('tours', 'totalCount', 'type'))->render();
+        if ($isAjax) {
+            $html = view('db_concerts._list', compact('tours', 'totalCount', 'type', 'accumulated'))->render();
             return response()->json([
                 'html' => $html,
                 'next_page_url' => $tours->appends(['type' => $type])->nextPageUrl(),
@@ -44,7 +69,7 @@ class DbConcertController extends Controller
             ]);
         }
 
-        return view('db_concerts.index', compact('tours', 'bios', 'type', 'totalCount', 'artist'));
+        return view('db_concerts.index', compact('tours', 'bios', 'type', 'totalCount', 'artist', 'accumulated'));
     }
 
     public function show($id)

@@ -1,6 +1,10 @@
 @php
-    // 現在ページでの開始番号を計算（逆順用）
-    $startNumber = $totalCount - ($setlists->currentPage() - 1) * $setlists->perPage();
+    // 現在ページでの開始番号を計算（逆順用）。
+    // ブラウザの戻る対応で1〜Nページ目をまとめて渡す場合（accumulated）は、
+    // itemsの先頭が常に全体の1番目（totalCount番）になる
+    $startNumber = ($accumulated ?? false)
+        ? $totalCount
+        : $totalCount - ($setlists->currentPage() - 1) * $setlists->perPage();
 @endphp
 @foreach ($setlists as $index => $setlist)
     <tr>

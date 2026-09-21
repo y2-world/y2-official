@@ -1,19 +1,20 @@
 /**
  * Infinite Scroll Implementation
  * ページネーション付きのページをインフィニティスクロールに変換
- *
- * 注意: ローカル環境のnode_modules（webpack5 / babel設定なし）でnpm run productionを
- * 実行すると、public/js/infinite-scroll.jsが本来のES5トランスパイル済みビルドとは
- * 異なる（正しくトランスパイルされない）成果物で上書きされてしまうことを確認済み。
- * そのため、このファイルへの変更（スクロール位置復元機能）は、正しいビルド環境が
- * 整うまでの間、public/js/infinite-scroll-restore.js に同等のロジックを手動で
- * 追記する形で反映している。正しくビルドできる環境が整い次第、このファイルから
- * public/js/infinite-scroll.js を再ビルドし、infinite-scroll-restore.js は削除すること。
  */
 
 class InfiniteScroll {
     constructor(options) {
         console.log('InfiniteScroll initialized with options:', options);
+
+        // ブラウザの「戻る/進む」時、そのページで最後にいたスクロール位置を自動復元する
+        // 標準機能を明示的に有効化しておく（history.replaceStateを使うため、一部ブラウザで
+        // デフォルトがmanualに変わってしまう可能性への保険）。
+        // これとURLへのpage反映（loadMore内）が揃って初めて、コンテンツの高さが復元先の
+        // スクロール位置に足りる状態でページが再読み込みされ、位置復元が機能する
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'auto';
+        }
 
         this.container = document.querySelector(options.container);
         this.nextPageUrl = options.nextPageUrl;
@@ -21,12 +22,6 @@ class InfiniteScroll {
         this.hasMore = true;
         this.debugMode = false; // デバッグモード無効
         this.debugEl = null;
-
-        // 詳細ページ等に遷移してブラウザバックで戻った際、読み込み済みページ数と
-        // スクロール位置を復元するためのsessionStorageキー（URLのpathごとに分ける）
-        this.storageKey = 'infiniteScroll:' + window.location.pathname;
-        this.loadedPages = 1;
-        this.restoring = false;
 
         if (!this.container) {
             console.error('Container not found:', options.container);
@@ -59,7 +54,6 @@ class InfiniteScroll {
         // スクロールイベントをリスン
         const scrollHandler = () => {
             requestAnimationFrame(() => this.handleScroll());
-            this.saveState();
         };
 
         window.addEventListener('scroll', scrollHandler, { passive: true });
@@ -68,56 +62,11 @@ class InfiniteScroll {
         // ローディングインジケーターを作成
         this.createLoadingIndicator();
 
-        // 保存された読み込み状態があれば、そこまで先読みしてからスクロール位置を復元する。
-        // なければ通常の初回チェックのみ行う
-        this.restoreState().then(() => {
-            // 初回チェック
-            setTimeout(() => this.handleScroll(), 200);
-        });
+        // 初回チェック
+        setTimeout(() => this.handleScroll(), 200);
 
         // モバイル用の定期チェック（1秒ごと）
         setInterval(() => this.handleScroll(), 1000);
-
-        // ページを離れる直前にも保存しておく（詳細ページへのリンククリック等）
-        window.addEventListener('pagehide', () => this.saveState());
-    }
-
-    saveState() {
-        try {
-            sessionStorage.setItem(this.storageKey, JSON.stringify({
-                loadedPages: this.loadedPages,
-                scrollY: window.pageYOffset || document.documentElement.scrollTop || 0,
-            }));
-        } catch (e) {
-            // プライベートブラウジング等でsessionStorageが使えない場合は諦める
-        }
-    }
-
-    async restoreState() {
-        let saved = null;
-        try {
-            const raw = sessionStorage.getItem(this.storageKey);
-            if (raw) saved = JSON.parse(raw);
-        } catch (e) {
-            return;
-        }
-
-        if (!saved || !saved.loadedPages || saved.loadedPages <= 1) {
-            return;
-        }
-
-        this.restoring = true;
-        const targetPages = saved.loadedPages;
-        while (this.loadedPages < targetPages && this.hasMore) {
-            await this.loadMore();
-        }
-        this.restoring = false;
-
-        // コンテンツの高さが確定してからでないと正しい位置にスクロールできないため、
-        // 描画を1フレーム待ってからスクロールする
-        requestAnimationFrame(() => {
-            window.scrollTo(0, saved.scrollY || 0);
-        });
     }
 
     createLoadingIndicator() {
@@ -190,11 +139,7 @@ class InfiniteScroll {
         console.log('Loading more from:', this.nextPageUrl);
 
         this.loading = true;
-        // スクロール位置復元のための先読み中は、ローディング表示を出さない
-        // （一瞬で何度も表示・非表示が切り替わってチラつくのを避ける）
-        if (!this.restoring) {
-            this.loadingEl.style.display = 'block';
-        }
+        this.loadingEl.style.display = 'block';
 
         try {
             const response = await fetch(this.nextPageUrl, {
@@ -219,8 +164,6 @@ class InfiniteScroll {
                 this.container.insertAdjacentHTML('beforeend', data.html);
             }
 
-            this.loadedPages += 1;
-
             // 次のページURLを更新（HTTPSに変換）
             if (data.next_page_url && window.location.protocol === 'https:') {
                 this.nextPageUrl = data.next_page_url.replace('http://', 'https://');
@@ -228,6 +171,16 @@ class InfiniteScroll {
                 this.nextPageUrl = data.next_page_url;
             }
             this.hasMore = data.next_page_url !== null;
+
+            // 現在表示されている最終ページ番号をURLに反映しておく（履歴は増やさずreplace）。
+            // これにより、詳細ページ等に遷移してブラウザの「戻る」で戻ってきたとき、
+            // サーバー側がこのpage番号までの全件をまとめて返すため、読み込み済みだった分が
+            // 保持された状態でロードされる（スクロール位置自体はブラウザ標準の挙動に任せる）
+            if (data.current_page) {
+                const url = new URL(window.location.href);
+                url.searchParams.set('page', data.current_page);
+                history.replaceState(history.state, '', url);
+            }
 
         } catch (error) {
             console.error('Error loading more items:', error);
