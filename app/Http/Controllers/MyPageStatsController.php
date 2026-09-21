@@ -327,7 +327,7 @@ class MyPageStatsController extends Controller
         $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds, $fesOnlyDbSongIds) {
             return [
                 'song_id' => $song->id,
-                'song_url' => route('songs.show', $song->id),
+                'song_url' => route('mypage.attendances.index', ['song_id' => 'official-' . $song->id]),
                 'title' => $song->title,
                 'done' => isset($playedDbSongIds[$song->id]),
                 'never_performed' => !isset($everPerformedDbSongIds[$song->id]),

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SlSong;
 use App\Models\SlSetlist;
+use App\Models\DbSong;
 use Illuminate\Http\Request;
 
 class SlSongController extends Controller
@@ -14,7 +15,7 @@ class SlSongController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $song = SlSong::findOrFail($id);
         $title = $song->title;
@@ -77,12 +78,46 @@ class SlSongController extends Controller
         ->sortByDesc('date')
         ->values();
 
-        // 前後のSetlistSong
+        // このページは常に2タブ構成：
+        // 「Yuki's Live Attendances」＝上記$setlists（セットリストサイト全体の記録、常に表示・
+        // 常にデフォルトタブ）。「Live Performances」＝db_song_id経由でDbSong（公式データベース）
+        // に変換した上での実際の演奏記録（DbSetlist）。このページは認証不要でログイン中ユーザー
+        // 本人のMy Live Attendancesは出さない（それはmypage配下の専用ページの役割）。
+        // db_song_id未紐付けの曲はLive Performances自体が存在しないため、そのタブを出さない。
+        $dbSong = $song->db_song_id ? $song->dbSong : null;
+        $performanceTours = $dbSong ? $dbSong->performedTourSetlists()->pluck('tour')->filter()->unique('id')->values() : collect();
+        $hasLivePerformancesTab = (bool) $dbSong;
+
+        // Previous/Nextで選んだタブをキープしたまま移動できるよう、?tab=performances をURLで
+        // 引き継ぐ。Live Performancesタブが無い曲では常にmine（唯一のタブ）。
+        $initialTab = $hasLivePerformancesTab && $request->query('tab') === 'performances' ? 'performances' : 'mine';
+
+        // 前後のSetlistSong（Yuki's Live Attendancesタブ用：sl_songs.id順）
         $previous = SlSong::where('artist_id', $song->artist_id)->where('id', '<', $song->id)->orderBy('id', 'desc')->first();
         $next = SlSong::where('artist_id', $song->artist_id)->where('id', '>', $song->id)->orderBy('id')->first();
 
-        // アーティストごとのナンバリング
+        // アーティストごとのナンバリング（Yuki's Live Attendancesタブ用：sl_songs.id順）
         $songNumber = SlSong::where('artist_id', $song->artist_id)->where('id', '<=', $song->id)->count();
+
+        // Live Performancesタブ用：DbSong詳細ページと同じ、アーティスト内のsort_order順位・前後の曲。
+        // 前後の曲があるかどうかの判定は常にDbSong基準（こちらが本来の並び順）で行う。
+        // リンク先は選んだタブの中に留まれるよう、対応するSlSong（db_song_idで逆引き、複数あれば
+        // 最初の1件）を優先し、そのDbSongがまだSlSongに紐付いていない場合はDbSong詳細ページへ
+        // フォールバックする（ボタン自体はDbSongが存在する限り出す）。
+        $performanceSongNumber = null;
+        $performancePreviousDbSong = null;
+        $performancePreviousSlSong = null;
+        $performanceNextDbSong = null;
+        $performanceNextSlSong = null;
+        if ($dbSong) {
+            $performanceSongNumber = DbSong::where('artist_id', $dbSong->artist_id)->where('sort_order', '<=', $dbSong->sort_order)->count();
+
+            $performancePreviousDbSong = DbSong::where('artist_id', $dbSong->artist_id)->where('sort_order', '<', $dbSong->sort_order)->orderBy('sort_order', 'desc')->first();
+            $performancePreviousSlSong = $performancePreviousDbSong ? $performancePreviousDbSong->slSongs()->first() : null;
+
+            $performanceNextDbSong = DbSong::where('artist_id', $dbSong->artist_id)->where('sort_order', '>', $dbSong->sort_order)->orderBy('sort_order')->first();
+            $performanceNextSlSong = $performanceNextDbSong ? $performanceNextDbSong->slSongs()->first() : null;
+        }
 
         // 検索候補（曲名 + アーティスト名）
         $suggestions = SlSong::query()
@@ -108,7 +143,15 @@ class SlSongController extends Controller
             'suggestions',
             'previous',
             'next',
-            'songNumber'
+            'songNumber',
+            'performanceTours',
+            'performanceSongNumber',
+            'performancePreviousDbSong',
+            'performancePreviousSlSong',
+            'performanceNextDbSong',
+            'performanceNextSlSong',
+            'hasLivePerformancesTab',
+            'initialTab'
         ));
     }
 

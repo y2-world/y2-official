@@ -17,7 +17,14 @@
             <p class="database-subtitle" style="">
                 <a href="{{ route('database.artist', $songs->artist_id) }}">{{ $songs->artist->name }}</a>
             </p>
-            <p class="database-subtitle" style=""># {{ $songNumber }}</p>
+            {{-- #（曲番）は選んでいるタブによって意味が変わる：Live Performances中はアーティスト内の
+                 sort_order順位（常に存在、初期表示）。2つ目のタブ（未ログインなら存在しない）中は、
+                 'yuki'なら対応するSlSongのid順位（まだSlSongに紐付いていなければ非表示）、
+                 'mine'なら自分の参加記録内での初登場順（まだ聴いた記録がなければ非表示）。 --}}
+            <p class="database-subtitle song-number-performances" style="{{ $initialTab === 'mine' ? 'display: none;' : '' }}"># {{ $songNumber }}</p>
+            @if ($secondTabSongNumber)
+                <p class="database-subtitle song-number-second" style="{{ $initialTab === 'mine' ? '' : 'display: none;' }}"># {{ $secondTabSongNumber }}</p>
+            @endif
             <h1 class="database-title sp" style="margin-bottom: 4px; cursor: pointer;"
                 onclick="document.getElementById('spSearchFormSongs').style.display='block'; document.querySelector('.database-title.sp').style.display='none';">
                 {{ $songs->title }}
@@ -68,116 +75,99 @@
         </div>
     </div>
 
-    <div class="container-lg database-year-content">
+    <div class="container database-year-content">
+        <div class="row justify-content-center">
+            <div class="col-xl-9">
 
-        @if (!$tours->isEmpty() || $secondTab)
-            @if ($secondTab)
-                {{-- secondTabがある場合のみ切り替えタブを表示する。
-                     'yuki': 認証不要（/stats経由）、セットリストサイト全体＝運営者本人の参加履歴
-                     'mine': ログイン中の外部ユーザー本人の参戦記録（マイページと同じデータ） --}}
-                <div class="song-performance-tabs" style="display: flex; gap: 8px; margin-bottom: 15px;">
-                    <button type="button" class="song-performance-tab-btn is-active" data-tab-target="live-performances-panel"
-                        style="padding: 8px 16px; border: none; border-radius: 20px; background: #667eea; color: white; font-weight: 500; cursor: pointer;">
-                        Live Performances
-                    </button>
-                    <button type="button" class="song-performance-tab-btn" data-tab-target="second-tab-panel"
-                        style="padding: 8px 16px; border: 1px solid #667eea; border-radius: 20px; background: white; color: #667eea; font-weight: 500; cursor: pointer;">
-                        {{ $secondTab === 'yuki' ? 'Yukiの参加履歴' : 'My Live Attendances' }}
-                    </button>
-                </div>
-            @else
-                <h3 style="margin-top: 0; margin-bottom: 15px;">Live Performances</h3>
-            @endif
-
-            <div id="live-performances-panel" @if($secondTab) style="display: block;" @endif>
-                @if ($tours->isEmpty())
-                    <p style="color: #718096;">演奏記録がありません。</p>
-                @else
-                    <table class="table table-striped count">
-                        <thead>
-                            <tr>
-                                <th class="mobile">#</th>
-                                <th class="mobile">開催日</th>
-                                <th class="mobile">タイトル</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($tours as $tour)
-                                <tr>
-                                    <td></td>
-                                    @if (isset($tour->date1) && isset($tour->date2))
-                                        <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }} -
-                                            {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
-                                    @elseif(isset($tour->date1) && !isset($tour->date2))
-                                        <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
-                                    @endif
-                                    <td class="td_title"><a href="{{ route('live.show', $tour->id) }}">{{ $tour->title }}</a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                @endif
+        <style>
+            @media (max-width: 768px) {
+                .song-performance-tabs {
+                    justify-content: center;
+                }
+            }
+        </style>
+        @if ($secondTab)
+            <div class="song-performance-tabs" style="display: flex; gap: 8px; margin-bottom: 15px;">
+                <button type="button" class="song-performance-tab-btn @if($initialTab === 'performances') is-active @endif" data-tab-target="live-performances-panel"
+                    style="padding: 8px 16px; border-radius: 20px; font-weight: 500; cursor: pointer; {{ $initialTab === 'performances' ? 'border: none; background: #667eea; color: white;' : 'border: 1px solid #667eea; background: white; color: #667eea;' }}">
+                    Live Performances
+                </button>
+                <button type="button" class="song-performance-tab-btn @if($initialTab === 'mine') is-active @endif" data-tab-target="second-tab-panel"
+                    style="padding: 8px 16px; border-radius: 20px; font-weight: 500; cursor: pointer; {{ $initialTab === 'mine' ? 'border: none; background: #667eea; color: white;' : 'border: 1px solid #667eea; background: white; color: #667eea;' }}">
+                    {{ $secondTab === 'yuki' ? "Yuki's Live Attendances" : 'My Live Attendances' }}
+                </button>
             </div>
-
-            @if ($secondTab)
-                <div id="second-tab-panel" style="display: none;">
-                    @if ($secondTabSetlists->isEmpty())
-                        <p style="color: #718096;">参加記録がありません。</p>
-                    @elseif ($secondTab === 'yuki')
-                        {{-- SlSetlist: date/title/venueを直接持つ --}}
-                        <table class="table table-striped count">
-                            <thead>
-                                <tr>
-                                    <th class="mobile">#</th>
-                                    <th class="mobile">開催日</th>
-                                    <th class="mobile">タイトル</th>
-                                    <th class="pc">会場</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($secondTabSetlists as $setlist)
-                                    <tr>
-                                        <td></td>
-                                        <td class="td_date">{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
-                                        <td class="td_title"><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
-                                        <td class="pc"><a href="{{ url('/venue?keyword=' . urlencode($setlist->venue)) }}">{{ $setlist->venue }}</a></td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    @else
-                        {{-- DbConcert（tour）: date1/date2/titleを持つ。Live Performancesと同じ列構成 --}}
-                        <table class="table table-striped count">
-                            <thead>
-                                <tr>
-                                    <th class="mobile">#</th>
-                                    <th class="mobile">開催日</th>
-                                    <th class="mobile">タイトル</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($secondTabSetlists as $tour)
-                                    <tr>
-                                        <td></td>
-                                        @if (isset($tour->date1) && isset($tour->date2))
-                                            <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }} -
-                                                {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
-                                        @elseif(isset($tour->date1) && !isset($tour->date2))
-                                            <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
-                                        @endif
-                                        <td class="td_title"><a href="{{ route('live.show', $tour->id) }}">{{ $tour->title }}</a></td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    @endif
-                </div>
-            @endif
+        @else
+            <h3 style="margin-top: 0; margin-bottom: 15px;">Live Performances</h3>
         @endif
 
-        {{-- 前後リンク --}}
-        <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
+        <div id="live-performances-panel" style="display: {{ $initialTab === 'mine' ? 'none' : 'block' }};">
+            @if ($tours->isEmpty())
+                <p style="color: #718096; text-align: center;">演奏記録がありません。</p>
+            @else
+                <table class="table table-striped count">
+                    <thead>
+                        <tr>
+                            <th class="mobile">#</th>
+                            <th class="mobile">開催日</th>
+                            <th class="mobile">タイトル</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($tours as $tour)
+                            <tr>
+                                <td></td>
+                                @if (isset($tour->date1) && isset($tour->date2))
+                                    <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }} -
+                                        {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
+                                @elseif(isset($tour->date1) && !isset($tour->date2))
+                                    <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
+                                @endif
+                                <td class="td_title"><a href="{{ route('live.show', $tour->id) }}">{{ $tour->title }}</a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+        </div>
+
+        @if ($secondTab)
+        <div id="second-tab-panel" style="display: {{ $initialTab === 'mine' ? 'block' : 'none' }};">
+            @if ($secondTabSetlists->isEmpty())
+                <p style="color: #718096; text-align: center;">参加記録がありません。</p>
+            @else
+                {{-- SlSetlist: date/title/venueを直接持つ --}}
+                <table class="table table-striped count">
+                    <thead>
+                        <tr>
+                            <th class="mobile">#</th>
+                            <th class="mobile">開催日</th>
+                            <th class="mobile">タイトル</th>
+                            <th class="pc">会場</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($secondTabSetlists as $setlist)
+                            <tr>
+                                <td></td>
+                                <td class="td_date">{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
+                                <td class="td_title"><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
+                                <td class="pc"><a href="{{ url('/venue?keyword=' . urlencode($setlist->venue)) }}">{{ $setlist->venue }}</a></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+        </div>
+        @endif
+
+        {{-- 前後リンクも#と同じくタブに応じて意味が変わる。'yuki'側は対応するDbSongをsort_order順
+             にたどり、db_song_idで逆引きしたSlSongへリンクする。'mine'側は自分の参加記録内での
+             初めて聴いた順の前後のDbSongへ直接リンクする（タブを切り替えたままページ間を
+             移動できるようにするため）。未ログイン（$secondTabがnull）の場合はLive Performances
+             のみなので、常にこちら（song-nav-performances）を表示する。 --}}
+        <div class="song-nav-performances" style="display: {{ $initialTab === 'mine' ? 'none' : 'flex' }}; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
             @if (isset($previous))
                 <a href="{{ route('songs.show', $previous->id) }}" rel="prev"
                     style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
@@ -195,11 +185,32 @@
                 </a>
             @endif
         </div>
+        @if ($secondTabSongNumber)
+            <div class="song-nav-second" style="display: {{ $initialTab === 'mine' ? 'flex' : 'none' }}; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
+                @if ($secondTabPrevious)
+                    <a href="{{ $secondTab === 'mine' ? route('songs.show', ['id' => $secondTabPrevious->id, 'tab' => 'mine']) : url('/setlists/songs', $secondTabPrevious->id) }}" rel="prev"
+                        style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
+                        <i class="fa-solid fa-arrow-left" style="margin-right: 8px;"></i>
+                        Previous
+                    </a>
+                @else
+                    <div></div>
+                @endif
+                @if ($secondTabNext)
+                    <a href="{{ $secondTab === 'mine' ? route('songs.show', ['id' => $secondTabNext->id, 'tab' => 'mine']) : url('/setlists/songs', $secondTabNext->id) }}" rel="next"
+                        style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
+                        Next
+                        <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
+                    </a>
+                @endif
+            </div>
+        @endif
+            </div>
+        </div>
     </div>
 @endsection
 
 @section('page-script')
-@if ($secondTab)
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var buttons = document.querySelectorAll('.song-performance-tab-btn');
@@ -209,17 +220,43 @@
                         b.classList.remove('is-active');
                         b.style.background = 'white';
                         b.style.color = '#667eea';
+                        b.style.border = '1px solid #667eea';
                     });
                     btn.classList.add('is-active');
                     btn.style.background = '#667eea';
                     btn.style.color = 'white';
+                    btn.style.border = 'none';
 
                     document.getElementById('live-performances-panel').style.display = 'none';
                     document.getElementById('second-tab-panel').style.display = 'none';
                     document.getElementById(btn.dataset.tabTarget).style.display = 'block';
+
+                    // #（曲番）とPrevious/Nextも選んだタブに応じて意味が変わるため、
+                    // 同じタイミングで表示を切り替える。2つ目のタブの種類（mine/yuki）は
+                    // ログイン有無だけで決まり、ページ内では切り替わらない。
+                    var isSecond = btn.dataset.tabTarget === 'second-tab-panel';
+                    var songNumberPerformances = document.querySelector('.song-number-performances');
+                    var songNumberSecond = document.querySelector('.song-number-second');
+                    if (songNumberPerformances) songNumberPerformances.style.display = isSecond ? 'none' : '';
+                    if (songNumberSecond) songNumberSecond.style.display = isSecond ? '' : 'none';
+
+                    var navPerformances = document.querySelector('.song-nav-performances');
+                    var navSecond = document.querySelector('.song-nav-second');
+                    if (navPerformances) navPerformances.style.display = isSecond ? 'none' : 'flex';
+                    if (navSecond) navSecond.style.display = isSecond ? 'flex' : 'none';
+
+                    // 2つ目のタブを見ながらPrevious/Nextで移動した先でも同じタブをキープできる
+                    // よう、?tab=mine だけURLに反映する（デフォルトはLive Performancesなので
+                    // そちらに戻す場合はクエリを外す）
+                    var url = new URL(window.location.href);
+                    if (isSecond) {
+                        url.searchParams.set('tab', 'mine');
+                    } else {
+                        url.searchParams.delete('tab');
+                    }
+                    history.replaceState(null, '', url);
                 });
             });
         });
     </script>
-@endif
 @endsection

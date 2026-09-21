@@ -4050,12 +4050,10 @@ a.setlist-card:hover {
     margin: 0 auto;
     text-align: left;
 }
-/* 「+」ボタンをクリックして開いた場合：ボタン自身は非表示になり高さが0になる。
-   リストが空のときはページ上端の.database-content padding-topだけでも十分な余白があるため、
-   ここでは追加しない（以前の16px/8pxは、空リスト時にpaddingと二重に積み上がって
-   想定より大きな空白になっていた）。 */
+/* 「+」ボタンをクリックして開いた場合：ボタン自身は非表示になり高さが0になるため、
+   直前の要素（カード一覧など）に詰まって見えないよう最小限の余白を確保する。 */
 .new-item-form--via-toggle {
-    margin-top: 0;
+    margin-top: 16px;
 }
 
 /* Timelineの投稿者フィルター用ドロップダウン。Timeline以外（Users' Databaseの一覧等）でも

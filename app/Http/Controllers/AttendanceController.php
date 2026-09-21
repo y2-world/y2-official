@@ -72,51 +72,27 @@ class AttendanceController extends Controller
         $songId = $request->input('song_id'); // "official-{id}" or "user-{id}"
         $song = null;
         $songKind = null;
-        $songNumber = null;
-        $previousSong = null;
-        $nextSong = null;
+        // My Live Attendancesタブ用：自分の参加記録を古い順に見ていったとき、そのアーティストの
+        // 曲の中で何番目に初めて登場したか。自分がまだこの曲を聴いた記録がなければnullのまま。
+        $songNumberMine = null;
+        $previousSongMine = null;
+        $nextSongMine = null;
+        // Live Performancesタブ用：DbSong/UserSong詳細ページと同じ、アーティスト内のsort_order順位
+        $songNumberPerformances = null;
+        $previousSongPerformances = null;
+        $nextSongPerformances = null;
+        $tours = collect(); // Live Performances（この曲が実際に演奏された全ライブ、参加記録に関わらず）
+        $secondTab = null; // null=タブなし, 'mine'=自分の参加履歴
         if ($songId) {
             [$songKind, $songIdValue] = $this->splitRef($songId);
             $song = $songKind === 'official' ? DbSong::find($songIdValue) : UserSong::find($songIdValue);
 
             if ($song) {
-                // 対象ユーザーの参加記録を古い順に見ていったとき、そのアーティストの曲の中で
-                // 何番目に初めて彼らのリストに登場したかを#として表示する
-                if ($songKind === 'official') {
-                    $orderedAttendances = $targetUser
-                        ->attendances()
-                        ->whereHas('dbSetlist.tour', fn ($q) => $q->where('artist_id', $song->artist_id))
-                        ->with('dbSetlist')
-                        ->orderBy('attended_date')
-                        ->get();
-                    $songKey = fn ($setlist) => array_merge($setlist->setlist ?? [], $setlist->encore ?? []);
-                } else {
-                    $orderedAttendances = $targetUser
-                        ->attendances()
-                        ->whereHas('userSetlist.concert', fn ($q) => $q->where('user_artist_id', $song->user_artist_id))
-                        ->with('userSetlist')
-                        ->orderBy('attended_date')
-                        ->get();
-                    $songKey = fn ($setlist) => array_merge($setlist->setlist ?? [], $setlist->encore ?? []);
-                }
+                $firstSeenOrder = $songKind === 'official'
+                    ? DbSong::firstSeenOrderFor($targetUser, $song->artist_id)
+                    : UserSong::firstSeenOrderFor($targetUser, $song->user_artist_id);
 
-                $firstSeenOrder = [];
-                foreach ($orderedAttendances as $attendance) {
-                    $setlist = $songKind === 'official' ? $attendance->dbSetlist : $attendance->userSetlist;
-                    if (!$setlist) {
-                        continue;
-                    }
-                    foreach ($songKey($setlist) as $s) {
-                        if (isset($s['song']) && is_numeric($s['song'])) {
-                            $sid = (int) $s['song'];
-                            if (!isset($firstSeenOrder[$sid])) {
-                                $firstSeenOrder[$sid] = count($firstSeenOrder) + 1;
-                            }
-                        }
-                    }
-                }
-
-                $songNumber = $firstSeenOrder[(int) $songIdValue] ?? null;
+                $songNumberMine = $firstSeenOrder[(int) $songIdValue] ?? null;
 
                 // 初めて聴いた順で前後の曲を求める
                 $orderedSongIds = array_keys($firstSeenOrder);
@@ -124,30 +100,48 @@ class AttendanceController extends Controller
                 $previousSongId = $currentIndex !== false && $currentIndex > 0 ? $orderedSongIds[$currentIndex - 1] : null;
                 $nextSongId = $currentIndex !== false && $currentIndex < count($orderedSongIds) - 1 ? $orderedSongIds[$currentIndex + 1] : null;
                 $songModel = $songKind === 'official' ? DbSong::class : UserSong::class;
-                $previousSong = $previousSongId ? $songModel::find($previousSongId) : null;
-                $nextSong = $nextSongId ? $songModel::find($nextSongId) : null;
-            }
+                $previousSongMine = $previousSongId ? $songModel::find($previousSongId) : null;
+                $nextSongMine = $nextSongId ? $songModel::find($nextSongId) : null;
 
-            if ($songKind === 'official') {
-                $matchingSetlistIds = DbSetlist::all()->filter(function (DbSetlist $setlist) use ($songIdValue) {
-                    foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
-                        if (isset($s['song']) && (int) $s['song'] === (int) $songIdValue) {
-                            return true;
-                        }
-                    }
-                    return false;
-                })->pluck('id');
-                $query->whereIn('db_setlist_id', $matchingSetlistIds);
-            } else {
-                $matchingSetlistIds = UserSetlist::all()->filter(function (UserSetlist $setlist) use ($songIdValue) {
-                    foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
-                        if (isset($s['song']) && (int) $s['song'] === (int) $songIdValue) {
-                            return true;
-                        }
-                    }
-                    return false;
-                })->pluck('id');
-                $query->whereIn('user_setlist_id', $matchingSetlistIds);
+                // アーティスト内のsort_order順位（DbSongController::show / UserSongController::show と同じ）
+                if ($songKind === 'official') {
+                    $songNumberPerformances = DbSong::where('artist_id', $song->artist_id)->where('sort_order', '<=', $song->sort_order)->count();
+                    $previousSongPerformances = DbSong::where('artist_id', $song->artist_id)->where('sort_order', '<', $song->sort_order)->orderBy('sort_order', 'desc')->first();
+                    $nextSongPerformances = DbSong::where('artist_id', $song->artist_id)->where('sort_order', '>', $song->sort_order)->orderBy('sort_order')->first();
+                } else {
+                    $songNumberPerformances = UserSong::where('user_artist_id', $song->user_artist_id)->where('sort_order', '<=', $song->sort_order)->count();
+                    $previousSongPerformances = UserSong::where('user_artist_id', $song->user_artist_id)->where('sort_order', '<', $song->sort_order)->orderBy('sort_order', 'desc')->first();
+                    $nextSongPerformances = UserSong::where('user_artist_id', $song->user_artist_id)->where('sort_order', '>', $song->sort_order)->orderBy('sort_order')->first();
+                }
+
+                $tourSetlists = $song->performedTourSetlists();
+
+                if ($songKind === 'official') {
+                    $tours = $tourSetlists->pluck('tour')->filter()->unique('id')->values();
+                    $query->whereIn('db_setlist_id', $tourSetlists->pluck('id'));
+                } else {
+                    $tours = $tourSetlists->pluck('concert')->filter()->unique('id')->values();
+                    $query->whereIn('user_setlist_id', $tourSetlists->pluck('id'));
+                }
+
+                // 「Live Performances」（この曲が演奏された全ライブ）と「My Live Attendances」
+                // （自分の参加記録、既存の$attendances）の2タブのうち、どちらを最初に見せるかを
+                // 遷移元によって切り替える。My Page内のセットリスト詳細（自分の参戦記録の1件）
+                // から曲名をクリックした場合は「自分の参加記録」の続きを見ている文脈なので
+                // My Live Attendancesをデフォルトにし、それ以外（Database/Stats等、曲そのものを
+                // 見に来た文脈）はLive Performancesをデフォルトにする。
+                // Previous/Nextで選んだタブをキープしたまま移動できるよう、?tab=mine が明示的に
+                // 指定されていればRefererより優先する。
+                if ($request->query('tab') === 'mine') {
+                    $secondTab = 'mine';
+                } elseif ($request->query('tab') === 'performances') {
+                    $secondTab = 'performances';
+                } else {
+                    $referer = request()->headers->get('referer', '');
+                    $refererPath = $referer ? parse_url($referer, PHP_URL_PATH) : null;
+                    $fromAttendanceShow = $refererPath && preg_match('#^/mypage/attendances/\d+$#', $refererPath);
+                    $secondTab = $fromAttendanceShow ? 'mine' : 'performances';
+                }
             }
         }
 
@@ -188,7 +182,10 @@ class AttendanceController extends Controller
             ->values();
 
         return view('mypage.attendances.index', compact(
-            'attendances', 'officialArtists', 'myArtists', 'artistId', 'song', 'songKind', 'songNumber', 'filterArtist', 'years', 'year', 'previousSong', 'nextSong', 'venue', 'targetUser'
+            'attendances', 'officialArtists', 'myArtists', 'artistId', 'song', 'songKind',
+            'songNumberMine', 'previousSongMine', 'nextSongMine',
+            'songNumberPerformances', 'previousSongPerformances', 'nextSongPerformances',
+            'filterArtist', 'years', 'year', 'venue', 'targetUser', 'tours', 'secondTab'
         ));
     }
 

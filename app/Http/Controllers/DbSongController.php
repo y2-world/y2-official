@@ -92,7 +92,7 @@ class DbSongController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $songs = DbSong::findOrFail($id);
 
@@ -110,34 +110,52 @@ class DbSongController extends Controller
         $next = DbSong::where('artist_id', $songs->artist_id)->where('sort_order', '>', $songs->sort_order)->orderBy('sort_order')->first();
         $songNumber = DbSong::where('artist_id', $songs->artist_id)->where('sort_order', '<=', $songs->sort_order)->count();
 
-        // 「Live Performances」の隣に出す2つ目のタブの種類を、認証不要の統計ページ（/stats配下）
-        // 経由の遷移かどうかで切り替える。/stats経由なら誰でも見られる「Yukiの参加履歴」
-        // （セットリストサイト全体＝運営者本人が行ったライブの記録）、それ以外はログイン中の
-        // 外部ユーザー本人の参戦記録（マイページの参加履歴と同じデータ）を出す。
-        $referer = request()->headers->get('referer', '');
-        $fromStats = $referer && parse_url($referer, PHP_URL_PATH) && str_starts_with(parse_url($referer, PHP_URL_PATH), '/stats');
-
-        $secondTab = null; // null=タブなし, 'yuki'=Yukiの参加履歴, 'mine'=自分の参加履歴
-        $secondTabSetlists = collect();
-
-        if ($fromStats) {
+        // 「Live Performances」の隣に出す2つ目のタブは、ログイン中の外部ユーザーが誰かによって
+        // 決まる（Referer等の遷移元は見ない）。Yuki本人のアカウント（管理画面でis_yuki=trueに
+        // 設定）なら「Yuki's Live Attendances」（セットリストサイト全体＝運営者本人の記録）、
+        // それ以外の一般ユーザーなら「My Live Attendances」（自分の参加記録）。未ログインの場合は
+        // どちらの参加記録も表示する意味が無いため、2つ目のタブ自体を出さずLive Performancesのみにする。
+        $externalUser = Auth::guard('external')->user();
+        if (!$externalUser) {
+            $secondTab = null;
+            $secondTabSetlists = collect();
+        } elseif ($externalUser->is_yuki) {
             $secondTab = 'yuki';
             $secondTabSetlists = $songs->performedSlSetlists();
-        } elseif (Auth::guard('external')->check()) {
+        } else {
             $secondTab = 'mine';
-            $matchingSetlistIds = $tourSetlists->pluck('id');
-            // $tours（Live Performances）と同じ形（DbConcertのコレクション）に揃えるため、
-            // attendances -> dbSetlist -> tour の順にたどる
-            $secondTabSetlists = Auth::guard('external')->user()
-                ->attendances()
-                ->whereIn('db_setlist_id', $matchingSetlistIds)
-                ->with('dbSetlist.tour')
-                ->get()
-                ->pluck('dbSetlist.tour')
-                ->filter()
-                ->unique('id')
-                ->sortByDesc(fn ($tour) => $tour->date1)
-                ->values();
+            $secondTabSetlists = $songs->myAttendedTours($tourSetlists);
+        }
+
+        // Previous/Nextで選んだタブをキープしたまま移動できるよう、?tab=mine をURLで引き継ぐ
+        // （2つ目のタブの種類自体はログイン中ユーザーで固定なので、'mine'かどうかだけ見る）
+        $initialTab = $secondTab && $request->query('tab') === 'mine' ? 'mine' : 'performances';
+
+        $secondTabSongNumber = null;
+        $secondTabPrevious = null;
+        $secondTabNext = null;
+        if ($secondTab === 'yuki') {
+            // Yuki's Live Attendancesタブ用：sl_songs側の番号・前後の曲。sl_songsにはsort_orderが
+            // 無く、id自体が聴いた順（登録順）を表すため、DbSong側のsort_orderとは辿らず、
+            // SlSong.id順で直接前後の曲を求める（db_song_idで逆引きしたSlSongが無い＝このDbSongが
+            // まだSlSongに紐付いていない場合はタブ内の曲番を出さない）。
+            $mySlSong = $songs->slSongs()->first();
+            if ($mySlSong) {
+                $secondTabSongNumber = \App\Models\SlSong::where('artist_id', $mySlSong->artist_id)->where('id', '<=', $mySlSong->id)->count();
+                $secondTabPrevious = \App\Models\SlSong::where('artist_id', $mySlSong->artist_id)->where('id', '<', $mySlSong->id)->orderBy('id', 'desc')->first();
+                $secondTabNext = \App\Models\SlSong::where('artist_id', $mySlSong->artist_id)->where('id', '>', $mySlSong->id)->orderBy('id')->first();
+            }
+        } elseif ($secondTab === 'mine') {
+            // My Live Attendancesタブ用：自分の参加記録内での初めて聴いた順・前後の曲
+            // （AttendanceController::index / UserSongController::show と同じ考え方）
+            $firstSeenOrder = DbSong::firstSeenOrderFor($externalUser, $songs->artist_id);
+            $secondTabSongNumber = $firstSeenOrder[$songs->id] ?? null;
+            $orderedSongIds = array_keys($firstSeenOrder);
+            $currentIndex = array_search($songs->id, $orderedSongIds, true);
+            $previousId = $currentIndex !== false && $currentIndex > 0 ? $orderedSongIds[$currentIndex - 1] : null;
+            $nextId = $currentIndex !== false && $currentIndex < count($orderedSongIds) - 1 ? $orderedSongIds[$currentIndex + 1] : null;
+            $secondTabPrevious = $previousId ? DbSong::find($previousId) : null;
+            $secondTabNext = $nextId ? DbSong::find($nextId) : null;
         }
 
         return view('db_songs.show', compact(
@@ -151,7 +169,11 @@ class DbSongController extends Controller
             'tours',
             'songNumber',
             'secondTab',
-            'secondTabSetlists'
+            'secondTabSetlists',
+            'secondTabSongNumber',
+            'secondTabPrevious',
+            'secondTabNext',
+            'initialTab'
         ));
     }
 

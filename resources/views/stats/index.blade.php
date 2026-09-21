@@ -189,6 +189,13 @@
                                     <i class="fas fa-stamp"></i> Live Stamp Book
                                 </h2>
                             </div>
+                            <style>
+                                @media (max-width: 768px) {
+                                    .stamp-book-link-wrapper {
+                                        justify-content: center !important;
+                                    }
+                                }
+                            </style>
                             <div class="stamp-book-link-wrapper" style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-start;">
                                 @foreach ($stampBookArtists as $artistStat)
                                     <a href="{{ route('stats.stamps', $artistStat['id']) }}" class="stamp-book-link">

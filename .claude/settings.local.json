@@ -7,7 +7,27 @@
       "Bash(git add *)",
       "Bash(git commit *)",
       "Bash(git push *)",
-      "Bash(curl -s \"https://y2-world.com/database/artists/3/biography\")"
+      "Bash(curl -s \"https://y2-world.com/database/artists/3/biography\")",
+      "Bash(grep -n 'protected array $data\\\\|public array $data\\\\|\\\\$this->data' vendor/filament/filament/src/Resources/Pages/EditRecord.php)",
+      "Bash(heroku run 'php artisan tinker --execute=\" *)",
+      "Bash(grep -v \"Deprecated\\\\|^Running\\\\|^\\\\\\\\\\\\$\\\\|starting\\\\|connecting\\\\|up, run\\\\|^echo\\\\|^foreach\")",
+      "Bash(docker exec y2-official-app php -r ' *)",
+      "Bash(xargs sed -i '' \"s/'label' => 'My Page', 'url' => route\\('mypage.stats'\\)/'label' => 'My Page', 'url' => route\\('mypage.index'\\)/g\")",
+      "Bash(docker run --rm mysql:8.0 mysql -h t07cxyau6qg7o5nz.cbetxkdyhwsb.us-east-1.rds.amazonaws.com -P 3306 -u mr1j2wjabgoy8xjd -pdjz3rhjoy7c30n7p gz7xhcvdvs4ffzsd -e ' *)",
+      "Bash(docker exec *)",
+      "Bash(heroku config:get SESSION_LIFETIME -a y2-official)",
+      "Bash(heroku config:get SESSION_DRIVER -a y2-official)",
+      "Bash(docker exec y2-official-app php artisan tinker '--execute= *)",
+      "Bash(xargs -I{} echo {})",
+      "Bash(node -e \"require\\('playwright'\\); console.log\\('playwright OK'\\)\")",
+      "Bash(npm ls *)",
+      "Bash(grep -n '$song\\\\['\\\\''version'\\\\''\\\\]\\\\|$data\\\\['\\\\''version'\\\\''\\\\]' resources/views/sl_setlists/show.blade.php)",
+      "Bash(heroku run -a y2-official 'php artisan tinker --execute=\" *)",
+      "Bash(curl -s http://localhost:8080/database/live/155 -o /dev/null -w \"HTTP %{http_code}\\\\n\")",
+      "Bash(curl -s http://localhost:8080/database/live/155)",
+      "Bash(git commit -m ' *)",
+      "Bash(curl -s http://localhost:8080/database/live/146)",
+      "Bash(docker compose *)"
     ]
   }
 }

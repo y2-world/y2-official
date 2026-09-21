@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Support\SongTitleNormalizer;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class DbSong extends Model
 {
@@ -187,6 +188,61 @@ class DbSong extends Model
             })
             ->sortByDesc(fn ($setlistModel) => optional($setlistModel->tour)->date1)
             ->values();
+    }
+
+    // この曲が演奏されたDbSetlist（performedTourSetlists()と同じ抽出結果）のうち、
+    // ログイン中の外部ユーザー本人が「参加した」と記録しているものに対応するツアーを、
+    // 開催日（tour.date1）降順で返す（未ログイン時は空）。
+    // $tourSetlists を渡せば同じ抽出結果を再利用でき、渡さなければ自前で計算する。
+    public function myAttendedTours($tourSetlists = null)
+    {
+        if (!Auth::guard('external')->check()) {
+            return collect();
+        }
+
+        $matchingSetlistIds = ($tourSetlists ?? $this->performedTourSetlists())->pluck('id');
+
+        return Auth::guard('external')->user()
+            ->attendances()
+            ->whereIn('db_setlist_id', $matchingSetlistIds)
+            ->with('dbSetlist.tour')
+            ->get()
+            ->pluck('dbSetlist.tour')
+            ->filter()
+            ->unique('id')
+            ->sortByDesc(fn ($tour) => $tour->date1)
+            ->values();
+    }
+
+    // 指定ユーザーの参加記録を古い順に見ていったとき、このアーティストの曲の中で各曲が
+    // 何番目に初めて登場したかのマップ（[db_song_id => 番号, ...]）を返す。
+    // AttendanceController::index の#（曲番）・Previous/Next（初めて聴いた順）と同じ考え方。
+    public static function firstSeenOrderFor(\App\Models\ExternalUser $user, int $artistId): array
+    {
+        $orderedAttendances = $user
+            ->attendances()
+            ->whereHas('dbSetlist.tour', fn ($q) => $q->where('artist_id', $artistId))
+            ->with('dbSetlist')
+            ->orderBy('attended_date')
+            ->get();
+
+        $firstSeenOrder = [];
+        foreach ($orderedAttendances as $attendance) {
+            $setlist = $attendance->dbSetlist;
+            if (!$setlist) {
+                continue;
+            }
+            foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
+                if (isset($s['song']) && is_numeric($s['song'])) {
+                    $sid = (int) $s['song'];
+                    if (!isset($firstSeenOrder[$sid])) {
+                        $firstSeenOrder[$sid] = count($firstSeenOrder) + 1;
+                    }
+                }
+            }
+        }
+
+        return $firstSeenOrder;
     }
 
     // この曲（db_songs.id）に紐づくSlSong（複数の可能性あり）を演奏している

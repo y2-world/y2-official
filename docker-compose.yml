@@ -16,14 +16,16 @@ services:
     networks:
       - y2-network
     depends_on:
-      - db
+      - postgres
       - redis
     environment:
-      - DB_HOST=db
-      - DB_PORT=3306
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_PORT=5432
       - DB_DATABASE=y2_official
       - DB_USERNAME=y2user
       - DB_PASSWORD=y2password
+      - DB_SSLMODE=disable
       - REDIS_HOST=redis
       - REDIS_PORT=6379
 
@@ -40,6 +42,21 @@ services:
       - db-data:/var/lib/mysql
     ports:
       - "3306:3306"
+    networks:
+      - y2-network
+
+  postgres:
+    image: postgres:16
+    container_name: y2-official-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: y2_official
+      POSTGRES_USER: y2user
+      POSTGRES_PASSWORD: y2password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
     networks:
       - y2-network
 
@@ -75,4 +92,6 @@ networks:
 
 volumes:
   db-data:
+    driver: local
+  postgres-data:
     driver: local

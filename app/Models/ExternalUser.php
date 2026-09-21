@@ -16,6 +16,7 @@ class ExternalUser extends Authenticatable
         'avatar_url',
         'email',
         'password',
+        'is_yuki',
     ];
 
     protected $hidden = [
@@ -25,6 +26,7 @@ class ExternalUser extends Authenticatable
 
     protected $casts = [
         'password' => 'hashed',
+        'is_yuki' => 'boolean',
     ];
 
     public function attendances()
