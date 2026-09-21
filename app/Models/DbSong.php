@@ -113,6 +113,23 @@ class DbSong extends Model
         return $albums->where('best', false)->whereNull('album_id')->first($contains);
     }
 
+    // 曲一覧・曲詳細でアルバム名として表示する文字列。通常はアルバム自体のtitleだが、
+    // 収録トラックにdiscラベル（例:「Slow Collection」のような、アルバム本編とは別の
+    // 呼称を持つボーナスディスク）が付いている場合はそちらを優先表示する
+    // （例: AKIRA初回限定盤ボーナスCD収録の新録曲は「AKIRA」ではなく「Slow Collection」として見せたい）
+    public function getAlbumDisplayTitleFromTracklistAttribute()
+    {
+        $album = $this->albumFromTracklist;
+        if (!$album) {
+            return null;
+        }
+
+        $songId = (string) $this->id;
+        $track = collect($album->tracklist ?? [])->first(fn($t) => ($t['id'] ?? null) === $songId);
+
+        return ($track['disc'] ?? null) ?: $album->title;
+    }
+
     public function getSingleFromTracklistAttribute()
     {
         $songId = $this->id;
