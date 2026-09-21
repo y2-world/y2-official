@@ -10,23 +10,27 @@
         <div class="row justify-content-center">
             <div class="col-xl-10">
                 <div class="element js-fadein">
-                    <h1 class="stats-title">Statistics</h1>
-                    <p class="stats-subtitle">{{ isset($artist) ? $artist->name . ' セットリスト統計' : 'Database' }}</p>
+                    <h1 class="stats-title">{{ isset($artist) ? $artist->name . ' Statistics' : 'Statistics' }}</h1>
+                    <p class="stats-subtitle">{{ isset($artist) ? 'セットリスト統計' : 'Database' }}</p>
 
-                    <!-- Tab Navigation -->
-                    <div class="stats-tabs">
-                        {{-- PersonalタブはYuki本人（is_yuki）のみ見られる --}}
-                        @if (\Illuminate\Support\Facades\Auth::guard('external')->user()?->is_yuki)
-                            <a href="{{ route('stats.index', ['tab' => 'personal']) }}"
-                               class="stats-tab {{ $tab === 'personal' ? 'active' : '' }}">
-                                <i class="fas fa-user"></i> Personal
+                    {{-- タブ切り替え（Personal/Database）は、未ログイン時はDatabaseしか
+                         選べず切り替える意味が無いため、ログイン中のみ表示する --}}
+                    @if (\Illuminate\Support\Facades\Auth::guard('external')->check())
+                        <!-- Tab Navigation -->
+                        <div class="stats-tabs">
+                            {{-- PersonalタブはYuki本人（is_yuki）のみ見られる --}}
+                            @if (\Illuminate\Support\Facades\Auth::guard('external')->user()?->is_yuki)
+                                <a href="{{ route('stats.index', ['tab' => 'personal']) }}"
+                                   class="stats-tab {{ $tab === 'personal' ? 'active' : '' }}">
+                                    <i class="fas fa-user"></i> Personal
+                                </a>
+                            @endif
+                            <a href="{{ route('stats.index', ['tab' => 'database']) }}"
+                               class="stats-tab {{ $tab === 'database' ? 'active' : '' }}">
+                                <i class="fas fa-database"></i> Database
                             </a>
-                        @endif
-                        <a href="{{ route('stats.index', ['tab' => 'database']) }}"
-                           class="stats-tab {{ $tab === 'database' ? 'active' : '' }}">
-                            <i class="fas fa-database"></i> Database
-                        </a>
-                    </div>
+                        </div>
+                    @endif
 
                     <!-- Artist Selector -->
                     <div style="margin-bottom: 24px;">
