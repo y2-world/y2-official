@@ -21,7 +21,7 @@ class ListDbSongs extends ListRecords
                 ->form([
                     Forms\Components\Select::make('artist_id')
                         ->label('アーティスト')
-                        ->options(fn () => \App\Support\JapaneseNameSorter::sortOptions(Artist::pluck('name', 'id')->all()))
+                        ->options(fn () => Artist::where('visible', 1)->orderBy('id')->pluck('name', 'id')->all())
                         ->required()
                         ->native(false)
                         ->searchable(),

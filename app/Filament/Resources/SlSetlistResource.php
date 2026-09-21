@@ -37,7 +37,7 @@ class SlSetlistResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('artist_id')
                             ->label('アーティスト')
-                            ->relationship('artist', 'name')
+                            ->relationship('artist', 'name', fn($query) => $query->where('visible', 1)->orderBy('id'))
                             ->searchable()
                             ->preload()
                             ->native(false),
@@ -366,7 +366,7 @@ class SlSetlistResource extends Resource
                                 // artist は song/block 共通キー
                                 Forms\Components\Select::make('artist')
                                     ->label('アーティスト')
-                                    ->options(fn() => \App\Support\JapaneseNameSorter::sortOptions(\App\Models\Artist::pluck('name', 'id')->all()))
+                                    ->options(fn() => \App\Models\Artist::where('visible', 1)->orderBy('id')->pluck('name', 'id')->all())
                                     ->searchable()
                                     ->native(false)
                                     ->nullable()
@@ -539,7 +539,7 @@ class SlSetlistResource extends Resource
 
                                 Forms\Components\Select::make('artist')
                                     ->label('アーティスト')
-                                    ->options(fn() => \App\Support\JapaneseNameSorter::sortOptions(\App\Models\Artist::pluck('name', 'id')->all()))
+                                    ->options(fn() => \App\Models\Artist::where('visible', 1)->orderBy('id')->pluck('name', 'id')->all())
                                     ->searchable()
                                     ->native(false)
                                     ->nullable()
@@ -739,7 +739,7 @@ class SlSetlistResource extends Resource
                         1 => 'フェス',
                     ]),
                 Tables\Filters\SelectFilter::make('artist')
-                    ->relationship('artist', 'name')
+                    ->relationship('artist', 'name', fn($query) => $query->where('visible', 1)->orderBy('id'))
                     ->label('アーティスト')
                     ->searchable(),
                 Tables\Filters\SelectFilter::make('year')
@@ -773,7 +773,7 @@ class SlSetlistResource extends Resource
                     ->form([
                         Forms\Components\Select::make('artist_id')
                             ->label('アーティスト')
-                            ->options(fn () => \App\Support\JapaneseNameSorter::sortOptions(\App\Models\Artist::pluck('name', 'id')->all()))
+                            ->options(fn () => \App\Models\Artist::where('visible', 1)->orderBy('id')->pluck('name', 'id')->all())
                             ->required()
                             ->native(false)
                             ->searchable(),

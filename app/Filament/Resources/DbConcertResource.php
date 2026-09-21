@@ -35,7 +35,7 @@ class DbConcertResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('artist_id')
                             ->label('アーティスト')
-                            ->options(fn() => \App\Support\JapaneseNameSorter::sortOptions(\App\Models\Artist::pluck('name', 'id')->all()))
+                            ->options(fn() => \App\Models\Artist::where('visible', 1)->orderBy('id')->pluck('name', 'id')->all())
                             ->required()
                             ->native(false)
                             ->searchable()
@@ -165,7 +165,7 @@ class DbConcertResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('artist_id')
                     ->label('アーティスト')
-                    ->options(fn() => \App\Support\JapaneseNameSorter::sortOptions(\App\Models\Artist::pluck('name', 'id')->all()))
+                    ->options(fn() => \App\Models\Artist::where('visible', 1)->orderBy('id')->pluck('name', 'id')->all())
                     ->searchable(),
                 Tables\Filters\SelectFilter::make('type')
                     ->label('タイプ')

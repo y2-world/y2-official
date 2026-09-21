@@ -36,7 +36,7 @@ class SlSongResource extends Resource
 
                 Forms\Components\Select::make('artist_id')
                     ->label('アーティスト')
-                    ->relationship('artist', 'name')
+                    ->relationship('artist', 'name', fn($query) => $query->where('visible', 1)->orderBy('id'))
                     ->searchable()
                     ->preload()
                     ->native(false)
@@ -94,7 +94,7 @@ class SlSongResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('artist')
-                    ->relationship('artist', 'name')
+                    ->relationship('artist', 'name', fn($query) => $query->where('visible', 1)->orderBy('id'))
                     ->label('アーティスト')
                     ->searchable(),
                 Tables\Filters\TernaryFilter::make('db_song_id')

@@ -47,7 +47,7 @@ class DbSetlistResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('_artist_id')
                             ->label('アーティスト')
-                            ->options(fn() => \App\Support\JapaneseNameSorter::sortOptions(\App\Models\Artist::pluck('name', 'id')->all()))
+                            ->options(fn() => \App\Models\Artist::where('visible', 1)->orderBy('id')->pluck('name', 'id')->all())
                             ->searchable()
                             ->native(false)
                             ->live()
@@ -414,7 +414,7 @@ class DbSetlistResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('artist')
                     ->label('アーティスト')
-                    ->options(fn() => \App\Support\JapaneseNameSorter::sortOptions(\App\Models\Artist::pluck('name', 'id')->all()))
+                    ->options(fn() => \App\Models\Artist::where('visible', 1)->orderBy('id')->pluck('name', 'id')->all())
                     ->query(fn($query, array $data) =>
                         $data['value']
                             ? $query->whereHas('tour', fn($q) => $q->where('artist_id', $data['value']))
