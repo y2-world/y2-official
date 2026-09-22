@@ -8,24 +8,40 @@ document.addEventListener('alpine:init', () => {
         draft: null,
 
         init() {
-            this.draft = this.loadDraft();
+            // この機能はあくまで入力保全の補助であり、何らかの理由で失敗しても
+            // Filament本来の保存・画面操作を絶対に妨げてはならないため、
+            // セットアップ全体を try/catch で囲む。
+            try {
+                this.draft = this.loadDraft();
 
-            if (this.draft) {
-                // 通知トースターで知らせる（画面上部の固定バナーはスクロールで見逃されるため、
-                // Filament標準のトースター通知＝目立つ場所に一定時間表示される仕組みを使う）
-                this.notifyDraftFound();
+                if (this.draft) {
+                    // 通知トースターで知らせる（画面上部の固定バナーはスクロールで見逃されるため、
+                    // Filament標準のトースター通知＝目立つ場所に一定時間表示される仕組みを使う）
+                    this.notifyDraftFound();
+                }
+
+                // $watch('$wire.data', ...) はオブジェクト参照自体の変化しか検知できず、
+                // Livewireはフィールド単位（data.title等）で更新するため参照は変わらず発火しない。
+                // JSON化した文字列を監視対象にすることで、ネストしたRepeater配列を含む
+                // あらゆるフィールドの変更を確実に検知する。
+                this.$watch(
+                    () => JSON.stringify(this.$wire.data),
+                    () => {
+                        clearTimeout(this.debounceTimer);
+                        this.debounceTimer = setTimeout(() => this.saveDraft(), 1500);
+                    }
+                );
+
+                // 通知アクションのdispatch()はLivewireの$dispatch経由で発火するため、
+                // 素のDOM CustomEventではなくLivewire.on()で受け取る必要がある
+                this.$wire.$on('draft-autosave-clear', () => this.clearDraft());
+                if (window.Livewire) {
+                    window.Livewire.on('draft-autosave-restore', () => this.restore());
+                    window.Livewire.on('draft-autosave-discard', () => this.clearDraft());
+                }
+            } catch (e) {
+                console.error('[draft-autosave] init failed', e);
             }
-
-            this.$watch('$wire.data', () => {
-                clearTimeout(this.debounceTimer);
-                this.debounceTimer = setTimeout(() => this.saveDraft(), 1500);
-            });
-
-            // 通知アクションのdispatch()はLivewireの$dispatch経由で発火するため、
-            // 素のDOM CustomEventではなくLivewire.on()で受け取る必要がある
-            this.$wire.$on('draft-autosave-clear', () => this.clearDraft());
-            Livewire.on('draft-autosave-restore', () => this.restore());
-            Livewire.on('draft-autosave-discard', () => this.clearDraft());
         },
 
         notifyDraftFound() {
