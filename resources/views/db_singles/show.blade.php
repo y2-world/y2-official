@@ -15,6 +15,8 @@
             <p class="database-subtitle" style="">
                 @if($singles->download == 0 && $singles->single_id)
                     {{ ordinal($singles->single_id) }} Single
+                @elseif($singles->ep)
+                    EP
                 @elseif($singles->download)
                     Digital Exclusive Single
                 @endif
