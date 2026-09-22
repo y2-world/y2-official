@@ -58,6 +58,11 @@ class DbSingleResource extends Resource
                     ->onColor('success')
                     ->offColor('gray'),
 
+                Forms\Components\Toggle::make('ep')
+                    ->label('EP')
+                    ->onColor('warning')
+                    ->offColor('gray'),
+
                 // 収録曲
                 Forms\Components\Repeater::make('tracklist')
                     ->label('収録曲')
@@ -125,6 +130,10 @@ class DbSingleResource extends Resource
                 Tables\Columns\ToggleColumn::make('download')
                     ->label('配信')
                     ->onColor('success')
+                    ->offColor('gray'),
+                Tables\Columns\ToggleColumn::make('ep')
+                    ->label('EP')
+                    ->onColor('warning')
                     ->offColor('gray'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y.m.d H:i')

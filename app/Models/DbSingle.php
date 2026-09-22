@@ -14,6 +14,7 @@ class DbSingle extends Model
         'date',
         'title',
         'download',
+        'ep',
         'text',
         'tracklist',
     ];
