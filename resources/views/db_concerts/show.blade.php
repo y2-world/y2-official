@@ -45,9 +45,11 @@
             ['label' => 'Live', 'url' => route('database.live', $artist->id)],
             ['label' => $tours->title],
         ]])
-            <p class="database-subtitle" style="">
-                <a href="{{ route('database.artist', $artist->id) }}">{{ $artist->name }}</a>
-            </p>
+            @if ((int) $tours->type !== 4)
+                <p class="database-subtitle" style="">
+                    <a href="{{ route('database.artist', $artist->id) }}">{{ $artist->name }}</a>
+                </p>
+            @endif
             <h1 class="database-title" style="">{{ $tours->title }}</h1>
             <p class="database-subtitle" style="">
                 @if (isset($tours->date1) && isset($tours->date2))

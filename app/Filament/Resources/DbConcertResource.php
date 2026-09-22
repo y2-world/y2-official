@@ -27,6 +27,9 @@ class DbConcertResource extends Resource
 
     protected static ?int $navigationSort = 20;
 
+    // 「ap bank fes」「ソロ」タイプはMr.Children専用の選択肢
+    private const MR_CHILDREN_ARTIST_ID = 2;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -39,6 +42,14 @@ class DbConcertResource extends Resource
                             ->required()
                             ->native(false)
                             ->searchable()
+                            ->live()
+                            ->afterStateUpdated(function ($state, Forms\Set $set, Forms\Get $get) {
+                                // 「ap bank fes」「ソロ」はMr.Children専用の選択肢のため、
+                                // Mr.Children以外に切り替えた際は選択済みならリセットする
+                                if ((int) $state !== self::MR_CHILDREN_ARTIST_ID && in_array((int) $get('type'), [3, 4], true)) {
+                                    $set('type', 0);
+                                }
+                            })
                             ->columnSpanFull(),
                         TextInput::make('title')
                             ->label('タイトル')
@@ -48,15 +59,22 @@ class DbConcertResource extends Resource
 
                         Radio::make('type')
                             ->label('タイプ')
-                            ->options([
-                                0 => 'ツアー',
-                                1 => '単発ライブ',
-                                2 => 'イベント',
-                                3 => 'ap bank fes',
-                                4 => 'ソロ',
-                            ])
+                            ->options(fn(Forms\Get $get) => (int) $get('artist_id') === self::MR_CHILDREN_ARTIST_ID
+                                ? [
+                                    0 => 'ツアー',
+                                    1 => '単発ライブ',
+                                    2 => 'イベント',
+                                    3 => 'ap bank fes',
+                                    4 => 'ソロ',
+                                ]
+                                : [
+                                    0 => 'ツアー',
+                                    1 => '単発ライブ',
+                                    2 => 'イベント',
+                                ])
                             ->default(0)
                             ->required()
+                            ->live()
                             ->columnSpanFull(),
 
                         Forms\Components\DatePicker::make('date1')
