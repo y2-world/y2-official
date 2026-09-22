@@ -318,8 +318,12 @@ class ImportFlumpoolDiscography extends Command
     private function singlesData(): array
     {
         return [
+            ['title' => '花になれ', 'date' => '2008-10-01', 'download' => true, 'tracks' => ['花になれ']],
+            ['title' => 'Over the rain 〜ひかりの橋〜', 'date' => '2008-11-05', 'download' => true, 'tracks' => ['Over the rain 〜ひかりの橋〜']],
             ['title' => '星に願いを', 'date' => '2009-02-25', 'tracks' => ['星に願いを', '回転木馬 (メリーゴーランド)', '春風 「No Reply」Unplugged', '星に願いを (Instrumental)', '回転木馬 (メリーゴーランド) (Instrumental)', '春風 「No Reply」Unplugged (Instrumental)']],
             ['title' => 'MW 〜Dear Mr. & Mrs. ピカレスク〜 / 夏Dive', 'date' => '2009-07-01', 'tracks' => ['MW 〜Dear Mr. & Mrs. ピカレスク〜', '夏Dive', 'サイレン', 'MW 〜Dear Mr. & Mrs. ピカレスク〜 (Instrumental)', '夏Dive (Instrumental)']],
+            ['title' => 'フレイム', 'date' => '2009-10-14', 'download' => true, 'tracks' => ['フレイム']],
+            ['title' => '見つめていたい', 'date' => '2009-11-18', 'download' => true, 'tracks' => ['見つめていたい']],
             ['title' => '残像', 'date' => '2010-02-03', 'tracks' => ['残像', 'Birds', '今年の桜 (Graduation Remix)']],
             ['title' => 'reboot 〜あきらめない詩〜 / 流れ星', 'date' => '2010-06-23', 'tracks' => ['reboot 〜あきらめない詩〜', '流れ星', 'Calling (LIVE at C.C.Lemon Hall)', 'reboot 〜あきらめない詩〜 (Instrumental)', '流れ星 (Instrumental)']],
             ['title' => '君に届け', 'date' => '2010-09-29', 'tracks' => ['君に届け', '僕の存在', 'Quville (LIVE at C.C.Lemon Hall)', '君に届け (Instrumental)', '僕の存在 (Instrumental)']],
