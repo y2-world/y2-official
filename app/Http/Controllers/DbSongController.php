@@ -106,9 +106,17 @@ class DbSongController extends Controller
         $allSongs = DbSong::orderBy('sort_order')->get();
         $albums = DbAlbum::orderBy('id')->get();
         $singles = DbSingle::orderBy('id')->get();
-        $previous = DbSong::where('artist_id', $songs->artist_id)->where('sort_order', '<', $songs->sort_order)->orderBy('sort_order', 'desc')->first();
-        $next = DbSong::where('artist_id', $songs->artist_id)->where('sort_order', '>', $songs->sort_order)->orderBy('sort_order')->first();
-        $songNumber = DbSong::where('artist_id', $songs->artist_id)->where('sort_order', '<=', $songs->sort_order)->count();
+        // sort_orderがNULLの曲（自動採番前の異常データ等）で例外にならないよう、
+        // NULLの場合は前後曲・曲番号を計算不能として扱う
+        if ($songs->sort_order === null) {
+            $previous = null;
+            $next = null;
+            $songNumber = null;
+        } else {
+            $previous = DbSong::where('artist_id', $songs->artist_id)->where('sort_order', '<', $songs->sort_order)->orderBy('sort_order', 'desc')->first();
+            $next = DbSong::where('artist_id', $songs->artist_id)->where('sort_order', '>', $songs->sort_order)->orderBy('sort_order')->first();
+            $songNumber = DbSong::where('artist_id', $songs->artist_id)->where('sort_order', '<=', $songs->sort_order)->count();
+        }
 
         // 「Live Performances」の隣に出す2つ目のタブは、ログイン中の外部ユーザーが誰かによって
         // 決まる（Referer等の遷移元は見ない）。Yuki本人のアカウント（管理画面でis_yuki=trueに

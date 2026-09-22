@@ -22,6 +22,15 @@ class DbSong extends Model
 
     protected static function booted()
     {
+        // sort_orderを指定せずに作成された場合、NULLのままだと曲詳細ページのprevious/next取得
+        // （where('sort_order', '<', ...)）がIlluminateのIllegal operator and value combination
+        // 例外を起こすため、同一アーティスト内の最大値+1を自動的に割り当てる。
+        static::creating(function (DbSong $song) {
+            if ($song->sort_order === null && $song->artist_id) {
+                $song->sort_order = (static::where('artist_id', $song->artist_id)->max('sort_order') ?? -1) + 1;
+            }
+        });
+
         // 作成・更新のたびに、同一アーティストでタイトルが一致する未紐付けのSlSongが1件だけ
         // 見つかれば自動で紐付ける（SlSong::booted()の逆方向。どちらを先に登録・編集しても紐付く）。
         // savedを使うのは、createdの時点ではまだ$song->idが確定していない場合があるため、
@@ -116,9 +125,9 @@ class DbSong extends Model
             ->first($contains);
     }
 
-    // 「Disc 1」「DISC-2」「Reel.3」「CD」「ボーナスCD」のような、単なる収録媒体の分割を
+    // 「Disc 1」「DISC-2」「Reel.3」「CD」「ボーナスCD」「Bonus Disc」のような、単なる収録媒体の分割を
     // 示すだけの定型discラベルにマッチする。これらはアルバム名の代わりにはならない
-    private const GENERIC_DISC_LABEL_PATTERN = '/^(disc|reel)[\s\-.]*\d*$|^cd$|^ボーナスcd$/ui';
+    private const GENERIC_DISC_LABEL_PATTERN = '/^(disc|reel)[\s\-.]*\d*$|^cd$|^ボーナスcd$|disc/ui';
 
     // 曲一覧・曲詳細でアルバム名として表示する文字列。通常はアルバム自体のtitleだが、
     // 収録トラックのdiscラベルが「Disc 1」等の定型分割ラベルではなく、「Slow Collection」
