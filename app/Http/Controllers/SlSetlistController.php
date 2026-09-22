@@ -122,28 +122,44 @@ class SlSetlistController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         // メモリリミットを増やす
         ini_set('memory_limit', '256M');
-        
+
         $setlists = SlSetlist::with('artist')->findOrFail($id);
         $artists = Artist::orderBy('id', 'asc')
         ->get(['id', 'name']); // 必要なカラムのみ取得
-        $previous = SlSetlist::where(function ($q) use ($setlists) {
+
+        // 年別ページ・アーティストページ・会場検索結果のどれから来たかを ?from= で引き継ぎ、
+        // Previous/Nextの移動範囲をその一覧と同じ範囲（年内 / アーティスト内 / 同一会場内）に絞り込む。
+        // 該当しない・指定が無い場合は従来通り全セットリスト中で前後に移動する。
+        $from = $request->query('from');
+        $scopeQuery = function ($query) use ($from, $setlists) {
+            if ($from === 'year') {
+                $query->where('year', $setlists->year);
+            } elseif ($from === 'artist' && $setlists->artist_id) {
+                $query->where('artist_id', $setlists->artist_id);
+            } elseif ($from === 'venue' && $setlists->venue) {
+                $query->where('venue', $setlists->venue);
+            }
+            return $query;
+        };
+
+        $previous = $scopeQuery(SlSetlist::where(function ($q) use ($setlists) {
                 $q->where('date', '<', $setlists->date)
                   ->orWhere(function ($q2) use ($setlists) {
                       $q2->where('date', $setlists->date)->where('id', '<', $setlists->id);
                   });
-            })->orderBy('date', 'desc')->orderBy('id', 'desc')->first();
-        $next = SlSetlist::where(function ($q) use ($setlists) {
+            }))->orderBy('date', 'desc')->orderBy('id', 'desc')->first();
+        $next = $scopeQuery(SlSetlist::where(function ($q) use ($setlists) {
                 $q->where('date', '>', $setlists->date)
                   ->orWhere(function ($q2) use ($setlists) {
                       $q2->where('date', $setlists->date)->where('id', '>', $setlists->id);
                   });
-            })->orderBy('date')->orderBy('id')->first();
-        
-        return view('sl_setlists.show', compact('artists', 'setlists', 'previous', 'next'));
+            }))->orderBy('date')->orderBy('id')->first();
+
+        return view('sl_setlists.show', compact('artists', 'setlists', 'previous', 'next', 'from'));
     }
 
     /**

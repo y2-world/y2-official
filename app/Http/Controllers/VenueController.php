@@ -32,7 +32,7 @@ class VenueController extends Controller
                 'artist_name' => $setlist->artist->name ?? null,
                 'artist_url' => $setlist->artist_id ? url('/setlists/artists', $setlist->artist_id) : null,
                 'title' => $setlist->title,
-                'url' => route('setlists.show', $setlist->id),
+                'url' => route('setlists.show', $setlist->id) . '?from=venue',
             ]);
 
         return view('venue', compact('artists', 'data', 'keyword'));

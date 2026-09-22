@@ -69,14 +69,14 @@
                                 <a
                                     href="{{ url('/setlists/artists', $setlist->artist_id) }}">{{ $setlist->artist->name }}</a>
                                 /
-                                <a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a>
+                                <a href="{{ route('setlists.show', $setlist->id) }}?from=year">{{ $setlist->title }}</a>
                             </td>
                         @else
                             <td class="pc"></td>
                             <td class="sp"><a
-                                    href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
+                                    href="{{ route('setlists.show', $setlist->id) }}?from=year">{{ $setlist->title }}</a></td>
                         @endif
-                        <td class="pc"><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a>
+                        <td class="pc"><a href="{{ route('setlists.show', $setlist->id) }}?from=year">{{ $setlist->title }}</a>
                         </td>
                         <td class="pc"><a
                                 href="{{ url('/venue?keyword=' . urlencode($setlist->venue)) }}">{{ $setlist->venue }}</a>

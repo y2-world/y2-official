@@ -63,7 +63,7 @@
                         <tr>
                             <td></td>
                             <td>{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
-                            <td><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
+                            <td><a href="{{ route('setlists.show', $setlist->id) }}?from=artist">{{ $setlist->title }}</a></td>
                             <td class="pc"><a
                                     href="{{ url('/venue?keyword=' . urlencode($setlist->venue)) }}">{{ $setlist->venue }}</a>
                             </td>
