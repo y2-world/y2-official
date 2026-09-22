@@ -15,6 +15,7 @@ class DbAlbum extends Model
         'title',
         'best',
         'mini',
+        'special',
         'text',
         'tracklist',
     ];
