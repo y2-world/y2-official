@@ -36,6 +36,9 @@ class LinkWindsMegaMixSongs extends Command
         'TRIAL' => 'TRIAL',
         'ブギウギ66' => 'ブギウギ66',
         'ハナムケ' => 'ハナムケ',
+
+        // 括弧ではなく全角チルダで囲まれているため、下の接尾辞除去の正規表現にはマッチしない
+        'SUPER LOVER〜movin’ pleasure mix〜' => 'SUPER LOVER 〜I need you tonight〜',
     ];
 
     // アルバムid => [exceptionにあるべき完全一致タイトル => 紐付け先曲タイトル]
