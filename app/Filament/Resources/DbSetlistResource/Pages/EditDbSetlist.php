@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\DbSetlistResource\Pages;
 
+use App\Filament\Concerns\HasDraftAutosave;
 use App\Filament\Resources\DbSetlistResource;
 use App\Models\DbSetlistRow;
 use Filament\Actions;
@@ -9,6 +10,8 @@ use Filament\Resources\Pages\EditRecord;
 
 class EditDbSetlist extends EditRecord
 {
+    use HasDraftAutosave;
+
     protected static string $resource = DbSetlistResource::class;
 
     private ?string $pendingRowTitle = null;
@@ -37,6 +40,8 @@ class EditDbSetlist extends EditRecord
 
     protected function afterSave(): void
     {
+        $this->clearDraftAutosave();
+
         $tourId = $this->record->tour_id;
         $row = $this->record->row;
         $orderNo = $this->record->order_no;
