@@ -58,10 +58,6 @@ class DbAlbumResource extends Resource
                     ->label('ミニアルバム')
                     ->onColor('warning')
                     ->offColor('gray'),
-                Forms\Components\Toggle::make('special')
-                    ->label('企画盤')
-                    ->onColor('danger')
-                    ->offColor('gray'),
                 Forms\Components\Repeater::make('tracklist')
                     ->label('収録曲')
                     ->schema([
