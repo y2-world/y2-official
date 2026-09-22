@@ -16,8 +16,14 @@ document.addEventListener('alpine:init', () => {
 
                 if (this.draft) {
                     // 通知トースターで知らせる（画面上部の固定バナーはスクロールで見逃されるため、
-                    // Filament標準のトースター通知＝目立つ場所に一定時間表示される仕組みを使う）
-                    this.notifyDraftFound();
+                    // Filament標準のトースター通知＝目立つ場所に一定時間表示される仕組みを使う）。
+                    // window.FilamentNotification自体は早期に定義されるが、それを実際に画面へ
+                    // 描画するFilamentのNotificationsコンポーネント（Livewire）がまだページ上に
+                    // マウントされていない状態で send() すると、CustomEventを誰も拾わず消える。
+                    // ページの読み込みが完全に終わるまで送信を遅らせる。
+                    this.runWhenPageReady(() => {
+                        this.waitForNotificationApi(() => this.notifyDraftFound());
+                    });
                 }
 
                 // $watch('$wire.data', ...) はオブジェクト参照自体の変化しか検知できず、
@@ -42,6 +48,28 @@ document.addEventListener('alpine:init', () => {
             } catch (e) {
                 console.error('[draft-autosave] init failed', e);
             }
+        },
+
+        runWhenPageReady(callback) {
+            if (document.readyState === 'complete') {
+                // 既にloadを過ぎている場合でも、Livewireコンポーネントのマウントが
+                // 1テンポ遅れることがあるため少し余裕を持たせる
+                setTimeout(callback, 300);
+                return;
+            }
+            window.addEventListener('load', () => setTimeout(callback, 300), { once: true });
+        },
+
+        waitForNotificationApi(callback, attemptsLeft = 20) {
+            if (window.FilamentNotification && window.FilamentNotificationAction) {
+                callback();
+                return;
+            }
+            if (attemptsLeft <= 0) {
+                console.error('[draft-autosave] FilamentNotification API did not become available');
+                return;
+            }
+            setTimeout(() => this.waitForNotificationApi(callback, attemptsLeft - 1), 100);
         },
 
         notifyDraftFound() {
