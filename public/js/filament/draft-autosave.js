@@ -5,17 +5,49 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('draftAutosave', (config) => ({
         key: 'filament-draft:' + config.draftKey,
         debounceTimer: null,
-        banner: null,
+        draft: null,
 
         init() {
-            this.banner = this.loadDraft();
+            this.draft = this.loadDraft();
+
+            if (this.draft) {
+                // 通知トースターで知らせる（画面上部の固定バナーはスクロールで見逃されるため、
+                // Filament標準のトースター通知＝目立つ場所に一定時間表示される仕組みを使う）
+                this.notifyDraftFound();
+            }
 
             this.$watch('$wire.data', () => {
                 clearTimeout(this.debounceTimer);
                 this.debounceTimer = setTimeout(() => this.saveDraft(), 1500);
             });
 
+            // 通知アクションのdispatch()はLivewireの$dispatch経由で発火するため、
+            // 素のDOM CustomEventではなくLivewire.on()で受け取る必要がある
             this.$wire.$on('draft-autosave-clear', () => this.clearDraft());
+            Livewire.on('draft-autosave-restore', () => this.restore());
+            Livewire.on('draft-autosave-discard', () => this.clearDraft());
+        },
+
+        notifyDraftFound() {
+            new window.FilamentNotification()
+                .title('保存されていない下書きがあります')
+                .body('前回入力中に保存されなかった内容が見つかりました。復元しますか？')
+                .warning()
+                .persistent()
+                .actions([
+                    new window.FilamentNotificationAction('restore')
+                        .label('復元する')
+                        .button()
+                        .dispatch('draft-autosave-restore')
+                        .close(),
+                    new window.FilamentNotificationAction('discard')
+                        .label('破棄する')
+                        .button()
+                        .outlined()
+                        .dispatch('draft-autosave-discard')
+                        .close(),
+                ])
+                .send();
         },
 
         saveDraft() {
@@ -41,8 +73,8 @@ document.addEventListener('alpine:init', () => {
         },
 
         async restore() {
-            if (!this.banner) return;
-            await this.$wire.call('restoreDraftData', this.banner.data);
+            if (!this.draft) return;
+            await this.$wire.call('restoreDraftData', this.draft.data);
             this.clearDraft();
         },
 
@@ -52,7 +84,7 @@ document.addEventListener('alpine:init', () => {
             } catch (e) {
                 // 何もしない
             }
-            this.banner = null;
+            this.draft = null;
         },
     }));
 });
