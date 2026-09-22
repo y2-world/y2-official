@@ -29,8 +29,14 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+        // CloudflareがこのJSファイルを長時間（cache-control: max-age=14400）CDNキャッシュするため、
+        // URLにクエリを付けずデプロイすると更新後も古い内容が配信され続ける。
+        // ファイル更新時刻をクエリに付け、デプロイのたびにURL自体を変えてキャッシュを回避する。
+        $draftAutosavePath = public_path('js/filament/draft-autosave.js');
+        $draftAutosaveVersion = file_exists($draftAutosavePath) ? filemtime($draftAutosavePath) : time();
+
         FilamentAsset::register([
-            Js::make('draft-autosave', asset('js/filament/draft-autosave.js')),
+            Js::make('draft-autosave', asset('js/filament/draft-autosave.js') . '?v=' . $draftAutosaveVersion),
         ]);
 
         return $panel
