@@ -141,7 +141,13 @@ class SlSetlistResource extends Resource
                                     ->searchable()
                                     ->native(false)
                                     ->live()
-                                    ->afterStateUpdated(fn($state, $set) => $set('song', static::resolveSongOptionValue($state)))
+                                    ->afterStateUpdated(function ($state, $set) {
+                                        $set('song', static::resolveSongOptionValue($state));
+                                        // 曲を差し替えたのに別表記（前の曲用のライブバージョン名等）が
+                                        // 残ってしまい、差し替え後の曲と噛み合わない表記のまま表示され続ける
+                                        // 事故を防ぐため、曲を変更したタイミングで別表記はクリアする
+                                        $set('alternative_title', null);
+                                    })
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('title')
                                             ->label('新しい曲名')
@@ -244,7 +250,13 @@ class SlSetlistResource extends Resource
                                     ->searchable()
                                     ->native(false)
                                     ->live()
-                                    ->afterStateUpdated(fn($state, $set) => $set('song', static::resolveSongOptionValue($state)))
+                                    ->afterStateUpdated(function ($state, $set) {
+                                        $set('song', static::resolveSongOptionValue($state));
+                                        // 曲を差し替えたのに別表記（前の曲用のライブバージョン名等）が
+                                        // 残ってしまい、差し替え後の曲と噛み合わない表記のまま表示され続ける
+                                        // 事故を防ぐため、曲を変更したタイミングで別表記はクリアする
+                                        $set('alternative_title', null);
+                                    })
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('title')
                                             ->label('新しい曲名')
@@ -391,7 +403,13 @@ class SlSetlistResource extends Resource
                                     ->searchable()
                                     ->native(false)
                                     ->live()
-                                    ->afterStateUpdated(fn($state, $set) => $set('song', static::resolveSongOptionValue($state)))
+                                    ->afterStateUpdated(function ($state, $set) {
+                                        $set('song', static::resolveSongOptionValue($state));
+                                        // 曲を差し替えたのに別表記（前の曲用のライブバージョン名等）が
+                                        // 残ってしまい、差し替え後の曲と噛み合わない表記のまま表示され続ける
+                                        // 事故を防ぐため、曲を変更したタイミングで別表記はクリアする
+                                        $set('alternative_title', null);
+                                    })
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('title')
                                             ->label('曲名')
@@ -446,7 +464,13 @@ class SlSetlistResource extends Resource
                                             ->searchable()
                                             ->native(false)
                                             ->live()
-                                            ->afterStateUpdated(fn($state, $set) => $set('song', static::resolveSongOptionValue($state)))
+                                            ->afterStateUpdated(function ($state, $set) {
+                                        $set('song', static::resolveSongOptionValue($state));
+                                        // 曲を差し替えたのに別表記（前の曲用のライブバージョン名等）が
+                                        // 残ってしまい、差し替え後の曲と噛み合わない表記のまま表示され続ける
+                                        // 事故を防ぐため、曲を変更したタイミングで別表記はクリアする
+                                        $set('alternative_title', null);
+                                    })
                                             ->createOptionForm([
                                                 Forms\Components\TextInput::make('title')
                                                     ->label('曲名')
@@ -563,7 +587,13 @@ class SlSetlistResource extends Resource
                                     ->searchable()
                                     ->native(false)
                                     ->live()
-                                    ->afterStateUpdated(fn($state, $set) => $set('song', static::resolveSongOptionValue($state)))
+                                    ->afterStateUpdated(function ($state, $set) {
+                                        $set('song', static::resolveSongOptionValue($state));
+                                        // 曲を差し替えたのに別表記（前の曲用のライブバージョン名等）が
+                                        // 残ってしまい、差し替え後の曲と噛み合わない表記のまま表示され続ける
+                                        // 事故を防ぐため、曲を変更したタイミングで別表記はクリアする
+                                        $set('alternative_title', null);
+                                    })
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('title')
                                             ->label('曲名')
@@ -617,7 +647,13 @@ class SlSetlistResource extends Resource
                                             ->searchable()
                                             ->native(false)
                                             ->live()
-                                            ->afterStateUpdated(fn($state, $set) => $set('song', static::resolveSongOptionValue($state)))
+                                            ->afterStateUpdated(function ($state, $set) {
+                                        $set('song', static::resolveSongOptionValue($state));
+                                        // 曲を差し替えたのに別表記（前の曲用のライブバージョン名等）が
+                                        // 残ってしまい、差し替え後の曲と噛み合わない表記のまま表示され続ける
+                                        // 事故を防ぐため、曲を変更したタイミングで別表記はクリアする
+                                        $set('alternative_title', null);
+                                    })
                                             ->createOptionForm([
                                                 Forms\Components\TextInput::make('title')
                                                     ->label('曲名')

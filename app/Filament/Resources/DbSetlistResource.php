@@ -136,6 +136,13 @@ class DbSetlistResource extends Resource
                                     ->native(false)
                                     ->required()
                                     ->allowHtml()
+                                    ->live()
+                                    ->afterStateUpdated(function ($set) {
+                                        // 曲を差し替えたのに別表記（前の曲用のライブバージョン名等）が
+                                        // 残ってしまい、差し替え後の曲と噛み合わない表記のまま表示され続ける
+                                        // 事故を防ぐため、曲を変更したタイミングで別表記はクリアする
+                                        $set('alternative_title', null);
+                                    })
                                     ->getSearchResultsUsing(function (string $search, Get $get) {
                                         $options = \App\Models\DbSong::when(
                                             $get('../../_artist_id'),
@@ -262,6 +269,13 @@ class DbSetlistResource extends Resource
                                     ->native(false)
                                     ->required()
                                     ->allowHtml()
+                                    ->live()
+                                    ->afterStateUpdated(function ($set) {
+                                        // 曲を差し替えたのに別表記（前の曲用のライブバージョン名等）が
+                                        // 残ってしまい、差し替え後の曲と噛み合わない表記のまま表示され続ける
+                                        // 事故を防ぐため、曲を変更したタイミングで別表記はクリアする
+                                        $set('alternative_title', null);
+                                    })
                                     ->getSearchResultsUsing(function (string $search, Get $get) {
                                         $options = \App\Models\DbSong::when(
                                             $get('../../_artist_id'),
