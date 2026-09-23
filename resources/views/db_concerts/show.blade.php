@@ -98,8 +98,8 @@
         <div id="setlistSummaryOverlay" style="display: none; position: fixed; inset: 0; background: rgba(20,22,30,0.5); z-index: 1050; align-items: center; justify-content: center;">
             @foreach ($setlistSummaries as $rowNum => $summary)
                 <div class="setlist setlist-summary-popup" data-summary-row="{{ $rowNum }}" style="display: none; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); padding: 30px; max-width: 560px; width: calc(100% - 32px); max-height: 80vh; overflow-y: auto; position: relative;">
-                    <button type="button" class="setlist-summary-close" style="position: absolute; top: 16px; right: 16px; border: none; background: #f0f1f6; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; color: #718096; font-size: 16px; line-height: 1;">&times;</button>
-                    <h3 style="margin: 0 0 20px; font-size: 18px;">{{ $tours->title }}</h3>
+                    <button type="button" class="setlist-summary-close" style="position: absolute; top: 16px; right: 16px; border: none; background: #f0f1f6; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; color: #718096; font-size: 16px; line-height: 1; flex-shrink: 0;">&times;</button>
+                    <h3 style="margin: 0 44px 20px 0; font-size: 18px;">{{ $tours->title }}</h3>
                     @foreach (['setlist' => $summary['setlist'], 'encore' => $summary['encore']] as $section => $rows)
                         @if (count($rows))
                             @if ($section === 'encore')
@@ -248,31 +248,40 @@ document.addEventListener('DOMContentLoaded', function () {
         var hasMultipleRows = rowNums.length > 1;
 
         var currentContainer = patternSelect;
-        var currentGroupTitle = null;
         var currentRowNum = null;
+        var currentGroupTitle = null;
+        var summaryShownForRow = {};
         wraps.forEach(function (wrap, index) {
             var rowEl = wrap.closest('.setlist-row');
             var rowNum = rowEl ? rowEl.getAttribute('data-row-num') : null;
             var groupWrap = wrap.closest('.setlist-group-wrap');
             var groupTitle = groupWrap ? groupWrap.getAttribute('data-group-title') : null;
+            var rowChanged = rowNum !== null && rowNum !== currentRowNum;
+            var groupChanged = groupTitle !== currentGroupTitle;
 
-            // rowが切り替わるタイミングで、rowが複数ある場合はラベル無しのoptgroupで区切り、
-            // そのrowにパターンが2つ以上ある（Summary対象）場合は「Summarize」オプションを
-            // そのoptgroupの先頭（パターン一覧の直前）に入れる
-            if (rowNum !== null && rowNum !== currentRowNum) {
-                currentRowNum = rowNum;
-                currentGroupTitle = null;
+            // rowまたはグループ名（同じrow内の曲順グループ見出し）が切り替わるたびに
+            // 新しいoptgroupを作る。そのoptgroupがrowの先頭（そのrowで最初のグループ）で、
+            // かつそのrowにパターンが2つ以上ある（Summary対象）場合だけ、
+            // 「Summarize」オプションをoptgroupの先頭に入れる（rowにつき1回のみ）。
+            if (rowChanged || groupChanged) {
+                if (rowChanged) {
+                    currentRowNum = rowNum;
+                }
+                currentGroupTitle = groupTitle;
 
-                if (hasMultipleRows) {
+                var label = groupTitle ? groupTitle : (hasMultipleRows ? 'Row ' + rowNum : '');
+
+                if (label) {
                     var rowOptgroup = document.createElement('optgroup');
-                    rowOptgroup.label = 'Row ' + rowNum;
+                    rowOptgroup.label = label;
                     patternSelect.appendChild(rowOptgroup);
                     currentContainer = rowOptgroup;
                 } else {
                     currentContainer = patternSelect;
                 }
 
-                if (summaryRowNums.indexOf(rowNum) !== -1) {
+                if (rowChanged && !summaryShownForRow[rowNum] && summaryRowNums.indexOf(rowNum) !== -1) {
+                    summaryShownForRow[rowNum] = true;
                     var summaryOption = document.createElement('option');
                     summaryOption.value = '__summary_' + rowNum + '__';
                     summaryOption.textContent = 'Summarize';
@@ -283,10 +292,6 @@ document.addEventListener('DOMContentLoaded', function () {
             var option = document.createElement('option');
             option.value = String(index);
             option.textContent = wrap.getAttribute('data-pattern-label');
-
-            if (groupTitle) {
-                option.textContent = groupTitle + ': ' + option.textContent;
-            }
             currentContainer.appendChild(option);
         });
         patternSelect.addEventListener('change', function () {
