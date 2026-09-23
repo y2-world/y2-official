@@ -57,7 +57,7 @@
         @if ($rowHasGroupTitle)
             <h4 class="setlist-group-title-sticky"></h4>
         @endif
-        <div class="setlist-row" style="justify-content: safe center;">
+        <div class="setlist-row" data-row-num="{{ $rowNum }}" style="justify-content: safe center;">
             @foreach ($groups as $group)
                 <div class="setlist-group-wrap" data-group-title="{{ $group['title'] }}">
                     @if ($group['title'])

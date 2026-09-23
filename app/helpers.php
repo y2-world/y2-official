@@ -179,6 +179,73 @@ if (!function_exists('isKaraokeTrack')) {
     }
 }
 
+if (!function_exists('buildSetlistPatternSummary')) {
+    // 同一row内の複数パターン（$patternsは各DbSetlist/UserSetlistモデルのコレクション）を
+    // 曲順の位置ごとに見比べ、全パターンで曲が一致する位置はそのまま1つ、
+    // 異なる位置はその位置に現れた曲名の重複を除いたリストとしてまとめる。
+    // 戻り値は setlist と encore それぞれについて、
+    // [['common' => true, 'title' => ..., 'song_id' => ...|null], ['common' => false, 'variants' => [['title'=>..,'song_id'=>..|null], ...]], ...] の配列。
+    // is_daily/medleyの日替わり候補やmedley曲は、パターン間比較の対象にせず常に「そのパターン内の1曲」として扱う
+    // （既存のgroupDailySongClustersとは目的が異なり、ここでは表示上の1トラックとして単純に横並び比較する）。
+    function buildSetlistPatternSummary($patterns, $songs): array
+    {
+        $extractTitle = function (array $item) use ($songs) {
+            $alternativeTitle = $item['alternative_title'] ?? '';
+            // is_numericだけでは、"20180908"のような数字だけの曲名（DbSongとして
+            // 登録せず生文字列のまま保存された曲）を誤ってDbSong.idの参照と解釈してしまうため、
+            // 実際にそのidのDbSongが存在するかどうかで判定する（_setlist_rows.blade.phpと同じ方針）。
+            $songModel = is_numeric($item['song'] ?? null) ? $songs->find($item['song']) : null;
+            $songId = $songModel ? $songModel->id : null;
+            $title = $alternativeTitle !== ''
+                ? $alternativeTitle
+                : ($songModel ? $songModel->title : ($item['song'] ?? ''));
+            return [
+                'title' => $title,
+                'song_id' => $songId,
+            ];
+        };
+
+        $buildSection = function (string $section) use ($patterns, $extractTitle): array {
+            $lists = $patterns->map(function ($pattern) use ($section) {
+                $items = is_array($pattern->{$section} ?? null) ? $pattern->{$section} : [];
+                return array_values($items);
+            })->values();
+
+            $maxLen = $lists->map(fn ($l) => count($l))->max() ?? 0;
+            $rows = [];
+
+            for ($i = 0; $i < $maxLen; $i++) {
+                $entries = [];
+                foreach ($lists as $list) {
+                    if (isset($list[$i])) {
+                        $entries[] = $extractTitle($list[$i]);
+                    }
+                }
+                if (empty($entries)) {
+                    continue;
+                }
+
+                $uniqueBySongOrTitle = collect($entries)->unique(function ($e) {
+                    return $e['song_id'] !== null ? 'id:' . $e['song_id'] : 'title:' . $e['title'];
+                })->values();
+
+                if ($uniqueBySongOrTitle->count() === 1 && count($entries) === $lists->count()) {
+                    $rows[] = ['common' => true] + $uniqueBySongOrTitle->first();
+                } else {
+                    $rows[] = ['common' => false, 'variants' => $uniqueBySongOrTitle->all()];
+                }
+            }
+
+            return $rows;
+        };
+
+        return [
+            'setlist' => $buildSection('setlist'),
+            'encore' => $buildSection('encore'),
+        ];
+    }
+}
+
 if (!function_exists('ordinal')) {
     function ordinal(int $n): string
     {

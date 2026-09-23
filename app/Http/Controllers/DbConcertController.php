@@ -53,6 +53,15 @@ class DbConcertController extends Controller
         $artist = $tours->artist;
         $songs = DbSong::orderBy('sort_order', 'asc')->get();
         $tourSetlists = DbSetlist::where('tour_id', $id)->orderBy('order_no', 'asc')->get();
+
+        // row（同時に見比べる列同士）ごとに、パターンが2つ以上ある場合だけ
+        // Summarizeポップアップ用の位置ベース差分マージ結果を作る
+        $setlistSummaries = $tourSetlists
+            ->groupBy(fn ($m) => $m->row ?? 1)
+            ->map(function ($rowSetlists) use ($songs) {
+                return $rowSetlists->count() >= 2 ? buildSetlistPatternSummary($rowSetlists, $songs) : null;
+            })
+            ->filter();
         $previous = DbConcert::where('artist_id', $tours->artist_id)
             ->where(function ($q) use ($tours) {
                 $q->where('date1', '<', $tours->date1)
@@ -68,6 +77,6 @@ class DbConcertController extends Controller
                   });
             })->orderBy('date1')->orderBy('id')->first();
 
-        return view('db_concerts.show', compact('songs', 'previous', 'next', 'tours', 'tourSetlists', 'artist'));
+        return view('db_concerts.show', compact('songs', 'previous', 'next', 'tours', 'tourSetlists', 'artist', 'setlistSummaries'));
     }
 }
