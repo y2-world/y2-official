@@ -6,6 +6,7 @@ use App\Models\Artist;
 use App\Models\DbSong;
 use App\Models\DbConcert;
 use App\Models\DbSetlist;
+use Illuminate\Http\Request;
 
 class DbConcertController extends Controller
 {
@@ -47,10 +48,21 @@ class DbConcertController extends Controller
         return view('db_concerts.index', compact('tours', 'bios', 'type', 'totalCount', 'artist'));
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $tours = DbConcert::findOrFail($id);
         $artist = $tours->artist;
+
+        // 一覧ページ（type別に絞り込まれたタブ）から来た場合、Previous/Nextの移動範囲を
+        // その一覧と同じtype（ツアー/イベント/ap bank fes/ソロ）内に絞り込む。
+        // 該当しない・指定が無い場合は従来通りアーティスト内の全ライブから前後に移動する。
+        $from = $request->query('from');
+        $scopeQuery = function ($query) use ($from, $tours) {
+            if ($from === 'type') {
+                $query->where('type', $tours->type);
+            }
+            return $query;
+        };
         $songs = DbSong::orderBy('sort_order', 'asc')->get();
         $tourSetlists = DbSetlist::where('tour_id', $id)->orderBy('order_no', 'asc')->get();
 
@@ -70,21 +82,21 @@ class DbConcertController extends Controller
                 return $hasDifference ? $summary : null;
             })
             ->filter();
-        $previous = DbConcert::where('artist_id', $tours->artist_id)
+        $previous = $scopeQuery(DbConcert::where('artist_id', $tours->artist_id)
             ->where(function ($q) use ($tours) {
                 $q->where('date1', '<', $tours->date1)
                   ->orWhere(function ($q2) use ($tours) {
                       $q2->where('date1', $tours->date1)->where('id', '<', $tours->id);
                   });
-            })->orderBy('date1', 'desc')->orderBy('id', 'desc')->first();
-        $next = DbConcert::where('artist_id', $tours->artist_id)
+            }))->orderBy('date1', 'desc')->orderBy('id', 'desc')->first();
+        $next = $scopeQuery(DbConcert::where('artist_id', $tours->artist_id)
             ->where(function ($q) use ($tours) {
                 $q->where('date1', '>', $tours->date1)
                   ->orWhere(function ($q2) use ($tours) {
                       $q2->where('date1', $tours->date1)->where('id', '>', $tours->id);
                   });
-            })->orderBy('date1')->orderBy('id')->first();
+            }))->orderBy('date1')->orderBy('id')->first();
 
-        return view('db_concerts.show', compact('songs', 'previous', 'next', 'tours', 'tourSetlists', 'artist', 'setlistSummaries'));
+        return view('db_concerts.show', compact('songs', 'previous', 'next', 'tours', 'tourSetlists', 'artist', 'setlistSummaries', 'from'));
     }
 }
