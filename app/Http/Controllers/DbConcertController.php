@@ -59,7 +59,15 @@ class DbConcertController extends Controller
         $setlistSummaries = $tourSetlists
             ->groupBy(fn ($m) => $m->row ?? 1)
             ->map(function ($rowSetlists) use ($songs) {
-                return $rowSetlists->count() >= 2 ? buildSetlistPatternSummary($rowSetlists, $songs) : null;
+                if ($rowSetlists->count() < 2) {
+                    return null;
+                }
+                $summary = buildSetlistPatternSummary($rowSetlists, $songs);
+                $hasDifference = collect(array_merge($summary['setlist'], $summary['encore']))
+                    ->contains(fn ($row) => count($row['variants']) > 1);
+                // 全パターンが完全に同じ曲順・曲目のrowは、Summarizeで見せる差異が
+                // 無いので対象から除外する
+                return $hasDifference ? $summary : null;
             })
             ->filter();
         $previous = DbConcert::where('artist_id', $tours->artist_id)

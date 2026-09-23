@@ -32,31 +32,9 @@
                     $tourKind = $artistId === 'new' ? 'user' : explode('-', $artistId, 2)[0];
                 @endphp
 
-                @if ($tours->isEmpty())
-                    <p id="noToursMessage">このアーティストにはまだツアーが登録されていません。</p>
-                @else
-                    <div class="select-card-list">
-                        @foreach ($tours as $tour)
-                            <a href="{{ route('mypage.attendances.setlists', $tourKind . '-' . $tour->id) }}" class="select-card">
-                                <span class="select-card-body">
-                                    <span class="select-card-title">{{ $tour->title }}</span>
-                                    <span class="select-card-meta">
-                                        @if ($tour->date1 && $tour->date2)
-                                            {{ date('Y.m.d', strtotime($tour->date1)) }} - {{ date('Y.m.d', strtotime($tour->date2)) }}
-                                        @elseif ($tour->date1)
-                                            {{ date('Y.m.d', strtotime($tour->date1)) }}
-                                        @endif
-                                    </span>
-                                </span>
-                                <i class="fa-solid fa-chevron-right select-card-arrow"></i>
-                            </a>
-                        @endforeach
-                    </div>
-                @endif
-
                 @if ($canAddTour)
                     <div style="text-align: center;">
-                        <a href="#" id="newTourToggle" class="mypage-add-button" title="新しいツアーを追加" style="display: inline-flex; margin-top: 24px;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newTourForm').hidden = false; this.hidden = true; var msg = document.getElementById('noToursMessage'); if (msg) { msg.hidden = true; }" @else hidden @endif>
+                        <a href="#" id="newTourToggle" class="mypage-add-button" title="新しいツアーを追加" style="display: inline-flex; margin-bottom: 24px;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newTourForm').hidden = false; this.hidden = true; var msg = document.getElementById('noToursMessage'); if (msg) { msg.hidden = true; }" @else hidden @endif>
                             <i class="fas fa-plus"></i>
                         </a>
                         <form id="newTourForm" method="POST" action="{{ route('mypage.attendances.tours.new', $artistId) }}" @if(!$errors->any()) hidden @endif class="new-item-form @unless($errors->any()) new-item-form--via-toggle @endunless">
@@ -89,6 +67,28 @@
                                 </button>
                             </div>
                         </form>
+                    </div>
+                @endif
+
+                @if ($tours->isEmpty())
+                    <p id="noToursMessage">このアーティストにはまだツアーが登録されていません。</p>
+                @else
+                    <div class="select-card-list">
+                        @foreach ($tours as $tour)
+                            <a href="{{ route('mypage.attendances.setlists', $tourKind . '-' . $tour->id) }}" class="select-card">
+                                <span class="select-card-body">
+                                    <span class="select-card-title">{{ $tour->title }}</span>
+                                    <span class="select-card-meta">
+                                        @if ($tour->date1 && $tour->date2)
+                                            {{ date('Y.m.d', strtotime($tour->date1)) }} - {{ date('Y.m.d', strtotime($tour->date2)) }}
+                                        @elseif ($tour->date1)
+                                            {{ date('Y.m.d', strtotime($tour->date1)) }}
+                                        @endif
+                                    </span>
+                                </span>
+                                <i class="fa-solid fa-chevron-right select-card-arrow"></i>
+                            </a>
+                        @endforeach
                     </div>
                 @endif
             </div>

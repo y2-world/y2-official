@@ -63,7 +63,7 @@
                     @if ($group['title'])
                         <h4 class="setlist-group-title">{{ $group['title'] }}</h4>
                     @endif
-                    <div class="setlist-group-columns" style="display: flex; justify-content: safe center;">
+                    <div class="setlist-group-columns {{ $group['title'] && $group['items']->count() === 1 ? 'setlist-row-single' : '' }}" style="display: flex; justify-content: safe center;">
                         @foreach ($group['items'] as $setlistModel)
                             @php
                                 $setlist = is_array($setlistModel->setlist) ? $setlistModel->setlist : [];

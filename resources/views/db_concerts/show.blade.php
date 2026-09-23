@@ -110,24 +110,16 @@
                             <ol class="live-column">
                                 @foreach ($rows as $row)
                                     <li>
-                                        @if ($row['common'])
-                                            @if ($row['song_id'])
-                                                <a href="{{ url('/database/songs', $row['song_id']) }}">{{ $row['title'] }}</a>
-                                            @else
-                                                {{ $row['title'] }}
+                                        @foreach ($row['variants'] as $variant)
+                                            @if (!$loop->first)
+                                                <span> / </span>
                                             @endif
-                                        @else
-                                            @foreach ($row['variants'] as $variant)
-                                                @if (!$loop->first)
-                                                    <span> / </span>
-                                                @endif
-                                                @if ($variant['song_id'])
-                                                    <a href="{{ url('/database/songs', $variant['song_id']) }}">{{ $variant['title'] }}</a>
-                                                @else
-                                                    {{ $variant['title'] }}
-                                                @endif
-                                            @endforeach
-                                        @endif
+                                            @if ($variant['song_id'])
+                                                <a href="{{ url('/database/songs', $variant['song_id']) }}">{{ $variant['title'] }}</a>
+                                            @else
+                                                {{ $variant['title'] }}
+                                            @endif
+                                        @endforeach
                                     </li>
                                 @endforeach
                             </ol>
@@ -203,8 +195,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // 横スクロール中、画面中央に見えているグループのタイトルを追従表示する
+        // （PC幅では各グループの見出し(h4)を固定表示するので不要。モバイル幅のみ使う）
         var stickyTitle = row.previousElementSibling;
-        if (stickyTitle && stickyTitle.classList.contains('setlist-group-title-sticky')) {
+        if (window.innerWidth <= 767 && stickyTitle && stickyTitle.classList.contains('setlist-group-title-sticky')) {
             var groupWraps = row.querySelectorAll('.setlist-group-wrap[data-group-title]');
             var updateStickyTitle = function () {
                 var rowRect = row.getBoundingClientRect();
@@ -238,11 +231,20 @@ document.addEventListener('DOMContentLoaded', function () {
         );
 
         var rowNums = [];
+        var groupTitlesByRow = {};
         wraps.forEach(function (wrap) {
             var rowEl = wrap.closest('.setlist-row');
             var rowNum = rowEl ? rowEl.getAttribute('data-row-num') : null;
             if (rowNum !== null && rowNums.indexOf(rowNum) === -1) {
                 rowNums.push(rowNum);
+            }
+            var groupWrap = wrap.closest('.setlist-group-wrap');
+            var groupTitle = groupWrap ? (groupWrap.getAttribute('data-group-title') || '') : '';
+            if (rowNum !== null && groupTitle) {
+                groupTitlesByRow[rowNum] = groupTitlesByRow[rowNum] || [];
+                if (groupTitlesByRow[rowNum].indexOf(groupTitle) === -1) {
+                    groupTitlesByRow[rowNum].push(groupTitle);
+                }
             }
         });
         var hasMultipleRows = rowNums.length > 1;
@@ -259,14 +261,27 @@ document.addEventListener('DOMContentLoaded', function () {
             var rowChanged = rowNum !== null && rowNum !== currentRowNum;
             var groupChanged = groupTitle !== currentGroupTitle;
 
-            // rowまたはグループ名（同じrow内の曲順グループ見出し）が切り替わるたびに
-            // 新しいoptgroupを作る。そのoptgroupがrowの先頭（そのrowで最初のグループ）で、
-            // かつそのrowにパターンが2つ以上ある（Summary対象）場合だけ、
-            // 「Summarize」オプションをoptgroupの先頭に入れる（rowにつき1回のみ）。
-            if (rowChanged || groupChanged) {
-                if (rowChanged) {
-                    currentRowNum = rowNum;
+            // row内のグループ名が複数種類ある場合、Summarizeはどのグループにも属さない
+            // row全体の先頭に入れる（特定のサブグループのoptgroupの中に入れるのは意味的に誤り）。
+            // row内のグループ名が1種類だけ（またはグループ名が無い）場合は、そのグループの
+            // optgroupの中に入れてよい（実質row全体を覆う唯一のグループのため）。
+            var groupTitleCountInRow = (groupTitlesByRow[rowNum] || []).length;
+            var summarizeGoesOutsideGroup = groupTitleCountInRow > 1;
+
+            if (rowChanged) {
+                currentRowNum = rowNum;
+                if (summarizeGoesOutsideGroup && !summaryShownForRow[rowNum] && summaryRowNums.indexOf(rowNum) !== -1) {
+                    summaryShownForRow[rowNum] = true;
+                    var summaryOption = document.createElement('option');
+                    summaryOption.value = '__summary_' + rowNum + '__';
+                    summaryOption.textContent = 'Summarize';
+                    patternSelect.appendChild(summaryOption);
                 }
+            }
+
+            // rowまたはグループ名（同じrow内の曲順グループ見出し）が切り替わるたびに
+            // 新しいoptgroupを作る。
+            if (rowChanged || groupChanged) {
                 currentGroupTitle = groupTitle;
 
                 var label = groupTitle ? groupTitle : (hasMultipleRows ? 'Row ' + rowNum : '');
@@ -280,12 +295,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     currentContainer = patternSelect;
                 }
 
-                if (rowChanged && !summaryShownForRow[rowNum] && summaryRowNums.indexOf(rowNum) !== -1) {
+                if (!summarizeGoesOutsideGroup && !summaryShownForRow[rowNum] && summaryRowNums.indexOf(rowNum) !== -1) {
                     summaryShownForRow[rowNum] = true;
-                    var summaryOption = document.createElement('option');
-                    summaryOption.value = '__summary_' + rowNum + '__';
-                    summaryOption.textContent = 'Summarize';
-                    currentContainer.appendChild(summaryOption);
+                    var summaryOptionInGroup = document.createElement('option');
+                    summaryOptionInGroup.value = '__summary_' + rowNum + '__';
+                    summaryOptionInGroup.textContent = 'Summarize';
+                    currentContainer.appendChild(summaryOptionInGroup);
                 }
             }
 

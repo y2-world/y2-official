@@ -123,6 +123,49 @@ if (!function_exists('groupDailySongClusters')) {
     }
 }
 
+if (!function_exists('groupAllSongClusters')) {
+    // groupDailySongClustersと同じ「is_dailyの塊＋その直前の通常曲1つ」を1トラックとする
+    // クラスタ化ルールで、setlist/encoreの全曲をクラスタ列に変換する（日替わりが無い曲も
+    // 独立した1クラスタとして含める）。buildSetlistPatternSummaryのように、パターン間で
+    // 曲順を「トラック単位」で比較する必要がある場合に使う。
+    function groupAllSongClusters(array $items): array
+    {
+        $clusters = [];
+        $currentDailyCluster = null;
+
+        foreach ($items as $item) {
+            $isDaily = !empty($item['is_daily']);
+
+            if ($isDaily) {
+                if ($currentDailyCluster === null) {
+                    // 直前に積んだ通常曲（最後のクラスタ）があれば、それをこの日替わり塊に合流させる
+                    if (!empty($clusters) && !($clusters[count($clusters) - 1]['is_daily'] ?? false)) {
+                        $currentDailyCluster = array_pop($clusters);
+                        $currentDailyCluster['is_daily'] = true;
+                    } else {
+                        $currentDailyCluster = ['items' => [], 'is_daily' => true];
+                    }
+                }
+                $currentDailyCluster['items'][] = $item;
+                continue;
+            }
+
+            if ($currentDailyCluster !== null) {
+                $clusters[] = $currentDailyCluster;
+                $currentDailyCluster = null;
+            }
+
+            $clusters[] = ['items' => [$item], 'is_daily' => false];
+        }
+
+        if ($currentDailyCluster !== null) {
+            $clusters[] = $currentDailyCluster;
+        }
+
+        return $clusters;
+    }
+}
+
 if (!function_exists('countActualSongs')) {
     // setlist/encoreのitem配列から、実際に演奏される曲数を数える。medleyの曲は
     // カウントせず（直前の通常曲の一部として扱う）、is_dailyの候補グループ
@@ -180,16 +223,19 @@ if (!function_exists('isKaraokeTrack')) {
 }
 
 if (!function_exists('buildSetlistPatternSummary')) {
-    // 同一row内の複数パターン（$patternsは各DbSetlist/UserSetlistモデルのコレクション）を
-    // 曲順の位置ごとに見比べ、全パターンで曲が一致する位置はそのまま1つ、
-    // 異なる位置はその位置に現れた曲名の重複を除いたリストとしてまとめる。
-    // 戻り値は setlist と encore それぞれについて、
-    // [['common' => true, 'title' => ..., 'song_id' => ...|null], ['common' => false, 'variants' => [['title'=>..,'song_id'=>..|null], ...]], ...] の配列。
-    // is_daily/medleyの日替わり候補やmedley曲は、パターン間比較の対象にせず常に「そのパターン内の1曲」として扱う
-    // （既存のgroupDailySongClustersとは目的が異なり、ここでは表示上の1トラックとして単純に横並び比較する）。
+    // 同一row内の複数パターン（$patternsは各DbSetlist/UserSetlistモデルのコレクション）を、
+    // 曲順の位置ごとに見比べてSummaryを作る。曲番の単位は生の配列インデックスではなく、
+    // groupAllSongClustersと同じ「is_dailyの塊＋その直前の通常曲1つ」を1トラックとして扱う
+    // （is_daily候補群の分だけ配列長が伸びて、以降の位置が全パターンでズレるのを防ぐため）。
+    // 各位置のクラスタを全パターン間で見比べ、曲が一致すれば1つ、異なれば重複を除いた
+    // 選択肢の一覧としてまとめる（位置ベースの単純マージ。パターン間で曲数が異なる場合、
+    // 短い方は該当位置にその位置の内容が無いものとして扱うため、1曲挿入・削除があると
+    // それ以降の位置がズレる制限がある）。
+    // 戻り値は setlist と encore それぞれについて
+    // [['variants' => [['title'=>..,'song_id'=>..|null], ...]], ...] の配列。
     function buildSetlistPatternSummary($patterns, $songs): array
     {
-        $extractTitle = function (array $item) use ($songs) {
+        $extractEntry = function (array $item) use ($songs) {
             $alternativeTitle = $item['alternative_title'] ?? '';
             // is_numericだけでは、"20180908"のような数字だけの曲名（DbSongとして
             // 登録せず生文字列のまま保存された曲）を誤ってDbSong.idの参照と解釈してしまうため、
@@ -202,38 +248,38 @@ if (!function_exists('buildSetlistPatternSummary')) {
             return [
                 'title' => $title,
                 'song_id' => $songId,
+                'key' => $songId !== null ? 'id:' . $songId : 'title:' . $title,
             ];
         };
 
-        $buildSection = function (string $section) use ($patterns, $extractTitle): array {
-            $lists = $patterns->map(function ($pattern) use ($section) {
+        $buildSection = function (string $section) use ($patterns, $extractEntry): array {
+            $clusterLists = $patterns->map(function ($pattern) use ($section) {
                 $items = is_array($pattern->{$section} ?? null) ? $pattern->{$section} : [];
-                return array_values($items);
+                return groupAllSongClusters($items);
             })->values();
 
-            $maxLen = $lists->map(fn ($l) => count($l))->max() ?? 0;
+            $maxLen = $clusterLists->map(fn ($list) => count($list))->max() ?? 0;
             $rows = [];
 
             for ($i = 0; $i < $maxLen; $i++) {
                 $entries = [];
-                foreach ($lists as $list) {
-                    if (isset($list[$i])) {
-                        $entries[] = $extractTitle($list[$i]);
+                $existingKeys = [];
+                foreach ($clusterLists as $list) {
+                    if (!isset($list[$i])) {
+                        continue;
+                    }
+                    foreach ($list[$i]['items'] as $item) {
+                        $entry = $extractEntry($item);
+                        if (!in_array($entry['key'], $existingKeys)) {
+                            $entries[] = $entry;
+                            $existingKeys[] = $entry['key'];
+                        }
                     }
                 }
                 if (empty($entries)) {
                     continue;
                 }
-
-                $uniqueBySongOrTitle = collect($entries)->unique(function ($e) {
-                    return $e['song_id'] !== null ? 'id:' . $e['song_id'] : 'title:' . $e['title'];
-                })->values();
-
-                if ($uniqueBySongOrTitle->count() === 1 && count($entries) === $lists->count()) {
-                    $rows[] = ['common' => true] + $uniqueBySongOrTitle->first();
-                } else {
-                    $rows[] = ['common' => false, 'variants' => $uniqueBySongOrTitle->all()];
-                }
+                $rows[] = ['variants' => $entries];
             }
 
             return $rows;
