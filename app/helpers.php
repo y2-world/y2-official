@@ -558,25 +558,55 @@ if (!function_exists('buildSetlistPatternSummary')) {
 
         $mergedSetlist = $mergeEntryLists($setlistClusterLists);
         $mergedEncore = $mergeEntryLists($encoreClusterLists);
+        $base = array_merge($mergedSetlist, $mergedEncore);
 
         // setlist単体・encore単体を独立にマージしたことで、本編最後の曲とアンコール
-        // 1曲目の曲が入れ替わるようなケース（本編/アンコールの境界自体がパターン間で
-        // ズレる）では、同じ曲がsetlist側の最後の行とencore側の最初の行の両方に
-        // 別々に現れてしまう。setlist側最後の行とencore側最初の行だけを対象に、
-        // 同じkeyを持つentryがあれば1行に統合する（境界そのものから離れた位置の
-        // 同名曲は、単に別々の演奏である可能性が高いため対象にしない）。
-        if (!empty($mergedSetlist) && !empty($mergedEncore)) {
-            $lastSetlistIdx = count($mergedSetlist) - 1;
-            $lastSetlistKeys = array_column($mergedSetlist[$lastSetlistIdx]['variants'], 'key');
-            $firstEncoreKeys = array_column($mergedEncore[0]['variants'], 'key');
+        // 側の曲が入れ替わるようなケース（本編/アンコールの境界自体がパターン間で
+        // ズレる）や、本編内でも曲数が1パターンだけ多いことによる位置ズレでは、
+        // 同じ曲が別々の行に重複して現れてしまう。$base全体を通して、同じkeyを
+        // 持つ「単独行」（variantsが1件だけ＝他の日替わり選択肢とまだマージされて
+        // いない行）が複数あれば、そのkeyを採用しているパターン数が少ない方の
+        // 出現を削除する（多い方はそのまま残す）。行のvariantsが2件以上ある場合は
+        // 対象外にする（例: 「どうしても君を失いたくない / 愛のままにわがままに」の
+        // ように、その曲が既に別の日替わり選択肢の一部として1行にまとまっている
+        // 場合、同じ曲名がアンコール側の別演奏にも単独で存在するだけで、両者は
+        // 無関係な演奏である可能性が高いため統合しない）。
+        $rowIndexesForKey = [];
+        foreach ($base as $rowIdx => $row) {
+            if (count($row['variants']) !== 1) {
+                continue;
+            }
+            $key = $row['variants'][0]['key'];
+            // song_idを持たない生文字列曲（key が "title:..." 形式）は、同名だが
+            // 別の演奏を指す可能性を否定できないため対象外とする
+            if (!str_starts_with($key, 'id:')) {
+                continue;
+            }
+            $rowIndexesForKey[$key][] = $rowIdx;
+        }
 
-            if (array_intersect($lastSetlistKeys, $firstEncoreKeys)) {
-                mergeEntriesPreservingEarliestOrder($mergedSetlist[$lastSetlistIdx]['variants'], $mergedEncore[0]['variants']);
-                array_shift($mergedEncore);
+        foreach ($rowIndexesForKey as $key => $rowIndexes) {
+            if (count($rowIndexes) < 2) {
+                continue;
+            }
+
+            $countsByRow = [];
+            foreach ($rowIndexes as $rowIdx) {
+                $votes = $base[$rowIdx]['variants'][0]['_sectionVotes'] ?? [];
+                $countsByRow[$rowIdx] = array_sum($votes) ?: 1;
+            }
+            $maxCount = max($countsByRow);
+            $keepRowIdx = array_search($maxCount, $countsByRow, true);
+
+            foreach ($rowIndexes as $rowIdx) {
+                if ($rowIdx === $keepRowIdx) {
+                    continue;
+                }
+                $base[$rowIdx]['variants'] = [];
             }
         }
 
-        $base = array_merge($mergedSetlist, $mergedEncore);
+        $base = array_values(array_filter($base, fn ($row) => !empty($row['variants'])));
 
         // LCSアンカー方式では基準列由来の曲が常にvariants先頭に来てしまう
         // （基準列は最初からvariantsに入っているため）。_orderで本来の初出
