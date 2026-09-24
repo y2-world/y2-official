@@ -61,6 +61,42 @@
         </div>
     </div>
 
+    @if (isset($setlistSummaries) && $setlistSummaries->count())
+        <div id="setlistSummaryOverlay" style="display: none; position: fixed; inset: 0; background: rgba(20,22,30,0.5); z-index: 1050; align-items: center; justify-content: center;">
+            @foreach ($setlistSummaries as $rowNum => $summary)
+                <div class="setlist setlist-summary-popup" data-summary-row="{{ $rowNum }}" style="display: none; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); padding: 30px; max-width: 560px; width: calc(100% - 32px); max-height: 80vh; overflow-y: auto; position: relative;">
+                    <button type="button" class="setlist-summary-close" style="position: absolute; top: 16px; right: 16px; border: none; background: #f0f1f6; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; color: #718096; font-size: 16px; line-height: 1; flex-shrink: 0;">&times;</button>
+                    <h3 style="margin: 0 44px 20px 0; font-size: 18px;">{{ $tour->title }}</h3>
+                    @foreach (['setlist' => $summary['setlist'], 'encore' => $summary['encore']] as $section => $rows)
+                        @if (count($rows))
+                            @if ($section === 'encore')
+                                <div style="margin: 20px 0 10px;">
+                                    <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
+                                </div>
+                            @endif
+                            <ol class="live-column">
+                                @foreach ($rows as $row)
+                                    <li>
+                                        @foreach ($row['variants'] as $variant)
+                                            @if (!$loop->first)
+                                                <span> / </span>
+                                            @endif
+                                            @if ($variant['song_id'])
+                                                <a href="{{ route('mypage.user_songs.show', $variant['song_id']) }}">{{ $variant['title'] }}</a>
+                                            @else
+                                                {{ $variant['title'] }}
+                                            @endif
+                                        @endforeach
+                                    </li>
+                                @endforeach
+                            </ol>
+                        @endif
+                    @endforeach
+                </div>
+            @endforeach
+        </div>
+    @endif
+
     <div class="container database-year-content" style="padding-top: 0;">
         <div class="row justify-content-center">
             <div class="col-xl-9">
@@ -106,30 +142,97 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         var wraps = document.querySelectorAll('.live-column-wrap[data-pattern-label]');
-        var currentOptgroup = null;
+        var summaryRowNums = Array.prototype.map.call(
+            document.querySelectorAll('.setlist-summary-popup[data-summary-row]'),
+            function (popup) { return popup.getAttribute('data-summary-row'); }
+        );
+
+        var rowNums = [];
+        var groupTitlesByRow = {};
+        wraps.forEach(function (wrap) {
+            var rowEl = wrap.closest('.setlist-row');
+            var rowNum = rowEl ? rowEl.getAttribute('data-row-num') : null;
+            if (rowNum !== null && rowNums.indexOf(rowNum) === -1) {
+                rowNums.push(rowNum);
+            }
+            var groupWrap = wrap.closest('.setlist-group-wrap');
+            var groupTitle = groupWrap ? (groupWrap.getAttribute('data-group-title') || '') : '';
+            if (rowNum !== null && groupTitle) {
+                groupTitlesByRow[rowNum] = groupTitlesByRow[rowNum] || [];
+                if (groupTitlesByRow[rowNum].indexOf(groupTitle) === -1) {
+                    groupTitlesByRow[rowNum].push(groupTitle);
+                }
+            }
+        });
+        var hasMultipleRows = rowNums.length > 1;
+
+        var currentContainer = patternSelect;
+        var currentRowNum = null;
         var currentGroupTitle = null;
+        var summaryShownForRow = {};
         wraps.forEach(function (wrap, index) {
+            var rowEl = wrap.closest('.setlist-row');
+            var rowNum = rowEl ? rowEl.getAttribute('data-row-num') : null;
             var groupWrap = wrap.closest('.setlist-group-wrap');
             var groupTitle = groupWrap ? groupWrap.getAttribute('data-group-title') : null;
+            var rowChanged = rowNum !== null && rowNum !== currentRowNum;
+            var groupChanged = groupTitle !== currentGroupTitle;
+
+            // row内のグループ名が複数種類ある場合、Summarizeはどのグループにも属さない
+            // row全体の先頭に入れる（特定のサブグループのoptgroupの中に入れるのは意味的に誤り）。
+            // row内のグループ名が1種類だけ（またはグループ名が無い）場合は、そのグループの
+            // optgroupの中に入れてよい（実質row全体を覆う唯一のグループのため）。
+            var groupTitleCountInRow = (groupTitlesByRow[rowNum] || []).length;
+            var summarizeGoesOutsideGroup = groupTitleCountInRow > 1;
+
+            if (rowChanged) {
+                currentRowNum = rowNum;
+                if (summarizeGoesOutsideGroup && !summaryShownForRow[rowNum] && summaryRowNums.indexOf(rowNum) !== -1) {
+                    summaryShownForRow[rowNum] = true;
+                    var summaryOption = document.createElement('option');
+                    summaryOption.value = '__summary_' + rowNum + '__';
+                    summaryOption.textContent = 'Summarize';
+                    patternSelect.appendChild(summaryOption);
+                }
+            }
+
+            // rowまたはグループ名（同じrow内の曲順グループ見出し）が切り替わるたびに
+            // 新しいoptgroupを作る。
+            if (rowChanged || groupChanged) {
+                currentGroupTitle = groupTitle;
+
+                var label = groupTitle ? groupTitle : (hasMultipleRows ? 'Row ' + rowNum : '');
+
+                if (label) {
+                    var rowOptgroup = document.createElement('optgroup');
+                    rowOptgroup.label = label;
+                    patternSelect.appendChild(rowOptgroup);
+                    currentContainer = rowOptgroup;
+                } else {
+                    currentContainer = patternSelect;
+                }
+
+                if (!summarizeGoesOutsideGroup && !summaryShownForRow[rowNum] && summaryRowNums.indexOf(rowNum) !== -1) {
+                    summaryShownForRow[rowNum] = true;
+                    var summaryOptionInGroup = document.createElement('option');
+                    summaryOptionInGroup.value = '__summary_' + rowNum + '__';
+                    summaryOptionInGroup.textContent = 'Summarize';
+                    currentContainer.appendChild(summaryOptionInGroup);
+                }
+            }
 
             var option = document.createElement('option');
             option.value = String(index);
             option.textContent = wrap.getAttribute('data-pattern-label');
-
-            if (groupTitle) {
-                if (groupTitle !== currentGroupTitle) {
-                    currentOptgroup = document.createElement('optgroup');
-                    currentOptgroup.label = groupTitle;
-                    patternSelect.appendChild(currentOptgroup);
-                    currentGroupTitle = groupTitle;
-                }
-                currentOptgroup.appendChild(option);
-            } else {
-                currentGroupTitle = null;
-                patternSelect.appendChild(option);
-            }
+            currentContainer.appendChild(option);
         });
         patternSelect.addEventListener('change', function () {
+            if (patternSelect.value.indexOf('__summary_') === 0) {
+                var rowNum = patternSelect.value.replace('__summary_', '').replace('__', '');
+                openSetlistSummary(rowNum);
+                patternSelect.value = '';
+                return;
+            }
             var wrap = wraps[Number(patternSelect.value)];
             if (wrap) {
                 var header = document.querySelector('nav.fixed-top');
@@ -163,28 +266,41 @@ document.addEventListener('DOMContentLoaded', function () {
     setupPatternSelect('spPatternListSelect');
     setupPatternSelect('pcPatternListSelect');
 
-    // PCでは、セットリストが横に並びきらずスクロールが発生している場合だけ
-    // パターン一覧アイコンを表示する（ウィンドウ幅やパターン数によって変わるため実測する）。
+    // PCでもウィンドウ幅やスクロール有無に関わらず常にパターン一覧アイコンを表示する
     var pcIconWrap = document.getElementById('pcPatternListIconWrap');
     if (pcIconWrap) {
-        var updatePcIconVisibility = function () {
-            // .pcクラス自体がmax-width:991pxで非表示になる想定のため、
-            // モバイル幅ではインラインstyleで上書きしないよう判定自体をスキップする
-            if (window.innerWidth < 992) {
-                pcIconWrap.style.display = 'none';
-                return;
+        pcIconWrap.style.display = 'flex';
+    }
+
+    var summaryOverlay = document.getElementById('setlistSummaryOverlay');
+    if (summaryOverlay) {
+        summaryOverlay.addEventListener('click', function (e) {
+            if (e.target === summaryOverlay) {
+                closeSetlistSummary();
             }
-            var hasScrollingRow = Array.prototype.some.call(
-                document.querySelectorAll('.setlist-row'),
-                function (row) {
-                    return row.scrollWidth > row.clientWidth + 1;
-                }
-            );
-            pcIconWrap.style.display = hasScrollingRow ? 'flex' : 'none';
-        };
-        updatePcIconVisibility();
-        window.addEventListener('resize', updatePcIconVisibility);
+        });
+        summaryOverlay.querySelectorAll('.setlist-summary-close').forEach(function (btn) {
+            btn.addEventListener('click', closeSetlistSummary);
+        });
     }
 });
+
+function openSetlistSummary(rowNum) {
+    var overlay = document.getElementById('setlistSummaryOverlay');
+    if (!overlay) {
+        return;
+    }
+    overlay.querySelectorAll('.setlist-summary-popup').forEach(function (popup) {
+        popup.style.display = popup.getAttribute('data-summary-row') === String(rowNum) ? 'block' : 'none';
+    });
+    overlay.style.display = 'flex';
+}
+
+function closeSetlistSummary() {
+    var overlay = document.getElementById('setlistSummaryOverlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+    }
+}
 </script>
 @endsection

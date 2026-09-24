@@ -30,36 +30,8 @@
                     </div>
                 @endif
 
-                <div id="concertList" class="select-card-list">
-                    @foreach ($concerts as $concert)
-                        <div class="manage-artist-row">
-                            <a href="{{ route('mypage.manage.setlists', [$artist->id, $concert->id]) }}" class="select-card">
-                                <span class="select-card-body">
-                                    <span class="select-card-title">{{ $concert->title }}</span>
-                                    <span class="select-card-meta">
-                                        @if ($concert->date1)
-                                            <span style="display: block;">
-                                                {{ \Carbon\Carbon::parse($concert->date1)->format('Y.m.d') }}
-                                                @if ($concert->date2 && $concert->date2 !== $concert->date1)
-                                                    - {{ \Carbon\Carbon::parse($concert->date2)->format('Y.m.d') }}
-                                                @endif
-                                            </span>
-                                        @endif
-                                        <span style="display: block;">{{ $concert->setlists_count }}パターン</span>
-                                    </span>
-                                </span>
-                                <button type="button" class="manage-artist-delete" data-delete-url="{{ route('mypage.manage.concerts.destroy', [$artist->id, $concert->id]) }}" data-confirm="このツアーを削除すると、含まれるセットリストパターンもすべて削除されます。よろしいですか？" title="削除">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                                <i class="fa-solid fa-chevron-right select-card-arrow"></i>
-                            </a>
-                        </div>
-                    @endforeach
-                </div>
-                <p id="noConcertsMessage" style="text-align: center; color: #999; margin-top: 0; margin-bottom: 0;" @if ($concerts->isNotEmpty() || $errors->any()) hidden @endif>まだツアーがありません。</p>
-
                 <div style="text-align: center;">
-                    <a href="#" id="newConcertToggle" class="mypage-add-button" title="ツアーを追加" style="display: inline-flex; margin-top: 24px;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newConcertForm').hidden = false; document.getElementById('noConcertsMessage').hidden = true; this.hidden = true;" @else hidden @endif>
+                    <a href="#" id="newConcertToggle" class="mypage-add-button" title="ツアーを追加" style="display: inline-flex; margin-bottom: 24px;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newConcertForm').hidden = false; document.getElementById('noConcertsMessage').hidden = true; this.hidden = true;" @else hidden @endif>
                         <i class="fas fa-plus"></i>
                     </a>
                     <form id="newConcertForm" method="POST" action="{{ route('mypage.manage.concerts.store', $artist->id) }}" @if(!$errors->any()) hidden @endif class="new-item-form @unless($errors->any()) new-item-form--via-toggle @endunless">
@@ -90,6 +62,34 @@
                         </div>
                     </form>
                 </div>
+
+                <div id="concertList" class="select-card-list">
+                    @foreach ($concerts as $concert)
+                        <div class="manage-artist-row">
+                            <a href="{{ route('mypage.manage.setlists', [$artist->id, $concert->id]) }}" class="select-card">
+                                <span class="select-card-body">
+                                    <span class="select-card-title">{{ $concert->title }}</span>
+                                    <span class="select-card-meta">
+                                        @if ($concert->date1)
+                                            <span style="display: block;">
+                                                {{ \Carbon\Carbon::parse($concert->date1)->format('Y.m.d') }}
+                                                @if ($concert->date2 && $concert->date2 !== $concert->date1)
+                                                    - {{ \Carbon\Carbon::parse($concert->date2)->format('Y.m.d') }}
+                                                @endif
+                                            </span>
+                                        @endif
+                                        <span style="display: block;">{{ $concert->setlists_count }}パターン</span>
+                                    </span>
+                                </span>
+                                <button type="button" class="manage-artist-delete" data-delete-url="{{ route('mypage.manage.concerts.destroy', [$artist->id, $concert->id]) }}" data-confirm="このツアーを削除すると、含まれるセットリストパターンもすべて削除されます。よろしいですか？" title="削除">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                                <i class="fa-solid fa-chevron-right select-card-arrow"></i>
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+                <p id="noConcertsMessage" style="text-align: center; color: #999; margin-top: 0; margin-bottom: 0;" @if ($concerts->isNotEmpty() || $errors->any()) hidden @endif>まだツアーがありません。</p>
             </div>
         </div>
     </div>

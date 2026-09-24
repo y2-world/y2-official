@@ -452,7 +452,7 @@
     // 「＋」を押しても何も保存せず、曲目編集フォーム（template）を複製して開いた状態で挿入するだけ。
     // この中の「保存」を押した時点で初めてstoreSetlistへ送信され、DBに書き込まれる。
     // 「キャンセル」または他のパターン追加を押した場合は、DOMから取り除くだけで何も残らない。
-    document.getElementById('newSetlistPatternBtn').addEventListener('click', () => {
+    document.getElementById('newSetlistPatternBtn').addEventListener('click', function () {
         // 既に開いている未保存フォームがあれば、二重に増やさず先に片付ける
         document.querySelector('.new-setlist-pattern-row')?.remove();
 
@@ -464,9 +464,12 @@
         const setlistList = document.getElementById('setlistList');
         setlistList.appendChild(fragment);
         document.getElementById('noSetlistsMessage').hidden = true;
+        this.hidden = true;
 
+        const newSetlistPatternBtn = this;
         row.querySelector('.new-setlist-pattern-cancel').addEventListener('click', () => {
             row.remove();
+            newSetlistPatternBtn.hidden = false;
             if (!document.querySelector('[data-setlist-id]')) {
                 document.getElementById('noSetlistsMessage').hidden = false;
             }

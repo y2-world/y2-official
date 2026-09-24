@@ -22,6 +22,17 @@
     <div class="container database-content">
         <div class="row justify-content-center">
             <div class="col-lg-8">
+                @if ($kind === 'user')
+                    <div style="margin-bottom: 24px; text-align: center;">
+                        <form method="POST" action="{{ route('mypage.attendances.setlists.new_pattern', $tourId) }}">
+                            @csrf
+                            <button type="submit" class="mypage-add-button" title="新しいセットリストパターンを追加" style="border: none;">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </form>
+                    </div>
+                @endif
+
                 @if ($tourSetlists->isEmpty())
                     <p>このツアーにはまだセットリストが登録されていません。</p>
                 @else
@@ -68,17 +79,6 @@
                             </div>
                         </div>
                     @endforeach
-                @endif
-
-                @if ($kind === 'user')
-                    <div style="margin-top: 24px; text-align: center;">
-                        <form method="POST" action="{{ route('mypage.attendances.setlists.new_pattern', $tourId) }}">
-                            @csrf
-                            <button type="submit" class="mypage-add-button" title="新しいセットリストパターンを追加" style="border: none;">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </form>
-                    </div>
                 @endif
             </div>
         </div>

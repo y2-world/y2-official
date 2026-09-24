@@ -45,24 +45,12 @@
                     </div>
                 @endif
 
-                @if ($myArtists->isNotEmpty())
+                @if ($officialArtists->isNotEmpty() && $myArtists->isNotEmpty())
                     <hr style="margin: 32px 0;">
-                    <div class="pick-card-grid">
-                        @foreach ($myArtists as $artist)
-                            <a href="{{ route('mypage.attendances.tours', 'user-' . $artist->id) }}" class="pick-card">
-                                <div class="pick-card-header">
-                                    <span class="select-card-icon"><i class="fa-solid fa-music"></i></span>
-                                    <span class="select-card-body">
-                                        <span class="select-card-title">{{ $artist->name }}</span>
-                                    </span>
-                                </div>
-                            </a>
-                        @endforeach
-                    </div>
                 @endif
 
                 <div style="text-align: center;">
-                    <a href="#" id="newArtistToggle" class="mypage-add-button" title="その他のアーティストを追加" style="display: inline-flex; margin-top: 24px;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newArtistForm').hidden = false; this.hidden = true;" @else hidden @endif>
+                    <a href="#" id="newArtistToggle" class="mypage-add-button" title="その他のアーティストを追加" style="display: inline-flex; margin-bottom: 24px;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newArtistForm').hidden = false; this.hidden = true;" @else hidden @endif>
                         <i class="fas fa-plus"></i>
                     </a>
                     <form id="newArtistForm" method="POST" action="{{ route('mypage.attendances.artists.new') }}" @if(!$errors->any()) hidden @endif class="new-item-form @unless($errors->any()) new-item-form--via-toggle @endunless">
@@ -79,6 +67,21 @@
                         </div>
                     </form>
                 </div>
+
+                @if ($myArtists->isNotEmpty())
+                    <div class="pick-card-grid">
+                        @foreach ($myArtists as $artist)
+                            <a href="{{ route('mypage.attendances.tours', 'user-' . $artist->id) }}" class="pick-card">
+                                <div class="pick-card-header">
+                                    <span class="select-card-icon"><i class="fa-solid fa-music"></i></span>
+                                    <span class="select-card-body">
+                                        <span class="select-card-title">{{ $artist->name }}</span>
+                                    </span>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                @endif
             </div>
         </div>
     </div>

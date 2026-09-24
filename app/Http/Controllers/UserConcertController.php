@@ -35,6 +35,23 @@ class UserConcertController extends Controller
         $songs = UserSong::where('user_artist_id', $tour->user_artist_id)->orderBy('sort_order', 'asc')->get();
         $tourSetlists = UserSetlist::where('user_concert_id', $id)->orderBy('row', 'asc')->orderBy('order_no', 'asc')->get();
 
+        // row（同時に見比べる列同士）ごとに、パターンが2つ以上ある場合だけ
+        // Summarizeポップアップ用の位置ベース差分マージ結果を作る
+        $setlistSummaries = $tourSetlists
+            ->groupBy(fn ($m) => $m->row ?? 1)
+            ->map(function ($rowSetlists) use ($songs) {
+                if ($rowSetlists->count() < 2) {
+                    return null;
+                }
+                $summary = buildSetlistPatternSummary($rowSetlists, $songs);
+                $hasDifference = collect(array_merge($summary['setlist'], $summary['encore']))
+                    ->contains(fn ($row) => count($row['variants']) > 1);
+                // 全パターンが完全に同じ曲順・曲目のrowは、Summarizeで見せる差異が
+                // 無いので対象から除外する
+                return $hasDifference ? $summary : null;
+            })
+            ->filter();
+
         $previous = UserConcert::where('user_artist_id', $tour->user_artist_id)
             ->where(function ($q) use ($tour) {
                 $q->where('date1', '<', $tour->date1)
@@ -50,6 +67,6 @@ class UserConcertController extends Controller
                   });
             })->orderBy('date1')->orderBy('id')->first();
 
-        return view('mypage.user_concerts.show', compact('songs', 'previous', 'next', 'tour', 'tourSetlists', 'artist'));
+        return view('mypage.user_concerts.show', compact('songs', 'previous', 'next', 'tour', 'tourSetlists', 'artist', 'setlistSummaries'));
     }
 }
