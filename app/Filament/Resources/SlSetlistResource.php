@@ -890,7 +890,7 @@ class SlSetlistResource extends Resource
                     ->visible(fn (SlSetlist $record) => !$record->fes && $record->db_concert_id && (!empty($record->setlist) || !empty($record->encore)))
                     ->modalHeading('セットリストパターンを追加')
                     ->modalSubmitActionLabel('追加する')
-                    ->form(fn (SlSetlist $record) => static::featuredSongChoiceFields($record))
+                    ->form(fn (SlSetlist $record) => static::featuredSongChoiceFields($record, $record->dbConcert))
                     ->action(function (array $data, SlSetlist $record) {
                         $tour = $record->dbConcert;
                         if (!$tour) {
@@ -1003,7 +1003,10 @@ class SlSetlistResource extends Resource
     // 返す。DbSongへの機械的な紐付け（タイトル一致）が別の曲を誤って指してしまう
     // リスクがあるため、フォームで曲ごとに新規登録するかどうかを選ばせる対象になる。
     // 既にdb_song_idがあるものは選択の余地なくその紐付けを使うので対象外。
-    private static function featuredUnlinkedSlSongsFor(SlSetlist $record)
+    // $tourを渡した場合、そのツアー内の既存DbSetlistで既に「登録しない」を選んで
+    // プレーンテキスト（song=タイトル文字列）のまま登録済みの曲は、一度判断済みとして
+    // 除外する（毎回同じ確認を繰り返させない）。
+    private static function featuredUnlinkedSlSongsFor(SlSetlist $record, ?DbConcert $tour = null)
     {
         $slSongIds = collect(array_merge($record->setlist ?? [], $record->encore ?? []))
             ->filter(fn ($item) => !empty($item['featuring']))
@@ -1011,15 +1014,28 @@ class SlSetlistResource extends Resource
             ->filter(fn ($v) => $v !== null && $v !== '')
             ->unique();
 
-        return SlSong::whereIn('id', $slSongIds)->whereNull('db_song_id')->get(['id', 'title']);
+        $slSongs = SlSong::whereIn('id', $slSongIds)->whereNull('db_song_id')->get(['id', 'title']);
+
+        if ($tour) {
+            $alreadyPlainTextTitles = DbSetlist::where('tour_id', $tour->id)
+                ->get(['setlist', 'encore'])
+                ->flatMap(fn (DbSetlist $s) => array_merge($s->setlist ?? [], $s->encore ?? []))
+                ->pluck('song')
+                ->filter(fn ($v) => $v !== null && $v !== '' && !is_numeric($v))
+                ->unique();
+
+            $slSongs = $slSongs->reject(fn (SlSong $s) => $alreadyPlainTextTitles->contains($s->title));
+        }
+
+        return $slSongs;
     }
 
     // featuring付きで未紐付けの曲がある場合だけ、曲ごとに「DbSongとして新規登録する/
     // しない（プレーンテキスト表示のまま）」を選ばせるRadioフィールドの配列を作る。
     // 無ければ空配列を返し、呼び出し元のフォーム自体を実質的に素通りさせる。
-    private static function featuredSongChoiceFields(SlSetlist $record): array
+    private static function featuredSongChoiceFields(SlSetlist $record, ?DbConcert $tour = null): array
     {
-        $slSongs = static::featuredUnlinkedSlSongsFor($record);
+        $slSongs = static::featuredUnlinkedSlSongsFor($record, $tour);
         if ($slSongs->isEmpty()) {
             return [];
         }
