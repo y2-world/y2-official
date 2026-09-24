@@ -313,6 +313,7 @@ if (!function_exists('mergeEntriesPreservingEarliestOrder')) {
 
             if (($entry['_order'] ?? PHP_INT_MAX) < ($variants[$existingIndex]['_order'] ?? PHP_INT_MAX)) {
                 $variants[$existingIndex]['_order'] = $entry['_order'];
+                $variants[$existingIndex]['_clusterPosition'] = $entry['_clusterPosition'] ?? 0;
             }
         }
     }
@@ -462,7 +463,13 @@ if (!function_exists('buildSetlistPatternSummary')) {
                     return collect($cluster['items'])
                         ->map($extractEntry)
                         ->unique('key')
-                        ->map(fn ($entry) => $entry + ['_order' => $patternIndex, '_section' => $section])
+                        ->values()
+                        // _clusterPosition: このクラスタ内（=is_dailyの塊など、1トラック
+                        // として扱われる範囲）での元の並び順。同じパターン由来の複数
+                        // entryが、マージ時にキー一致の有無で別々のタイミングで処理
+                        // されると、_orderが同点でも配列への追加順が元のクラスタ内順序と
+                        // ズレてしまうため、_order同点時のタイブレークに使う。
+                        ->map(fn ($entry, $clusterPosition) => $entry + ['_order' => $patternIndex, '_section' => $section, '_clusterPosition' => $clusterPosition])
                         ->values()
                         ->all();
                 })
@@ -627,9 +634,13 @@ if (!function_exists('buildSetlistPatternSummary')) {
         // （基準列は最初からvariantsに入っているため）。_orderで本来の初出
         // パターン順に並べ替え直す（PHPのusortはPHP8で安定ソート。単純位置
         // マージ側は元々走査順=初出パターン順で追加しているため、並べ替えても
-        // 結果は変わらない）。
+        // 結果は変わらない）。_orderが同点になる場合（同じパターン由来の複数
+        // entryが、マージ過程でキー一致の有無により別々のタイミングで配列に
+        // 追加され、追加順が元のクラスタ内順序とズレてしまったケース）は、
+        // _clusterPosition（そのentryが元々属していたクラスタ内での並び順）で
+        // タイブレークし、実際の演奏順を復元する。
         foreach ($base as &$row) {
-            usort($row['variants'], fn ($a, $b) => $a['_order'] <=> $b['_order']);
+            usort($row['variants'], fn ($a, $b) => $a['_order'] <=> $b['_order'] ?: ($a['_clusterPosition'] ?? 0) <=> ($b['_clusterPosition'] ?? 0));
         }
         unset($row);
 
@@ -680,7 +691,7 @@ if (!function_exists('buildSetlistPatternSummary')) {
                         $totalVotes = $totalVotesByKey[$entry['key']] ?? 0;
                         $isCommon = $totalVotes >= $patternCount;
                         return collect($entry)
-                            ->except(['_order', '_section', '_sectionVotes', '_sectionMaxOrder'])
+                            ->except(['_order', '_section', '_sectionVotes', '_sectionMaxOrder', '_clusterPosition'])
                             ->put('is_common', $isCommon)
                             ->all();
                     },
