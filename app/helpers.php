@@ -560,6 +560,21 @@ if (!function_exists('buildSetlistPatternSummary')) {
         $mergedEncore = $mergeEntryLists($encoreClusterLists);
         $base = array_merge($mergedSetlist, $mergedEncore);
 
+        // is_common判定（その曲が全パターンで演奏されているか）に使う、keyごとの
+        // 総出演パターン数を、重複削除で行が消される前のこの時点で集計しておく。
+        // 後段の重複削除処理は「少ない方の出現を削除する」ため、削除後に集計すると
+        // 削除された側の票が失われ、実際には全パターン共通の曲（例: tour103の
+        // 「ポケット カスタネット」、本編/アンコールの境界がズレて2箇所に分かれて
+        // いただけ）が誤って「一部公演限定」と判定されてしまう。
+        $totalVotesByKey = [];
+        foreach ($base as $row) {
+            foreach ($row['variants'] as $entry) {
+                $votes = $entry['_sectionVotes'] ?? [$entry['_section'] => 1];
+                $key = $entry['key'];
+                $totalVotesByKey[$key] = ($totalVotesByKey[$key] ?? 0) + array_sum($votes);
+            }
+        }
+
         // setlist単体・encore単体を独立にマージしたことで、本編最後の曲とアンコール
         // 側の曲が入れ替わるようなケース（本編/アンコールの境界自体がパターン間で
         // ズレる）や、本編内でも曲数が1パターンだけ多いことによる位置ズレでは、
@@ -652,9 +667,23 @@ if (!function_exists('buildSetlistPatternSummary')) {
                 $section = $encoreCount > $setlistCount ? 'encore' : 'setlist';
             }
 
+            // is_common: その曲（key）自体が全パターンで演奏されているかどうか。
+            // _sectionVotes（setlist側+encore側の合計）がパターン総数と一致しない
+            // 場合は、一部の公演でしか演奏されていない曲ということなので、
+            // 呼び出し側でその旨を視覚的に区別できるようfalseにする（例: tour82の
+            // 「かぞえうた」は119でしか演奏されていないのでfalse、「End of the day」は
+            // 全パターンで演奏されているのでtrue）。
+            $patternCount = $patterns->count();
             $cleanedRow = [
                 'variants' => array_map(
-                    fn ($entry) => collect($entry)->except(['_order', '_section', '_sectionVotes', '_sectionMaxOrder'])->all(),
+                    function ($entry) use ($patternCount, $totalVotesByKey) {
+                        $totalVotes = $totalVotesByKey[$entry['key']] ?? 0;
+                        $isCommon = $totalVotes >= $patternCount;
+                        return collect($entry)
+                            ->except(['_order', '_section', '_sectionVotes', '_sectionMaxOrder'])
+                            ->put('is_common', $isCommon)
+                            ->all();
+                    },
                     $row['variants']
                 ),
             ];

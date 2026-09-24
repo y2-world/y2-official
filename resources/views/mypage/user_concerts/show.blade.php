@@ -81,10 +81,16 @@
                                             @if (!$loop->first)
                                                 <span> / </span>
                                             @endif
+                                            @if (!($variant['is_common'] ?? true))
+                                                <strong>
+                                            @endif
                                             @if ($variant['song_id'])
                                                 <a href="{{ route('mypage.user_songs.show', $variant['song_id']) }}">{{ $variant['title'] }}</a>
                                             @else
                                                 {{ $variant['title'] }}
+                                            @endif
+                                            @if (!($variant['is_common'] ?? true))
+                                                </strong>
                                             @endif
                                         @endforeach
                                     </li>

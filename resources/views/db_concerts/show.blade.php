@@ -114,10 +114,16 @@
                                             @if (!$loop->first)
                                                 <span> / </span>
                                             @endif
+                                            @if (!($variant['is_common'] ?? true))
+                                                <strong>
+                                            @endif
                                             @if ($variant['song_id'])
                                                 <a href="{{ url('/database/songs', $variant['song_id']) }}">{{ $variant['title'] }}</a>
                                             @else
                                                 {{ $variant['title'] }}
+                                            @endif
+                                            @if (!($variant['is_common'] ?? true))
+                                                </strong>
                                             @endif
                                         @endforeach
                                     </li>
