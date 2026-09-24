@@ -355,14 +355,22 @@ if (!function_exists('mergePatternIntoBase')) {
                 for ($k = $pairLen; $k < $otherGapLen; $k++) {
                     $extraCluster = $clusters[$otherGapStart + $k];
                     // このクラスタの曲が、LCSでアンカーに選ばれなかっただけで実は
-                    // $base全体のどこかに既に存在する場合（例: 基準列と他の既マージ
-                    // パターンの両方にある曲が、このパターンではアンカー候補から
-                    // 外れてギャップに回ってしまったケース）、新規の独立行として
-                    // 挿入すると同じ曲が2箇所に重複してしまう。その場合は独立行に
-                    // せず、既存の行にマージする。
+                    // 挿入予定位置のすぐ近く（前後2行以内）に既に存在する場合
+                    // （例: 基準列と他の既マージパターンの両方にある曲が、この
+                    // パターンではアンカー候補から外れてギャップに回ってしまった
+                    // ケース）、新規の独立行として挿入すると同じ曲が2箇所に重複
+                    // してしまう。その場合は独立行にせず、既存の行にマージする。
+                    // 探索範囲を近傍に限定するのは、$base全体を無制限に探すと、
+                    // たまたま同じ曲名が全く別の日替わり位置（例: 本編前半の
+                    // 単独追加曲と、本編後半の日替わり候補）に存在するだけの
+                    // 無関係な曲まで誤って同一視してしまうため（実際に発生した例:
+                    // ある公演だけ演奏された曲Xの位置に紛れ込んだ、全く別の
+                    // 日替わり候補としての同名曲）。
+                    $insertPos = $baseGapStart + $baseGapLen;
+                    $searchRadius = 2;
                     $existingRowIndex = null;
-                    foreach ($base as $rowIdx => $row) {
-                        if (array_intersect(array_column($row['variants'], 'key'), array_column($extraCluster, 'key'))) {
+                    for ($rowIdx = max(0, $insertPos - $searchRadius); $rowIdx <= min(count($base) - 1, $insertPos + $searchRadius); $rowIdx++) {
+                        if (array_intersect(array_column($base[$rowIdx]['variants'], 'key'), array_column($extraCluster, 'key'))) {
                             $existingRowIndex = $rowIdx;
                             break;
                         }
@@ -407,17 +415,16 @@ if (!function_exists('buildSetlistPatternSummary')) {
     // 曲順の位置ごとに見比べてSummaryを作る。曲番の単位は生の配列インデックスではなく、
     // groupAllSongClustersと同じ「is_dailyの塊＋その直前の通常曲1つ」を1トラックとして扱う
     // （is_daily候補群の分だけ配列長が伸びて、以降の位置が全パターンでズレるのを防ぐため）。
-    // setlistとencoreは、それぞれ個別にクラスタ化した上で1本の列として結合してから
-    // まとめてマージする。これにより「本編最後の曲とアンコール1曲目の曲が入れ替わる」
-    // ような、本編/アンコールの境界自体がパターン間でズレるケースも、1つの位置の
-    // 日替わり候補として自然に検出できる（境界を跨いでクラスタ化されないよう、
-    // setlist/encoreは連結前に個別処理する）。単純な位置ベースマージは、setlist単体・
-    // encore単体それぞれのクラスタ数が全パターンで一致する場合（＝境界の位置自体は
-    // 全パターンで一致している場合）に限定する。結合後の合計クラスタ数だけがたまたま
-    // 一致するケース（例: 本編/アンコールの境界がズレていて、setlist単体・encore単体では
-    // 数が食い違うが合計は同じ）は、単純マージだと無関係な曲同士を誤って同じ位置の
-    // 日替わり候補とみなしてしまうため、常にLCSアンカー方式で扱う。
-    // マージ後、各行が実質的にsetlist由来かencore由来かを、variants内の登場パターン数の
+    // setlistとencoreは、まず独立にマージする（各セクションで曲数が全パターン一致
+    // すれば単純位置マージ、不一致ならLCSアンカー方式）。setlist側だけ曲数が
+    // パターンごとに違う場合でも、encore側が全パターン共通ならencore側は安全な
+    // 単純マージの恩恵を受けられる（結合してから1回で判定すると、setlist側の
+    // 些細な曲数差にencore側まで巻き込まれてLCSに倒れてしまうため）。
+    // 独立マージした後、setlist側の最後の行とencore側の最初の行だけを対象に、
+    // 同じ曲がまたがっていれば1行に統合する（本編最後の曲とアンコール1曲目の曲が
+    // パターン間で入れ替わるような、本編/アンコールの境界自体がズレるケースへの対応。
+    // 境界から離れた位置の同名曲は、単に別々の演奏である可能性が高いため対象にしない）。
+    // 統合後、各行が実質的にsetlist由来かencore由来かを、variants内の登場パターン数の
     // 多数決（＝頻出する方）で判定し、setlist/encoreに再分割する。
     // 各位置のクラスタは全パターン間で見比べ、曲が一致すれば1つ、異なれば重複を除いた
     // 選択肢の一覧としてまとめる。
@@ -465,58 +472,57 @@ if (!function_exists('buildSetlistPatternSummary')) {
         $setlistClusterLists = $patterns->values()->map(fn ($pattern, $i) => $toEntryClustersFor($pattern, $i, 'setlist'))->values();
         $encoreClusterLists = $patterns->values()->map(fn ($pattern, $i) => $toEntryClustersFor($pattern, $i, 'encore'))->values();
 
-        $entryLists = $setlistClusterLists->map(
-            fn ($setlistClusters, $i) => $setlistClusters->concat($encoreClusterLists[$i])->values()->all()
-        )->values();
-
-        if ($entryLists->isEmpty()) {
+        if ($setlistClusterLists->isEmpty()) {
             return ['setlist' => [], 'encore' => []];
         }
 
-        $lengths = $entryLists->map(fn ($list) => count($list));
-        // setlist単体・encore単体それぞれのクラスタ数が全パターンで一致するか
-        // （＝本編/アンコールの境界位置自体が全パターンで一致しているか）
-        $setlistLengths = $setlistClusterLists->map(fn ($c) => $c->count());
-        $encoreLengths = $encoreClusterLists->map(fn ($c) => $c->count());
-        $boundariesMatch = $setlistLengths->unique()->count() === 1 && $encoreLengths->unique()->count() === 1;
+        // クラスタ列の一覧を、曲数（クラスタ数）が全パターンで完全一致する場合は
+        // 単純な位置ベースマージ、そうでない場合はLCSアンカー方式でマージする。
+        // setlist単体・encore単体を独立に呼び出すことで、例えば「本編側だけ公演に
+        // よって演奏曲数が違うがアンコールは全公演共通4曲」のようなケースでも、
+        // アンコール側は安全な単純マージの恩恵を受けられるようにする
+        // （結合列全体の曲数一致だけで判定すると、setlist側の些細な曲数差に
+        // 巻き込まれてencore側までLCSに倒れてしまうため）。
+        $mergeEntryLists = function ($entryLists) {
+            $lengths = $entryLists->map(fn ($list) => count($list));
 
-        if ($boundariesMatch && $lengths->unique()->count() === 1) {
-            // 全パターンで曲数（クラスタ数）が完全に一致する場合は、単純な位置
-            // ベースマージで十分かつ最も安全（同じ2曲が順序だけ入れ替わる等の
-            // ケースで、LCSアンカー方式は共通曲をアンカーと誤認して破綻するため）。
-            $maxLen = $lengths->max();
-            $rows = [];
-            for ($i = 0; $i < $maxLen; $i++) {
-                $entries = [];
-                foreach ($entryLists as $list) {
-                    foreach ($list[$i] as $entry) {
-                        $existingIndex = null;
-                        foreach ($entries as $idx => $existing) {
-                            if ($existing['key'] === $entry['key']) {
-                                $existingIndex = $idx;
-                                break;
+            if ($lengths->unique()->count() === 1) {
+                // 全パターンで曲数（クラスタ数）が完全に一致する場合は、単純な位置
+                // ベースマージで十分かつ最も安全（同じ2曲が順序だけ入れ替わる等の
+                // ケースで、LCSアンカー方式は共通曲をアンカーと誤認して破綻するため）。
+                $maxLen = $lengths->max();
+                $rows = [];
+                for ($i = 0; $i < $maxLen; $i++) {
+                    $entries = [];
+                    foreach ($entryLists as $list) {
+                        foreach ($list[$i] as $entry) {
+                            $existingIndex = null;
+                            foreach ($entries as $idx => $existing) {
+                                if ($existing['key'] === $entry['key']) {
+                                    $existingIndex = $idx;
+                                    break;
+                                }
+                            }
+                            if ($existingIndex === null) {
+                                $entry['_sectionVotes'] = [$entry['_section'] => 1];
+                                $entry['_sectionMaxOrder'] = [$entry['_section'] => $entry['_order']];
+                                $entries[] = $entry;
+                            } else {
+                                $section = $entry['_section'];
+                                $entries[$existingIndex]['_sectionVotes'][$section] = ($entries[$existingIndex]['_sectionVotes'][$section] ?? 0) + 1;
+                                $entries[$existingIndex]['_sectionMaxOrder'][$section] = max(
+                                    $entries[$existingIndex]['_sectionMaxOrder'][$section] ?? -1,
+                                    $entry['_order']
+                                );
                             }
                         }
-                        if ($existingIndex === null) {
-                            $entry['_sectionVotes'] = [$entry['_section'] => 1];
-                            $entry['_sectionMaxOrder'] = [$entry['_section'] => $entry['_order']];
-                            $entries[] = $entry;
-                        } else {
-                            $section = $entry['_section'];
-                            $entries[$existingIndex]['_sectionVotes'][$section] = ($entries[$existingIndex]['_sectionVotes'][$section] ?? 0) + 1;
-                            $entries[$existingIndex]['_sectionMaxOrder'][$section] = max(
-                                $entries[$existingIndex]['_sectionMaxOrder'][$section] ?? -1,
-                                $entry['_order']
-                            );
-                        }
                     }
+                    $rows[] = ['variants' => $entries];
                 }
-                $rows[] = ['variants' => $entries];
+                return $rows;
             }
-            $base = $rows;
-        } else {
-            // 曲数が食い違う場合、またはsetlist/encoreの境界位置自体がパターン間で
-            // ズレている場合は、曲数が最も多いパターンを基準列にする。他パターンは
+
+            // 曲数が食い違う場合は、曲数が最も多いパターンを基準列にする。他パターンは
             // 基準列と共通する曲（アンカー）でLCSアラインメントし、アンカーとアンカーの
             // 間のギャップは、両者の長さが一致する場合だけ位置ベースでペア化する
             // （=同じ曲番の日替わり候補とみなす）。長さが食い違う場合は、どちらの
@@ -544,9 +550,33 @@ if (!function_exists('buildSetlistPatternSummary')) {
                 if ($i === $baseIndex) {
                     continue;
                 }
-                $base = mergePatternIntoBase($base, $clusters);
+                $base = mergePatternIntoBase($base, is_array($clusters) ? $clusters : $clusters->all());
+            }
+
+            return $base;
+        };
+
+        $mergedSetlist = $mergeEntryLists($setlistClusterLists);
+        $mergedEncore = $mergeEntryLists($encoreClusterLists);
+
+        // setlist単体・encore単体を独立にマージしたことで、本編最後の曲とアンコール
+        // 1曲目の曲が入れ替わるようなケース（本編/アンコールの境界自体がパターン間で
+        // ズレる）では、同じ曲がsetlist側の最後の行とencore側の最初の行の両方に
+        // 別々に現れてしまう。setlist側最後の行とencore側最初の行だけを対象に、
+        // 同じkeyを持つentryがあれば1行に統合する（境界そのものから離れた位置の
+        // 同名曲は、単に別々の演奏である可能性が高いため対象にしない）。
+        if (!empty($mergedSetlist) && !empty($mergedEncore)) {
+            $lastSetlistIdx = count($mergedSetlist) - 1;
+            $lastSetlistKeys = array_column($mergedSetlist[$lastSetlistIdx]['variants'], 'key');
+            $firstEncoreKeys = array_column($mergedEncore[0]['variants'], 'key');
+
+            if (array_intersect($lastSetlistKeys, $firstEncoreKeys)) {
+                mergeEntriesPreservingEarliestOrder($mergedSetlist[$lastSetlistIdx]['variants'], $mergedEncore[0]['variants']);
+                array_shift($mergedEncore);
             }
         }
+
+        $base = array_merge($mergedSetlist, $mergedEncore);
 
         // LCSアンカー方式では基準列由来の曲が常にvariants先頭に来てしまう
         // （基準列は最初からvariantsに入っているため）。_orderで本来の初出
