@@ -7,6 +7,9 @@ use App\Models\DbSetlist;
 use App\Models\DbSong;
 use App\Models\SlSetlist;
 use App\Models\SlSong;
+use App\Models\UserConcert;
+use App\Models\UserSetlist;
+use App\Models\UserSong;
 
 trait ComputesDbSongStamps
 {
@@ -46,6 +49,29 @@ trait ComputesDbSongStamps
         }
 
         return $everPerformedDbSongIds;
+    }
+
+    // ユーザー登録アーティストのmanage画面に登録された全ツアー記録（user_setlists）上、
+    // 一度でも演奏された曲IDを集める。ここに含まれない曲は「ライブでそもそも未演奏」
+    // として台紙自体をグレー表示する。公式側のeverPerformedDbSongIdsと同じ考え方だが、
+    // 演奏記録の裏付けがYuki本人の公式記録ではなく、そのアーティストの作成者（または
+    // 誰か）がmanage画面で自己申告したものである点が異なる。
+    private function everPerformedUserSongIds(int $userArtistId): array
+    {
+        $songArtistIds = UserSong::where('user_artist_id', $userArtistId)->pluck('user_artist_id', 'id');
+        $concertIds = UserConcert::where('user_artist_id', $userArtistId)->pluck('id');
+        $setlists = UserSetlist::whereIn('user_concert_id', $concertIds)->get();
+
+        $everPerformedUserSongIds = [];
+        foreach ($setlists as $setlist) {
+            foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
+                if (isset($s['song']) && is_numeric($s['song']) && isset($songArtistIds[(int) $s['song']])) {
+                    $everPerformedUserSongIds[(int) $s['song']] = true;
+                }
+            }
+        }
+
+        return $everPerformedUserSongIds;
     }
 
     // Yuki本人が実際にライブで演奏した記録（SlSetlist、フェスのゲスト出演含む）がある

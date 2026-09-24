@@ -338,10 +338,12 @@ class MyPageStatsController extends Controller
         return $this->renderStampsView($artist, $stamps, $externalUser);
     }
 
-    // ユーザー登録アーティストのスタンプ帳。演奏記録の元がYuki本人の公式記録ではなく
-    // ユーザー自身の申告（UserSong/UserSetlist）のため、「未演奏」区分は設けず
-    // 「自分が参加したセットリストで演奏された曲か」だけのシンプルな2値判定にする。
-    // ただしtype（0=ツアー・1=単発ライブ以外はフェス扱い）は公式側と同様に区別し、
+    // ユーザー登録アーティストのスタンプ帳。「自分が参加したセットリストで演奏された曲か」
+    // に加えて、そのアーティストのmanage画面に登録された全ツアー記録を基準に
+    // 「そもそもライブで一度も演奏されていない曲」を never_performed として区別する
+    // （公式側のeverPerformedDbSongIdsと同じ考え方。manage画面で全ツアーが登録されて
+    // いる前提のため、登録が不完全なアーティストでは正確性が下がる点に留意）。
+    // type（0=ツアー・1=単発ライブ以外はフェス扱い）は公式側と同様に区別し、
     // フェスでしか演奏されていない曲はfes_onlyとして台紙上で区別できるようにする。
     private function userStamps($artistId, $externalUser)
     {
@@ -349,6 +351,8 @@ class MyPageStatsController extends Controller
         if (!$artist) {
             abort(404);
         }
+
+        $everPerformedUserSongIds = $this->everPerformedUserSongIds((int) $artistId);
 
         $attendedSetlistIds = $externalUser
             ->attendances()
@@ -376,13 +380,13 @@ class MyPageStatsController extends Controller
         $fesOnlyUserSongIds = array_diff_key($playedUserSongIdsFes, $playedUserSongIdsNormal);
 
         $userSongs = UserSong::where('user_artist_id', $artistId)->orderBy('sort_order')->get();
-        $stamps = $userSongs->map(function (UserSong $song) use ($playedUserSongIds, $fesOnlyUserSongIds) {
+        $stamps = $userSongs->map(function (UserSong $song) use ($playedUserSongIds, $everPerformedUserSongIds, $fesOnlyUserSongIds) {
             return [
                 'song_id' => $song->id,
                 'song_url' => route('mypage.attendances.index', ['song_id' => 'user-' . $song->id]),
                 'title' => $song->title,
                 'done' => isset($playedUserSongIds[$song->id]),
-                'never_performed' => false,
+                'never_performed' => !isset($everPerformedUserSongIds[$song->id]),
                 'fes_only' => isset($fesOnlyUserSongIds[$song->id]),
             ];
         });
