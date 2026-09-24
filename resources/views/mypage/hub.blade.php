@@ -31,6 +31,13 @@
                             <i class="fa-solid fa-chevron-right select-card-arrow"></i>
                         </a>
 
+                        <a href="{{ route('mypage.user_artists.index') }}" class="select-card">
+                            <span class="select-card-body">
+                                <span class="select-card-title"><i class="fa-solid fa-database" style="margin-right: 10px;"></i> Database</span>
+                            </span>
+                            <i class="fa-solid fa-chevron-right select-card-arrow"></i>
+                        </a>
+
                         <a href="{{ route('mypage.stats') }}" class="select-card">
                             <span class="select-card-body">
                                 <span class="select-card-title"><i class="fa-solid fa-chart-simple" style="margin-right: 10px;"></i> My Statistics</span>

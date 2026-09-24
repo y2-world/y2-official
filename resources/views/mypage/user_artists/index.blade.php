@@ -1,20 +1,20 @@
 @extends('layouts.app')
-@section('title', "Users' Database - My Page")
-@section('og_title', "Users' Database - Yuki Official")
+@section('title', "Database - My Page")
+@section('og_title', "Database - Yuki Official")
 
 @section('content')
-    <div class="container database-content" style="padding-top: 24px;">
-        @php
-            $myId = \Illuminate\Support\Facades\Auth::guard('external')->id();
-        @endphp
-        <div class="timeline-filter-row">
-            <select class="timeline-user-select" onchange="if (this.value) window.location.href=this.value;">
-                <option value="{{ route('mypage.timeline.index', ['user_id' => 'all']) }}">すべての投稿</option>
-                <option value="{{ route('mypage.timeline.index', ['user_id' => $myId]) }}">自分の投稿</option>
-                <option value="{{ route('mypage.user_artists.index') }}" selected>Users' Database</option>
-            </select>
+    <div class="database-hero database-hero--detail manage-page">
+        <div class="container">
+            @include('database._breadcrumb', ['breadcrumbs' => [
+                ['label' => 'My Page', 'url' => route('mypage.index')],
+                ['label' => "Database"],
+            ]])
+            <h1 class="database-title" style="text-align: center;">Database</h1>
+            <p class="database-subtitle" style="text-align: center;">アーティストのライブ・楽曲データベース</p>
         </div>
+    </div>
 
+    <div class="container database-content">
         @if ($artists->isEmpty())
             <p style="text-align: center; color: #999;">まだ登録されているアーティストがありません。</p>
         @else
