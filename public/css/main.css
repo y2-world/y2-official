@@ -1635,6 +1635,12 @@ h2 {
     display: none;
 }
 
+/* PC・タブレット幅：sticky見出しは非表示だが、そのすぐ後に続く2つ目以降の
+   グループ（.setlist-row）自体には引き続き前のグループとの区切りの余白が必要 */
+.setlist-group-title-sticky + .setlist-row {
+    margin-top: 24px;
+}
+
 /* モバイル幅：複数グループが横に長く伸び、画面内に同時に収まらないため、
    各グループの固定見出しではなく画面上部に追従するsticky見出しを使う */
 @media (max-width: 767px) {
@@ -1644,6 +1650,12 @@ h2 {
 
     .setlist-group-title-sticky {
         display: block;
+    }
+
+    /* sticky見出し自体に既にmargin-topが付くため、直後のrowへの追加の
+       余白は不要（付けると見出しとrowの間が二重に空いてしまう） */
+    .setlist-group-title-sticky + .setlist-row {
+        margin-top: 0;
     }
 }
 
