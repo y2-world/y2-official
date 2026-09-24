@@ -881,6 +881,31 @@ class SlSetlistResource extends Resource
 
                         return redirect(DbSetlistResource::getUrl('edit', ['record' => $dbSetlist]));
                     }),
+                Tables\Actions\Action::make('addSetlistPattern')
+                    ->label('パターンを追加')
+                    ->icon('heroicon-o-plus-circle')
+                    ->color('gray')
+                    ->visible(fn (SlSetlist $record) => !$record->fes && $record->db_concert_id && (!empty($record->setlist) || !empty($record->encore)))
+                    ->action(function (SlSetlist $record) {
+                        $tour = $record->dbConcert;
+                        if (!$tour) {
+                            Notification::make()
+                                ->danger()
+                                ->title('紐付け先のツアーが見つかりません')
+                                ->send();
+                            return;
+                        }
+
+                        $dbSetlist = static::addSetlistPatternToDatabase($record, $tour);
+
+                        Notification::make()
+                            ->success()
+                            ->title('セットリストパターンを追加しました')
+                            ->body("「{$tour->title}」にパターンを追加しました。")
+                            ->send();
+
+                        return redirect(DbSetlistResource::getUrl('edit', ['record' => $dbSetlist]));
+                    }),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -938,7 +963,25 @@ class SlSetlistResource extends Resource
             'schedule' => $data['schedule'] ?? null,
         ]);
 
-        $toDbSongItems = function (array $items) use ($data) {
+        return static::createDbSetlistFromSlSetlist($record, $tour, $data['artist_id'], 1);
+    }
+
+    // 既存のDbConcert（コピー済みのツアー）に、別日程用の新しいDbSetlist（セットリスト
+    // パターン）を1つだけ追加する。ツアー自体（DbConcert）は作り直さない。
+    // order_noは既存パターンの最大値+1にして末尾に追加する。
+    private static function addSetlistPatternToDatabase(SlSetlist $record, DbConcert $tour): DbSetlist
+    {
+        $nextOrderNo = (DbSetlist::where('tour_id', $tour->id)->max('order_no') ?? 0) + 1;
+
+        return static::createDbSetlistFromSlSetlist($record, $tour, $tour->artist_id, $nextOrderNo);
+    }
+
+    // SlSetlist（公開セトリ投稿）の曲目を、指定されたDbConcertに紐づく新しいDbSetlist
+    // として1件作成する共通処理。曲目の変換ロジック（SlSong→DbSong解決）は
+    // copySlSetlistToDatabase / addSetlistPatternToDatabase の両方から使う。
+    private static function createDbSetlistFromSlSetlist(SlSetlist $record, DbConcert $tour, int $artistId, int $orderNo): DbSetlist
+    {
+        $toDbSongItems = function (array $items) use ($artistId) {
             $result = [];
             foreach ($items as $item) {
                 if (!isset($item['song']) || $item['song'] === '') {
@@ -954,7 +997,7 @@ class SlSetlistResource extends Resource
                     $dbSongId = $slSong->db_song_id;
                 } else {
                     $dbSong = DbSong::firstOrCreate(
-                        ['artist_id' => $data['artist_id'], 'title' => $slSong->title],
+                        ['artist_id' => $artistId, 'title' => $slSong->title],
                         []
                     );
                     $dbSongId = $dbSong->id;
@@ -979,7 +1022,7 @@ class SlSetlistResource extends Resource
 
         return DbSetlist::create([
             'tour_id' => $tour->id,
-            'order_no' => 1,
+            'order_no' => $orderNo,
             'row' => 1,
             'setlist' => $toDbSongItems($record->setlist ?? []),
             'encore' => $toDbSongItems($record->encore ?? []),
