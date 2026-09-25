@@ -605,6 +605,30 @@ if (!function_exists('buildSetlistPatternSummary')) {
         // ように、その曲が既に別の日替わり選択肢の一部として1行にまとまっている
         // 場合、同じ曲名がアンコール側の別演奏にも単独で存在するだけで、両者は
         // 無関係な演奏である可能性が高いため統合しない）。
+        // ただし、いずれかのパターンがそのkeyを1公演内で2回以上演奏している場合は
+        // （例: アンコールでHEATを2回演奏した公演がある）、その2回目の演奏を
+        // 別の日替わり位置での重複と誤認して消してしまわないよう、削除対象から除外する。
+        $keyPerformedTwiceInAnyPattern = function (string $key) use ($patterns): bool {
+            foreach ($patterns->values() as $pattern) {
+                $items = array_merge(
+                    is_array($pattern->setlist ?? null) ? $pattern->setlist : [],
+                    is_array($pattern->encore ?? null) ? $pattern->encore : []
+                );
+                $count = 0;
+                foreach ($items as $item) {
+                    $songId = $item['song'] ?? null;
+                    $itemKey = is_numeric($songId) ? 'id:' . $songId : null;
+                    if ($itemKey === $key) {
+                        $count++;
+                    }
+                }
+                if ($count >= 2) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
         $rowIndexesForKey = [];
         foreach ($base as $rowIdx => $row) {
             if (count($row['variants']) !== 1) {
@@ -621,6 +645,10 @@ if (!function_exists('buildSetlistPatternSummary')) {
 
         foreach ($rowIndexesForKey as $key => $rowIndexes) {
             if (count($rowIndexes) < 2) {
+                continue;
+            }
+
+            if ($keyPerformedTwiceInAnyPattern($key)) {
                 continue;
             }
 
