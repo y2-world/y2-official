@@ -98,9 +98,9 @@
         <div class="setlist" style="display: none;">
             @include('db_concerts._setlist_rows', ['tourSetlists' => $tourSetlists, 'songs' => $songs])
         </div>
-        <div class="container database-year-content">
+        <div class="{{ $totalOlCount >= 3 ? 'container-fluid' : 'container' }} database-year-content">
             <div class="row justify-content-center">
-                <div class="col-xl-9 setlist">
+                <div class="{{ $colClass }} setlist">
                     @if ($setlistSummaries->count())
                         <div class="setlist-row" style="justify-content: safe center;">
                             @foreach ($setlistSummaries as $rowNum => $summary)
@@ -117,6 +117,38 @@
                                         <div class="setlist-subtitle-area">
                                             <h5 class="setlist-subtitle-heading">{{ $summaryRowTitles[$rowNum] }}</h5>
                                         </div>
+                                    @else
+                                        {{-- rowにDbSetlistRowのグループ名が設定されていない場合、代わりに
+                                             このrowに属する全パターンの日付・会場ラベル（通常表示の
+                                             live-column-wrapと同じsubtitle）を一覧表示する。row見出しが
+                                             無いと、Summaryだけ見てもどの公演を元にした比較表なのか
+                                             分からないため。 --}}
+                                        @php
+                                            // 通常表示（_setlist_rows.blade.php）と同じrenderSubtitleWithGreyedVenues
+                                            // で日付を太字・地名をグレー小文字にした上で、各パターンのsubtitleを
+                                            // 1行ずつ連結する（1公演のsubtitle自体が複数行のことがあるため、
+                                            // まずrenderSubtitleWithGreyedVenuesが返す行配列をflattenする）。
+                                            $rowPatternLabels = $tourSetlists
+                                                ->filter(fn ($m) => ($m->row ?? 1) == $rowNum)
+                                                ->sortBy('order_no')
+                                                ->flatMap(fn ($m) => renderSubtitleWithGreyedVenues($m->subtitle ?? '')['lines'])
+                                                ->filter(fn ($line) => trim(strip_tags($line)) !== '')
+                                                // 日付と会場名のまとまりが改行の途中で分断されないよう、
+                                                // 1パターン分のラベルをnowrapなspanで囲む（パターン同士の
+                                                // 間はスペースのみなので、そこで折り返される）。
+                                                ->map(fn ($line) => '<span style="white-space: nowrap;">' . $line . '</span>')
+                                                ->values();
+                                            $firstPatternLabel = $rowPatternLabels->first();
+                                            $restPatternLabels = $rowPatternLabels->slice(1);
+                                        @endphp
+                                        @if ($rowPatternLabels->count())
+                                            <div class="setlist-subtitle-area">
+                                                <h5 class="setlist-subtitle-heading setlist-subtitle-wrap {{ $restPatternLabels->count() ? 'setlist-subtitle-collapsible' : '' }}"
+                                                    @if ($restPatternLabels->count()) onclick="this.classList.toggle('is-expanded')" @endif>
+                                                    {!! $firstPatternLabel !!}@if ($restPatternLabels->count())<span class="setlist-subtitle-rest"> {!! $restPatternLabels->implode(' ') !!}</span>@endif
+                                                </h5>
+                                            </div>
+                                        @endif
                                     @endif
                                     {{-- 通常のセットリスト表示（_setlist_rows.blade.php）と同じく、
                                          SETLIST/ENCOREで<ol>を分けず1つに統一し、間に見出しだけを

@@ -1911,6 +1911,22 @@ h5.setlist-subtitle-heading {
     color: #999;
 }
 
+/* Summaryページのrowパターンラベル一覧（1行に連結したテキスト）専用。
+   通常表示の日付ラベル（元々複数行で短い）と違い、1つ目のラベル自体が
+   幅を超えることがあるため、未展開時は1行に収めて省略記号を出し、
+   展開時は折り返して全文を見せる。 */
+.setlist-subtitle-collapsible.setlist-subtitle-wrap {
+    max-width: min(350px, 80vw);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.setlist-subtitle-collapsible.setlist-subtitle-wrap.is-expanded {
+    white-space: normal;
+    text-overflow: clip;
+}
+
 
 .database-year-content .table {
     background: white;

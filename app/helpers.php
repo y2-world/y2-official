@@ -296,10 +296,15 @@ if (!function_exists('entryListsArePositionallyConsistent')) {
                 $listB = $lists[$b];
                 $pairs = lcsAlignEntryLists($listA, $listB);
 
-                if (count($pairs) !== count($listA) || count($pairs) !== count($listB)) {
-                    return false;
-                }
-
+                // ペア化された箇所同士のオフセット（位置の対応関係）が一貫していれば
+                // 安全とみなす。ペア数がクラスタ数に届かないだけ（＝LCSがアンカー化
+                // できなかったクラスタが残っただけ）で不安全と決めつけない。例えば
+                // tour108で「fanfare」が両パターンに存在しつつ位置だけ違う場合、LCSは
+                // 前後関係の交差でfanfareをアンカーにできないが、それ以外の全クラスタは
+                // 完全に同じ位置に対応しており、単純位置マージで正しく処理できる。
+                // 一方、tour386/323のように本当に位置がズレているケースは、ペア化
+                // できた箇所同士でもオフセットが複数種類に分かれるため、このチェックで
+                // 引き続き正しく不安全と判定される。
                 $offsets = [];
                 foreach ($pairs as [$ai, $bi]) {
                     $offsets[$ai - $bi] = true;
@@ -424,7 +429,34 @@ if (!function_exists('mergePatternIntoBase')) {
             // 確立している）位置から優先的にotherGap側とペア化する。
             $baseGapOrder = range(0, $baseGapLen - 1);
             if ($baseGapLen > $otherGapLen) {
-                usort($baseGapOrder, function ($a, $b) use ($baseGapStart, $base) {
+                usort($baseGapOrder, function ($a, $b) use ($baseGapStart, $base, $clusters) {
+                    // baseGap内の位置が、other列の別の位置（このギャップの外）にも
+                    // 既に存在する場合、それは「このギャップの日替わり候補」ではなく
+                    // 「LCSがたまたまアンカーに選べなかっただけの、本当は別の位置に
+                    // 対応する曲」である可能性が高い。そのような候補を最優先で
+                    // ペア化してしまうと、本来ここでペア化されるべき候補が押し出されて
+                    // 独立行に分裂する（例: tour92のENCOREで、baseGapに「id:217
+                    // （ヒカリノアトリエ、他パターンでは前寄りの位置にも出現する）」
+                    // 「id:132（僕らの音）」があり、otherGapに「id:113（空風の帰り道）」
+                    // だけがあるケース。得票数だけで見ると同点なので先頭のid:217が
+                    // 優先されてしまい、本来id:132と対応すべきid:113が誤ってid:217と
+                    // ペア化を試みられ、near-elsewhereチェックで弾かれた結果
+                    // 独立行になってしまっていた）。そのため、得票数より先に
+                    // 「other列の他の位置に存在しない」ことを優先条件にする。
+                    $existsElsewhere = function ($pos) use ($baseGapStart, $base, $clusters) {
+                        $keysHere = array_column($base[$baseGapStart + $pos]['variants'], 'key');
+                        foreach ($clusters as $cluster) {
+                            if (array_intersect(array_column($cluster, 'key'), $keysHere)) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    };
+                    $elsewhereA = $existsElsewhere($a);
+                    $elsewhereB = $existsElsewhere($b);
+                    if ($elsewhereA !== $elsewhereB) {
+                        return $elsewhereA <=> $elsewhereB;
+                    }
                     $votesA = array_sum($base[$baseGapStart + $a]['variants'][0]['_sectionVotes'] ?? []);
                     $votesB = array_sum($base[$baseGapStart + $b]['variants'][0]['_sectionVotes'] ?? []);
                     // 得票数が同点の場合は、無理に優先順位をつけず元の並び順
@@ -441,15 +473,20 @@ if (!function_exists('mergePatternIntoBase')) {
 
             $pairLen = min($baseGapLen, $otherGapLen);
             $unpairedOtherPositions = [];
-            $elsewhereSearchRadius = 2;
             for ($k = 0; $k < $pairLen; $k++) {
                 $basePos = $baseGapStart + $baseGapOrder[$k];
                 $otherPos = $otherGapStart + $k;
                 $baseKeysHere = array_column($base[$basePos]['variants'], 'key');
                 $otherKeysHere = array_column($clusters[$otherPos], 'key');
 
+                // otherGap側の曲がbase内のどこかに既に存在するかどうかは、base全体を
+                // 探索する（近傍±2行に限定しない）。近傍限定だと、baseGap自体が
+                // 広い（=basePosから既存の同一曲の行までの距離が2行を超える）場合に
+                // 見逃してしまい、無関係な位置に誤ってペア化してしまう
+                // （例: tour73で、baseの[2]に既にある「ニシエヒガシエ」が、
+                // 3行離れた[5]「id:179」の位置に誤って同居させられていた）。
                 $otherHasElsewhere = false;
-                for ($rowIdx = max(0, $basePos - $elsewhereSearchRadius); $rowIdx <= min(count($base) - 1, $basePos + $elsewhereSearchRadius); $rowIdx++) {
+                for ($rowIdx = 0; $rowIdx < count($base); $rowIdx++) {
                     if ($rowIdx === $basePos) {
                         continue;
                     }
@@ -460,7 +497,7 @@ if (!function_exists('mergePatternIntoBase')) {
                 }
 
                 $baseHasElsewhere = false;
-                for ($clusterIdx = max(0, $otherPos - $elsewhereSearchRadius); $clusterIdx <= min(count($clusters) - 1, $otherPos + $elsewhereSearchRadius); $clusterIdx++) {
+                for ($clusterIdx = 0; $clusterIdx < count($clusters); $clusterIdx++) {
                     if ($clusterIdx === $otherPos) {
                         continue;
                     }
@@ -485,21 +522,19 @@ if (!function_exists('mergePatternIntoBase')) {
                 foreach ($unpairedOtherPositions as $otherPos) {
                     $extraCluster = $clusters[$otherPos];
                     // このクラスタの曲が、LCSでアンカーに選ばれなかっただけで実は
-                    // 挿入予定位置のすぐ近く（前後2行以内）に既に存在する場合
-                    // （例: 基準列と他の既マージパターンの両方にある曲が、この
-                    // パターンではアンカー候補から外れてギャップに回ってしまった
-                    // ケース）、新規の独立行として挿入すると同じ曲が2箇所に重複
-                    // してしまう。その場合は独立行にせず、既存の行にマージする。
-                    // 探索範囲を近傍に限定するのは、$base全体を無制限に探すと、
-                    // たまたま同じ曲名が全く別の日替わり位置（例: 本編前半の
-                    // 単独追加曲と、本編後半の日替わり候補）に存在するだけの
-                    // 無関係な曲まで誤って同一視してしまうため（実際に発生した例:
-                    // ある公演だけ演奏された曲Xの位置に紛れ込んだ、全く別の
-                    // 日替わり候補としての同名曲）。
+                    // base内の別の位置に既に存在する場合（例: 基準列と他の既マージ
+                    // パターンの両方にある曲が、このパターンではアンカー候補から
+                    // 外れてギャップに回ってしまったケース）、新規の独立行として
+                    // 挿入すると同じ曲が2箇所に重複してしまう。その場合は独立行に
+                    // せず、既存の行にマージする。base全体を探索するのは、挿入予定
+                    // 位置から離れた行に既存の同じ曲があるケース（例: tour73で、
+                    // baseの[2]/[6]に既にある「ニシエヒガシエ」「id:179」が、
+                    // 挿入予定位置から3行以上離れていたため近傍±2では見つからず、
+                    // 重複した独立行として挿入されてしまっていた）でも正しく統合する
+                    // ため。
                     $insertPos = $baseGapStart + $baseGapLen;
-                    $searchRadius = 2;
                     $existingRowIndex = null;
-                    for ($rowIdx = max(0, $insertPos - $searchRadius); $rowIdx <= min(count($base) - 1, $insertPos + $searchRadius); $rowIdx++) {
+                    for ($rowIdx = 0; $rowIdx < count($base); $rowIdx++) {
                         if (array_intersect(array_column($base[$rowIdx]['variants'], 'key'), array_column($extraCluster, 'key'))) {
                             $existingRowIndex = $rowIdx;
                             break;
@@ -628,11 +663,19 @@ if (!function_exists('buildSetlistPatternSummary')) {
         // ツアーが進むほどセットリストが最終形に収束していく傾向があるため、
         // 「基準パターンに存在しない曲」＝「一部の公演限定で挟まれた追加曲」
         // とみなせる。
+        // is_extra判定のkey集合自体は、SETLIST/ENCOREそれぞれの行が実際に
+        // 属するセクション単位で見る（合算した集合で見ると、例えば「終わりなき旅」が
+        // 基準パターンではENCORE側にしか無いのに、SETLIST側の日替わり行での
+        // is_extra判定が誤ってfalseになってしまう。ある公演では本編最後の曲、
+        // 別の公演ではアンコール1曲目の曲、という本編/アンコール境界をまたぐ
+        // 日替わりでこれが起きる）。基準パターン自体は1つに統一したまま
+        // （そうしないとsetlist側とencore側で別々のパターンを基準にしてしまい
+        // is_extra判定にねじれが生じるため）、そのパターンのsetlist側・encore側
+        // それぞれのkey集合を別々に持つ。
         $totalLengths = $setlistClusterLists->map(fn ($list, $i) => count($list) + count($encoreClusterLists[$i]));
         $maxTotalLen = $totalLengths->max();
         $referenceIndex = $totalLengths->keys()->filter(fn ($i) => $totalLengths[$i] === $maxTotalLen)->last();
-        $referenceKeys = collect($setlistClusterLists[$referenceIndex])
-            ->concat($encoreClusterLists[$referenceIndex])
+        $referenceKeysForSection = fn ($clusterLists) => collect($clusterLists[$referenceIndex])
             ->flatMap(fn ($cluster) => array_column($cluster, 'key'))
             ->flip();
 
@@ -643,7 +686,8 @@ if (!function_exists('buildSetlistPatternSummary')) {
         // アンコール側は安全な単純マージの恩恵を受けられるようにする
         // （結合列全体の曲数一致だけで判定すると、setlist側の些細な曲数差に
         // 巻き込まれてencore側までLCSに倒れてしまうため）。
-        $mergeEntryLists = function ($entryLists, bool $forceSimple = false) use ($referenceKeys) {
+        $mergeEntryLists = function ($entryLists, bool $forceSimple = false) use ($referenceKeysForSection, $referenceIndex) {
+            $referenceKeys = $referenceKeysForSection($entryLists);
             $lengths = $entryLists->map(fn ($list) => count($list));
             // 曲数（クラスタ数）が全パターンで一致していても、それだけでは
             // 単純位置マージの安全性を保証できない（1曲が別の位置に移動している
@@ -704,13 +748,10 @@ if (!function_exists('buildSetlistPatternSummary')) {
             // （誤ってペアにするより安全）。基準列由来のentryが持つ_orderは、後段の
             // mergeEntriesPreservingEarliestOrderで他パターンとの重複マージ時に
             // より早いパターンのものへ更新されうるため、最終的な並び順は必ずしも
-            // 基準列のパターン順にはならない（初出パターン順を優先する）。曲数が
-            // 同点で並んだ場合は、その中で最初のパターンを基準列にする（従来通り。
-            // ここを「最後のパターン」に変えるとtour92/172/205/323のように、既に
-            // 安定していたLCSマージの結果が広範囲に変わってしまうため、実際に
-            // マージのアンカーとして使う基準列と、is_extra判定用の基準
-            // （$referenceIndex、常に最後のパターン）は別々に使い分ける）。
-            $baseIndex = $entryLists->keys()->sortByDesc(fn ($i) => count($entryLists[$i]))->first();
+            // 基準列のパターン順にはならない（初出パターン順を優先する）。
+            // 基準列は、is_extra判定用の基準（$referenceIndex：setlist+encoreの
+            // 合計曲数が最多、同点なら最後のパターン）と同じものを使う。
+            $baseIndex = $entryLists->has($referenceIndex) ? $referenceIndex : $entryLists->keys()->sortByDesc(fn ($i) => count($entryLists[$i]))->first();
             $base = collect($entryLists[$baseIndex])
                 ->map(fn ($cluster) => [
                     'variants' => array_map(
