@@ -17,7 +17,7 @@ Yuki Yoshidaの公式ウェブサイト。ニュース、ディスコグラフ�
 - Filament 3.2 (管理画面)
 - Livewire 3.5
 - Cloudinary (画像管理)
-- MySQL
+- PostgreSQL
 
 ## 環境変数
 

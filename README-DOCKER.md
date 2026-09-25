@@ -15,7 +15,6 @@
 ```
 
 アプリケーションは `http://localhost:8080` でアクセスできます。
-phpMyAdminは `http://localhost:8081` でアクセスできます。
 
 ## 手動セットアップ
 
@@ -67,9 +66,8 @@ docker-compose exec app npm run dev
 このプロジェクトは以下のサービスで構成されています：
 
 - **app**: PHP 8.2 + Nginx + Node.js (ポート: 8080)
-- **db**: MySQL 8.0 (ポート: 3306)
+- **postgres**: PostgreSQL 16 (ポート: 5432)
 - **redis**: Redis Alpine (ポート: 6379)
-- **phpmyadmin**: phpMyAdmin (ポート: 8081)
 
 ## よく使うコマンド
 
@@ -116,17 +114,10 @@ docker-compose exec app npm run watch
 
 ### データベース接続
 
-**phpMyAdmin（推奨）:**
-ブラウザで `http://localhost:8081` にアクセス
-
-- サーバー: `db`
-- ユーザー名: `root`
-- パスワード: `rootpassword`
-
 **コマンドライン:**
 ```bash
-# MySQLコンテナに接続
-docker-compose exec db mysql -u y2user -py2password y2_official
+# postgresコンテナに接続
+docker-compose exec postgres psql -U y2user -d y2_official
 ```
 
 ### データベースのリセット
@@ -168,7 +159,7 @@ docker-compose up -d --build
 Docker環境用の環境変数は [.env.docker](.env.docker) に定義されています。
 
 主な設定：
-- `DB_HOST=db` (MySQLコンテナ名)
+- `DB_HOST=postgres` (postgresコンテナ名)
 - `DB_DATABASE=y2_official`
 - `DB_USERNAME=y2user`
 - `DB_PASSWORD=y2password`
