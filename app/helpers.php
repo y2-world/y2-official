@@ -412,11 +412,38 @@ if (!function_exists('mergePatternIntoBase')) {
             // 日替わり候補とみなしてペア化してよい（例: tour323のENCORE、
             // 「家族になろうよ/道標/Dear」のように、各パターン固有でお互いの列の
             // 他の位置には出てこない曲同士の対応）。
+            // baseGap側の方が長い場合（otherGap側の候補数の方が少ない場合）、
+            // 単純に先頭から数えてペア化すると、まだ何のアンカーとも対応して
+            // いないbaseGap先頭の位置に誤ってペア化してしまうことがある（例:
+            // tour195で、baseのギャップに「きみとなら, RED」の2曲、otherの
+            // ギャップに「声明」の1曲だけがあるケース。「RED」は既に他パターンの
+            // マージで得票済みで、本来「声明」はこの「RED」と同じ日替わり位置に
+            // 対応するはずなのに、先頭の「きみとなら」と対応させてしまっていた）。
+            // このケースでは、baseGap側の各位置が既に得票しているentry数の
+            // 降順で対応順序を決め、最も得票が多い（＝既存の日替わり位置として
+            // 確立している）位置から優先的にotherGap側とペア化する。
+            $baseGapOrder = range(0, $baseGapLen - 1);
+            if ($baseGapLen > $otherGapLen) {
+                usort($baseGapOrder, function ($a, $b) use ($baseGapStart, $base) {
+                    $votesA = array_sum($base[$baseGapStart + $a]['variants'][0]['_sectionVotes'] ?? []);
+                    $votesB = array_sum($base[$baseGapStart + $b]['variants'][0]['_sectionVotes'] ?? []);
+                    // 得票数が同点の場合は、無理に優先順位をつけず元の並び順
+                    // （先頭から）を維持する。得票が同点ということは、まだ
+                    // どちらの候補も「確立した日替わり位置」と言えるほどの
+                    // 差が無いということなので、無理に並べ替えると逆に不安定な
+                    // 結果を生む（例: tour330で、baseGapが「友よ/化身(v:1)」
+                    // 「HUMAN(v:1)」の同点2候補のとき、無理にHUMANを優先すると
+                    // 1曲目候補として正しい「GAME」が2曲目のHUMANの位置に
+                    // 押し込まれてしまい、1曲目の日替わり群から漏れてしまう）。
+                    return $votesB <=> $votesA ?: $a <=> $b;
+                });
+            }
+
             $pairLen = min($baseGapLen, $otherGapLen);
             $unpairedOtherPositions = [];
             $elsewhereSearchRadius = 2;
             for ($k = 0; $k < $pairLen; $k++) {
-                $basePos = $baseGapStart + $k;
+                $basePos = $baseGapStart + $baseGapOrder[$k];
                 $otherPos = $otherGapStart + $k;
                 $baseKeysHere = array_column($base[$basePos]['variants'], 'key');
                 $otherKeysHere = array_column($clusters[$otherPos], 'key');
