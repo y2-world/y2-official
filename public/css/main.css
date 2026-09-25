@@ -1911,20 +1911,24 @@ h5.setlist-subtitle-heading {
     color: #999;
 }
 
-/* Summaryページのrowパターンラベル一覧（1行に連結したテキスト）専用。
-   通常表示の日付ラベル（元々複数行で短い）と違い、1つ目のラベル自体が
-   幅を超えることがあるため、未展開時は1行に収めて省略記号を出し、
-   展開時は折り返して全文を見せる。 */
+/* Summaryページのrowパターンラベル一覧専用。全パターンを常にDOM上に
+   出力し、未展開時はline-clampで1行分だけに切り詰める（1パターン目だけを
+   別枠に切り出す方式だと、幅に余裕があっても2パターン目以降が一切見えず
+   もったいないため）。line-clampは自動で省略記号を付け、はみ出た2行目が
+   中途半端に見えてしまうこともない（max-heightだけの切り詰めと違い、
+   行の境界で正しくクリップされる）。展開時はline-clampを解除して全
+   パターンを折り返し表示する。 */
 .setlist-subtitle-collapsible.setlist-subtitle-wrap {
-    max-width: min(350px, 80vw);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .setlist-subtitle-collapsible.setlist-subtitle-wrap.is-expanded {
-    white-space: normal;
-    text-overflow: clip;
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
 }
 
 

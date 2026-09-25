@@ -112,10 +112,24 @@
                                     // Row1「ドーム公演」からの続き番号になってしまっていた）。
                                     $summaryNumber = 0;
                                 @endphp
-                                <div class="live-column-wrap">
-                                    @if ($summaryRowTitles[$rowNum] ?? null)
+                                <div class="live-column-wrap" style="max-width: min(350px, 80vw);">
+                                    @php
+                                        $rowTitleList = $summaryRowTitles[$rowNum] ?? collect();
+                                    @endphp
+                                    @if ($rowTitleList->count() === 1 && $setlistSummaries->count() > 1)
+                                        {{-- rowが1つしかタイトルを持たず、かつこのツアーでSummary対象の
+                                             rowも1つしかない場合、row同士を見比べる意味がある見出し
+                                             自体が不要なため出さない。 --}}
                                         <div class="setlist-subtitle-area">
-                                            <h5 class="setlist-subtitle-heading">{{ $summaryRowTitles[$rowNum] }}</h5>
+                                            <h5 class="setlist-subtitle-heading">{{ $rowTitleList->first() }}</h5>
+                                        </div>
+                                    @elseif ($rowTitleList->count() >= 2)
+                                        {{-- rowの途中でグループタイトルが切り替わる場合（例:
+                                             「アリーナ公演」→「ドーム・スタジアム公演」）、代表の
+                                             1つだけを見出しにすると残りのグループの存在が分からなく
+                                             なるため、全タイトルを列挙する。 --}}
+                                        <div class="setlist-subtitle-area">
+                                            <h5 class="setlist-subtitle-heading">{{ $rowTitleList->implode(' / ') }}</h5>
                                         </div>
                                     @else
                                         {{-- rowにDbSetlistRowのグループ名が設定されていない場合、代わりに
@@ -128,24 +142,30 @@
                                             // で日付を太字・地名をグレー小文字にした上で、各パターンのsubtitleを
                                             // 1行ずつ連結する（1公演のsubtitle自体が複数行のことがあるため、
                                             // まずrenderSubtitleWithGreyedVenuesが返す行配列をflattenする）。
+                                            // 1パターン分の日付+会場名が折り返しの途中で分断されないよう、
+                                            // それぞれnowrapなspanで囲む（パターン同士の間はスペースのみ
+                                            // なので、そこで折り返される）。
                                             $rowPatternLabels = $tourSetlists
                                                 ->filter(fn ($m) => ($m->row ?? 1) == $rowNum)
                                                 ->sortBy('order_no')
                                                 ->flatMap(fn ($m) => renderSubtitleWithGreyedVenues($m->subtitle ?? '')['lines'])
                                                 ->filter(fn ($line) => trim(strip_tags($line)) !== '')
-                                                // 日付と会場名のまとまりが改行の途中で分断されないよう、
-                                                // 1パターン分のラベルをnowrapなspanで囲む（パターン同士の
-                                                // 間はスペースのみなので、そこで折り返される）。
                                                 ->map(fn ($line) => '<span style="white-space: nowrap;">' . $line . '</span>')
                                                 ->values();
-                                            $firstPatternLabel = $rowPatternLabels->first();
-                                            $restPatternLabels = $rowPatternLabels->slice(1);
                                         @endphp
-                                        @if ($rowPatternLabels->count())
+                                        {{-- このツアーでSummary対象のrowが1つしかない場合、row同士を
+                                             見比べる意味がある見出し（rowタイトル）自体が不要なため
+                                             出さない（通常表示のパターン一覧アイコンから個別公演には
+                                             いつでも移動できる）。 --}}
+                                        @if ($setlistSummaries->count() > 1 && $rowPatternLabels->count())
                                             <div class="setlist-subtitle-area">
-                                                <h5 class="setlist-subtitle-heading setlist-subtitle-wrap {{ $restPatternLabels->count() ? 'setlist-subtitle-collapsible' : '' }}"
-                                                    @if ($restPatternLabels->count()) onclick="this.classList.toggle('is-expanded')" @endif>
-                                                    {!! $firstPatternLabel !!}@if ($restPatternLabels->count())<span class="setlist-subtitle-rest"> {!! $restPatternLabels->implode(' ') !!}</span>@endif
+                                                {{-- 未展開時はmax-heightで1行分だけに切り詰め、クリックで
+                                                     全パターン分を折り返し表示する。1パターン目だけを別枠に
+                                                     切り出さず全パターンを同じマークアップで出すことで、
+                                                     未展開時から幅に収まる分だけ複数パターンが自然に見える。 --}}
+                                                <h5 class="setlist-subtitle-heading setlist-subtitle-wrap setlist-subtitle-collapsible"
+                                                    onclick="this.classList.toggle('is-expanded')">
+                                                    {!! $rowPatternLabels->implode(' ') !!}
                                                 </h5>
                                             </div>
                                         @endif

@@ -118,14 +118,16 @@ class DbConcertController extends Controller
 
         // Summaryテキスト表示（tab=summary）で、各rowを「Row 1」のような機械的な
         // 番号ではなく、そのrowに設定されたグループ名（例: 「ホール・アリーナ公演」）
-        // で見出しを付けるための、row => 代表タイトルのマップ。同じrow内で複数の
-        // order_noにタイトルが設定されていることがあるが、ここではrow全体を
-        // 代表する見出しが欲しいだけなので、そのrowで最も早いorder_noのタイトルを使う。
+        // で見出しを付けるための、row => タイトル一覧（重複除去、登場順）のマップ。
+        // 同じrow内で日替わりの途中からグループタイトルが切り替わることがある
+        // （例: tour155のrow1が「アリーナ公演」→「ドーム・スタジアム公演」）ため、
+        // そのrowで使われている全タイトルを保持する（表示側で1件なら単独見出し、
+        // 複数件ならすべて列挙する）。
         $summaryRowTitles = DbSetlistRow::where('tour_id', $id)
             ->orderBy('order_no')
             ->get()
             ->groupBy('row')
-            ->map(fn ($rows) => $rows->first()->title);
+            ->map(fn ($rows) => $rows->pluck('title')->unique()->values());
 
         // 福山雅治（artist_id=5）はツアーによってアンコールの構成が公演ごとに
         // 大きく異なり、かつ同じ曲（例: MELODY）が全公演共通のアンカーとして
