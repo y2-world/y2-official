@@ -6,10 +6,39 @@ use App\Models\Artist;
 use App\Models\DbSong;
 use App\Models\DbConcert;
 use App\Models\DbSetlist;
+use App\Models\DbSetlistRow;
 use Illuminate\Http\Request;
 
 class DbConcertController extends Controller
 {
+    // Setlist Summarize（複数パターンのセットリストを1つの比較表にまとめる機能）が
+    // 実際に表示すべき差異を持つかどうかを判定する。show()の$setlistSummaries算出と
+    // 同じロジックを、type=summary一覧の絞り込みでも再利用するための共通処理。
+    private function tourHasSetlistSummary(DbConcert $tour, $songs): bool
+    {
+        $tourSetlists = DbSetlist::where('tour_id', $tour->id)->orderBy('order_no', 'asc')->get();
+        $forceSimpleEncoreMerge = (int) $tour->artist_id === 5;
+
+        return $tourSetlists
+            ->groupBy(fn ($m) => $m->row ?? 1)
+            ->contains(function ($rowSetlists) use ($songs, $forceSimpleEncoreMerge) {
+                if ($rowSetlists->count() < 2) {
+                    return false;
+                }
+                $summary = buildSetlistPatternSummary($rowSetlists, $songs, $forceSimpleEncoreMerge);
+                $hasVariantDifference = collect(array_merge($summary['setlist'], $summary['encore']))
+                    ->contains(fn ($row) => count($row['variants']) > 1);
+                $setlistCounts = $rowSetlists->map(fn ($s) => count($s->setlist ?? []));
+                $encoreCounts = $rowSetlists->map(fn ($s) => count($s->encore ?? []));
+                $totalCounts = $rowSetlists->map(fn ($s) => count($s->setlist ?? []) + count($s->encore ?? []));
+                $hasCountDifference = $setlistCounts->unique()->count() > 1
+                    || $encoreCounts->unique()->count() > 1
+                    || $totalCounts->unique()->count() > 1;
+
+                return $hasVariantDifference || $hasCountDifference;
+            });
+    }
+
     public function index($artistId)
     {
         $artist = Artist::findOrFail($artistId);
@@ -32,8 +61,28 @@ class DbConcertController extends Controller
         }
 
         $bios = $artist->years;
-        $tours = $liveQuery->paginate(10);
-        $totalCount = $tours->total();
+
+        if ($type === 'summary') {
+            // SummaryがあるかどうかはDbSetlistのJSON内容を実際に比較しないと
+            // 判定できないため、DBのwhere句だけでは絞り込めない。対象アーティストの
+            // 全ライブを取得してPHP側でフィルタしてから手動でページングする
+            // （ページ内の件数がフィルタ後に変わるため、通常のpaginate()は使えない）。
+            $songs = DbSong::orderBy('sort_order', 'asc')->get();
+            $allTours = $liveQuery->get()->filter(fn ($tour) => $this->tourHasSetlistSummary($tour, $songs))->values();
+            $totalCount = $allTours->count();
+            $perPage = 10;
+            $currentPage = \Illuminate\Pagination\Paginator::resolveCurrentPage();
+            $tours = new \Illuminate\Pagination\LengthAwarePaginator(
+                $allTours->forPage($currentPage, $perPage),
+                $totalCount,
+                $perPage,
+                $currentPage,
+                ['path' => \Illuminate\Pagination\Paginator::resolveCurrentPath()]
+            );
+        } else {
+            $tours = $liveQuery->paginate(10);
+            $totalCount = $tours->total();
+        }
 
         if (request()->wantsJson() || request()->ajax()) {
             $html = view('db_concerts._list', compact('tours', 'totalCount', 'type'))->render();
@@ -57,6 +106,7 @@ class DbConcertController extends Controller
         // その一覧と同じtype（ツアー/イベント/ap bank fes/ソロ）内に絞り込む。
         // 該当しない・指定が無い場合は従来通りアーティスト内の全ライブから前後に移動する。
         $from = $request->query('from');
+        $tab = $request->query('tab');
         $scopeQuery = function ($query) use ($from, $tours) {
             if ($from === 'type') {
                 $query->where('type', $tours->type);
@@ -65,6 +115,17 @@ class DbConcertController extends Controller
         };
         $songs = DbSong::orderBy('sort_order', 'asc')->get();
         $tourSetlists = DbSetlist::where('tour_id', $id)->orderBy('order_no', 'asc')->get();
+
+        // Summaryテキスト表示（tab=summary）で、各rowを「Row 1」のような機械的な
+        // 番号ではなく、そのrowに設定されたグループ名（例: 「ホール・アリーナ公演」）
+        // で見出しを付けるための、row => 代表タイトルのマップ。同じrow内で複数の
+        // order_noにタイトルが設定されていることがあるが、ここではrow全体を
+        // 代表する見出しが欲しいだけなので、そのrowで最も早いorder_noのタイトルを使う。
+        $summaryRowTitles = DbSetlistRow::where('tour_id', $id)
+            ->orderBy('order_no')
+            ->get()
+            ->groupBy('row')
+            ->map(fn ($rows) => $rows->first()->title);
 
         // 福山雅治（artist_id=5）はツアーによってアンコールの構成が公演ごとに
         // 大きく異なり、かつ同じ曲（例: MELODY）が全公演共通のアンカーとして
@@ -105,21 +166,32 @@ class DbConcertController extends Controller
                 return $hasDifference ? $summary : null;
             })
             ->filter();
-        $previous = $scopeQuery(DbConcert::where('artist_id', $tours->artist_id)
+        $previousQuery = $scopeQuery(DbConcert::where('artist_id', $tours->artist_id)
             ->where(function ($q) use ($tours) {
                 $q->where('date1', '<', $tours->date1)
                   ->orWhere(function ($q2) use ($tours) {
                       $q2->where('date1', $tours->date1)->where('id', '<', $tours->id);
                   });
-            }))->orderBy('date1', 'desc')->orderBy('id', 'desc')->first();
-        $next = $scopeQuery(DbConcert::where('artist_id', $tours->artist_id)
+            }))->orderBy('date1', 'desc')->orderBy('id', 'desc');
+        $nextQuery = $scopeQuery(DbConcert::where('artist_id', $tours->artist_id)
             ->where(function ($q) use ($tours) {
                 $q->where('date1', '>', $tours->date1)
                   ->orWhere(function ($q2) use ($tours) {
                       $q2->where('date1', $tours->date1)->where('id', '>', $tours->id);
                   });
-            }))->orderBy('date1')->orderBy('id')->first();
+            }))->orderBy('date1')->orderBy('id');
 
-        return view('db_concerts.show', compact('songs', 'previous', 'next', 'tours', 'tourSetlists', 'artist', 'setlistSummaries', 'from'));
+        if ($tab === 'summary') {
+            // Summary一覧内を移動している間は、Previous/NextもSummaryを持つ
+            // 公演までスキップして探す（Summaryが無い公演に移動してしまうと
+            // 「このライブにはSummaryがありません」の空表示になってしまうため）。
+            $previous = $previousQuery->get()->first(fn ($t) => $this->tourHasSetlistSummary($t, $songs));
+            $next = $nextQuery->get()->first(fn ($t) => $this->tourHasSetlistSummary($t, $songs));
+        } else {
+            $previous = $previousQuery->first();
+            $next = $nextQuery->first();
+        }
+
+        return view('db_concerts.show', compact('songs', 'previous', 'next', 'tours', 'tourSetlists', 'artist', 'setlistSummaries', 'from', 'tab', 'summaryRowTitles'));
     }
 }

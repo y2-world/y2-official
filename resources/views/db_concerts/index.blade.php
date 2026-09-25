@@ -12,12 +12,14 @@
                 $liveTitle = match(request('type')) {
                     '1' => 'Live', '6' => 'Tours', '5' => '単発ライブ',
                     '2' => 'Events', '3' => 'ap bank fes', '4' => 'Solo',
+                    'summary' => 'Summary',
                     default => 'Live'
                 };
                 $liveSubtitle = match(request('type')) {
                     '1' => 'すべてのツアー・単発ライブ情報', '6' => 'すべてのツアー情報',
                     '5' => 'すべての単発ライブ情報', '2' => 'すべてのイベント情報',
                     '3' => 'ap bank fes出演履歴', '4' => 'すべてのソロ活動',
+                    'summary' => 'Summary一覧',
                     default => 'すべてのライブ情報'
                 };
             @endphp
@@ -47,6 +49,7 @@
                         <option value="{{ route('database.live', $artist->id) }}?type=3" {{ request('type') == '3' ? 'selected' : '' }}>ap bank fes</option>
                         <option value="{{ route('database.live', $artist->id) }}?type=4" {{ request('type') == '4' ? 'selected' : '' }}>Solo</option>
                         @endif
+                        <option value="{{ route('database.live', $artist->id) }}?type=summary" {{ request('type') == 'summary' ? 'selected' : '' }}>Summary</option>
                     </select>
                     <select class="year-select" name="select" onChange="location.href=value;">
                         <option value="" disabled selected>Years</option>

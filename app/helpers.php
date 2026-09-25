@@ -618,6 +618,24 @@ if (!function_exists('buildSetlistPatternSummary')) {
             return ['setlist' => [], 'encore' => []];
         }
 
+        // 「基準パターン」＝Summary上で無番号（-）にする曲を判定する土台。
+        // setlist・encoreを合わせた合計クラスタ数（曲数）で、最も曲数が多い
+        // パターン（同数なら最後、最も新しいパターン）を1つだけ選び、setlist側・
+        // encore側の両方でこの同じパターンを基準として使う（setlist側と
+        // encore側で別々に基準を選ぶと、例えばsetlist側は「水上バスを含む
+        // パターンA」、encore側は「Tomorrow never knowsを含むパターンB」を
+        // それぞれ基準にしてしまい、is_extra判定にねじれが生じるため）。
+        // ツアーが進むほどセットリストが最終形に収束していく傾向があるため、
+        // 「基準パターンに存在しない曲」＝「一部の公演限定で挟まれた追加曲」
+        // とみなせる。
+        $totalLengths = $setlistClusterLists->map(fn ($list, $i) => count($list) + count($encoreClusterLists[$i]));
+        $maxTotalLen = $totalLengths->max();
+        $referenceIndex = $totalLengths->keys()->filter(fn ($i) => $totalLengths[$i] === $maxTotalLen)->last();
+        $referenceKeys = collect($setlistClusterLists[$referenceIndex])
+            ->concat($encoreClusterLists[$referenceIndex])
+            ->flatMap(fn ($cluster) => array_column($cluster, 'key'))
+            ->flip();
+
         // クラスタ列の一覧を、曲数（クラスタ数）が全パターンで完全一致する場合は
         // 単純な位置ベースマージ、そうでない場合はLCSアンカー方式でマージする。
         // setlist単体・encore単体を独立に呼び出すことで、例えば「本編側だけ公演に
@@ -625,7 +643,7 @@ if (!function_exists('buildSetlistPatternSummary')) {
         // アンコール側は安全な単純マージの恩恵を受けられるようにする
         // （結合列全体の曲数一致だけで判定すると、setlist側の些細な曲数差に
         // 巻き込まれてencore側までLCSに倒れてしまうため）。
-        $mergeEntryLists = function ($entryLists, bool $forceSimple = false) {
+        $mergeEntryLists = function ($entryLists, bool $forceSimple = false) use ($referenceKeys) {
             $lengths = $entryLists->map(fn ($list) => count($list));
             // 曲数（クラスタ数）が全パターンで一致していても、それだけでは
             // 単純位置マージの安全性を保証できない（1曲が別の位置に移動している
@@ -674,7 +692,7 @@ if (!function_exists('buildSetlistPatternSummary')) {
                     }
                     $rows[] = ['variants' => $entries];
                 }
-                return $rows;
+                return ['rows' => $rows, 'referenceKeys' => $referenceKeys];
             }
 
             // 曲数が食い違う場合は、曲数が最も多いパターンを基準列にする。他パターンは
@@ -686,7 +704,12 @@ if (!function_exists('buildSetlistPatternSummary')) {
             // （誤ってペアにするより安全）。基準列由来のentryが持つ_orderは、後段の
             // mergeEntriesPreservingEarliestOrderで他パターンとの重複マージ時に
             // より早いパターンのものへ更新されうるため、最終的な並び順は必ずしも
-            // 基準列のパターン順にはならない（初出パターン順を優先する）。
+            // 基準列のパターン順にはならない（初出パターン順を優先する）。曲数が
+            // 同点で並んだ場合は、その中で最初のパターンを基準列にする（従来通り。
+            // ここを「最後のパターン」に変えるとtour92/172/205/323のように、既に
+            // 安定していたLCSマージの結果が広範囲に変わってしまうため、実際に
+            // マージのアンカーとして使う基準列と、is_extra判定用の基準
+            // （$referenceIndex、常に最後のパターン）は別々に使い分ける）。
             $baseIndex = $entryLists->keys()->sortByDesc(fn ($i) => count($entryLists[$i]))->first();
             $base = collect($entryLists[$baseIndex])
                 ->map(fn ($cluster) => [
@@ -708,11 +731,17 @@ if (!function_exists('buildSetlistPatternSummary')) {
                 $base = mergePatternIntoBase($base, is_array($clusters) ? $clusters : $clusters->all());
             }
 
-            return $base;
+            return ['rows' => $base, 'referenceKeys' => $referenceKeys];
         };
 
-        $mergedSetlist = $mergeEntryLists($setlistClusterLists);
-        $mergedEncore = $mergeEntryLists($encoreClusterLists, $forceSimpleEncoreMerge);
+        $mergedSetlistResult = $mergeEntryLists($setlistClusterLists);
+        $mergedEncoreResult = $mergeEntryLists($encoreClusterLists, $forceSimpleEncoreMerge);
+        $mergedSetlist = $mergedSetlistResult['rows'];
+        $mergedEncore = $mergedEncoreResult['rows'];
+        $referenceKeysBySection = [
+            'setlist' => $mergedSetlistResult['referenceKeys'],
+            'encore' => $mergedEncoreResult['referenceKeys'],
+        ];
         $base = array_merge($mergedSetlist, $mergedEncore);
 
         // is_common判定（その曲が全パターンで演奏されているか）に使う、keyごとの
@@ -861,14 +890,25 @@ if (!function_exists('buildSetlistPatternSummary')) {
             // 「かぞえうた」は119でしか演奏されていないのでfalse、「End of the day」は
             // 全パターンで演奏されているのでtrue）。
             $patternCount = $patterns->count();
+            $referenceKeys = $referenceKeysBySection[$section];
             $cleanedRow = [
                 'variants' => array_map(
-                    function ($entry) use ($patternCount, $totalVotesByKey) {
+                    function ($entry) use ($patternCount, $totalVotesByKey, $referenceKeys) {
                         $totalVotes = $totalVotesByKey[$entry['key']] ?? 0;
                         $isCommon = $totalVotes >= $patternCount;
+                        // is_extra: このentryが基準パターン（最後、または曲数最多の
+                        // パターン）に存在しない曲かどうか。基準パターンに無い曲は
+                        // 通常の曲番グループの一員として数えるべきでない「一部の
+                        // 公演限定で挟まれた追加曲」とみなし、呼び出し側で無番号の
+                        // 特別な行として表示できるようフラグを立てる（例: tour127の
+                        // 「花の匂い」。同じ日替わり位置の他の候補は基準パターンに
+                        // 存在するため通常通り曲番グループの一員として扱われるが、
+                        // 花の匂いだけは基準パターンに無いため区別される）。
+                        $isExtra = !$referenceKeys->has($entry['key']);
                         return collect($entry)
                             ->except(['_order', '_section', '_sectionVotes', '_sectionMaxOrder', '_clusterPosition'])
                             ->put('is_common', $isCommon)
+                            ->put('is_extra', $isExtra)
                             ->all();
                     },
                     $row['variants']

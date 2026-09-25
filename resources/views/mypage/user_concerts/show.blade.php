@@ -64,19 +64,33 @@
     @if (isset($setlistSummaries) && $setlistSummaries->count())
         <div id="setlistSummaryOverlay" style="display: none; position: fixed; inset: 0; background: rgba(20,22,30,0.5); z-index: 1050; align-items: center; justify-content: center;">
             @foreach ($setlistSummaries as $rowNum => $summary)
+                @php $summaryNumber = 0; @endphp
                 <div class="setlist setlist-summary-popup" data-summary-row="{{ $rowNum }}" style="display: none; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); padding: 30px; max-width: 560px; width: calc(100% - 32px); max-height: 80vh; overflow-y: auto; position: relative;">
                     <button type="button" class="setlist-summary-close" style="position: absolute; top: 16px; right: 16px; border: none; background: #f0f1f6; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; color: #718096; font-size: 16px; line-height: 1; flex-shrink: 0;">&times;</button>
                     <h3 style="margin: 0 44px 20px 0; font-size: 18px;">{{ $tour->title }}</h3>
-                    @foreach (['setlist' => $summary['setlist'], 'encore' => $summary['encore']] as $section => $rows)
-                        @if (count($rows))
-                            @if ($section === 'encore')
-                                <div style="margin: 20px 0 10px;">
-                                    <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
-                                </div>
-                            @endif
-                            <ol class="live-column">
+                    <ol class="live-column">
+                        @foreach (['setlist' => $summary['setlist'], 'encore' => $summary['encore']] as $section => $rows)
+                            @if (count($rows))
+                                @if ($section === 'encore')
+                                    <div style="margin: 20px 0 10px;">
+                                        <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
+                                    </div>
+                                @endif
                                 @foreach ($rows as $row)
-                                    <li>
+                                    @php
+                                        $isExtraRow = collect($row['variants'])->every(fn ($v) => $v['is_extra'] ?? false);
+                                        if (!$isExtraRow) {
+                                            $summaryNumber = ($summaryNumber ?? 0) + 1;
+                                        }
+                                    @endphp
+                                    @if ($isExtraRow)
+                                        <li class="live-column-extra" value="{{ $summaryNumber ?? 0 }}" style="list-style: none;">
+                                    @else
+                                        <li value="{{ $summaryNumber }}">
+                                    @endif
+                                        @if ($isExtraRow)
+                                            -
+                                        @endif
                                         @foreach ($row['variants'] as $variant)
                                             @if (!$loop->first)
                                                 <span> / </span>
@@ -95,9 +109,9 @@
                                         @endforeach
                                     </li>
                                 @endforeach
-                            </ol>
-                        @endif
-                    @endforeach
+                            @endif
+                        @endforeach
+                    </ol>
                 </div>
             @endforeach
         </div>

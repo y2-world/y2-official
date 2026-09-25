@@ -7,6 +7,10 @@
 
 @section('content')
     @php
+        // Previous/Nextで移動してもtype絞り込み一覧の範囲・Summary専用表示を
+        // 維持できるよう、現在のfrom/tabをクエリとして引き継ぐ
+        $prevNextQuery = (($tab ?? null) === 'summary') ? '?tab=summary' : (!empty($from) ? '?from=' . $from : '');
+
         // 関数の重複定義を防ぐためにチェック
         if (!function_exists('getTotalOlCount')) {
             function getTotalOlCount($tourSetlists)
@@ -84,56 +88,167 @@
         </div>
     </div>
 
-    <div class="{{ $totalOlCount >= 3 ? 'container-fluid' : 'container' }} database-year-content">
-        <div class="row justify-content-center">
-            <div class="{{ $colClass }}">
-                <div class="setlist" style="width: 100%;">
-                    @include('db_concerts._setlist_rows', ['tourSetlists' => $tourSetlists, 'songs' => $songs])
+    @if (($tab ?? null) === 'summary')
+        {{-- Live一覧の「Summary」タブから遷移してきた場合、ページ本文には
+             Summarizeの内容をそのままテキスト表示する。ただし、タイトル右の
+             パターン一覧アイコン（fa-bars、見出し内で先に描画済み）はDOM上の
+             .live-column-wrap[data-pattern-label]を探して選択肢を作るため、
+             通常のセットリスト自体も非表示のまま埋め込んでおき、アイコンから
+             引き続きパターンジャンプ・Summarize呼び出しを使えるようにする。 --}}
+        <div class="setlist" style="display: none;">
+            @include('db_concerts._setlist_rows', ['tourSetlists' => $tourSetlists, 'songs' => $songs])
+        </div>
+        <div class="container database-year-content">
+            <div class="row justify-content-center">
+                <div class="col-xl-9 setlist">
+                    @if ($setlistSummaries->count())
+                        <div class="setlist-row" style="justify-content: safe center;">
+                            @foreach ($setlistSummaries as $rowNum => $summary)
+                                @php
+                                    // rowが変わったら（=横並びの別グループに移ったら）曲番を1から
+                                    // 数え直す。$summaryNumberはこの<ol>のスコープ内だけで完結する
+                                    // 想定だが、Bladeの@phpはループをまたいで変数が残ってしまうため
+                                    // 明示的にリセットする（例: tour121のRow2「スタジアム公演」が、
+                                    // Row1「ドーム公演」からの続き番号になってしまっていた）。
+                                    $summaryNumber = 0;
+                                @endphp
+                                <div class="live-column-wrap">
+                                    @if ($setlistSummaries->count() > 1)
+                                        <div class="setlist-subtitle-area">
+                                            <h5 class="setlist-subtitle-heading">{{ $summaryRowTitles[$rowNum] ?? ('Row ' . $rowNum) }}</h5>
+                                        </div>
+                                    @endif
+                                    {{-- 通常のセットリスト表示（_setlist_rows.blade.php）と同じく、
+                                         SETLIST/ENCOREで<ol>を分けず1つに統一し、間に見出しだけを
+                                         挟むことで、ENCORE側もSETLISTからの続き番号にする。 --}}
+                                    <ol class="live-column">
+                                        @foreach (['setlist' => $summary['setlist'], 'encore' => $summary['encore']] as $section => $rows)
+                                            @if (count($rows))
+                                                @if ($section === 'encore')
+                                                    <div style="margin: 20px 0 10px;">
+                                                        <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
+                                                    </div>
+                                                @endif
+                                                @foreach ($rows as $row)
+                                                    @php
+                                                        // is_extra: 基準パターン（最後、または曲数最多のパターン）に
+                                                        // 存在しない曲。行内の全variantsがextraの場合だけ（＝この行
+                                                        // 自体が「一部の公演限定で挟まれた追加曲」）、通常の曲番を
+                                                        // 振らない「-」行として表示する。行内の一部だけがextraの
+                                                        // 場合（同じ日替わり位置の他の候補は基準パターンにある）は
+                                                        // 通常通り曲番付きの行として扱う。
+                                                        // <ol>はvalue属性を持つ<li>もカウント対象にしてしまうため、
+                                                        // 「-」行にも直前の通常行と同じvalueを指定し、次の通常行の
+                                                        // 番号がずれないようにする。
+                                                        $isExtraRow = collect($row['variants'])->every(fn ($v) => $v['is_extra'] ?? false);
+                                                        if (!$isExtraRow) {
+                                                            $summaryNumber = ($summaryNumber ?? 0) + 1;
+                                                        }
+                                                    @endphp
+                                                    @if ($isExtraRow)
+                                                        <li class="live-column-extra" value="{{ $summaryNumber ?? 0 }}" style="list-style: none;">
+                                                    @else
+                                                        <li value="{{ $summaryNumber }}">
+                                                    @endif
+                                                        @if ($isExtraRow)
+                                                            -
+                                                        @endif
+                                                        @foreach ($row['variants'] as $variant)
+                                                            @if (!$loop->first)
+                                                                <span> / </span>
+                                                            @endif
+                                                            @if (!($variant['is_common'] ?? true))
+                                                                <strong>
+                                                            @endif
+                                                            @if ($variant['song_id'])
+                                                                <a href="{{ url('/database/songs', $variant['song_id']) }}">{{ $variant['title'] }}</a>
+                                                            @else
+                                                                {{ $variant['title'] }}
+                                                            @endif
+                                                            @if (!($variant['is_common'] ?? true))
+                                                                </strong>
+                                                            @endif
+                                                        @endforeach
+                                                    </li>
+                                                @endforeach
+                                            @endif
+                                        @endforeach
+                                    </ol>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p>このライブにはSummaryがありません。</p>
+                    @endif
                 </div>
             </div>
         </div>
-    </div>
-
-    @if (isset($setlistSummaries) && $setlistSummaries->count())
-        <div id="setlistSummaryOverlay" style="display: none; position: fixed; inset: 0; background: rgba(20,22,30,0.5); z-index: 1050; align-items: center; justify-content: center;">
-            @foreach ($setlistSummaries as $rowNum => $summary)
-                <div class="setlist setlist-summary-popup" data-summary-row="{{ $rowNum }}" style="display: none; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); padding: 30px; max-width: 560px; width: calc(100% - 32px); max-height: 80vh; overflow-y: auto; position: relative;">
-                    <button type="button" class="setlist-summary-close" style="position: absolute; top: 16px; right: 16px; border: none; background: #f0f1f6; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; color: #718096; font-size: 16px; line-height: 1; flex-shrink: 0;">&times;</button>
-                    <h3 style="margin: 0 44px 20px 0; font-size: 18px;">{{ $tours->title }}</h3>
-                    @foreach (['setlist' => $summary['setlist'], 'encore' => $summary['encore']] as $section => $rows)
-                        @if (count($rows))
-                            @if ($section === 'encore')
-                                <div style="margin: 20px 0 10px;">
-                                    <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
-                                </div>
-                            @endif
-                            <ol class="live-column">
-                                @foreach ($rows as $row)
-                                    <li>
-                                        @foreach ($row['variants'] as $variant)
-                                            @if (!$loop->first)
-                                                <span> / </span>
-                                            @endif
-                                            @if (!($variant['is_common'] ?? true))
-                                                <strong>
-                                            @endif
-                                            @if ($variant['song_id'])
-                                                <a href="{{ url('/database/songs', $variant['song_id']) }}">{{ $variant['title'] }}</a>
-                                            @else
-                                                {{ $variant['title'] }}
-                                            @endif
-                                            @if (!($variant['is_common'] ?? true))
-                                                </strong>
-                                            @endif
-                                        @endforeach
-                                    </li>
-                                @endforeach
-                            </ol>
-                        @endif
-                    @endforeach
+    @else
+        <div class="{{ $totalOlCount >= 3 ? 'container-fluid' : 'container' }} database-year-content">
+            <div class="row justify-content-center">
+                <div class="{{ $colClass }}">
+                    <div class="setlist" style="width: 100%;">
+                        @include('db_concerts._setlist_rows', ['tourSetlists' => $tourSetlists, 'songs' => $songs])
+                    </div>
                 </div>
-            @endforeach
+            </div>
         </div>
+
+        @if (isset($setlistSummaries) && $setlistSummaries->count())
+            <div id="setlistSummaryOverlay" style="display: none; position: fixed; inset: 0; background: rgba(20,22,30,0.5); z-index: 1050; align-items: center; justify-content: center;">
+                @foreach ($setlistSummaries as $rowNum => $summary)
+                    @php $summaryNumber = 0; @endphp
+                    <div class="setlist setlist-summary-popup" data-summary-row="{{ $rowNum }}" style="display: none; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); padding: 30px; max-width: 560px; width: calc(100% - 32px); max-height: 80vh; overflow-y: auto; position: relative;">
+                        <button type="button" class="setlist-summary-close" style="position: absolute; top: 16px; right: 16px; border: none; background: #f0f1f6; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; color: #718096; font-size: 16px; line-height: 1; flex-shrink: 0;">&times;</button>
+                        <h3 style="margin: 0 44px 20px 0; font-size: 18px;">{{ $tours->title }}</h3>
+                        <ol class="live-column">
+                            @foreach (['setlist' => $summary['setlist'], 'encore' => $summary['encore']] as $section => $rows)
+                                @if (count($rows))
+                                    @if ($section === 'encore')
+                                        <div style="margin: 20px 0 10px;">
+                                            <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
+                                        </div>
+                                    @endif
+                                    @foreach ($rows as $row)
+                                        @php
+                                            $isExtraRow = collect($row['variants'])->every(fn ($v) => $v['is_extra'] ?? false);
+                                            if (!$isExtraRow) {
+                                                $summaryNumber = ($summaryNumber ?? 0) + 1;
+                                            }
+                                        @endphp
+                                        @if ($isExtraRow)
+                                            <li class="live-column-extra" value="{{ $summaryNumber ?? 0 }}" style="list-style: none;">
+                                        @else
+                                            <li value="{{ $summaryNumber }}">
+                                        @endif
+                                            @if ($isExtraRow)
+                                                -
+                                            @endif
+                                            @foreach ($row['variants'] as $variant)
+                                                @if (!$loop->first)
+                                                    <span> / </span>
+                                                @endif
+                                                @if (!($variant['is_common'] ?? true))
+                                                    <strong>
+                                                @endif
+                                                @if ($variant['song_id'])
+                                                    <a href="{{ url('/database/songs', $variant['song_id']) }}">{{ $variant['title'] }}</a>
+                                                @else
+                                                    {{ $variant['title'] }}
+                                                @endif
+                                                @if (!($variant['is_common'] ?? true))
+                                                    </strong>
+                                                @endif
+                                            @endforeach
+                                        </li>
+                                    @endforeach
+                                @endif
+                            @endforeach
+                        </ol>
+                    </div>
+                @endforeach
+            </div>
+        @endif
     @endif
     <div class="container database-year-content" style="padding-top: 0;">
         <div class="row justify-content-center">
@@ -155,7 +270,7 @@
                 {{-- 前後リンク --}}
                 <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
                     @if (isset($previous))
-                        <a href="{{ route('live.show', $previous->id) }}{{ !empty($from) ? '?from=' . $from : '' }}" rel="prev"
+                        <a href="{{ route('live.show', $previous->id) }}{{ $prevNextQuery }}" rel="prev"
                            style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
                             <i class="fa-solid fa-arrow-left" style="margin-right: 8px;"></i>
                             Previous
@@ -164,7 +279,7 @@
                         <div></div>
                     @endif
                     @if (isset($next))
-                        <a href="{{ route('live.show', $next->id) }}{{ !empty($from) ? '?from=' . $from : '' }}" rel="next"
+                        <a href="{{ route('live.show', $next->id) }}{{ $prevNextQuery }}" rel="next"
                            style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
                             Next
                             <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
@@ -179,6 +294,14 @@
 
 @section('page-script')
 <script>
+// Summaryページからのハッシュ付き遷移（#setlist-pattern-ID）で、ブラウザ標準の
+// スクロール位置復元・アンカージャンプがJSでの正確な位置計算より後から効いて
+// しまい、タイトルや1曲目が隠れる位置までずれてしまう。スクリプト読み込み直後
+// （DOMContentLoadedより前）にscrollRestorationを明示的にmanualへ切り替え、
+// ブラウザ自身による自動スクロール調整を止める。
+if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+}
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.setlist-row').forEach(function (row) {
         if (row.scrollWidth > row.clientWidth) {
@@ -323,30 +446,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
             var wrap = wraps[Number(patternSelect.value)];
-            if (wrap) {
-                var header = document.querySelector('nav.fixed-top');
-                var headerHeight = header ? header.getBoundingClientRect().height : 0;
-                var wrapRect = wrap.getBoundingClientRect();
-
-                // グループ見出しを含むグループ全体（.setlist-group-wrap）の先頭を
-                // 基準にスクロールする（PCは見出しが子要素として表示され、モバイルは
-                // 見出し自体は隠れていてもラッパーの位置は変わらない）。
-                // 見出しが無いグループは、その分オフセットを少なくする。
-                var groupWrap = wrap.closest('.setlist-group-wrap');
-                var hasGroupTitle = groupWrap && !!groupWrap.querySelector('.setlist-group-title');
-                var scrollAnchorRect = groupWrap ? groupWrap.getBoundingClientRect() : wrapRect;
-                var extraOffset = hasGroupTitle ? 30 : 12;
-
-                var targetTop = window.scrollY + scrollAnchorRect.top - (headerHeight + extraOffset);
-                window.scrollTo({ top: targetTop, behavior: 'smooth' });
-
-                var scrollParent = wrap.closest('.setlist-row');
-                if (scrollParent) {
-                    var parentRect = scrollParent.getBoundingClientRect();
-                    var targetLeft = scrollParent.scrollLeft + wrapRect.left - parentRect.left
-                        - (parentRect.width - wrapRect.width) / 2;
-                    scrollParent.scrollTo({ left: targetLeft, behavior: 'smooth' });
+            @if (($tab ?? null) === 'summary')
+                // Summaryテキスト表示ページでは通常のセットリスト自体を非表示で
+                // 埋め込んでいるだけなので、その場でスクロールしても意味が無い。
+                // 通常のセットリスト表示ページに、選んだパターンのIDをアンカーとして
+                // 遷移する（Summaryページからのクイックアクセスという位置付け）。
+                if (wrap && wrap.id) {
+                    window.location.href = '{{ route('live.show', $tours->id) }}{{ !empty($from) ? '?from=' . $from : '' }}#' + wrap.id;
                 }
+                return;
+            @endif
+            if (wrap) {
+                scrollToPatternWrap(wrap);
                 patternSelect.value = '';
             }
         });
@@ -354,6 +465,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
     setupPatternSelect('spPatternListSelect');
     setupPatternSelect('pcPatternListSelect');
+
+    // Summaryテキスト表示ページのパターン一覧から個別パターンを選ぶと、
+    // このページ（通常のセットリスト表示）に#setlist-pattern-IDのハッシュ付きで
+    // 遷移してくる。ブラウザ自身の標準アンカージャンプ（scrollToPatternWrapとは
+    // 別に、ページ読み込み時点で先に発生する）が先に効いてしまい、その後
+    // scrollToPatternWrapが「既にジャンプ済みの位置」を基準に計算してしまうと、
+    // 二重にオフセットがかかって着地位置がずれる（例: 1曲目を選んだのに、
+    // ブラウザの標準ジャンプ分だけ余計に下へスクロールされ、タイトルや
+    // 1曲目自体が隠れてしまう）。scrollTo自体は同期的に位置を更新するが、
+    // 直後のgetBoundingClientRect()がレイアウト再計算前の古い値を返すことが
+    // あるため、requestAnimationFrameで1フレーム待ってから計算し直す。
+    if (window.location.hash.indexOf('#setlist-pattern-') === 0) {
+        var hashTarget = document.getElementById(window.location.hash.slice(1));
+        if (hashTarget) {
+            window.scrollTo(0, 0);
+            requestAnimationFrame(function () {
+                scrollToPatternWrap(hashTarget);
+            });
+        }
+    }
 
     // PCでもウィンドウ幅やスクロール有無に関わらず常にパターン一覧アイコンを表示する
     var pcIconWrap = document.getElementById('pcPatternListIconWrap');
@@ -373,6 +504,32 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+function scrollToPatternWrap(wrap) {
+    var header = document.querySelector('nav.fixed-top');
+    var headerHeight = header ? header.getBoundingClientRect().height : 0;
+    var wrapRect = wrap.getBoundingClientRect();
+
+    // グループ見出しを含むグループ全体（.setlist-group-wrap）の先頭を
+    // 基準にスクロールする（PCは見出しが子要素として表示され、モバイルは
+    // 見出し自体は隠れていてもラッパーの位置は変わらない）。
+    // 見出しが無いグループは、その分オフセットを少なくする。
+    var groupWrap = wrap.closest('.setlist-group-wrap');
+    var hasGroupTitle = groupWrap && !!groupWrap.querySelector('.setlist-group-title');
+    var scrollAnchorRect = groupWrap ? groupWrap.getBoundingClientRect() : wrapRect;
+    var extraOffset = hasGroupTitle ? 30 : 12;
+
+    var targetTop = window.scrollY + scrollAnchorRect.top - (headerHeight + extraOffset);
+    window.scrollTo({ top: targetTop, behavior: 'smooth' });
+
+    var scrollParent = wrap.closest('.setlist-row');
+    if (scrollParent) {
+        var parentRect = scrollParent.getBoundingClientRect();
+        var targetLeft = scrollParent.scrollLeft + wrapRect.left - parentRect.left
+            - (parentRect.width - wrapRect.width) / 2;
+        scrollParent.scrollTo({ left: targetLeft, behavior: 'smooth' });
+    }
+}
 
 function openSetlistSummary(rowNum) {
     var overlay = document.getElementById('setlistSummaryOverlay');
