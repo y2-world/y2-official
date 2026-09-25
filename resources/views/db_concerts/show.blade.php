@@ -113,9 +113,9 @@
                                     $summaryNumber = 0;
                                 @endphp
                                 <div class="live-column-wrap">
-                                    @if ($setlistSummaries->count() > 1)
+                                    @if ($summaryRowTitles[$rowNum] ?? null)
                                         <div class="setlist-subtitle-area">
-                                            <h5 class="setlist-subtitle-heading">{{ $summaryRowTitles[$rowNum] ?? ('Row ' . $rowNum) }}</h5>
+                                            <h5 class="setlist-subtitle-heading">{{ $summaryRowTitles[$rowNum] }}</h5>
                                         </div>
                                     @endif
                                     {{-- 通常のセットリスト表示（_setlist_rows.blade.php）と同じく、
