@@ -66,15 +66,22 @@ class DbConcertController extends Controller
         $songs = DbSong::orderBy('sort_order', 'asc')->get();
         $tourSetlists = DbSetlist::where('tour_id', $id)->orderBy('order_no', 'asc')->get();
 
+        // 福山雅治（artist_id=5）はツアーによってアンコールの構成が公演ごとに
+        // 大きく異なり、かつ同じ曲（例: MELODY）が全公演共通のアンカーとして
+        // 存在するため、LCSアンカー方式だとアンカー前後の曲を誤って別の日替わり
+        // 位置に押し込め合い、崩壊した表示になってしまう。アンコールだけ常に
+        // 単純な位置ベースマージを使う。
+        $forceSimpleEncoreMerge = (int) $artist->id === 5;
+
         // row（同時に見比べる列同士）ごとに、パターンが2つ以上ある場合だけ
         // Summarizeポップアップ用の位置ベース差分マージ結果を作る
         $setlistSummaries = $tourSetlists
             ->groupBy(fn ($m) => $m->row ?? 1)
-            ->map(function ($rowSetlists) use ($songs) {
+            ->map(function ($rowSetlists) use ($songs, $forceSimpleEncoreMerge) {
                 if ($rowSetlists->count() < 2) {
                     return null;
                 }
-                $summary = buildSetlistPatternSummary($rowSetlists, $songs);
+                $summary = buildSetlistPatternSummary($rowSetlists, $songs, $forceSimpleEncoreMerge);
                 // variantsが2件以上の行があれば、当然差異あり。
                 // それに加えて、パターン間で曲数（setlist+encoreの総数）が異なる場合も
                 // 差異ありとみなす。曲数がバラバラだと、日替わり箇所ごとの曲数の違いに

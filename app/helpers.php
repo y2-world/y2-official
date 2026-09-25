@@ -431,7 +431,13 @@ if (!function_exists('buildSetlistPatternSummary')) {
     // 選択肢の一覧としてまとめる。
     // 戻り値は setlist と encore それぞれについて
     // [['variants' => [['title'=>..,'song_id'=>..|null], ...]], ...] の配列。
-    function buildSetlistPatternSummary($patterns, $songs): array
+    // $forceSimpleEncoreMerge: trueの場合、encore側は曲数がパターン間で食い違って
+    // いてもLCSアンカー方式を使わず、常に単純な位置ベースマージ（最長パターンの
+    // 位置に全パターンの該当曲を集める）を使う。福山雅治のように、1つのツアーで
+    // アンコールの構成が公演ごとに大きく異なり、かつ同じ曲（例: MELODY）が
+    // 全公演共通のアンカーとして存在するケースでは、LCSアンカー方式がアンカー前後の
+    // 曲を誤って別の日替わり位置に押し込め合ってしまい、崩壊した表示になるため。
+    function buildSetlistPatternSummary($patterns, $songs, bool $forceSimpleEncoreMerge = false): array
     {
         $extractEntry = function (array $item) use ($songs) {
             $alternativeTitle = $item['alternative_title'] ?? '';
@@ -490,19 +496,25 @@ if (!function_exists('buildSetlistPatternSummary')) {
         // アンコール側は安全な単純マージの恩恵を受けられるようにする
         // （結合列全体の曲数一致だけで判定すると、setlist側の些細な曲数差に
         // 巻き込まれてencore側までLCSに倒れてしまうため）。
-        $mergeEntryLists = function ($entryLists) {
+        $mergeEntryLists = function ($entryLists, bool $forceSimple = false) {
             $lengths = $entryLists->map(fn ($list) => count($list));
 
-            if ($lengths->unique()->count() === 1) {
+            if ($forceSimple || $lengths->unique()->count() === 1) {
                 // 全パターンで曲数（クラスタ数）が完全に一致する場合は、単純な位置
                 // ベースマージで十分かつ最も安全（同じ2曲が順序だけ入れ替わる等の
                 // ケースで、LCSアンカー方式は共通曲をアンカーと誤認して破綻するため）。
+                // $forceSimpleがtrueの場合は、曲数が食い違っていても強制的にこちらを
+                // 使う（最長パターンの位置数に合わせ、足りないパターンはその位置に
+                // 該当曲が無いものとして扱う）。
                 $maxLen = $lengths->max();
                 $rows = [];
                 for ($i = 0; $i < $maxLen; $i++) {
                     $entries = [];
                     foreach ($entryLists as $list) {
-                        foreach ($list[$i] as $entry) {
+                        // $forceSimple時は曲数がパターン間で食い違うため、短い方の
+                        // パターンにはこの位置が存在しないことがある（その位置には
+                        // 該当曲が無いものとして単に読み飛ばす）。
+                        foreach ($list[$i] ?? [] as $entry) {
                             $existingIndex = null;
                             foreach ($entries as $idx => $existing) {
                                 if ($existing['key'] === $entry['key']) {
@@ -564,7 +576,7 @@ if (!function_exists('buildSetlistPatternSummary')) {
         };
 
         $mergedSetlist = $mergeEntryLists($setlistClusterLists);
-        $mergedEncore = $mergeEntryLists($encoreClusterLists);
+        $mergedEncore = $mergeEntryLists($encoreClusterLists, $forceSimpleEncoreMerge);
         $base = array_merge($mergedSetlist, $mergedEncore);
 
         // is_common判定（その曲が全パターンで演奏されているか）に使う、keyごとの
