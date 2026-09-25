@@ -394,19 +394,27 @@ if (!function_exists('mergePatternIntoBase')) {
             // 「このパターンだけの追加曲」とみなし、base側の余りはそのまま単独行、
             // other側の余りはbaseのギャップ直後に独立した行として挿入する。
             // ただし、basePos側・otherPos側どちらかのクラスタの曲が、実は相手の
-            // 列の「このギャップ以外の場所」に既に存在する場合（＝LCSでアンカーに
+            // 列の「このギャップの近傍」に既に存在する場合（＝LCSでアンカーに
             // 選ばれなかっただけで、本当はどこか別の行に対応する曲）は、ここで
             // 無関係な相手側クラスタとペア化してはいけない（例: tour323で、baseの
             // ギャップに「HEAVEN」、otherのギャップに「妖」が来るケース。「妖」は
             // base自身の別の行に既に存在する共通曲で、LCSが「革命」と「妖」の
             // 前後関係が交差するため両方を同時にアンカーにできず、どちらか一方
             // だけがアンカーとして選ばれ、残りがこのギャップ処理に回ってきて
-            // しまっただけ）。一方、双方のクラスタの曲がお互いの列のどこにも
-            // 存在しない場合は、単純にこの位置の日替わり候補とみなしてペア化して
-            // よい（例: tour323のENCORE、「家族になろうよ/道標/Dear」のように、
-            // 各パターン固有でお互いの列の他の位置には出てこない曲同士の対応）。
+            // しまっただけ）。この探索は必ず近傍（前後2行以内）に限定する。
+            // 無制限にbase全体を探すと、たまたま同じ曲名が全く別の日替わり位置に
+            // 存在するだけの無関係な曲まで誤って同一視してしまう（実際に発生した
+            // 例: tour330で、1曲目の日替わり候補「fighting pose」が、全く無関係な
+            // 17曲目付近の日替わり候補としても登場する。1曲目のペア化を判定する
+            // 際、17曲目にある「fighting pose」まで検出して誤ってペア化を拒否し、
+            // 1曲目の選択肢が分裂してしまっていた）。一方、双方のクラスタの曲が
+            // お互いの列の近傍のどこにも存在しない場合は、単純にこの位置の
+            // 日替わり候補とみなしてペア化してよい（例: tour323のENCORE、
+            // 「家族になろうよ/道標/Dear」のように、各パターン固有でお互いの列の
+            // 他の位置には出てこない曲同士の対応）。
             $pairLen = min($baseGapLen, $otherGapLen);
             $unpairedOtherPositions = [];
+            $elsewhereSearchRadius = 2;
             for ($k = 0; $k < $pairLen; $k++) {
                 $basePos = $baseGapStart + $k;
                 $otherPos = $otherGapStart + $k;
@@ -414,22 +422,22 @@ if (!function_exists('mergePatternIntoBase')) {
                 $otherKeysHere = array_column($clusters[$otherPos], 'key');
 
                 $otherHasElsewhere = false;
-                foreach ($base as $rowIdx => $row) {
+                for ($rowIdx = max(0, $basePos - $elsewhereSearchRadius); $rowIdx <= min(count($base) - 1, $basePos + $elsewhereSearchRadius); $rowIdx++) {
                     if ($rowIdx === $basePos) {
                         continue;
                     }
-                    if (array_intersect(array_column($row['variants'], 'key'), $otherKeysHere)) {
+                    if (array_intersect(array_column($base[$rowIdx]['variants'], 'key'), $otherKeysHere)) {
                         $otherHasElsewhere = true;
                         break;
                     }
                 }
 
                 $baseHasElsewhere = false;
-                foreach ($clusters as $clusterIdx => $cluster) {
+                for ($clusterIdx = max(0, $otherPos - $elsewhereSearchRadius); $clusterIdx <= min(count($clusters) - 1, $otherPos + $elsewhereSearchRadius); $clusterIdx++) {
                     if ($clusterIdx === $otherPos) {
                         continue;
                     }
-                    if (array_intersect(array_column($cluster, 'key'), $baseKeysHere)) {
+                    if (array_intersect(array_column($clusters[$clusterIdx], 'key'), $baseKeysHere)) {
                         $baseHasElsewhere = true;
                         break;
                     }
