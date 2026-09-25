@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   app:
     build:
@@ -29,22 +27,6 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
 
-  db:
-    image: mysql:8.0
-    container_name: y2-official-db
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: y2_official
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_USER: y2user
-      MYSQL_PASSWORD: y2password
-    volumes:
-      - db-data:/var/lib/mysql
-    ports:
-      - "3306:3306"
-    networks:
-      - y2-network
-
   postgres:
     image: postgres:16
     container_name: y2-official-postgres
@@ -69,29 +51,10 @@ services:
     networks:
       - y2-network
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: y2-official-phpmyadmin
-    restart: unless-stopped
-    environment:
-      PMA_HOST: db
-      PMA_PORT: 3306
-      PMA_USER: root
-      PMA_PASSWORD: rootpassword
-      MYSQL_ROOT_PASSWORD: rootpassword
-    ports:
-      - "8081:80"
-    networks:
-      - y2-network
-    depends_on:
-      - db
-
 networks:
   y2-network:
     driver: bridge
 
 volumes:
-  db-data:
-    driver: local
   postgres-data:
     driver: local
