@@ -11,23 +11,19 @@
             <div class="col-xl-10">
                 <div class="element js-fadein">
                     <h1 class="stats-title">{{ isset($artist) ? $artist->name . ' Statistics' : 'Statistics' }}</h1>
-                    <p class="stats-subtitle">{{ isset($artist) ? 'セットリスト統計' : 'Database' }}</p>
+                    <p class="stats-subtitle">{{ isset($artist) ? 'セットリスト統計' : 'ライブ演奏履歴とデータ分析' }}</p>
 
-                    {{-- タブ切り替え（Personal/Database）は、PersonalタブがあるYuki本人だけ
-                         意味を持つため、Yuki本人がログインしている時だけ表示する --}}
-                    @if (\Illuminate\Support\Facades\Auth::guard('external')->user()?->is_yuki)
-                        <!-- Tab Navigation -->
-                        <div class="stats-tabs">
-                            <a href="{{ route('stats.index', ['tab' => 'personal']) }}"
-                               class="stats-tab {{ $tab === 'personal' ? 'active' : '' }}">
-                                <i class="fas fa-user"></i> Personal
-                            </a>
-                            <a href="{{ route('stats.index', ['tab' => 'database']) }}"
-                               class="stats-tab {{ $tab === 'database' ? 'active' : '' }}">
-                                <i class="fas fa-database"></i> Database
-                            </a>
-                        </div>
-                    @endif
+                    <!-- Tab Navigation -->
+                    <div class="stats-tabs">
+                        <a href="{{ route('stats.index', ['tab' => 'database']) }}"
+                           class="stats-tab {{ $tab === 'database' ? 'active' : '' }}">
+                            <i class="fas fa-database"></i> Database
+                        </a>
+                        <a href="{{ route('stats.index', ['tab' => 'personal']) }}"
+                           class="stats-tab {{ $tab === 'personal' ? 'active' : '' }}">
+                            <i class="fas fa-user"></i> Yuki's Stats
+                        </a>
+                    </div>
 
                     <!-- Artist Selector -->
                     <div style="margin-bottom: 24px;">
