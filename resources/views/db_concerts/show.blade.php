@@ -129,7 +129,7 @@
                                              1つだけを見出しにすると残りのグループの存在が分からなく
                                              なるため、全タイトルを列挙する。 --}}
                                         <div class="setlist-subtitle-area">
-                                            <h5 class="setlist-subtitle-heading">{{ $rowTitleList->implode(' / ') }}</h5>
+                                            <h5 class="setlist-subtitle-heading">{!! $rowTitleList->map(fn ($title) => e($title))->implode('<br>') !!}</h5>
                                         </div>
                                     @else
                                         {{-- rowにDbSetlistRowのグループ名が設定されていない場合、代わりに
