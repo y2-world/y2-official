@@ -1923,6 +1923,7 @@ h5.setlist-subtitle-heading {
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
     overflow: hidden;
+    max-width: min(350px, 80vw);
 }
 
 .setlist-subtitle-collapsible.setlist-subtitle-wrap.is-expanded {
