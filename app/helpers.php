@@ -267,6 +267,53 @@ if (!function_exists('lcsAlignEntryLists')) {
     }
 }
 
+if (!function_exists('entryListsArePositionallyConsistent')) {
+    // 全パターンでクラスタ数（曲数）が完全一致していても、実際には「1曲だけ
+    // 別の位置に移動している」「1曲抜けて別の1曲が増えている」ようなケースでは、
+    // 単純な位置ベースマージを使うと、その1箇所より後ろの行が軒並り2曲ずつ
+    // 混在してしまい壊滅的な結果になる（例: tour386のSETLIST、「煌」という曲が
+    // 一部パターンには存在せず、別のパターンでは先頭に入っている＝曲数は
+    // どちらも19のまま。tour323のSETLIST、pattern0だけ「Venus」が1曲多く
+    // 「HEAVEN」が1曲少ない）。「曲数が一致している」だけでは位置マージの
+    // 安全性を保証できないため、追加で全パターンの組み合わせに対し、
+    // 1) LCSアンカーで対応するペア数がクラスタ数と一致するか（＝すべての
+    //    クラスタがアンカーとして両者に共通して存在するか。「煌」のように
+    //    一方にしか無いクラスタがあれば、アンカー数がクラスタ数より少なくなり
+    //    ここで検出できる）、2) アンカーの対応関係にズレ（オフセットの変化）が
+    //    無いか、の両方を検証する。全パターンの組み合わせで両方を満たす場合のみ
+    //    真に位置が対応しているとみなし、単純位置マージを安全と判定する。
+    function entryListsArePositionallyConsistent($entryLists): bool
+    {
+        $lists = $entryLists->values()->map(fn ($list) => is_array($list) ? $list : $list->all());
+        $count = $lists->count();
+        if ($count < 2) {
+            return true;
+        }
+
+        for ($a = 0; $a < $count; $a++) {
+            for ($b = $a + 1; $b < $count; $b++) {
+                $listA = $lists[$a];
+                $listB = $lists[$b];
+                $pairs = lcsAlignEntryLists($listA, $listB);
+
+                if (count($pairs) !== count($listA) || count($pairs) !== count($listB)) {
+                    return false;
+                }
+
+                $offsets = [];
+                foreach ($pairs as [$ai, $bi]) {
+                    $offsets[$ai - $bi] = true;
+                }
+                if (count($offsets) > 1) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+}
+
 if (!function_exists('mergeEntriesPreservingEarliestOrder')) {
     // $variants（1行分のentry配列、参照渡し）に $newEntries をマージする。同じkeyの
     // entryが既にあれば追加しないが、新しく来たentryの方が_order（パターンの登場順
@@ -346,15 +393,62 @@ if (!function_exists('mergePatternIntoBase')) {
             // （同じ曲番の日替わり候補とみなす）。片方が長い場合、その余った分は
             // 「このパターンだけの追加曲」とみなし、base側の余りはそのまま単独行、
             // other側の余りはbaseのギャップ直後に独立した行として挿入する。
+            // ただし、basePos側・otherPos側どちらかのクラスタの曲が、実は相手の
+            // 列の「このギャップ以外の場所」に既に存在する場合（＝LCSでアンカーに
+            // 選ばれなかっただけで、本当はどこか別の行に対応する曲）は、ここで
+            // 無関係な相手側クラスタとペア化してはいけない（例: tour323で、baseの
+            // ギャップに「HEAVEN」、otherのギャップに「妖」が来るケース。「妖」は
+            // base自身の別の行に既に存在する共通曲で、LCSが「革命」と「妖」の
+            // 前後関係が交差するため両方を同時にアンカーにできず、どちらか一方
+            // だけがアンカーとして選ばれ、残りがこのギャップ処理に回ってきて
+            // しまっただけ）。一方、双方のクラスタの曲がお互いの列のどこにも
+            // 存在しない場合は、単純にこの位置の日替わり候補とみなしてペア化して
+            // よい（例: tour323のENCORE、「家族になろうよ/道標/Dear」のように、
+            // 各パターン固有でお互いの列の他の位置には出てこない曲同士の対応）。
             $pairLen = min($baseGapLen, $otherGapLen);
+            $unpairedOtherPositions = [];
             for ($k = 0; $k < $pairLen; $k++) {
                 $basePos = $baseGapStart + $k;
                 $otherPos = $otherGapStart + $k;
-                mergeEntriesPreservingEarliestOrder($base[$basePos]['variants'], $clusters[$otherPos]);
+                $baseKeysHere = array_column($base[$basePos]['variants'], 'key');
+                $otherKeysHere = array_column($clusters[$otherPos], 'key');
+
+                $otherHasElsewhere = false;
+                foreach ($base as $rowIdx => $row) {
+                    if ($rowIdx === $basePos) {
+                        continue;
+                    }
+                    if (array_intersect(array_column($row['variants'], 'key'), $otherKeysHere)) {
+                        $otherHasElsewhere = true;
+                        break;
+                    }
+                }
+
+                $baseHasElsewhere = false;
+                foreach ($clusters as $clusterIdx => $cluster) {
+                    if ($clusterIdx === $otherPos) {
+                        continue;
+                    }
+                    if (array_intersect(array_column($cluster, 'key'), $baseKeysHere)) {
+                        $baseHasElsewhere = true;
+                        break;
+                    }
+                }
+
+                if (!$otherHasElsewhere && !$baseHasElsewhere) {
+                    mergeEntriesPreservingEarliestOrder($base[$basePos]['variants'], $clusters[$otherPos]);
+                } else {
+                    $unpairedOtherPositions[] = $otherPos;
+                }
             }
             if ($otherGapLen > $pairLen) {
                 for ($k = $pairLen; $k < $otherGapLen; $k++) {
-                    $extraCluster = $clusters[$otherGapStart + $k];
+                    $unpairedOtherPositions[] = $otherGapStart + $k;
+                }
+            }
+            if (!empty($unpairedOtherPositions)) {
+                foreach ($unpairedOtherPositions as $otherPos) {
+                    $extraCluster = $clusters[$otherPos];
                     // このクラスタの曲が、LCSでアンカーに選ばれなかっただけで実は
                     // 挿入予定位置のすぐ近く（前後2行以内）に既に存在する場合
                     // （例: 基準列と他の既マージパターンの両方にある曲が、この
@@ -498,11 +592,18 @@ if (!function_exists('buildSetlistPatternSummary')) {
         // 巻き込まれてencore側までLCSに倒れてしまうため）。
         $mergeEntryLists = function ($entryLists, bool $forceSimple = false) {
             $lengths = $entryLists->map(fn ($list) => count($list));
+            // 曲数（クラスタ数）が全パターンで一致していても、それだけでは
+            // 単純位置マージの安全性を保証できない（1曲が別の位置に移動している
+            // だけで曲数は変わらないケースがあるため）。entryListsArePositionallyConsistent
+            // で、全パターン間のLCSアンカー対応にズレが無いかも合わせて確認する。
+            $isSimpleSafe = $lengths->unique()->count() === 1
+                && entryListsArePositionallyConsistent($entryLists);
 
-            if ($forceSimple || $lengths->unique()->count() === 1) {
-                // 全パターンで曲数（クラスタ数）が完全に一致する場合は、単純な位置
-                // ベースマージで十分かつ最も安全（同じ2曲が順序だけ入れ替わる等の
-                // ケースで、LCSアンカー方式は共通曲をアンカーと誤認して破綻するため）。
+            if ($forceSimple || $isSimpleSafe) {
+                // 全パターンで曲数（クラスタ数）が完全に一致し、かつ位置対応にも
+                // ズレが無い場合は、単純な位置ベースマージで十分かつ最も安全
+                // （同じ2曲が順序だけ入れ替わる等のケースで、LCSアンカー方式は
+                // 共通曲をアンカーと誤認して破綻するため）。
                 // $forceSimpleがtrueの場合は、曲数が食い違っていても強制的にこちらを
                 // 使う（最長パターンの位置数に合わせ、足りないパターンはその位置に
                 // 該当曲が無いものとして扱う）。
