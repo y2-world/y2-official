@@ -2042,18 +2042,15 @@ h5.setlist-subtitle-heading {
    展開時は高さ制限を解除して全パターンを表示する。 */
 .setlist-subtitle-collapsible.setlist-subtitle-wrap {
     position: relative;
+    line-height: 1.3;
+    max-height: 1.3em;
     overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-    text-overflow: ellipsis;
 }
 
 .setlist-subtitle-collapsible.setlist-subtitle-wrap.is-expanded {
     max-height: none;
     overflow: visible;
     display: block;
-    -webkit-line-clamp: unset;
 }
 
 
