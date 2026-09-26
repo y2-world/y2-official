@@ -135,11 +135,14 @@ if (!function_exists('groupAllSongClusters')) {
 
         foreach ($items as $item) {
             $isDaily = !empty($item['is_daily']);
+            $isMedley = !empty($item['medley']);
 
             if ($isDaily) {
                 if ($currentDailyCluster === null) {
                     // 直前に積んだ通常曲（最後のクラスタ）があれば、それをこの日替わり塊に合流させる
-                    if (!empty($clusters) && !($clusters[count($clusters) - 1]['is_daily'] ?? false)) {
+                    if (!empty($clusters)
+                        && !($clusters[count($clusters) - 1]['is_daily'] ?? false)
+                        && !($clusters[count($clusters) - 1]['is_medley'] ?? false)) {
                         $currentDailyCluster = array_pop($clusters);
                         $currentDailyCluster['is_daily'] = true;
                     } else {
@@ -147,6 +150,23 @@ if (!function_exists('groupAllSongClusters')) {
                     }
                 }
                 $currentDailyCluster['items'][] = $item;
+                continue;
+            }
+
+            if ($isMedley) {
+                if ($currentDailyCluster !== null) {
+                    // 日替わり曲に続くメドレー曲は、同じ候補トラックに含める。
+                    $currentDailyCluster['items'][] = $item;
+                } elseif (!empty($clusters) && ($clusters[count($clusters) - 1]['is_medley'] ?? false)) {
+                    $clusters[count($clusters) - 1]['items'][] = $item;
+                } elseif (!empty($clusters) && !($clusters[count($clusters) - 1]['is_daily'] ?? false)) {
+                    // メドレー項目は直前の通常曲の続きとして同じトラックにまとめる。
+                    $lastIndex = count($clusters) - 1;
+                    $clusters[$lastIndex]['items'][] = $item;
+                    $clusters[$lastIndex]['is_medley'] = true;
+                } else {
+                    $clusters[] = ['items' => [$item], 'is_daily' => false, 'is_medley' => true];
+                }
                 continue;
             }
 
@@ -690,6 +710,16 @@ if (!function_exists('buildSetlistPatternSummary')) {
                 foreach ($clusterItems as $item) {
                     $group = trim((string) ($item['daily_note'] ?? ''));
                     if ($group === '') {
+                        if (!empty($item['medley'])) {
+                            if ($pendingItems !== []) {
+                                $pendingItems[] = $item;
+                            } elseif (!empty($clusters) && ($clusters[count($clusters) - 1]['is_daily'] ?? false)) {
+                                $clusters[count($clusters) - 1]['items'][] = $item;
+                            } else {
+                                $clusters[] = ['items' => [$item], 'is_daily' => false, 'is_medley' => true];
+                            }
+                            continue;
+                        }
                         if ($pendingItems !== []) {
                             $clusters[] = ['items' => $pendingItems, 'is_daily' => true];
                             $pendingItems = [];
@@ -715,7 +745,7 @@ if (!function_exists('buildSetlistPatternSummary')) {
                 ->map(function ($cluster) use ($extractEntry, $patternIndex, $section) {
                     return collect($cluster['items'])
                         ->map($extractEntry)
-                        ->unique('key')
+                        ->unique(fn ($entry) => setlistEntryMergeIdentity($entry))
                         ->values()
                         // _clusterPosition: このクラスタ内（=is_dailyの塊など、1トラック
                         // として扱われる範囲）での元の並び順。同じパターン由来の複数
