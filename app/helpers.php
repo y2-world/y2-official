@@ -305,10 +305,12 @@ if (!function_exists('lcsAlignEntryLists')) {
 }
 
 if (!function_exists('setlistEntryMergeIdentity')) {
-    // daily_noteが異なる同一曲は、同じ楽曲の別の演奏位置として保持する。
+    // daily_noteまたはmedley属性が異なる同一曲は、別の演奏位置/役割として保持する。
     function setlistEntryMergeIdentity(array $entry): string
     {
-        return ($entry['key'] ?? '') . "\0" . (string) ($entry['summary_group'] ?? '');
+        return ($entry['key'] ?? '')
+            . "\0" . (string) ($entry['summary_group'] ?? '')
+            . "\0" . (!empty($entry['medley']) ? 'medley' : 'regular');
     }
 }
 
