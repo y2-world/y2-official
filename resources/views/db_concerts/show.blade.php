@@ -215,7 +215,7 @@
                                                             @endphp
                                                             <span class="setlist-song-featuring">
                                                                 @if (!$loop->first)
-                                                                    <span class="setlist-summary-variant-separator">@if (!empty($variant['medley']))〜@else/&nbsp;@endif</span>
+                                                                    <span class="setlist-summary-variant-separator">@if (!empty($variant['medley']))〜@else/@endif</span>
                                                                 @endif
                                                                 @if (!($variant['is_common'] ?? true))
                                                                     <strong>
@@ -298,7 +298,7 @@
                                                 @endphp
                                                 <span class="setlist-song-featuring">
                                                     @if (!$loop->first)
-                                                        <span class="setlist-summary-variant-separator">@if (!empty($variant['medley']))〜@else/&nbsp;@endif</span>
+                                                        <span class="setlist-summary-variant-separator">@if (!empty($variant['medley']))〜@else/@endif</span>
                                                     @endif
                                                     @if (!($variant['is_common'] ?? true))
                                                         <strong>
