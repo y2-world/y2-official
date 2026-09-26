@@ -828,12 +828,10 @@ select {
     box-sizing: border-box;
 }
 
-.setlist-featuring-summary {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    overflow-wrap: anywhere;
-    word-break: break-word;
+.setlist-summary-wrap .setlist-featuring,
+.setlist-summary-popup .setlist-featuring {
+    display: inline-block;
+    max-width: 350px;
 }
 
 @media (max-width: 767px) {
@@ -847,11 +845,12 @@ select {
 }
 
 .setlist-featuring {
-    display: inline;
+    display: inline-block;
+    max-width: 350px;
     color: #999;
     font-size: 0.75em;
     white-space: normal;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
 }
 
 .setlist-subtitle-area {
