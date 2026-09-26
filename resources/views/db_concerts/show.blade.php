@@ -112,7 +112,7 @@
                                     // Row1「ドーム公演」からの続き番号になってしまっていた）。
                                     $summaryNumber = 0;
                                 @endphp
-                                <div class="live-column-wrap" style="max-width: min(350px, 80vw);">
+                                <div class="live-column-wrap" style="max-width: min(450px, 80vw);">
                                     @php
                                         $rowTitleList = $summaryRowTitles[$rowNum] ?? collect();
                                     @endphp
