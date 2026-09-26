@@ -815,11 +815,11 @@ select {
 }
 
 @media (max-width: 767px) {
-    .setlist-standard-page {
+    .setlist-standard-page.has-responsive-summary {
         display: none;
     }
 
-    .setlist-standard-page.is-mobile-selected {
+    .setlist-standard-page.has-responsive-summary.is-mobile-selected {
         display: block;
     }
 
@@ -2042,13 +2042,18 @@ h5.setlist-subtitle-heading {
    展開時は高さ制限を解除して全パターンを表示する。 */
 .setlist-subtitle-collapsible.setlist-subtitle-wrap {
     position: relative;
-    max-height: 1.2em;
     overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    text-overflow: ellipsis;
 }
 
 .setlist-subtitle-collapsible.setlist-subtitle-wrap.is-expanded {
     max-height: none;
     overflow: visible;
+    display: block;
+    -webkit-line-clamp: unset;
 }
 
 

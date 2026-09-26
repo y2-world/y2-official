@@ -101,7 +101,7 @@
         </div>
         @include('db_concerts._summary_page')
     @else
-        <div class="setlist-standard-page{{ request()->query('view') === 'standard' ? ' is-mobile-selected' : '' }}">
+        <div class="setlist-standard-page{{ isset($setlistSummaries) && $setlistSummaries->count() ? ' has-responsive-summary' : '' }}{{ request()->query('view') === 'standard' ? ' is-mobile-selected' : '' }}">
         <div class="{{ $totalOlCount >= 3 ? 'container-fluid' : 'container' }} database-year-content">
             <div class="row justify-content-center">
                 <div class="{{ $colClass }}">
