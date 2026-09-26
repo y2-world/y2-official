@@ -187,7 +187,7 @@ class DbSetlistResource extends Resource
                                             ->live(),
 
                                         Forms\Components\TextInput::make('daily_note')
-                                            ->label('日替わり説明')
+                                            ->label('日替わり情報')
                                             ->placeholder('例: 1')
                                             ->maxLength(255),
 

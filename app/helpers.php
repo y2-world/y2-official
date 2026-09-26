@@ -224,7 +224,7 @@ if (!function_exists('isKaraokeTrack')) {
 
 if (!function_exists('lcsAlignEntryLists')) {
     // 2つのクラスタ列（各要素はentries=[['key'=>..],...]の配列）を、共通する曲
-    // （keyが交差するクラスタ）をアンカーにして最長共通部分列（LCS）でアラインメントする。
+    // または同じsummary_groupを持つクラスタをアンカーにして最長共通部分列（LCS）でアラインメントする。
     // 標準的な動的計画法でLCSの長さテーブルを作り、そこから逆算してマッチしたペアの
     // (baseIndex, otherIndex) の組を先頭から順に返す（1対1、順序を保った対応）。
     function lcsAlignEntryLists(array $base, array $other): array
@@ -234,10 +234,27 @@ if (!function_exists('lcsAlignEntryLists')) {
         $matches = [];
         for ($i = 0; $i < $m; $i++) {
             $matches[$i] = [];
-            $baseKeys = array_column($base[$i], 'key');
             for ($j = 0; $j < $n; $j++) {
-                $otherKeys = array_column($other[$j], 'key');
-                $matches[$i][$j] = (bool) array_intersect($baseKeys, $otherKeys);
+                $matches[$i][$j] = false;
+                foreach ($base[$i] as $baseEntry) {
+                    foreach ($other[$j] as $otherEntry) {
+                        $baseGroup = $baseEntry['summary_group'] ?? null;
+                        $otherGroup = $otherEntry['summary_group'] ?? null;
+
+                        // 同じdaily_noteは、曲が異なっていても同じ日替わり位置の
+                        // アンカーとして扱う。一方、同じ曲でも両方に異なる
+                        // daily_noteが付いている場合は別位置なので、曲IDだけで
+                        // 同一アンカーにしない。
+                        if ($baseGroup !== null && $otherGroup !== null && $baseGroup !== $otherGroup) {
+                            continue;
+                        }
+                        if ($baseEntry['key'] === $otherEntry['key']
+                            || ($baseGroup !== null && $baseGroup === $otherGroup)) {
+                            $matches[$i][$j] = true;
+                            break 2;
+                        }
+                    }
+                }
             }
         }
 
@@ -264,6 +281,14 @@ if (!function_exists('lcsAlignEntryLists')) {
         }
 
         return $pairs;
+    }
+}
+
+if (!function_exists('setlistEntryMergeIdentity')) {
+    // daily_noteが異なる同一曲は、同じ楽曲の別の演奏位置として保持する。
+    function setlistEntryMergeIdentity(array $entry): string
+    {
+        return ($entry['key'] ?? '') . "\0" . (string) ($entry['summary_group'] ?? '');
     }
 }
 
@@ -320,7 +345,8 @@ if (!function_exists('entryListsArePositionallyConsistent')) {
 }
 
 if (!function_exists('mergeEntriesPreservingEarliestOrder')) {
-    // $variants（1行分のentry配列、参照渡し）に $newEntries をマージする。同じkeyの
+    // $variants（1行分のentry配列、参照渡し）に $newEntries をマージする。同じkeyと
+    // summary_groupの
     // entryが既にあれば追加しないが、新しく来たentryの方が_order（パターンの登場順
     // インデックス）が小さい場合は、既存entryの_orderだけ若い方に更新する。
     // 基準列（LCSアンカー方式で最初にvariantsへ入るパターン）由来のentryは、
@@ -337,7 +363,7 @@ if (!function_exists('mergeEntriesPreservingEarliestOrder')) {
         foreach ($newEntries as $entry) {
             $existingIndex = null;
             foreach ($variants as $idx => $existing) {
-                if ($existing['key'] === $entry['key']) {
+                if (setlistEntryMergeIdentity($existing) === setlistEntryMergeIdentity($entry)) {
                     $existingIndex = $idx;
                     break;
                 }
@@ -535,7 +561,9 @@ if (!function_exists('mergePatternIntoBase')) {
                     $insertPos = $baseGapStart + $baseGapLen;
                     $existingRowIndex = null;
                     for ($rowIdx = 0; $rowIdx < count($base); $rowIdx++) {
-                        if (array_intersect(array_column($base[$rowIdx]['variants'], 'key'), array_column($extraCluster, 'key'))) {
+                        $existingIdentities = array_map('setlistEntryMergeIdentity', $base[$rowIdx]['variants']);
+                        $extraIdentities = array_map('setlistEntryMergeIdentity', $extraCluster);
+                        if (array_intersect($existingIdentities, $extraIdentities)) {
                             $existingRowIndex = $rowIdx;
                             break;
                         }
@@ -637,7 +665,50 @@ if (!function_exists('buildSetlistPatternSummary')) {
         // パターン順」へ並べ替え直す必要がある。
         $toEntryClustersFor = function ($pattern, int $patternIndex, string $section) use ($extractEntry) {
             $items = is_array($pattern->{$section} ?? null) ? $pattern->{$section} : [];
-            return collect(groupAllSongClusters($items))
+            $clusters = [];
+            foreach (groupAllSongClusters($items) as $cluster) {
+                $clusterItems = $cluster['items'];
+                $hasSummaryGroups = collect($clusterItems)->contains(
+                    fn ($item) => trim((string) ($item['daily_note'] ?? '')) !== ''
+                );
+
+                if (!$hasSummaryGroups) {
+                    $clusters[] = $cluster;
+                    continue;
+                }
+
+                // daily_noteが明示されている範囲では、その値を曲位置の定義として
+                // 優先する。is_dailyが連続しているだけで1クラスタにまとめると、
+                // 11曲目(group 1)と12曲目(group 2)のような隣接する別の日替わり枠が
+                // 一緒になってしまう。無指定の直前曲は独立クラスタにし、同じ値の
+                // daily_noteが連続する曲だけを1つの候補クラスタとして扱う。
+                $pendingGroup = null;
+                $pendingItems = [];
+                foreach ($clusterItems as $item) {
+                    $group = trim((string) ($item['daily_note'] ?? ''));
+                    if ($group === '') {
+                        if ($pendingItems !== []) {
+                            $clusters[] = ['items' => $pendingItems, 'is_daily' => true];
+                            $pendingItems = [];
+                            $pendingGroup = null;
+                        }
+                        $clusters[] = ['items' => [$item], 'is_daily' => false];
+                        continue;
+                    }
+
+                    if ($pendingItems !== [] && $group !== $pendingGroup) {
+                        $clusters[] = ['items' => $pendingItems, 'is_daily' => true];
+                        $pendingItems = [];
+                    }
+                    $pendingGroup = $group;
+                    $pendingItems[] = $item;
+                }
+                if ($pendingItems !== []) {
+                    $clusters[] = ['items' => $pendingItems, 'is_daily' => true];
+                }
+            }
+
+            return collect($clusters)
                 ->map(function ($cluster) use ($extractEntry, $patternIndex, $section) {
                     return collect($cluster['items'])
                         ->map($extractEntry)
@@ -724,7 +795,7 @@ if (!function_exists('buildSetlistPatternSummary')) {
                         foreach ($list[$i] ?? [] as $entry) {
                             $existingIndex = null;
                             foreach ($entries as $idx => $existing) {
-                                if ($existing['key'] === $entry['key']) {
+                                if (setlistEntryMergeIdentity($existing) === setlistEntryMergeIdentity($entry)) {
                                     $existingIndex = $idx;
                                     break;
                                 }
@@ -845,23 +916,29 @@ if (!function_exists('buildSetlistPatternSummary')) {
         };
 
         $rowIndexesForKey = [];
+        $songKeyByMergeIdentity = [];
         foreach ($base as $rowIdx => $row) {
             if (count($row['variants']) !== 1) {
                 continue;
             }
-            $key = $row['variants'][0]['key'];
+            $entry = $row['variants'][0];
+            $key = $entry['key'];
             // song_idを持たない生文字列曲（key が "title:..." 形式）は、同名だが
             // 別の演奏を指す可能性を否定できないため対象外とする
             if (!str_starts_with($key, 'id:')) {
                 continue;
             }
-            $rowIndexesForKey[$key][] = $rowIdx;
+            $mergeIdentity = setlistEntryMergeIdentity($entry);
+            $rowIndexesForKey[$mergeIdentity][] = $rowIdx;
+            $songKeyByMergeIdentity[$mergeIdentity] = $key;
         }
 
-        foreach ($rowIndexesForKey as $key => $rowIndexes) {
+        foreach ($rowIndexesForKey as $mergeIdentity => $rowIndexes) {
             if (count($rowIndexes) < 2) {
                 continue;
             }
+
+            $key = $songKeyByMergeIdentity[$mergeIdentity];
 
             if ($keyPerformedTwiceInAnyPattern($key)) {
                 continue;
