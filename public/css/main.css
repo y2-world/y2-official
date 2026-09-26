@@ -1974,23 +1974,26 @@ h5.setlist-subtitle-heading {
     color: #999;
 }
 
-/* Summaryページのrowパターンラベル一覧専用。全パターンを常にDOM上に
-   出力し、未展開時はline-clampで1行分だけに切り詰める（1パターン目だけを
-   別枠に切り出す方式だと、幅に余裕があっても2パターン目以降が一切見えず
-   もったいないため）。line-clampは自動で省略記号を付け、はみ出た2行目が
-   中途半端に見えてしまうこともない（max-heightだけの切り詰めと違い、
-   行の境界で正しくクリップされる）。展開時はline-clampを解除して全
-   パターンを折り返し表示する。 */
+/* Summaryのrowパターンラベルは1行に切り詰め、通常表示と同じ色の
+   省略記号を疑似要素で重ねる。展開時は高さ制限を解除して全パターンを表示する。 */
 .setlist-subtitle-collapsible.setlist-subtitle-wrap {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
+    position: relative;
+    max-height: 1.2em;
     overflow: hidden;
 }
 
+.setlist-subtitle-collapsible.setlist-subtitle-wrap:not(.is-expanded)::after {
+    content: '…';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding-left: 0.15em;
+    background: white;
+    color: #999;
+}
+
 .setlist-subtitle-collapsible.setlist-subtitle-wrap.is-expanded {
-    display: block;
-    -webkit-line-clamp: unset;
+    max-height: none;
     overflow: visible;
 }
 

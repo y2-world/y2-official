@@ -410,7 +410,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Summaryページのrowパターンラベル一覧（setlist-subtitle-wrap）は、
     // パターン数や幅次第で1行に収まることもある。その場合は省略記号や
     // クリック展開の見た目自体が不要（展開しても何も変わらないため）
-    // なので、実際にline-clampで2行目以降が切り詰められているかどうかを
+    // なので、実際に高さ制限で2行目以降が切り詰められているかどうかを
     // 判定し、切り詰められていなければsetlist-subtitle-collapsibleを
     // 外す。判定はscrollHeightとclientHeightの比較で行う（一時的に
     // is-expandedを付けて実際の全文の高さを測り、line-clamp適用時の
