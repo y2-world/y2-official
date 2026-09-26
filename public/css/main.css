@@ -828,10 +828,26 @@ select {
     box-sizing: border-box;
 }
 
-.setlist-summary-wrap .setlist-featuring,
-.setlist-summary-popup .setlist-featuring {
+.setlist-song-featuring {
     display: inline-block;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    vertical-align: top;
+}
+
+.setlist-song-featuring .setlist-featuring {
+    display: inline;
+    max-width: none;
+}
+
+.setlist-song-featuring.is-feature-wrap {
+    display: block;
     max-width: 350px;
+}
+
+.setlist-song-featuring.is-feature-wrap .setlist-featuring {
+    display: block;
 }
 
 @media (max-width: 767px) {

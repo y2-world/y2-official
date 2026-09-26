@@ -206,9 +206,6 @@
                                                             -
                                                         @endif
                                                         @foreach ($row['variants'] as $variant)
-                                                            @if (!$loop->first)
-                                                                <span>{{ !empty($variant['medley']) ? '〜' : ' / ' }}</span>
-                                                            @endif
                                                             @php
                                                                 $featuring = $variant['featuring'] ?? '';
                                                                 $featuringType = $variant['featuring_type'] ?? 'guest';
@@ -216,20 +213,25 @@
                                                                     ? '/ ' . $featuring
                                                                     : $featuring;
                                                             @endphp
-                                                            @if (!($variant['is_common'] ?? true))
-                                                                <strong>
-                                                            @endif
-                                                            @if ($variant['song_id'])
-                                                                <a href="{{ url('/database/songs', $variant['song_id']) }}">{{ $variant['title'] }}</a>
-                                                            @else
-                                                                {{ $variant['title'] }}
-                                                            @endif
-                                                            @if (!($variant['is_common'] ?? true))
-                                                                </strong>
-                                                            @endif
-                                                            @if ($featuringDisplay !== '')
-                                                                <span class="setlist-featuring setlist-featuring-summary">{{ $featuringDisplay }}</span>
-                                                            @endif
+                                                            <span class="setlist-song-featuring">
+                                                                @if (!$loop->first)
+                                                                    <span class="setlist-summary-variant-separator">@if (!empty($variant['medley']))〜@else/&nbsp;@endif</span>
+                                                                @endif
+                                                                @if (!($variant['is_common'] ?? true))
+                                                                    <strong>
+                                                                @endif
+                                                                @if ($variant['song_id'])
+                                                                    <a href="{{ url('/database/songs', $variant['song_id']) }}">{{ $variant['title'] }}</a>
+                                                                @else
+                                                                    {{ $variant['title'] }}
+                                                                @endif
+                                                                @if (!($variant['is_common'] ?? true))
+                                                                    </strong>
+                                                                @endif
+                                                                @if ($featuringDisplay !== '')
+                                                                    <span class="setlist-featuring setlist-featuring-summary">{{ $featuringDisplay }}</span>
+                                                                @endif
+                                                            </span>
                                                         @endforeach
                                                     </li>
                                                 @endforeach
@@ -287,9 +289,6 @@
                                                 -
                                             @endif
                                             @foreach ($row['variants'] as $variant)
-                                                @if (!$loop->first)
-                                                    <span>{{ !empty($variant['medley']) ? '〜' : ' / ' }}</span>
-                                                @endif
                                                 @php
                                                     $featuring = $variant['featuring'] ?? '';
                                                     $featuringType = $variant['featuring_type'] ?? 'guest';
@@ -297,20 +296,25 @@
                                                         ? '/ ' . $featuring
                                                         : $featuring;
                                                 @endphp
-                                                @if (!($variant['is_common'] ?? true))
-                                                    <strong>
-                                                @endif
-                                                @if ($variant['song_id'])
-                                                    <a href="{{ url('/database/songs', $variant['song_id']) }}">{{ $variant['title'] }}</a>
-                                                @else
-                                                    {{ $variant['title'] }}
-                                                @endif
-                                                @if (!($variant['is_common'] ?? true))
-                                                    </strong>
-                                                @endif
-                                                @if ($featuringDisplay !== '')
-                                                    <span class="setlist-featuring setlist-featuring-summary">{{ $featuringDisplay }}</span>
-                                                @endif
+                                                <span class="setlist-song-featuring">
+                                                    @if (!$loop->first)
+                                                        <span class="setlist-summary-variant-separator">@if (!empty($variant['medley']))〜@else/&nbsp;@endif</span>
+                                                    @endif
+                                                    @if (!($variant['is_common'] ?? true))
+                                                        <strong>
+                                                    @endif
+                                                    @if ($variant['song_id'])
+                                                        <a href="{{ url('/database/songs', $variant['song_id']) }}">{{ $variant['title'] }}</a>
+                                                    @else
+                                                        {{ $variant['title'] }}
+                                                    @endif
+                                                    @if (!($variant['is_common'] ?? true))
+                                                        </strong>
+                                                    @endif
+                                                    @if ($featuringDisplay !== '')
+                                                        <span class="setlist-featuring setlist-featuring-summary">{{ $featuringDisplay }}</span>
+                                                    @endif
+                                                </span>
                                             @endforeach
                                         </li>
                                     @endforeach
@@ -375,6 +379,34 @@ if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
 }
 document.addEventListener('DOMContentLoaded', function () {
+    function updateSongFeaturingWrap() {
+        document.querySelectorAll('.setlist-song-featuring').forEach(function (item) {
+            item.classList.remove('is-feature-wrap');
+            if (!item.querySelector('.setlist-featuring')) {
+                return;
+            }
+
+            var measure = item.cloneNode(true);
+            measure.style.cssText = 'position:fixed;left:-10000px;top:0;display:inline-block;width:max-content;max-width:none;white-space:nowrap;visibility:hidden;';
+            measure.querySelectorAll('.setlist-featuring').forEach(function (featuring) {
+                featuring.style.cssText += ';display:inline;max-width:none;white-space:nowrap;';
+            });
+            document.body.appendChild(measure);
+            var width = measure.getBoundingClientRect().width;
+            measure.remove();
+
+            if (width > 350) {
+                item.classList.add('is-feature-wrap');
+            }
+        });
+    }
+
+    updateSongFeaturingWrap();
+    window.addEventListener('resize', updateSongFeaturingWrap);
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(updateSongFeaturingWrap);
+    }
+
     // Summaryページのrowパターンラベル一覧（setlist-subtitle-wrap）は、
     // パターン数や幅次第で1行に収まることもある。その場合は省略記号や
     // クリック展開の見た目自体が不要（展開しても何も変わらないため）

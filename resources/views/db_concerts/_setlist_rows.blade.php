@@ -129,25 +129,29 @@
 
                                             @if ($isInline)
                                                 -
-                                                @if ($link)
-                                                    <a href="{{ $link }}" @if($isUnique) style="font-weight:900;" @endif>{{ $title }}</a>
-                                                @else
-                                                    @if($isUnique)<span style="font-weight:900;">{{ $title }}</span>@else{{ $title }}@endif
-                                                @endif
-                                                @if(!empty($featuring))
-                                                    <span class="setlist-featuring">{{ $featuringDisplay }}</span>
-                                                @endif
-                                                <br>
-                                            @else
-                                                <li @if($isUnique) style="font-weight:900;" @endif>
+                                                <span class="setlist-song-featuring">
                                                     @if ($link)
-                                                        <a href="{{ $link }}">{{ $title }}</a>
+                                                        <a href="{{ $link }}" @if($isUnique) style="font-weight:900;" @endif>{{ $title }}</a>
                                                     @else
-                                                        {{ $title }}
+                                                        @if($isUnique)<span style="font-weight:900;">{{ $title }}</span>@else{{ $title }}@endif
                                                     @endif
                                                     @if(!empty($featuring))
                                                         <span class="setlist-featuring">{{ $featuringDisplay }}</span>
                                                     @endif
+                                                </span>
+                                                <br>
+                                            @else
+                                                <li @if($isUnique) style="font-weight:900;" @endif>
+                                                    <span class="setlist-song-featuring">
+                                                        @if ($link)
+                                                            <a href="{{ $link }}">{{ $title }}</a>
+                                                        @else
+                                                            {{ $title }}
+                                                        @endif
+                                                        @if(!empty($featuring))
+                                                            <span class="setlist-featuring">{{ $featuringDisplay }}</span>
+                                                        @endif
+                                                    </span>
                                                 </li>
                                             @endif
                                         @endforeach
