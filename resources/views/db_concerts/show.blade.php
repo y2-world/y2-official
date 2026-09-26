@@ -510,10 +510,12 @@ document.addEventListener('DOMContentLoaded', function () {
             currentContainer.appendChild(option);
         });
         @if (($tab ?? null) !== 'summary')
+            if (summaryRowNums.length) {
             var summaryPageOption = document.createElement('option');
             summaryPageOption.value = '__summary_page__';
-            summaryPageOption.textContent = 'Summary';
+            summaryPageOption.textContent = 'Summaryに移動';
             patternSelect.appendChild(summaryPageOption);
+            }
         @endif
         patternSelect.addEventListener('change', function () {
             if (patternSelect.value === '__summary_page__') {
