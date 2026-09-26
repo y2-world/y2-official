@@ -79,7 +79,7 @@
                                     : 'パターン' . $loop->iteration;
                             @endphp
                             @if (count($setlist) || count($encore))
-                                <div class="live-column-wrap" id="setlist-pattern-{{ $setlistModel->id }}" data-pattern-label="{{ $patternLabel }}">
+                                <div class="live-column-wrap setlist-pattern-wrap" id="setlist-pattern-{{ $setlistModel->id }}" data-pattern-label="{{ $patternLabel }}">
                                     <div class="setlist-subtitle-area">
                                         @if (count($subtitleRenderedLines))
                                             @php
@@ -135,7 +135,7 @@
                                                     @if($isUnique)<span style="font-weight:900;">{{ $title }}</span>@else{{ $title }}@endif
                                                 @endif
                                                 @if(!empty($featuring))
-                                                    <span style="color:#999;font-size:0.75em;">{{ $featuringDisplay }}</span>
+                                                    <span class="setlist-featuring">{{ $featuringDisplay }}</span>
                                                 @endif
                                                 <br>
                                             @else
@@ -146,7 +146,7 @@
                                                         {{ $title }}
                                                     @endif
                                                     @if(!empty($featuring))
-                                                        <span style="color:#999;font-size:0.75em;">{{ $featuringDisplay }}</span>
+                                                        <span class="setlist-featuring">{{ $featuringDisplay }}</span>
                                                     @endif
                                                 </li>
                                             @endif

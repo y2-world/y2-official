@@ -112,7 +112,7 @@
                                     // Row1「ドーム公演」からの続き番号になってしまっていた）。
                                     $summaryNumber = 0;
                                 @endphp
-                                <div class="live-column-wrap" style="max-width: min(450px, 80vw);">
+                                <div class="live-column-wrap setlist-summary-wrap" style="max-width: min(450px, 80vw);">
                                     @php
                                         $rowTitleList = $summaryRowTitles[$rowNum] ?? collect();
                                     @endphp
@@ -228,7 +228,7 @@
                                                                 </strong>
                                                             @endif
                                                             @if ($featuringDisplay !== '')
-                                                                <span style="color:#999;font-size:0.75em;">{{ $featuringDisplay }}</span>
+                                                                <span class="setlist-featuring setlist-featuring-summary">{{ $featuringDisplay }}</span>
                                                             @endif
                                                         @endforeach
                                                     </li>
@@ -309,7 +309,7 @@
                                                     </strong>
                                                 @endif
                                                 @if ($featuringDisplay !== '')
-                                                    <span style="color:#999;font-size:0.75em;">{{ $featuringDisplay }}</span>
+                                                    <span class="setlist-featuring setlist-featuring-summary">{{ $featuringDisplay }}</span>
                                                 @endif
                                             @endforeach
                                         </li>
