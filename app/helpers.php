@@ -653,6 +653,8 @@ if (!function_exists('buildSetlistPatternSummary')) {
                 'title' => $title,
                 'song_id' => $songId,
                 'key' => $songId !== null ? 'id:' . $songId : 'title:' . $title,
+                'featuring' => trim((string) ($item['featuring'] ?? '')),
+                'featuring_type' => $item['featuring_type'] ?? 'guest',
                 'summary_group' => $summaryGroup !== '' ? $summaryGroup : null,
             ];
         };

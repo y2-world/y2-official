@@ -209,6 +209,13 @@
                                                             @if (!$loop->first)
                                                                 <span> / </span>
                                                             @endif
+                                                            @php
+                                                                $featuring = $variant['featuring'] ?? '';
+                                                                $featuringType = $variant['featuring_type'] ?? 'guest';
+                                                                $featuringDisplay = $featuring !== '' && $featuringType === 'artist'
+                                                                    ? '/ ' . $featuring
+                                                                    : $featuring;
+                                                            @endphp
                                                             @if (!($variant['is_common'] ?? true))
                                                                 <strong>
                                                             @endif
@@ -219,6 +226,9 @@
                                                             @endif
                                                             @if (!($variant['is_common'] ?? true))
                                                                 </strong>
+                                                            @endif
+                                                            @if ($featuringDisplay !== '')
+                                                                <span style="color:#999;font-size:0.75em;">{{ $featuringDisplay }}</span>
                                                             @endif
                                                         @endforeach
                                                     </li>
@@ -280,6 +290,13 @@
                                                 @if (!$loop->first)
                                                     <span> / </span>
                                                 @endif
+                                                @php
+                                                    $featuring = $variant['featuring'] ?? '';
+                                                    $featuringType = $variant['featuring_type'] ?? 'guest';
+                                                    $featuringDisplay = $featuring !== '' && $featuringType === 'artist'
+                                                        ? '/ ' . $featuring
+                                                        : $featuring;
+                                                @endphp
                                                 @if (!($variant['is_common'] ?? true))
                                                     <strong>
                                                 @endif
@@ -290,6 +307,9 @@
                                                 @endif
                                                 @if (!($variant['is_common'] ?? true))
                                                     </strong>
+                                                @endif
+                                                @if ($featuringDisplay !== '')
+                                                    <span style="color:#999;font-size:0.75em;">{{ $featuringDisplay }}</span>
                                                 @endif
                                             @endforeach
                                         </li>
