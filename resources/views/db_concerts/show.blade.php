@@ -531,6 +531,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         @if (($tab ?? null) !== 'summary')
             if (summaryRowNums.length) {
+            var summarySeparator = document.createElement('hr');
+            patternSelect.appendChild(summarySeparator);
+
             var summaryPageOption = document.createElement('option');
             summaryPageOption.value = '__summary_page__';
             summaryPageOption.textContent = 'Summaryに移動';
