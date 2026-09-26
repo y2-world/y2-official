@@ -872,8 +872,51 @@ if (!function_exists('buildSetlistPatternSummary')) {
                 $votes = $base[$rowIdx]['variants'][0]['_sectionVotes'] ?? [];
                 $countsByRow[$rowIdx] = array_sum($votes) ?: 1;
             }
-            $maxCount = max($countsByRow);
-            $keepRowIdx = array_search($maxCount, $countsByRow, true);
+
+            // 同じ曲が本編とアンコールの両方に現れた場合は、出現数だけでなく
+            // 基準パターンでの所属セクションを優先する。これにより基準パターンで
+            // アンコールにある曲（例: JAP THE RIPPER）が、同数票の本編側に
+            // 誤って残るのを防ぐ。基準パターンにその曲が片方のセクションでのみ
+            // 存在する場合に限って優先し、両方/どちらにも無い場合は従来の
+            // 出現数による判定を使う。
+            $referenceSectionsForKey = [];
+            foreach ($referenceKeysBySection as $section => $keys) {
+                if ($keys->has($key)) {
+                    $referenceSectionsForKey[] = $section;
+                }
+            }
+
+            $keepCandidates = $rowIndexes;
+            if (count($referenceSectionsForKey) === 1) {
+                $referenceSection = $referenceSectionsForKey[0];
+                $rowsInReferenceSection = array_values(array_filter(
+                    $rowIndexes,
+                    function ($rowIdx) use ($base, $referenceSection) {
+                        $entry = $base[$rowIdx]['variants'][0];
+                        $votes = $entry['_sectionVotes'] ?? [];
+                        $setlistVotes = $votes['setlist'] ?? 0;
+                        $encoreVotes = $votes['encore'] ?? 0;
+                        if ($setlistVotes !== $encoreVotes) {
+                            $section = $encoreVotes > $setlistVotes ? 'encore' : 'setlist';
+                        } else {
+                            $maxOrders = $entry['_sectionMaxOrder'] ?? [];
+                            $section = ($maxOrders['encore'] ?? -1) > ($maxOrders['setlist'] ?? -1)
+                                ? 'encore'
+                                : 'setlist';
+                        }
+
+                        return $section === $referenceSection;
+                    }
+                ));
+
+                if ($rowsInReferenceSection !== []) {
+                    $keepCandidates = $rowsInReferenceSection;
+                }
+            }
+
+            $candidateCounts = array_intersect_key($countsByRow, array_flip($keepCandidates));
+            $maxCount = max($candidateCounts);
+            $keepRowIdx = array_search($maxCount, $candidateCounts, true);
 
             foreach ($rowIndexes as $rowIdx) {
                 if ($rowIdx === $keepRowIdx) {
