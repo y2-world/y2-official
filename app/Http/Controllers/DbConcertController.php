@@ -140,6 +140,7 @@ class DbConcertController extends Controller
         // Summarizeポップアップ用の位置ベース差分マージ結果を作る
         $setlistSummaries = $tourSetlists
             ->groupBy(fn ($m) => $m->row ?? 1)
+            ->sortKeys()
             ->map(function ($rowSetlists) use ($songs, $forceSimpleEncoreMerge) {
                 if ($rowSetlists->count() < 2) {
                     return null;
