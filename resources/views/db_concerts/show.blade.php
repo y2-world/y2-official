@@ -509,7 +509,17 @@ document.addEventListener('DOMContentLoaded', function () {
             option.textContent = wrap.getAttribute('data-pattern-label');
             currentContainer.appendChild(option);
         });
+        @if (($tab ?? null) !== 'summary')
+            var summaryPageOption = document.createElement('option');
+            summaryPageOption.value = '__summary_page__';
+            summaryPageOption.textContent = 'Summary';
+            patternSelect.appendChild(summaryPageOption);
+        @endif
         patternSelect.addEventListener('change', function () {
+            if (patternSelect.value === '__summary_page__') {
+                window.location.href = '{{ route('live.show', $tours->id) }}?tab=summary{{ !empty($from) ? '&from=' . urlencode($from) : '' }}';
+                return;
+            }
             if (patternSelect.value.indexOf('__summary_') === 0) {
                 var rowNum = patternSelect.value.replace('__summary_', '').replace('__', '');
                 openSetlistSummary(rowNum);

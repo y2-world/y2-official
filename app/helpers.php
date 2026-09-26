@@ -956,7 +956,10 @@ if (!function_exists('buildSetlistPatternSummary')) {
                         // 花の匂いだけは基準パターンに無いため区別される）。
                         $isExtra = !$referenceKeys->has($entry['key']);
                         return collect($entry)
-                            ->except(['_order', '_section', '_sectionVotes', '_sectionMaxOrder', '_clusterPosition'])
+                            // summary_groupで別々の行を後から統合する場合にも、
+                            // 初出パターン順を復元できるよう_orderと_clusterPositionは
+                            // 統合が終わるまで保持する。
+                            ->except(['_section', '_sectionVotes', '_sectionMaxOrder'])
                             ->put('is_common', $isCommon)
                             ->put('is_extra', $isExtra)
                             ->all();
@@ -1026,6 +1029,26 @@ if (!function_exists('buildSetlistPatternSummary')) {
 
         $setlistRows = $applySummaryGroups($setlistRows);
         $encoreRows = $applySummaryGroups($encoreRows);
+
+        // summary_groupの統合で別行から候補が追加されているため、統合前の行順ではなく
+        // 各候補の初出パターン順（同一パターン内は元の曲順）に並べ直す。
+        $sortAndCleanSummaryRows = function (array $sectionRows): array {
+            foreach ($sectionRows as &$row) {
+                usort($row['variants'], fn ($a, $b) =>
+                    ($a['_order'] ?? PHP_INT_MAX) <=> ($b['_order'] ?? PHP_INT_MAX)
+                    ?: ($a['_clusterPosition'] ?? 0) <=> ($b['_clusterPosition'] ?? 0)
+                );
+
+                foreach ($row['variants'] as &$entry) {
+                    unset($entry['_order'], $entry['_clusterPosition']);
+                }
+                unset($entry);
+            }
+            unset($row);
+            return $sectionRows;
+        };
+        $setlistRows = $sortAndCleanSummaryRows($setlistRows);
+        $encoreRows = $sortAndCleanSummaryRows($encoreRows);
 
         return [
             'setlist' => $setlistRows,
