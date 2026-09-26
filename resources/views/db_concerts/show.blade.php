@@ -150,7 +150,7 @@
                                                 ->sortBy('order_no')
                                                 ->flatMap(fn ($m) => renderSubtitleWithGreyedVenues($m->subtitle ?? '')['lines'])
                                                 ->filter(fn ($line) => trim(strip_tags($line)) !== '')
-                                                ->map(fn ($line) => '<span style="white-space: nowrap;">' . $line . '</span>')
+                                                ->map(fn ($line) => '<span class="setlist-summary-pattern-label" style="white-space: nowrap;">' . $line . '</span>')
                                                 ->values();
                                         @endphp
                                         {{-- このツアーでSummary対象のrowが1つしかない場合、row同士を
@@ -165,7 +165,7 @@
                                                      未展開時から幅に収まる分だけ複数パターンが自然に見える。 --}}
                                                 <h5 class="setlist-subtitle-heading setlist-subtitle-wrap setlist-subtitle-collapsible"
                                                     onclick="this.classList.toggle('is-expanded')">
-                                                    {!! $rowPatternLabels->implode(' ') !!}
+                                                    {!! $rowPatternLabels->implode(' ') !!}<span class="setlist-subtitle-toggle" aria-hidden="true"><i class="fa-solid fa-angle-down"></i><i class="fa-solid fa-angle-up"></i></span>
                                                 </h5>
                                             </div>
                                         @endif
@@ -401,10 +401,38 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function positionSummarySubtitleToggles() {
+        document.querySelectorAll('.setlist-summary-wrap .setlist-subtitle-wrap').forEach(function (heading) {
+            var labels = Array.prototype.slice.call(heading.querySelectorAll('.setlist-summary-pattern-label'));
+            var toggle = heading.querySelector('.setlist-subtitle-toggle');
+            if (!labels.length || !toggle || !heading.classList.contains('setlist-subtitle-collapsible')) {
+                return;
+            }
+
+            var headingRect = heading.getBoundingClientRect();
+            var firstLabelRect = labels[0].getBoundingClientRect();
+            var firstLineTop = firstLabelRect.top;
+            var lastRight = firstLabelRect.right;
+            labels.slice(1).forEach(function (label) {
+                var rect = label.getBoundingClientRect();
+                if (Math.abs(rect.top - firstLineTop) < 1) {
+                    lastRight = Math.max(lastRight, rect.right);
+                }
+            });
+
+            toggle.style.left = (lastRight - headingRect.left + 4) + 'px';
+            toggle.style.top = (firstLineTop - headingRect.top + firstLabelRect.height / 2) + 'px';
+        });
+    }
+
     updateSongFeaturingWrap();
     window.addEventListener('resize', updateSongFeaturingWrap);
+    window.addEventListener('resize', positionSummarySubtitleToggles);
     if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(updateSongFeaturingWrap);
+        document.fonts.ready.then(function () {
+            updateSongFeaturingWrap();
+            positionSummarySubtitleToggles();
+        });
     }
 
     // Summaryページのrowパターンラベル一覧（setlist-subtitle-wrap）は、
@@ -425,6 +453,7 @@ document.addEventListener('DOMContentLoaded', function () {
             el.removeAttribute('onclick');
         }
     });
+    positionSummarySubtitleToggles();
 
     document.querySelectorAll('.setlist-row').forEach(function (row) {
         if (row.scrollWidth > row.clientWidth) {

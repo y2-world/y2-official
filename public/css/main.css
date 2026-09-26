@@ -1959,6 +1959,11 @@ h5.setlist-subtitle-heading {
 
 .setlist-subtitle-collapsible {
     cursor: pointer;
+    position: relative;
+    align-self: flex-start;
+    width: fit-content;
+    max-width: 100%;
+    padding-right: 1.2em;
 }
 
 .setlist-subtitle-collapsible .setlist-subtitle-rest {
@@ -1969,27 +1974,53 @@ h5.setlist-subtitle-heading {
     display: inline;
 }
 
-.setlist-subtitle-collapsible:not(.is-expanded)::after {
-    content: '…';
+.setlist-subtitle-toggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 0.75em;
+    --summary-toggle-y-offset: 4px;
     color: #999;
 }
 
-/* Summaryのrowパターンラベルは1行に切り詰め、通常表示と同じ色の
-   省略記号を疑似要素で重ねる。展開時は高さ制限を解除して全パターンを表示する。 */
+.setlist-pattern-wrap .setlist-subtitle-collapsible {
+    position: static;
+    align-self: stretch;
+    width: auto;
+    max-width: none;
+    padding-right: 0;
+}
+
+.setlist-pattern-wrap .setlist-subtitle-toggle {
+    position: static;
+    margin-left: 0.35em;
+    vertical-align: middle;
+    transform: none;
+}
+
+.setlist-summary-wrap .setlist-subtitle-toggle {
+    right: auto;
+    transform: translateY(calc(-50% + var(--summary-toggle-y-offset)));
+}
+
+.setlist-subtitle-toggle .fa-angle-up {
+    display: none;
+}
+
+.setlist-subtitle-collapsible.is-expanded .setlist-subtitle-toggle .fa-angle-down {
+    display: none;
+}
+
+.setlist-subtitle-collapsible.is-expanded .setlist-subtitle-toggle .fa-angle-up {
+    display: inline-block;
+}
+
+/* Summaryのrowパターンラベルは1行に切り詰める。矢印はJSで1行目末尾に置き、
+   展開時は高さ制限を解除して全パターンを表示する。 */
 .setlist-subtitle-collapsible.setlist-subtitle-wrap {
     position: relative;
     max-height: 1.2em;
     overflow: hidden;
-}
-
-.setlist-subtitle-collapsible.setlist-subtitle-wrap:not(.is-expanded)::after {
-    content: '…';
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    padding-left: 0.15em;
-    background: white;
-    color: #999;
 }
 
 .setlist-subtitle-collapsible.setlist-subtitle-wrap.is-expanded {

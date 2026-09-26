@@ -88,7 +88,7 @@
                                             @endphp
                                             <h5 class="setlist-subtitle-heading {{ count($restLines) ? 'setlist-subtitle-collapsible' : '' }}"
                                                 @if (count($restLines)) onclick="this.classList.toggle('is-expanded')" @endif>
-                                                {!! $firstLine !!}@if (count($restLines))<span class="setlist-subtitle-rest"><br>{!! implode('<br>', $restLines) !!}</span>@endif
+                                                {!! $firstLine !!}@if (count($restLines))<span class="setlist-subtitle-toggle" aria-hidden="true"><i class="fa-solid fa-angle-down"></i><i class="fa-solid fa-angle-up"></i></span><span class="setlist-subtitle-rest"><br>{!! implode('<br>', $restLines) !!}</span>@endif
                                             </h5>
                                         @endif
                                     </div>
