@@ -207,7 +207,7 @@
                                                         @endif
                                                         @foreach ($row['variants'] as $variant)
                                                             @if (!$loop->first)
-                                                                <span> / </span>
+                                                                <span>{{ !empty($variant['medley']) ? '〜' : ' / ' }}</span>
                                                             @endif
                                                             @php
                                                                 $featuring = $variant['featuring'] ?? '';
@@ -288,7 +288,7 @@
                                             @endif
                                             @foreach ($row['variants'] as $variant)
                                                 @if (!$loop->first)
-                                                    <span> / </span>
+                                                    <span>{{ !empty($variant['medley']) ? '〜' : ' / ' }}</span>
                                                 @endif
                                                 @php
                                                     $featuring = $variant['featuring'] ?? '';
