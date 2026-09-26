@@ -169,6 +169,17 @@ class DbConcertController extends Controller
                 return $hasDifference ? $summary : null;
             })
             ->filter();
+
+        // Summaryページでは差異のあるrowだけでなく、同じ曲順のrowも含めて
+        // ツアー内のすべてのrowを表示する。差異のあるrowは上で計算した結果を再利用し、
+        // Summary対象外だったrowだけ単独パターンを含めて構築する。
+        $summaryRows = $tourSetlists
+            ->groupBy(fn ($m) => $m->row ?? 1)
+            ->sortKeys()
+            ->map(function ($rowSetlists, $rowNum) use ($setlistSummaries, $songs, $forceSimpleEncoreMerge) {
+                return $setlistSummaries->get($rowNum)
+                    ?? buildSetlistPatternSummary($rowSetlists, $songs, $forceSimpleEncoreMerge);
+            });
         $previousQuery = $scopeQuery(DbConcert::where('artist_id', $tours->artist_id)
             ->where(function ($q) use ($tours) {
                 $q->where('date1', '<', $tours->date1)
@@ -195,6 +206,6 @@ class DbConcertController extends Controller
             $next = $nextQuery->first();
         }
 
-        return view('db_concerts.show', compact('songs', 'previous', 'next', 'tours', 'tourSetlists', 'artist', 'setlistSummaries', 'from', 'tab', 'summaryRowTitles'));
+        return view('db_concerts.show', compact('songs', 'previous', 'next', 'tours', 'tourSetlists', 'artist', 'setlistSummaries', 'summaryRows', 'from', 'tab', 'summaryRowTitles'));
     }
 }

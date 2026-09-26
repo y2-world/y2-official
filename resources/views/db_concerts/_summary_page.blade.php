@@ -3,7 +3,7 @@
                 <div class="{{ $colClass }} setlist">
                     @if ($setlistSummaries->count())
                         <div class="setlist-row" style="justify-content: safe center;">
-                            @foreach ($setlistSummaries as $rowNum => $summary)
+                            @foreach ($summaryRows as $rowNum => $summary)
                                 @php
                                     // rowが変わったら（=横並びの別グループに移ったら）曲番を1から
                                     // 数え直す。$summaryNumberはこの<ol>のスコープ内だけで完結する
@@ -16,10 +16,8 @@
                                     @php
                                         $rowTitleList = $summaryRowTitles[$rowNum] ?? collect();
                                     @endphp
-                                    @if ($rowTitleList->count() === 1 && $setlistSummaries->count() > 1)
-                                        {{-- rowが1つしかタイトルを持たず、かつこのツアーでSummary対象の
-                                             rowも1つしかない場合、row同士を見比べる意味がある見出し
-                                             自体が不要なため出さない。 --}}
+                                    @if ($rowTitleList->count() === 1 && $summaryRows->count() > 1)
+                                        {{-- 表示するrowが複数ある場合は、rowごとのグループ名を見出しにする。 --}}
                                         <div class="setlist-subtitle-area">
                                             <h5 class="setlist-subtitle-heading">{{ $rowTitleList->first() }}</h5>
                                         </div>
@@ -53,11 +51,9 @@
                                                 ->map(fn ($line) => '<span class="setlist-summary-pattern-label" style="white-space: nowrap;">' . $line . '</span>')
                                                 ->values();
                                         @endphp
-                                        {{-- このツアーでSummary対象のrowが1つしかない場合、row同士を
-                                             見比べる意味がある見出し（rowタイトル）自体が不要なため
-                                             出さない（通常表示のパターン一覧アイコンから個別公演には
-                                             いつでも移動できる）。 --}}
-                                        @if ($setlistSummaries->count() > 1 && $rowPatternLabels->count())
+                                        {{-- 表示するrowが複数ある場合に、グループ名が無いrowは
+                                             パターンの日付・会場ラベルを見出しとして表示する。 --}}
+                                        @if ($summaryRows->count() > 1 && $rowPatternLabels->count())
                                             <div class="setlist-subtitle-area">
                                                 {{-- 未展開時はmax-heightで1行分だけに切り詰め、クリックで
                                                      全パターン分を折り返し表示する。1パターン目だけを別枠に
