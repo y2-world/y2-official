@@ -355,6 +355,25 @@ if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
 }
 document.addEventListener('DOMContentLoaded', function () {
+    // Summaryページのrowパターンラベル一覧（setlist-subtitle-wrap）は、
+    // パターン数や幅次第で1行に収まることもある。その場合は省略記号や
+    // クリック展開の見た目自体が不要（展開しても何も変わらないため）
+    // なので、実際にline-clampで2行目以降が切り詰められているかどうかを
+    // 判定し、切り詰められていなければsetlist-subtitle-collapsibleを
+    // 外す。判定はscrollHeightとclientHeightの比較で行う（一時的に
+    // is-expandedを付けて実際の全文の高さを測り、line-clamp適用時の
+    // 高さと比べる）。
+    document.querySelectorAll('.setlist-subtitle-wrap.setlist-subtitle-collapsible').forEach(function (el) {
+        var clampedHeight = el.getBoundingClientRect().height;
+        el.classList.add('is-expanded');
+        var fullHeight = el.getBoundingClientRect().height;
+        el.classList.remove('is-expanded');
+        if (fullHeight <= clampedHeight + 1) {
+            el.classList.remove('setlist-subtitle-collapsible');
+            el.removeAttribute('onclick');
+        }
+    });
+
     document.querySelectorAll('.setlist-row').forEach(function (row) {
         if (row.scrollWidth > row.clientWidth) {
             row.style.justifyContent = 'flex-start';

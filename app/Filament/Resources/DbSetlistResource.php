@@ -188,7 +188,7 @@ class DbSetlistResource extends Resource
 
                                         Forms\Components\TextInput::make('daily_note')
                                             ->label('日替わり説明')
-                                            ->placeholder('例: 9.30')
+                                            ->placeholder('例: 1')
                                             ->maxLength(255),
 
                                         Forms\Components\TextInput::make('featuring')
@@ -322,8 +322,9 @@ class DbSetlistResource extends Resource
                                             ->live(),
 
                                         Forms\Components\TextInput::make('daily_note')
-                                            ->label('日替わり説明')
-                                            ->placeholder('例: 9.30')
+                                            ->label('Summary日替わりグループ')
+                                            ->helperText('複数パターンをまたいで同じ日替わり位置の候補である曲に、共通の値（例: "1"）を入力する。Setlist Summarizeがこの値を最優先で同じ行にまとめる（LCSによる自動判定より優先）。同じ曲でもパターンによって役割が違う場合は、レコードごとに別の値を入れてよい。')
+                                            ->placeholder('例: 1')
                                             ->maxLength(255),
 
                                         Forms\Components\TextInput::make('featuring')

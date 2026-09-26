@@ -105,7 +105,6 @@
                                                 $isDaily = isset($data['is_daily']) && $data['is_daily'];
                                                 $isMedley = isset($data['medley']) && $data['medley'];
                                                 $isInline = $isDaily || $isMedley;
-                                                $dailyNote = isset($data['daily_note']) ? $data['daily_note'] : '';
                                                 $featuringType = $data['featuring_type'] ?? 'guest';
                                                 $featuring = isset($data['featuring']) ? $data['featuring'] : '';
                                                 $featuringDisplay = $featuring !== '' && $featuringType === 'artist' ? '/ ' . $featuring : $featuring;
@@ -138,9 +137,6 @@
                                                 @if(!empty($featuring))
                                                     <span style="color:#999;font-size:0.75em;">{{ $featuringDisplay }}</span>
                                                 @endif
-                                                @if(!empty($dailyNote))
-                                                    <span style="color:#999;font-size:0.75em;">{{ $dailyNote }}</span>
-                                                @endif
                                                 <br>
                                             @else
                                                 <li @if($isUnique) style="font-weight:900;" @endif>
@@ -151,9 +147,6 @@
                                                     @endif
                                                     @if(!empty($featuring))
                                                         <span style="color:#999;font-size:0.75em;">{{ $featuringDisplay }}</span>
-                                                    @endif
-                                                    @if(!empty($dailyNote))
-                                                        <span style="color:#999;font-size:0.75em;">{{ $dailyNote }}</span>
                                                     @endif
                                                 </li>
                                             @endif

@@ -613,10 +613,19 @@ if (!function_exists('buildSetlistPatternSummary')) {
             $title = $alternativeTitle !== ''
                 ? $alternativeTitle
                 : ($songModel ? $songModel->title : ($item['song'] ?? ''));
+            // summaryGroup: DbSetlistRow編集画面の「daily_note」欄（Summary日替わり
+            // グループ）に手動で入力された値。LCSアンカー方式では機械的に判別
+            // できない「本当は同じ日替わり位置の候補だが、たまたま曲順や基準
+            // パターンの都合で別の行に分裂してしまう」ケース（例: tour187の
+            // もうはなさない/Hi/ピエロ）に対して、人手で同じ値を入力しておくことで
+            // マージ時に最優先で同じ行へ統合する。空文字はグループ指定なしとして
+            // 通常のLCS判定に任せる。
+            $summaryGroup = trim((string) ($item['daily_note'] ?? ''));
             return [
                 'title' => $title,
                 'song_id' => $songId,
                 'key' => $songId !== null ? 'id:' . $songId : 'title:' . $title,
+                'summary_group' => $summaryGroup !== '' ? $summaryGroup : null,
             ];
         };
 
@@ -961,6 +970,62 @@ if (!function_exists('buildSetlistPatternSummary')) {
                 $setlistRows[] = $cleanedRow;
             }
         }
+
+        // summary_group（DbSetlistRow編集画面の「daily_note」欄に手動入力された
+        // 値）が同じentry同士を、LCSの自動判定結果に関わらず強制的に1つの行へ
+        // 統合する。LCSアンカー方式では機械的に判別できない分裂ケース（例:
+        // tour187の「もうはなさない/Hi/ピエロ」が基準パターンの都合で別々の
+        // 行になってしまう）への、人手による最終手段の救済措置。setlist/encore
+        // それぞれのセクション内でのみ統合する（本編/アンコール境界をまたいだ
+        // グループ指定は現状のデータ構造では想定しない）。
+        $applySummaryGroups = function (array $rows): array {
+            $rowIndexesByGroup = [];
+            foreach ($rows as $rowIdx => $row) {
+                foreach ($row['variants'] as $entry) {
+                    $group = $entry['summary_group'] ?? null;
+                    if ($group === null) {
+                        continue;
+                    }
+                    $rowIndexesByGroup[$group][] = $rowIdx;
+                }
+            }
+
+            $mergeInto = [];
+            foreach ($rowIndexesByGroup as $group => $rowIndexes) {
+                $rowIndexes = array_values(array_unique($rowIndexes));
+                if (count($rowIndexes) < 2) {
+                    continue;
+                }
+                $targetRowIdx = min($rowIndexes);
+                foreach ($rowIndexes as $rowIdx) {
+                    if ($rowIdx !== $targetRowIdx) {
+                        $mergeInto[$rowIdx] = $targetRowIdx;
+                    }
+                }
+            }
+            // Aさん→Bさんへの統合がさらにBさん→Cさんへの統合と連鎖する場合に
+            // 備えて、最終的な統合先まで辿る（同じ行が複数のグループ指定に
+            // またがって登場するケースへの保険）。
+            $resolveTarget = function ($rowIdx) use (&$mergeInto, &$resolveTarget) {
+                return isset($mergeInto[$rowIdx]) ? $resolveTarget($mergeInto[$rowIdx]) : $rowIdx;
+            };
+
+            foreach ($mergeInto as $rowIdx => $targetRowIdx) {
+                $targetRowIdx = $resolveTarget($targetRowIdx);
+                if ($targetRowIdx === $rowIdx) {
+                    continue;
+                }
+                foreach ($rows[$rowIdx]['variants'] as $entry) {
+                    $rows[$targetRowIdx]['variants'][] = $entry;
+                }
+                $rows[$rowIdx]['variants'] = [];
+            }
+
+            return array_values(array_filter($rows, fn ($row) => !empty($row['variants'])));
+        };
+
+        $setlistRows = $applySummaryGroups($setlistRows);
+        $encoreRows = $applySummaryGroups($encoreRows);
 
         return [
             'setlist' => $setlistRows,
