@@ -847,8 +847,7 @@ select {
 }
 
 .setlist-featuring {
-    display: inline-block;
-    max-width: 100%;
+    display: inline;
     color: #999;
     font-size: 0.75em;
     white-space: normal;
