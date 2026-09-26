@@ -809,6 +809,29 @@ select {
     box-sizing: border-box;
 }
 
+/* Default mobile view uses the full Summary page when one exists. */
+.setlist-responsive-summary-page {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    .setlist-standard-page {
+        display: none;
+    }
+
+    .setlist-standard-page.is-mobile-selected {
+        display: block;
+    }
+
+    .setlist-responsive-summary-page {
+        display: block;
+    }
+
+    .setlist-responsive-summary-page.is-mobile-hidden {
+        display: none;
+    }
+}
+
 .setlist-pattern-wrap .live-column {
     width: 100%;
     max-width: 100%;
