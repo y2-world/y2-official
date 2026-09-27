@@ -2701,6 +2701,33 @@ h5.setlist-subtitle-heading {
     color: #fff;
 }
 
+.stats-accordion-toggle-row {
+    display: flex;
+    justify-content: flex-end;
+    margin: -16px 0 8px;
+}
+
+.stats-accordion-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #667eea;
+    cursor: pointer;
+}
+
+.stats-accordion-toggle i {
+    transition: transform 0.2s ease;
+}
+
+.stats-accordion-toggle[aria-expanded="true"] i {
+    transform: rotate(180deg);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .stats-wrapper {
