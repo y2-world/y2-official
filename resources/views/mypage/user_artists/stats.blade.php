@@ -40,13 +40,6 @@
                     ] as $section)
                         <section class="stats-section visible">
                             <h2 class="section-title"><i class="fas {{ $section['icon'] }}"></i> {{ $section['title'] }} ({{ $section['items']->filter(fn ($song) => $song['count'] > 0)->count() }})</h2>
-                            @if($section['accordion'] && $section['items']->count() > 10)
-                                <div class="stats-accordion-toggle-row">
-                                    <button class="stats-accordion-toggle" type="button" aria-label="一覧を展開" aria-expanded="false" onclick="toggleStatsRows(this)">
-                                        <i class="fas fa-chevron-down" aria-hidden="true"></i>
-                                    </button>
-                                </div>
-                            @endif
                             @if($section['items']->isEmpty())
                                 <p>該当するデータはありません。</p>
                             @else
@@ -73,6 +66,11 @@
                                             @endforeach
                                         </tbody>
                                     </table>
+                                    @if($section['accordion'] && $section['items']->count() > 10)
+                                        <div class="show-more-container">
+                                            <button class="show-more-btn" type="button" onclick="toggleStatsRows(this)">Show More <i class="fas fa-chevron-down"></i></button>
+                                        </div>
+                                    @endif
                                 </div>
                             @endif
                         </section>
@@ -148,9 +146,9 @@ function toggleStatsRows(button) {
         row.style.display = isExpanded ? 'none' : 'table-row';
     });
     button.classList.toggle('expanded');
-    button.setAttribute('aria-expanded', String(!isExpanded));
-    button.setAttribute('aria-label', isExpanded ? '一覧を展開' : '一覧を折りたたむ');
-    button.innerHTML = '<i class="fas fa-chevron-down" aria-hidden="true"></i>';
+    button.innerHTML = isExpanded
+        ? 'Show More <i class="fas fa-chevron-down"></i>'
+        : 'Show Less <i class="fas fa-chevron-up"></i>';
 }
 </script>
 @endsection

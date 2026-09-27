@@ -262,37 +262,11 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function positionSummarySubtitleToggles() {
-        document.querySelectorAll('.setlist-summary-wrap .setlist-subtitle-wrap').forEach(function (heading) {
-            var labels = Array.prototype.slice.call(heading.querySelectorAll('.setlist-summary-pattern-label'));
-            var toggle = heading.querySelector('.setlist-subtitle-toggle');
-            if (!labels.length || !toggle || !heading.classList.contains('setlist-subtitle-collapsible')) {
-                return;
-            }
-
-            var headingRect = heading.getBoundingClientRect();
-            var firstLabelRect = labels[0].getBoundingClientRect();
-            var firstLineTop = firstLabelRect.top;
-            var lastRight = firstLabelRect.right;
-            labels.slice(1).forEach(function (label) {
-                var rect = label.getBoundingClientRect();
-                if (Math.abs(rect.top - firstLineTop) < 1) {
-                    lastRight = Math.max(lastRight, rect.right);
-                }
-            });
-
-            toggle.style.left = (lastRight - headingRect.left + 4) + 'px';
-            toggle.style.top = (firstLineTop - headingRect.top + firstLabelRect.height / 2) + 'px';
-        });
-    }
-
     updateSongFeaturingWrap();
     window.addEventListener('resize', updateSongFeaturingWrap);
-    window.addEventListener('resize', positionSummarySubtitleToggles);
     if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(function () {
             updateSongFeaturingWrap();
-            positionSummarySubtitleToggles();
         });
     }
 
@@ -314,8 +288,6 @@ document.addEventListener('DOMContentLoaded', function () {
             el.removeAttribute('onclick');
         }
     });
-    positionSummarySubtitleToggles();
-
     document.querySelectorAll('.setlist-row').forEach(function (row) {
         if (row.scrollWidth > row.clientWidth) {
             row.style.justifyContent = 'flex-start';

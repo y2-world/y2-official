@@ -2004,9 +2004,11 @@ h5.setlist-subtitle-heading {
 .setlist-subtitle-collapsible {
     cursor: pointer;
     position: relative;
-    align-self: flex-start;
-    width: fit-content;
+    align-self: stretch;
+    display: block;
+    width: 100%;
     max-width: 100%;
+    box-sizing: border-box;
     padding-right: 1.2em;
 }
 
@@ -2028,23 +2030,30 @@ h5.setlist-subtitle-heading {
 }
 
 .setlist-pattern-wrap .setlist-subtitle-collapsible {
-    position: static;
+    position: relative;
     align-self: stretch;
-    width: auto;
+    display: block;
+    width: 100%;
     max-width: none;
-    padding-right: 0;
+    box-sizing: border-box;
+    padding-right: 1.2em;
 }
 
 .setlist-pattern-wrap .setlist-subtitle-toggle {
-    position: static;
-    margin-left: 0.35em;
-    vertical-align: middle;
+    position: absolute;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    margin: 0;
     transform: none;
 }
 
 .setlist-summary-wrap .setlist-subtitle-toggle {
-    right: auto;
-    transform: translateY(calc(-50% + var(--summary-toggle-y-offset)));
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    transform: none;
 }
 
 .setlist-subtitle-toggle .fa-angle-up {
@@ -2059,8 +2068,8 @@ h5.setlist-subtitle-heading {
     display: inline-block;
 }
 
-/* Summaryのrowパターンラベルは1行に切り詰める。矢印はJSで1行目末尾に置き、
-   展開時は高さ制限を解除して全パターンを表示する。 */
+/* Summaryのrowパターンラベルは1行に切り詰め、展開時は高さ制限を解除する。
+   展開ボタンは見出し文字に混ぜず、見出しボックスの右下に置く。 */
 .setlist-subtitle-collapsible.setlist-subtitle-wrap {
     position: relative;
     line-height: 1.5;
@@ -2699,33 +2708,6 @@ h5.setlist-subtitle-heading {
 .stats-back-link,
 .stats-back-link:hover {
     color: #fff;
-}
-
-.stats-accordion-toggle-row {
-    display: flex;
-    justify-content: flex-end;
-    margin: -16px 0 8px;
-}
-
-.stats-accordion-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 28px;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: #667eea;
-    cursor: pointer;
-}
-
-.stats-accordion-toggle i {
-    transition: transform 0.2s ease;
-}
-
-.stats-accordion-toggle[aria-expanded="true"] i {
-    transform: rotate(180deg);
 }
 
 /* Responsive Design */
