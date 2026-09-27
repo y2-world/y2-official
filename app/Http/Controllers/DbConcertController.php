@@ -11,11 +11,15 @@ use Illuminate\Http\Request;
 
 class DbConcertController extends Controller
 {
-    // Setlist Summarize（複数パターンのセットリストを1つの比較表にまとめる機能）が
-    // 実際に表示すべき差異を持つかどうかを判定する。show()の$setlistSummaries算出と
-    // 同じロジックを、type=summary一覧の絞り込みでも再利用するための共通処理。
+    private const SUMMARY_WITHOUT_DIFFERENCES_TOUR_IDS = [47, 218, 220];
+
+    // Summaryの差分がある公演に加え、同一パターンでもSummaryを表示する公演を判定する。
     private function tourHasSetlistSummary(DbConcert $tour, $songs): bool
     {
+        if (in_array((int) $tour->id, self::SUMMARY_WITHOUT_DIFFERENCES_TOUR_IDS, true)) {
+            return true;
+        }
+
         $tourSetlists = DbSetlist::where('tour_id', $tour->id)->orderBy('order_no', 'asc')->get();
         $forceSimpleEncoreMerge = (int) $tour->artist_id === 5;
 
@@ -136,12 +140,11 @@ class DbConcertController extends Controller
         // 単純な位置ベースマージを使う。
         $forceSimpleEncoreMerge = (int) $artist->id === 5;
 
-        // row（同時に見比べる列同士）ごとに、パターンが2つ以上ある場合だけ
-        // Summarizeポップアップ用の位置ベース差分マージ結果を作る
+        // row（同時に見比べる列同士）ごとに、パターンが2つ以上ある場合にSummaryを作る。
         $setlistSummaries = $tourSetlists
             ->groupBy(fn ($m) => $m->row ?? 1)
             ->sortKeys()
-            ->map(function ($rowSetlists) use ($songs, $forceSimpleEncoreMerge) {
+            ->map(function ($rowSetlists) use ($songs, $forceSimpleEncoreMerge, $tours) {
                 if ($rowSetlists->count() < 2) {
                     return null;
                 }
@@ -164,9 +167,18 @@ class DbConcertController extends Controller
                     || $encoreCounts->unique()->count() > 1
                     || $totalCounts->unique()->count() > 1;
                 $hasDifference = $hasVariantDifference || $hasCountDifference;
-                // 全パターンが完全に同じ曲順・曲目のrowは、Summarizeで見せる差異が
-                // 無いので対象から除外する
-                return $hasDifference ? $summary : null;
+                if ($hasDifference) {
+                    return $summary;
+                }
+
+                if (!in_array((int) $tours->id, self::SUMMARY_WITHOUT_DIFFERENCES_TOUR_IDS, true)) {
+                    return null;
+                }
+
+                // 全パターンが同じ曲順・曲目の場合は、同じ行を再マージせず、
+                // 指定公演についてはorder_noが最後のパターンをそのままSummaryに使う。
+                $finalPattern = $rowSetlists->sortBy('order_no')->last();
+                return buildSetlistPatternSummary(collect([$finalPattern]), $songs, $forceSimpleEncoreMerge);
             })
             ->filter();
 
