@@ -2051,8 +2051,12 @@ h5.setlist-subtitle-heading {
     display: none;
 }
 
-.setlist-subtitle-auto:not(.setlist-subtitle-collapsible) .setlist-subtitle-toggle {
+.setlist-subtitle-toggle {
     display: none;
+}
+
+.setlist-subtitle-collapsible > .setlist-subtitle-toggle {
+    display: block;
 }
 
 .setlist-subtitle-collapsible.is-expanded .setlist-subtitle-rest {
