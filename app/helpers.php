@@ -813,6 +813,11 @@ if (!function_exists('buildSetlistPatternSummary')) {
         $referenceKeysForSection = fn ($clusterLists) => collect($clusterLists[$referenceIndex])
             ->flatMap(fn ($cluster) => array_column($cluster, 'key'))
             ->flip();
+        $referenceSummaryGroupsForSection = fn ($clusterLists) => collect($clusterLists[$referenceIndex])
+            ->flatMap(fn ($cluster) => array_column($cluster, 'summary_group'))
+            ->filter(fn ($group) => $group !== null && trim((string) $group) !== '')
+            ->unique()
+            ->flip();
 
         // クラスタ列の一覧を、曲数（クラスタ数）が全パターンで完全一致する場合は
         // 単純な位置ベースマージ、そうでない場合はLCSアンカー方式でマージする。
@@ -1116,20 +1121,24 @@ if (!function_exists('buildSetlistPatternSummary')) {
             // 全パターンで演奏されているのでtrue）。
             $patternCount = $patterns->count();
             $referenceKeys = $referenceKeysBySection[$section];
+            $referenceSummaryGroups = $referenceSummaryGroupsForSection(
+                $section === 'encore' ? $encoreClusterLists : $setlistClusterLists
+            );
             $cleanedRow = [
                 'variants' => array_map(
-                    function ($entry) use ($patternCount, $totalVotesByKey, $referenceKeys) {
+                    function ($entry) use ($patternCount, $totalVotesByKey, $referenceKeys, $referenceSummaryGroups) {
                         $totalVotes = $totalVotesByKey[$entry['key']] ?? 0;
                         $isCommon = $totalVotes >= $patternCount;
-                        // is_extra: このentryが基準パターン（最後、または曲数最多の
-                        // パターン）に存在しない曲かどうか。基準パターンに無い曲は
-                        // 通常の曲番グループの一員として数えるべきでない「一部の
-                        // 公演限定で挟まれた追加曲」とみなし、呼び出し側で無番号の
-                        // 特別な行として表示できるようフラグを立てる（例: tour127の
-                        // 「花の匂い」。同じ日替わり位置の他の候補は基準パターンに
-                        // 存在するため通常通り曲番グループの一員として扱われるが、
-                        // 花の匂いだけは基準パターンに無いため区別される）。
-                        $isExtra = !$referenceKeys->has($entry['key']);
+                        // is_extra: 基準パターンに曲位置が無い追加曲かどうか。
+                        // daily_noteが明示されている場合は曲名の出現有無ではなく、
+                        // 同じsummary_groupが基準パターンにあるかで位置を判定する。
+                        // これにより、別の曲番位置には演奏されている曲でも、基準に
+                        // 無いdaily_note位置（例: group 3）の候補なら「-」行になる。
+                        // daily_noteが無い既存データは従来通り曲keyで判定する。
+                        $summaryGroup = trim((string) ($entry['summary_group'] ?? ''));
+                        $isExtra = $summaryGroup !== ''
+                            ? !$referenceSummaryGroups->has($summaryGroup)
+                            : !$referenceKeys->has($entry['key']);
                         return collect($entry)
                             // summary_groupで別々の行を後から統合する場合にも、
                             // 初出パターン順を復元できるよう_orderと_clusterPositionは
