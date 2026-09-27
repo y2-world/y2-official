@@ -59,7 +59,7 @@
                                                      全パターン分を折り返し表示する。1パターン目だけを別枠に
                                                      切り出さず全パターンを同じマークアップで出すことで、
                                                      未展開時から幅に収まる分だけ複数パターンが自然に見える。 --}}
-                                                <h5 class="setlist-subtitle-heading setlist-subtitle-wrap setlist-subtitle-collapsible"
+                                                <h5 class="setlist-subtitle-heading setlist-subtitle-wrap setlist-subtitle-collapsible{{ $rowPatternLabels->count() === 1 ? ' setlist-summary-single-pattern-label' : '' }}"
                                                     onclick="this.classList.toggle('is-expanded')">
                                                     {!! $rowPatternLabels->implode(' ') !!}<span class="setlist-subtitle-toggle" aria-hidden="true"><i class="fa-solid fa-angle-down"></i><i class="fa-solid fa-angle-up"></i></span>
                                                 </h5>

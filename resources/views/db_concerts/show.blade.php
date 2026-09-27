@@ -479,18 +479,22 @@ document.addEventListener('DOMContentLoaded', function () {
             @if (($tab ?? null) === 'summary')
                 // Summaryテキスト表示ページでは通常のセットリスト自体を非表示で
                 // 埋め込んでいるだけなので、その場でスクロールしても意味が無い。
-                // 通常のセットリスト表示ページに、選んだパターンのIDをアンカーとして
-                // 遷移する（Summaryページからのクイックアクセスという位置付け）。
+                // モバイルは通常表示の先頭を開き、PCは選択したパターンへ移動する。
                 if (wrap && wrap.id) {
-                    window.location.href = '{{ route('live.show', $tours->id) }}{{ $standardViewQuery }}#' + wrap.id;
+                    var standardViewUrl = '{{ route('live.show', $tours->id) }}{{ $standardViewQuery }}';
+                    if (window.matchMedia('(max-width: 767px)').matches) {
+                        window.location.href = standardViewUrl;
+                    } else {
+                        window.location.href = standardViewUrl + '#' + wrap.id;
+                    }
                 }
                 return;
             @else
                 // モバイルではSummaryを初期表示し、通常セットリストはCSSで隠しているため、
-                // 選択したパターンが見える通常表示へアンカー付きで遷移する。
+                // 通常表示へページ先頭から遷移する。
                 if (isMobileSummaryView) {
                     if (wrap && wrap.id) {
-                        window.location.href = '{{ route('live.show', $tours->id) }}{{ $standardViewQuery }}#' + wrap.id;
+                        window.location.href = '{{ route('live.show', $tours->id) }}{{ $standardViewQuery }}';
                     }
                     return;
                 }
@@ -519,9 +523,16 @@ document.addEventListener('DOMContentLoaded', function () {
         var hashTarget = document.getElementById(window.location.hash.slice(1));
         if (hashTarget) {
             window.scrollTo(0, 0);
-            requestAnimationFrame(function () {
-                scrollToPatternWrap(hashTarget);
-            });
+            var scrollToHashTarget = function () {
+                requestAnimationFrame(function () {
+                    scrollToPatternWrap(hashTarget);
+                });
+            };
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(scrollToHashTarget);
+            } else {
+                scrollToHashTarget();
+            }
         }
     }
 
