@@ -266,17 +266,23 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.setlist-pattern-wrap .setlist-subtitle-auto').forEach(function (heading) {
             heading.classList.remove('setlist-subtitle-collapsible', 'is-expanded');
 
+            var hasExplicitRest = !!heading.querySelector('.setlist-subtitle-rest');
             var measure = heading.cloneNode(true);
-            measure.classList.remove('setlist-subtitle-collapsible', 'is-expanded');
-            measure.style.cssText = 'position:fixed;left:-10000px;top:0;display:inline-block;width:max-content;max-width:none;white-space:nowrap;max-height:none;overflow:visible;visibility:hidden;';
-            var measureToggle = measure.querySelector('.setlist-subtitle-toggle');
-            if (measureToggle) measureToggle.remove();
+            measure.querySelectorAll('.setlist-subtitle-rest, .setlist-subtitle-toggle').forEach(function (el) {
+                el.remove();
+            });
+            measure.style.cssText = 'position:fixed;left:-10000px;top:0;display:block;width:max-content;max-width:none;white-space:nowrap;overflow:visible;visibility:hidden;';
+            measure.querySelectorAll('.setlist-subtitle-date-venue').forEach(function (el) {
+                el.style.cssText += ';display:inline-block;width:max-content;max-width:none;white-space:nowrap;';
+            });
             document.body.appendChild(measure);
-            var oneLineHeight = measure.getBoundingClientRect().height;
+            var naturalWidth = measure.getBoundingClientRect().width;
             measure.remove();
 
-            var wrapsNaturally = heading.scrollHeight > oneLineHeight + 1;
-            if (wrapsNaturally) {
+            // 明示的な続き行がある場合、または先頭行が列幅を超えて
+            // 実際に折り返す場合だけアコーディオンにする。
+            var wrapsNaturally = naturalWidth > heading.clientWidth + 1;
+            if (hasExplicitRest || wrapsNaturally) {
                 heading.classList.add('setlist-subtitle-collapsible');
                 heading.onclick = function () {
                     heading.classList.toggle('is-expanded');

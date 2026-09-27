@@ -40,9 +40,8 @@
                                             // で日付を太字・地名をグレー小文字にした上で、各パターンのsubtitleを
                                             // 1行ずつ連結する（1公演のsubtitle自体が複数行のことがあるため、
                                             // まずrenderSubtitleWithGreyedVenuesが返す行配列をflattenする）。
-                                            // 1パターン分の日付+会場名が折り返しの途中で分断されないよう、
-                                            // それぞれnowrapなspanで囲む（パターン同士の間はスペースのみ
-                                            // なので、そこで折り返される）。
+                                            // 日付+会場名はrenderSubtitleWithGreyedVenues内でひとまとまりにし、
+                                            // パターンラベル自体はモバイルで箱にせず、タイトル内に詰めて折り返す。
                                             $rowPatternLabels = $tourSetlists
                                                 ->filter(fn ($m) => ($m->row ?? 1) == $rowNum)
                                                 ->sortBy('order_no')

@@ -1450,6 +1450,10 @@ h2 {
     h5,
     .footer {
         text-align: center;
+    }
+
+    .app-title h2,
+    .footer {
         padding-top: 10px;
     }
 
@@ -2138,6 +2142,12 @@ h5.setlist-subtitle-heading {
     .setlist-summary-wrap .setlist-subtitle-wrap {
         line-height: 1.8;
         max-height: 1.8em;
+    }
+
+    /* Summaryタイトルは公演ラベル全体を塊にせず、日付・会場単位で詰めて折り返す。 */
+    .setlist-summary-wrap .setlist-summary-pattern-label {
+        display: inline;
+        vertical-align: baseline;
     }
 
     .setlist-summary-wrap .setlist-summary-single-pattern-label {
