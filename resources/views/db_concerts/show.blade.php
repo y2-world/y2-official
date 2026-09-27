@@ -479,22 +479,18 @@ document.addEventListener('DOMContentLoaded', function () {
             @if (($tab ?? null) === 'summary')
                 // Summaryテキスト表示ページでは通常のセットリスト自体を非表示で
                 // 埋め込んでいるだけなので、その場でスクロールしても意味が無い。
-                // モバイルは通常表示の先頭を開き、PCは選択したパターンへ移動する。
+                // 通常表示に切り替え、選択したパターンの位置へ移動する。
                 if (wrap && wrap.id) {
                     var standardViewUrl = '{{ route('live.show', $tours->id) }}{{ $standardViewQuery }}';
-                    if (window.matchMedia('(max-width: 767px)').matches) {
-                        window.location.href = standardViewUrl;
-                    } else {
-                        window.location.href = standardViewUrl + '#' + wrap.id;
-                    }
+                    window.location.href = standardViewUrl + '#' + wrap.id;
                 }
                 return;
             @else
                 // モバイルではSummaryを初期表示し、通常セットリストはCSSで隠しているため、
-                // 通常表示へページ先頭から遷移する。
+                // 選択したパターンの位置へスクロールする通常表示に遷移する。
                 if (isMobileSummaryView) {
                     if (wrap && wrap.id) {
-                        window.location.href = '{{ route('live.show', $tours->id) }}{{ $standardViewQuery }}';
+                        window.location.href = '{{ route('live.show', $tours->id) }}{{ $standardViewQuery }}#' + wrap.id;
                     }
                     return;
                 }

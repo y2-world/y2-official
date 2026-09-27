@@ -2054,6 +2054,11 @@ h5.setlist-subtitle-heading {
 }
 
 @media (max-width: 767px) {
+    .setlist-summary-wrap .setlist-subtitle-wrap {
+        line-height: 1.8;
+        max-height: 1.8em;
+    }
+
     .setlist-summary-wrap .setlist-summary-single-pattern-label {
         max-height: none;
         overflow: visible;
