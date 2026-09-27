@@ -304,24 +304,33 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Summaryページのrowパターンラベル一覧（setlist-subtitle-wrap）は、
-    // パターン数や幅次第で1行に収まることもある。その場合は
-    // クリック展開の見た目自体が不要（展開しても何も変わらないため）
-    // なので、実際に高さ制限で2行目以降が切り詰められているかどうかを
-    // 判定し、切り詰められていなければsetlist-subtitle-collapsibleを
-    // 外す。判定は展開前後の高さを比較する（一時的に
-    // is-expandedを付けて実際の全文の高さを測り、折りたたみ時の
-    // 高さと比べる）。
-    document.querySelectorAll('.setlist-subtitle-wrap.setlist-subtitle-collapsible').forEach(function (el) {
-        var clampedHeight = el.getBoundingClientRect().height;
-        el.classList.add('is-expanded');
-        var fullHeight = el.getBoundingClientRect().height;
-        el.classList.remove('is-expanded');
-        if (fullHeight <= clampedHeight + 1) {
-            el.classList.remove('setlist-subtitle-collapsible');
-            el.removeAttribute('onclick');
-        }
-    });
+    // Summaryタイトルはフォント読込後・画面幅変更後にも実際の高さを比較し、
+    // 複数行が切り詰められる場合だけアコーディオンを有効にする。
+    function updateSummarySubtitleAccordions() {
+        document.querySelectorAll('.setlist-subtitle-wrap').forEach(function (el) {
+            el.classList.add('setlist-subtitle-collapsible');
+            el.classList.remove('is-expanded');
+            var clampedHeight = el.getBoundingClientRect().height;
+            el.classList.add('is-expanded');
+            var fullHeight = el.getBoundingClientRect().height;
+            el.classList.remove('is-expanded');
+
+            if (fullHeight > clampedHeight + 1) {
+                el.onclick = function () {
+                    el.classList.toggle('is-expanded');
+                };
+            } else {
+                el.classList.remove('setlist-subtitle-collapsible');
+                el.onclick = null;
+            }
+        });
+    }
+
+    updateSummarySubtitleAccordions();
+    window.addEventListener('resize', updateSummarySubtitleAccordions);
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(updateSummarySubtitleAccordions);
+    }
     document.querySelectorAll('.setlist-row').forEach(function (row) {
         if (row.scrollWidth > row.clientWidth) {
             row.style.justifyContent = 'flex-start';

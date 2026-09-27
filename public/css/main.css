@@ -2142,6 +2142,11 @@ h5.setlist-subtitle-heading {
     .setlist-summary-wrap .setlist-subtitle-wrap {
         line-height: 1.8;
         max-height: 1.8em;
+        text-wrap: balance;
+    }
+
+    .setlist-pattern-wrap .setlist-subtitle-heading {
+        text-wrap: balance;
     }
 
     /* Summaryタイトルは公演ラベル全体を塊にせず、日付・会場単位で詰めて折り返す。 */
