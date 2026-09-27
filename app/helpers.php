@@ -1149,6 +1149,45 @@ if (!function_exists('buildSetlistPatternSummary')) {
             }
         }
 
+        // 位置ベース/LCSマージの結果、異なるsummary_group（daily_note）が
+        // 同じ行に入った場合は、グループごとに行を分ける。後段で同じ番号の行を
+        // 統合するとき、異なる番号の候補まで一緒に残るのを防ぐ。
+        $splitRowsBySummaryGroup = function (array $rows): array {
+            $splitRows = [];
+            foreach ($rows as $row) {
+                $groupedVariants = [];
+                $ungroupedVariants = [];
+
+                foreach ($row['variants'] as $entry) {
+                    $group = trim((string) ($entry['summary_group'] ?? ''));
+                    if ($group === '') {
+                        $ungroupedVariants[] = $entry;
+                        continue;
+                    }
+
+                    $groupKey = 'group:' . $group;
+                    $groupedVariants[$groupKey][] = $entry;
+                }
+
+                if (count($groupedVariants) <= 1) {
+                    $splitRows[] = $row;
+                    continue;
+                }
+
+                foreach ($groupedVariants as $variants) {
+                    $splitRows[] = ['variants' => $variants];
+                }
+                if ($ungroupedVariants !== []) {
+                    $splitRows[] = ['variants' => $ungroupedVariants];
+                }
+            }
+
+            return $splitRows;
+        };
+
+        $setlistRows = $splitRowsBySummaryGroup($setlistRows);
+        $encoreRows = $splitRowsBySummaryGroup($encoreRows);
+
         // summary_group（DbSetlistRow編集画面の「daily_note」欄に手動入力された
         // 値）が同じentry同士を、LCSの自動判定結果に関わらず強制的に1つの行へ
         // 統合する。LCSアンカー方式では機械的に判別できない分裂ケース（例:
