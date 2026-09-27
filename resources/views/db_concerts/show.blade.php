@@ -266,23 +266,15 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.setlist-pattern-wrap .setlist-subtitle-auto').forEach(function (heading) {
             heading.classList.remove('setlist-subtitle-collapsible', 'is-expanded');
 
-            var hasExplicitRest = !!heading.querySelector('.setlist-subtitle-rest');
-            var measure = heading.cloneNode(true);
-            measure.querySelectorAll('.setlist-subtitle-rest, .setlist-subtitle-toggle').forEach(function (el) {
-                el.remove();
-            });
-            measure.style.cssText = 'position:fixed;left:-10000px;top:0;display:block;width:max-content;max-width:none;white-space:nowrap;overflow:visible;visibility:hidden;';
-            measure.querySelectorAll('.setlist-subtitle-date-venue').forEach(function (el) {
-                el.style.cssText += ';display:inline-block;width:max-content;max-width:none;white-space:nowrap;';
-            });
-            document.body.appendChild(measure);
-            var naturalWidth = measure.getBoundingClientRect().width;
-            measure.remove();
-
-            // 明示的な続き行がある場合、または先頭行が列幅を超えて
-            // 実際に折り返す場合だけアコーディオンにする。
-            var wrapsNaturally = naturalWidth > heading.clientWidth + 1;
-            if (hasExplicitRest || wrapsNaturally) {
+            // 改行位置を固定せず出力した見出し自身の実高さを見る。
+            // max-heightを外した状態で1行分より十分高ければ、実際に折り返している。
+            var style = window.getComputedStyle(heading);
+            var lineHeight = parseFloat(style.lineHeight);
+            if (!Number.isFinite(lineHeight)) {
+                lineHeight = parseFloat(style.fontSize) * 1.2;
+            }
+            var wrapsNaturally = heading.scrollHeight > lineHeight * 1.5;
+            if (wrapsNaturally) {
                 heading.classList.add('setlist-subtitle-collapsible');
                 heading.onclick = function () {
                     heading.classList.toggle('is-expanded');

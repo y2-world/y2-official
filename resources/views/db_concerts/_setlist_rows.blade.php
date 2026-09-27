@@ -83,12 +83,13 @@
                                     <div class="setlist-subtitle-area">
                                         @if (count($subtitleRenderedLines))
                                             @php
-                                                $firstLine = $subtitleRenderedLines[0];
-                                                $restLines = array_slice($subtitleRenderedLines, 1);
+                                                // 元データ上の改行を固定せず、モバイル幅に合わせて
+                                                // 日付・会場ラベルを連続して折り返せるようにする。
+                                                $subtitleHtml = implode(' ', $subtitleRenderedLines);
                                             @endphp
                                             <h5 class="setlist-subtitle-heading setlist-subtitle-auto"
                                                 onclick="if (this.classList.contains('setlist-subtitle-collapsible')) this.classList.toggle('is-expanded')">
-                                                {!! $firstLine !!}<span class="setlist-subtitle-toggle" aria-hidden="true"><i class="fa-solid fa-angle-down"></i><i class="fa-solid fa-angle-up"></i></span>@if (count($restLines))<span class="setlist-subtitle-rest"><br>{!! implode('<br>', $restLines) !!}</span>@endif
+                                                {!! $subtitleHtml !!}<span class="setlist-subtitle-toggle" aria-hidden="true"><i class="fa-solid fa-angle-down"></i><i class="fa-solid fa-angle-up"></i></span>
                                             </h5>
                                         @endif
                                     </div>
