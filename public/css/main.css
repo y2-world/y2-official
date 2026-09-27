@@ -2155,10 +2155,6 @@ h5.setlist-subtitle-heading {
         vertical-align: baseline;
     }
 
-    .setlist-summary-wrap .setlist-summary-single-pattern-label {
-        max-height: none;
-        overflow: visible;
-    }
 }
 
 
