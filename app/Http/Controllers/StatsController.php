@@ -12,7 +12,6 @@ use App\Models\DbSingle;
 use App\Models\DbAlbum;
 use App\Models\SlSong;
 use App\Http\Controllers\Concerns\ComputesDbSongStamps;
-use App\Support\JapaneseNameSorter;
 use Illuminate\Support\Facades\DB;
 
 class StatsController extends Controller
@@ -57,11 +56,12 @@ class StatsController extends Controller
         if ($tab === 'database') {
             $artistId = $request->get('artist_id');
             if (!$artistId) {
-                $dbArtists = JapaneseNameSorter::sortBy(Artist::whereHas('tours')->get());
-                $tab = 'database';
-                return view('stats.database', compact('dbArtists', 'tab'));
+                return redirect('/database');
             }
-            return $this->getDatabaseStats((int)$artistId);
+            $type = in_array($request->get('type'), ['tours', 'events'], true)
+                ? $request->get('type')
+                : 'all';
+            return $this->getDatabaseStats((int)$artistId, $type);
         }
 
         // Personal stats (参加したライブの履歴)
@@ -386,42 +386,36 @@ class StatsController extends Controller
     // Database統計（ツアー情報）
     // =====================================
 
-    private function getDatabaseStats(int $artistId)
+    private function getDatabaseStats(int $artistId, string $type = 'all')
     {
         $artist = Artist::findOrFail($artistId);
-        $dbArtists = JapaneseNameSorter::sortBy(Artist::whereHas('tours')->get());
-
-        $overallStats = $this->getDatabaseOverallStats($artistId);
-        $songStats = $this->getDatabaseSongStats($artistId);
-        $encoreSongStats = $this->getDatabaseEncoreSongStats($artistId);
-        $openingSongStats = $this->getDatabaseOpeningSongStats($artistId);
-        $longestSetlists = $this->getDatabaseLongestSetlists($artistId);
-        $yearStats = $this->getDatabaseYearStats($artistId);
-
-        $tab = 'database';
+        $overallStats = $this->getDatabaseOverallStats($artistId, $type);
+        $songStats = $this->getDatabaseSongStats($artistId, $type);
+        $encoreSongStats = $this->getDatabaseEncoreSongStats($artistId, $type);
+        $openingSongStats = $this->getDatabaseOpeningSongStats($artistId, $type);
+        $longestSetlists = $this->getDatabaseLongestSetlists($artistId, $type);
+        $yearStats = $this->getDatabaseYearStats($artistId, $type);
 
         return view('stats.database', compact(
             'artist',
-            'dbArtists',
             'overallStats',
             'songStats',
             'encoreSongStats',
             'openingSongStats',
             'longestSetlists',
-            'yearStats',
-            'tab'
+            'yearStats'
         ));
     }
 
-    private function getDatabaseOverallStats(int $artistId)
+    private function getDatabaseOverallStats(int $artistId, string $type = 'all')
     {
-        $tourIds = DbConcert::where('artist_id', $artistId)->pluck('id');
+        $tourIds = $this->databaseConcertIds([$artistId], $type);
         $totalTours = $tourIds->count();
         $totalSetlistPatterns = DbSetlist::whereIn('tour_id', $tourIds)->count();
         $totalSongs = DbSong::where('artist_id', $artistId)->count();
 
         $songArtistIds = DbSong::pluck('artist_id', 'id');
-        $crossoverTourIds = DbConcert::whereIn('artist_id', $this->crossoverTourArtistIds($artistId))->pluck('id');
+        $crossoverTourIds = $this->databaseConcertIds($this->crossoverTourArtistIds($artistId), $type);
         $uniqueSongIds = [];
         $tourSetlists = DbSetlist::whereIn('tour_id', $crossoverTourIds)->get();
         foreach ($tourSetlists as $setlist) {
@@ -449,10 +443,10 @@ class StatsController extends Controller
         ];
     }
 
-    private function getDatabaseSongStats(int $artistId)
+    private function getDatabaseSongStats(int $artistId, string $type = 'all')
     {
         $songArtistIds = DbSong::pluck('artist_id', 'id');
-        $tourIds = DbConcert::whereIn('artist_id', $this->crossoverTourArtistIds($artistId))->pluck('id');
+        $tourIds = $this->databaseConcertIds($this->crossoverTourArtistIds($artistId), $type);
         $tourSetlists = DbSetlist::whereIn('tour_id', $tourIds)->get();
         $songTourCounts = [];
 
@@ -491,9 +485,12 @@ class StatsController extends Controller
         return $stats;
     }
 
-    private function getDatabaseYearStats(int $artistId)
+    private function getDatabaseYearStats(int $artistId, string $type = 'all')
     {
-        return DbConcert::where('artist_id', $artistId)
+        $query = DbConcert::where('artist_id', $artistId);
+        $this->applyDatabaseTypeFilter($query, $type);
+
+        return $query
             ->select(DB::raw($this->dateExtractRaw('date1', 'YEAR') . ' as year'), DB::raw('count(*) as count'))
             ->whereNotNull('date1')
             ->groupBy('year')
@@ -502,10 +499,10 @@ class StatsController extends Controller
             ->get();
     }
 
-    private function getDatabaseEncoreSongStats(int $artistId)
+    private function getDatabaseEncoreSongStats(int $artistId, string $type = 'all')
     {
         $songArtistIds = DbSong::pluck('artist_id', 'id');
-        $tourIds = DbConcert::whereIn('artist_id', $this->crossoverTourArtistIds($artistId))->pluck('id');
+        $tourIds = $this->databaseConcertIds($this->crossoverTourArtistIds($artistId), $type);
         $tourSetlists = DbSetlist::whereIn('tour_id', $tourIds)->get();
         $counts = [];
 
@@ -532,10 +529,10 @@ class StatsController extends Controller
         return $stats;
     }
 
-    private function getDatabaseOpeningSongStats(int $artistId)
+    private function getDatabaseOpeningSongStats(int $artistId, string $type = 'all')
     {
         $songArtistIds = DbSong::pluck('artist_id', 'id');
-        $tourIds = DbConcert::whereIn('artist_id', $this->crossoverTourArtistIds($artistId))->pluck('id');
+        $tourIds = $this->databaseConcertIds($this->crossoverTourArtistIds($artistId), $type);
         $tourSetlists = DbSetlist::whereIn('tour_id', $tourIds)->get();
         $counts = [];
 
@@ -561,11 +558,13 @@ class StatsController extends Controller
         return $stats;
     }
 
-    private function getDatabaseLongestSetlists(int $artistId)
+    private function getDatabaseLongestSetlists(int $artistId, string $type = 'all')
     {
         // type=2（イベント）・3（ap bank fes）・4（ソロ）は他アーティストとの合同編成や
         // 単独プロジェクトのため、そのアーティスト単独のセットリスト長の比較には含めない
-        $tourIds = DbConcert::where('artist_id', $artistId)->whereNotIn('type', [2, 3, 4])->pluck('id');
+        $query = DbConcert::where('artist_id', $artistId)->whereNotIn('type', [2, 3, 4]);
+        $this->applyDatabaseTypeFilter($query, $type);
+        $tourIds = $query->pluck('id');
         $tourSetlists = DbSetlist::whereIn('tour_id', $tourIds)->get();
         $lengths = [];
 
@@ -589,6 +588,22 @@ class StatsController extends Controller
 
         usort($lengths, fn($a, $b) => $b['song_count'] - $a['song_count']);
         return array_slice($lengths, 0, 5);
+    }
+
+    private function databaseConcertIds(array $artistIds, string $type): \Illuminate\Support\Collection
+    {
+        $query = DbConcert::whereIn('artist_id', $artistIds);
+        $this->applyDatabaseTypeFilter($query, $type);
+        return $query->pluck('id');
+    }
+
+    private function applyDatabaseTypeFilter($query, string $type): void
+    {
+        if ($type === 'tours') {
+            $query->whereIn('type', [0, 1]);
+        } elseif ($type === 'events') {
+            $query->where('type', 2);
+        }
     }
 
     // =====================================

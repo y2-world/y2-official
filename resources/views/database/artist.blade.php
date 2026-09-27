@@ -30,8 +30,12 @@
                         <i class="fa-solid fa-guitar"></i>
                     </div>
                     <h3 class="card-title">Live</h3>
-                    <p class="card-description">すべてのツアー、イベント、公演情報</p>
+                    <p class="card-description">セットリスト統計、すべてのツアー、イベント情報</p>
                     <div class="card-links">
+                        <a href="{{ route('stats.index', ['tab' => 'database', 'artist_id' => $artist->id, 'type' => 'all']) }}" class="database-link">
+                            <span>Stats</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
                         <a href="{{ route('database.live', $artist->id) }}" class="database-link">
                             <span>All</span>
                             <i class="fa-solid fa-arrow-right"></i>

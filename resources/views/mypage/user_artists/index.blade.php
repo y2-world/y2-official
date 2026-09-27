@@ -18,6 +18,14 @@
         @if ($artists->isEmpty())
             <p style="text-align: center; color: #999;">まだ登録されているアーティストがありません。</p>
         @else
+            <div class="timeline-filter-row">
+                <select class="timeline-user-select" onchange="if (this.value) window.location.href=this.value;">
+                    <option value="{{ route('mypage.user_artists.index') }}" selected>すべて</option>
+                    @foreach ($artists as $artist)
+                        <option value="{{ route('mypage.user_artists.live', $artist->id) }}">{{ $artist->name }}</option>
+                    @endforeach
+                </select>
+            </div>
             <div class="row justify-content-center">
                 @foreach ($artists as $artist)
                     <div class="col-lg-4 mb-4">
@@ -28,6 +36,10 @@
                             <h3 class="card-title">{{ $artist->name }}</h3>
                             <p class="card-description">{{ $artist->songs_count }}曲 / {{ $artist->concerts_count }}ツアー</p>
                             <div class="card-links">
+                                <a href="{{ route('mypage.user_artists.stats', $artist->id) }}" class="database-link">
+                                    <span>Stats</span>
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </a>
                                 <a href="{{ route('mypage.user_artists.live', $artist->id) }}" class="database-link">
                                     <span>Live</span>
                                     <i class="fa-solid fa-arrow-right"></i>

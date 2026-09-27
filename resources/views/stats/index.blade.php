@@ -13,18 +13,6 @@
                     <h1 class="stats-title">Statistics</h1>
                     <p class="stats-subtitle">ライブ参加履歴とデータ分析</p>
 
-                    <!-- Tab Navigation -->
-                    <div class="stats-tabs">
-                        <a href="{{ route('stats.index', ['tab' => 'database']) }}"
-                           class="stats-tab {{ $tab === 'database' ? 'active' : '' }}">
-                            <i class="fas fa-database"></i> Database
-                        </a>
-                        <a href="{{ route('stats.index', ['tab' => 'personal']) }}"
-                           class="stats-tab {{ $tab === 'personal' ? 'active' : '' }}">
-                            <i class="fas fa-user"></i> Yuki's Stats
-                        </a>
-                    </div>
-
                     <!-- Overall Stats Cards -->
                     <div class="row stats-cards">
                         <div class="col-md-3 col-sm-6 mb-4">
@@ -394,7 +382,6 @@
                     <a href="{{ url('/#music') }}">Music</a>・
                     <a href="{{ url('/#profile') }}">Profile</a>・
                     <a href="{{ url('/#radio') }}">Radio</a>・
-                    <a href="{{ url('/stats') }}">Stats</a>・
                     <a href="https://ameblo.jp/y2-world" target="_blank">Blog</a>・
                     <a href="{{ url('/admin') }}" target="_blank">Admin</a>
                     <br>

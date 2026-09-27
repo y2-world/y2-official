@@ -90,9 +90,6 @@
                         <a class="nav-link" href="{{ url('/database') }}">Database</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/stats') }}">Stats</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ url('https://ameblo.jp/y2-world') }}"
                             target="_blank">Blog</a>
                     </li>

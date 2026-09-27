@@ -198,7 +198,6 @@
                     <a href="{{ url('/#music') }}">Music</a>・
                     <a href="{{ url('/#profile') }}">Profile</a>・
                     <a href="{{ url('/#radio') }}">Radio</a>・
-                    <a href="{{ url('/stats') }}">Stats</a>・
                     <a href="https://ameblo.jp/y2-world" target="_blank">Blog</a>・
                     <a href="{{ url('/admin') }}" target="_blank">Admin</a>
                     <br>

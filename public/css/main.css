@@ -1625,6 +1625,15 @@ h2 {
     gap: 10px;
 }
 
+.card-link-heading {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+    color: #667eea;
+    font-weight: 600;
+    text-align: center;
+}
+
 
 .database-link {
     display: flex;
@@ -1957,6 +1966,18 @@ h2 {
 .year-select:hover {
     background: rgba(255, 255, 255, 0.25);
     border-color: rgba(255, 255, 255, 0.5);
+}
+
+.year-select-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.year-select-link:hover,
+.year-select-link:focus {
+    color: white;
+    text-decoration: none;
 }
 
 .year-select option {
@@ -2673,6 +2694,11 @@ h5.setlist-subtitle-heading {
 .stats-link:hover {
     color: inherit;
     text-decoration: none;
+}
+
+.stats-back-link,
+.stats-back-link:hover {
+    color: #fff;
 }
 
 /* Responsive Design */

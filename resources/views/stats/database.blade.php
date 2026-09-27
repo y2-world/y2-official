@@ -13,31 +13,6 @@
                     <h1 class="stats-title">{{ isset($artist) ? $artist->name . ' Statistics' : 'Statistics' }}</h1>
                     <p class="stats-subtitle">{{ isset($artist) ? 'セットリスト統計' : 'ライブ演奏履歴とデータ分析' }}</p>
 
-                    <!-- Tab Navigation -->
-                    <div class="stats-tabs">
-                        <a href="{{ route('stats.index', ['tab' => 'database']) }}"
-                           class="stats-tab {{ $tab === 'database' ? 'active' : '' }}">
-                            <i class="fas fa-database"></i> Database
-                        </a>
-                        <a href="{{ route('stats.index', ['tab' => 'personal']) }}"
-                           class="stats-tab {{ $tab === 'personal' ? 'active' : '' }}">
-                            <i class="fas fa-user"></i> Yuki's Stats
-                        </a>
-                    </div>
-
-                    <!-- Artist Selector -->
-                    <div style="margin-bottom: 24px;">
-                        <select onchange="location.href=this.value" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: inherit; padding: 6px 12px; border-radius: 6px; cursor: pointer;">
-                            <option value="" disabled {{ !isset($artist) ? 'selected' : '' }}>アーティストを選択</option>
-                            @foreach($dbArtists as $a)
-                                <option value="{{ route('stats.index', ['tab' => 'database', 'artist_id' => $a->id]) }}"
-                                    {{ isset($artist) && $a->id === $artist->id ? 'selected' : '' }}>
-                                    {{ $a->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
                     @isset($artist)
                     <!-- Overall Stats Cards -->
                     <div class="row stats-cards">
@@ -330,7 +305,6 @@
                     <a href="{{ url('/#music') }}">Music</a>・
                     <a href="{{ url('/#profile') }}">Profile</a>・
                     <a href="{{ url('/#radio') }}">Radio</a>・
-                    <a href="{{ url('/stats') }}">Stats</a>・
                     <a href="https://ameblo.jp/y2-world" target="_blank">Blog</a>・
                     <a href="{{ url('/admin') }}" target="_blank">Admin</a>
                     <br>

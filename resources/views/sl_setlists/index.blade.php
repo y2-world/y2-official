@@ -18,6 +18,7 @@
                     <button type="button" id="spSearchButtonSetlists" class="sp" onclick="var form = document.getElementById('spSearchFormSetlists'); var icon = this.querySelector('i'); if (form.style.display === 'none' || form.style.display === '') { form.style.display='block'; icon.className='fa-solid fa-xmark'; } else { form.style.display='none'; icon.className='fa-solid fa-magnifying-glass'; }" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
                         <i class="fa-solid fa-magnifying-glass" style="font-size: 14px;"></i>
                     </button>
+                    <a class="year-select year-select-link" href="{{ route('stats.index', ['tab' => 'personal']) }}">Stats</a>
                     <select class="year-select" name="select" onchange="if (this.value) window.location.href=this.value;">
                         <option value="" disabled selected>Live Type</option>
                         <option value="{{ url('/setlists') }}" {{ request('type') ? '' : 'selected' }}>All</option>

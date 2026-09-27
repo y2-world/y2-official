@@ -9,7 +9,7 @@
     </div>
 
     <div class="container database-content sp-pt-24">
-        <div class="timeline-filter-row sp">
+        <div class="timeline-filter-row">
             <select class="timeline-user-select" onchange="if (this.value) window.location.href=this.value;">
                 <option value="{{ url('/database') }}" selected>すべて</option>
                 @foreach ($artists as $artist)
@@ -30,6 +30,10 @@
                         @endif
                         <p class="card-description">{{ $artist->songs_count }}曲 / {{ $artist->tours_count }}ツアー</p>
                         <div class="card-links">
+                            <a href="{{ route('stats.index', ['tab' => 'database', 'artist_id' => $artist->id]) }}" class="database-link">
+                                <span>Stats</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
                             <a href="{{ route('database.live', $artist->id) }}" class="database-link">
                                 <span>Live</span>
                                 <i class="fa-solid fa-arrow-right"></i>

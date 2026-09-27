@@ -143,6 +143,7 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
         Route::get('artists', [UserArtistController::class, 'index'])->name('user_artists.index');
         Route::get('artists/{artistId}/live', [UserConcertController::class, 'index'])->name('user_artists.live');
         Route::get('artists/{artistId}/songs', [UserSongController::class, 'index'])->name('user_artists.songs');
+        Route::get('artists/{artistId}/stats', [UserArtistController::class, 'stats'])->name('user_artists.stats');
         Route::get('live/{id}', [UserConcertController::class, 'show'])->name('user_concerts.show');
         Route::get('songs/{id}', [UserSongController::class, 'show'])->name('user_songs.show');
 
