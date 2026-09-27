@@ -482,7 +482,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // 通常表示に切り替え、選択したパターンの位置へ移動する。
                 if (wrap && wrap.id) {
                     var standardViewUrl = '{{ route('live.show', $tours->id) }}{{ $standardViewQuery }}';
-                    window.location.href = standardViewUrl + '#' + wrap.id;
+                    window.location.href = standardViewUrl + '&pattern=' + encodeURIComponent(wrap.id);
                 }
                 return;
             @else
@@ -490,7 +490,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // 選択したパターンの位置へスクロールする通常表示に遷移する。
                 if (isMobileSummaryView) {
                     if (wrap && wrap.id) {
-                        window.location.href = '{{ route('live.show', $tours->id) }}{{ $standardViewQuery }}#' + wrap.id;
+                        window.location.href = '{{ route('live.show', $tours->id) }}{{ $standardViewQuery }}&pattern=' + encodeURIComponent(wrap.id);
                     }
                     return;
                 }
@@ -505,30 +505,35 @@ document.addEventListener('DOMContentLoaded', function () {
     setupPatternSelect('spPatternListSelect');
     setupPatternSelect('pcPatternListSelect');
 
-    // Summaryテキスト表示ページのパターン一覧から個別パターンを選ぶと、
-    // このページ（通常のセットリスト表示）に#setlist-pattern-IDのハッシュ付きで
-    // 遷移してくる。ブラウザ自身の標準アンカージャンプ（scrollToPatternWrapとは
-    // 別に、ページ読み込み時点で先に発生する）が先に効いてしまい、その後
-    // scrollToPatternWrapが「既にジャンプ済みの位置」を基準に計算してしまうと、
-    // 二重にオフセットがかかって着地位置がずれる（例: 1曲目を選んだのに、
-    // ブラウザの標準ジャンプ分だけ余計に下へスクロールされ、タイトルや
-    // 1曲目自体が隠れてしまう）。scrollTo自体は同期的に位置を更新するが、
-    // 直後のgetBoundingClientRect()がレイアウト再計算前の古い値を返すことが
-    // あるため、requestAnimationFrameで1フレーム待ってから計算し直す。
-    if (window.location.hash.indexOf('#setlist-pattern-') === 0) {
-        var hashTarget = document.getElementById(window.location.hash.slice(1));
-        if (hashTarget) {
+    // Summaryから通常表示へ移るとき、URLハッシュを使うとブラウザ標準の
+    // アンカージャンプと独自スクロールが競合する。patternクエリを使い、
+    // 通常表示のレイアウトが確定してから独自スクロールだけを実行する。
+    var patternTargetId = new URLSearchParams(window.location.search).get('pattern');
+    if (!patternTargetId && window.location.hash.indexOf('#setlist-pattern-') === 0) {
+        patternTargetId = window.location.hash.slice(1);
+    }
+    if (patternTargetId) {
+        var patternTarget = document.getElementById(patternTargetId);
+        if (patternTarget) {
             window.scrollTo(0, 0);
-            var scrollToHashTarget = function () {
+            var pageAssetsReady = new Promise(function (resolve) {
+                if (document.readyState === 'complete') {
+                    resolve();
+                } else {
+                    window.addEventListener('load', resolve, { once: true });
+                }
+            });
+            var fontsReady = document.fonts && document.fonts.ready
+                ? document.fonts.ready
+                : Promise.resolve();
+            Promise.all([pageAssetsReady, fontsReady]).then(function () {
+                // load/font完了後に2フレーム待ち、画像・フォント反映後の位置で計算する。
                 requestAnimationFrame(function () {
-                    scrollToPatternWrap(hashTarget, 'auto');
+                    requestAnimationFrame(function () {
+                        scrollToPatternWrap(patternTarget, 'auto');
+                    });
                 });
-            };
-            if (document.fonts && document.fonts.ready) {
-                document.fonts.ready.then(scrollToHashTarget);
-            } else {
-                scrollToHashTarget();
-            }
+            });
         }
     }
 
