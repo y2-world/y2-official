@@ -14,7 +14,7 @@
                         <a href="{{ route('mypage.user_artists.index') }}" class="stats-link stats-back-link">← Database</a>
                     </div>
                     <h1 class="stats-title">{{ $artist->name }} Statistics</h1>
-                    <p class="stats-subtitle">登録されたライブ・セットリストの統計</p>
+                    <p class="stats-subtitle">セットリスト統計</p>
 
                     <div class="row stats-cards">
                         @foreach([
