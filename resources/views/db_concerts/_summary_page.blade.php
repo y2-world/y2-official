@@ -48,7 +48,7 @@
                                                 ->sortBy('order_no')
                                                 ->flatMap(fn ($m) => renderSubtitleWithGreyedVenues($m->subtitle ?? '')['lines'])
                                                 ->filter(fn ($line) => trim(strip_tags($line)) !== '')
-                                                ->map(fn ($line) => '<span class="setlist-summary-pattern-label" style="white-space: nowrap;">' . $line . '</span>')
+                                                ->map(fn ($line) => '<span class="setlist-summary-pattern-label">' . $line . '</span>')
                                                 ->values();
                                         @endphp
                                         {{-- 表示するrowが複数ある場合に、グループ名が無いrowは

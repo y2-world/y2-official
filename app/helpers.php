@@ -26,15 +26,24 @@ if (!function_exists('renderSubtitleWithGreyedVenues')) {
 
             $html = '';
             $hasVenue = false;
+            $dateVenueOpen = false;
             foreach ($segments as $i => $segment) {
                 if ($i % 2 === 1) {
                     // 奇数インデックス = 日付本体
-                    $html .= e($segment);
+                    $html .= '<span class="setlist-subtitle-date-venue">' . e($segment);
+                    $dateVenueOpen = true;
                     continue;
                 }
 
                 $venue = trim($segment);
                 if ($venue === '') {
+                    if ($dateVenueOpen) {
+                        $html .= '</span>';
+                        $dateVenueOpen = false;
+                        if (isset($segments[$i + 1])) {
+                            $html .= ' ';
+                        }
+                    }
                     continue;
                 }
 
@@ -45,10 +54,19 @@ if (!function_exists('renderSubtitleWithGreyedVenues')) {
                     // 会場名は見出しサイズに対する相対値(em)。見出し自体が行数で縮小されると連動して縮む
                     $html .= '<span style="font-size: 0.5em; color: #999; font-weight: normal; margin-left: 3px;">' . e($venue) . '</span>';
                     $hasVenue = true;
-                    if (isset($segments[$i + 1])) {
-                        $html .= ' ';
-                    }
                 }
+
+                if ($dateVenueOpen) {
+                    $html .= '</span>';
+                    $dateVenueOpen = false;
+                }
+                if (isset($segments[$i + 1])) {
+                    $html .= ' ';
+                }
+            }
+
+            if ($dateVenueOpen) {
+                $html .= '</span>';
             }
 
             return ['html' => $html, 'hasVenue' => $hasVenue];

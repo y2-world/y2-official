@@ -896,6 +896,20 @@ select {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* 見出しは列の幅を基準に折り返し、長いタイトルで隣の列へはみ出さない。 */
+.setlist-subtitle-area .setlist-subtitle-heading {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
 
 .no-setlist-subtitle .setlist-subtitle-area {
@@ -1999,6 +2013,27 @@ h2 {
 
 h5.setlist-subtitle-heading {
     margin: 0.25rem;
+}
+
+.setlist-subtitle-date-venue {
+    display: inline-block;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    vertical-align: top;
+}
+
+.setlist-subtitle-heading,
+.setlist-summary-pattern-label {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+.setlist-summary-pattern-label {
+    display: inline-block;
+    white-space: normal;
+    vertical-align: top;
 }
 
 .setlist-subtitle-collapsible {
