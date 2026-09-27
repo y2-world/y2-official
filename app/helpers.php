@@ -556,7 +556,27 @@ if (!function_exists('mergePatternIntoBase')) {
                 }
 
                 if (!$otherHasElsewhere && !$baseHasElsewhere) {
-                    mergeEntriesPreservingEarliestOrder($base[$basePos]['variants'], $clusters[$otherPos]);
+                    $baseSummaryGroups = array_values(array_unique(array_filter(
+                        array_column($base[$basePos]['variants'], 'summary_group'),
+                        fn ($group) => $group !== null && $group !== ''
+                    )));
+                    $otherSummaryGroups = array_values(array_unique(array_filter(
+                        array_column($clusters[$otherPos], 'summary_group'),
+                        fn ($group) => $group !== null && $group !== ''
+                    )));
+                    $hasConflictingSummaryGroups = $baseSummaryGroups !== []
+                        && $otherSummaryGroups !== []
+                        && array_intersect($baseSummaryGroups, $otherSummaryGroups) === [];
+
+                    if ($hasConflictingSummaryGroups) {
+                        // daily_noteが両方に明示されていて値が異なる候補は、
+                        // ギャップ内で隣り合っていても別の曲位置として扱う。
+                        // 片方の候補が基準パターンに無い場合、位置ベースの
+                        // ペア化だけで「3」と「4」が同じSummary行に入るのを防ぐ。
+                        $unpairedOtherPositions[] = $otherPos;
+                    } else {
+                        mergeEntriesPreservingEarliestOrder($base[$basePos]['variants'], $clusters[$otherPos]);
+                    }
                 } else {
                     $unpairedOtherPositions[] = $otherPos;
                 }
