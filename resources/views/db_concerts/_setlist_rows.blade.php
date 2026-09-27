@@ -86,9 +86,9 @@
                                                 $firstLine = $subtitleRenderedLines[0];
                                                 $restLines = array_slice($subtitleRenderedLines, 1);
                                             @endphp
-                                            <h5 class="setlist-subtitle-heading {{ count($restLines) ? 'setlist-subtitle-collapsible' : '' }}"
-                                                @if (count($restLines)) onclick="this.classList.toggle('is-expanded')" @endif>
-                                                {!! $firstLine !!}@if (count($restLines))<span class="setlist-subtitle-toggle" aria-hidden="true"><i class="fa-solid fa-angle-down"></i><i class="fa-solid fa-angle-up"></i></span><span class="setlist-subtitle-rest"><br>{!! implode('<br>', $restLines) !!}</span>@endif
+                                            <h5 class="setlist-subtitle-heading setlist-subtitle-auto{{ count($restLines) ? ' setlist-subtitle-collapsible' : '' }}"
+                                                onclick="if (this.classList.contains('setlist-subtitle-collapsible')) this.classList.toggle('is-expanded')">
+                                                {!! $firstLine !!}<span class="setlist-subtitle-toggle" aria-hidden="true"><i class="fa-solid fa-angle-down"></i><i class="fa-solid fa-angle-up"></i></span>@if (count($restLines))<span class="setlist-subtitle-rest"><br>{!! implode('<br>', $restLines) !!}</span>@endif
                                             </h5>
                                         @endif
                                     </div>

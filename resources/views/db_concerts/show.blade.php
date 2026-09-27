@@ -262,11 +262,40 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function updatePatternSubtitleAccordions() {
+        document.querySelectorAll('.setlist-pattern-wrap .setlist-subtitle-auto').forEach(function (heading) {
+            var hasExplicitRest = !!heading.querySelector('.setlist-subtitle-rest');
+            heading.classList.remove('setlist-subtitle-collapsible', 'is-expanded');
+
+            var measure = heading.cloneNode(true);
+            measure.classList.remove('setlist-subtitle-collapsible', 'is-expanded');
+            measure.style.cssText = 'position:fixed;left:-10000px;top:0;display:inline-block;width:max-content;max-width:none;white-space:nowrap;max-height:none;overflow:visible;visibility:hidden;';
+            var measureToggle = measure.querySelector('.setlist-subtitle-toggle');
+            if (measureToggle) measureToggle.remove();
+            document.body.appendChild(measure);
+            var oneLineHeight = measure.getBoundingClientRect().height;
+            measure.remove();
+
+            var wrapsNaturally = heading.scrollHeight > oneLineHeight + 1;
+            if (hasExplicitRest || wrapsNaturally) {
+                heading.classList.add('setlist-subtitle-collapsible');
+                heading.onclick = function () {
+                    heading.classList.toggle('is-expanded');
+                };
+            } else {
+                heading.onclick = null;
+            }
+        });
+    }
+
     updateSongFeaturingWrap();
+    updatePatternSubtitleAccordions();
     window.addEventListener('resize', updateSongFeaturingWrap);
+    window.addEventListener('resize', updatePatternSubtitleAccordions);
     if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(function () {
             updateSongFeaturingWrap();
+            updatePatternSubtitleAccordions();
         });
     }
 

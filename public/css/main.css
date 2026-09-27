@@ -2016,6 +2016,10 @@ h5.setlist-subtitle-heading {
     display: none;
 }
 
+.setlist-subtitle-auto:not(.setlist-subtitle-collapsible) .setlist-subtitle-toggle {
+    display: none;
+}
+
 .setlist-subtitle-collapsible.is-expanded .setlist-subtitle-rest {
     display: inline;
 }
@@ -2037,6 +2041,14 @@ h5.setlist-subtitle-heading {
     max-width: none;
     box-sizing: border-box;
     padding-right: 1.2em;
+    line-height: 1.2;
+    max-height: 1.2em;
+    overflow: hidden;
+}
+
+.setlist-pattern-wrap .setlist-subtitle-collapsible.is-expanded {
+    max-height: none;
+    overflow: visible;
 }
 
 .setlist-pattern-wrap .setlist-subtitle-toggle {
