@@ -264,7 +264,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updatePatternSubtitleAccordions() {
         document.querySelectorAll('.setlist-pattern-wrap .setlist-subtitle-auto').forEach(function (heading) {
-            var hasExplicitRest = !!heading.querySelector('.setlist-subtitle-rest');
             heading.classList.remove('setlist-subtitle-collapsible', 'is-expanded');
 
             var measure = heading.cloneNode(true);
@@ -277,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function () {
             measure.remove();
 
             var wrapsNaturally = heading.scrollHeight > oneLineHeight + 1;
-            if (hasExplicitRest || wrapsNaturally) {
+            if (wrapsNaturally) {
                 heading.classList.add('setlist-subtitle-collapsible');
                 heading.onclick = function () {
                     heading.classList.toggle('is-expanded');
