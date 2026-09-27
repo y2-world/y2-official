@@ -563,12 +563,22 @@ function scrollToPatternWrap(wrap, behavior) {
     var groupWrap = wrap.closest('.setlist-group-wrap');
     var hasGroupTitle = groupWrap && !!groupWrap.querySelector('.setlist-group-title');
     var scrollAnchorRect = groupWrap ? groupWrap.getBoundingClientRect() : wrapRect;
-    var extraOffset = hasGroupTitle ? 30 : 12;
+    var row = wrap.closest('.setlist-row');
+    var stickyTitle = row ? row.previousElementSibling : null;
+    var hasMobileStickyTitle = window.matchMedia('(max-width: 767px)').matches
+        && stickyTitle
+        && stickyTitle.classList.contains('setlist-group-title-sticky');
+    var stickyTitleMarginTop = hasMobileStickyTitle
+        ? (parseFloat(window.getComputedStyle(stickyTitle).marginTop) || 0)
+        : 0;
+    var extraOffset = hasMobileStickyTitle
+        ? stickyTitle.offsetHeight + stickyTitleMarginTop + 4
+        : (hasGroupTitle ? 30 : 12);
 
     var targetTop = window.scrollY + scrollAnchorRect.top - (headerBottom + extraOffset);
     window.scrollTo({ top: targetTop, behavior: behavior || 'smooth' });
 
-    var scrollParent = wrap.closest('.setlist-row');
+    var scrollParent = row;
     if (scrollParent) {
         var parentRect = scrollParent.getBoundingClientRect();
         var targetLeft = scrollParent.scrollLeft + wrapRect.left - parentRect.left
