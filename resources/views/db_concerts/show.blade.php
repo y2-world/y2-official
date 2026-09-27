@@ -521,7 +521,7 @@ document.addEventListener('DOMContentLoaded', function () {
             window.scrollTo(0, 0);
             var scrollToHashTarget = function () {
                 requestAnimationFrame(function () {
-                    scrollToPatternWrap(hashTarget);
+                    scrollToPatternWrap(hashTarget, 'auto');
                 });
             };
             if (document.fonts && document.fonts.ready) {
@@ -551,9 +551,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-function scrollToPatternWrap(wrap) {
+function scrollToPatternWrap(wrap, behavior) {
     var header = document.querySelector('nav.fixed-top');
-    var headerHeight = header ? header.getBoundingClientRect().height : 0;
+    var headerBottom = header ? header.getBoundingClientRect().bottom : 0;
     var wrapRect = wrap.getBoundingClientRect();
 
     // グループ見出しを含むグループ全体（.setlist-group-wrap）の先頭を
@@ -565,15 +565,15 @@ function scrollToPatternWrap(wrap) {
     var scrollAnchorRect = groupWrap ? groupWrap.getBoundingClientRect() : wrapRect;
     var extraOffset = hasGroupTitle ? 30 : 12;
 
-    var targetTop = window.scrollY + scrollAnchorRect.top - (headerHeight + extraOffset);
-    window.scrollTo({ top: targetTop, behavior: 'smooth' });
+    var targetTop = window.scrollY + scrollAnchorRect.top - (headerBottom + extraOffset);
+    window.scrollTo({ top: targetTop, behavior: behavior || 'smooth' });
 
     var scrollParent = wrap.closest('.setlist-row');
     if (scrollParent) {
         var parentRect = scrollParent.getBoundingClientRect();
         var targetLeft = scrollParent.scrollLeft + wrapRect.left - parentRect.left
             - (parentRect.width - wrapRect.width) / 2;
-        scrollParent.scrollTo({ left: targetLeft, behavior: 'smooth' });
+        scrollParent.scrollTo({ left: targetLeft, behavior: behavior || 'smooth' });
     }
 }
 
