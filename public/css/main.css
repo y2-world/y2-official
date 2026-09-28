@@ -2040,6 +2040,11 @@ h5.setlist-subtitle-heading {
     vertical-align: top;
 }
 
+.setlist-pattern-wrap .setlist-subtitle-heading,
+.setlist-summary-wrap .setlist-subtitle-wrap {
+    text-wrap: balance;
+}
+
 .setlist-subtitle-collapsible {
     cursor: pointer;
     position: relative;
@@ -2142,10 +2147,6 @@ h5.setlist-subtitle-heading {
     .setlist-summary-wrap .setlist-subtitle-wrap {
         line-height: 1.8;
         max-height: 1.8em;
-        text-wrap: balance;
-    }
-
-    .setlist-pattern-wrap .setlist-subtitle-heading {
         text-wrap: balance;
     }
 
