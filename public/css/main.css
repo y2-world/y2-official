@@ -2040,9 +2040,11 @@ h5.setlist-subtitle-heading {
     vertical-align: top;
 }
 
-.setlist-pattern-wrap .setlist-subtitle-heading,
-.setlist-summary-wrap .setlist-subtitle-wrap {
-    text-wrap: balance;
+.setlist-pattern-wrap .setlist-subtitle-heading {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: baseline;
 }
 
 .setlist-subtitle-collapsible {
@@ -2084,7 +2086,7 @@ h5.setlist-subtitle-heading {
 .setlist-pattern-wrap .setlist-subtitle-collapsible {
     position: relative;
     align-self: stretch;
-    display: block;
+    display: flex;
     width: 100%;
     max-width: none;
     box-sizing: border-box;
