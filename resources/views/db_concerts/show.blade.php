@@ -146,9 +146,6 @@
                                         @else
                                             <li value="{{ $summaryNumber }}">
                                         @endif
-                                            @if ($isExtraRow)
-                                                -
-                                            @endif
                                             @foreach ($row['variants'] as $variant)
                                                 @php
                                                     $featuring = $variant['featuring'] ?? '';
@@ -158,6 +155,9 @@
                                                         : $featuring;
                                                 @endphp
                                                 <span class="setlist-song-featuring">
+                                                    @if ($isExtraRow && $loop->first)
+                                                        <span class="setlist-extra-prefix">-&nbsp;</span>
+                                                    @endif
                                                     @if (!$loop->first)
                                                         <span class="setlist-summary-variant-separator">@if (!empty($variant['medley']))〜@else/@endif</span>
                                                     @endif

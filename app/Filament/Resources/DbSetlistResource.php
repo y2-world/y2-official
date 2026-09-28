@@ -461,7 +461,7 @@ class DbSetlistResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('id', 'desc');
+            ->defaultSort('updated_at', 'desc');
     }
 
     public static function getRelations(): array

@@ -859,6 +859,10 @@ select {
     vertical-align: top;
 }
 
+.setlist-extra-prefix {
+    white-space: nowrap;
+}
+
 .setlist-song-featuring .setlist-featuring {
     display: inline;
     max-width: none;
