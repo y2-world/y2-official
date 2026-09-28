@@ -2035,16 +2035,9 @@ h5.setlist-subtitle-heading {
 }
 
 .setlist-summary-pattern-label {
-    display: inline-block;
+    display: inline;
     white-space: normal;
-    vertical-align: top;
-}
-
-.setlist-pattern-wrap .setlist-subtitle-heading {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    align-items: baseline;
+    vertical-align: baseline;
 }
 
 .setlist-subtitle-collapsible {
@@ -2086,7 +2079,7 @@ h5.setlist-subtitle-heading {
 .setlist-pattern-wrap .setlist-subtitle-collapsible {
     position: relative;
     align-self: stretch;
-    display: flex;
+    display: block;
     width: 100%;
     max-width: none;
     box-sizing: border-box;
@@ -2108,6 +2101,10 @@ h5.setlist-subtitle-heading {
     bottom: 0;
     margin: 0;
     transform: none;
+}
+
+.setlist-pattern-wrap .setlist-subtitle-heading {
+    text-wrap: balance;
 }
 
 .setlist-summary-wrap .setlist-subtitle-toggle {
@@ -2149,13 +2146,6 @@ h5.setlist-subtitle-heading {
     .setlist-summary-wrap .setlist-subtitle-wrap {
         line-height: 1.8;
         max-height: 1.8em;
-        text-wrap: balance;
-    }
-
-    /* Summaryタイトルは公演ラベル全体を塊にせず、日付・会場単位で詰めて折り返す。 */
-    .setlist-summary-wrap .setlist-summary-pattern-label {
-        display: inline;
-        vertical-align: baseline;
     }
 
     .setlist-summary-wrap .setlist-summary-single-pattern-label {

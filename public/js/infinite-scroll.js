@@ -21,7 +21,7 @@ var InfiniteScroll = /*#__PURE__*/function () {
     _classCallCheck(this, InfiniteScroll);
     console.log('InfiniteScroll initialized with options:', options);
     this.container = document.querySelector(options.container);
-    this.nextPageUrl = options.nextPageUrl;
+    this.nextPageUrl = this.normalizeUrl(options.nextPageUrl);
     this.loading = false;
     this.hasMore = true;
     this.debugMode = false; // デバッグモード無効
@@ -49,6 +49,17 @@ var InfiniteScroll = /*#__PURE__*/function () {
     this.init();
   }
   _createClass(InfiniteScroll, [{
+    key: "normalizeUrl",
+    value: function normalizeUrl(url) {
+      if (!url) return url;
+      var nextUrl = new URL(url, window.location.href);
+      if (nextUrl.hostname === window.location.hostname) {
+        nextUrl.protocol = window.location.protocol;
+        nextUrl.port = window.location.port;
+      }
+      return nextUrl.toString();
+    }
+  }, {
     key: "init",
     value: function init() {
       var _this = this;
@@ -171,12 +182,8 @@ var InfiniteScroll = /*#__PURE__*/function () {
                 this.container.insertAdjacentHTML('beforeend', data.html);
               }
 
-              // 次のページURLを更新（HTTPSに変換）
-              if (data.next_page_url && window.location.protocol === 'https:') {
-                this.nextPageUrl = data.next_page_url.replace('http://', 'https://');
-              } else {
-                this.nextPageUrl = data.next_page_url;
-              }
+              // 同じホストへのURLは現在のポート・プロトコルに合わせる。
+              this.nextPageUrl = this.normalizeUrl(data.next_page_url);
               this.hasMore = data.next_page_url !== null;
               _context.next = 24;
               break;

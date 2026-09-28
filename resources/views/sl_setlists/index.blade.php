@@ -163,7 +163,7 @@
 @endsection
 
 @section('page-script')
-    <script src="{{ asset('/js/infinite-scroll.js?v=20251110e') }}"></script>
+    <script src="{{ asset('/js/infinite-scroll.js?v=20260928') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM loaded');
