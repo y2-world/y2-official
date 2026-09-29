@@ -172,11 +172,10 @@
 
             @if($pastSetlists->hasMorePages())
                 console.log('Initializing InfiniteScroll...');
-                let nextUrl = '{!! $pastSetlists->appends(['type' => $type])->nextPageUrl() !!}';
-                // 本番環境では強制的にHTTPSにする
-                if (window.location.protocol === 'https:') {
-                    nextUrl = nextUrl.replace('http://', 'https://');
-                }
+                let rawUrl = '{!! $pastSetlists->appends(['type' => $type])->nextPageUrl() !!}';
+                // Remove hostname and reconstruct with current location
+                let pathname = new URL(rawUrl).pathname + new URL(rawUrl).search;
+                let nextUrl = window.location.protocol + '//' + window.location.host + pathname;
                 const infiniteScroll = new InfiniteScroll({
                     container: '#setlists-container',
                     nextPageUrl: nextUrl

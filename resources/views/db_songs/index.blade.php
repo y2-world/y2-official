@@ -80,10 +80,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             @if($songs->hasMorePages())
-                let nextUrl = '{!! $songs->nextPageUrl() !!}';
-                if (window.location.protocol === 'https:') {
-                    nextUrl = nextUrl.replace('http://', 'https://');
-                }
+                let rawUrl = '{!! $songs->nextPageUrl() !!}';
+                // Remove hostname and reconstruct with current location
+                let pathname = new URL(rawUrl).pathname + new URL(rawUrl).search;
+                let nextUrl = window.location.protocol + '//' + window.location.host + pathname;
                 new InfiniteScroll({
                     container: '#songs-container',
                     nextPageUrl: nextUrl
