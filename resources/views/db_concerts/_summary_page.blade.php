@@ -36,21 +36,13 @@
                                              無いと、Summaryだけ見てもどの公演を元にした比較表なのか
                                              分からないため。 --}}
                                         @php
-                                            // 各パターンのsubtitleを日付・会場グレー表示で整形する
-                                            // （renderSubtitleWithGreyedVenues使用）。
-                                            // 実データはsubtitleの改行がすべてスペースに統一されているため、
-                                            // 各パターンは常に1行の出力になる。
+                                            // subtitleに改行が残っていても全行を拾えるよう、行配列をflattenする
                                             $rowPatternLabels = $tourSetlists
                                                 ->filter(fn ($m) => ($m->row ?? 1) == $rowNum)
                                                 ->sortBy('order_no')
-                                                ->map(function ($m) {
-                                                    $rendered = renderSubtitleWithGreyedVenues($m->subtitle ?? '');
-                                                    $line = $rendered['lines'][0] ?? '';
-                                                    return trim(strip_tags($line)) !== ''
-                                                        ? '<span class="setlist-summary-pattern-label">' . $line . '</span>'
-                                                        : null;
-                                                })
-                                                ->filter(fn ($line) => $line !== null)
+                                                ->flatMap(fn ($m) => renderSubtitleWithGreyedVenues($m->subtitle ?? '')['lines'])
+                                                ->filter(fn ($line) => trim(strip_tags($line)) !== '')
+                                                ->map(fn ($line) => '<span class="setlist-summary-pattern-label">' . $line . '</span>')
                                                 ->values();
                                         @endphp
                                         {{-- 表示するrowが複数ある場合に、グループ名が無いrowは

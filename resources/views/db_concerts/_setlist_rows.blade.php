@@ -73,7 +73,7 @@
 
                             @php
                                 $subtitleRendered = renderSubtitleWithGreyedVenues($setlistModel->subtitle ?? '');
-                                $subtitleHtml = $subtitleRendered['lines'][0] ?? '';
+                                $subtitleHtml = implode(' ', $subtitleRendered['lines']);
                                 $rawSubtitle = trim(strip_tags($setlistModel->subtitle ?? ''));
                                 $patternLabel = $rawSubtitle !== ''
                                     ? preg_replace('/\s+/', ' ', $rawSubtitle)
