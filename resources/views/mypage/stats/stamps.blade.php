@@ -51,7 +51,8 @@
                                     data-filter-keys="{{ implode(' ', $stamp['filter_keys'] ?? []) }}"
                                     data-done="{{ $stamp['done'] ? 1 : 0 }}"
                                     data-never-performed="{{ $stamp['never_performed'] ? 1 : 0 }}"
-                                    @if (!empty($stamp['track_titles'])) data-track-titles="{{ json_encode($stamp['track_titles'], JSON_UNESCAPED_UNICODE) }}" @endif>
+                                    @if (!empty($stamp['track_titles'])) data-track-titles="{{ json_encode($stamp['track_titles'], JSON_UNESCAPED_UNICODE) }}" @endif
+                                    @if (!empty($stamp['track_orders'])) data-track-orders="{{ json_encode($stamp['track_orders']) }}" @endif>
                                     <div class="stamp-slot-frame js-stamp-tap" @if ($stamp['never_performed']) title="ライブで演奏されたことがない曲です" @endif>
                                         @if ($stamp['done'])
                                             <div class="stamp-mark">
@@ -77,7 +78,7 @@
 @endsection
 
 @section('page-script')
-<script src="{{ asset('/js/stamp-book.js?v=20260929') }}"></script>
+<script src="{{ asset('/js/stamp-book.js?v=20260929b') }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.js-stamp-tap').forEach(function (frame) {

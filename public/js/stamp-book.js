@@ -20,7 +20,19 @@ document.addEventListener('DOMContentLoaded', function () {
         slot._titleEl = titleEl;
         slot._defaultTitle = titleEl ? titleEl.textContent : '';
         slot._trackTitles = slot.dataset.trackTitles ? JSON.parse(slot.dataset.trackTitles) : {};
+        slot._trackOrders = slot.dataset.trackOrders ? JSON.parse(slot.dataset.trackOrders) : {};
     });
+
+    // アルバム絞り込み時はそのアルバムの曲順、それ以外は元の並び順に並べ替える
+    function orderedSlots(key) {
+        const ordered = slots.slice();
+        if (key && key.indexOf('album-') === 0) {
+            ordered.sort(function (a, b) {
+                return (a._trackOrders[key] || Infinity) - (b._trackOrders[key] || Infinity);
+            });
+        }
+        return ordered;
+    }
 
     function applyTitles(key) {
         slots.forEach(function (slot) {
@@ -50,8 +62,10 @@ document.addEventListener('DOMContentLoaded', function () {
     function showSlots(visibleSlots, animate, key) {
         applyTitles(key);
         const visibleSet = new Set(visibleSlots);
+        const ordered = orderedSlots(key);
+        ordered.forEach(function (slot) { book.appendChild(slot); });
         let order = 0;
-        slots.forEach(function (slot) {
+        ordered.forEach(function (slot) {
             const show = visibleSet.has(slot);
             slot.hidden = !show;
             slot.classList.remove('is-filter-in');

@@ -336,6 +336,7 @@ class MyPageStatsController extends Controller
                 'fes_only' => isset($fesOnlyDbSongIds[$song->id]),
                 'filter_keys' => $this->stampFilterKeys($song->id, $stampFilters),
                 'track_titles' => $this->stampTrackTitles($song->id, $stampFilters),
+                'track_orders' => $this->stampTrackOrders($song->id, $stampFilters),
             ];
         });
 

@@ -99,7 +99,14 @@ trait ComputesDbSongStamps
             ->map(fn (DbAlbum $album) => [
                 'key' => 'album-' . $album->id,
                 'title' => $album->title,
-                'song_ids' => $songTracks($album->tracklist)->map(fn ($track) => (int) $track['id'])->flip()->all(),
+                // 曲ID => 曲順（同じ曲が複数回入る場合は最初の位置）
+                'song_ids' => $songTracks($album->tracklist)
+                    ->map(fn ($track) => (int) $track['id'])
+                    ->unique()
+                    ->values()
+                    ->flip()
+                    ->map(fn ($index) => $index + 1)
+                    ->all(),
             ])
             ->filter(fn ($album) => !empty($album['song_ids']))
             ->values()
@@ -125,6 +132,18 @@ trait ComputesDbSongStamps
         }
 
         return $keys;
+    }
+
+    private function stampTrackOrders(int $songId, array $filters): array
+    {
+        $orders = [];
+        foreach ($filters['albums'] as $album) {
+            if (isset($album['song_ids'][$songId])) {
+                $orders[$album['key']] = $album['song_ids'][$songId];
+            }
+        }
+
+        return $orders;
     }
 
     private function stampTrackTitles(int $songId, array $filters): array
