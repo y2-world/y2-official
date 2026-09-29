@@ -1,0 +1,217 @@
+{
+  "artist_id": 27,
+  "source": "ja.wikipedia.org「Official髭男dism」ライブ節ほか",
+  "tours": [
+    {
+      "title": "Official Showcase Live",
+      "type": 1,
+      "date1": "2016-04-19",
+      "date2": null,
+      "venue": "渋谷TAKE OFF 7",
+      "schedule": null
+    },
+    {
+      "title": "韓国単独公演",
+      "type": 1,
+      "date1": "2016-06-11",
+      "date2": null,
+      "venue": "ソウルUNDERSTAGE",
+      "schedule": null
+    },
+    {
+      "title": "THE DAILY MIRROR tour 2016",
+      "type": 0,
+      "date1": "2016-07-16",
+      "date2": "2016-08-06",
+      "venue": null,
+      "schedule": "7月16日(土) 大阪LIVE SQUARE 2nd LINE\n7月17日(日) 名古屋Heart Land\n7月23日(土) 渋谷TAKE OFF 7\n8月6日(土) 松江AZTiC canova"
+    },
+    {
+      "title": "one-man tour 2016",
+      "type": 0,
+      "date1": "2016-11-20",
+      "date2": "2016-11-26",
+      "venue": null,
+      "schedule": "11月20日(日) 名古屋ell.SIZE\n11月23日(水) 阿倍野ROCKTOWN\n11月26日(土) 代官山LOOP"
+    },
+    {
+      "title": "髭団サミット17'",
+      "type": 0,
+      "date1": "2017-02-18",
+      "date2": "2017-03-04",
+      "venue": null,
+      "schedule": "2月18日(土) 京橋BERONICA\n2月26日(日) 名古屋BLcafe\n3月4日(土) 原宿ストロボカフェ"
+    },
+    {
+      "title": "赤ひげ危機一髪！",
+      "type": 1,
+      "date1": "2017-05-05",
+      "date2": null,
+      "venue": "梅田CLUB QUATTRO",
+      "schedule": null
+    },
+    {
+      "title": "one-man tour 2017 -summer-",
+      "type": 0,
+      "date1": "2017-06-09",
+      "date2": "2017-07-14",
+      "venue": null,
+      "schedule": "6月9日(金) 横浜BAYSIS\n6月16日(金) 渋谷CLUB QUATTRO\n6月24日(土) 名古屋SPADEBOX\n6月25日(日) 広島CLUB QUATTRO\n7月14日(金) umeda TRAD"
+    },
+    {
+      "title": "one-man tour 2017 -winter-",
+      "type": 0,
+      "date1": "2017-11-03",
+      "date2": "2017-12-08",
+      "venue": null,
+      "schedule": "11月3日(金) 島根県民会館 中ホール\n11月11日(土) 水戸LIGHT HOUSE\n11月12日(日) 仙台space Zero\n11月23日(木) Queblick\n11月26日(日) 梅田CLUB QUATTRO\n12月1日(金) 神戸VARIT.\n12月2日(土) 名古屋ボトムライン\n12月8日(金) 赤坂BLITZ"
+    },
+    {
+      "title": "one-man tour 2018",
+      "type": 0,
+      "date1": "2018-05-02",
+      "date2": "2018-07-05",
+      "venue": null,
+      "schedule": "5月2日(水) 横浜BAYSIS\n5月3日(木) 仙台darwin\n5月12日(土) B.9 V2\n5月13日(日) DRUM Be-1\n5月25日(金) BLUELIVE HIROSHIMA\n5月26日(土) サンケイホールブリーゼ\n6月2日(土) 水戸LIGHT HOUSE\n6月9日(土) 名古屋DIAMOND HALL\n6月16日(土) IMAGE\n6月17日(日) 米子AZTiC laughs\n6月19日(火) サンケイホールブリーゼ\n6月24日(日) 柏PALOOZA\n6月29日(金) 金沢vanvanV4\n7月5日(木) 中野サンプラザ"
+    },
+    {
+      "title": "HIGEDAN acoustic one-man live 2018 -Autumn-",
+      "type": 1,
+      "date1": "2018-10-13",
+      "date2": null,
+      "venue": "ヒューリックホール東京",
+      "schedule": null
+    },
+    {
+      "title": "one-man tour 18/19",
+      "type": 0,
+      "date1": "2018-11-07",
+      "date2": "2019-02-02",
+      "venue": null,
+      "schedule": "［2018年］\n11月7日(水) 横浜Bay Hall\n11月9日(金) 札幌cube garden\n11月10日(土) 札幌cube garden\n11月17日(土) 高松DIME\n11月18日(日) 松山サロンキティ\n11月22日(木) 松江AZTiC canova\n11月24日(土) 米子AZTiC laughs\n11月25日(日) 広島CLUB QUATTRO\n11月28日(水) HEAVEN'S ROCK さいたま新都心VJ-3\n12月1日(土) チームスマイル・仙台PIT\n12月2日(日) 郡山CLUB #9\n12月9日(日) 水戸LIGHT HOUSE\n12月15日(土) GOLDEN PIGS RED STAGE\n12月16日(日) 長野CLUB JUNK BOX\n\n［2019年］\n1月11日(金) NHK大阪ホール\n1月12日(土) 米子市文化ホール\n1月16日(水) 日本特殊陶業市民会館 ビレッジホール\n1月18日(金) Live House 浜松 窓枠\n1月19日(土) 日本特殊陶業市民会館 ビレッジホール\n1月24日(木) NHKホール\n1月26日(土) 福岡DRUM LOGOS\n1月27日(日) 鹿児島SR HALL\n1月31日(木) NHK大阪ホール\n2月2日(土) 島根県民会館 大ホール"
+    },
+    {
+      "title": "Fan Club Tour Vol.1 ～Hey BROTHERS! 聖なる夜にWhat's Up Live～",
+      "type": 0,
+      "date1": "2018-12-20",
+      "date2": "2018-12-25",
+      "venue": null,
+      "schedule": "12月20日(木) 渋谷duo MUSIC EXCHANGE\n12月23日(日) BIGCAT\n12月25日(火) 伏見JAMMIN'"
+    },
+    {
+      "title": "two-man live 2019",
+      "type": 0,
+      "date1": "2019-03-02",
+      "date2": "2019-03-17",
+      "venue": null,
+      "schedule": "3月2日(土) 新木場 STUDIO COAST\n3月17日(日) なんばHatch"
+    },
+    {
+      "title": "one-man tour 2019",
+      "type": 0,
+      "date1": "2019-06-22",
+      "date2": "2019-07-22",
+      "venue": null,
+      "schedule": "6月22日(土) 仙台GIGS\n6月30日(日) Zepp Fukuoka\n7月8日(月) 日本武道館（追加公演）\n7月13日(土) Zepp Namba\n7月14日(日) Zepp Nagoya\n7月21日(日) Zepp DiverCity\n7月22日(月) Zepp DiverCity"
+    },
+    {
+      "title": "Tour 19/20 -Hall Travelers-",
+      "type": 0,
+      "date1": "2019-10-26",
+      "date2": "2020-02-22",
+      "venue": null,
+      "schedule": "［2019年］\n10月26日(土) 市川市文化会館 大ホール\n10月30日(水) なら100年会館 大ホール\n11月1日(金) グランキューブ大阪\n11月2日(土) グランキューブ大阪\n11月7日(木) 大宮ソニックシティ 大ホール\n11月10日(日) 本多の森ホール\n11月15日(金) 小樽市民会館\n11月17日(日) 札幌文化芸術劇場 hitaru\n11月23日(土) サンポートホール高松\n11月24日(日) 神戸国際会館 こくさいホール\n11月29日(金) 愛知県芸術劇場 大ホール\n11月30日(土) オリンパスホール八王子\n12月7日(土) 長良川国際会議場 メインホール\n12月8日(日) 日本特殊陶業市民会館 フォレストホール\n12月13日(金) 広島文化学園 HBGホール\n12月15日(日) 島根県民会館 大ホール\n12月20日(金) 仙台サンプラザホール\n12月22日(日) いわき芸術文化交流館アリオス 大ホール\n\n［2020年］\n1月4日(土) 福岡サンパレス\n1月5日(日) 福岡サンパレス\n1月12日(日) パシフィコ横浜 国立大ホール\n1月13日(月) パシフィコ横浜 国立大ホール\n1月26日(日) 新潟テルサ\n1月31日(金) 宝山ホール\n2月2日(日) 熊本県立劇場 演劇ホール\n2月10日(月) パシフィコ横浜 国立大ホール\n2月11日(火) パシフィコ横浜 国立大ホール\n2月21日(金) 倉敷市民会館\n2月22日(土) 米子市公会堂"
+    },
+    {
+      "title": "Tour 2020 -Arena Travelers-",
+      "type": 0,
+      "date1": "2020-03-14",
+      "date2": "2020-08-02",
+      "venue": null,
+      "schedule": "3月14日(土) 北海道立総合体育センター 北海きたえーる\n3月15日(日) 北海道立総合体育センター 北海きたえーる\n3月21日(土) 大阪城ホール\n3月23日(月) 大阪城ホール（追加公演）\n3月24日(火) 大阪城ホール（追加公演）\n3月30日(月) 福岡国際センター\n3月31日(火) 福岡国際センター\n4月4日(土) ポートメッセなごや3号館\n4月5日(日) ポートメッセなごや3号館\n4月22日(水) マリンメッセ福岡（3/30の振替公演）\n4月23日(木) マリンメッセ福岡（3/31の振替公演）\n4月28日(火) アスティとくしま\n4月29日(水) アスティとくしま\n5月5日(火) 朱鷺メッセ 新潟コンベンションセンター\n5月6日(水) 朱鷺メッセ 新潟コンベンションセンター（追加公演）\n5月18日(月) 横浜アリーナ\n5月19日(火) 横浜アリーナ\n5月26日(火) 東京ガーデンシアター\n5月27日(水) 東京ガーデンシアター\n6月13日(土) 広島グリーンアリーナ\n6月14日(日) 広島グリーンアリーナ\n6月27日(土) 宮城セキスイハイムスーパーアリーナ\n6月28日(日) 宮城セキスイハイムスーパーアリーナ\n7月5日(日) 沖縄市民会館（追加公演）\n8月1日(土) 北海道立総合体育センター 北海きたえーる（3/14の振替公演）\n8月2日(日) 北海道立総合体育センター 北海きたえーる（3/15の振替公演）"
+    },
+    {
+      "title": "ONLINE LIVE 2020 -Arena Travelers-",
+      "type": 1,
+      "date1": "2020-09-26",
+      "date2": null,
+      "venue": "東京ガーデンシアター",
+      "schedule": null
+    },
+    {
+      "title": "FC Tour Vol.2 -The Blooming Universe ONLINE-",
+      "type": 1,
+      "date1": "2021-04-18",
+      "date2": null,
+      "venue": "浦安舞スタジオ",
+      "schedule": null
+    },
+    {
+      "title": "『Editorial』発売記念 ONLINE FREE LIVE",
+      "type": 1,
+      "date1": "2021-08-28",
+      "date2": null,
+      "venue": "東京オペラシティ",
+      "schedule": null
+    },
+    {
+      "title": "Live at Radio",
+      "type": 1,
+      "date1": "2024-05-07",
+      "date2": null,
+      "venue": null,
+      "schedule": null
+    },
+    {
+      "title": "one-man live 2024 -UNOFFICIAL-",
+      "type": 1,
+      "date1": "2024-07-23",
+      "date2": null,
+      "venue": "Zepp Haneda",
+      "schedule": null
+    },
+    {
+      "title": "ASIA TOUR 2024 -Rejoice-",
+      "type": 0,
+      "date1": "2024-11-30",
+      "date2": "2024-12-15",
+      "venue": null,
+      "schedule": "11月30日(土) KINTEX Hall 5\n12月1日(日) KINTEX Hall 5\n12月15日(日) TAIPEI ARENA"
+    },
+    {
+      "title": "one-man live 2025 -UNOFFICIAL-",
+      "type": 1,
+      "date1": "2025-04-24",
+      "date2": null,
+      "venue": "KT Zepp Yokohama",
+      "schedule": null
+    },
+    {
+      "title": "one-man tour FOUR-RE:ISM",
+      "type": 0,
+      "date1": "2025-12-10",
+      "date2": "2026-01-22",
+      "venue": null,
+      "schedule": "［2025年］\n12月10日(水) Zepp Fukuoka\n12月11日(木) Zepp Fukuoka\n12月15日(月) Zepp Osaka Bayside\n12月16日(火) Zepp Osaka Bayside\n12月22日(月) Zepp DiverCity(TOKYO)\n12月23日(火) Zepp DiverCity(TOKYO)\n\n［2026年］\n1月13日(火) Zepp Sapporo\n1月14日(水) Zepp Sapporo\n1月21日(水) Zepp Nagoya\n1月22日(木) Zepp Nagoya"
+    },
+    {
+      "title": "ASIA TOUR 2026",
+      "type": 0,
+      "date1": "2026-08-08",
+      "date2": "2026-09-06",
+      "venue": null,
+      "schedule": "8月8日(土) KSPO DOME\n8月9日(日) KSPO DOME\n8月21日(金) THE STAR THEATER\n8月29日(土) 台北アリーナ\n8月30日(日) 台北アリーナ\n9月6日(日) UOB LIVE"
+    }
+  ],
+  "fixes": [
+    {
+      "id": 255,
+      "expect": {
+        "schedule": "4月4日(土) 仙台サンプラザホール\n4月5日(日) 仙台サンプラザホール\n4月17日(金) 福岡サンパレス\n4月18日(土) 福岡サンパレス\n4月25日(土 )高知県立県民文化ホール オレンジホール\n4月27日(月)愛媛県県民文化会館 メインホール\n5月3日(日) 新潟県民会館 大ホール\n5月4日(月・祝) 新潟県民会館 大ホール\n5月10日(日) iichikoグランシアタ　\n5月12日(火) アルカスSASEBO 大ホール\n5月21日(木) やまぎん県民ホール\n5月23日(土) あきた芸術劇場ミルハス 大ホール\n5月30日(土) 広島文化学園HBGホール　\n5月31日(日) 広島文化学園HBGホール　\n6月11日(木) 帯広市民文化ホール　\n6月13日(土) コーチャンフォー釧路文化ホール　\n6月20日(土) 札幌文化芸術劇場 hitaru\n6月21日(日) 札幌文化芸術劇場 hitaru　\n7月3日(金) Niterra日本特殊陶業市民会館 フォレストホール\n7月4日(土) Niterra日本特殊陶業市民会館 フォレストホール\n7月11日(土) SGC HALL ARIAKE　\n7月12日(日) SGC HALL ARIAKE　\n7月18日(土) 大阪城ホール　\n7月19日(日) 大阪城ホール　\n7月25日(土) Kアリーナ横浜　\n7月26日(日) Kアリーナ横浜"
+      },
+      "set": {
+        "schedule": "4月4日(土) 仙台サンプラザホール\n4月5日(日) 仙台サンプラザホール\n4月17日(金) 福岡サンパレス\n4月18日(土) 福岡サンパレス\n4月25日(土) 高知県立県民文化ホール オレンジホール\n4月27日(月) 愛媛県県民文化会館 メインホール\n5月3日(日) 新潟県民会館 大ホール\n5月4日(月・祝) 新潟県民会館 大ホール\n5月10日(日) iichikoグランシアタ\n5月12日(火) アルカスSASEBO 大ホール\n5月21日(木) やまぎん県民ホール\n5月23日(土) あきた芸術劇場ミルハス 大ホール\n5月30日(土) 広島文化学園HBGホール\n5月31日(日) 広島文化学園HBGホール\n6月11日(木) 帯広市民文化ホール\n6月13日(土) コーチャンフォー釧路文化ホール\n6月20日(土) 札幌文化芸術劇場 hitaru\n6月21日(日) 札幌文化芸術劇場 hitaru\n7月3日(金) Niterra日本特殊陶業市民会館 フォレストホール\n7月4日(土) Niterra日本特殊陶業市民会館 フォレストホール\n7月11日(土) SGC HALL ARIAKE\n7月12日(日) SGC HALL ARIAKE\n7月18日(土) 大阪城ホール\n7月19日(日) 大阪城ホール\n7月25日(土) Kアリーナ横浜\n7月26日(日) Kアリーナ横浜"
+      }
+    }
+  ]
+}
