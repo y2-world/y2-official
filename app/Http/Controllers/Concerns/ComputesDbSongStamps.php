@@ -79,7 +79,7 @@ trait ComputesDbSongStamps
     // スタンプ帳の絞り込み用。シングルは表題曲（両A面は「A / B」の曲数ぶん先頭から、
     // EPは全曲）、アルバムはベスト盤も含めtracklistの収録曲すべてを対象にする。
     // exceptionは表記違いの表示名にも使われるため、曲IDがあれば収録曲として数える。
-    // シングル絞り込み時だけは、スタンプの曲名をシングル側の表記（exception）に差し替える。
+    // 絞り込み時は、スタンプの曲名をそのシングル・アルバム側の表記（exception）に差し替える。
     private function stampDiscographyFilters(int $artistId): array
     {
         $songTracks = fn ($tracklist) => collect($tracklist ?? [])
@@ -106,6 +106,12 @@ trait ComputesDbSongStamps
                     ->values()
                     ->flip()
                     ->map(fn ($index) => $index + 1)
+                    ->all(),
+                // 同じ曲が複数回入る場合（Radio Mix等）は最初のトラックの表記を使う
+                'track_titles' => $songTracks($album->tracklist)
+                    ->unique(fn ($track) => (int) $track['id'])
+                    ->filter(fn ($track) => filled($track['exception'] ?? null))
+                    ->mapWithKeys(fn ($track) => [(int) $track['id'] => $track['exception']])
                     ->all(),
             ])
             ->filter(fn ($album) => !empty($album['song_ids']))
@@ -149,7 +155,14 @@ trait ComputesDbSongStamps
 
     private function stampTrackTitles(int $songId, array $filters): array
     {
-        return isset($filters['single_titles'][$songId]) ? ['single' => $filters['single_titles'][$songId]] : [];
+        $titles = isset($filters['single_titles'][$songId]) ? ['single' => $filters['single_titles'][$songId]] : [];
+        foreach ($filters['albums'] as $album) {
+            if (isset($album['track_titles'][$songId])) {
+                $titles[$album['key']] = $album['track_titles'][$songId];
+            }
+        }
+
+        return $titles;
     }
 
     // Yuki本人が実際にライブで演奏した記録（SlSetlist、フェスのゲスト出演含む）がある
