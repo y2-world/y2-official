@@ -42,10 +42,8 @@ class SlSetlistController extends Controller
         $pastSetlists = $pastQuery->with('artist')->paginate(10);
         $pastTotalCount = $pastSetlists->total();
 
-        // アーティスト、全てのアーティスト、年のデータを取得する
-        $liveArtists = Artist::where('visible', 1)->orderBy('id', 'asc')->get();
-        $fesArtists = Artist::where('visible', 0)->orderBy('id', 'asc')->get();
-        $artists = $liveArtists->merge($fesArtists);
+        // アーティスト選択は公開アーティストのみ
+        $artists = Artist::where('visible', 1)->orderBy('id', 'asc')->get();
         $allArtists = $artists;
 
         // Setlistから年のリストを取得
@@ -92,7 +90,7 @@ class SlSetlistController extends Controller
             ->toArray();
 
         // ビューにデータを渡して表示する
-        return view('sl_setlists.index', compact('artists', 'allArtists', 'liveArtists', 'fesArtists', 'upcomingSetlists', 'pastSetlists', 'upcomingTotalCount', 'pastTotalCount', 'years', 'type', 'suggestions'));
+        return view('sl_setlists.index', compact('artists', 'allArtists', 'upcomingSetlists', 'pastSetlists', 'upcomingTotalCount', 'pastTotalCount', 'years', 'type', 'suggestions'));
     }
 
     /**
