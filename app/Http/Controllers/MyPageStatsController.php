@@ -323,8 +323,10 @@ class MyPageStatsController extends Controller
 
         $everPerformedDbSongIds = $this->everPerformedDbSongIds((int) $artistId);
 
+        $stampFilters = $this->stampDiscographyFilters((int) $artistId);
+
         $dbSongs = DbSong::where('artist_id', $artistId)->orderBy('sort_order')->get();
-        $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds, $fesOnlyDbSongIds) {
+        $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds, $fesOnlyDbSongIds, $stampFilters) {
             return [
                 'song_id' => $song->id,
                 'song_url' => route('mypage.attendances.index', ['song_id' => 'official-' . $song->id]),
@@ -332,10 +334,12 @@ class MyPageStatsController extends Controller
                 'done' => isset($playedDbSongIds[$song->id]),
                 'never_performed' => !isset($everPerformedDbSongIds[$song->id]),
                 'fes_only' => isset($fesOnlyDbSongIds[$song->id]),
+                'filter_keys' => $this->stampFilterKeys($song->id, $stampFilters),
+                'track_titles' => $this->stampTrackTitles($song->id, $stampFilters),
             ];
         });
 
-        return $this->renderStampsView($artist, $stamps, $externalUser);
+        return $this->renderStampsView($artist, $stamps, $externalUser, $stampFilters);
     }
 
     // ユーザー登録アーティストのスタンプ帳。「自分が参加したセットリストで演奏された曲か」
@@ -394,7 +398,7 @@ class MyPageStatsController extends Controller
         return $this->renderStampsView($artist, $stamps, $externalUser);
     }
 
-    private function renderStampsView($artist, $stamps, $externalUser)
+    private function renderStampsView($artist, $stamps, $externalUser, ?array $stampFilters = null)
     {
         $totalCount = $stamps->count();
         $doneCount = $stamps->where('done', true)->count();
@@ -414,7 +418,8 @@ class MyPageStatsController extends Controller
             'performedCount',
             'performedPercentage',
             'externalUser',
-            'isOwner'
+            'isOwner',
+            'stampFilters'
         ));
     }
 }

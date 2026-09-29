@@ -861,14 +861,18 @@ class StatsController extends Controller
         // ここに含まれない曲は「ライブでそもそも未演奏」として台紙自体をグレー表示する。
         $everPerformedDbSongIds = $this->everPerformedDbSongIds((int)$artistId);
 
+        $stampFilters = $this->stampDiscographyFilters((int)$artistId);
+
         $dbSongs = DbSong::where('artist_id', $artistId)->orderBy('sort_order')->get();
-        $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds, $fesOnlyDbSongIds) {
+        $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds, $fesOnlyDbSongIds, $stampFilters) {
             return [
                 'song_id' => $song->id,
                 'title' => $song->title,
                 'done' => isset($playedDbSongIds[$song->id]),
                 'never_performed' => !isset($everPerformedDbSongIds[$song->id]),
                 'fes_only' => isset($fesOnlyDbSongIds[$song->id]),
+                'filter_keys' => $this->stampFilterKeys($song->id, $stampFilters),
+                'track_titles' => $this->stampTrackTitles($song->id, $stampFilters),
             ];
         });
 
@@ -887,7 +891,8 @@ class StatsController extends Controller
             'doneCount',
             'percentage',
             'performedCount',
-            'performedPercentage'
+            'performedPercentage',
+            'stampFilters'
         ));
     }
 }

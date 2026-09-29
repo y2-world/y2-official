@@ -24,7 +24,7 @@
                         data-performed="{{ $performedCount }}"
                         data-performed-percentage="{{ $performedPercentage }}">
                         <div class="stamp-summary-count">
-                            <span class="stamp-summary-done">{{ $doneCount }}</span>
+                            <span class="stamp-summary-done" id="stampSummaryDone">{{ $doneCount }}</span>
                             <span class="stamp-summary-slash">/</span>
                             <span class="stamp-summary-total" id="stampSummaryTotal">{{ $totalCount }}</span>
                             <span class="stamp-summary-unit">songs</span>
@@ -34,9 +34,11 @@
                         </div>
                         <div class="stamp-summary-percentage" id="stampSummaryPercentage">{{ $percentage }}% complete</div>
 
+                        @include('stats._stamp_filter')
+
                         <label class="unique-tour-label stamp-summary-toggle">
                             <input type="checkbox" id="stampPerformedOnlyCheckbox" class="unique-tour-checkbox">
-                            <span class="unique-tour-text">Count only songs ever performed live</span>
+                            <span class="unique-tour-text">演奏曲のみ</span>
                         </label>
                     </div>
 
@@ -45,7 +47,11 @@
                     @else
                         <div class="stamp-book">
                             @foreach ($stamps as $stamp)
-                                <div class="stamp-slot {{ $stamp['done'] ? 'is-stamped' : '' }} {{ $stamp['never_performed'] ? 'is-never-performed' : '' }} {{ $stamp['fes_only'] ? 'is-fes-only' : '' }}">
+                                <div class="stamp-slot {{ $stamp['done'] ? 'is-stamped' : '' }} {{ $stamp['never_performed'] ? 'is-never-performed' : '' }} {{ $stamp['fes_only'] ? 'is-fes-only' : '' }}"
+                                    data-filter-keys="{{ implode(' ', $stamp['filter_keys'] ?? []) }}"
+                                    data-done="{{ $stamp['done'] ? 1 : 0 }}"
+                                    data-never-performed="{{ $stamp['never_performed'] ? 1 : 0 }}"
+                                    @if (!empty($stamp['track_titles'])) data-track-titles="{{ json_encode($stamp['track_titles'], JSON_UNESCAPED_UNICODE) }}" @endif>
                                     <div class="stamp-slot-frame js-stamp-tap" @if ($stamp['never_performed']) title="ライブで演奏されたことがない曲です" @endif>
                                         @if ($stamp['done'])
                                             <div class="stamp-mark">
@@ -61,6 +67,7 @@
                                 </div>
                             @endforeach
                         </div>
+                        <p class="stamp-empty" id="stampFilterNoMatch" hidden>No songs match this filter.</p>
                     @endif
                 </div>
             </div>
@@ -70,6 +77,7 @@
 @endsection
 
 @section('page-script')
+<script src="{{ asset('/js/stamp-book.js?v=20260929') }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.js-stamp-tap').forEach(function (frame) {
@@ -98,21 +106,6 @@ document.addEventListener('DOMContentLoaded', function () {
         stampObserver.observe(mark);
     });
 
-    const summary = document.querySelector('.stamp-summary');
-    const checkbox = document.getElementById('stampPerformedOnlyCheckbox');
-    const totalEl = document.getElementById('stampSummaryTotal');
-    const barFillEl = document.getElementById('stampSummaryBarFill');
-    const percentageEl = document.getElementById('stampSummaryPercentage');
-
-    if (summary && checkbox) {
-        checkbox.addEventListener('change', function () {
-            const usePerformedOnly = checkbox.checked;
-            totalEl.textContent = usePerformedOnly ? summary.dataset.performed : summary.dataset.total;
-            const percentage = usePerformedOnly ? summary.dataset.performedPercentage : summary.dataset.totalPercentage;
-            barFillEl.style.width = percentage + '%';
-            percentageEl.textContent = percentage + '% complete';
-        });
-    }
 });
 </script>
 @endsection

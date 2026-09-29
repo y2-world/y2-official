@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Concerns;
 
+use App\Models\DbAlbum;
 use App\Models\DbConcert;
+use App\Models\DbSingle;
 use App\Models\DbSetlist;
 use App\Models\DbSong;
 use App\Models\SlSetlist;
@@ -72,6 +74,62 @@ trait ComputesDbSongStamps
         }
 
         return $everPerformedUserSongIds;
+    }
+
+    // スタンプ帳の絞り込み用。シングルは表題曲（両A面は「A / B」の曲数ぶん先頭から、
+    // EPは全曲）、アルバムはベスト盤も含めtracklistの収録曲すべてを対象にする。
+    // exceptionは表記違いの表示名にも使われるため、曲IDがあれば収録曲として数える。
+    // シングル絞り込み時だけは、スタンプの曲名をシングル側の表記（exception）に差し替える。
+    private function stampDiscographyFilters(int $artistId): array
+    {
+        $songTracks = fn ($tracklist) => collect($tracklist ?? [])
+            ->filter(fn ($track) => is_numeric($track['id'] ?? null));
+
+        $singleTitleTracks = DbSingle::where('artist_id', $artistId)->orderBy('date')->orderBy('id')->get()
+            ->flatMap(function (DbSingle $single) use ($songTracks) {
+                $tracklist = $single->tracklist ?? [];
+                if (!$single->ep) {
+                    $tracklist = array_slice($tracklist, 0, count(preg_split('/[\/／]/u', $single->title ?? '')));
+                }
+                return $songTracks($tracklist)->values();
+            })
+            ->unique(fn ($track) => (int) $track['id']);
+
+        $albums = DbAlbum::where('artist_id', $artistId)->orderBy('date')->orderBy('id')->get()
+            ->map(fn (DbAlbum $album) => [
+                'key' => 'album-' . $album->id,
+                'title' => $album->title,
+                'song_ids' => $songTracks($album->tracklist)->map(fn ($track) => (int) $track['id'])->flip()->all(),
+            ])
+            ->filter(fn ($album) => !empty($album['song_ids']))
+            ->values()
+            ->all();
+
+        return [
+            'single_song_ids' => $singleTitleTracks->mapWithKeys(fn ($track) => [(int) $track['id'] => true])->all(),
+            'single_titles' => $singleTitleTracks
+                ->filter(fn ($track) => filled($track['exception'] ?? null))
+                ->mapWithKeys(fn ($track) => [(int) $track['id'] => $track['exception']])
+                ->all(),
+            'albums' => $albums,
+        ];
+    }
+
+    private function stampFilterKeys(int $songId, array $filters): array
+    {
+        $keys = isset($filters['single_song_ids'][$songId]) ? ['single'] : [];
+        foreach ($filters['albums'] as $album) {
+            if (isset($album['song_ids'][$songId])) {
+                $keys[] = $album['key'];
+            }
+        }
+
+        return $keys;
+    }
+
+    private function stampTrackTitles(int $songId, array $filters): array
+    {
+        return isset($filters['single_titles'][$songId]) ? ['single' => $filters['single_titles'][$songId]] : [];
     }
 
     // Yuki本人が実際にライブで演奏した記録（SlSetlist、フェスのゲスト出演含む）がある
