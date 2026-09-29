@@ -36,18 +36,21 @@
                                              無いと、Summaryだけ見てもどの公演を元にした比較表なのか
                                              分からないため。 --}}
                                         @php
-                                            // 通常表示（_setlist_rows.blade.php）と同じrenderSubtitleWithGreyedVenues
-                                            // で日付を太字・地名をグレー小文字にした上で、各パターンのsubtitleを
-                                            // 1行ずつ連結する（1公演のsubtitle自体が複数行のことがあるため、
-                                            // まずrenderSubtitleWithGreyedVenuesが返す行配列をflattenする）。
-                                            // 日付+会場名はrenderSubtitleWithGreyedVenues内でひとまとまりにし、
-                                            // パターンラベル自体はモバイルで箱にせず、タイトル内に詰めて折り返す。
+                                            // 各パターンのsubtitleを日付・会場グレー表示で整形する
+                                            // （renderSubtitleWithGreyedVenues使用）。
+                                            // 実データはsubtitleの改行がすべてスペースに統一されているため、
+                                            // 各パターンは常に1行の出力になる。
                                             $rowPatternLabels = $tourSetlists
                                                 ->filter(fn ($m) => ($m->row ?? 1) == $rowNum)
                                                 ->sortBy('order_no')
-                                                ->flatMap(fn ($m) => renderSubtitleWithGreyedVenues($m->subtitle ?? '')['lines'])
-                                                ->filter(fn ($line) => trim(strip_tags($line)) !== '')
-                                                ->map(fn ($line) => '<span class="setlist-summary-pattern-label">' . $line . '</span>')
+                                                ->map(function ($m) {
+                                                    $rendered = renderSubtitleWithGreyedVenues($m->subtitle ?? '');
+                                                    $line = $rendered['lines'][0] ?? '';
+                                                    return trim(strip_tags($line)) !== ''
+                                                        ? '<span class="setlist-summary-pattern-label">' . $line . '</span>'
+                                                        : null;
+                                                })
+                                                ->filter(fn ($line) => $line !== null)
                                                 ->values();
                                         @endphp
                                         {{-- 表示するrowが複数ある場合に、グループ名が無いrowは
