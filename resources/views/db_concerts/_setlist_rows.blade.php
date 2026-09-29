@@ -73,20 +73,16 @@
 
                             @php
                                 $subtitleRendered = renderSubtitleWithGreyedVenues($setlistModel->subtitle ?? '');
-                                $subtitleRenderedLines = $subtitleRendered['lines'];
-                                $patternLabel = trim(strip_tags($setlistModel->subtitle ?? '')) !== ''
-                                    ? trim(strip_tags($setlistModel->subtitle))
+                                $subtitleHtml = $subtitleRendered['lines'][0] ?? '';
+                                $rawSubtitle = trim(strip_tags($setlistModel->subtitle ?? ''));
+                                $patternLabel = $rawSubtitle !== ''
+                                    ? preg_replace('/\s+/', ' ', $rawSubtitle)
                                     : 'パターン' . $loop->iteration;
                             @endphp
                             @if (count($setlist) || count($encore))
                                 <div class="live-column-wrap setlist-pattern-wrap" id="setlist-pattern-{{ $setlistModel->id }}" data-pattern-label="{{ $patternLabel }}">
                                     <div class="setlist-subtitle-area">
-                                        @if (count($subtitleRenderedLines))
-                                            @php
-                                                // 元データ上の改行を固定せず、モバイル幅に合わせて
-                                                // 日付・会場ラベルを連続して折り返せるようにする。
-                                                $subtitleHtml = implode(' ', $subtitleRenderedLines);
-                                            @endphp
+                                        @if ($subtitleHtml)
                                             <h5 class="setlist-subtitle-heading setlist-subtitle-auto"
                                                 onclick="if (this.classList.contains('setlist-subtitle-collapsible')) this.classList.toggle('is-expanded')">
                                                 {!! $subtitleHtml !!}<span class="setlist-subtitle-toggle" aria-hidden="true"><i class="fa-solid fa-angle-down"></i><i class="fa-solid fa-angle-up"></i></span>
