@@ -23,10 +23,11 @@ document.addEventListener('DOMContentLoaded', function () {
         slot._trackOrders = slot.dataset.trackOrders ? JSON.parse(slot.dataset.trackOrders) : {};
     });
 
-    // アルバム絞り込み時はそのアルバムの曲順、それ以外は元の並び順に並べ替える
+    // アルバム絞り込み時はそのアルバムの曲順、シングル絞り込み時は発売順、
+    // それ以外は元の並び順に並べ替える
     function orderedSlots(key) {
         const ordered = slots.slice();
-        if (key && key.indexOf('album-') === 0) {
+        if (key) {
             ordered.sort(function (a, b) {
                 return (a._trackOrders[key] || Infinity) - (b._trackOrders[key] || Infinity);
             });
