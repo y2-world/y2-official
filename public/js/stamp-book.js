@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const barFillEl = document.getElementById('stampSummaryBarFill');
     const percentageEl = document.getElementById('stampSummaryPercentage');
     const noMatchEl = document.getElementById('stampFilterNoMatch');
+    const summary = document.querySelector('.stamp-summary');
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let swapTimer = null;
 
@@ -58,6 +59,32 @@ document.addEventListener('DOMContentLoaded', function () {
         totalEl.textContent = total;
         barFillEl.style.width = percentage + '%';
         percentageEl.textContent = percentage + '% complete';
+
+        const complete = total > 0 && done === total;
+        summary.classList.toggle('is-complete', complete);
+        const old = summary.querySelector('.stamp-sparkles');
+        if (old) {
+            old.remove();
+        }
+        if (complete && !reduceMotion) {
+            sparkle();
+        }
+    }
+
+    // 100%の間は星をきらめかせ続ける（各星の開始をずらして常にどこかが光るようにする）
+    function sparkle() {
+        const layer = document.createElement('div');
+        layer.className = 'stamp-sparkles';
+        for (let i = 0; i < 18; i++) {
+            const star = document.createElement('span');
+            star.className = 'stamp-sparkle';
+            star.style.left = (4 + Math.random() * 92) + '%';
+            star.style.top = (4 + Math.random() * 80) + '%';
+            star.style.setProperty('--size', (8 + Math.random() * 14) + 'px');
+            star.style.animationDelay = (0.5 + Math.random() * 2.4) + 's';
+            layer.appendChild(star);
+        }
+        summary.appendChild(layer);
     }
 
     function showSlots(visibleSlots, animate, key) {

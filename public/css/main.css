@@ -3495,6 +3495,89 @@ h5.setlist-subtitle-heading {
     white-space: normal;
 }
 
+.stamp-summary {
+    position: relative;
+}
+
+.stamp-summary.is-complete .stamp-summary-bar-fill {
+    background: linear-gradient(90deg, #667eea, #764ba2, #f6d365, #764ba2, #667eea);
+    background-size: 300% 100%;
+    animation: stampBarShimmer 2.4s linear infinite;
+}
+
+.stamp-summary.is-complete {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 0 24px rgba(246, 201, 69, 0.45);
+}
+
+.stamp-summary.is-complete::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(90deg, #667eea, #764ba2, #f6d365, #764ba2, #667eea);
+    background-size: 300% 100%;
+    animation: stampBarShimmer 2.4s linear infinite;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+.stamp-summary.is-complete .stamp-summary-percentage {
+    color: #c9a227;
+    font-weight: 500;
+}
+
+@keyframes stampBarShimmer {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: 300% 0;
+    }
+}
+
+.stamp-sparkles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.stamp-sparkle {
+    position: absolute;
+    width: var(--size, 12px);
+    height: var(--size, 12px);
+    margin: calc(var(--size, 12px) / -2) 0 0 calc(var(--size, 12px) / -2);
+    background: linear-gradient(135deg, #fff6c8, #f6c945);
+    clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+    opacity: 0;
+    animation: stampSparkle 2.4s ease-in-out infinite both;
+}
+
+@keyframes stampSparkle {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(0) rotate(0deg);
+    }
+    20% {
+        opacity: 1;
+        transform: scale(1) rotate(45deg);
+    }
+    45% {
+        opacity: 0;
+        transform: scale(0.3) rotate(90deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stamp-summary.is-complete .stamp-summary-bar-fill,
+    .stamp-summary.is-complete::before {
+        animation: none;
+    }
+}
+
 .stamp-filter {
     display: flex;
     justify-content: center;
