@@ -182,7 +182,7 @@ class AttendanceController extends Controller
     // ユーザー登録アーティストは誰が登録したかに関わらず全ユーザーが閲覧・選択できる。
     public function create()
     {
-        $officialArtists = JapaneseNameSorter::sortBy(Artist::whereHas('tours')->where('is_public', true)->get());
+        $officialArtists = JapaneseNameSorter::sortBy(Artist::whereHas('tours')->get());
         $myArtists = JapaneseNameSorter::sortBy(UserArtist::get());
 
         return view('mypage.attendances.create', compact('officialArtists', 'myArtists'));
