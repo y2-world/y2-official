@@ -21,15 +21,13 @@ class DbConcertController extends Controller
         }
 
         $tourSetlists = DbSetlist::where('tour_id', $tour->id)->orderBy('order_no', 'asc')->get();
-        $forceSimpleEncoreMerge = (int) $tour->artist_id === 5;
-
         return $tourSetlists
             ->groupBy(fn ($m) => $m->row ?? 1)
-            ->contains(function ($rowSetlists) use ($songs, $forceSimpleEncoreMerge) {
+            ->contains(function ($rowSetlists) use ($songs) {
                 if ($rowSetlists->count() < 2) {
                     return false;
                 }
-                $summary = buildSetlistPatternSummary($rowSetlists, $songs, $forceSimpleEncoreMerge);
+                $summary = buildSetlistPatternSummary($rowSetlists, $songs);
                 $hasVariantDifference = collect(array_merge($summary['setlist'], $summary['encore']))
                     ->contains(fn ($row) => count($row['variants']) > 1);
                 $setlistCounts = $rowSetlists->map(fn ($s) => count($s->setlist ?? []));
@@ -133,22 +131,15 @@ class DbConcertController extends Controller
             ->groupBy('row')
             ->map(fn ($rows) => $rows->pluck('title')->unique()->values());
 
-        // 福山雅治（artist_id=5）はツアーによってアンコールの構成が公演ごとに
-        // 大きく異なり、かつ同じ曲（例: MELODY）が全公演共通のアンカーとして
-        // 存在するため、LCSアンカー方式だとアンカー前後の曲を誤って別の日替わり
-        // 位置に押し込め合い、崩壊した表示になってしまう。アンコールだけ常に
-        // 単純な位置ベースマージを使う。
-        $forceSimpleEncoreMerge = (int) $artist->id === 5;
-
         // row（同時に見比べる列同士）ごとに、パターンが2つ以上ある場合にSummaryを作る。
         $setlistSummaries = $tourSetlists
             ->groupBy(fn ($m) => $m->row ?? 1)
             ->sortKeys()
-            ->map(function ($rowSetlists) use ($songs, $forceSimpleEncoreMerge, $tours) {
+            ->map(function ($rowSetlists) use ($songs, $tours) {
                 if ($rowSetlists->count() < 2) {
                     return null;
                 }
-                $summary = buildSetlistPatternSummary($rowSetlists, $songs, $forceSimpleEncoreMerge);
+                $summary = buildSetlistPatternSummary($rowSetlists, $songs);
                 // variantsが2件以上の行があれば、当然差異あり。
                 // それに加えて、パターン間で曲数（setlist+encoreの総数）が異なる場合も
                 // 差異ありとみなす。曲数がバラバラだと、日替わり箇所ごとの曲数の違いに
@@ -178,7 +169,7 @@ class DbConcertController extends Controller
                 // 全パターンが同じ曲順・曲目の場合は、同じ行を再マージせず、
                 // 指定公演についてはorder_noが最後のパターンをそのままSummaryに使う。
                 $finalPattern = $rowSetlists->sortBy('order_no')->last();
-                return buildSetlistPatternSummary(collect([$finalPattern]), $songs, $forceSimpleEncoreMerge);
+                return buildSetlistPatternSummary(collect([$finalPattern]), $songs);
             })
             ->filter();
 
@@ -188,9 +179,9 @@ class DbConcertController extends Controller
         $summaryRows = $tourSetlists
             ->groupBy(fn ($m) => $m->row ?? 1)
             ->sortKeys()
-            ->map(function ($rowSetlists, $rowNum) use ($setlistSummaries, $songs, $forceSimpleEncoreMerge) {
+            ->map(function ($rowSetlists, $rowNum) use ($setlistSummaries, $songs) {
                 return $setlistSummaries->get($rowNum)
-                    ?? buildSetlistPatternSummary($rowSetlists, $songs, $forceSimpleEncoreMerge);
+                    ?? buildSetlistPatternSummary($rowSetlists, $songs);
             });
         $previousQuery = $scopeQuery(DbConcert::where('artist_id', $tours->artist_id)
             ->where(function ($q) use ($tours) {
