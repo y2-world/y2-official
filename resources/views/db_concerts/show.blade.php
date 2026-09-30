@@ -129,7 +129,7 @@
                         <ol class="live-column">
                             @foreach (['setlist' => $summary['setlist'], 'encore' => $summary['encore']] as $section => $rows)
                                 @if (count($rows))
-                                    @php $currentEncoreBlock = null; @endphp
+                                    @php $currentEncoreBlock = null; $encoreBlockCount = $section === 'encore' ? collect($rows)->flatMap(fn ($r) => $r['variants'])->max(fn ($v) => (int) ($v['encore_block'] ?? 0)) + 1 : 1; @endphp
                                     @foreach ($rows as $row)
                                         {{-- アンコールは行ごとのブロック（ENCORE / DOUBLE ENCORE …）が変わるところに見出しを挟む --}}
                                         @if ($section === 'encore')
@@ -137,7 +137,7 @@
                                             @if ($rowEncoreBlock !== $currentEncoreBlock)
                                                 @php $currentEncoreBlock = $rowEncoreBlock; @endphp
                                                 <div style="margin: 20px 0 10px;">
-                                                    <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">{{ \App\Support\EncoreBlocks::label($rowEncoreBlock) }}</span>
+                                                    <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">{{ \App\Support\EncoreBlocks::label($rowEncoreBlock, $encoreBlockCount) }}</span>
                                                 </div>
                                             @endif
                                         @endif

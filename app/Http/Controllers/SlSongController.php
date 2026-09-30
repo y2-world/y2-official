@@ -135,6 +135,26 @@ class SlSongController extends Controller
             $titles = $dbSong->performanceTitlesIn(array_merge($tourSetlist->setlist ?? [], $tourSetlist->encore ?? []));
             $tourTitles[$tourSetlist->tour_id] = array_values(array_unique(array_merge($tourTitles[$tourSetlist->tour_id] ?? [], $titles)));
         }
+        // 福山雅治のDOUBLE ENCOREは弾き語りなので、DOUBLE ENCOREで演奏した公演にはギターアイコンを出す
+        $isHikigatariArtist = ($dbSong && (int) $dbSong->artist_id === \App\Support\EncoreBlocks::HIKIGATARI_ARTIST_ID)
+            || optional($song->artist)->name === '福山雅治';
+        $hikigatariSetlistIds = [];
+        $hikigatariTourIds = [];
+        if ($isHikigatariArtist) {
+            foreach ($setlists as $setlist) {
+                $doubleEncore = \App\Support\EncoreBlocks::doubleEncore((array) ($setlist->encore ?? []));
+                $matches = fn ($entry) => is_numeric($entry) ? (int) $entry === (int) $song->id : trim(preg_replace('/\s*\[[^\]]+\]/u', '', $entry)) === $title;
+                if (\App\Support\PerformanceTitles::in($doubleEncore, $matches, $title) !== []) {
+                    $hikigatariSetlistIds[$setlist->id] = true;
+                }
+            }
+            foreach ($performedTourSetlists as $tourSetlist) {
+                if ($dbSong->isHikigatariIn($tourSetlist)) {
+                    $hikigatariTourIds[$tourSetlist->tour_id] = true;
+                }
+            }
+        }
+
         $performanceTitles = \App\Support\PerformanceTitles::options(...array_values($tourTitles), ...array_values($setlistTitles));
         $initialTitle = \App\Support\PerformanceTitles::pick($performanceTitles, $request->query('title'));
 
@@ -174,7 +194,10 @@ class SlSongController extends Controller
             'setlistTitles',
             'tourTitles',
             'performanceTitles',
-            'initialTitle'
+            'initialTitle',
+            'isHikigatariArtist',
+            'hikigatariSetlistIds',
+            'hikigatariTourIds'
         ));
     }
 

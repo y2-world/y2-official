@@ -2,7 +2,7 @@
 
 namespace App\Support;
 
-// アンコールを「ENCORE / DOUBLE ENCORE / TRIPLE ENCORE」のブロックに分ける。
+// アンコールを「ENCORE 1 / ENCORE 2 / …」のブロックに分ける（2つ目以降のアンコールがDOUBLE ENCORE）。
 // アンコールの曲に encore_block_start（ここから次のアンコール）が付いていれば、そこで区切る。
 // 付いていない既存データは、今までどおり1つのENCOREとして扱われる。
 class EncoreBlocks
@@ -15,9 +15,10 @@ class EncoreBlocks
     // DOUBLE ENCOREの統計を出す
     public const HIKIGATARI_ARTIST_ID = 5;
 
-    public static function label(int $block): string
+    // アンコールが1つだけなら「ENCORE」、2つ以上あれば「ENCORE 1」「ENCORE 2」…
+    public static function label(int $block, int $blockCount = 1): string
     {
-        return ['ENCORE', 'DOUBLE ENCORE', 'TRIPLE ENCORE'][$block] ?? ($block + 1) . 'TH ENCORE';
+        return $blockCount > 1 ? 'ENCORE ' . ($block + 1) : 'ENCORE';
     }
 
     // アンコールの各曲が何番目のブロックか（0 = ENCORE, 1 = DOUBLE ENCORE, ...）を、曲の並びと同じ順で返す
@@ -35,15 +36,16 @@ class EncoreBlocks
         return $indexes;
     }
 
-    // [['label' => null, 'block' => null, 'items' => 本編], ['label' => 'ENCORE', 'block' => 0, 'items' => [...]], ...]
+    // [['label' => null, 'block' => null, 'items' => 本編], ['label' => 'ENCORE 1', 'block' => 0, 'items' => [...]], ...]
     public static function sections(array $setlist, array $encore): array
     {
         $sections = [['label' => null, 'block' => null, 'items' => $setlist]];
         $indexes = self::blockIndexes($encore);
+        $blockCount = $indexes ? max($indexes) + 1 : 0;
         foreach (array_values($encore) as $i => $item) {
             $block = $indexes[$i];
             if (!isset($sections[$block + 1])) {
-                $sections[$block + 1] = ['label' => self::label($block), 'block' => $block, 'items' => []];
+                $sections[$block + 1] = ['label' => self::label($block, $blockCount), 'block' => $block, 'items' => []];
             }
             $sections[$block + 1]['items'][] = $item;
         }

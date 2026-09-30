@@ -235,6 +235,17 @@ class DbSong extends Model
         }, $this->title);
     }
 
+    // 福山雅治のDOUBLE ENCOREは弾き語りなので、このセットリストでこの曲がDOUBLE ENCOREで演奏されたかを返す
+    // （楽曲ページで弾き語りアイコンを出すため）。福山雅治以外のアーティストでは常にfalse
+    public function isHikigatariIn(DbSetlist $setlist): bool
+    {
+        if ((int) $this->artist_id !== \App\Support\EncoreBlocks::HIKIGATARI_ARTIST_ID) {
+            return false;
+        }
+
+        return $this->performanceTitlesIn(\App\Support\EncoreBlocks::doubleEncore($setlist->encore ?? [])) !== [];
+    }
+
     // この曲が演奏されたDbSetlist（performedTourSetlists()と同じ抽出結果）のうち、
     // ログイン中の外部ユーザー本人が「参加した」と記録しているものに対応するツアーを、
     // 開催日（tour.date1）降順で返す（未ログイン時は空）。

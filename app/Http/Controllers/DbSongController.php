@@ -192,6 +192,31 @@ class DbSongController extends Controller
                 $secondTabTitles[$setlist->tour_id] = array_values(array_unique(array_merge($secondTabTitles[$setlist->tour_id] ?? [], $titles)));
             }
         }
+        // 福山雅治のDOUBLE ENCOREは弾き語りなので、DOUBLE ENCOREで演奏した公演の行にギターアイコンを出す
+        $isHikigatariArtist = (int) $songs->artist_id === \App\Support\EncoreBlocks::HIKIGATARI_ARTIST_ID;
+        $hikigatariTourIds = [];
+        $hikigatariSecondTabIds = [];
+        if ($isHikigatariArtist) {
+            foreach ($tourSetlists as $setlist) {
+                if ($songs->isHikigatariIn($setlist)) {
+                    $hikigatariTourIds[$setlist->tour_id] = true;
+                }
+            }
+            if ($secondTab === 'yuki') {
+                foreach ($secondTabSetlists as $setlist) {
+                    if ($songs->performanceTitlesIn(\App\Support\EncoreBlocks::doubleEncore((array) ($setlist->encore ?? [])), $slSongIds) !== []) {
+                        $hikigatariSecondTabIds[$setlist->id] = true;
+                    }
+                }
+            } elseif ($secondTab === 'mine') {
+                foreach ($attended as $attendance) {
+                    if ($attendance->dbSetlist && $songs->isHikigatariIn($attendance->dbSetlist)) {
+                        $hikigatariSecondTabIds[$attendance->dbSetlist->tour_id] = true;
+                    }
+                }
+            }
+        }
+
         $performanceTitles = \App\Support\PerformanceTitles::options(...array_values($tourTitles), ...array_values($secondTabTitles));
         // スタンプ等から ?title= で来た場合は、その表記を選んだ状態で開く
         $initialTitle = \App\Support\PerformanceTitles::pick($performanceTitles, $request->query('title'));
@@ -199,6 +224,9 @@ class DbSongController extends Controller
         return view('db_songs.show', compact(
             'tourTitles',
             'secondTabTitles',
+            'isHikigatariArtist',
+            'hikigatariTourIds',
+            'hikigatariSecondTabIds',
             'performanceTitles',
             'initialTitle',
             'songs',

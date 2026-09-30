@@ -283,6 +283,10 @@ class SlSetlistResource extends Resource
                                     ->schema([
                                         Forms\Components\Grid::make(2)
                                             ->schema([
+                                                // ダブルアンコールなど、アンコールを複数回に分けるときに、次のアンコールの最初の曲に付ける
+                                                Forms\Components\Toggle::make('encore_block_start')
+                                                    ->label('ここから次のアンコール（ENCORE 2 など）')
+                                                    ->default(false),
                                                 Forms\Components\Toggle::make('medley')
                                                     ->label('メドレー')
                                                     ->default(false),

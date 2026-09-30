@@ -311,7 +311,7 @@ class DbSetlistResource extends Resource
                                     ->schema([
                                         // ダブルアンコールなど、アンコールを複数回に分けるときに、次のアンコールの最初の曲に付ける
                                         Forms\Components\Toggle::make('encore_block_start')
-                                            ->label('ここから次のアンコール（DOUBLE ENCORE など）')
+                                            ->label('ここから次のアンコール（ENCORE 2 など）')
                                             ->default(false)
                                             ->inline(false)
                                             ->live()
@@ -385,7 +385,7 @@ class DbSetlistResource extends Resource
                                         $blockLabel = '';
                                         if (!empty($item['encore_block_start'])) {
                                             $block = \App\Support\EncoreBlocks::blockIndexes(array_values($items))[array_search($uuid, array_column(array_values($items), '_uuid'), true)] ?? 0;
-                                            $blockLabel = '【' . \App\Support\EncoreBlocks::label($block) . '】 ';
+                                            $blockLabel = '【ENCORE ' . ($block + 1) . '】 ';
                                         }
                                         if ($isSkipped) {
                                             return trim($blockLabel);

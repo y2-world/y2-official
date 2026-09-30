@@ -113,6 +113,7 @@
                             <th class="mobile">#</th>
                             <th class="mobile">開催日</th>
                             <th class="mobile">タイトル</th>
+                            @if ($isHikigatariArtist)<th class="mobile" title="弾き語り（DOUBLE ENCORE）"><i class="fa-solid fa-guitar"></i></th>@endif
                         </tr>
                     </thead>
                     <tbody>
@@ -127,6 +128,7 @@
                                 @endif
                                 <td class="td_title"><a href="{{ route('live.show', $tour->id) }}">{{ $tour->title }}</a>
                                 </td>
+                                @if ($isHikigatariArtist)<td class="mobile" style="width: 1%; text-align: center;">@if (isset($hikigatariTourIds[$tour->id]))<i class="fa-solid fa-guitar" title="弾き語り（DOUBLE ENCORE）" style="color: #764ba2;"></i>@endif</td>@endif
                             </tr>
                         @endforeach
                     </tbody>
@@ -146,6 +148,7 @@
                             <th class="mobile">#</th>
                             <th class="mobile">開催日</th>
                             <th class="mobile">タイトル</th>
+                            @if ($isHikigatariArtist)<th class="mobile" title="弾き語り（DOUBLE ENCORE）"><i class="fa-solid fa-guitar"></i></th>@endif
                             <th class="pc">会場</th>
                         </tr>
                     </thead>
@@ -155,6 +158,7 @@
                                 <td></td>
                                 <td class="td_date">{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
                                 <td class="td_title"><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
+                                @if ($isHikigatariArtist)<td class="mobile" style="width: 1%; text-align: center;">@if (isset($hikigatariSecondTabIds[$setlist->id]))<i class="fa-solid fa-guitar" title="弾き語り（DOUBLE ENCORE）" style="color: #764ba2;"></i>@endif</td>@endif
                                 <td class="pc"><a href="{{ url('/venue?keyword=' . urlencode($setlist->venue)) }}">{{ $setlist->venue }}</a></td>
                             </tr>
                         @endforeach

@@ -250,16 +250,16 @@
                 @if (!$setlists->fes)
                     @php $count = renderSetlist($setlists->setlist, $setlists->artist_id, [], 1, empty($setlists->encore)); @endphp
 
-                    {{-- アンコール --}}
+                    {{-- アンコール（ENCORE / DOUBLE ENCORE … のブロックごとに見出しを挟む。番号は本編からの続き） --}}
                     @if (!empty($setlists->encore))
-                        <br>
-                        <div style="margin: 0;">
-                            <span style="color: #999; font-weight: 400; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
-                        </div>
-                        @php
-                            $count += renderEncoreSetlist($setlists->encore, $setlists->artist_id);
-                            echo '</ol>';
-                        @endphp
+                        @foreach (array_slice(\App\Support\EncoreBlocks::sections([], (array) $setlists->encore), 1) as $encoreSection)
+                            <br>
+                            <div style="margin: 0;">
+                                <span style="color: #999; font-weight: 400; font-size: 0.9rem; letter-spacing: 2px;">{{ $encoreSection['label'] }}</span>
+                            </div>
+                            @php $count += renderEncoreSetlist($encoreSection['items'], $setlists->artist_id); @endphp
+                        @endforeach
+                        @php echo '</ol>'; @endphp
                     @endif
                 @endif
 
