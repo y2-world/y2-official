@@ -305,14 +305,25 @@ class MyPageStatsController extends Controller
         // そちらでしか演奏されていない曲は台紙上で区別できるようにする
         $playedDbSongIdsNormal = [];
         $playedDbSongIdsFes = [];
+        // 福山雅治のDOUBLE ENCORE（2つ目以降のアンコール）は弾き語りなので、そこでしか聴いていない曲はギター柄のスタンプにする
+        $playedDbSongIdsDoubleEncore = [];
+        $playedDbSongIdsOutsideDoubleEncore = [];
         foreach ($setlists as $setlist) {
             $isFes = !in_array((int) ($setlist->tour->type ?? 0), [0, 1], true);
-            foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
+            $encore = array_values((array) ($setlist->encore ?? []));
+            $encoreBlocks = \App\Support\EncoreBlocks::blockIndexes($encore);
+            foreach (array_merge($setlist->setlist ?? [], $encore) as $position => $s) {
                 if (isset($s['song']) && is_numeric($s['song'])) {
                     if ($isFes) {
                         $playedDbSongIdsFes[(int) $s['song']] = true;
                     } else {
                         $playedDbSongIdsNormal[(int) $s['song']] = true;
+                    }
+                    $encoreIndex = $position - count($setlist->setlist ?? []);
+                    if ($encoreIndex >= 0 && ($encoreBlocks[$encoreIndex] ?? 0) >= \App\Support\EncoreBlocks::DOUBLE_ENCORE) {
+                        $playedDbSongIdsDoubleEncore[(int) $s['song']] = true;
+                    } else {
+                        $playedDbSongIdsOutsideDoubleEncore[(int) $s['song']] = true;
                     }
                 }
             }
@@ -320,13 +331,16 @@ class MyPageStatsController extends Controller
 
         $playedDbSongIds = $playedDbSongIdsNormal + $playedDbSongIdsFes;
         $fesOnlyDbSongIds = array_diff_key($playedDbSongIdsFes, $playedDbSongIdsNormal);
+        $hikigatariDbSongIds = (int) $artistId === \App\Support\EncoreBlocks::HIKIGATARI_ARTIST_ID
+            ? array_diff_key($playedDbSongIdsDoubleEncore, $playedDbSongIdsOutsideDoubleEncore)
+            : [];
 
         $everPerformedDbSongIds = $this->everPerformedDbSongIds((int) $artistId);
 
         $stampFilters = $this->stampDiscographyFilters((int) $artistId);
 
         $dbSongs = DbSong::where('artist_id', $artistId)->orderBy('sort_order')->get();
-        $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds, $fesOnlyDbSongIds, $stampFilters) {
+        $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds, $fesOnlyDbSongIds, $hikigatariDbSongIds, $stampFilters) {
             return [
                 'song_id' => $song->id,
                 'song_url' => route('mypage.attendances.index', ['song_id' => 'official-' . $song->id]),
@@ -334,6 +348,7 @@ class MyPageStatsController extends Controller
                 'done' => isset($playedDbSongIds[$song->id]),
                 'never_performed' => !isset($everPerformedDbSongIds[$song->id]),
                 'fes_only' => isset($fesOnlyDbSongIds[$song->id]),
+                'hikigatari_only' => isset($hikigatariDbSongIds[$song->id]),
                 'filter_keys' => $this->stampFilterKeys($song->id, $stampFilters),
                 'track_titles' => $this->stampTrackTitles($song->id, $stampFilters),
                 'track_orders' => $this->stampTrackOrders($song->id, $stampFilters),

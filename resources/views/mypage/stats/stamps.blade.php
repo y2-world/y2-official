@@ -47,7 +47,7 @@
                     @else
                         <div class="stamp-book">
                             @foreach ($stamps as $stamp)
-                                <div class="stamp-slot {{ $stamp['done'] ? 'is-stamped' : '' }} {{ $stamp['never_performed'] ? 'is-never-performed' : '' }} {{ $stamp['fes_only'] ? 'is-fes-only' : '' }}"
+                                <div class="stamp-slot {{ $stamp['done'] ? 'is-stamped' : '' }} {{ $stamp['never_performed'] ? 'is-never-performed' : '' }} {{ $stamp['fes_only'] ? 'is-fes-only' : '' }} {{ !empty($stamp['hikigatari_only']) ? 'is-hikigatari-only' : '' }}"
                                     data-filter-keys="{{ implode(' ', $stamp['filter_keys'] ?? []) }}"
                                     data-done="{{ $stamp['done'] ? 1 : 0 }}"
                                     data-never-performed="{{ $stamp['never_performed'] ? 1 : 0 }}"
@@ -56,7 +56,12 @@
                                     <div class="stamp-slot-frame js-stamp-tap" @if ($stamp['never_performed']) title="ライブで演奏されたことがない曲です" @endif>
                                         @if ($stamp['done'])
                                             <div class="stamp-mark">
-                                                <span class="stamp-mark-text">{{ $stamp['fes_only'] ? 'FES' : 'LIVE' }}</span>
+                                                @if (!empty($stamp['hikigatari_only']))
+                                                    {{-- 福山雅治のDOUBLE ENCORE（弾き語り）でしか聴いていない曲 --}}
+                                                    <span class="stamp-mark-text" title="弾き語り（DOUBLE ENCORE）でのみ"><i class="fa-solid fa-guitar"></i></span>
+                                                @else
+                                                    <span class="stamp-mark-text">{{ $stamp['fes_only'] ? 'FES' : 'LIVE' }}</span>
+                                                @endif
                                             </div>
                                         @endif
                                     </div>

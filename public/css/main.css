@@ -3707,6 +3707,22 @@ h5.setlist-subtitle-heading {
     box-shadow: 0 0 0 3px rgba(47, 109, 178, 0.15) inset;
 }
 
+/* 福山雅治のDOUBLE ENCORE（弾き語り）でのみ聴いた曲は、茶色のギター柄のスタンプにする */
+.stamp-slot.is-stamped.is-hikigatari-only .stamp-slot-frame {
+    border-color: #8b5a2b;
+    background: rgba(139, 90, 43, 0.08);
+}
+
+.stamp-slot.is-hikigatari-only .stamp-mark {
+    border-color: #8b5a2b;
+    color: #8b5a2b;
+    box-shadow: 0 0 0 3px rgba(139, 90, 43, 0.15) inset;
+}
+
+.stamp-slot.is-hikigatari-only .stamp-mark-text .fa-guitar {
+    font-size: 2.8em;
+}
+
 .stamp-slot.is-never-performed .stamp-slot-frame {
     background: repeating-linear-gradient(
         45deg,

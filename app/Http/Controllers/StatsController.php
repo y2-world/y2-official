@@ -825,10 +825,22 @@ class StatsController extends Controller
         $playedSlSongIdsFes = [];
         $setlists = SlSetlist::where('date', '<=', $today)->get();
 
+        // 福山雅治のDOUBLE ENCORE（2つ目以降のアンコール）は弾き語りなので、そこでしか聴いていない曲は
+        // 台紙上でギター柄のスタンプにする。DOUBLE ENCORE以外（本編・1つ目のアンコール・フェス）で聴いたかも別に集める
+        $playedSlSongIdsDoubleEncore = [];
+        $playedSlSongIdsOutsideDoubleEncore = [];
         foreach ($setlists as $setlist) {
-            foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $songData) {
+            $encore = array_values((array) ($setlist->encore ?? []));
+            $encoreBlocks = \App\Support\EncoreBlocks::blockIndexes($encore);
+            foreach (array_merge($setlist->setlist ?? [], $encore) as $position => $songData) {
                 if (isset($songData['song']) && is_numeric($songData['song'])) {
                     $playedSlSongIdsNormal[(int)$songData['song']] = true;
+                    $encoreIndex = $position - count($setlist->setlist ?? []);
+                    if ($encoreIndex >= 0 && ($encoreBlocks[$encoreIndex] ?? 0) >= \App\Support\EncoreBlocks::DOUBLE_ENCORE) {
+                        $playedSlSongIdsDoubleEncore[(int)$songData['song']] = true;
+                    } else {
+                        $playedSlSongIdsOutsideDoubleEncore[(int)$songData['song']] = true;
+                    }
                 }
             }
 
@@ -836,6 +848,7 @@ class StatsController extends Controller
             foreach ($fesSongs as $songData) {
                 if (isset($songData['song']) && is_numeric($songData['song'])) {
                     $playedSlSongIdsFes[(int)$songData['song']] = true;
+                    $playedSlSongIdsOutsideDoubleEncore[(int)$songData['song']] = true;
                 }
             }
         }
@@ -846,6 +859,7 @@ class StatsController extends Controller
 
         $playedDbSongIds = [];
         $fesOnlyDbSongIds = [];
+        $hikigatariDbSongIds = [];
         foreach ($slSongToDbSongId as $slSongId => $dbSongId) {
             $playedNormal = isset($playedSlSongIdsNormal[$slSongId]);
             $playedFes = isset($playedSlSongIdsFes[$slSongId]);
@@ -854,6 +868,12 @@ class StatsController extends Controller
             }
             if ($playedFes && !$playedNormal) {
                 $fesOnlyDbSongIds[(int)$dbSongId] = true;
+            }
+            if ((int) $artistId === \App\Support\EncoreBlocks::HIKIGATARI_ARTIST_ID && isset($playedSlSongIdsDoubleEncore[$slSongId])) {
+                $hikigatariDbSongIds[(int)$dbSongId] = ($hikigatariDbSongIds[(int)$dbSongId] ?? true) && !isset($playedSlSongIdsOutsideDoubleEncore[$slSongId]);
+            } elseif ($playedNormal || $playedFes) {
+                // 同じ曲に紐づく別のSlSongでDOUBLE ENCORE以外で聴いていれば、弾き語りのみではない
+                $hikigatariDbSongIds[(int)$dbSongId] = false;
             }
         }
 
@@ -864,13 +884,14 @@ class StatsController extends Controller
         $stampFilters = $this->stampDiscographyFilters((int)$artistId);
 
         $dbSongs = DbSong::where('artist_id', $artistId)->orderBy('sort_order')->get();
-        $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds, $fesOnlyDbSongIds, $stampFilters) {
+        $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds, $fesOnlyDbSongIds, $hikigatariDbSongIds, $stampFilters) {
             return [
                 'song_id' => $song->id,
                 'title' => $song->title,
                 'done' => isset($playedDbSongIds[$song->id]),
                 'never_performed' => !isset($everPerformedDbSongIds[$song->id]),
                 'fes_only' => isset($fesOnlyDbSongIds[$song->id]),
+                'hikigatari_only' => !empty($hikigatariDbSongIds[$song->id]),
                 'filter_keys' => $this->stampFilterKeys($song->id, $stampFilters),
                 'track_titles' => $this->stampTrackTitles($song->id, $stampFilters),
                 'track_orders' => $this->stampTrackOrders($song->id, $stampFilters),
