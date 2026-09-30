@@ -12,6 +12,16 @@
                 <div class="element js-fadein">
                     <h1 class="stats-title">{{ isset($artist) ? $artist->name . ' Statistics' : 'Statistics' }}</h1>
                     <p class="stats-subtitle">{{ isset($artist) ? 'セットリスト統計' : 'ライブ演奏履歴とデータ分析' }}</p>
+                    @if (!empty($isHikigatariArtist))
+                        {{-- 福山雅治のDOUBLE ENCORE（弾き語り）を除いて数える切り替え。演奏回数とアンコールのランキングに効く --}}
+                        <div style="text-align: center; margin: -10px 0 25px;">
+                            <label style="display: inline-flex; align-items: center; gap: 6px; color: white; cursor: pointer;">
+                                <input type="checkbox" @if ($excludeDoubleEncore) checked @endif
+                                    onchange="var u = new URL(location.href); if (this.checked) { u.searchParams.set('exclude_double_encore', '1'); } else { u.searchParams.delete('exclude_double_encore'); } location.href = u.toString();">
+                                DOUBLE ENCOREを除く
+                            </label>
+                        </div>
+                    @endif
 
                     @isset($artist)
                     <!-- Overall Stats Cards -->
@@ -154,6 +164,57 @@
                             </table>
                         </div>
                     </div>
+
+                    @if (!empty($isHikigatariArtist) && !empty($doubleEncoreSongStats))
+                    @php $doubleEncoreSongStatsTop = array_slice($doubleEncoreSongStats, 0, 10); @endphp
+                    <!-- DOUBLE ENCORE Songs Section（福山雅治のみ。DOUBLE ENCOREは弾き語り） -->
+                    <div class="stats-section visible">
+                        <h2 class="section-title">
+                            <i class="fas fa-guitar"></i> Most Performed DOUBLE ENCORE Songs
+                        </h2>
+                        <div class="stats-table-container">
+                            <table class="stats-table">
+                                <thead>
+                                    <tr>
+                                        <th class="rank-col">Rank</th>
+                                        <th>Song Title</th>
+                                        <th class="count-col">Times Performed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($doubleEncoreSongStatsTop as $index => $song)
+                                    @php
+                                        $showRank = $index === 0 || $doubleEncoreSongStatsTop[$index - 1]['count'] !== $song['count'];
+                                        $actualRank = $index + 1;
+                                    @endphp
+                                    <tr>
+                                        <td class="rank-col">
+                                            @if($showRank)
+                                                @if($index === 0)
+                                                    <span class="rank-badge gold">🏆</span>
+                                                @elseif($index === 1)
+                                                    <span class="rank-badge silver">🥈</span>
+                                                @elseif($index === 2)
+                                                    <span class="rank-badge bronze">🥉</span>
+                                                @else
+                                                    <span class="rank-number">{{ $actualRank }}</span>
+                                                @endif
+                                            @endif
+                                        </td>
+                                        <td class="song-title">
+                                            <a href="{{ url('/database/songs/' . $song['song_id']) }}" class="stats-link">{{ $song['title'] }}</a>
+                                        </td>
+                                        <td class="count-col">
+                                            <span class="count-badge">{{ $song['count'] }}</span>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    @endif
 
                     <!-- Most Opening Songs Section -->
                     <div class="stats-section visible">

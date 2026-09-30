@@ -49,7 +49,7 @@
                             <div class="unique-tour-toggle" style="margin-left: 0;">
                                 <label class="unique-tour-label">
                                     <input type="checkbox" id="uniqueTourCheckboxMypageArtist" class="unique-tour-checkbox">
-                                    <span class="unique-tour-text">Count same-named tours only once</span>
+                                    <span class="unique-tour-text">同ツアーを除く</span>
                                 </label>
                             </div>
                         </div>

@@ -61,7 +61,9 @@ class StatsController extends Controller
             $type = in_array($request->get('type'), ['tours', 'events'], true)
                 ? $request->get('type')
                 : 'all';
-            return $this->getDatabaseStats((int)$artistId, $type);
+            // 福山雅治のDOUBLE ENCORE（弾き語り）を除いて数える切り替え（福山雅治以外では常にオフ）
+            $excludeDoubleEncore = (int)$artistId === \App\Support\EncoreBlocks::HIKIGATARI_ARTIST_ID && $request->boolean('exclude_double_encore');
+            return $this->getDatabaseStats((int)$artistId, $type, $excludeDoubleEncore);
         }
 
         // Personal stats (参加したライブの履歴)
@@ -386,12 +388,14 @@ class StatsController extends Controller
     // Database統計（ツアー情報）
     // =====================================
 
-    private function getDatabaseStats(int $artistId, string $type = 'all')
+    private function getDatabaseStats(int $artistId, string $type = 'all', bool $excludeDoubleEncore = false)
     {
         $artist = Artist::findOrFail($artistId);
         $overallStats = $this->getDatabaseOverallStats($artistId, $type);
-        $songStats = $this->getDatabaseSongStats($artistId, $type);
-        $encoreSongStats = $this->getDatabaseEncoreSongStats($artistId, $type);
+        $songStats = $this->getDatabaseSongStats($artistId, $type, $excludeDoubleEncore);
+        $encoreSongStats = $this->getDatabaseEncoreSongStats($artistId, $type, $excludeDoubleEncore);
+        $isHikigatariArtist = $artistId === \App\Support\EncoreBlocks::HIKIGATARI_ARTIST_ID;
+        $doubleEncoreSongStats = $isHikigatariArtist ? $this->getDatabaseDoubleEncoreSongStats($artistId, $type) : [];
         $openingSongStats = $this->getDatabaseOpeningSongStats($artistId, $type);
         $longestSetlists = $this->getDatabaseLongestSetlists($artistId, $type);
         $yearStats = $this->getDatabaseYearStats($artistId, $type);
@@ -401,6 +405,9 @@ class StatsController extends Controller
             'overallStats',
             'songStats',
             'encoreSongStats',
+            'doubleEncoreSongStats',
+            'isHikigatariArtist',
+            'excludeDoubleEncore',
             'openingSongStats',
             'longestSetlists',
             'yearStats'
@@ -443,7 +450,15 @@ class StatsController extends Controller
         ];
     }
 
-    private function getDatabaseSongStats(int $artistId, string $type = 'all')
+    // DOUBLE ENCOREを除くときは、アンコールのうちENCORE 1だけを数える
+    private function statsEncore($setlist, bool $excludeDoubleEncore): array
+    {
+        $encore = array_values((array) ($setlist->encore ?? []));
+
+        return $excludeDoubleEncore ? \App\Support\EncoreBlocks::withoutDoubleEncore($encore) : $encore;
+    }
+
+    private function getDatabaseSongStats(int $artistId, string $type = 'all', bool $excludeDoubleEncore = false)
     {
         $songArtistIds = DbSong::pluck('artist_id', 'id');
         $tourIds = $this->databaseConcertIds($this->crossoverTourArtistIds($artistId), $type);
@@ -451,7 +466,7 @@ class StatsController extends Controller
         $songTourCounts = [];
 
         foreach ($tourSetlists as $setlist) {
-            foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
+            foreach (array_merge($setlist->setlist ?? [], $this->statsEncore($setlist, $excludeDoubleEncore)) as $s) {
                 if (isset($s['song']) && is_numeric($s['song']) && ($songArtistIds[(int)$s['song']] ?? null) === $artistId) {
                     $songId = (int)$s['song'];
                     $tourId = $setlist->tour_id;
@@ -499,7 +514,31 @@ class StatsController extends Controller
             ->get();
     }
 
-    private function getDatabaseEncoreSongStats(int $artistId, string $type = 'all')
+    // 福山雅治のDOUBLE ENCORE（弾き語り）で演奏された曲。数え方は他のランキングと同じく、演奏されたツアーの数
+    private function getDatabaseDoubleEncoreSongStats(int $artistId, string $type = 'all')
+    {
+        $songArtistIds = DbSong::pluck('artist_id', 'id');
+        $tourIds = $this->databaseConcertIds([$artistId], $type);
+        $counts = [];
+        foreach (DbSetlist::whereIn('tour_id', $tourIds)->get() as $setlist) {
+            foreach (\App\Support\EncoreBlocks::doubleEncore((array) ($setlist->encore ?? [])) as $s) {
+                if (isset($s['song']) && is_numeric($s['song']) && ($songArtistIds[(int)$s['song']] ?? null) === $artistId) {
+                    $counts[(int)$s['song']][$setlist->tour_id] = true;
+                }
+            }
+        }
+        $counts = array_map('count', $counts);
+        uksort($counts, fn($a, $b) => $counts[$b] !== $counts[$a] ? $counts[$b] - $counts[$a] : $a - $b);
+
+        $titles = DbSong::whereIn('id', array_keys($counts))->pluck('title', 'id');
+        $stats = [];
+        foreach ($counts as $songId => $count) {
+            if (isset($titles[$songId])) $stats[] = ['song_id' => $songId, 'title' => $titles[$songId], 'count' => $count];
+        }
+        return $stats;
+    }
+
+    private function getDatabaseEncoreSongStats(int $artistId, string $type = 'all', bool $excludeDoubleEncore = false)
     {
         $songArtistIds = DbSong::pluck('artist_id', 'id');
         $tourIds = $this->databaseConcertIds($this->crossoverTourArtistIds($artistId), $type);
@@ -507,7 +546,7 @@ class StatsController extends Controller
         $counts = [];
 
         foreach ($tourSetlists as $setlist) {
-            foreach ($setlist->encore ?? [] as $s) {
+            foreach ($this->statsEncore($setlist, $excludeDoubleEncore) as $s) {
                 if (isset($s['song']) && is_numeric($s['song']) && ($songArtistIds[(int)$s['song']] ?? null) === $artistId) {
                     $songId = (int)$s['song'];
                     $tourId = $setlist->tour_id;
