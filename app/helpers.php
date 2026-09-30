@@ -711,6 +711,7 @@ if (!function_exists('buildSetlistPatternSummary')) {
                 'featuring_type' => $item['featuring_type'] ?? 'guest',
                 'medley' => !empty($item['medley']),
                 'summary_group' => $summaryGroup !== '' ? $summaryGroup : null,
+                'encore_block' => (int) ($item['_encore_block'] ?? 0),
             ];
         };
 
@@ -722,6 +723,11 @@ if (!function_exists('buildSetlistPatternSummary')) {
         // パターン順」へ並べ替え直す必要がある。
         $toEntryClustersFor = function ($pattern, int $patternIndex, string $section) use ($extractEntry) {
             $items = is_array($pattern->{$section} ?? null) ? $pattern->{$section} : [];
+            // アンコールの各曲に、何番目のアンコール（ENCORE / DOUBLE ENCORE …）かを持たせる
+            if ($section === 'encore') {
+                $blockIndexes = \App\Support\EncoreBlocks::blockIndexes($items);
+                $items = array_map(fn ($item, $i) => $item + ['_encore_block' => $blockIndexes[$i]], array_values($items), array_keys(array_values($items)));
+            }
             $clusters = [];
             foreach (groupAllSongClusters($items) as $cluster) {
                 $clusterItems = $cluster['items'];

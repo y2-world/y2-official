@@ -309,6 +309,14 @@ class DbSetlistResource extends Resource
                                     ->collapsible() // 折りたたみ可能
                                     ->collapsed()   // 初期状態で閉じる
                                     ->schema([
+                                        // ダブルアンコールなど、アンコールを複数回に分けるときに、次のアンコールの最初の曲に付ける
+                                        Forms\Components\Toggle::make('encore_block_start')
+                                            ->label('ここから次のアンコール（DOUBLE ENCORE など）')
+                                            ->default(false)
+                                            ->inline(false)
+                                            ->live()
+                                            ->columnSpanFull(),
+
                                         Forms\Components\Toggle::make('is_daily')
                                             ->label('日替わり')
                                             ->default(false)
@@ -373,11 +381,17 @@ class DbSetlistResource extends Resource
                                     $uuid = $item['_uuid'] ?? null;
 
                                     if ($uuid === $currentUuid) {
+                                        // 次のアンコールの始まりの曲には、どのアンコールかを番号の横に出す
+                                        $blockLabel = '';
+                                        if (!empty($item['encore_block_start'])) {
+                                            $block = \App\Support\EncoreBlocks::blockIndexes(array_values($items))[array_search($uuid, array_column(array_values($items), '_uuid'), true)] ?? 0;
+                                            $blockLabel = '【' . \App\Support\EncoreBlocks::label($block) . '】 ';
+                                        }
                                         if ($isSkipped) {
-                                            return '';
+                                            return trim($blockLabel);
                                         } else {
                                             $number++;
-                                            return (string)$number;
+                                            return $blockLabel . $number;
                                         }
                                     }
 

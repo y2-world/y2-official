@@ -90,10 +90,12 @@
                                         @endif
                                     </div>
                                 <ol class="live-column {{ $totalItems >= 20 ? 'live-column-two-col' : '' }}">
-                                    @foreach ([$setlist, $encore] as $section)
-                                        @if ($loop->index === 1 && count($encore))
+                                    {{-- アンコールは ENCORE / DOUBLE ENCORE … のブロックごとに見出しを挟む（番号は本編からの続き） --}}
+                                    @foreach (\App\Support\EncoreBlocks::sections($setlist, $encore) as $encoreSection)
+                                        @php $section = $encoreSection['items']; @endphp
+                                        @if ($encoreSection['label'] && count($section))
                                             <div style="margin: 20px 0 0 0;">
-                                                <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
+                                                <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">{{ $encoreSection['label'] }}</span>
                                             </div>
                                         @endif
 

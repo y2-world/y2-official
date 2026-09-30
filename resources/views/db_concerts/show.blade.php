@@ -129,12 +129,18 @@
                         <ol class="live-column">
                             @foreach (['setlist' => $summary['setlist'], 'encore' => $summary['encore']] as $section => $rows)
                                 @if (count($rows))
-                                    @if ($section === 'encore')
-                                        <div style="margin: 20px 0 10px;">
-                                            <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
-                                        </div>
-                                    @endif
+                                    @php $currentEncoreBlock = null; @endphp
                                     @foreach ($rows as $row)
+                                        {{-- アンコールは行ごとのブロック（ENCORE / DOUBLE ENCORE …）が変わるところに見出しを挟む --}}
+                                        @if ($section === 'encore')
+                                            @php $rowEncoreBlock = min(array_map(fn ($v) => (int) ($v['encore_block'] ?? 0), $row['variants'] ?: [[]])); @endphp
+                                            @if ($rowEncoreBlock !== $currentEncoreBlock)
+                                                @php $currentEncoreBlock = $rowEncoreBlock; @endphp
+                                                <div style="margin: 20px 0 10px;">
+                                                    <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">{{ \App\Support\EncoreBlocks::label($rowEncoreBlock) }}</span>
+                                                </div>
+                                            @endif
+                                        @endif
                                         @php
                                             $isExtraRow = collect($row['variants'])->every(fn ($v) => $v['is_extra'] ?? false);
                                             if (!$isExtraRow) {

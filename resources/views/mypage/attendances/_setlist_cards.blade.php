@@ -25,7 +25,7 @@
     }
 @endphp
 
-@foreach ([['label' => null, 'items' => $setlist], ['label' => 'ENCORE', 'items' => $encore]] as $section)
+@foreach (\App\Support\EncoreBlocks::sections($setlist, $encore) as $section)
     @continue(empty($section['items']))
     @if ($section['label'])
         <div class="setlist-card-section-label">{{ $section['label'] }}</div>
