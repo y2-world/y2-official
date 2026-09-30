@@ -87,7 +87,7 @@
                 }
             }
         </style>
-        @include('songs._title_filter', ['songTitle' => $songs->title])
+        @include('songs._title_filter', ['songTitle' => $songs->title, 'showDoubleEncoreToggle' => $isHikigatariArtist])
         @if ($secondTab)
             <div class="song-performance-tabs" style="display: flex; gap: 8px; margin-bottom: 15px;">
                 <button type="button" class="song-performance-tab-btn @if($initialTab === 'performances') is-active @endif" data-tab-target="live-performances-panel"
@@ -118,7 +118,7 @@
                     </thead>
                     <tbody>
                         @foreach ($tours as $tour)
-                            <tr data-titles="{{ json_encode($tourTitles[$tour->id] ?? [], JSON_UNESCAPED_UNICODE) }}">
+                            <tr data-titles="{{ json_encode($tourTitles[$tour->id] ?? [], JSON_UNESCAPED_UNICODE) }}" @if ($isHikigatariArtist && isset($hikigatariTourIds[$tour->id]) && !isset($normalTourIds[$tour->id])) data-double-encore-only="1" @endif>
                                 <td></td>
                                 @if (isset($tour->date1) && isset($tour->date2))
                                     <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }} -
@@ -154,7 +154,7 @@
                     </thead>
                     <tbody>
                         @foreach ($secondTabSetlists as $setlist)
-                            <tr data-titles="{{ json_encode($secondTabTitles[$setlist->id] ?? [], JSON_UNESCAPED_UNICODE) }}">
+                            <tr data-titles="{{ json_encode($secondTabTitles[$setlist->id] ?? [], JSON_UNESCAPED_UNICODE) }}" @if ($isHikigatariArtist && isset($hikigatariSecondTabIds[$setlist->id]) && !isset($normalSecondTabIds[$setlist->id])) data-double-encore-only="1" @endif>
                                 <td></td>
                                 <td class="td_date">{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
                                 <td class="td_title"><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
