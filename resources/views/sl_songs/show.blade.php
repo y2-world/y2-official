@@ -14,7 +14,7 @@
             @if ($performanceSongNumber)
                 <p class="database-subtitle song-number-performances" style="{{ $initialTab === 'performances' ? '' : 'display: none;' }}">#{{ $performanceSongNumber }}</p>
             @endif
-            <h1 class="database-title" style="">{{ $song->title }}</h1>
+            <h1 class="database-title" style="">{{ $initialTitle ?? $song->title }}</h1>
 
             <div style="font-size: 1rem; color: rgba(255, 255, 255, 0.9); line-height: 1.8;">
                 @if ($song->artist)
@@ -65,6 +65,7 @@
                         }
                     }
                 </style>
+                @include('songs._title_filter', ['songTitle' => $song->title])
                 <div class="song-performance-tabs" style="display: flex; gap: 8px; margin-bottom: 15px;">
                     @if ($hasLivePerformancesTab)
                         <button type="button" class="song-performance-tab-btn @if($initialTab === 'performances') is-active @endif" data-tab-target="live-performances-panel"
@@ -93,7 +94,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($performanceTours as $tour)
-                                        <tr>
+                                        <tr data-titles="{{ json_encode($tourTitles[$tour->id] ?? [], JSON_UNESCAPED_UNICODE) }}">
                                             <td></td>
                                             @if (isset($tour->date1) && isset($tour->date2))
                                                 <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }} -
@@ -125,7 +126,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($setlists as $setlist)
-                                    <tr>
+                                    <tr data-titles="{{ json_encode($setlistTitles[$setlist->id] ?? [], JSON_UNESCAPED_UNICODE) }}">
                                         <td></td>
                                         <td class="td_date">{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
                                         <td class="td_title"><a

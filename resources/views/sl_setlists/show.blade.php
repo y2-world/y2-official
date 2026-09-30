@@ -101,6 +101,8 @@
                             $main = $parts['main'];
                             $annotation = $parts['annotation'];
                             $keyword = !empty($data['alternative_title']) ? $data['alternative_title'] : $main;
+                            // 別表記で出している曲は、楽曲ページもその表記で絞り込んだ状態で開く
+                            if (!empty($data['alternative_title']) && $url !== '#') { $url .= '?' . http_build_query(['title' => $data['alternative_title']]); }
 
                             // 共演者・別名義アーティストがある場合は曲名の後に追加
                             $featuringType = $data['featuring_type'] ?? 'guest';
@@ -191,6 +193,8 @@
                             $main = $parts['main'];
                             $annotation = $parts['annotation'];
                             $keyword = !empty($data['alternative_title']) ? $data['alternative_title'] : $main;
+                            // 別表記で出している曲は、楽曲ページもその表記で絞り込んだ状態で開く
+                            if (!empty($data['alternative_title']) && $url !== '#') { $url .= '?' . http_build_query(['title' => $data['alternative_title']]); }
 
                             // 共演者・別名義アーティストがある場合は曲名の後に追加
                             $featuringType = $data['featuring_type'] ?? 'guest';
@@ -301,6 +305,8 @@
                                         }
                                         $parts = splitAnnotation($title);
                                         $keyword = !empty($song['alternative_title']) ? $song['alternative_title'] : $parts['main'];
+                                        // 別表記で出している曲は、楽曲ページもその表記で絞り込んだ状態で開く
+                                        if (!empty($song['alternative_title']) && $url !== '#') { $url .= '?' . http_build_query(['title' => $song['alternative_title']]); }
                                         $annotation = $parts['annotation'];
                                         $songFeaturingType = $song['featuring_type'] ?? 'guest';
                                         $feat = !empty($song['featuring'])
@@ -339,6 +345,8 @@
                                     }
                                     $parts = splitAnnotation($title);
                                     $keyword = !empty($data['alternative_title']) ? $data['alternative_title'] : $parts['main'];
+                                    // 別表記で出している曲は、楽曲ページもその表記で絞り込んだ状態で開く
+                                    if (!empty($data['alternative_title']) && $url !== '#') { $url .= '?' . http_build_query(['title' => $data['alternative_title']]); }
                                     $annotation = $parts['annotation'];
                                     $isMedley = !empty($data['medley']) && $data['medley'] == 1;
                                     $artistDisplay = '';

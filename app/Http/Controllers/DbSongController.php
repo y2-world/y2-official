@@ -192,16 +192,9 @@ class DbSongController extends Controller
                 $secondTabTitles[$setlist->tour_id] = array_values(array_unique(array_merge($secondTabTitles[$setlist->tour_id] ?? [], $titles)));
             }
         }
-        $performanceTitles = collect($tourTitles)->flatten()->merge(collect($secondTabTitles)->flatten())->unique()->values()->all();
-        if (count($performanceTitles) < 2) {
-            $performanceTitles = [];
-        }
-        // スタンプ等から ?title= で来た場合は、その表記を選んだ状態で開く（空白の有無・大文字小文字の違いは同じ表記とみなす）
-        // 「I'll be」と「I'LL BE」のように大文字・小文字で書き分けている表記もあるので、大文字・小文字まで一致するものを優先する
-        $looseTitle = fn ($t) => preg_replace('/\s+/u', '', str_replace(['～', '’', '‘'], ['〜', "'", "'"], (string) $t));
-        $wanted = $looseTitle($request->query('title'));
-        $initialTitle = collect($performanceTitles)->first(fn ($t) => $looseTitle($t) === $wanted)
-            ?? collect($performanceTitles)->first(fn ($t) => mb_strtolower($looseTitle($t)) === mb_strtolower($wanted));
+        $performanceTitles = \App\Support\PerformanceTitles::options(...array_values($tourTitles), ...array_values($secondTabTitles));
+        // スタンプ等から ?title= で来た場合は、その表記を選んだ状態で開く
+        $initialTitle = \App\Support\PerformanceTitles::pick($performanceTitles, $request->query('title'));
 
         return view('db_songs.show', compact(
             'tourTitles',

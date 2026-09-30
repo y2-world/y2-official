@@ -85,7 +85,8 @@ class SlSongController extends Controller
         // 本人のMy Live Attendancesは出さない（それはmypage配下の専用ページの役割）。
         // db_song_id未紐付けの曲はLive Performances自体が存在しないため、そのタブを出さない。
         $dbSong = $song->db_song_id ? $song->dbSong : null;
-        $performanceTours = $dbSong ? $dbSong->performedTourSetlists()->pluck('tour')->filter()->unique('id')->values() : collect();
+        $performedTourSetlists = $dbSong ? $dbSong->performedTourSetlists() : collect();
+        $performanceTours = $performedTourSetlists->pluck('tour')->filter()->unique('id')->values();
         $hasLivePerformancesTab = (bool) $dbSong;
 
         // Previous/Nextで選んだタブをキープしたまま移動できるよう、?tab=performances をURLで
@@ -119,6 +120,24 @@ class SlSongController extends Controller
             $performanceNextSlSong = $performanceNextDbSong ? $performanceNextDbSong->slSongs()->first() : null;
         }
 
+        // 表記ごとの絞り込み用：各行（参加記録／ツアー）がどの表記で演奏されたか（DbSongControllerと同じ考え方）
+        $expandFes = fn ($items) => collect($items ?? [])->flatMap(fn ($item) => ($item['type'] ?? 'song') === 'block' ? ($item['songs'] ?? []) : [$item])->all();
+        $setlistTitles = [];
+        foreach ($setlists->sortBy('date') as $setlist) {
+            $setlistTitles[$setlist->id] = \App\Support\PerformanceTitles::in(
+                array_merge($setlist->setlist ?? [], $setlist->encore ?? [], $expandFes($setlist->fes_setlist), $expandFes($setlist->fes_encore)),
+                fn ($entry) => is_numeric($entry) ? (int) $entry === (int) $song->id : trim(preg_replace('/\s*\[[^\]]+\]/u', '', $entry)) === $title,
+                $title
+            );
+        }
+        $tourTitles = [];
+        foreach ($performedTourSetlists->sortBy(fn ($s) => optional($s->tour)->date1) as $tourSetlist) {
+            $titles = $dbSong->performanceTitlesIn(array_merge($tourSetlist->setlist ?? [], $tourSetlist->encore ?? []));
+            $tourTitles[$tourSetlist->tour_id] = array_values(array_unique(array_merge($tourTitles[$tourSetlist->tour_id] ?? [], $titles)));
+        }
+        $performanceTitles = \App\Support\PerformanceTitles::options(...array_values($tourTitles), ...array_values($setlistTitles));
+        $initialTitle = \App\Support\PerformanceTitles::pick($performanceTitles, $request->query('title'));
+
         // 検索候補（曲名 + アーティスト名）
         $suggestions = SlSong::query()
             ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
@@ -151,7 +170,11 @@ class SlSongController extends Controller
             'performanceNextDbSong',
             'performanceNextSlSong',
             'hasLivePerformancesTab',
-            'initialTab'
+            'initialTab',
+            'setlistTitles',
+            'tourTitles',
+            'performanceTitles',
+            'initialTitle'
         ));
     }
 
