@@ -1,0 +1,4090 @@
+{
+ "artist_id": 5,
+ "sl_artist_name": "福山雅治",
+ "source": "LiveFans（アンコール #1 / #2 の区切り）",
+ "changes": [
+  {
+   "table": "db_setlists",
+   "tour_date1": "2003-12-27",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "約束の丘",
+    "明日へのマーチ",
+    "遠くへ"
+   ],
+   "subtitle": "12.31 Day 4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2004-12-15",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "明日へのマーチ"
+   ],
+   "subtitle": "12.15 北海道 12.20 福岡 12.22 大阪 12.25 名古屋 12.28 横浜1 12.30 横浜2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2004-12-15",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "明日へのマーチ",
+    "約束の丘",
+    "遠くへ",
+    "友よ"
+   ],
+   "subtitle": "12.31 横浜3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2005-03-12",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "Good night"
+   ],
+   "subtitle": "3.18 宮城2 4.6 福岡2 4.24 北海道2 5.5 名古屋2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2005-03-12",
+   "row": 1,
+   "order_no": 5,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "みつめていたい"
+   ],
+   "subtitle": "3.24 広島2 4.1 愛媛1 5.4 名古屋1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2005-03-12",
+   "row": 1,
+   "order_no": 6,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "Good Luck"
+   ],
+   "subtitle": "4.2 愛媛2 4.13 大阪1 4.14 大阪2 4.30 新潟2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2007-01-18",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "1.18 埼玉1 1.21 埼玉3 2.3 大阪1 2.4 大阪2 2.6 大阪3 2.7 大阪4 2.10 福岡1 2.11 福岡2 2.17 名古屋1 2.18 名古屋2 2.24 新潟1 2.25 新潟2 3.1 広島1 3.2 広島2 3.8 札幌1 3.9 札幌2 3.17 静岡1 3.18 静岡2 3.22 横浜2 3.24 横浜3 3.31 宮城1 4.1 宮城2 4.14 愛媛1 4.15 愛媛2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2007-01-18",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    3,
+    4
+   ],
+   "double_encore": [
+    "桜坂",
+    "遠くへ"
+   ],
+   "subtitle": "3.21 横浜1 3.25 横浜4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2008-12-27",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "12.27 Day 1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2008-12-27",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "12.28 Day 2 12.30 Day 3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2008-12-27",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "12.31 Day 4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2009-05-28",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "道標"
+   ],
+   "subtitle": null
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2009-06-20",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "6.20 静岡1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2009-06-20",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Good night"
+   ],
+   "subtitle": "6.21 静岡2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2009-06-20",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "6.27 新潟1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2009-06-20",
+   "row": 1,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Good night"
+   ],
+   "subtitle": "6.28 新潟2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2009-06-20",
+   "row": 1,
+   "order_no": 5,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Good night"
+   ],
+   "subtitle": "7.4 埼玉1 7.5 埼玉2 7.26 札幌4 8.1 広島1 8.5 福岡1 8.15 名古屋1 8.19 大阪1 8.22 大阪3 9.12 宮城1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2009-06-20",
+   "row": 1,
+   "order_no": 6,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "遠くへ"
+   ],
+   "subtitle": "7.8 横浜1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2009-06-20",
+   "row": 1,
+   "order_no": 7,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "今夜、君を抱いて"
+   ],
+   "subtitle": "7.9 横浜2 7.11 横浜3 7.12 横浜4 7.22 札幌1 8.6 福岡2 8.20 大阪2 8.23 大阪4 9.6 徳島2 9.16 名古屋1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2009-06-20",
+   "row": 1,
+   "order_no": 8,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Good night"
+   ],
+   "subtitle": "7.23 札幌2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2009-06-20",
+   "row": 1,
+   "order_no": 9,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "今夜、君を抱いて"
+   ],
+   "subtitle": "7.25 札幌3 8.2 広島2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2009-06-20",
+   "row": 1,
+   "order_no": 10,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Good night"
+   ],
+   "subtitle": "8.8 福岡3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2009-06-20",
+   "row": 1,
+   "order_no": 11,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "今夜、君を抱いて"
+   ],
+   "subtitle": "8.9 福岡4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2009-06-20",
+   "row": 1,
+   "order_no": 12,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "今夜、君を抱いて"
+   ],
+   "subtitle": "8.16 名古屋2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2009-06-20",
+   "row": 1,
+   "order_no": 13,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Good night"
+   ],
+   "subtitle": "9.5 徳島1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2009-06-20",
+   "row": 1,
+   "order_no": 14,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "遠くへ"
+   ],
+   "subtitle": "9.13 宮城2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2009-06-20",
+   "row": 1,
+   "order_no": 15,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "今夜、君を抱いて"
+   ],
+   "subtitle": "9.17 名古屋2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2009-06-20",
+   "row": 1,
+   "order_no": 16,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "Good night"
+   ],
+   "subtitle": "9.23 代々木1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2009-06-20",
+   "row": 1,
+   "order_no": 17,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "今夜、君を抱いて"
+   ],
+   "subtitle": "9.24 代々木2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2009-06-20",
+   "row": 1,
+   "order_no": 18,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "東京にもあったんだ"
+   ],
+   "subtitle": "9.26 代々木3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2009-06-20",
+   "row": 1,
+   "order_no": 19,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "東京にもあったんだ",
+    "Heart"
+   ],
+   "subtitle": "9.27 代々木4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2010-12-27",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "群青 〜ultramarine〜"
+   ],
+   "subtitle": "12.31 Day 4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "明日の☆SHOW"
+   ],
+   "subtitle": "2.26 大阪2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "明日の☆SHOW"
+   ],
+   "subtitle": "2.27 大阪3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "道標"
+   ],
+   "subtitle": "3.5 和歌山1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 5,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "3.6 和歌山2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 7,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "4.16 三重1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 8,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "4.17 三重2 4.20 名古屋1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 9,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "4.21 名古屋2 5.1 福岡2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 10,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "最愛"
+   ],
+   "subtitle": "4.23 名古屋3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 11,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "最愛"
+   ],
+   "subtitle": "4.24 名古屋4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 12,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "道標"
+   ],
+   "subtitle": "4.30 福岡1 5.3 福岡3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 13,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "5.4 福岡4 5.21 長野1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 14,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "5.14 新潟1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 15,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "道標"
+   ],
+   "subtitle": "5.15 新潟2 6.25 徳島1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 16,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "最愛"
+   ],
+   "subtitle": "5.22 長野2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 19,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Good night"
+   ],
+   "subtitle": "5.28 横浜3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 20,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "5.29 横浜4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 21,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "6.4 鹿児島1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 22,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "6.5 鹿児島2 6.18 青森1 6.19 青森2 7.3 愛媛2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 23,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "最愛"
+   ],
+   "subtitle": "6.11 静岡1 7.27 大阪1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 24,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "道標"
+   ],
+   "subtitle": "6.12 静岡2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 25,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "最愛"
+   ],
+   "subtitle": "6.26 徳島2 7.28 大阪2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 26,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "ながれ星"
+   ],
+   "subtitle": "7.2 愛媛1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 27,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "7.30 大阪3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 29,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "milk tea"
+   ],
+   "subtitle": "8.3 代々木1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 30,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Squall"
+   ],
+   "subtitle": "8.4 代々木2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 31,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "you"
+   ],
+   "subtitle": "8.6 代々木3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 32,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "恋人"
+   ],
+   "subtitle": "8.7 代々木4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 33,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "milk tea"
+   ],
+   "subtitle": "9.10 広島1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 34,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "you"
+   ],
+   "subtitle": "9.11 広島2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 35,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "milk tea"
+   ],
+   "subtitle": "9.21 札幌1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 36,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "9.22 札幌2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 37,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "最愛"
+   ],
+   "subtitle": "9.24 札幌3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 38,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "恋人"
+   ],
+   "subtitle": "9.25 札幌4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 39,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "明日へのマーチ",
+    "桜坂"
+   ],
+   "subtitle": "11.12 宮城1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 40,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "明日へのマーチ",
+    "道標"
+   ],
+   "subtitle": "11.13 宮城2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 41,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "you"
+   ],
+   "subtitle": "11.16 埼玉1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 42,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "最愛"
+   ],
+   "subtitle": "11.17 埼玉2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 43,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "11.19 埼玉3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 44,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "道標"
+   ],
+   "subtitle": "11.20 埼玉4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-08-27",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "Squall"
+   ],
+   "subtitle": null
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-12-24",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "Kissin’ in the holy night"
+   ],
+   "subtitle": "12.24 Day 1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-12-24",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "Kissin’ in the holy night"
+   ],
+   "subtitle": "12.25 Day 2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-12-24",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "Good Luck"
+   ],
+   "subtitle": "12.28 Day 3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-12-24",
+   "row": 1,
+   "order_no": 4,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "ただ僕がかわった"
+   ],
+   "subtitle": "12.30 Day 4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-12-24",
+   "row": 1,
+   "order_no": 5,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "ただ僕がかわった"
+   ],
+   "subtitle": "12.31 Day 5"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2012-12-15",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "家族になろうよ"
+   ],
+   "subtitle": "12.15 Day 1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2012-12-15",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "恋人"
+   ],
+   "subtitle": "12.16 Day 2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2012-12-15",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "you"
+   ],
+   "subtitle": "12.19 Day 3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2012-12-15",
+   "row": 1,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "泣いたりしないで"
+   ],
+   "subtitle": "12.20 Day 4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2012-12-15",
+   "row": 1,
+   "order_no": 5,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Good Luck"
+   ],
+   "subtitle": "12.23 Day 5"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2012-12-15",
+   "row": 1,
+   "order_no": 6,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Kissin’ in the holy night"
+   ],
+   "subtitle": "12.24 Day 6"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2012-12-15",
+   "row": 1,
+   "order_no": 7,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "ながれ星"
+   ],
+   "subtitle": "12.27 Day 7"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2012-12-15",
+   "row": 1,
+   "order_no": 8,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "蛍"
+   ],
+   "subtitle": "12.28 Day 8"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2012-12-15",
+   "row": 1,
+   "order_no": 9,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "東京にもあったんだ"
+   ],
+   "subtitle": "12.30 Day 9"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2012-12-15",
+   "row": 1,
+   "order_no": 10,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "蛍"
+   ],
+   "subtitle": "12.31 Day 10"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2013-12-14",
+   "row": 1,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "ながれ星"
+   ],
+   "subtitle": "12.19 Day 4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2014-04-05",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "家族になろうよ"
+   ],
+   "subtitle": "4.5 東京1 4.6 東京2 4.19 大阪1 4.20 大阪2 4.27 名古屋1 5.2 福岡1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2014-04-05",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "家族になろうよ"
+   ],
+   "subtitle": "4.28 名古屋2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2014-04-05",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "家族になろうよ"
+   ],
+   "subtitle": "5.3 福岡2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2014-04-05",
+   "row": 1,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "家族になろうよ"
+   ],
+   "subtitle": "5.10 札幌 5.24 大阪1 5.25 大阪2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2014-04-05",
+   "row": 1,
+   "order_no": 5,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "家族になろうよ"
+   ],
+   "subtitle": "5.15 埼玉1 5.17 埼玉2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2014-04-05",
+   "row": 1,
+   "order_no": 6,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "家族になろうよ"
+   ],
+   "subtitle": "5.18 埼玉3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2014-11-20",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "暁"
+   ],
+   "subtitle": "11.20 静岡1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2014-11-20",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "暁"
+   ],
+   "subtitle": "11.22 静岡2 11.29 愛媛2 11.30 愛媛3 12.6 広島2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2014-11-20",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "暁"
+   ],
+   "subtitle": "11.23 静岡3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2014-11-20",
+   "row": 1,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "暁"
+   ],
+   "subtitle": "11.27 愛媛1 12.4 広島1 12.7 広島3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2014-11-20",
+   "row": 2,
+   "order_no": 1,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "Good Luck"
+   ],
+   "subtitle": "12.23 Hotel de Fukuyama III 横浜メンズ館 男の、男による、男のための聖夜にして野郎夜!! "
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2014-11-20",
+   "row": 2,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Heart of Xmas"
+   ],
+   "subtitle": "12.24 Hotel de Fukuyama III 横浜ウィメンズ館 だったら今夜はこれでしょ! 女だらけの聖夜にしちゃわnight♡ "
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2014-11-20",
+   "row": 2,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "暁"
+   ],
+   "subtitle": "12.27 Day 3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2014-11-20",
+   "row": 2,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "暁"
+   ],
+   "subtitle": "12.28 Day 4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2014-11-20",
+   "row": 2,
+   "order_no": 5,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "暁"
+   ],
+   "subtitle": "12.30 Day 5"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2014-11-20",
+   "row": 2,
+   "order_no": 6,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "暁"
+   ],
+   "subtitle": "12.31 Day 6"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2014-11-20",
+   "row": 3,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "暁"
+   ],
+   "subtitle": "1.15 新潟1 1.18 新潟3 1.24 福井1 2.11 宮城1 "
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2014-11-20",
+   "row": 3,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "暁"
+   ],
+   "subtitle": "1.17 新潟2 1.25 福井2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2014-11-20",
+   "row": 3,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "暁"
+   ],
+   "subtitle": "2.12 宮城2 2.14 宮城3 2.15 宮城4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2015-08-01",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "家族になろうよ"
+   ],
+   "subtitle": null
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2015-08-19",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "milk tea"
+   ],
+   "subtitle": "8.19"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2015-08-19",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "milk tea"
+   ],
+   "subtitle": "8.20"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2015-08-29",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Good night"
+   ],
+   "subtitle": "8.29"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2015-08-29",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "暁"
+   ],
+   "subtitle": "8.30"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2015-12-19",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "you"
+   ],
+   "subtitle": "12.19 Day 1 12.20 Day 2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2015-12-19",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "東京にもあったんだ"
+   ],
+   "subtitle": "12.23 野郎夜!! THE SECOND"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2015-12-19",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Heart of Xmas",
+    "milk tea"
+   ],
+   "subtitle": "12.24 聖女夜!! THE SECOND"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2015-12-19",
+   "row": 1,
+   "order_no": 5,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "ながれ星"
+   ],
+   "subtitle": "12.27 Day 6"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2015-12-19",
+   "row": 1,
+   "order_no": 6,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "you"
+   ],
+   "subtitle": "12.30 Day 7"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2015-12-19",
+   "row": 1,
+   "order_no": 7,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "道標"
+   ],
+   "subtitle": "12.31 Day 8"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2016-09-25",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "道標"
+   ],
+   "subtitle": "9.25"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2016-09-25",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "最愛"
+   ],
+   "subtitle": "9.26"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2016-12-20",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "最愛"
+   ],
+   "subtitle": "12.20 Day 1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2016-12-20",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "恋人"
+   ],
+   "subtitle": "12.21 Day 2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2016-12-20",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "遠くへ"
+   ],
+   "subtitle": "12.23 野郎夜!!3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2016-12-20",
+   "row": 1,
+   "order_no": 5,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "ながれ星"
+   ],
+   "subtitle": "12.27 Day 5"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2016-12-20",
+   "row": 1,
+   "order_no": 6,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "蛍"
+   ],
+   "subtitle": "12.28 Day 6"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2016-12-20",
+   "row": 1,
+   "order_no": 7,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "Dear"
+   ],
+   "subtitle": "12.30 Day 7"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2016-12-20",
+   "row": 1,
+   "order_no": 8,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "Dear"
+   ],
+   "subtitle": "12.31 Day 8"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2017-12-21",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "虹"
+   ],
+   "subtitle": "12.23 野郎夜!!4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2017-12-21",
+   "row": 1,
+   "order_no": 6,
+   "points": [
+    4
+   ],
+   "double_encore": [
+    "milk tea"
+   ],
+   "subtitle": "12.31 Day 6"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "道標"
+   ],
+   "subtitle": "1.24 大阪1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "最愛"
+   ],
+   "subtitle": "1.25 大阪2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "泣いたりしないで"
+   ],
+   "subtitle": "1.27 大阪3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 1,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "18 〜eighteen〜"
+   ],
+   "subtitle": "1.28 大阪4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 1,
+   "order_no": 5,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "東京にもあったんだ"
+   ],
+   "subtitle": "2.10 宮城1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 1,
+   "order_no": 6,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Good night"
+   ],
+   "subtitle": "2.11 宮城2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 1,
+   "order_no": 7,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "道標"
+   ],
+   "subtitle": "2.24 新潟1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 1,
+   "order_no": 8,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Dear"
+   ],
+   "subtitle": "2.25 新潟2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 1,
+   "order_no": 9,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "雨のメインストリート"
+   ],
+   "subtitle": "3.5 武道館1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 1,
+   "order_no": 10,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "7月7日"
+   ],
+   "subtitle": "3.6 武道館2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 2,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Good night"
+   ],
+   "subtitle": "3.14 名古屋1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 2,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "美しき花"
+   ],
+   "subtitle": "3.15 名古屋2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 2,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "暁"
+   ],
+   "subtitle": "3.24 静岡1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 2,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "遠くへ"
+   ],
+   "subtitle": "3.25 静岡2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 2,
+   "order_no": 5,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "IT’S ONLY LOVE"
+   ],
+   "subtitle": "3.30 三重1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 2,
+   "order_no": 6,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "誕生日には真白な百合を"
+   ],
+   "subtitle": "3.31 三重2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 2,
+   "order_no": 7,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "はつ恋"
+   ],
+   "subtitle": "4.7 札幌1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 2,
+   "order_no": 8,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "you"
+   ],
+   "subtitle": "4.8 札幌2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 2,
+   "order_no": 9,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "ふたつの鼓動"
+   ],
+   "subtitle": "4.14 徳島1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 2,
+   "order_no": 10,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "みつめていたい"
+   ],
+   "subtitle": "4.15 徳島2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 2,
+   "order_no": 11,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "群青 〜ultramarine〜"
+   ],
+   "subtitle": "4.21 広島1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 2,
+   "order_no": 12,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "ながれ星"
+   ],
+   "subtitle": "4.22 広島2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 2,
+   "order_no": 13,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "蛍"
+   ],
+   "subtitle": "4.26 福岡1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 2,
+   "order_no": 14,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "ひまわり"
+   ],
+   "subtitle": "4.27 福岡2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-05-19",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Squall"
+   ],
+   "subtitle": "5.19 大阪1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-05-19",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Heart"
+   ],
+   "subtitle": "5.20 大阪2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-05-19",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "明日の☆SHOW"
+   ],
+   "subtitle": "5.26 東京1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-05-19",
+   "row": 1,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "少年"
+   ],
+   "subtitle": "5.27 東京2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-12-21",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "甲子園"
+   ],
+   "subtitle": "12.20 Day 1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-12-21",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "甲子園"
+   ],
+   "subtitle": "12.23 野郎夜!!5"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-12-21",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Heart of Xmas",
+    "ふたつの鼓動"
+   ],
+   "subtitle": "12.24 聖女夜"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-12-21",
+   "row": 1,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "家族になろうよ"
+   ],
+   "subtitle": "12.27 Day 4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-12-21",
+   "row": 1,
+   "order_no": 5,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "道標"
+   ],
+   "subtitle": "12.28 Day 5"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-12-21",
+   "row": 1,
+   "order_no": 6,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "トモエ学園"
+   ],
+   "subtitle": "12.30 Day 6"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-12-21",
+   "row": 1,
+   "order_no": 7,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "12.31 Day 7"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2019-02-05",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "もっとそばにきて"
+   ],
+   "subtitle": "2.5"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2019-02-05",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "MELODY"
+   ],
+   "subtitle": "2.6"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2019-02-05",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    2,
+    3
+   ],
+   "double_encore": [
+    "Good night",
+    "明日の☆SHOW",
+    "少年",
+    "MELODY"
+   ],
+   "subtitle": "2.7"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2019-12-21",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "milk tea"
+   ],
+   "subtitle": "12.21 Day 1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2019-12-21",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "少年"
+   ],
+   "subtitle": "12.22 野郎夜!!6"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2019-12-21",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "蛍",
+    "Heart"
+   ],
+   "subtitle": "12.24 聖女夜"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2019-12-21",
+   "row": 1,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "家族になろうよ"
+   ],
+   "subtitle": "12.27 Day 4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2019-12-21",
+   "row": 1,
+   "order_no": 5,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "恋人"
+   ],
+   "subtitle": "12.28 Day 5"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2019-12-21",
+   "row": 1,
+   "order_no": 7,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "誕生日には真白な百合を"
+   ],
+   "subtitle": "12.31 Day 7"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2020-12-27",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    1
+   ],
+   "double_encore": [
+    "恋の中"
+   ],
+   "subtitle": null
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "幸福論"
+   ],
+   "subtitle": "11.27 横浜1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "遠くへ"
+   ],
+   "subtitle": "11.28 横浜2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Good Luck"
+   ],
+   "subtitle": "12.1 福岡1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 1,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "18 〜eighteen〜"
+   ],
+   "subtitle": "12.2 福岡2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 1,
+   "order_no": 5,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Heart of Xmas"
+   ],
+   "subtitle": "12.21 名古屋1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 1,
+   "order_no": 6,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "道標"
+   ],
+   "subtitle": "12.22 名古屋2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 1,
+   "order_no": 7,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Calling"
+   ],
+   "subtitle": "1.7 大阪1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 1,
+   "order_no": 8,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Moon"
+   ],
+   "subtitle": "1.8 大阪2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 1,
+   "order_no": 9,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "そのままで･･･"
+   ],
+   "subtitle": "1.15 新潟1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 1,
+   "order_no": 10,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Sandy"
+   ],
+   "subtitle": "1.16 新潟2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 1,
+   "order_no": 11,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "BEAUTIFUL DAY"
+   ],
+   "subtitle": "2.19 静岡1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 1,
+   "order_no": 12,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "恋人"
+   ],
+   "subtitle": "2.20 静岡2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 1,
+   "order_no": 13,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "明日へのマーチ"
+   ],
+   "subtitle": "2.23 神戸1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 1,
+   "order_no": 14,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "泣いたりしないで"
+   ],
+   "subtitle": "2.24 神戸2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 1,
+   "order_no": 15,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "暁"
+   ],
+   "subtitle": "2.26 神戸3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 1,
+   "order_no": 16,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "甲子園"
+   ],
+   "subtitle": "2.27 神戸4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 1,
+   "order_no": 17,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "蜜柑色の夏休み"
+   ],
+   "subtitle": "3.5 愛媛1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 1,
+   "order_no": 18,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "生きてる生きてく"
+   ],
+   "subtitle": "3.6 愛媛2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 2,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Good night"
+   ],
+   "subtitle": "4.9 宮城1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 2,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "何度でも花が咲くように私を生きよう"
+   ],
+   "subtitle": "4.10 宮城2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 2,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "東京にもあったんだ"
+   ],
+   "subtitle": "4.29 代々木1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 2,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Heart"
+   ],
+   "subtitle": "4.30 代々木2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 2,
+   "order_no": 5,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "アクセス"
+   ],
+   "subtitle": "5.7 熊本1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 2,
+   "order_no": 6,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "IT’S ONLY LOVE"
+   ],
+   "subtitle": "5.8 熊本2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 2,
+   "order_no": 8,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "All My Loving"
+   ],
+   "subtitle": "5.22 広島2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 2,
+   "order_no": 9,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "ひまわり"
+   ],
+   "subtitle": "5.28 札幌1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2022-01-28",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    1
+   ],
+   "double_encore": [
+    "Heart"
+   ],
+   "subtitle": null
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2022-06-16",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Squall"
+   ],
+   "subtitle": "6.16"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2022-06-16",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "彼方で"
+   ],
+   "subtitle": "6.18"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2022-12-24",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Heart of Xmas"
+   ],
+   "subtitle": "12.24 Day 1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2022-12-24",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Sandy"
+   ],
+   "subtitle": "12.25 Day 2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2022-12-24",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "友よ"
+   ],
+   "subtitle": "12.28 Day 3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2022-12-24",
+   "row": 1,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Calling"
+   ],
+   "subtitle": "12.29 Day 4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2022-12-24",
+   "row": 1,
+   "order_no": 5,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "12.31 Day 5"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2022-12-24",
+   "row": 1,
+   "order_no": 6,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "約束の丘"
+   ],
+   "subtitle": "1.1 Day 6"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2023-07-15",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    1
+   ],
+   "double_encore": [
+    "Heart of Xmas"
+   ],
+   "subtitle": null
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2023-08-10",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2,
+    3
+   ],
+   "double_encore": [
+    "クスノキ",
+    "家族になろうよ"
+   ],
+   "subtitle": "8.10"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2023-08-10",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2,
+    3
+   ],
+   "double_encore": [
+    "クスノキ",
+    "道標"
+   ],
+   "subtitle": "8.12"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2023-08-10",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    2,
+    3
+   ],
+   "double_encore": [
+    "クスノキ",
+    "Dear"
+   ],
+   "subtitle": "8.13"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2023-12-23",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "虹"
+   ],
+   "subtitle": "12.23 Day 1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2023-12-23",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Heart of Xmas"
+   ],
+   "subtitle": "12.24 Day 2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2023-12-23",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Good Luck"
+   ],
+   "subtitle": "12.27 Day 3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2023-12-23",
+   "row": 1,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "恋人"
+   ],
+   "subtitle": "12.28 Day 4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2023-12-23",
+   "row": 1,
+   "order_no": 5,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "遠くへ"
+   ],
+   "subtitle": "12.31 Day 5"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2023-12-23",
+   "row": 1,
+   "order_no": 6,
+   "points": [
+    2,
+    3
+   ],
+   "double_encore": [
+    "想望",
+    "虹"
+   ],
+   "subtitle": "1.1 Day 6"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "美しき花"
+   ],
+   "subtitle": "4.27 静岡1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "何度でも花が咲くように私を生きよう"
+   ],
+   "subtitle": "4.28 静岡2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "明日へのマーチ"
+   ],
+   "subtitle": "5.3 神戸1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 1,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "All My Loving"
+   ],
+   "subtitle": "5.5 神戸2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 1,
+   "order_no": 5,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "甲子園"
+   ],
+   "subtitle": "5.6 神戸3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 1,
+   "order_no": 6,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "恋の中"
+   ],
+   "subtitle": "5.11 愛媛1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 1,
+   "order_no": 7,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "DRIVE-IN THEATERでくちづけを"
+   ],
+   "subtitle": "5.12 愛媛2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 1,
+   "order_no": 8,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "恋人"
+   ],
+   "subtitle": "5.18 長野1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 1,
+   "order_no": 9,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Calling"
+   ],
+   "subtitle": "5.19 長野2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 1,
+   "order_no": 10,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Good Luck"
+   ],
+   "subtitle": "5.25 鹿児島1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 1,
+   "order_no": 11,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Moon"
+   ],
+   "subtitle": "5.26 鹿児島2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "ただ僕がかわった"
+   ],
+   "subtitle": "6.8 福岡1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "もっとそばにきて"
+   ],
+   "subtitle": "6.9 福岡2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Girl"
+   ],
+   "subtitle": "6.15 広島1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "ふたつの鼓動"
+   ],
+   "subtitle": "6.16 広島2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 5,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "遠くへ"
+   ],
+   "subtitle": "6.26 横浜1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 6,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "雨のメインストリート"
+   ],
+   "subtitle": "6.27 横浜2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 7,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "7月7日"
+   ],
+   "subtitle": "7.9 大阪1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 9,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "IT’S ONLY LOVE"
+   ],
+   "subtitle": "7.20 高知1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 10,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "HELLO"
+   ],
+   "subtitle": "7.21 高知2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 11,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "そのままで･･･"
+   ],
+   "subtitle": "7.27 岡山1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 12,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Good night"
+   ],
+   "subtitle": "7.28 岡山2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 13,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "ながれ星"
+   ],
+   "subtitle": "8.3 埼玉1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 14,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "あの夏も 海も 空も"
+   ],
+   "subtitle": "8.4 埼玉2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 15,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "milk tea"
+   ],
+   "subtitle": "8.24 盛岡1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 16,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Squall"
+   ],
+   "subtitle": "8.25 盛岡2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 17,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "泣いたりしないで"
+   ],
+   "subtitle": "9.7 新潟1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 18,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "18 〜eighteen〜"
+   ],
+   "subtitle": "9.8 新潟2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 19,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "巻き戻した夏"
+   ],
+   "subtitle": "9.14 宮城1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 20,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "蛍"
+   ],
+   "subtitle": "9.15 宮城2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 21,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "はつ恋"
+   ],
+   "subtitle": "9.21 札幌1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 22,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Beautiful life"
+   ],
+   "subtitle": "9.22 札幌2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 23,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "最愛"
+   ],
+   "subtitle": "9.26 武道館1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 24,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "ヒトツボシ"
+   ],
+   "subtitle": "9.28 武道館2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 25,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "少年"
+   ],
+   "subtitle": "9.29 武道館3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-10-13",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2,
+    3
+   ],
+   "double_encore": [
+    "クスノキ",
+    "幸福論"
+   ],
+   "subtitle": null
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-12-26",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "家族になろうよ"
+   ],
+   "subtitle": "12.26 Day 1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-12-26",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "12.28 Day 2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-12-26",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "虹"
+   ],
+   "subtitle": "12.29 Day 3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-12-26",
+   "row": 1,
+   "order_no": 4,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "幸福論"
+   ],
+   "subtitle": "12.31 Day 4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2025-08-30",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "もっとそばにきて"
+   ],
+   "subtitle": "8.30 大阪1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2025-08-30",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "幸福論"
+   ],
+   "subtitle": "8.31 大阪2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2025-08-30",
+   "row": 1,
+   "order_no": 5,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "ヒトツボシ"
+   ],
+   "subtitle": "9.27 福岡1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2025-08-30",
+   "row": 1,
+   "order_no": 6,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "最愛"
+   ],
+   "subtitle": "9.28 福岡2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2025-12-27",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "12.27 Day 1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2025-12-27",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Heart"
+   ],
+   "subtitle": "12.28 Day 2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2025-12-27",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "遠くへ"
+   ],
+   "subtitle": "12.30 Day 3"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2025-12-27",
+   "row": 1,
+   "order_no": 4,
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "道標"
+   ],
+   "subtitle": "12.31 Day 4"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "you"
+   ],
+   "subtitle": "1.21 神戸1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Heart"
+   ],
+   "subtitle": "1.22 神戸2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "はつ恋"
+   ],
+   "subtitle": "2.7 大阪1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 1,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "そのままで･･･"
+   ],
+   "subtitle": "2.8 大阪2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 1,
+   "order_no": 5,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Moon"
+   ],
+   "subtitle": "2.12 名古屋1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 1,
+   "order_no": 6,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "ただ僕がかわった"
+   ],
+   "subtitle": "2.13 名古屋2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 1,
+   "order_no": 7,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "アクセス"
+   ],
+   "subtitle": "2.28 広島1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 1,
+   "order_no": 8,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "この国を"
+   ],
+   "subtitle": "3.1 広島2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 1,
+   "order_no": 9,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "昭和やったね"
+   ],
+   "subtitle": "3.7 福岡1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 1,
+   "order_no": 10,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "18 〜eighteen〜"
+   ],
+   "subtitle": "3.8 福岡2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 1,
+   "order_no": 11,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "家族になろうよ"
+   ],
+   "subtitle": "3.14 宮城1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 1,
+   "order_no": 12,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "少年"
+   ],
+   "subtitle": "3.15 宮城2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 1,
+   "order_no": 13,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "拍手喝采"
+   ],
+   "subtitle": "4.11 新潟1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 1,
+   "order_no": 14,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "拍手喝采"
+   ],
+   "subtitle": "4.12 新潟2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 2,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "道標"
+   ],
+   "subtitle": "4.24 武道館1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 2,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Dear"
+   ],
+   "subtitle": "4.25 武道館2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 2,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "桜坂"
+   ],
+   "subtitle": "5.9 徳島1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 2,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "誕生日には真白な百合を"
+   ],
+   "subtitle": "5.10 徳島2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 2,
+   "order_no": 5,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "恋人"
+   ],
+   "subtitle": "5.16 三重1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 2,
+   "order_no": 6,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "All My Loving"
+   ],
+   "subtitle": "5.17 三重2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 2,
+   "order_no": 7,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "最愛"
+   ],
+   "subtitle": "5.30 青森1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 2,
+   "order_no": 8,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Good Luck"
+   ],
+   "subtitle": "5.31 青森2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 2,
+   "order_no": 9,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Beautiful life"
+   ],
+   "subtitle": "6.6 札幌1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 2,
+   "order_no": 10,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Good night"
+   ],
+   "subtitle": "6.7 札幌2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 2,
+   "order_no": 11,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "あの夏も 海も 空も"
+   ],
+   "subtitle": "6.13 武道館1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 2,
+   "order_no": 12,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "ながれ星"
+   ],
+   "subtitle": "6.14 武道館2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 2,
+   "order_no": 13,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "遠くへ"
+   ],
+   "subtitle": "6.27 香川1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-01-24",
+   "row": 2,
+   "order_no": 14,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Squall"
+   ],
+   "subtitle": "6.28 香川2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-08-05",
+   "row": 1,
+   "order_no": 1,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "もっとそばにきて"
+   ],
+   "subtitle": "8.5 東京1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-08-05",
+   "row": 1,
+   "order_no": 2,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "道標"
+   ],
+   "subtitle": "8.6 東京2"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-08-05",
+   "row": 1,
+   "order_no": 3,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Message"
+   ],
+   "subtitle": "8.22 大阪1"
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2026-08-05",
+   "row": 1,
+   "order_no": 4,
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "MELODY"
+   ],
+   "subtitle": "8.23 大阪2"
+  },
+  {
+   "table": "sl_setlists",
+   "date": "2015-08-09",
+   "title": "福山★夏の大創業祭 2015",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "家族になろうよ"
+   ]
+  },
+  {
+   "table": "sl_setlists",
+   "date": "2015-08-19",
+   "title": "夏だ! 台場だ! 福山だ! Zeppに福山雅治がやってくる! 10代限定「真夏の初体験」",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "milk tea"
+   ]
+  },
+  {
+   "table": "sl_setlists",
+   "date": "2015-12-23",
+   "title": "福山☆冬の大感謝祭 其の十五",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "東京にもあったんだ"
+   ]
+  },
+  {
+   "table": "sl_setlists",
+   "date": "2016-12-23",
+   "title": "福山☆冬の大感謝祭 其の十六",
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "遠くへ"
+   ]
+  },
+  {
+   "table": "sl_setlists",
+   "date": "2018-05-26",
+   "title": "DOME LIVE 2018 -暗闇の中で飛べ-",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "明日の☆SHOW"
+   ]
+  },
+  {
+   "table": "sl_setlists",
+   "date": "2018-12-23",
+   "title": "福山☆冬の大感謝祭 其の十八",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "甲子園"
+   ]
+  },
+  {
+   "table": "sl_setlists",
+   "date": "2019-12-22",
+   "title": "福山☆冬の大感謝祭 其の十九 ALL SINGLE LIVE",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "少年"
+   ]
+  },
+  {
+   "table": "sl_setlists",
+   "date": "2023-01-01",
+   "title": "福山☆冬の大感謝祭 其の二十 “GET BACK”",
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "約束の丘"
+   ]
+  },
+  {
+   "table": "sl_setlists",
+   "date": "2023-08-10",
+   "title": "LIVE@NIPPON BUDOKAN 2023 言霊の幸わう夏",
+   "points": [
+    2,
+    3
+   ],
+   "double_encore": [
+    "クスノキ",
+    "家族になろうよ"
+   ]
+  },
+  {
+   "table": "sl_setlists",
+   "date": "2024-01-01",
+   "title": "福山☆冬の大感謝祭 其の二十一 “LIVE A LIVE”",
+   "points": [
+    2,
+    3
+   ],
+   "double_encore": [
+    "想望",
+    "虹"
+   ]
+  },
+  {
+   "table": "sl_setlists",
+   "date": "2024-12-26",
+   "title": "福山☆冬の大感謝祭 其の二十二 GUITAR HERO That's what I live for",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "家族になろうよ"
+   ]
+  },
+  {
+   "table": "sl_setlists",
+   "date": "2025-08-31",
+   "title": "35TH ANNIVERSARY DOME LIVE 2025 // SOUL",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "幸福論"
+   ]
+  },
+  {
+   "table": "sl_setlists",
+   "date": "2025-12-31",
+   "title": "福山☆冬の大感謝祭 其の二十三 『龍がくる』",
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "道標"
+   ]
+  },
+  {
+   "table": "sl_setlists",
+   "date": "2026-04-24",
+   "title": "WE’RE BROS. TOUR 2026 龍、雷乃発声",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "道標"
+   ]
+  },
+  {
+   "table": "sl_setlists",
+   "date": "2026-08-06",
+   "title": "WE’RE BROS. TOUR 2026 DOME LIVE 龍、涼風至",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "道標"
+   ]
+  }
+ ]
+}
