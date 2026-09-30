@@ -22,7 +22,7 @@
                 <select class="timeline-user-select" onchange="if (this.value) window.location.href=this.value;">
                     <option value="{{ route('mypage.user_artists.index') }}" selected>すべて</option>
                     @foreach ($artists as $artist)
-                        <option value="{{ route('mypage.user_artists.live', $artist->id) }}">{{ $artist->name }}</option>
+                        <option value="{{ route('mypage.user_artists.show', $artist->id) }}">{{ $artist->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -46,6 +46,10 @@
                                 </a>
                                 <a href="{{ route('mypage.user_artists.songs', $artist->id) }}" class="database-link">
                                     <span>Songs</span>
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+                                <a href="{{ route('mypage.user_artists.show', $artist->id) }}" class="database-link">
+                                    <span>View All</span>
                                     <i class="fa-solid fa-arrow-right"></i>
                                 </a>
                             </div>

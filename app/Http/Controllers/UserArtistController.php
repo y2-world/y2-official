@@ -21,6 +21,14 @@ class UserArtistController extends Controller
         return view('mypage.user_artists.index', compact('artists'));
     }
 
+    // アーティストのトップ（Databaseのアーティストのトップ database/artist と同じ形）。Live・Discography への入口
+    public function show(int $artistId)
+    {
+        $artist = UserArtist::withCount(['concerts', 'songs'])->findOrFail($artistId);
+
+        return view('mypage.user_artists.show', compact('artist'));
+    }
+
     public function stats(int $artistId)
     {
         $artist = UserArtist::with(['songs', 'concerts.setlists'])->findOrFail($artistId);

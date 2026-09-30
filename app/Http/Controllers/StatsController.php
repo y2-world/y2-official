@@ -130,6 +130,7 @@ class StatsController extends Controller
             'topicFirstHeard',
             'topicWelcomeBack',
             'topicRecentFirst',
+            'topicRecentFirstAll',
             'overallStats',
             'songStats',
             'songStatsUnique',
@@ -424,6 +425,9 @@ class StatsController extends Controller
         $topics = new \App\Support\ArtistTopics($artistId);
         $topicRevivals = $topics->revivals();
         $topicDormant = $topics->dormant();
+        $topicDormantSingles = $topics->dormant(1, true);
+        $topicFormerStaples = $topics->formerStaples();
+        $topicLateDebuts = $topics->lateDebuts();
         $topicClosingSongs = array_slice($topics->closingSongs(), 0, 10);
         $encoreSongStatsNoDoubleEncore = $isHikigatariArtist ? $this->getDatabaseEncoreSongStats($artistId, $type, true) : [];
         $doubleEncoreSongStats = $isHikigatariArtist ? $this->getDatabaseDoubleEncoreSongStats($artistId, $type) : [];
@@ -449,6 +453,9 @@ class StatsController extends Controller
             'encoreSongStatsNoDoubleEncore',
             'topicRevivals',
             'topicDormant',
+            'topicDormantSingles',
+            'topicFormerStaples',
+            'topicLateDebuts',
             'topicClosingSongs',
             'openingSongStats',
             'longestSetlists',
@@ -908,6 +915,7 @@ class StatsController extends Controller
         $topicFirstHeard = $topics->firstHeardTimeline($heard);
         $topicWelcomeBack = $topics->welcomeBack($heard);
         $topicRecentFirst = $topics->recentFirstListens($heard);
+        $topicRecentFirstAll = $topics->recentFirstListens($heard, false);
 
         // タブの「Artists」：参加したアーティストに切り替える（今のアーティストを選んだ状態）
         $tabArtists = collect($this->getPersonalArtistStats())
@@ -924,6 +932,7 @@ class StatsController extends Controller
             'topicFirstHeard',
             'topicWelcomeBack',
             'topicRecentFirst',
+            'topicRecentFirstAll',
             'allSongsNoDoubleEncore',
             'allSongsUniqueNoDoubleEncore',
             'doubleEncoreSongs',

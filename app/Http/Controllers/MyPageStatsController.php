@@ -200,7 +200,7 @@ class MyPageStatsController extends Controller
         $heard = $attendances->filter(fn ($a) => $a->dbSetlist)->map(fn ($a) => [
             'date' => $a->attended_date ? $a->attended_date->format('Y-m-d') : substr((string) optional($a->dbSetlist->tour)->date1, 0, 10),
             'title' => optional($a->dbSetlist->tour)->title,
-            'url' => $this->isOwner() ? route('mypage.attendances.show', ['attendance' => $a, 'from' => 'stats']) : route('live.show', $a->dbSetlist->tour_id),
+            'url' => route('mypage.attendances.show', ['attendance' => $a, 'from' => 'stats']),
             'song_ids' => collect(array_merge($a->dbSetlist->setlist ?? [], $a->dbSetlist->encore ?? []))
                 ->filter(fn ($s) => is_numeric($s['song'] ?? null))->map(fn ($s) => (int) $s['song'])->values()->all(),
         ])->values()->all();
@@ -209,6 +209,7 @@ class MyPageStatsController extends Controller
         $topicFirstHeard = $topics->firstHeardTimeline($heard);
         $topicWelcomeBack = $topics->welcomeBack($heard);
         $topicRecentFirst = $topics->recentFirstListens($heard);
+        $topicRecentFirstAll = $topics->recentFirstListens($heard, false);
 
         return view('mypage.stats.artist', compact(
             'artist',
@@ -226,7 +227,8 @@ class MyPageStatsController extends Controller
             'topicHeardRevivals',
             'topicFirstHeard',
             'topicWelcomeBack',
-            'topicRecentFirst'
+            'topicRecentFirst',
+            'topicRecentFirstAll'
         ));
     }
 

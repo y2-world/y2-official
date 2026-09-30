@@ -13,11 +13,13 @@
     $refId = fn ($ref) => (int) substr((string) $ref, strpos((string) $ref, '-') + 1);
     $isOfficialRef = fn ($ref) => str_starts_with((string) $ref, 'official-');
     $songUrl = fn ($ref) => $isOwner ? route('mypage.attendances.index', ['song_id' => $ref]) : ($isOfficialRef($ref) ? url('/database/songs/' . $refId($ref)) : null);
-    $artistUrl = fn ($ref) => $isOwner ? route('mypage.attendances.index', ['artist_id' => $ref]) : ($isOfficialRef($ref) ? route('database.artist', $refId($ref)) : null);
+    // アーティスト名は、公式ならDatabaseのアーティストのトップ、自分で登録したアーティストならそのアーティストのページへ
+    //（アーティスト別のstatsへは、タブの Artists から移動する）
+    $artistUrl = fn ($ref) => $isOfficialRef($ref) ? route('database.artist', $refId($ref)) : route('mypage.user_artists.show', $refId($ref));
     $artistStatsUrl = fn ($ref) => $isOwner ? route('mypage.stats.artist', $ref) : route('mypage.stats.artist', ['artistId' => $ref, 'user' => $statsUser->id]);
     $stampsUrl = fn ($ref) => $isOwner ? route('mypage.stats.stamps', $ref) : route('mypage.stats.stamps', ['artistId' => $ref, 'user' => $statsUser->id]);
-    $attendanceUrl = fn ($attendance, $tour) => $isOwner ? route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'stats'])
-        : ($attendance->db_setlist_id && $tour ? route('live.show', $tour->id) : null);
+    // 参加したライブのタイトルは、その投稿（Timelineと同じ投稿のページ。本人以外も見られる）へ
+    $attendanceUrl = fn ($attendance, $tour) => route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'stats']);
     $link = fn ($url, $text) => $url ? '<a href="' . e($url) . '" class="stats-link">' . e($text) . '</a>' : e($text);
 @endphp
 <div class="stats-wrapper">
@@ -86,7 +88,7 @@
                     </div>
 
                     {{-- 全体のstatsと同じく、タブで分ける：Songs（曲）／Setlists（参加記録・アーティスト・会場・時期）／Stamps（スタンプ帳）／Artists（アーティスト別のstatsへ移動） --}}
-                    <div class="stats-tabs" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 10px 0 25px;">
+                    <div class="stats-tab-bar">
                         <button type="button" class="stats-tab-btn is-active" data-stats-tab="songs">Songs</button>
                         <button type="button" class="stats-tab-btn" data-stats-tab="setlists">Setlists</button>
                         <button type="button" class="stats-tab-btn" data-stats-tab="stamps">Stamps</button>
@@ -181,66 +183,6 @@
                     </div>
 
                     <div class="stats-tab-panel" data-stats-panel="setlists" style="display: none;">
-                    <!-- Artist Statistics Section -->
-                    <div class="stats-section visible">
-                        <div class="section-title-wrapper">
-                            <h2 class="section-title">
-                                <i class="fas fa-microphone"></i> Artist Statistics
-    <span class="section-title-desc">参加したライブが多いアーティスト</span></h2>
-                        </div>
-                        <div class="stats-table-container">
-                            <table class="stats-table">
-                                <thead>
-                                    <tr>
-                                        <th class="rank-col">Rank</th>
-                                        <th>Artist Name</th>
-                                        <th class="count-col">Shows Attended</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($artistStats as $index => $artist)
-                                        @php
-                                            $showRank = $index === 0 || $artistStats[$index - 1]['show_count'] !== $artist['show_count'];
-                                            $actualRank = $index + 1;
-                                        @endphp
-                                        <tr class="{{ $index >= 10 ? 'hidden-row-artist' : '' }}">
-                                            <td class="rank-col">
-                                                @if ($showRank)
-                                                    @if ($index === 0)
-                                                        <span class="rank-badge gold">🏆</span>
-                                                    @elseif ($index === 1)
-                                                        <span class="rank-badge silver">🥈</span>
-                                                    @elseif ($index === 2)
-                                                        <span class="rank-badge bronze">🥉</span>
-                                                    @else
-                                                        <span class="rank-number">{{ $actualRank }}</span>
-                                                    @endif
-                                                @endif
-                                            </td>
-                                            <td class="artist-name">
-                                                {!! $link($artistStatsUrl($artist['id']), $artist['name']) !!}
-                                            </td>
-                                            <td class="count-col">
-                                                <span class="count-badge">{{ $artist['show_count'] }}</span>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="3">まだ参加したライブが記録されていません。</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                            @if (count($artistStats) > 10)
-                                <div class="show-more-container">
-                                    <button class="show-more-btn" onclick="toggleArtistStatsRows(this)">
-                                        Show More <i class="fas fa-chevron-down"></i>
-                                    </button>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-
                     <!-- Attendances Section -->
                     <div class="stats-section visible">
                         <div class="section-title-wrapper" style="flex-direction: row !important; flex-wrap: nowrap; align-items: center; min-width: 0;">
@@ -305,6 +247,66 @@
                             @if (count($attendances) > 10)
                                 <div class="show-more-container">
                                     <button class="show-more-btn" onclick="toggleAttendanceRows(this)">
+                                        Show More <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Artist Statistics Section -->
+                    <div class="stats-section visible">
+                        <div class="section-title-wrapper">
+                            <h2 class="section-title">
+                                <i class="fas fa-microphone"></i> Artist Statistics
+    <span class="section-title-desc">参加したライブが多いアーティスト</span></h2>
+                        </div>
+                        <div class="stats-table-container">
+                            <table class="stats-table">
+                                <thead>
+                                    <tr>
+                                        <th class="rank-col">Rank</th>
+                                        <th>Artist Name</th>
+                                        <th class="count-col">Shows Attended</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($artistStats as $index => $artist)
+                                        @php
+                                            $showRank = $index === 0 || $artistStats[$index - 1]['show_count'] !== $artist['show_count'];
+                                            $actualRank = $index + 1;
+                                        @endphp
+                                        <tr class="{{ $index >= 10 ? 'hidden-row-artist' : '' }}">
+                                            <td class="rank-col">
+                                                @if ($showRank)
+                                                    @if ($index === 0)
+                                                        <span class="rank-badge gold">🏆</span>
+                                                    @elseif ($index === 1)
+                                                        <span class="rank-badge silver">🥈</span>
+                                                    @elseif ($index === 2)
+                                                        <span class="rank-badge bronze">🥉</span>
+                                                    @else
+                                                        <span class="rank-number">{{ $actualRank }}</span>
+                                                    @endif
+                                                @endif
+                                            </td>
+                                            <td class="artist-name">
+                                                {!! $link($artistUrl($artist['id']), $artist['name']) !!}
+                                            </td>
+                                            <td class="count-col">
+                                                <span class="count-badge">{{ $artist['show_count'] }}</span>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="3">まだ参加したライブが記録されていません。</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                            @if (count($artistStats) > 10)
+                                <div class="show-more-container">
+                                    <button class="show-more-btn" onclick="toggleArtistStatsRows(this)">
                                         Show More <i class="fas fa-chevron-down"></i>
                                     </button>
                                 </div>
@@ -463,7 +465,7 @@
                                                 @endif
                                             </td>
                                             <td class="artist-name">
-                                                {!! $link($artistStatsUrl($artistStat['id']), $artistStat['name']) !!}
+                                                {!! $link($artistUrl($artistStat['id']), $artistStat['name']) !!}
                                             </td>
                                             <td class="count-col">{{ $artistStat['unique_songs'] }} / {{ $artistStat['total_songs'] }}</td>
                                             <td class="percentage-col">
@@ -603,7 +605,7 @@ document.getElementById('mypageUniqueTourCheckbox')?.addEventListener('change', 
         const isOwner = @json($isOwner);
         const officialId = ref => String(ref).startsWith('official-') ? String(ref).slice(9) : null;
         const songHref = isOwner ? '/mypage/attendances?song_id=' + song.song_id : (officialId(song.song_id) ? '/database/songs/' + officialId(song.song_id) : null);
-        const artistHref = !song.artist_id ? null : (isOwner ? '/mypage/attendances?artist_id=' + song.artist_id : (officialId(song.artist_id) ? '/database/artists/' + officialId(song.artist_id) : null));
+        const artistHref = !song.artist_id ? null : (officialId(song.artist_id) ? '/database/artists/' + officialId(song.artist_id) : '/mypage/artists/' + String(song.artist_id).replace('user-', ''));
         const artistCell = artistHref ? '<a href="' + artistHref + '" class="stats-link">' + song.artist_name + '</a>' : song.artist_name;
         const songCell = songHref ? '<a href="' + songHref + '" class="stats-link">' + song.title + '</a>' : song.title;
 

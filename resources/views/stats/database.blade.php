@@ -55,7 +55,7 @@
                     </div>
 
                     {{-- 集計をタブで分ける：Songs（曲ごとのランキング・トピックス）／Setlist（セトリの中の位置や曲数） --}}
-                    <div class="stats-tabs" style="display: flex; justify-content: center; gap: 8px; margin: 10px 0 25px;">
+                    <div class="stats-tab-bar">
                         <button type="button" class="stats-tab-btn is-active" data-stats-tab="songs">Songs</button>
                         <button type="button" class="stats-tab-btn" data-stats-tab="setlist">Setlists</button>
                         {{-- Artists：ほかのアーティストのDatabaseのstatsへ切り替える --}}
@@ -75,7 +75,7 @@
                             <h2 class="section-title" style="text-align: center;">
                                 <i class="fas fa-fire"></i> Most Performed Songs in Tours (<span id="dbSongCountLabel">{{ count(array_filter($songStats, fn($s) => $s['count'] > 0)) }}</span>)
     <span class="section-title-desc">演奏されたツアーの数が多い曲</span></h2>
-                            @if (!empty($isHikigatariArtist))
+                            @if (!empty($isHikigatariArtist) && !empty($doubleEncoreSongStats))
                             {{-- 福山雅治のみ：演奏回数を、DOUBLE ENCORE（弾き語り）を除いて数える（その場で表を切り替える） --}}
                             <div class="unique-tour-toggle" style="margin-left: 0;">
                                 <label class="unique-tour-label">
@@ -276,7 +276,7 @@
                             <h2 class="section-title" style="text-align: center;">
                                 <i class="fas fa-star"></i> Most Performed Encore Songs
     <span class="section-title-desc">アンコールで演奏されたツアーの数が多い曲</span></h2>
-                            @if (!empty($isHikigatariArtist))
+                            @if (!empty($isHikigatariArtist) && !empty($doubleEncoreSongStats))
                             {{-- 福山雅治のみ：アンコールの回数を、DOUBLE ENCORE（弾き語り）を除いて数える（その場で表を切り替える） --}}
                             <div class="unique-tour-toggle" style="margin-left: 0;">
                                 <label class="unique-tour-label">
@@ -429,7 +429,7 @@ function toggleSongRows(button) {
         : 'Show Less <i class="fas fa-chevron-up"></i>';
 }
 
-@if (!empty($isHikigatariArtist))
+@if (!empty($isHikigatariArtist) && !empty($doubleEncoreSongStats))
 // 福山雅治のみ：「DOUBLE ENCOREを除く」で、ページを読み込み直さずに表を描き直す（同ツアーを除くと同じ動き）
 const dbSongStats = { normal: @json($songStats), noDoubleEncore: @json($songStatsNoDoubleEncore) };
 const dbEncoreStats = { normal: @json($encoreSongStats), noDoubleEncore: @json($encoreSongStatsNoDoubleEncore) };

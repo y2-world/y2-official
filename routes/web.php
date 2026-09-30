@@ -141,6 +141,7 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
         // ユーザー登録アーティストの「データベース」的な閲覧ページ（公式のdatabase.live/live.show相当）。
         // 誰が登録したかに関わらず全ツアーが並ぶ、認可制限のない一覧・詳細。
         Route::get('artists', [UserArtistController::class, 'index'])->name('user_artists.index');
+        Route::get('artists/{artistId}', [UserArtistController::class, 'show'])->name('user_artists.show')->whereNumber('artistId');
         Route::get('artists/{artistId}/live', [UserConcertController::class, 'index'])->name('user_artists.live');
         Route::get('artists/{artistId}/songs', [UserSongController::class, 'index'])->name('user_artists.songs');
         Route::get('artists/{artistId}/stats', [UserArtistController::class, 'stats'])->name('user_artists.stats');

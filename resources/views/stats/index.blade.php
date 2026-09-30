@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Statistics')
-@section('og_title', 'Statistics - Yuki Official')
+@section('title', "Yuki's Statistics")
+@section('og_title', "Yuki's Statistics - Yuki Official")
 @section('og_description', 'Live attendance statistics and analytics')
 
 @section('content')
@@ -10,7 +10,7 @@
         <div class="row justify-content-center">
             <div class="col-xl-10">
                 <div class="element js-fadein">
-                    <h1 class="stats-title">Statistics</h1>
+                    <h1 class="stats-title">Yuki's Statistics</h1>
                     <p class="stats-subtitle">ライブ参加履歴とデータ分析</p>
 
                     <!-- Overall Stats Cards -->
@@ -54,7 +54,7 @@
                     </div>
 
                     {{-- 集計をタブで分ける：Songs（曲）／Data（アーティスト・会場・時期）／Stamps（スタンプ帳）／Artists（アーティスト別のstatsへ移動） --}}
-                    <div class="stats-tabs" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 10px 0 25px;">
+                    <div class="stats-tab-bar">
                         <button type="button" class="stats-tab-btn is-active" data-stats-tab="songs">Songs</button>
                         <button type="button" class="stats-tab-btn" data-stats-tab="data">Data</button>
                         <button type="button" class="stats-tab-btn" data-stats-tab="stamps">Stamps</button>
@@ -171,7 +171,7 @@
                                             @endif
                                         </td>
                                         <td class="artist-name">
-                                            <a href="{{ route('stats.artist', $artist['id']) }}" class="stats-link">{{ $artist['name'] }}</a>
+                                            <a href="{{ url('/setlists/artists/' . $artist['id']) }}" class="stats-link">{{ $artist['name'] }}</a>
                                         </td>
                                         <td class="count-col">
                                             <span class="count-badge">{{ $artist['show_count'] }}</span>
@@ -368,7 +368,7 @@
                                                 @endif
                                             </td>
                                             <td class="artist-name">
-                                                <a href="{{ route('stats.artist', $artistStat['id']) }}" class="stats-link">{{ $artistStat['name'] }}</a>
+                                                <a href="{{ url('/setlists/artists/' . $artistStat['id']) }}" class="stats-link">{{ $artistStat['name'] }}</a>
                                             </td>
                                             <td class="count-col">{{ $artistStat['done_count'] }} / {{ $artistStat['total_count'] }}</td>
                                             <td class="percentage-col">

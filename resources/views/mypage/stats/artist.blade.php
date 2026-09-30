@@ -48,7 +48,7 @@
                     </div>
 
                     {{-- 全体のstatsと同じタブ：Songs（曲）／Data（公演の年・会場）／Artists（ほかのアーティストへ切り替え）。スタンプ帳のボタンは見出しの下 --}}
-                    <div class="stats-tabs" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 10px 0 25px;">
+                    <div class="stats-tab-bar">
                         <button type="button" class="stats-tab-btn is-active" data-stats-tab="songs">Songs</button>
                         <button type="button" class="stats-tab-btn" data-stats-tab="data">Data</button>
                         @if (count($tabArtists))

@@ -6,11 +6,11 @@
         <div class="container" style="position: relative;">
             @include('database._breadcrumb', ['breadcrumbs' => [
                 ['label' => 'My Page', 'url' => route('mypage.index')],
-                ['label' => $song->artist->name, 'url' => route('mypage.user_artists.live', $song->user_artist_id)],
+                ['label' => $song->artist->name, 'url' => route('mypage.user_artists.show', $song->user_artist_id)],
                 ['label' => $song->title],
             ]])
             <p class="database-subtitle">
-                <a href="{{ route('mypage.user_artists.live', $song->user_artist_id) }}">{{ $song->artist->name }}</a>
+                <a href="{{ route('mypage.user_artists.show', $song->user_artist_id) }}">{{ $song->artist->name }}</a>
             </p>
             {{-- #（曲番）は選んでいるタブによって意味が変わる：Live Performances中はアーティスト内の
                  sort_order順位（常に存在）、My Live Attendances中は自分の参加記録での初登場順

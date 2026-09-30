@@ -13,11 +13,11 @@
         <div class="container" style="position: relative;">
             @include('database._breadcrumb', ['breadcrumbs' => [
                 ['label' => 'My Page', 'url' => route('mypage.index')],
-                ['label' => $artist->name, 'url' => route('mypage.user_artists.live', $artist->id)],
+                ['label' => $artist->name, 'url' => route('mypage.user_artists.show', $artist->id)],
                 ['label' => $tour->title],
             ]])
             <p class="database-subtitle">
-                <a href="{{ route('mypage.user_artists.live', $artist->id) }}">{{ $artist->name }}</a>
+                <a href="{{ route('mypage.user_artists.show', $artist->id) }}">{{ $artist->name }}</a>
             </p>
             <h1 class="database-title">{{ $tour->title }}</h1>
             <p class="database-subtitle">

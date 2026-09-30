@@ -6,7 +6,7 @@
         <div class="container" style="position: relative;">
             @include('database._breadcrumb', ['breadcrumbs' => [
                 ['label' => 'My Page', 'url' => route('mypage.index')],
-                ['label' => $artist->name, 'url' => route('mypage.user_artists.live', $artist->id)],
+                ['label' => $artist->name, 'url' => route('mypage.user_artists.show', $artist->id)],
                 ['label' => 'Songs'],
             ]])
             <h1 class="database-title" style="text-align: center;">Songs</h1>

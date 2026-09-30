@@ -273,15 +273,15 @@ class MyPageController extends Controller
             $heardByArtist[$setlist->tour->artist_id][] = [
                 'date' => $attendance->attended_date ? $attendance->attended_date->format('Y-m-d') : substr((string) $setlist->tour->date1, 0, 10),
                 'title' => $setlist->tour->title,
-                'url' => $isOwner ? route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'stats']) : route('live.show', $setlist->tour->id),
+                'url' => route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'stats']),
                 'song_ids' => collect(array_merge($setlist->setlist ?? [], $setlist->encore ?? []))
                     ->filter(fn ($s) => is_numeric($s['song'] ?? null))->map(fn ($s) => (int) $s['song'])->values()->all(),
             ];
         }
         ['topicHeardRevivals' => $topicHeardRevivals, 'topicFirstHeard' => $topicFirstHeard,
-         'topicWelcomeBack' => $topicWelcomeBack, 'topicRecentFirst' => $topicRecentFirst]
+         'topicWelcomeBack' => $topicWelcomeBack, 'topicRecentFirst' => $topicRecentFirst, 'topicRecentFirstAll' => $topicRecentFirstAll]
             = \App\Support\ArtistTopics::combined($heardByArtist);
 
-        return view('mypage.index', compact('attendances', 'overallStats', 'topSongs', 'topSongsUnique', 'artistStats', 'artistSongStats', 'venueStats', 'yearStats', 'topicHeardRevivals', 'topicFirstHeard', 'topicWelcomeBack', 'topicRecentFirst', 'isOwner', 'asProfile', 'statsUser'));
+        return view('mypage.index', compact('attendances', 'overallStats', 'topSongs', 'topSongsUnique', 'artistStats', 'artistSongStats', 'venueStats', 'yearStats', 'topicHeardRevivals', 'topicFirstHeard', 'topicWelcomeBack', 'topicRecentFirst', 'topicRecentFirstAll', 'isOwner', 'asProfile', 'statsUser'));
     }
 }

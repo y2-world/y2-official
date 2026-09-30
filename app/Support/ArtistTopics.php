@@ -7,7 +7,7 @@ use App\Models\DbSetlist;
 use App\Models\DbSong;
 
 // アーティストのstatsの「トピックス」。公式の演奏記録（db_setlists）から、
-// 久しぶりに演奏された曲・ご無沙汰の曲・本編ラスト曲を出す（Databaseのstats）。
+// 久しぶりに演奏された曲・いちばん長い間演奏されていない曲・定番だったのに演奏されなくなった曲・発売から初演まで時間がかかった曲・本編ラスト曲を出す（Databaseのstats）。
 // 参加記録と組み合わせて、最近初めて聴いた曲・久しぶりに聴いた曲・自分が聴いた「久しぶり」・初めて聴いた曲の年表を出す（Yuki／マイページのstats）。
 // 回数はどれも他のランキングと同じく「演奏されたツアーの数」で数える
 class ArtistTopics
@@ -92,22 +92,86 @@ class ArtistTopics
         return array_slice($rows, 0, self::LIST_SIZE);
     }
 
-    // ご無沙汰の曲：5ツアー以上で演奏されてきたのに、最後の演奏からいちばん時間がたっている曲
-    public function dormant(): array
+    // 同じライブシリーズを1つにまとめるためのキー（B'z の -Preview- / -Intermission- / -Extra- など、同じツアーの延長として
+    // 別に登録された公演を1ツアーとして数える）。タイトル末尾のそれらを外し、大文字・小文字の違いも同じとみなす
+    private function seriesKey(int $tourId): string
+    {
+        $title = trim($this->tours[$tourId]->title);
+        $title = preg_replace('/\s*(?:-\s*(?:Preview|Intermission|Extra)\s*-|EXTRA|In Tokyo)\s*$/iu', '', $title);
+
+        return mb_strtolower(preg_replace('/\s+/u', ' ', trim($title)));
+    }
+
+    // 曲が演奏されたライブシリーズの数
+    private function seriesCount(array $tourIds): int
+    {
+        return count(array_unique(array_map(fn ($id) => $this->seriesKey($id), $tourIds)));
+    }
+
+    // いちばん長い間演奏されていない曲：最後の演奏から時間がたっている順。$minTours 以上のツアー（同じライブシリーズは1つ）で演奏された曲だけ、
+    // $singlesOnly ならシングルの表題曲だけ
+    public function dormant(int $minTours = 1, bool $singlesOnly = false): array
     {
         $today = now()->toDateString();
+        $singles = $singlesOnly ? $this->singleSongIds() : null;
         $rows = [];
         foreach (array_keys($this->toursBySong) as $songId) {
             $ids = $this->sortedTours($songId);
-            if (count($ids) < 5) {
+            $series = $this->seriesCount($ids);
+            if ($series < $minTours || ($singles !== null && !isset($singles[$songId]))) {
                 continue;
             }
             $last = $this->tourInfo(end($ids));
-            $rows[] = ['song_id' => $songId, 'title' => $this->songs[$songId], 'tours' => count($ids), 'last' => $last, 'years' => self::years($last['date'], $today)];
+            $rows[] = ['song_id' => $songId, 'title' => $this->songs[$songId], 'tours' => $series, 'last' => $last, 'years' => self::years($last['date'], $today)];
         }
         usort($rows, fn ($a, $b) => $b['years'] <=> $a['years']);
 
         return array_slice($rows, 0, self::LIST_SIZE);
+    }
+
+    // 定番曲だったのに演奏されなくなった曲：5ツアー（同じライブシリーズは1つ）以上で演奏されてきたのに、最後の演奏からいちばん時間がたっている曲
+    public function formerStaples(): array
+    {
+        return $this->dormant(5);
+    }
+
+    // 発売から初めて演奏されるまでに時間がかかった曲（発売日と、初めて演奏されたツアーの開始日の差が大きい順）
+    public function lateDebuts(): array
+    {
+        $this->releaseDates ??= $this->releaseDates();
+        $rows = [];
+        foreach ($this->releaseDates as $songId => $released) {
+            if (!isset($this->songs[$songId]) || empty($this->toursBySong[$songId])) {
+                continue;
+            }
+            $first = $this->tourInfo($this->sortedTours($songId)[0]);
+            $years = self::years($released, $first['date']);
+            if ($years >= 1) {
+                $rows[] = ['song_id' => $songId, 'title' => $this->songs[$songId], 'released' => $released, 'first' => $first, 'years' => $years];
+            }
+        }
+        usort($rows, fn ($a, $b) => $b['years'] <=> $a['years']);
+
+        return array_slice($rows, 0, self::LIST_SIZE);
+    }
+
+    // シングルの表題曲（両A面は「A / B」の曲数ぶん先頭から、EPは全曲）。スタンプ帳のシングルの絞り込みと同じ考え方
+    private function singleSongIds(): array
+    {
+        $ids = [];
+        foreach (\App\Models\DbSingle::where('artist_id', $this->artistId)->get(['title', 'tracklist', 'ep']) as $single) {
+            $tracks = $single->tracklist ?? [];
+            if (!$single->ep) {
+                $tracks = array_slice($tracks, 0, count(preg_split('/[\/／]/u', $single->title ?? '')));
+            }
+            foreach ($tracks as $track) {
+                if (is_numeric($track['id'] ?? null)) {
+                    $ids[(int) $track['id']] = true;
+                }
+            }
+        }
+
+        return $ids;
     }
 
     // 本編ラスト曲：各パターンの本編（アンコール前）最後の曲を、演奏されたツアーの数で数える
@@ -190,18 +254,21 @@ class ArtistTopics
 
     // 最近初めて聴いた曲：初めて生で聴いた曲を、新しい順に。新曲（そのライブの1年前以降に発売された曲と、発売前だった曲）は、
     // 聴けて当たり前なので除く
-    public function recentFirstListens(array $heard): array
+    public function recentFirstListens(array $heard, bool $excludeNew = true): array
     {
         usort($heard, fn ($a, $b) => strcmp($a['date'], $b['date']));
         $first = [];
         foreach ($heard as $show) {
             foreach ($show['song_ids'] as $songId) {
                 if (isset($this->songs[$songId]) && !isset($first[$songId])) {
-                    $first[$songId] = ['song_id' => $songId, 'title' => $this->songs[$songId], 'date' => $show['date'], 'show' => $show['title'] ?? '', 'show_url' => $show['url'] ?? null];
+                    $first[$songId] = ['song_id' => $songId, 'title' => $this->songs[$songId], 'date' => $show['date'], 'show' => $show['title'] ?? '', 'show_url' => $show['url'] ?? null,
+                        'new' => $this->isNewSong($songId, $show['date'])];
                 }
             }
         }
-        $first = array_filter($first, fn ($row) => !$this->isNewSong($row['song_id'], $row['date']));
+        if ($excludeNew) {
+            $first = array_filter($first, fn ($row) => !$row['new']);
+        }
         $rows = array_values($first);
         usort($rows, fn ($a, $b) => strcmp($b['date'], $a['date']));
 
@@ -240,45 +307,18 @@ class ArtistTopics
         return $dates;
     }
 
-    // そのライブの頃のオリジナルアルバム（ベスト盤以外）の収録曲。ライブの3年前〜1年後に出たアルバムを対象にする
-    // （発売前のツアーで新しいアルバムの曲を先に演奏することがあるため、発売後だけでなく少し先に出たアルバムも含める）。
-    // ツアーでそのアルバムの曲を聴くのは当たり前なので、初めて聴いた曲の年表では、それ以外の曲（昔の曲・シングルのみ・未発表曲など）を目立たせる
-    private function tourAlbumSongIds(string $date): array
-    {
-        static $albumsByArtist = [];
-        $albumsByArtist[$this->artistId] ??= \App\Models\DbAlbum::where('artist_id', $this->artistId)->where('best', 0)
-            ->whereNotNull('date')->get(['date', 'tracklist'])->all();
-        $from = date('Y-m-d', strtotime($date . ' -3 years'));
-        $to = date('Y-m-d', strtotime($date . ' +1 year'));
-        $ids = [];
-        foreach ($albumsByArtist[$this->artistId] as $album) {
-            $released = substr((string) $album->date, 0, 10);
-            if ($released >= $from && $released <= $to) {
-                foreach ($album->tracklist ?? [] as $track) {
-                    if (is_numeric($track['id'] ?? null)) {
-                        $ids[(int) $track['id']] = true;
-                    }
-                }
-            }
-        }
-
-        return $ids;
-    }
-
     // 初めて聴いた曲の年表：年ごとに、その年に初めて生で聴いた曲（新しい年から）。
-    // tour_album: そのツアーの頃のオリジナルアルバムの曲かどうか / new: そのライブの時点で新曲かどうか（「新曲を除く」用）
+    // new: そのライブの時点で新曲かどうか（「新曲を除く」用）
     public function firstHeardTimeline(array $heard): array
     {
         usort($heard, fn ($a, $b) => strcmp($a['date'], $b['date']));
         $seen = [];
         $timeline = [];
         foreach ($heard as $show) {
-            $albumSongs = $this->tourAlbumSongIds($show['date']);
             foreach ($show['song_ids'] as $songId) {
                 if (isset($this->songs[$songId]) && !isset($seen[$songId])) {
                     $seen[$songId] = true;
-                    $timeline[substr($show['date'], 0, 4)][] = ['song_id' => $songId, 'title' => $this->songs[$songId], 'tour_album' => isset($albumSongs[$songId]),
-                        'new' => $this->isNewSong($songId, $show['date'])];
+                    $timeline[substr($show['date'], 0, 4)][] = ['song_id' => $songId, 'title' => $this->songs[$songId], 'new' => $this->isNewSong($songId, $show['date'])];
                 }
             }
         }
@@ -292,13 +332,14 @@ class ArtistTopics
     public static function combined(array $heardByArtist): array
     {
         $names = \App\Models\Artist::whereIn('id', array_keys($heardByArtist))->pluck('name', 'id');
-        $heardRevivals = $firstHeard = $welcomeBack = $recentFirst = [];
+        $heardRevivals = $firstHeard = $welcomeBack = $recentFirst = $recentFirstAll = [];
         foreach ($heardByArtist as $artistId => $heard) {
             $topics = new self((int) $artistId);
             $withArtist = fn ($row) => $row + ['artist' => $names[$artistId] ?? '', 'artist_id' => (int) $artistId];
             $heardRevivals = array_merge($heardRevivals, array_map($withArtist, $topics->heardRevivals($heard)));
             $welcomeBack = array_merge($welcomeBack, array_map($withArtist, $topics->welcomeBack($heard)));
             $recentFirst = array_merge($recentFirst, array_map($withArtist, $topics->recentFirstListens($heard)));
+            $recentFirstAll = array_merge($recentFirstAll, array_map($withArtist, $topics->recentFirstListens($heard, false)));
             foreach ($topics->firstHeardTimeline($heard) as $year => $songs) {
                 $firstHeard[$year] = array_merge($firstHeard[$year] ?? [], array_map($withArtist, $songs));
             }
@@ -306,6 +347,7 @@ class ArtistTopics
         usort($heardRevivals, fn ($a, $b) => $b['years'] <=> $a['years']);
         usort($welcomeBack, fn ($a, $b) => $b['years'] <=> $a['years']);
         usort($recentFirst, fn ($a, $b) => strcmp($b['date'], $a['date']));
+        usort($recentFirstAll, fn ($a, $b) => strcmp($b['date'], $a['date']));
         krsort($firstHeard);
 
         return [
@@ -313,6 +355,7 @@ class ArtistTopics
             'topicFirstHeard' => $firstHeard,
             'topicWelcomeBack' => array_slice($welcomeBack, 0, self::LIST_SIZE),
             'topicRecentFirst' => array_slice($recentFirst, 0, self::LIST_SIZE),
+            'topicRecentFirstAll' => array_slice($recentFirstAll, 0, self::LIST_SIZE),
         ];
     }
 
