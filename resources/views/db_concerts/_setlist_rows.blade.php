@@ -117,7 +117,7 @@
 
                                                 if ($songModel) {
                                                     $title = !empty($alternativeTitle) ? $alternativeTitle : $songModel->title;
-                                                    $link = $songLinkResolver ? $songLinkResolver($songModel) : url('/database/songs', $data['song']);
+                                                    $link = $songLinkResolver ? $songLinkResolver($songModel) : \App\Models\DbSong::showUrl($data['song'], $alternativeTitle);
                                                 } else {
                                                     $title = !empty($alternativeTitle) ? $alternativeTitle : $data['song'];
                                                     $link = null;

@@ -111,7 +111,7 @@
                                                                     <strong>
                                                                 @endif
                                                                 @if ($variant['song_id'])
-                                                                    <a href="{{ url('/database/songs', $variant['song_id']) }}">{{ $variant['title'] }}</a>
+                                                                    <a href="{{ \App\Models\DbSong::showUrl($variant['song_id'], $variant['title']) }}">{{ $variant['title'] }}</a>
                                                                 @else
                                                                     {{ $variant['title'] }}
                                                                 @endif

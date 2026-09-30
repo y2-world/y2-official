@@ -209,6 +209,46 @@ class DbSong extends Model
             ->values();
     }
 
+    // 楽曲ページへのリンク。曲名と違う表記（アルバム・シングルの収録表記、セトリの別表記）で
+    // 出しているリンクは、楽曲ページもその表記で絞り込んだ状態で開く
+    public static function showUrl($id, ?string $displayTitle = null): string
+    {
+        static $titles = [];
+        $url = url('/database/songs', $id);
+        if ($displayTitle === null || trim($displayTitle) === '') {
+            return $url;
+        }
+        $titles[$id] ??= self::whereKey($id)->value('title');
+
+        return trim($displayTitle) === $titles[$id] ? $url : $url . '?' . http_build_query(['title' => trim($displayTitle)]);
+    }
+
+    // セットリストの中でこの曲にあたる項目が、どの表記で載っているか（別表記があればそれ、無ければ曲名）を返す。
+    // 楽曲ページの表記ごとの絞り込み（All / 表記1 / 表記2）に使う
+    public function performanceTitlesIn(array $entries, array $slSongIds = []): array
+    {
+        $titles = [];
+        foreach ($entries as $entry) {
+            $song = $entry['song'] ?? null;
+            if ($song === null) {
+                continue;
+            }
+            $matched = $slSongIds
+                ? (is_numeric($song) && in_array((string) (int) $song, $slSongIds, true))
+                : (is_numeric($song) && (int) $song === (int) $this->id);
+            if (!$matched && !is_numeric($song)) {
+                $matched = trim(preg_replace('/\s*\[[^\]]+\]/u', '', $song)) === $this->title;
+            }
+            if ($matched) {
+                // 全角チルダ（～）と波ダッシュ（〜）、アポストロフィー（’ と '）の違いは入力の揺れなので、同じ表記として扱う
+                $alternative = str_replace(['～', '’', '‘'], ['〜', "'", "'"], trim((string) ($entry['alternative_title'] ?? '')));
+                $titles[] = $alternative !== '' ? $alternative : $this->title;
+            }
+        }
+
+        return array_values(array_unique($titles));
+    }
+
     // この曲が演奏されたDbSetlist（performedTourSetlists()と同じ抽出結果）のうち、
     // ログイン中の外部ユーザー本人が「参加した」と記録しているものに対応するツアーを、
     // 開催日（tour.date1）降順で返す（未ログイン時は空）。

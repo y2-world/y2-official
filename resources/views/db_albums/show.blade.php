@@ -71,7 +71,7 @@
 
                     <li>
                         @if (isset($data['id']))
-                            <a href="{{ url('/database/songs', $data['id']) }}"
+                            <a href="{{ \App\Models\DbSong::showUrl($data['id'], $data['exception'] ?? null) }}"
                                 style="color: #667eea; text-decoration: none; font-weight: 500; transition: color 0.3s ease;">
                                 {{ $data['exception'] ?? ($songs[$data['id']]->title ?? '') }}
                             </a>

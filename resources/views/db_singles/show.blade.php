@@ -48,7 +48,7 @@
               @foreach ($singles->tracklist as $data)
                 @if(isset($data['id']))
                   @if(isset($data['exception']))
-                  <li><a href="{{ url('/database/songs', $data['id']) }}" style="color: #667eea; text-decoration: none; font-weight: 500; transition: color 0.3s ease;">{{ $data['exception']}}</a></li>
+                  <li><a href="{{ \App\Models\DbSong::showUrl($data['id'], $data['exception']) }}" style="color: #667eea; text-decoration: none; font-weight: 500; transition: color 0.3s ease;">{{ $data['exception']}}</a></li>
                   @else
                   <li><a href="{{ url('/database/songs', $data['id']) }}" style="color: #667eea; text-decoration: none; font-weight: 500; transition: color 0.3s ease;">{{ $songs[$data['id']]->title ?? '' }}</a></li>
                   @endif

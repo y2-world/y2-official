@@ -39,7 +39,16 @@ document.addEventListener('DOMContentLoaded', function () {
     function applyTitles(key) {
         slots.forEach(function (slot) {
             if (slot._titleEl) {
-                slot._titleEl.textContent = slot._trackTitles[key] || slot._defaultTitle;
+                const title = slot._trackTitles[key] || slot._defaultTitle;
+                slot._titleEl.textContent = title;
+                // 曲名と違う表記で出しているときは、楽曲ページもその表記で絞り込んだ状態で開く
+                const url = new URL(slot._titleEl.href, window.location.href);
+                if (title !== slot._defaultTitle) {
+                    url.searchParams.set('title', title);
+                } else {
+                    url.searchParams.delete('title');
+                }
+                slot._titleEl.href = url.toString();
             }
         });
     }

@@ -168,7 +168,46 @@ class DbSongController extends Controller
             $secondTabNext = $nextId ? DbSong::find($nextId) : null;
         }
 
+        // 表記ごとの絞り込み用：各行（ツアー／参加記録）がどの表記で演奏されたか。
+        // 表記が2つ以上ある曲だけ「All / 表記1 / 表記2」を出す（並びは古い公演で使われた順）
+        $tourTitles = [];
+        foreach ($tourSetlists->sortBy(fn ($s) => optional($s->tour)->date1) as $setlist) {
+            $titles = $songs->performanceTitlesIn(array_merge($setlist->setlist ?? [], $setlist->encore ?? []));
+            $tourTitles[$setlist->tour_id] = array_values(array_unique(array_merge($tourTitles[$setlist->tour_id] ?? [], $titles)));
+        }
+        $secondTabTitles = [];
+        if ($secondTab === 'yuki') {
+            $slSongIds = $songs->slSongs()->pluck('id')->map(fn ($id) => (string) $id)->all();
+            $expandFes = fn ($items) => collect($items ?? [])->flatMap(fn ($item) => ($item['type'] ?? 'song') === 'block' ? ($item['songs'] ?? []) : [$item])->all();
+            foreach ($secondTabSetlists as $setlist) {
+                $secondTabTitles[$setlist->id] = $songs->performanceTitlesIn(array_merge(
+                    $setlist->setlist ?? [], $setlist->encore ?? [], $expandFes($setlist->fes_setlist), $expandFes($setlist->fes_encore)
+                ), $slSongIds);
+            }
+        } elseif ($secondTab === 'mine') {
+            $attended = $externalUser->attendances()->whereIn('db_setlist_id', $tourSetlists->pluck('id'))->with('dbSetlist')->get();
+            foreach ($attended as $attendance) {
+                $setlist = $attendance->dbSetlist;
+                $titles = $songs->performanceTitlesIn(array_merge($setlist->setlist ?? [], $setlist->encore ?? []));
+                $secondTabTitles[$setlist->tour_id] = array_values(array_unique(array_merge($secondTabTitles[$setlist->tour_id] ?? [], $titles)));
+            }
+        }
+        $performanceTitles = collect($tourTitles)->flatten()->merge(collect($secondTabTitles)->flatten())->unique()->values()->all();
+        if (count($performanceTitles) < 2) {
+            $performanceTitles = [];
+        }
+        // スタンプ等から ?title= で来た場合は、その表記を選んだ状態で開く（空白の有無・大文字小文字の違いは同じ表記とみなす）
+        // 「I'll be」と「I'LL BE」のように大文字・小文字で書き分けている表記もあるので、大文字・小文字まで一致するものを優先する
+        $looseTitle = fn ($t) => preg_replace('/\s+/u', '', str_replace(['～', '’', '‘'], ['〜', "'", "'"], (string) $t));
+        $wanted = $looseTitle($request->query('title'));
+        $initialTitle = collect($performanceTitles)->first(fn ($t) => $looseTitle($t) === $wanted)
+            ?? collect($performanceTitles)->first(fn ($t) => mb_strtolower($looseTitle($t)) === mb_strtolower($wanted));
+
         return view('db_songs.show', compact(
+            'tourTitles',
+            'secondTabTitles',
+            'performanceTitles',
+            'initialTitle',
             'songs',
             'allSongs',
             'albums',

@@ -65,7 +65,7 @@
                     $title = $alternativeTitle ?: ($songModel->title ?? 'Unknown Song');
                     if ($songModel && $isFromTimeline) {
                         $link = $kind === 'official'
-                            ? route('songs.show', ['id' => $songModel->id, 'tab' => 'mine'])
+                            ? route('songs.show', array_filter(['id' => $songModel->id, 'tab' => 'mine', 'title' => $alternativeTitle && $alternativeTitle !== $songModel->title ? $alternativeTitle : null]))
                             : route('mypage.user_songs.show', ['id' => $songModel->id, 'tab' => 'mine']);
                     } elseif ($songModel) {
                         $link = route('mypage.attendances.index', ['song_id' => $kind . '-' . $songModel->id]);
