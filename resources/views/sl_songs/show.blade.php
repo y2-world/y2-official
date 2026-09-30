@@ -113,7 +113,7 @@
 
                 <div id="second-tab-panel" style="display: {{ $initialTab === 'mine' ? 'block' : 'none' }};">
                     @if ($setlists->isEmpty())
-                        <p style="color: #718096; text-align: center;">演奏記録がありません。</p>
+                        <p style="color: #718096; text-align: center;">参加記録がありません。</p>
                     @else
                         <table class="table table-striped count">
                             <thead>

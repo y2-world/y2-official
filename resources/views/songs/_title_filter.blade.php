@@ -31,6 +31,24 @@
                     var titles = JSON.parse(row.dataset.titles || '[]');
                     row.style.display = !title || titles.indexOf(title) !== -1 ? '' : 'none';
                 });
+                // 選んだ表記の行が1つも無い一覧は、表を隠してメッセージを出す
+                // （楽曲ページで一覧が空のときと同じ文言・見た目。Live Performances以外のタブは参加記録）
+                document.querySelectorAll('table').forEach(function (table) {
+                    var rows = table.querySelectorAll('tr[data-titles]');
+                    if (!rows.length) return;
+                    var empty = Array.prototype.every.call(rows, function (row) { return row.style.display === 'none'; });
+                    var message = table.nextElementSibling && table.nextElementSibling.classList.contains('song-title-filter-empty')
+                        ? table.nextElementSibling : null;
+                    if (!message) {
+                        message = document.createElement('p');
+                        message.className = 'song-title-filter-empty';
+                        message.style.cssText = 'color: #718096; text-align: center;';
+                        message.textContent = table.closest('#live-performances-panel') ? '演奏記録がありません。' : '参加記録がありません。';
+                        table.parentNode.insertBefore(message, table.nextSibling);
+                    }
+                    table.style.display = empty ? 'none' : '';
+                    message.style.display = empty ? '' : 'none';
+                });
                 var url = new URL(window.location.href);
                 if (title) {
                     url.searchParams.set('title', title);
