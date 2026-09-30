@@ -1,6 +1,6 @@
 {{-- 福山雅治の楽曲一覧の弾き語り列。DOUBLE ENCORE（弾き語り）で演奏した公演はギター、
      同じ公演で通常（本編・1つ目のアンコール）でも演奏していればギターとマイクを横に並べて出す。
-     マイクはApple Musicのアーティストのアイコンのような斜めのハンドマイクで、Font Awesome（無料版）に無いのでSVGで描く --}}
+     マイクは斜めのハンドマイクで、Font Awesome（無料版）に無いのでSVGで描く --}}
 <td class="mobile" style="width: 1%; text-align: center; white-space: nowrap;">
     @if ($hikigatari)
         <span style="display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;">
