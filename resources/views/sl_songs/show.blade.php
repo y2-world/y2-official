@@ -104,7 +104,7 @@
                                                 <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
                                             @endif
                                             <td class="td_title"><a href="{{ route('live.show', $tour->id) }}">{{ $tour->title }}</a></td>
-                                            @if ($isHikigatariArtist)<td class="mobile" style="width: 1%; text-align: center;">@if (isset($hikigatariTourIds[$tour->id]))<i class="fa-solid fa-guitar" title="弾き語り（DOUBLE ENCORE）" style="color: #764ba2;"></i>@endif</td>@endif
+                                            @if ($isHikigatariArtist)@include('songs._hikigatari_cell', ['hikigatari' => isset($hikigatariTourIds[$tour->id]), 'normal' => isset($normalTourIds[$tour->id])])@endif
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -134,7 +134,7 @@
                                         <td class="td_date">{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
                                         <td class="td_title"><a
                                                 href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
-                                            @if ($isHikigatariArtist)<td class="mobile" style="width: 1%; text-align: center;">@if (isset($hikigatariSetlistIds[$setlist->id]))<i class="fa-solid fa-guitar" title="弾き語り（DOUBLE ENCORE）" style="color: #764ba2;"></i>@endif</td>@endif
+                                            @if ($isHikigatariArtist)@include('songs._hikigatari_cell', ['hikigatari' => isset($hikigatariSetlistIds[$setlist->id]), 'normal' => isset($normalSetlistIds[$setlist->id])])@endif
                                         <td class="pc"><a
                                                 href="{{ url('/venue?keyword=' . urlencode($setlist->venue)) }}">{{ $setlist->venue }}</a>
                                         </td>

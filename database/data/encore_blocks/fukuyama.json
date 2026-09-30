@@ -1,7 +1,7 @@
 {
  "artist_id": 5,
  "sl_artist_name": "福山雅治",
- "source": "LiveFans（アンコール #1 / #2 の区切り）",
+ "source": "LiveFans（アンコール #1 / #2 の区切り）と、同じツアーで区切りが分かっているパターン（アンコールの曲数が同じもの）からの推定",
  "changes": [
   {
    "table": "db_setlists",
@@ -4085,6 +4085,384 @@
    "double_encore": [
     "道標"
    ]
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2005-03-12",
+   "row": 1,
+   "order_no": 1,
+   "subtitle": "3.12 横浜1 3.17 宮城1",
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "わたしは風になる"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2010-12-27",
+   "row": 1,
+   "order_no": 1,
+   "subtitle": "12.27 Day 1 12.28 Day 2 12.30 Day 3",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "道標"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 6,
+   "subtitle": "3.10 広島1",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "milk tea"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 17,
+   "subtitle": "5.25 横浜1",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "最愛"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 18,
+   "subtitle": "5.26 横浜2",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "道標"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2011-02-24",
+   "row": 1,
+   "order_no": 28,
+   "subtitle": "7.31 大阪4",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "milk tea"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2013-12-14",
+   "row": 1,
+   "order_no": 1,
+   "subtitle": "12.14 Day 1",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "milk tea"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2013-12-14",
+   "row": 1,
+   "order_no": 2,
+   "subtitle": "12.15 Day 2",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "家族になろうよ"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2013-12-14",
+   "row": 1,
+   "order_no": 5,
+   "subtitle": "12.22 Day 5",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Heart of Xmas"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2013-12-14",
+   "row": 1,
+   "order_no": 6,
+   "subtitle": "12.23 Day 6",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Heart of Xmas"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2013-12-14",
+   "row": 1,
+   "order_no": 7,
+   "subtitle": "12.27 Day 7",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "東京にもあったんだ"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2013-12-14",
+   "row": 1,
+   "order_no": 8,
+   "subtitle": "12.28 Day 8",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Good Luck"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2013-12-14",
+   "row": 1,
+   "order_no": 9,
+   "subtitle": "12.30 Day 9",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "道標"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2013-12-14",
+   "row": 1,
+   "order_no": 10,
+   "subtitle": "12.31 Day 10",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "家族になろうよ"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2015-12-19",
+   "row": 1,
+   "order_no": 4,
+   "subtitle": "12.26 Day 5",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "最愛"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2017-12-21",
+   "row": 1,
+   "order_no": 1,
+   "subtitle": "12.21 Day 1",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Heart"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2017-12-21",
+   "row": 1,
+   "order_no": 3,
+   "subtitle": "12.27 Day 3",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "少年"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2017-12-21",
+   "row": 1,
+   "order_no": 4,
+   "subtitle": "12.28 Day 4",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "IT’S ONLY LOVE"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2017-12-21",
+   "row": 1,
+   "order_no": 5,
+   "subtitle": "12.30 Day 5",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Peach!!"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 2,
+   "order_no": 15,
+   "subtitle": "4.29 福岡3",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "昭和やったね"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2018-01-24",
+   "row": 2,
+   "order_no": 16,
+   "subtitle": "4.30 福岡4",
+   "points": [
+    3
+   ],
+   "double_encore": [
+    "蜜柑色の夏休み"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2019-12-21",
+   "row": 1,
+   "order_no": 6,
+   "subtitle": "12.30 Day 6",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "Good night"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 2,
+   "order_no": 7,
+   "subtitle": "5.21 広島1",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "蛍"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2021-11-27",
+   "row": 2,
+   "order_no": 10,
+   "subtitle": "5.29 札幌2",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "もっとそばにきて"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2024-04-27",
+   "row": 2,
+   "order_no": 8,
+   "subtitle": "7.10 大阪2",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "アクセス"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2025-08-30",
+   "row": 1,
+   "order_no": 3,
+   "subtitle": "9.15 埼玉1",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "遠くへ"
+   ],
+   "inferred": true
+  },
+  {
+   "table": "db_setlists",
+   "tour_date1": "2025-08-30",
+   "row": 1,
+   "order_no": 4,
+   "subtitle": "9.16 埼玉2",
+   "points": [
+    2
+   ],
+   "double_encore": [
+    "あの夏も 海も 空も"
+   ],
+   "inferred": true
   }
  ]
 }

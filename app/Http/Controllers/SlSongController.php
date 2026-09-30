@@ -140,6 +140,8 @@ class SlSongController extends Controller
             || optional($song->artist)->name === '福山雅治';
         $hikigatariSetlistIds = [];
         $hikigatariTourIds = [];
+        $normalSetlistIds = [];
+        $normalTourIds = [];
         if ($isHikigatariArtist) {
             foreach ($setlists as $setlist) {
                 $doubleEncore = \App\Support\EncoreBlocks::doubleEncore((array) ($setlist->encore ?? []));
@@ -147,10 +149,17 @@ class SlSongController extends Controller
                 if (\App\Support\PerformanceTitles::in($doubleEncore, $matches, $title) !== []) {
                     $hikigatariSetlistIds[$setlist->id] = true;
                 }
+                $normalLists = array_merge((array) ($setlist->setlist ?? []), \App\Support\EncoreBlocks::withoutDoubleEncore((array) ($setlist->encore ?? [])), $expandFes($setlist->fes_setlist), $expandFes($setlist->fes_encore));
+                if (\App\Support\PerformanceTitles::in($normalLists, $matches, $title) !== []) {
+                    $normalSetlistIds[$setlist->id] = true;
+                }
             }
             foreach ($performedTourSetlists as $tourSetlist) {
                 if ($dbSong->isHikigatariIn($tourSetlist)) {
                     $hikigatariTourIds[$tourSetlist->tour_id] = true;
+                }
+                if ($dbSong->isNormalIn($tourSetlist)) {
+                    $normalTourIds[$tourSetlist->tour_id] = true;
                 }
             }
         }
@@ -197,7 +206,9 @@ class SlSongController extends Controller
             'initialTitle',
             'isHikigatariArtist',
             'hikigatariSetlistIds',
-            'hikigatariTourIds'
+            'hikigatariTourIds',
+            'normalSetlistIds',
+            'normalTourIds'
         ));
     }
 

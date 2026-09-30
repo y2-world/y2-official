@@ -196,10 +196,15 @@ class DbSongController extends Controller
         $isHikigatariArtist = (int) $songs->artist_id === \App\Support\EncoreBlocks::HIKIGATARI_ARTIST_ID;
         $hikigatariTourIds = [];
         $hikigatariSecondTabIds = [];
+        $normalTourIds = [];
+        $normalSecondTabIds = [];
         if ($isHikigatariArtist) {
             foreach ($tourSetlists as $setlist) {
                 if ($songs->isHikigatariIn($setlist)) {
                     $hikigatariTourIds[$setlist->tour_id] = true;
+                }
+                if ($songs->isNormalIn($setlist)) {
+                    $normalTourIds[$setlist->tour_id] = true;
                 }
             }
             if ($secondTab === 'yuki') {
@@ -207,11 +212,18 @@ class DbSongController extends Controller
                     if ($songs->performanceTitlesIn(\App\Support\EncoreBlocks::doubleEncore((array) ($setlist->encore ?? [])), $slSongIds) !== []) {
                         $hikigatariSecondTabIds[$setlist->id] = true;
                     }
+                    $normalLists = array_merge((array) ($setlist->setlist ?? []), \App\Support\EncoreBlocks::withoutDoubleEncore((array) ($setlist->encore ?? [])), $expandFes($setlist->fes_setlist), $expandFes($setlist->fes_encore));
+                    if ($songs->performanceTitlesIn($normalLists, $slSongIds) !== []) {
+                        $normalSecondTabIds[$setlist->id] = true;
+                    }
                 }
             } elseif ($secondTab === 'mine') {
                 foreach ($attended as $attendance) {
                     if ($attendance->dbSetlist && $songs->isHikigatariIn($attendance->dbSetlist)) {
                         $hikigatariSecondTabIds[$attendance->dbSetlist->tour_id] = true;
+                    }
+                    if ($attendance->dbSetlist && $songs->isNormalIn($attendance->dbSetlist)) {
+                        $normalSecondTabIds[$attendance->dbSetlist->tour_id] = true;
                     }
                 }
             }
@@ -227,6 +239,8 @@ class DbSongController extends Controller
             'isHikigatariArtist',
             'hikigatariTourIds',
             'hikigatariSecondTabIds',
+            'normalTourIds',
+            'normalSecondTabIds',
             'performanceTitles',
             'initialTitle',
             'songs',

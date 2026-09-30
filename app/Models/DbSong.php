@@ -246,6 +246,13 @@ class DbSong extends Model
         return $this->performanceTitlesIn(\App\Support\EncoreBlocks::doubleEncore($setlist->encore ?? [])) !== [];
     }
 
+    // このセットリストでこの曲をDOUBLE ENCORE以外（本編・1つ目のアンコール）で演奏したか
+    // （弾き語りと通常の両方で演奏した公演に、ギターとマイクのアイコンを出すため）
+    public function isNormalIn(DbSetlist $setlist): bool
+    {
+        return $this->performanceTitlesIn(array_merge($setlist->setlist ?? [], \App\Support\EncoreBlocks::withoutDoubleEncore($setlist->encore ?? []))) !== [];
+    }
+
     // この曲が演奏されたDbSetlist（performedTourSetlists()と同じ抽出結果）のうち、
     // ログイン中の外部ユーザー本人が「参加した」と記録しているものに対応するツアーを、
     // 開催日（tour.date1）降順で返す（未ログイン時は空）。
