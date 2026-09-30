@@ -16,6 +16,8 @@
     // スマホ：参加した公演のタイトル（リンク先があればリンクに）。日付は下の段に小さく出す
     $topicShowTitle = fn ($title, $url) => $url ? '<a href="' . e($url) . '" class="stats-link">' . e($title) . '</a>' : e($title);
     $topicSongLink = fn ($row) => '<a href="' . e(url('/database/songs/' . $row['song_id'])) . '" class="stats-link">' . e($row['title']) . '</a>';
+    // 新曲以外（リリースから時間がたってから初めて聴けた曲）は太字にする
+    $topicSongLinkMarked = fn ($row) => empty($row['new']) ? '<span style="font-weight: 700;">' . $topicSongLink($row) . '</span>' : $topicSongLink($row);
 
     // 全体のstatsでは、アーティストをまたいで並ぶので曲名の下にアーティスト名を出す
     $topicWelcomeBack = $topicWelcomeBack ?? [];
@@ -46,7 +48,7 @@
             <tbody data-recent-kind="{{ $kind }}" @if ($kind === 'all') style="display: none;" @endif>
                 @foreach ($rows as $row)
                 <tr>
-                    <td class="song-title">{!! $topicSongLink($row) !!}</td>
+                    <td class="song-title">{!! $topicSongLinkMarked($row) !!}</td>
                     @if ($topicShowArtist)<td>{!! $topicArtistCell($row) !!}</td>@endif
                     <td style="font-size: 0.85em;">@if (!empty($row['show_url']))<a href="{{ $row['show_url'] }}" class="stats-link">{{ $row['show'] }}</a>@else{{ $row['show'] }}@endif</td>
                     <td class="count-col"><span class="count-badge">{{ date('Y.m.d', strtotime($row['date'])) }}</span></td>
@@ -60,7 +62,7 @@
             @foreach (['exclude' => $topicRecentFirst, 'all' => $topicRecentFirstAll] as $kind => $rows)
                 @foreach ($rows as $row)
                     {{-- 日付はバッジに入りきらないので、右端に小さく出す --}}
-                    @include('stats._stacked_row', ['rank' => null, 'song' => $topicSongLink($row), 'artist' => $topicShowArtist ? $topicArtistCell($row) : null, 'showArtist' => $topicShowArtist,
+                    @include('stats._stacked_row', ['rank' => null, 'song' => $topicSongLinkMarked($row), 'artist' => $topicShowArtist ? $topicArtistCell($row) : null, 'showArtist' => $topicShowArtist,
                         'lines' => [['tour' => $topicShowTitle($row['show'], $row['show_url'] ?? null)]], 'badge' => null, 'rightText' => date('Y.m.d', strtotime($row['date'])),
                         'kind' => 'recent-' . $kind, 'hidden' => $kind === 'all'])
                 @endforeach
@@ -158,7 +160,7 @@ document.getElementById('recentFirstExcludeNew')?.addEventListener('change', fun
                 @foreach ($topicFirstHeard as $year => $songsOfYear)
                 <tr class="first-listens-row">
                     <td style="white-space: nowrap;">{{ $year }}</td>
-                    <td class="song-title" style="line-height: 1.8;">@foreach ($songsOfYear as $song)<span class="first-listen" style="display: inline;" @if ($song['new']) data-new="1" @endif><span class="first-listen-sep" style="display: inline;">{{ $loop->first ? '' : ' / ' }}</span>{!! $topicSongLink($song) !!}</span>@endforeach</td>
+                    <td class="song-title" style="line-height: 1.8;">@foreach ($songsOfYear as $song)<span class="first-listen" style="display: inline;{{ $song['new'] ? '' : ' font-weight: 700;' }}" @if ($song['new']) data-new="1" @endif><span class="first-listen-sep" style="display: inline;">{{ $loop->first ? '' : ' / ' }}</span>{!! $topicSongLink($song) !!}</span>@endforeach</td>
                     <td class="count-col"><span class="count-badge first-listens-count">{{ count($songsOfYear) }}</span></td>
                 </tr>
                 @endforeach
