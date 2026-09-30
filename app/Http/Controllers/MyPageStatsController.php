@@ -46,9 +46,53 @@ class MyPageStatsController extends Controller
 
     // アーティスト別の自分専用統計（/stats/artist/{id} のMy Page版）。
     // $artistId は "official-{id}" / "user-{id}" 形式。
-    public function artist($artistId)
+    // 統計を見るユーザー。?user= で他のユーザーを指定すると、その人のアーティスト別のstats・スタンプ帳を見られる
+    //（プロフィールと同じく、ログインしている人なら誰でも見られる）
+    private ?ExternalUser $statsUser = null;
+
+    private function resolveStatsUser(Request $request): ExternalUser
+    {
+        $viewer = Auth::guard('external')->user();
+        $viewedUserId = $request->query('user');
+        if (!$viewedUserId || (int) $viewedUserId === (int) $viewer->id) {
+            return $viewer;
+        }
+
+        return ExternalUser::findOrFail($viewedUserId);
+    }
+
+    // タブの「Artists」：統計を見ているユーザーが参加したアーティスト（公式・自分で登録したもの）に切り替える
+    private function tabArtists(string $currentRef): array
+    {
+        $attendances = $this->statsUser->attendances()->with(['dbSetlist.tour.artist', 'userSetlist.concert.artist'])->get();
+        $artists = [];
+        foreach ($attendances as $attendance) {
+            if ($artist = $attendance->dbSetlist?->tour?->artist) {
+                $artists['official-' . $artist->id] ??= ['name' => $artist->name, 'count' => 0];
+                $artists['official-' . $artist->id]['count']++;
+            } elseif ($artist = $attendance->userSetlist?->concert?->artist) {
+                $artists['user-' . $artist->id] ??= ['name' => $artist->name, 'count' => 0];
+                $artists['user-' . $artist->id]['count']++;
+            }
+        }
+        uasort($artists, fn ($a, $b) => $b['count'] <=> $a['count']);
+
+        return collect($artists)->map(fn ($a, $ref) => [
+            'name' => $a['name'],
+            'url' => route('mypage.stats.artist', $this->isOwner() ? $ref : ['artistId' => $ref, 'user' => $this->statsUser->id]),
+            'current' => $ref === $currentRef,
+        ])->values()->all();
+    }
+
+    private function isOwner(): bool
+    {
+        return (int) $this->statsUser->id === (int) Auth::guard('external')->id();
+    }
+
+    public function artist(Request $request, $artistId)
     {
         [$kind, $id] = $this->splitRef($artistId);
+        $this->statsUser = $this->resolveStatsUser($request);
 
         if ($kind === 'official') {
             return $this->officialArtistStats($id);
@@ -66,7 +110,7 @@ class MyPageStatsController extends Controller
 
         // type=4（ソロ）は本人単独のプロジェクトであり、アーティスト本体の統計には含めない
         // （イベント・ap bank fesはそのアーティスト自身としての出演なので含める）
-        $attendances = Auth::guard('external')->user()
+        $attendances = $this->statsUser
             ->attendances()
             ->with('dbSetlist.tour')
             ->whereHas('dbSetlist.tour', fn ($q) => $q->where('artist_id', $id)->where('type', '!=', 4))
@@ -147,18 +191,42 @@ class MyPageStatsController extends Controller
             ->values();
 
         $artistRef = 'official-' . $artist->id;
-        $stampsRoute = route('mypage.stats.stamps', $artistRef);
+        $stampsRoute = route('mypage.stats.stamps', $this->isOwner() ? $artistRef : ['artistId' => $artistRef, 'user' => $this->statsUser->id]);
+        $isOwner = $this->isOwner();
+        $statsUser = $this->statsUser;
+        $tabArtists = $this->tabArtists($artistRef);
+
+        // トピックス（最近初めて聴いた曲・久しぶりに聴いた曲・自分が聴いた「久しぶり」・初めて聴いた曲の年表）
+        $heard = $attendances->filter(fn ($a) => $a->dbSetlist)->map(fn ($a) => [
+            'date' => $a->attended_date ? $a->attended_date->format('Y-m-d') : substr((string) optional($a->dbSetlist->tour)->date1, 0, 10),
+            'title' => optional($a->dbSetlist->tour)->title,
+            'url' => $this->isOwner() ? route('mypage.attendances.show', ['attendance' => $a, 'from' => 'stats']) : route('live.show', $a->dbSetlist->tour_id),
+            'song_ids' => collect(array_merge($a->dbSetlist->setlist ?? [], $a->dbSetlist->encore ?? []))
+                ->filter(fn ($s) => is_numeric($s['song'] ?? null))->map(fn ($s) => (int) $s['song'])->values()->all(),
+        ])->values()->all();
+        $topics = new \App\Support\ArtistTopics((int) $artist->id);
+        $topicHeardRevivals = $topics->heardRevivals($heard);
+        $topicFirstHeard = $topics->firstHeardTimeline($heard);
+        $topicWelcomeBack = $topics->welcomeBack($heard);
+        $topicRecentFirst = $topics->recentFirstListens($heard);
 
         return view('mypage.stats.artist', compact(
             'artist',
             'artistRef',
             'stampsRoute',
+            'isOwner',
+            'statsUser',
+            'tabArtists',
             'totalShows',
             'totalSongs',
             'allSongs',
             'allSongsUnique',
             'yearStats',
-            'venueStats'
+            'venueStats',
+            'topicHeardRevivals',
+            'topicFirstHeard',
+            'topicWelcomeBack',
+            'topicRecentFirst'
         ));
     }
 
@@ -169,7 +237,7 @@ class MyPageStatsController extends Controller
             abort(404);
         }
 
-        $attendances = Auth::guard('external')->user()
+        $attendances = $this->statsUser
             ->attendances()
             ->with('userSetlist.concert')
             ->whereHas('userSetlist.concert', fn ($q) => $q->where('user_artist_id', $id))
@@ -248,12 +316,18 @@ class MyPageStatsController extends Controller
             ->values();
 
         $artistRef = 'user-' . $artist->id;
-        $stampsRoute = route('mypage.stats.stamps', $artistRef);
+        $stampsRoute = route('mypage.stats.stamps', $this->isOwner() ? $artistRef : ['artistId' => $artistRef, 'user' => $this->statsUser->id]);
+        $isOwner = $this->isOwner();
+        $statsUser = $this->statsUser;
+        $tabArtists = $this->tabArtists($artistRef);
 
         return view('mypage.stats.artist', compact(
             'artist',
             'artistRef',
             'stampsRoute',
+            'isOwner',
+            'statsUser',
+            'tabArtists',
             'totalShows',
             'totalSongs',
             'allSongs',
@@ -271,10 +345,7 @@ class MyPageStatsController extends Controller
     {
         [$kind, $id] = $this->splitRef($artistId);
 
-        $viewedUserId = $request->query('user');
-        $externalUser = $viewedUserId
-            ? ExternalUser::findOrFail($viewedUserId)
-            : Auth::guard('external')->user();
+        $externalUser = $this->statsUser = $this->resolveStatsUser($request);
 
         if ($kind === 'official') {
             return $this->officialStamps($id, $externalUser);
@@ -343,7 +414,7 @@ class MyPageStatsController extends Controller
         $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds, $fesOnlyDbSongIds, $hikigatariDbSongIds, $stampFilters) {
             return [
                 'song_id' => $song->id,
-                'song_url' => route('mypage.attendances.index', ['song_id' => 'official-' . $song->id]),
+                'song_url' => $this->isOwner() ? route('mypage.attendances.index', ['song_id' => 'official-' . $song->id]) : url('/database/songs/' . $song->id),
                 'title' => $song->title,
                 'done' => isset($playedDbSongIds[$song->id]),
                 'never_performed' => !isset($everPerformedDbSongIds[$song->id]),
@@ -403,7 +474,7 @@ class MyPageStatsController extends Controller
         $stamps = $userSongs->map(function (UserSong $song) use ($playedUserSongIds, $everPerformedUserSongIds, $fesOnlyUserSongIds) {
             return [
                 'song_id' => $song->id,
-                'song_url' => route('mypage.attendances.index', ['song_id' => 'user-' . $song->id]),
+                'song_url' => $this->isOwner() ? route('mypage.attendances.index', ['song_id' => 'user-' . $song->id]) : null,
                 'title' => $song->title,
                 'done' => isset($playedUserSongIds[$song->id]),
                 'never_performed' => !isset($everPerformedUserSongIds[$song->id]),

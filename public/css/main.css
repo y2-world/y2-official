@@ -4514,3 +4514,57 @@ a.setlist-card:hover {
 .timeline-user-select:hover {
     border-color: #bbb;
 }
+
+/* 楽曲ページの「DOUBLE ENCOREを除く」（福山雅治のみ）。スマホではタブと同じく中央寄せ */
+@media (max-width: 768px) {
+    .double-encore-toggle .unique-tour-label {
+        justify-content: center;
+    }
+}
+
+/* Databaseのstatsのタブ（Songs / Setlist） */
+.stats-tab-btn {
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    background: transparent;
+    color: white;
+}
+
+.stats-tab-btn.is-active {
+    background: white;
+    color: #667eea;
+    border-color: white;
+}
+
+/* statsの各欄の日本語の説明。見出しの中（仕切りの線の上）に小さく出す */
+.section-title-desc {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: #718096;
+}
+
+/* statsの表：回数・年数・日付のバッジと年の列は、タイトルが長くても折り返さない（「25.3年」の「年」だけが2行目に落ちないように） */
+.stats-table .count-col,
+.stats-table .count-badge {
+    white-space: nowrap;
+}
+
+/* statsのタブの「Artists」（プルダウン）。タブのボタンと同じ見た目にする */
+.stats-tab-select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 32px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='white'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.stats-tab-select option {
+    color: #333;
+}

@@ -4,15 +4,46 @@
 @section('og_title', 'My Statistics - Yuki Official')
 
 @section('content')
+@php
+    // プロフィール画面として、本人以外がこの統計を見ることがある（My Statistics を公開しているユーザー）。
+    // 参加記録の一覧・詳細などの本人だけが開けるページへのリンクは、本人以外にはDatabaseのページ（公式の曲・アーティスト・ライブ）にし、
+    // それが無いもの（自分で登録したアーティストなど）はリンクなしの文字にする。アーティスト別のstats・スタンプ帳は ?user= でその人の分を開く
+    $isOwner = $isOwner ?? true;
+    $asProfile = $asProfile ?? false;
+    $refId = fn ($ref) => (int) substr((string) $ref, strpos((string) $ref, '-') + 1);
+    $isOfficialRef = fn ($ref) => str_starts_with((string) $ref, 'official-');
+    $songUrl = fn ($ref) => $isOwner ? route('mypage.attendances.index', ['song_id' => $ref]) : ($isOfficialRef($ref) ? url('/database/songs/' . $refId($ref)) : null);
+    $artistUrl = fn ($ref) => $isOwner ? route('mypage.attendances.index', ['artist_id' => $ref]) : ($isOfficialRef($ref) ? route('database.artist', $refId($ref)) : null);
+    $artistStatsUrl = fn ($ref) => $isOwner ? route('mypage.stats.artist', $ref) : route('mypage.stats.artist', ['artistId' => $ref, 'user' => $statsUser->id]);
+    $stampsUrl = fn ($ref) => $isOwner ? route('mypage.stats.stamps', $ref) : route('mypage.stats.stamps', ['artistId' => $ref, 'user' => $statsUser->id]);
+    $attendanceUrl = fn ($attendance, $tour) => $isOwner ? route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'stats'])
+        : ($attendance->db_setlist_id && $tour ? route('live.show', $tour->id) : null);
+    $link = fn ($url, $text) => $url ? '<a href="' . e($url) . '" class="stats-link">' . e($text) . '</a>' : e($text);
+@endphp
 <div class="stats-wrapper">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-10">
                 <div class="element js-fadein">
+                    @if ($asProfile)
+                        <div class="profile-header">
+                            @if ($statsUser->avatar_url)
+                                <img src="{{ $statsUser->avatar_url }}" alt="" class="profile-avatar">
+                            @else
+                                <div class="profile-avatar profile-avatar--placeholder"><i class="fa-solid fa-user"></i></div>
+                            @endif
+                            <h1 class="stats-title" style="margin: 12px 0 0; font-size: 1.8rem;">{{ $statsUser->name ?: 'ゲスト' }}</h1>
+                            @if ($statsUser->bio)
+                                <p class="profile-bio">{{ $statsUser->bio }}</p>
+                            @endif
+                        </div>
+                        <p class="stats-subtitle" style="margin-top: 20px;">参加したライブの記録</p>
+                    @else
                     <div style="text-align: center;">
                         <h1 class="stats-title" style="margin-bottom: 0;">My Statistics</h1>
                     </div>
                     <p class="stats-subtitle" style="margin-top: 10px;">参加したライブの記録</p>
+                    @endif
 
                     <!-- Overall Stats Cards -->
                     <div class="row stats-cards">
@@ -54,87 +85,38 @@
                         </div>
                     </div>
 
-                    <!-- Attendances Section -->
-                    <div class="stats-section visible">
-                        <div class="section-title-wrapper" style="flex-direction: row !important; flex-wrap: nowrap; align-items: center; min-width: 0;">
-                            <h2 class="section-title" style="text-align: center !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; flex: 1 1 auto; margin-bottom: 0;">
-                                <i class="fas fa-calendar-check"></i> My Live Attendances
-                            </h2>
-                            <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-button" title="セットリストを追加" style="flex: 0 0 auto;">
-                                <i class="fas fa-plus"></i>
-                            </a>
-                        </div>
-                        <div class="database-year-content" style="padding: 0;">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th class="mobile">#</th>
-                                        <th class="mobile">開催日</th>
-                                        <th class="sp">アーティスト / タイトル</th>
-                                        <th class="pc td_artist">アーティスト</th>
-                                        <th class="pc">タイトル</th>
-                                        <th class="pc">会場</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php $attendanceStart = count($attendances); @endphp
-                                    @forelse ($attendances as $index => $attendance)
-                                        @php
-                                            $tour = $attendance->attendedTour;
-                                            $isFes = in_array((int)($tour?->type ?? 0), [2, 3, 4], true);
-                                            $artistRef = $attendance->db_setlist_id
-                                                ? 'official-' . $tour?->artist_id
-                                                : 'user-' . $tour?->user_artist_id;
-                                        @endphp
-                                        <tr class="{{ $index >= 10 ? 'hidden-row-attendances' : '' }}">
-                                            <td>{{ $attendanceStart - $index }}</td>
-                                            <td>{{ $attendance->attended_date?->format('Y.m.d') ?? '-' }}</td>
-                                            <td class="sp">
-                                                @if ($tour?->artist && !$isFes)
-                                                    <a href="{{ route('mypage.attendances.index', ['artist_id' => $artistRef]) }}" class="stats-link">{{ $tour->artist->name }}</a>
-                                                    /
-                                                @endif
-                                                <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'stats']) }}" class="stats-link">{{ $tour->title ?? '-' }}</a>
-                                            </td>
-                                            <td class="pc td_artist">
-                                                @if ($tour?->artist && !$isFes)
-                                                    <a href="{{ route('mypage.attendances.index', ['artist_id' => $artistRef]) }}" class="stats-link">{{ $tour->artist->name }}</a>
-                                                @endif
-                                            </td>
-                                            <td class="pc">
-                                                <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'stats']) }}" class="stats-link">{{ $tour->title ?? '-' }}</a>
-                                            </td>
-                                            <td class="pc">{{ $attendance->venue }}</td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="6">まだ参加したライブが記録されていません。右上の「＋」から追加してください。</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                            @if (count($attendances) > 10)
-                                <div class="show-more-container">
-                                    <button class="show-more-btn" onclick="toggleAttendanceRows(this)">
-                                        Show More <i class="fas fa-chevron-down"></i>
-                                    </button>
-                                </div>
-                            @endif
-                        </div>
+                    {{-- 全体のstatsと同じく、タブで分ける：Songs（曲）／Setlists（参加記録・アーティスト・会場・時期）／Stamps（スタンプ帳）／Artists（アーティスト別のstatsへ移動） --}}
+                    <div class="stats-tabs" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 10px 0 25px;">
+                        <button type="button" class="stats-tab-btn is-active" data-stats-tab="songs">Songs</button>
+                        <button type="button" class="stats-tab-btn" data-stats-tab="setlists">Setlists</button>
+                        <button type="button" class="stats-tab-btn" data-stats-tab="stamps">Stamps</button>
+                        {{-- Artists：選んだアーティストのstatsに移動する --}}
+                        @if (count($artistStats))
+                        <select class="stats-tab-btn stats-tab-select" onchange="if (this.value) location.href = this.value;">
+                            <option value="" selected>All</option>
+                            @foreach ($artistStats as $tabArtist)
+                                <option value="{{ $artistStatsUrl($tabArtist['id']) }}">{{ $tabArtist['name'] }}</option>
+                            @endforeach
+                        </select>
+                        @endif
                     </div>
 
+                    <div class="stats-tab-panel" data-stats-panel="songs">
                     <!-- Most Listened Songs Section -->
                     <div class="stats-section visible">
                         <div class="section-title-wrapper" style="flex-direction: column; align-items: center; gap: 10px;">
                             <h2 class="section-title" style="text-align: center;">
                                 <i class="fas fa-fire"></i> Most Listened Songs (<span id="mypageSongCountLabel">{{ count($topSongs) }}</span>)
-                            </h2>
+    <span class="section-title-desc">参加したライブで聴いた回数が多い曲</span></h2>
+                            {{-- 同じツアーに2回以上行っていなければ、数え方が変わらないのでチェックを出さない --}}
+                            @if ($topSongs != $topSongsUnique)
                             <div class="unique-tour-toggle" style="margin-left: 0;">
                                 <label class="unique-tour-label">
                                     <input type="checkbox" id="mypageUniqueTourCheckbox" class="unique-tour-checkbox">
                                     <span class="unique-tour-text">同ツアーを除く</span>
                                 </label>
                             </div>
+                            @endif
                         </div>
                         <div class="stats-table-container">
                             <table class="stats-table" id="mypageSongStatsTable">
@@ -167,11 +149,11 @@
                                                 @endif
                                             </td>
                                             <td class="song-title">
-                                                <a href="{{ route('mypage.attendances.index', ['song_id' => $song['song_id']]) }}" class="stats-link">{{ $song['title'] }}</a>
+                                                {!! $link($songUrl($song['song_id']), $song['title']) !!}
                                             </td>
                                             <td class="artist-name">
                                                 @if ($song['artist_id'])
-                                                    <a href="{{ route('mypage.attendances.index', ['artist_id' => $song['artist_id']]) }}" class="stats-link">{{ $song['artist_name'] }}</a>
+                                                    {!! $link($artistUrl($song['artist_id']), $song['artist_name']) !!}
                                                 @else
                                                     {{ $song['artist_name'] }}
                                                 @endif
@@ -195,12 +177,16 @@
                         </div>
                     </div>
 
+                    @includeWhen(isset($topicHeardRevivals), 'stats._topics_listener', ['showFirstListens' => false, 'topicArtistUrl' => fn ($id) => $artistUrl('official-' . $id)])
+                    </div>
+
+                    <div class="stats-tab-panel" data-stats-panel="setlists" style="display: none;">
                     <!-- Artist Statistics Section -->
                     <div class="stats-section visible">
                         <div class="section-title-wrapper">
                             <h2 class="section-title">
                                 <i class="fas fa-microphone"></i> Artist Statistics
-                            </h2>
+    <span class="section-title-desc">参加したライブが多いアーティスト</span></h2>
                         </div>
                         <div class="stats-table-container">
                             <table class="stats-table">
@@ -232,7 +218,7 @@
                                                 @endif
                                             </td>
                                             <td class="artist-name">
-                                                <a href="{{ route('mypage.stats.artist', $artist['id']) }}" class="stats-link">{{ $artist['name'] }}</a>
+                                                {!! $link($artistStatsUrl($artist['id']), $artist['name']) !!}
                                             </td>
                                             <td class="count-col">
                                                 <span class="count-badge">{{ $artist['show_count'] }}</span>
@@ -255,12 +241,197 @@
                         </div>
                     </div>
 
+                    <!-- Attendances Section -->
+                    <div class="stats-section visible">
+                        <div class="section-title-wrapper" style="flex-direction: row !important; flex-wrap: nowrap; align-items: center; min-width: 0;">
+                            <h2 class="section-title" style="text-align: center !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; flex: 1 1 auto; margin-bottom: 0;">
+                                <i class="fas fa-calendar-check"></i> My Live Attendances
+    <span class="section-title-desc">参加したライブの記録</span></h2>
+                            @if ($isOwner)
+                            <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-button" title="セットリストを追加" style="flex: 0 0 auto;">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                            @endif
+                        </div>
+                        <div class="database-year-content" style="padding: 0;">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th class="mobile">#</th>
+                                        <th class="mobile">開催日</th>
+                                        <th class="sp">アーティスト / タイトル</th>
+                                        <th class="pc td_artist">アーティスト</th>
+                                        <th class="pc">タイトル</th>
+                                        <th class="pc">会場</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php $attendanceStart = count($attendances); @endphp
+                                    @forelse ($attendances as $index => $attendance)
+                                        @php
+                                            $tour = $attendance->attendedTour;
+                                            $isFes = in_array((int)($tour?->type ?? 0), [2, 3, 4], true);
+                                            $artistRef = $attendance->db_setlist_id
+                                                ? 'official-' . $tour?->artist_id
+                                                : 'user-' . $tour?->user_artist_id;
+                                        @endphp
+                                        <tr class="{{ $index >= 10 ? 'hidden-row-attendances' : '' }}">
+                                            <td>{{ $attendanceStart - $index }}</td>
+                                            <td>{{ $attendance->attended_date?->format('Y.m.d') ?? '-' }}</td>
+                                            <td class="sp">
+                                                @if ($tour?->artist && !$isFes)
+                                                    {!! $link($artistUrl($artistRef), $tour->artist->name) !!}
+                                                    /
+                                                @endif
+                                                {!! $link($attendanceUrl($attendance, $tour), $tour->title ?? '-') !!}
+                                            </td>
+                                            <td class="pc td_artist">
+                                                @if ($tour?->artist && !$isFes)
+                                                    {!! $link($artistUrl($artistRef), $tour->artist->name) !!}
+                                                @endif
+                                            </td>
+                                            <td class="pc">
+                                                {!! $link($attendanceUrl($attendance, $tour), $tour->title ?? '-') !!}
+                                            </td>
+                                            <td class="pc">{{ $attendance->venue }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6">まだ参加したライブが記録されていません。@if ($isOwner)右上の「＋」から追加してください。@endif</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                            @if (count($attendances) > 10)
+                                <div class="show-more-container">
+                                    <button class="show-more-btn" onclick="toggleAttendanceRows(this)">
+                                        Show More <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Top Venues Section -->
+                    <div class="stats-section visible">
+                        <h2 class="section-title">
+                            <i class="fas fa-map-marker-alt"></i> Top Venues
+    <span class="section-title-desc">よく行った会場</span></h2>
+                        <div class="stats-table-container">
+                            <table class="stats-table">
+                                <thead>
+                                    <tr>
+                                        <th class="rank-col">Rank</th>
+                                        <th>Venue</th>
+                                        <th class="count-col">Visits</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($venueStats as $index => $venue)
+                                        @php
+                                            $showRank = $index === 0 || $venueStats[$index - 1]->count !== $venue->count;
+                                            $actualRank = $index + 1;
+                                        @endphp
+                                        <tr>
+                                            <td class="rank-col">
+                                                @if ($showRank)
+                                                    @if ($index === 0)
+                                                        <span class="rank-badge gold">🏆</span>
+                                                    @elseif ($index === 1)
+                                                        <span class="rank-badge silver">🥈</span>
+                                                    @elseif ($index === 2)
+                                                        <span class="rank-badge bronze">🥉</span>
+                                                    @else
+                                                        <span class="rank-number">{{ $actualRank }}</span>
+                                                    @endif
+                                                @endif
+                                            </td>
+                                            <td class="venue-name">
+                                                {!! $link($isOwner ? route('mypage.attendances.index', ['venue' => $venue->venue]) : null, $venue->venue) !!}
+                                            </td>
+                                            <td class="count-col">
+                                                <span class="count-badge">{{ $venue->count }}</span>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="3">まだ参加したライブが記録されていません。</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Shows by Year Section -->
+                    <div class="stats-section visible">
+                        <h2 class="section-title">
+                            <i class="fas fa-calendar-alt"></i> Shows by Year
+    <span class="section-title-desc">参加したライブが多かった年</span></h2>
+                        <div class="stats-table-container">
+                            <table class="stats-table has-bar-indicator">
+                                <thead>
+                                    <tr>
+                                        <th>Year</th>
+                                        <th class="count-col">Shows Attended</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($yearStats as $yearStat)
+                                        <tr>
+                                            <td class="year-col">{!! $link($isOwner ? route('mypage.attendances.index', ['year' => $yearStat->year]) : null, $yearStat->year) !!}</td>
+                                            <td class="count-col">
+                                                <div class="year-bar-container">
+                                                    <div class="year-bar-wrapper">
+                                                        <div class="year-bar" style="width: {{ ($yearStat->count / $yearStats->max('count')) * 100 }}%"></div>
+                                                    </div>
+                                                    <span class="year-count">{{ $yearStat->count }}</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="2">まだ参加したライブが記録されていません。</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="stats-tab-panel" data-stats-panel="stamps" style="display: none;">
+                    @if ($artistSongStats->isNotEmpty())
+                        <!-- Live Stamp Book Section -->
+                        <div class="stats-section visible">
+                            <div class="section-title-wrapper">
+                                <h2 class="section-title">
+                                    <i class="fas fa-stamp"></i> Live Stamp Book
+    <span class="section-title-desc">アーティストごとの、聴いた曲のスタンプ帳</span></h2>
+                            </div>
+                            <style>
+                                @media (max-width: 768px) {
+                                    .stamp-book-link-wrapper {
+                                        justify-content: center !important;
+                                    }
+                                }
+                            </style>
+                            <div class="stamp-book-link-wrapper" style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-start;">
+                                @foreach ($artistSongStats as $artistStat)
+                                    <a href="{{ $stampsUrl($artistStat['id']) }}" class="stamp-book-link">
+                                        <i class="fas fa-stamp"></i> {{ $artistStat['name'] }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
                     @if ($artistSongStats->isNotEmpty())
                         <!-- Unique Songs by Artist Section -->
                         <div class="stats-section visible">
                             <h2 class="section-title">
                                 <i class="fas fa-music"></i> Unique Songs by Artist
-                            </h2>
+    <span class="section-title-desc">アーティストごとの、聴いた曲の数と全曲に対する割合</span></h2>
                             <div class="stats-table-container">
                                 <table class="stats-table has-ratio-count">
                                     <thead>
@@ -292,7 +463,7 @@
                                                 @endif
                                             </td>
                                             <td class="artist-name">
-                                                <a href="{{ route('mypage.stats.artist', $artistStat['id']) }}" class="stats-link">{{ $artistStat['name'] }}</a>
+                                                {!! $link($artistStatsUrl($artistStat['id']), $artistStat['name']) !!}
                                             </td>
                                             <td class="count-col">{{ $artistStat['unique_songs'] }} / {{ $artistStat['total_songs'] }}</td>
                                             <td class="percentage-col">
@@ -312,92 +483,6 @@
                             </div>
                         </div>
                     @endif
-
-                    <!-- Top Venues Section -->
-                    <div class="stats-section visible">
-                        <h2 class="section-title">
-                            <i class="fas fa-map-marker-alt"></i> Top Venues
-                        </h2>
-                        <div class="stats-table-container">
-                            <table class="stats-table">
-                                <thead>
-                                    <tr>
-                                        <th class="rank-col">Rank</th>
-                                        <th>Venue</th>
-                                        <th class="count-col">Visits</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($venueStats as $index => $venue)
-                                        @php
-                                            $showRank = $index === 0 || $venueStats[$index - 1]->count !== $venue->count;
-                                            $actualRank = $index + 1;
-                                        @endphp
-                                        <tr>
-                                            <td class="rank-col">
-                                                @if ($showRank)
-                                                    @if ($index === 0)
-                                                        <span class="rank-badge gold">🏆</span>
-                                                    @elseif ($index === 1)
-                                                        <span class="rank-badge silver">🥈</span>
-                                                    @elseif ($index === 2)
-                                                        <span class="rank-badge bronze">🥉</span>
-                                                    @else
-                                                        <span class="rank-number">{{ $actualRank }}</span>
-                                                    @endif
-                                                @endif
-                                            </td>
-                                            <td class="venue-name">
-                                                <a href="{{ route('mypage.attendances.index', ['venue' => $venue->venue]) }}" class="stats-link">{{ $venue->venue }}</a>
-                                            </td>
-                                            <td class="count-col">
-                                                <span class="count-badge">{{ $venue->count }}</span>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="3">まだ参加したライブが記録されていません。</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Shows by Year Section -->
-                    <div class="stats-section visible">
-                        <h2 class="section-title">
-                            <i class="fas fa-calendar-alt"></i> Shows by Year
-                        </h2>
-                        <div class="stats-table-container">
-                            <table class="stats-table has-bar-indicator">
-                                <thead>
-                                    <tr>
-                                        <th>Year</th>
-                                        <th class="count-col">Shows Attended</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($yearStats as $yearStat)
-                                        <tr>
-                                            <td class="year-col"><a href="{{ route('mypage.attendances.index', ['year' => $yearStat->year]) }}" class="stats-link">{{ $yearStat->year }}</a></td>
-                                            <td class="count-col">
-                                                <div class="year-bar-container">
-                                                    <div class="year-bar-wrapper">
-                                                        <div class="year-bar" style="width: {{ ($yearStat->count / $yearStats->max('count')) * 100 }}%"></div>
-                                                    </div>
-                                                    <span class="year-count">{{ $yearStat->count }}</span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="2">まだ参加したライブが記録されていません。</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
 
                 </div>
@@ -406,6 +491,7 @@
     </div>
 </div>
 
+@include('stats._tabs_script')
 <script>
 function toggleAttendanceRows(button) {
     const hiddenRows = document.querySelectorAll('.hidden-row-attendances');
@@ -467,7 +553,7 @@ function toggleArtistSongStatsRows(button) {
 const mypageSongStatsData = @json($topSongs);
 const mypageSongStatsUnique = @json($topSongsUnique);
 
-document.getElementById('mypageUniqueTourCheckbox').addEventListener('change', function(e) {
+document.getElementById('mypageUniqueTourCheckbox')?.addEventListener('change', function(e) {
     const useUnique = e.target.checked;
     const data = useUnique ? mypageSongStatsUnique : mypageSongStatsData;
 
@@ -513,14 +599,18 @@ document.getElementById('mypageUniqueTourCheckbox').addEventListener('change', f
             }
         }
 
-        const artistCell = song.artist_id
-            ? '<a href="/mypage/attendances?artist_id=' + song.artist_id + '" class="stats-link">' + song.artist_name + '</a>'
-            : song.artist_name;
+        // 本人以外が見るときは、公式の曲・アーティストだけDatabaseのページへリンクする（上の表と同じ）
+        const isOwner = @json($isOwner);
+        const officialId = ref => String(ref).startsWith('official-') ? String(ref).slice(9) : null;
+        const songHref = isOwner ? '/mypage/attendances?song_id=' + song.song_id : (officialId(song.song_id) ? '/database/songs/' + officialId(song.song_id) : null);
+        const artistHref = !song.artist_id ? null : (isOwner ? '/mypage/attendances?artist_id=' + song.artist_id : (officialId(song.artist_id) ? '/database/artists/' + officialId(song.artist_id) : null));
+        const artistCell = artistHref ? '<a href="' + artistHref + '" class="stats-link">' + song.artist_name + '</a>' : song.artist_name;
+        const songCell = songHref ? '<a href="' + songHref + '" class="stats-link">' + song.title + '</a>' : song.title;
 
         tr.innerHTML = `
             <td class="rank-col">${rankBadge}</td>
             <td class="song-title">
-                <a href="/mypage/attendances?song_id=${song.song_id}" class="stats-link">${song.title}</a>
+                ${songCell}
             </td>
             <td class="artist-name">${artistCell}</td>
             <td class="count-col">

@@ -2,12 +2,13 @@
      ・表記：別表記（alternative_title）で演奏されたことがある曲だけ「All / 表記1 / 表記2」を出し、選んだ表記で
        演奏した行だけにする（セトリやスタンプに出ている表記と同じ公演だけを見られるようにするため）。
        選んだ表記は見出し（.database-title）にも出し、Allなら曲名に戻す。
-     ・DOUBLE ENCOREを除く：福山雅治の曲だけ。DOUBLE ENCORE（弾き語り）でだけ演奏した行を隠す。
+     ・DOUBLE ENCOREを除く：福山雅治の曲だけ。DOUBLE ENCORE（弾き語り）でだけ演奏した行を隠す。チェックボックスはタブの下（songs._double_encore_toggle）に置く。
      一覧の行には data-titles（その行で使われた表記のJSON）と、DOUBLE ENCOREでだけ演奏した行には
      data-double-encore-only を付けておく。隠した行は#の連番に数えられないので、番号は絞り込んだ後の回数になる。
      必要な変数: $performanceTitles（空なら表記ボタンは出さない）、$initialTitle、$songTitle、$showDoubleEncoreToggle（任意） --}}
 @php $showDoubleEncoreToggle = $showDoubleEncoreToggle ?? false; @endphp
 @if ($performanceTitles || $showDoubleEncoreToggle)
+    @if ($performanceTitles)
     <div class="song-performance-tabs song-title-filter" style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 10px;">
         @foreach ($performanceTitles ? array_merge([null], $performanceTitles) : [] as $filterTitle)
             @php $isActive = $filterTitle === $initialTitle; @endphp
@@ -16,13 +17,8 @@
                 {{ $filterTitle ?? 'All' }}
             </button>
         @endforeach
-        @if ($showDoubleEncoreToggle)
-            <label style="display: inline-flex; align-items: center; gap: 6px; margin: 0 0 0 4px; font-size: 14px; color: #4a5568; cursor: pointer;">
-                <input type="checkbox" id="excludeDoubleEncore" @if (request()->query('exclude_double_encore')) checked @endif>
-                DOUBLE ENCOREを除く
-            </label>
-        @endif
     </div>
+    @endif
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var titleButtons = document.querySelectorAll('.song-title-filter-btn');

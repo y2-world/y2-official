@@ -12,7 +12,7 @@
                     <h1 class="stats-title">{{ $artist->name }}</h1>
                     <p class="stats-subtitle">Artist Statistics</p>
 
-                    <div class="stamp-book-link-wrapper">
+                    <div class="stamp-book-link-wrapper" style="margin: -18px 0 45px;">
                         <a href="{{ route('stats.stamps', $artist->id) }}" class="stamp-book-link">
                             <i class="fas fa-stamp"></i> View Live Stamp Book
                         </a>
@@ -40,18 +40,45 @@
                         </div>
                     </div>
 
+                    {{-- 全体のstatsと同じタブ：Songs（曲）／Data（公演の年・会場）／Artists（ほかのアーティストへ切り替え）。スタンプ帳のボタンは見出しの下 --}}
+                    <div class="stats-tabs" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 10px 0 25px;">
+                        <button type="button" class="stats-tab-btn is-active" data-stats-tab="songs">Songs</button>
+                        <button type="button" class="stats-tab-btn" data-stats-tab="data">Data</button>
+                        @if (count($tabArtists))
+                        <select class="stats-tab-btn stats-tab-select" onchange="if (this.value) location.href = this.value;" aria-label="Artists">
+                            <option value="{{ url('/stats?tab=personal') }}">All</option>
+                            @foreach ($tabArtists as $tabArtist)
+                                <option value="{{ $tabArtist['url'] }}" {{ $tabArtist['current'] ? 'selected' : '' }}>{{ $tabArtist['name'] }}</option>
+                            @endforeach
+                        </select>
+                        @endif
+                    </div>
+
+                    <div class="stats-tab-panel" data-stats-panel="songs">
                     <!-- Top Songs for Artist -->
                     <div class="stats-section visible">
                         <div class="section-title-wrapper" style="flex-direction: column; align-items: center; gap: 10px;">
                             <h2 class="section-title" style="text-align: center;">
                                 <i class="fas fa-fire"></i> Most Listened Songs (<span id="songCountLabel">{{ count($allSongs) }}</span>)
-                            </h2>
+    <span class="section-title-desc">参加したライブで聴いた回数が多い曲</span></h2>
+                            {{-- 同じツアーに2回以上行っていなければ、数え方が変わらないのでチェックを出さない --}}
+                            @if ($allSongs != $allSongsUnique)
                             <div class="unique-tour-toggle" style="margin-left: 0;">
                                 <label class="unique-tour-label">
                                     <input type="checkbox" id="uniqueTourCheckboxArtist" class="unique-tour-checkbox">
                                     <span class="unique-tour-text">同ツアーを除く</span>
                                 </label>
                             </div>
+                            @endif
+                            {{-- 福山雅治のみ：DOUBLE ENCORE（弾き語り）で聴いた分を除いて数える --}}
+                            @if ($isHikigatariArtist && $allSongs != $allSongsNoDoubleEncore)
+                            <div class="unique-tour-toggle" style="margin-left: 0;">
+                                <label class="unique-tour-label">
+                                    <input type="checkbox" id="excludeDoubleEncoreArtist" class="unique-tour-checkbox">
+                                    <span class="unique-tour-text">DOUBLE ENCOREを除く</span>
+                                </label>
+                            </div>
+                            @endif
                         </div>
                         <div class="stats-table-container">
                             <table class="stats-table" id="artistSongStatsTable">
@@ -100,11 +127,61 @@
                         </div>
                     </div>
 
+                    @if ($isHikigatariArtist && count($doubleEncoreSongs))
+                    <!-- DOUBLE ENCORE（福山雅治のみ。DOUBLE ENCOREは弾き語り） -->
+                    <div class="stats-section visible">
+                        <h2 class="section-title">
+                            <i class="fas fa-guitar"></i> Most Listened DOUBLE ENCORE Songs ({{ count($doubleEncoreSongs) }})
+    <span class="section-title-desc">DOUBLE ENCOREで聴いた回数が多い曲</span></h2>
+                        <div class="stats-table-container">
+                            <table class="stats-table">
+                                <thead>
+                                    <tr>
+                                        <th class="rank-col">Rank</th>
+                                        <th>Song Title</th>
+                                        <th class="count-col">Times Listened</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($doubleEncoreSongs as $index => $song)
+                                    @php $showRank = $index === 0 || $doubleEncoreSongs[$index - 1]['count'] !== $song['count']; @endphp
+                                    <tr>
+                                        <td class="rank-col">
+                                            @if($showRank)
+                                                @if($index === 0)
+                                                    <span class="rank-badge gold">🏆</span>
+                                                @elseif($index === 1)
+                                                    <span class="rank-badge silver">🥈</span>
+                                                @elseif($index === 2)
+                                                    <span class="rank-badge bronze">🥉</span>
+                                                @else
+                                                    <span class="rank-number">{{ $index + 1 }}</span>
+                                                @endif
+                                            @endif
+                                        </td>
+                                        <td class="song-title">
+                                            <a href="{{ url('/setlists/songs/' . $song['song_id']) }}" class="stats-link">{{ $song['title'] }}</a>
+                                        </td>
+                                        <td class="count-col">
+                                            <span class="count-badge">{{ $song['count'] }}</span>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    @endif
+
+                    @includeWhen(isset($topicHeardRevivals), 'stats._topics_listener')
+                    </div>
+
+                    <div class="stats-tab-panel" data-stats-panel="data" style="display: none;">
                     <!-- Shows by Year Section -->
                     <div class="stats-section visible">
                         <h2 class="section-title">
                             <i class="fas fa-calendar-alt"></i> Shows by Year
-                        </h2>
+    <span class="section-title-desc">参加したライブが多かった年</span></h2>
                         <div class="stats-table-container">
                             <table class="stats-table has-bar-indicator">
                                 <thead>
@@ -136,7 +213,7 @@
                     <div class="stats-section visible">
                         <h2 class="section-title">
                             <i class="fas fa-map-marker-alt"></i> Top Venues
-                        </h2>
+    <span class="section-title-desc">よく行った会場</span></h2>
                         <div class="stats-table-container">
                             <table class="stats-table">
                                 <thead>
@@ -178,6 +255,7 @@
                             </table>
                         </div>
                     </div>
+                    </div>
 
                 </div>
             </div>
@@ -209,6 +287,7 @@
     </div>
 </div>
 
+@include('stats._tabs_script')
 <script>
 function toggleTopSongRows(button) {
     const hiddenRows = document.querySelectorAll('.hidden-row-top-songs');
@@ -227,10 +306,16 @@ function toggleTopSongRows(button) {
 // Most Listened Songs - Unique Tour Toggle
 const allSongsData = @json($allSongs);
 const allSongsUnique = @json($allSongsUnique);
+// 福山雅治のみ：DOUBLE ENCOREを除いた版（同ツアーを除くと組み合わせられる）
+const allSongsNoDoubleEncore = @json($allSongsNoDoubleEncore);
+const allSongsUniqueNoDoubleEncore = @json($allSongsUniqueNoDoubleEncore);
 
-document.getElementById('uniqueTourCheckboxArtist').addEventListener('change', function(e) {
-    const useUnique = e.target.checked;
-    const data = useUnique ? allSongsUnique : allSongsData;
+function renderArtistSongs() {
+    const useUnique = document.getElementById('uniqueTourCheckboxArtist')?.checked || false;
+    const excludeDoubleEncore = document.getElementById('excludeDoubleEncoreArtist')?.checked || false;
+    const data = excludeDoubleEncore
+        ? (useUnique ? allSongsUniqueNoDoubleEncore : allSongsNoDoubleEncore)
+        : (useUnique ? allSongsUnique : allSongsData);
 
     // Update song count label
     document.getElementById('songCountLabel').textContent = data.length;
@@ -290,6 +375,9 @@ document.getElementById('uniqueTourCheckboxArtist').addEventListener('change', f
 
         tbody.appendChild(tr);
     });
-});
+}
+
+document.getElementById('uniqueTourCheckboxArtist')?.addEventListener('change', renderArtistSongs);
+document.getElementById('excludeDoubleEncoreArtist')?.addEventListener('change', renderArtistSongs);
 </script>
 @endsection

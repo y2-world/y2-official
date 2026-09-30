@@ -61,9 +61,7 @@ class StatsController extends Controller
             $type = in_array($request->get('type'), ['tours', 'events'], true)
                 ? $request->get('type')
                 : 'all';
-            // 福山雅治のDOUBLE ENCORE（弾き語り）を除いて数える切り替え（福山雅治以外では常にオフ）
-            $excludeDoubleEncore = (int)$artistId === \App\Support\EncoreBlocks::HIKIGATARI_ARTIST_ID && $request->boolean('exclude_double_encore');
-            return $this->getDatabaseStats((int)$artistId, $type, $excludeDoubleEncore);
+            return $this->getDatabaseStats((int)$artistId, $type);
         }
 
         // Personal stats (参加したライブの履歴)
@@ -104,9 +102,34 @@ class StatsController extends Controller
             ->sortByDesc('percentage')
             ->values();
 
+        // トピックス（最近初めて聴いた曲・久しぶりに聴いた曲・自分が聴いた「久しぶり」・初めて聴いた曲の年表）を全アーティスト分まとめる。
+        // 参加記録の曲（SlSong）を紐付いたDatabaseの曲（DbSong）に置き換え、その曲のアーティストごとに分ける
+        $slToDbSong = SlSong::whereNotNull('db_song_id')->pluck('db_song_id', 'id');
+        $dbSongArtist = DbSong::pluck('artist_id', 'id');
+        $heardByArtist = [];
+        foreach (SlSetlist::where('date', '<=', now()->toDateString())->get() as $setlist) {
+            $byArtist = [];
+            $items = array_merge($setlist->setlist ?? [], $setlist->encore ?? [],
+                $this->flattenFesSongs($setlist->fes_setlist ?? []), $this->flattenFesSongs($setlist->fes_encore ?? []));
+            foreach ($items as $songData) {
+                $dbSongId = is_numeric($songData['song'] ?? null) ? ($slToDbSong[(int) $songData['song']] ?? null) : null;
+                if ($dbSongId && isset($dbSongArtist[$dbSongId])) {
+                    $byArtist[$dbSongArtist[$dbSongId]][] = (int) $dbSongId;
+                }
+            }
+            foreach ($byArtist as $artistId => $songIds) {
+                $heardByArtist[$artistId][] = ['date' => substr((string) $setlist->date, 0, 10), 'title' => $setlist->title, 'url' => route('setlists.show', $setlist->id), 'song_ids' => $songIds];
+            }
+        }
+        extract(\App\Support\ArtistTopics::combined($heardByArtist));
+
         $tab = 'personal';
 
         return view('stats.index', compact(
+            'topicHeardRevivals',
+            'topicFirstHeard',
+            'topicWelcomeBack',
+            'topicRecentFirst',
             'overallStats',
             'songStats',
             'songStatsUnique',
@@ -388,26 +411,45 @@ class StatsController extends Controller
     // Database統計（ツアー情報）
     // =====================================
 
-    private function getDatabaseStats(int $artistId, string $type = 'all', bool $excludeDoubleEncore = false)
+    private function getDatabaseStats(int $artistId, string $type = 'all')
     {
         $artist = Artist::findOrFail($artistId);
         $overallStats = $this->getDatabaseOverallStats($artistId, $type);
-        $songStats = $this->getDatabaseSongStats($artistId, $type, $excludeDoubleEncore);
-        $encoreSongStats = $this->getDatabaseEncoreSongStats($artistId, $type, $excludeDoubleEncore);
+        $songStats = $this->getDatabaseSongStats($artistId, $type);
+        $encoreSongStats = $this->getDatabaseEncoreSongStats($artistId, $type);
+        // 福山雅治のみ：DOUBLE ENCORE（弾き語り）を除いた版も用意して、画面上のチェックでその場で切り替える
         $isHikigatariArtist = $artistId === \App\Support\EncoreBlocks::HIKIGATARI_ARTIST_ID;
+        $songStatsNoDoubleEncore = $isHikigatariArtist ? $this->getDatabaseSongStats($artistId, $type, true) : [];
+        // トピックス（久しぶりに演奏された曲など）
+        $topics = new \App\Support\ArtistTopics($artistId);
+        $topicRevivals = $topics->revivals();
+        $topicDormant = $topics->dormant();
+        $topicClosingSongs = array_slice($topics->closingSongs(), 0, 10);
+        $encoreSongStatsNoDoubleEncore = $isHikigatariArtist ? $this->getDatabaseEncoreSongStats($artistId, $type, true) : [];
         $doubleEncoreSongStats = $isHikigatariArtist ? $this->getDatabaseDoubleEncoreSongStats($artistId, $type) : [];
         $openingSongStats = $this->getDatabaseOpeningSongStats($artistId, $type);
         $longestSetlists = $this->getDatabaseLongestSetlists($artistId, $type);
         $yearStats = $this->getDatabaseYearStats($artistId, $type);
 
+        // タブの「Artists」：セットリストが登録されているアーティストのDatabaseのstatsに切り替える（今のアーティストを選んだ状態）
+        $tourArtistIds = DbConcert::whereIn('id', DbSetlist::distinct()->pluck('tour_id'))->distinct()->pluck('artist_id');
+        $tabArtists = \App\Support\JapaneseNameSorter::sortBy(Artist::whereIn('id', $tourArtistIds)->get(), 'name')
+            ->map(fn ($a) => ['name' => $a->name, 'url' => route('stats.index', ['tab' => 'database', 'artist_id' => $a->id]), 'current' => (int) $a->id === $artistId])
+            ->values()->all();
+
         return view('stats.database', compact(
+            'tabArtists',
             'artist',
             'overallStats',
             'songStats',
             'encoreSongStats',
             'doubleEncoreSongStats',
             'isHikigatariArtist',
-            'excludeDoubleEncore',
+            'songStatsNoDoubleEncore',
+            'encoreSongStatsNoDoubleEncore',
+            'topicRevivals',
+            'topicDormant',
+            'topicClosingSongs',
             'openingSongStats',
             'longestSetlists',
             'yearStats'
@@ -833,15 +875,104 @@ class StatsController extends Controller
         // 総曲数（ユニーク）
         $totalSongs = count($songPlayCounts);
 
+        // 福山雅治のDOUBLE ENCORE（弾き語り）：除いて数えた版と、DOUBLE ENCOREで聴いた曲のランキング
+        $isHikigatariArtist = (int) $artistId === \App\Support\EncoreBlocks::HIKIGATARI_ARTIST_ID;
+        $allSongsNoDoubleEncore = $isHikigatariArtist ? $this->listenedSongStats($setlists, (int) $artistId, false, 'exclude') : [];
+        $allSongsUniqueNoDoubleEncore = $isHikigatariArtist ? $this->listenedSongStats($setlists, (int) $artistId, true, 'exclude') : [];
+        $doubleEncoreSongs = $isHikigatariArtist ? $this->listenedSongStats($setlists, (int) $artistId, false, 'only') : [];
+
+        // トピックス（最近初めて聴いた曲・久しぶりに聴いた曲・自分が聴いた「久しぶり」・初めて聴いた曲の年表）。
+        // 参加記録の曲（SlSong）を、紐付いたDatabaseの曲（DbSong）に置き換えて使う
+        $slToDbSong = SlSong::whereNotNull('db_song_id')->pluck('db_song_id', 'id');
+        $heard = [];
+        foreach ($setlists as $setlist) {
+            $items = [];
+            if ($setlist->artist_id == $artistId) {
+                $items = array_merge($setlist->setlist ?? [], $setlist->encore ?? []);
+            } elseif ($setlist->fes == 1) {
+                $items = array_filter($this->flattenFesSongs(array_merge($setlist->fes_setlist ?? [], $setlist->fes_encore ?? [])),
+                    fn ($songData) => isset($songData['artist']) && (string) $songData['artist'] === (string) $artistId);
+            }
+            $songIds = [];
+            foreach ($items as $songData) {
+                if (is_numeric($songData['song'] ?? null) && isset($slToDbSong[(int) $songData['song']])) {
+                    $songIds[] = (int) $slToDbSong[(int) $songData['song']];
+                }
+            }
+            if ($songIds) {
+                $heard[] = ['date' => substr((string) $setlist->date, 0, 10), 'title' => $setlist->title, 'url' => route('setlists.show', $setlist->id), 'song_ids' => $songIds];
+            }
+        }
+        $topics = new \App\Support\ArtistTopics((int) $artistId);
+        $topicHeardRevivals = $topics->heardRevivals($heard);
+        $topicFirstHeard = $topics->firstHeardTimeline($heard);
+        $topicWelcomeBack = $topics->welcomeBack($heard);
+        $topicRecentFirst = $topics->recentFirstListens($heard);
+
+        // タブの「Artists」：参加したアーティストに切り替える（今のアーティストを選んだ状態）
+        $tabArtists = collect($this->getPersonalArtistStats())
+            ->map(fn ($a) => ['name' => $a['name'], 'url' => route('stats.artist', $a['id']), 'current' => (int) $a['id'] === (int) $artistId])
+            ->values()->all();
+
         return view('stats.artist', compact(
+            'tabArtists',
             'artist',
             'allSongs',
             'allSongsUnique',
+            'isHikigatariArtist',
+            'topicHeardRevivals',
+            'topicFirstHeard',
+            'topicWelcomeBack',
+            'topicRecentFirst',
+            'allSongsNoDoubleEncore',
+            'allSongsUniqueNoDoubleEncore',
+            'doubleEncoreSongs',
             'yearStats',
             'venueStats',
             'totalShows',
             'totalSongs'
         ));
+    }
+
+    // Most Listened Songs の集計（getArtistTopSongsの通常／同名ツアー1回カウントと同じ数え方）に、
+    // DOUBLE ENCOREの扱いを加えたもの。$doubleEncore: 'exclude' = DOUBLE ENCOREを除く / 'only' = DOUBLE ENCOREだけ。
+    // フェスの出演にはDOUBLE ENCOREが無いので、'exclude' ではそのまま数え、'only' では数えない
+    private function listenedSongStats($setlists, int $artistId, bool $uniqueTour, string $doubleEncore): array
+    {
+        $counts = [];
+        foreach ($setlists as $setlist) {
+            $songs = [];
+            if ($setlist->artist_id == $artistId) {
+                $encore = array_values((array) ($setlist->encore ?? []));
+                $songs = $doubleEncore === 'only'
+                    ? \App\Support\EncoreBlocks::doubleEncore($encore)
+                    : array_merge($setlist->setlist ?? [], \App\Support\EncoreBlocks::withoutDoubleEncore($encore));
+            } elseif ($setlist->fes == 1 && $doubleEncore !== 'only') {
+                foreach ($this->flattenFesSongs(array_merge($setlist->fes_setlist ?? [], $setlist->fes_encore ?? [])) as $songData) {
+                    if (isset($songData['artist']) && (string) $songData['artist'] === (string) $artistId) {
+                        $songs[] = $songData;
+                    }
+                }
+            }
+            $key = $uniqueTour ? ($setlist->title ?? 'Unknown') : 'setlist-' . $setlist->id;
+            foreach ($songs as $songData) {
+                if (isset($songData['song']) && is_numeric($songData['song'])) {
+                    $counts[(int) $songData['song']][$key] = true;
+                }
+            }
+        }
+        $counts = array_map('count', $counts);
+        arsort($counts);
+
+        $titles = SlSong::whereIn('id', array_keys($counts))->pluck('title', 'id');
+        $stats = [];
+        foreach ($counts as $songId => $count) {
+            if (isset($titles[$songId])) {
+                $stats[] = ['song_id' => $songId, 'title' => $titles[$songId], 'count' => $count];
+            }
+        }
+
+        return $stats;
     }
 
     // アーティストのdatabase楽曲カタログを台紙にした「スタンプ帳」。

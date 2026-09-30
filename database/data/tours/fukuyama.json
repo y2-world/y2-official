@@ -3,14 +3,6 @@
   "source": "ja.wikipedia.org「福山雅治」ライブ節の表（1990〜91年のライブハウス公演は同記事ライブ節の冒頭の箇条書き）",
   "tours": [
     {
-      "title": "Mr.clarinet LIVE 渋谷 eggman",
-      "type": 1,
-      "date1": "1990-05-04",
-      "date2": null,
-      "venue": "渋谷 eggman",
-      "schedule": null
-    },
-    {
       "title": "LIVE 渋谷 eggman",
       "type": 1,
       "date1": "1990-10-10",
@@ -27,43 +19,11 @@
       "schedule": null
     },
     {
-      "title": "LIVE 横浜 LIVE SQUARE VIVRE",
-      "type": 1,
-      "date1": "1991-02-08",
-      "date2": null,
-      "venue": "横浜 LIVE SQUARE VIVRE",
-      "schedule": null
-    },
-    {
-      "title": "LIVE 渋谷 eggman",
-      "type": 1,
-      "date1": "1991-02-12",
-      "date2": null,
-      "venue": "渋谷 eggman",
-      "schedule": null
-    },
-    {
       "title": "LIVE 渋谷 CLUB QUATTRO",
       "type": 1,
       "date1": "1991-05-06",
       "date2": null,
       "venue": "渋谷 CLUB QUATTRO",
-      "schedule": null
-    },
-    {
-      "title": "LIVE 大阪 amHALL",
-      "type": 1,
-      "date1": "1991-07-23",
-      "date2": null,
-      "venue": "大阪 amHALL",
-      "schedule": null
-    },
-    {
-      "title": "LIVE 名古屋 HeartLand STUDIO",
-      "type": 1,
-      "date1": "1991-07-24",
-      "date2": null,
-      "venue": "名古屋 HeartLand STUDIO",
       "schedule": null
     },
     {

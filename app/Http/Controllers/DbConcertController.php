@@ -64,27 +64,8 @@ class DbConcertController extends Controller
 
         $bios = $artist->years;
 
-        if ($type === 'summary') {
-            // SummaryがあるかどうかはDbSetlistのJSON内容を実際に比較しないと
-            // 判定できないため、DBのwhere句だけでは絞り込めない。対象アーティストの
-            // 全ライブを取得してPHP側でフィルタしてから手動でページングする
-            // （ページ内の件数がフィルタ後に変わるため、通常のpaginate()は使えない）。
-            $songs = DbSong::orderBy('sort_order', 'asc')->get();
-            $allTours = $liveQuery->get()->filter(fn ($tour) => $this->tourHasSetlistSummary($tour, $songs))->values();
-            $totalCount = $allTours->count();
-            $perPage = 10;
-            $currentPage = \Illuminate\Pagination\Paginator::resolveCurrentPage();
-            $tours = new \Illuminate\Pagination\LengthAwarePaginator(
-                $allTours->forPage($currentPage, $perPage),
-                $totalCount,
-                $perPage,
-                $currentPage,
-                ['path' => \Illuminate\Pagination\Paginator::resolveCurrentPath()]
-            );
-        } else {
-            $tours = $liveQuery->paginate(10);
-            $totalCount = $tours->total();
-        }
+        $tours = $liveQuery->paginate(10);
+        $totalCount = $tours->total();
 
         if (request()->wantsJson() || request()->ajax()) {
             $html = view('db_concerts._list', compact('tours', 'totalCount', 'type'))->render();
@@ -198,17 +179,14 @@ class DbConcertController extends Controller
                   });
             }))->orderBy('date1')->orderBy('id');
 
-        if ($tab === 'summary') {
-            // Summary一覧内を移動している間は、Previous/NextもSummaryを持つ
-            // 公演までスキップして探す（Summaryが無い公演に移動してしまうと
-            // 「このライブにはSummaryがありません」の空表示になってしまうため）。
-            $previous = $previousQuery->get()->first(fn ($t) => $this->tourHasSetlistSummary($t, $songs));
-            $next = $nextQuery->get()->first(fn ($t) => $this->tourHasSetlistSummary($t, $songs));
-        } else {
-            $previous = $previousQuery->first();
-            $next = $nextQuery->first();
-        }
+        // Previous/NextはSummaryの有無に関係なく、隣のライブに移動する。Summaryを見ている間は、
+        // 移動先にSummaryがあればSummaryのまま、無ければ通常の表示で開く
+        // （Summaryが無いライブをSummaryで開くと「このライブにはSummaryがありません」だけになるため）。
+        $previous = $previousQuery->first();
+        $next = $nextQuery->first();
+        $previousHasSummary = $tab === 'summary' && $previous && $this->tourHasSetlistSummary($previous, $songs);
+        $nextHasSummary = $tab === 'summary' && $next && $this->tourHasSetlistSummary($next, $songs);
 
-        return view('db_concerts.show', compact('songs', 'previous', 'next', 'tours', 'tourSetlists', 'artist', 'setlistSummaries', 'summaryRows', 'from', 'tab', 'summaryRowTitles'));
+        return view('db_concerts.show', compact('songs', 'previous', 'next', 'previousHasSummary', 'nextHasSummary', 'tours', 'tourSetlists', 'artist', 'setlistSummaries', 'summaryRows', 'from', 'tab', 'summaryRowTitles'));
     }
 }

@@ -103,6 +103,7 @@
             <h3 style="margin-top: 0; margin-bottom: 15px;">Live Performances</h3>
         @endif
 
+        @include('songs._double_encore_toggle')
         <div id="live-performances-panel" style="display: {{ $initialTab !== 'performances' ? 'none' : 'block' }};">
             @if ($tours->isEmpty())
                 <p style="color: #718096; text-align: center;">演奏記録がありません。</p>

@@ -53,18 +53,38 @@
                         </div>
                     </div>
 
+                    {{-- 集計をタブで分ける：Songs（曲）／Data（アーティスト・会場・時期）／Stamps（スタンプ帳）／Artists（アーティスト別のstatsへ移動） --}}
+                    <div class="stats-tabs" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 10px 0 25px;">
+                        <button type="button" class="stats-tab-btn is-active" data-stats-tab="songs">Songs</button>
+                        <button type="button" class="stats-tab-btn" data-stats-tab="data">Data</button>
+                        <button type="button" class="stats-tab-btn" data-stats-tab="stamps">Stamps</button>
+                        {{-- Artists：選んだアーティストのstatsに移動する --}}
+                        @if (count($artistStats))
+                        <select class="stats-tab-btn stats-tab-select" onchange="if (this.value) location.href = this.value;">
+                            <option value="" selected>All</option>
+                            @foreach ($artistStats as $tabArtist)
+                                <option value="{{ route('stats.artist', $tabArtist['id']) }}">{{ $tabArtist['name'] }}</option>
+                            @endforeach
+                        </select>
+                        @endif
+                    </div>
+
+                    <div class="stats-tab-panel" data-stats-panel="songs">
                     <!-- Most Listened Songs Section -->
                     <div class="stats-section visible">
                         <div class="section-title-wrapper" style="flex-direction: column; align-items: center; gap: 10px;">
                             <h2 class="section-title" style="text-align: center;">
                                 <i class="fas fa-fire"></i> Most Listened Songs
-                            </h2>
+    <span class="section-title-desc">参加したライブで聴いた回数が多い曲</span></h2>
+                            {{-- 同じツアーに2回以上行っていなければ、数え方が変わらないのでチェックを出さない --}}
+                            @if ($songStats != $songStatsUnique)
                             <div class="unique-tour-toggle" style="margin-left: 0;">
                                 <label class="unique-tour-label">
                                     <input type="checkbox" id="uniqueTourCheckbox" class="unique-tour-checkbox">
                                     <span class="unique-tour-text">同ツアーを除く</span>
                                 </label>
                             </div>
+                            @endif
                         </div>
                         <div class="stats-table-container">
                             <table class="stats-table" id="songStatsTable">
@@ -112,11 +132,15 @@
                         </div>
                     </div>
 
+                    @includeWhen(isset($topicHeardRevivals), 'stats._topics_listener', ['showFirstListens' => false, 'topicArtistUrl' => fn ($id) => url('/setlists/artists/' . $id)])
+                    </div>
+
+                    <div class="stats-tab-panel" data-stats-panel="data" style="display: none;">
                     <!-- Artist Statistics Section -->
                     <div class="stats-section visible">
                         <h2 class="section-title">
                             <i class="fas fa-microphone"></i> Artist Statistics
-                        </h2>
+    <span class="section-title-desc">参加したライブが多いアーティスト</span></h2>
                         <div class="stats-table-container">
                             <table class="stats-table">
                                 <thead>
@@ -166,6 +190,119 @@
                         </div>
                     </div>
 
+                    <!-- Top Venues Section -->
+                    <div class="stats-section visible">
+                        <h2 class="section-title">
+                            <i class="fas fa-map-marker-alt"></i> Top Venues
+    <span class="section-title-desc">よく行った会場</span></h2>
+                        <div class="stats-table-container">
+                            <table class="stats-table">
+                                <thead>
+                                    <tr>
+                                        <th class="rank-col">Rank</th>
+                                        <th>Venue</th>
+                                        <th class="count-col">Visits</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($venueStats as $index => $venue)
+                                    @php
+                                        $showRank = $index === 0 || $venueStats[$index - 1]->count !== $venue->count;
+                                        $actualRank = $index + 1;
+                                    @endphp
+                                    <tr>
+                                        <td class="rank-col">
+                                            @if($showRank)
+                                                @if($index === 0)
+                                                    <span class="rank-badge gold">🏆</span>
+                                                @elseif($index === 1)
+                                                    <span class="rank-badge silver">🥈</span>
+                                                @elseif($index === 2)
+                                                    <span class="rank-badge bronze">🥉</span>
+                                                @else
+                                                    <span class="rank-number">{{ $actualRank }}</span>
+                                                @endif
+                                            @endif
+                                        </td>
+                                        <td class="venue-name">
+                                            <a href="{{ url('/venue') }}?keyword={{ urlencode($venue->venue) }}" class="stats-link">{{ $venue->venue }}</a>
+                                        </td>
+                                        <td class="count-col">
+                                            <span class="count-badge">{{ $venue->count }}</span>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Shows by Year Section -->
+                    <div class="stats-section visible">
+                        <h2 class="section-title">
+                            <i class="fas fa-calendar-alt"></i> Shows by Year
+    <span class="section-title-desc">参加したライブが多かった年</span></h2>
+                        <div class="stats-table-container">
+                            <table class="stats-table has-bar-indicator">
+                                <thead>
+                                    <tr>
+                                        <th>Year</th>
+                                        <th class="count-col">Shows Attended</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($yearStats as $yearStat)
+                                    <tr>
+                                        <td class="year-col"><a href="{{ url('/setlists/years/' . $yearStat->year) }}" class="stats-link">{{ $yearStat->year }}</a></td>
+                                        <td class="count-col">
+                                            <div class="year-bar-container">
+                                                <div class="year-bar-wrapper">
+                                                    <div class="year-bar" style="width: {{ ($yearStat->count / $yearStats->max('count')) * 100 }}%"></div>
+                                                </div>
+                                                <span class="year-count">{{ $yearStat->count }}</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Shows by Month Section -->
+                    <div class="stats-section visible">
+                        <h2 class="section-title">
+                            <i class="fas fa-chart-bar"></i> Shows by Month
+    <span class="section-title-desc">参加したライブが多かった月</span></h2>
+                        <div class="stats-table-container">
+                            <table class="stats-table has-bar-indicator">
+                                <thead>
+                                    <tr>
+                                        <th>Month</th>
+                                        <th class="count-col">Shows Attended</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($monthStats as $monthStat)
+                                    <tr>
+                                        <td class="year-col">{{ $monthStat->month }}</td>
+                                        <td class="count-col">
+                                            <div class="year-bar-container">
+                                                <div class="year-bar-wrapper">
+                                                    <div class="year-bar" style="width: {{ $monthStats->max('count') > 0 ? ($monthStat->count / $monthStats->max('count')) * 100 : 0 }}%"></div>
+                                                </div>
+                                                <span class="year-count">{{ $monthStat->count }}</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="stats-tab-panel" data-stats-panel="stamps" style="display: none;">
                     @php
                         $stampBookArtists = collect($artistStats)->filter(fn($a) => isset($artistIdsWithDbSongs[$a['id']]));
                     @endphp
@@ -175,7 +312,7 @@
                             <div class="section-title-wrapper">
                                 <h2 class="section-title">
                                     <i class="fas fa-stamp"></i> Live Stamp Book
-                                </h2>
+    <span class="section-title-desc">アーティストごとの、聴いた曲のスタンプ帳</span></h2>
                             </div>
                             <style>
                                 @media (max-width: 768px) {
@@ -199,7 +336,7 @@
                         <div class="stats-section visible">
                             <h2 class="section-title">
                                 <i class="fas fa-music"></i> Unique Songs by Artist
-                            </h2>
+    <span class="section-title-desc">アーティストごとの、聴いた曲の数と全曲に対する割合</span></h2>
                             <div class="stats-table-container">
                                 <table class="stats-table has-ratio-count">
                                     <thead>
@@ -251,116 +388,6 @@
                             </div>
                         </div>
                     @endif
-
-                    <!-- Top Venues Section -->
-                    <div class="stats-section visible">
-                        <h2 class="section-title">
-                            <i class="fas fa-map-marker-alt"></i> Top Venues
-                        </h2>
-                        <div class="stats-table-container">
-                            <table class="stats-table">
-                                <thead>
-                                    <tr>
-                                        <th class="rank-col">Rank</th>
-                                        <th>Venue</th>
-                                        <th class="count-col">Visits</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($venueStats as $index => $venue)
-                                    @php
-                                        $showRank = $index === 0 || $venueStats[$index - 1]->count !== $venue->count;
-                                        $actualRank = $index + 1;
-                                    @endphp
-                                    <tr>
-                                        <td class="rank-col">
-                                            @if($showRank)
-                                                @if($index === 0)
-                                                    <span class="rank-badge gold">🏆</span>
-                                                @elseif($index === 1)
-                                                    <span class="rank-badge silver">🥈</span>
-                                                @elseif($index === 2)
-                                                    <span class="rank-badge bronze">🥉</span>
-                                                @else
-                                                    <span class="rank-number">{{ $actualRank }}</span>
-                                                @endif
-                                            @endif
-                                        </td>
-                                        <td class="venue-name">
-                                            <a href="{{ url('/venue') }}?keyword={{ urlencode($venue->venue) }}" class="stats-link">{{ $venue->venue }}</a>
-                                        </td>
-                                        <td class="count-col">
-                                            <span class="count-badge">{{ $venue->count }}</span>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Shows by Year Section -->
-                    <div class="stats-section visible">
-                        <h2 class="section-title">
-                            <i class="fas fa-calendar-alt"></i> Shows by Year
-                        </h2>
-                        <div class="stats-table-container">
-                            <table class="stats-table has-bar-indicator">
-                                <thead>
-                                    <tr>
-                                        <th>Year</th>
-                                        <th class="count-col">Shows Attended</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($yearStats as $yearStat)
-                                    <tr>
-                                        <td class="year-col"><a href="{{ url('/setlists/years/' . $yearStat->year) }}" class="stats-link">{{ $yearStat->year }}</a></td>
-                                        <td class="count-col">
-                                            <div class="year-bar-container">
-                                                <div class="year-bar-wrapper">
-                                                    <div class="year-bar" style="width: {{ ($yearStat->count / $yearStats->max('count')) * 100 }}%"></div>
-                                                </div>
-                                                <span class="year-count">{{ $yearStat->count }}</span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Shows by Month Section -->
-                    <div class="stats-section visible">
-                        <h2 class="section-title">
-                            <i class="fas fa-chart-bar"></i> Shows by Month
-                        </h2>
-                        <div class="stats-table-container">
-                            <table class="stats-table has-bar-indicator">
-                                <thead>
-                                    <tr>
-                                        <th>Month</th>
-                                        <th class="count-col">Shows Attended</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($monthStats as $monthStat)
-                                    <tr>
-                                        <td class="year-col">{{ $monthStat->month }}</td>
-                                        <td class="count-col">
-                                            <div class="year-bar-container">
-                                                <div class="year-bar-wrapper">
-                                                    <div class="year-bar" style="width: {{ $monthStats->max('count') > 0 ? ($monthStat->count / $monthStats->max('count')) * 100 : 0 }}%"></div>
-                                                </div>
-                                                <span class="year-count">{{ $monthStat->count }}</span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
 
                 </div>
@@ -393,6 +420,7 @@
     </div>
 </div>
 
+@include('stats._tabs_script')
 <script>
 function toggleArtistRows(button) {
     const hiddenRows = document.querySelectorAll('.hidden-row');
@@ -426,7 +454,7 @@ function toggleStampBookSongStatsRows(button) {
 const songStatsData = @json($songStats);
 const songStatsUnique = @json($songStatsUnique);
 
-document.getElementById('uniqueTourCheckbox').addEventListener('change', function(e) {
+document.getElementById('uniqueTourCheckbox')?.addEventListener('change', function(e) {
     const useUnique = e.target.checked;
     const data = useUnique ? songStatsUnique : songStatsData;
 

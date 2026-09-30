@@ -79,6 +79,7 @@
                     </button>
                 </div>
 
+                @include('songs._double_encore_toggle')
                 @if ($hasLivePerformancesTab)
                     <div id="live-performances-panel" style="display: {{ $initialTab === 'performances' ? 'block' : 'none' }};">
                         @if ($performanceTours->isEmpty())
