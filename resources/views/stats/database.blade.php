@@ -16,10 +16,13 @@
                     @isset($artist)
                     {{-- フェス・イベント（type=2）も数えるか。チェックを変えたら読み直す（最初はイベントを除く） --}}
                     @if ($hasEvents)
-                    <div class="unique-tour-toggle" style="margin: 0 0 20px; justify-content: center;">
-                        <label class="unique-tour-label">
+                    {{-- 行き先のURLはサーバー側で作る（このページでは window.URL が別のものに上書きされていて new URL() が使えない） --}}
+                    <div class="unique-tour-toggle" style="margin: 0 0 20px; display: flex; justify-content: center;">
+                        <label class="unique-tour-label" style="color: rgba(255, 255, 255, 0.9);">
                             <input type="checkbox" id="includeEvents" class="unique-tour-checkbox" {{ $includeEvents ? 'checked' : '' }}
-                                onchange="var u = new URL(location.href); this.checked ? u.searchParams.set('include_events', '1') : u.searchParams.delete('include_events'); location.href = u.toString();">
+                                data-on="?{{ http_build_query(array_merge(request()->query(), ['include_events' => 1])) }}"
+                                data-off="?{{ http_build_query(\Illuminate\Support\Arr::except(request()->query(), ['include_events'])) }}"
+                                onchange="location.href = this.checked ? this.dataset.on : this.dataset.off;">
                             <span class="unique-tour-text">イベントを含める</span>
                         </label>
                     </div>

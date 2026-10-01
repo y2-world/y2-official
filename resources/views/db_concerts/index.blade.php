@@ -9,12 +9,12 @@
             ['label' => 'Live'],
         ]])
             @php
-                $liveTitle = match(request('type')) {
+                $liveTitle = match($type) {
                     '1' => 'Live', '6' => 'Tours', '5' => '単発ライブ',
                     '2' => 'Events', '3' => 'ap bank fes', '4' => 'Solo',
                     default => 'Live'
                 };
-                $liveSubtitle = match(request('type')) {
+                $liveSubtitle = match($type) {
                     '1' => 'すべてのツアー・単発ライブ情報', '6' => 'すべてのツアー情報',
                     '5' => 'すべての単発ライブ情報', '2' => 'すべてのイベント情報',
                     '3' => 'ap bank fes出演履歴', '4' => 'すべてのソロ活動',
@@ -38,14 +38,14 @@
                     </select>
                     <select class="year-select" name="select" onChange="location.href=value;">
                         <option value="" disabled>Live</option>
-                        <option value="{{ route('database.live', $artist->id) }}" {{ !request('type') ? 'selected' : '' }}>All</option>
-                        <option value="{{ route('database.live', $artist->id) }}?type=1" {{ request('type') == '1' ? 'selected' : '' }}>Live</option>
-                        <option value="{{ route('database.live', $artist->id) }}?type=6" {{ request('type') == '6' ? 'selected' : '' }}>Tours</option>
-                        <option value="{{ route('database.live', $artist->id) }}?type=5" {{ request('type') == '5' ? 'selected' : '' }}>単発ライブ</option>
-                        <option value="{{ route('database.live', $artist->id) }}?type=2" {{ request('type') == '2' ? 'selected' : '' }}>Events</option>
+                        <option value="{{ route('database.live', $artist->id) }}{{ $artist->stats_event_toggle ? '?type=all' : '' }}" {{ !$type || $type === 'all' ? 'selected' : '' }}>All</option>
+                        <option value="{{ route('database.live', $artist->id) }}?type=1" {{ $type == '1' ? 'selected' : '' }}>Live</option>
+                        <option value="{{ route('database.live', $artist->id) }}?type=6" {{ $type == '6' ? 'selected' : '' }}>Tours</option>
+                        <option value="{{ route('database.live', $artist->id) }}?type=5" {{ $type == '5' ? 'selected' : '' }}>単発ライブ</option>
+                        <option value="{{ route('database.live', $artist->id) }}?type=2" {{ $type == '2' ? 'selected' : '' }}>Events</option>
                         @if($artist->name === 'Mr.Children')
-                        <option value="{{ route('database.live', $artist->id) }}?type=3" {{ request('type') == '3' ? 'selected' : '' }}>ap bank fes</option>
-                        <option value="{{ route('database.live', $artist->id) }}?type=4" {{ request('type') == '4' ? 'selected' : '' }}>Solo</option>
+                        <option value="{{ route('database.live', $artist->id) }}?type=3" {{ $type == '3' ? 'selected' : '' }}>ap bank fes</option>
+                        <option value="{{ route('database.live', $artist->id) }}?type=4" {{ $type == '4' ? 'selected' : '' }}>Solo</option>
                         @endif
                     </select>
                     <select class="year-select" name="select" onChange="location.href=value;">
