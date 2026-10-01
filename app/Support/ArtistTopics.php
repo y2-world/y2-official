@@ -20,11 +20,13 @@ class ArtistTopics
     // [曲ID => [ツアーID => true]]
     private array $toursBySong = [];
 
-    public function __construct(private int $artistId)
+    // includeEvents: フェス・イベント（type=2）の演奏も数えるか（Databaseのstatsの「イベントを含める」）
+    public function __construct(private int $artistId, bool $includeEvents = true)
     {
         $this->songs = DbSong::where('artist_id', $artistId)->pluck('title', 'id')->all();
         $today = now()->toDateString();
         $this->tours = DbConcert::where('artist_id', $artistId)
+            ->when(!$includeEvents, fn ($q) => $q->whereNotIn('type', [2]))
             ->whereNotNull('date1')
             ->whereDate('date1', '<=', $today)
             ->orderBy('date1')

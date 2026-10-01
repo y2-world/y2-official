@@ -14,6 +14,16 @@
                     <p class="stats-subtitle">{{ isset($artist) ? 'セットリスト統計' : 'ライブ演奏履歴とデータ分析' }}</p>
 
                     @isset($artist)
+                    {{-- フェス・イベント（type=2）も数えるか。チェックを変えたら読み直す（最初はイベントを除く） --}}
+                    @if ($hasEvents)
+                    <div class="unique-tour-toggle" style="margin: 0 0 20px; justify-content: center;">
+                        <label class="unique-tour-label">
+                            <input type="checkbox" id="includeEvents" class="unique-tour-checkbox" {{ $includeEvents ? 'checked' : '' }}
+                                onchange="var u = new URL(location.href); this.checked ? u.searchParams.set('include_events', '1') : u.searchParams.delete('include_events'); location.href = u.toString();">
+                            <span class="unique-tour-text">イベントを含める</span>
+                        </label>
+                    </div>
+                    @endif
                     <!-- Overall Stats Cards -->
                     <div class="row stats-cards">
                         <div class="col-md-3 col-sm-6 mb-4">
