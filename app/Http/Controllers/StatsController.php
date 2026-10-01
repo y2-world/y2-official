@@ -16,8 +16,6 @@ use Illuminate\Support\Facades\DB;
 
 class StatsController extends Controller
 {
-    // Databaseのstatsで「イベントを含める」を出すアーティスト（フェス・イベントの数がツアーよりずっと多い）：スキマスイッチ・Official髭男dism
-    private const EVENT_TOGGLE_ARTIST_IDS = [10, 27];
 
     use ComputesDbSongStamps;
 
@@ -61,10 +59,11 @@ class StatsController extends Controller
             if (!$artistId) {
                 return redirect('/database');
             }
-            // フェス・イベントの多いアーティストは、「イベントを含める」にチェックしたときだけフェス・イベント（type=2）も数える
+            // 管理画面で「イベントを含める」を出すにしたアーティストは、チェックしたときだけフェス・イベント（type=2）も数える
+            $toggle = (bool) Artist::whereKey((int) $artistId)->value('stats_event_toggle');
             $type = in_array($request->get('type'), ['tours', 'events'], true)
                 ? $request->get('type')
-                : (!in_array((int) $artistId, self::EVENT_TOGGLE_ARTIST_IDS, true) || $request->boolean('include_events') ? 'all' : 'no_events');
+                : (!$toggle || $request->boolean('include_events') ? 'all' : 'no_events');
             return $this->getDatabaseStats((int)$artistId, $type);
         }
 
@@ -439,7 +438,7 @@ class StatsController extends Controller
         $longestSetlists = $this->getDatabaseLongestSetlists($artistId, $type);
         $yearStats = $this->getDatabaseYearStats($artistId, $type);
 
-        $hasEvents = in_array($artistId, self::EVENT_TOGGLE_ARTIST_IDS, true);
+        $hasEvents = (bool) $artist->stats_event_toggle;
         // タブの「Artists」：セットリストが登録されているアーティストのDatabaseのstatsに切り替える（今のアーティストを選んだ状態）
         $tourArtistIds = DbConcert::whereIn('id', DbSetlist::distinct()->pluck('tour_id'))->distinct()->pluck('artist_id');
         $tabArtists = \App\Support\JapaneseNameSorter::sortBy(Artist::whereIn('id', $tourArtistIds)->get(), 'name')

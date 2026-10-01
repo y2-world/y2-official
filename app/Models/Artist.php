@@ -14,6 +14,11 @@ class Artist extends Model
         'kana',
         'romaji',
         'visible',
+        'stats_event_toggle',
+    ];
+
+    protected $casts = [
+        'stats_event_toggle' => 'boolean',
     ];
 
     public function setlists()
