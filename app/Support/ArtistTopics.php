@@ -129,12 +129,6 @@ class ArtistTopics
         return array_slice($rows, 0, $limit);
     }
 
-    // 定番曲だったのに演奏されなくなった曲：5ツアー（同じライブシリーズは1つ）以上で演奏されてきたのに、最後の演奏からいちばん時間がたっている曲
-    public function formerStaples(): array
-    {
-        return $this->dormant(5);
-    }
-
     // 発売から初めて演奏されるまでに時間がかかった曲（発売日と、初めて演奏されたツアーの開始日の差が大きい順）
     public function lateDebuts(): array
     {

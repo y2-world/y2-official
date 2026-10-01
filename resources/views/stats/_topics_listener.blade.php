@@ -148,7 +148,7 @@ document.getElementById('recentFirstExcludeNew')?.addEventListener('change', fun
         {{-- 新曲（そのライブの1年前以降に発売された曲と、発売前だった曲）を除いて見る。ページを読み込み直さずにその場で切り替える --}}
         <div class="unique-tour-toggle" style="margin-left: 0;">
             <label class="unique-tour-label">
-                <input type="checkbox" class="unique-tour-checkbox" id="firstListensExcludeNew">
+                <input type="checkbox" class="unique-tour-checkbox" id="firstListensExcludeNew" checked>
                 <span class="unique-tour-text">新曲を除く</span>
             </label>
         </div>
@@ -169,8 +169,8 @@ document.getElementById('recentFirstExcludeNew')?.addEventListener('change', fun
     </div>
 </div>
 <script>
-document.getElementById('firstListensExcludeNew')?.addEventListener('change', function (e) {
-    var excludeNew = e.target.checked;
+// 「新曲を除く」は最初からオン。ページを開いたときにも同じ絞り込みをする
+function applyFirstListensFilter(excludeNew) {
     document.querySelectorAll('#firstListensTable .first-listens-row').forEach(function (row) {
         var visible = 0;
         row.querySelectorAll('.first-listen').forEach(function (song) {
@@ -183,6 +183,11 @@ document.getElementById('firstListensExcludeNew')?.addEventListener('change', fu
         row.querySelector('.first-listens-count').textContent = visible;
         row.style.display = visible ? '' : 'none';
     });
-});
+}
+var firstListensToggle = document.getElementById('firstListensExcludeNew');
+if (firstListensToggle) {
+    firstListensToggle.addEventListener('change', function (e) { applyFirstListensFilter(e.target.checked); });
+    applyFirstListensFilter(firstListensToggle.checked);
+}
 </script>
 @endif

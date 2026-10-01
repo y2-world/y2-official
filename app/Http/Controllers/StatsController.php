@@ -427,7 +427,6 @@ class StatsController extends Controller
         // Long Time No Play は50曲まで（最初の10曲だけ見せて、残りは折りたたむ）
         $topicDormant = $topics->dormant(1, false, 50);
         $topicDormantSingles = $topics->dormant(1, true, 50);
-        $topicFormerStaples = $topics->formerStaples();
         $topicLateDebuts = $topics->lateDebuts();
         $topicClosingSongs = array_slice($topics->closingSongs(), 0, 10);
         $encoreSongStatsNoDoubleEncore = $isHikigatariArtist ? $this->getDatabaseEncoreSongStats($artistId, $type, true) : [];
@@ -455,7 +454,6 @@ class StatsController extends Controller
             'topicRevivals',
             'topicDormant',
             'topicDormantSingles',
-            'topicFormerStaples',
             'topicLateDebuts',
             'topicClosingSongs',
             'openingSongStats',

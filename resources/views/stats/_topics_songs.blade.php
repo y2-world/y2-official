@@ -155,32 +155,3 @@
     </div>
 </div>
 @endif
-
-@if (count($topicFormerStaples))
-<div class="stats-section visible">
-    <h2 class="section-title"><i class="fas fa-box-archive"></i> Former Staples
-    <span class="section-title-desc">定番曲だったのに、演奏されなくなった曲</span></h2>
-    <div class="stats-table-container">
-        <table class="stats-table topic-pc">
-            <thead><tr><th class="rank-col">Rank</th><th>Song Title</th><th>Tour Title</th><th class="count-col">Years</th></tr></thead>
-            <tbody>
-                @foreach ($topicFormerStaples as $index => $row)
-                <tr>
-                    <td class="rank-col">{!! $topicRank($topicFormerStaples, $index, 'years') !!}</td>
-                    <td class="song-title">{!! $topicSongLink($row) !!} <span style="color: #a0aec0; font-size: 0.8em;">{{ $row['tours'] }} tours</span></td>
-                    <td>{!! $topicTourLine($row['last']) !!}</td>
-                    <td class="count-col"><span class="count-badge">{{ $topicYears($row) }}</span></td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-        <table class="stats-table stats-table-stacked topic-sp">
-            @include('stats._stacked_head', ['hasRank' => true, 'badgeLabel' => 'Years', 'showArtist' => false])
-            @foreach ($topicFormerStaples as $index => $row)
-                @include('stats._stacked_row', ['rank' => $topicRank($topicFormerStaples, $index, 'years'), 'song' => $topicSongLink($row) . '<span class="stats-sub">' . $row['tours'] . ' tours</span>', 'artist' => null, 'showArtist' => false,
-                    'lines' => [['tour' => $topicTourLink($row['last'])]], 'badge' => $topicYears($row)])
-            @endforeach
-        </table>
-    </div>
-</div>
-@endif
