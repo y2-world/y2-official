@@ -54,10 +54,10 @@
                         </div>
                     </div>
 
-                    {{-- 集計をタブで分ける：Songs（曲ごとのランキング・トピックス）／Setlist（セトリの中の位置や曲数） --}}
+                    {{-- 集計をタブで分ける：Songs（曲ごとのランキング・トピックス）／Data（セトリの中の位置や曲数、年ごとのツアー数） --}}
                     <div class="stats-tab-bar">
                         <button type="button" class="stats-tab-btn is-active" data-stats-tab="songs">Songs</button>
-                        <button type="button" class="stats-tab-btn" data-stats-tab="setlist">Setlists</button>
+                        <button type="button" class="stats-tab-btn" data-stats-tab="data">Data</button>
                         {{-- Artists：ほかのアーティストのDatabaseのstatsへ切り替える --}}
                         @if (count($tabArtists) > 1)
                         <select class="stats-tab-btn stats-tab-select" onchange="if (this.value) location.href = this.value;" aria-label="Artists">
@@ -187,40 +187,9 @@
 
                     @include('stats._topics_songs')
 
-                    <!-- Tours by Year Section -->
-                    <div class="stats-section visible">
-                        <h2 class="section-title">
-                            <i class="fas fa-calendar-alt"></i> Tours by Year
-    <span class="section-title-desc">ツアー・ライブが多かった年</span></h2>
-                        <div class="stats-table-container">
-                            <table class="stats-table has-bar-indicator">
-                                <thead>
-                                    <tr>
-                                        <th>Year</th>
-                                        <th class="count-col">Tour Count</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($yearStats as $yearData)
-                                    <tr>
-                                        <td class="year-col"><a href="{{ url('/database/years/' . $yearData->year) }}" class="stats-link">{{ $yearData->year }}</a></td>
-                                        <td class="count-col">
-                                            <div class="year-bar-container">
-                                                <div class="year-bar-wrapper">
-                                                    <div class="year-bar" style="width: {{ ($yearData->count / $yearStats->max('count')) * 100 }}%"></div>
-                                                </div>
-                                                <span class="year-count">{{ $yearData->count }}</span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
                     </div>
 
-                    <div class="stats-tab-panel" data-stats-panel="setlist" style="display: none;">
+                    <div class="stats-tab-panel" data-stats-panel="data" style="display: none;">
                     <!-- Most Opening Songs Section -->
                     <div class="stats-section visible">
                         <h2 class="section-title">
@@ -372,6 +341,38 @@
                                         </td>
                                         <td class="count-col">
                                             <span class="count-badge">{{ $setlist['song_count'] }}</span>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Tours by Year Section -->
+                    <div class="stats-section visible">
+                        <h2 class="section-title">
+                            <i class="fas fa-calendar-alt"></i> Tours by Year
+    <span class="section-title-desc">ツアー・ライブが多かった年</span></h2>
+                        <div class="stats-table-container">
+                            <table class="stats-table has-bar-indicator">
+                                <thead>
+                                    <tr>
+                                        <th>Year</th>
+                                        <th class="count-col">Tour Count</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($yearStats as $yearData)
+                                    <tr>
+                                        <td class="year-col"><a href="{{ url('/database/years/' . $yearData->year) }}" class="stats-link">{{ $yearData->year }}</a></td>
+                                        <td class="count-col">
+                                            <div class="year-bar-container">
+                                                <div class="year-bar-wrapper">
+                                                    <div class="year-bar" style="width: {{ ($yearData->count / $yearStats->max('count')) * 100 }}%"></div>
+                                                </div>
+                                                <span class="year-count">{{ $yearData->count }}</span>
+                                            </div>
                                         </td>
                                     </tr>
                                     @endforeach
