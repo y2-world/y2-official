@@ -51,6 +51,11 @@ class SlSetlist extends Model
         // 存在しなければ、その値をタイトルとみなしfirstOrCreateで正しい曲に解決してから
         // 保存する（既存の同名曲があればそれを再利用し、無ければ新規作成する）。
         static::saving(function (SlSetlist $setlist) {
+            // 登録・更新のとき、database側のツアーとまだ結び付いていなければ、自動で探して結び付ける
+            if (!$setlist->fes && !$setlist->db_concert_id) {
+                $setlist->db_concert_id = static::findDbConcertId($setlist);
+            }
+
             foreach (['setlist', 'encore'] as $field) {
                 $items = $setlist->{$field};
                 if (is_array($items)) {
@@ -65,6 +70,44 @@ class SlSetlist extends Model
                 }
             }
         });
+    }
+
+    // database 側のライブを探す。まずツアー名が同じもの（公演日が期間に入るものを優先、期間外でも1件だけならそれ。延期公演など）、
+    // 無ければ公演日が期間（開始日〜終了日）に入るライブが1件だけのときにそれ。決まらなければ null（手で選ぶ）
+    private static function findDbConcertId(SlSetlist $setlist): ?int
+    {
+        if (!$setlist->artist_id) {
+            return null;
+        }
+        $date = empty($setlist->attributes['date']) ? null : substr((string) $setlist->attributes['date'], 0, 10);
+        $concerts = DbConcert::where('artist_id', $setlist->artist_id)->get(['id', 'title', 'date1', 'date2']);
+        $inRange = fn ($c) => $date && substr((string) $c->date1, 0, 10) <= $date && substr((string) ($c->date2 ?? $c->date1), 0, 10) >= $date;
+
+        $title = static::normalizeTourTitle((string) $setlist->title);
+        $sameTitle = $concerts->filter(fn ($c) => static::normalizeTourTitle((string) $c->title) === $title);
+        $sameTitleInRange = $sameTitle->filter($inRange);
+        if ($sameTitleInRange->count() === 1) {
+            return $sameTitleInRange->first()->id;
+        }
+        if ($sameTitle->count() === 1) {
+            return $sameTitle->first()->id;
+        }
+
+        $byDate = $concerts->filter($inRange);
+
+        return $byDate->count() === 1 ? $byDate->first()->id : null;
+    }
+
+    // 同じツアーかどうかを判定するためのタイトル正規化。SongTitleNormalizer（曲名専用）とは
+    // 別に用意する。スマートクォート("")と直引用符("")、波ダッシュ・全角チルダ、
+    // 空白の有無といった表記ゆれを吸収し、db_concert_idの紐付け判定にだけ使う。
+    public static function normalizeTourTitle(string $title): string
+    {
+        $title = mb_convert_kana($title, 'as');
+        $title = str_replace(["\u{201C}", "\u{201D}", "\u{2018}", "\u{2019}", "'"], '"', $title);
+        $title = preg_replace('/[\x{301C}\x{FF5E}~]/u', '', $title);
+        $title = preg_replace('/\s+/u', '', $title);
+        return mb_strtolower($title);
     }
 
     // setlist/encore用: 各要素のsongが実在するSlSong.idでなければ、

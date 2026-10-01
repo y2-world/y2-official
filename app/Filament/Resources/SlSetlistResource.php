@@ -942,16 +942,10 @@ class SlSetlistResource extends Resource
         ];
     }
 
-    // 同じツアーかどうかを判定するためのタイトル正規化。SongTitleNormalizer（曲名専用）とは
-    // 別に用意する。スマートクォート("")と直引用符("")、波ダッシュ・全角チルダ、
-    // 空白の有無といった表記ゆれを吸収し、db_concert_idの一括紐付け判定にのみ使う。
+    // タイトル正規化は SlSetlist（保存時の自動紐付け）と共通
     private static function normalizeTourTitle(string $title): string
     {
-        $title = mb_convert_kana($title, 'as');
-        $title = str_replace(["\u{201C}", "\u{201D}", "\u{2018}", "\u{2019}", "'"], '"', $title);
-        $title = preg_replace('/[\x{301C}\x{FF5E}~]/u', '', $title);
-        $title = preg_replace('/\s+/u', '', $title);
-        return mb_strtolower($title);
+        return SlSetlist::normalizeTourTitle($title);
     }
 
     // SlSetlist（公開セトリ投稿）1件を、新しいDbConcert（database側のツアー・ライブ）+
