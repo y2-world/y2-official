@@ -25,7 +25,8 @@
     }
 @endphp
 
-@foreach (\App\Support\EncoreBlocks::sections($setlist, $encore) as $section)
+{{-- アンコールの見出しは、公式データ（DbSetlist）ならツアーのアーティストで決める（福山雅治は ENCORE / DOUBLE ENCORE） --}}
+@foreach (\App\Support\EncoreBlocks::sections($setlist, $encore, $setlistModel instanceof \App\Models\DbSetlist ? $setlistModel->tour?->artist_id : null) as $section)
     @continue(empty($section['items']))
     @if ($section['label'])
         <div class="setlist-card-section-label">{{ $section['label'] }}</div>

@@ -140,7 +140,7 @@
                                             @if ($rowEncoreBlock !== $currentEncoreBlock)
                                                 @php $currentEncoreBlock = $rowEncoreBlock; @endphp
                                                 <div style="margin: 20px 0 10px;">
-                                                    <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">{{ \App\Support\EncoreBlocks::label($rowEncoreBlock, $encoreBlockCount) }}</span>
+                                                    <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">{{ \App\Support\EncoreBlocks::label($rowEncoreBlock, $encoreBlockCount, $tours->artist_id ?? null) }}</span>
                                                 </div>
                                             @endif
                                         @endif

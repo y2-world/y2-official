@@ -16,8 +16,13 @@ class EncoreBlocks
     public const HIKIGATARI_ARTIST_ID = 5;
 
     // アンコールが1つだけなら「ENCORE」、2つ以上あれば「ENCORE 1」「ENCORE 2」…
-    public static function label(int $block, int $blockCount = 1): string
+    // 福山雅治は2つ目以降をまとめて「DOUBLE ENCORE」と呼ぶので、「ENCORE」「DOUBLE ENCORE」にする
+    public static function label(int $block, int $blockCount = 1, ?int $artistId = null): string
     {
+        if ($artistId === self::HIKIGATARI_ARTIST_ID) {
+            return $block >= self::DOUBLE_ENCORE ? 'DOUBLE ENCORE' : 'ENCORE';
+        }
+
         return $blockCount > 1 ? 'ENCORE ' . ($block + 1) : 'ENCORE';
     }
 
@@ -37,7 +42,7 @@ class EncoreBlocks
     }
 
     // [['label' => null, 'block' => null, 'items' => 本編], ['label' => 'ENCORE 1', 'block' => 0, 'items' => [...]], ...]
-    public static function sections(array $setlist, array $encore): array
+    public static function sections(array $setlist, array $encore, ?int $artistId = null): array
     {
         $sections = [['label' => null, 'block' => null, 'items' => $setlist]];
         $indexes = self::blockIndexes($encore);
@@ -45,7 +50,7 @@ class EncoreBlocks
         foreach (array_values($encore) as $i => $item) {
             $block = $indexes[$i];
             if (!isset($sections[$block + 1])) {
-                $sections[$block + 1] = ['label' => self::label($block, $blockCount), 'block' => $block, 'items' => []];
+                $sections[$block + 1] = ['label' => self::label($block, $blockCount, $artistId), 'block' => $block, 'items' => []];
             }
             $sections[$block + 1]['items'][] = $item;
         }

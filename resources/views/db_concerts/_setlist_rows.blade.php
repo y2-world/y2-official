@@ -18,6 +18,10 @@
                 ->groupBy('row')
                 ->map(fn($rows) => $rows->pluck('title', 'order_no'))
             : collect();
+        // アンコールの見出し（福山雅治は ENCORE / DOUBLE ENCORE）を決めるためのアーティスト。UserSetlistには無い
+        $encoreArtistId = $tourSetlists->first() instanceof \App\Models\DbSetlist
+            ? \App\Models\DbConcert::whereKey($tourSetlists->first()->tour_id)->value('artist_id')
+            : null;
     @endphp
     @foreach ($setlistsByRow as $rowNum => $rowSetlists)
         @php
@@ -91,7 +95,7 @@
                                     </div>
                                 <ol class="live-column {{ $totalItems >= 20 ? 'live-column-two-col' : '' }}">
                                     {{-- アンコールは ENCORE / DOUBLE ENCORE … のブロックごとに見出しを挟む（番号は本編からの続き） --}}
-                                    @foreach (\App\Support\EncoreBlocks::sections($setlist, $encore) as $encoreSection)
+                                    @foreach (\App\Support\EncoreBlocks::sections($setlist, $encore, $encoreArtistId) as $encoreSection)
                                         @php $section = $encoreSection['items']; @endphp
                                         @if ($encoreSection['label'] && count($section))
                                             <div style="margin: 20px 0 0 0;">
