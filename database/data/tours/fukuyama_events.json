@@ -1,0 +1,126 @@
+{
+  "artist_id": 5,
+  "tours": [
+    {
+      "title": "Act Against AIDS '93",
+      "type": 2,
+      "date1": "1993-12-01",
+      "date2": null,
+      "venue": "日本武道館",
+      "schedule": null,
+      "livefans_event_ids": [
+        380173
+      ]
+    },
+    {
+      "title": "桑田佳祐 LIVE TOUR '94 -さのさのさ-",
+      "type": 2,
+      "date1": "1994-12-31",
+      "date2": null,
+      "venue": "横浜アリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        36095
+      ]
+    },
+    {
+      "title": "Act Against AIDS 2003 「THE VARIETY 11」",
+      "type": 2,
+      "date1": "2003-12-01",
+      "date2": null,
+      "venue": "日本武道館",
+      "schedule": null,
+      "livefans_event_ids": [
+        241223
+      ]
+    },
+    {
+      "title": "8.25オールナイトニッポン武道館",
+      "type": 2,
+      "date1": "2007-08-25",
+      "date2": null,
+      "venue": "日本武道館",
+      "schedule": null,
+      "livefans_event_ids": [
+        226388
+      ]
+    },
+    {
+      "title": "LIVE福島 風とロックSUPER野馬追",
+      "type": 2,
+      "date1": "2011-09-17",
+      "date2": null,
+      "venue": "風とロックSUPER野馬追メインスタジアム",
+      "schedule": null,
+      "livefans_event_ids": [
+        199801
+      ]
+    },
+    {
+      "title": "Act Against AIDS 2012 「THE VARIETY 20」",
+      "type": 2,
+      "date1": "2012-11-30",
+      "date2": null,
+      "venue": "日本武道館",
+      "schedule": null,
+      "livefans_event_ids": [
+        115557
+      ]
+    },
+    {
+      "title": "Amuse 35th Anniversary BBQ inつま恋 ～僕らのビートを喰らえコラ!～",
+      "type": 2,
+      "date1": "2013-07-14",
+      "date2": null,
+      "venue": "つま恋",
+      "schedule": null,
+      "livefans_event_ids": [
+        175484
+      ]
+    },
+    {
+      "title": "-The 六十th Anniv.- ROCK十 CHAR LIVE IN 日本武道館",
+      "type": 2,
+      "date1": "2015-06-15",
+      "date2": null,
+      "venue": "日本武道館",
+      "schedule": null,
+      "livefans_event_ids": [
+        454229
+      ]
+    },
+    {
+      "title": "KANPAI JAPAN LIVE 2017",
+      "type": 2,
+      "date1": "2017-10-28",
+      "date2": null,
+      "venue": "東京ドーム",
+      "schedule": null,
+      "livefans_event_ids": [
+        876152
+      ]
+    },
+    {
+      "title": "KANPAI JAPAN LIVE 2019",
+      "type": 2,
+      "date1": "2019-08-10",
+      "date2": null,
+      "venue": "メットライフドーム",
+      "schedule": null,
+      "livefans_event_ids": [
+        1164405
+      ]
+    },
+    {
+      "title": "30th ANNIVERSARY KICK-OFF STUDIO LIVE『序』",
+      "type": 1,
+      "date1": "2020-03-21",
+      "date2": null,
+      "venue": "都内レコーディングスタジオ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1250214
+      ]
+    }
+  ]
+}

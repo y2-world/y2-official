@@ -1,0 +1,833 @@
+{
+  "artist_id": 5,
+  "new_songs": [],
+  "review_notes": [],
+  "setlists": [
+    {
+      "date1": "1993-12-01",
+      "tour_title": "Act Against AIDS '93",
+      "mode": "new",
+      "source": "LiveFans",
+      "patterns": [
+        {
+          "row": 1,
+          "order_no": 1,
+          "subtitle": null,
+          "livefans_event_ids": [
+            380173
+          ],
+          "order_from_event_id": 380173,
+          "setlist": [
+            {
+              "title": "\u5bb5\u8857\u8349",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": "\u9ad8\u5cf0\u4e09\u679d\u5b50",
+              "featuring_type": "artist",
+              "song_id": null,
+              "song_title": null
+            },
+            {
+              "title": "\u3053\u306e\u9053",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": "\u7ae5\u8b21",
+              "featuring_type": "artist",
+              "song_id": null,
+              "song_title": null
+            },
+            {
+              "title": "\u30bd\u30fc\u30e9\u30f3\u7bc0",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": "\u6c11\u8b21",
+              "featuring_type": "artist",
+              "song_id": null,
+              "song_title": null
+            },
+            {
+              "title": "\u52dd\u624b\u306b\u30b7\u30f3\u30c9\u30d0\u30c3\u30c9",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": "\u30b5\u30b6\u30f3\u30aa\u30fc\u30eb\u30b9\u30bf\u30fc\u30ba",
+              "featuring_type": "artist",
+              "song_id": null,
+              "song_title": null
+            }
+          ],
+          "encore": []
+        }
+      ],
+      "subtitle_updates": []
+    },
+    {
+      "date1": "1994-12-31",
+      "tour_title": "\u6851\u7530\u4f73\u7950 LIVE TOUR '94 -\u3055\u306e\u3055\u306e\u3055-",
+      "mode": "new",
+      "source": "LiveFans",
+      "patterns": [
+        {
+          "row": 1,
+          "order_no": 1,
+          "subtitle": null,
+          "livefans_event_ids": [
+            36095
+          ],
+          "order_from_event_id": 36095,
+          "setlist": [
+            {
+              "title": "IT'S ONLY LOVE",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 810,
+              "song_title": "IT\u2019S ONLY LOVE"
+            }
+          ],
+          "encore": []
+        }
+      ],
+      "subtitle_updates": []
+    },
+    {
+      "date1": "2003-12-01",
+      "tour_title": "Act Against AIDS 2003 \u300cTHE VARIETY 11\u300d",
+      "mode": "new",
+      "source": "LiveFans",
+      "patterns": [
+        {
+          "row": 1,
+          "order_no": 1,
+          "subtitle": null,
+          "livefans_event_ids": [
+            241223
+          ],
+          "order_from_event_id": 241223,
+          "setlist": [
+            {
+              "title": "\u8679",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 857,
+              "song_title": "\u8679"
+            },
+            {
+              "title": "\u305d\u308c\u304c\u3059\u3079\u3066\u3055",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 859,
+              "song_title": "\u305d\u308c\u304c\u3059\u3079\u3066\u3055"
+            },
+            {
+              "title": "Heart of Xmas",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 839,
+              "song_title": "Heart of Xmas"
+            },
+            {
+              "title": "\u4f1d\u3048\u305f\u3044\u3088\u541b\u304c\u597d\u304d\u3060\u3088",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": null,
+              "song_title": null
+            }
+          ],
+          "encore": []
+        }
+      ],
+      "subtitle_updates": []
+    },
+    {
+      "date1": "2007-08-25",
+      "tour_title": "8.25\u30aa\u30fc\u30eb\u30ca\u30a4\u30c8\u30cb\u30c3\u30dd\u30f3\u6b66\u9053\u9928",
+      "mode": "new",
+      "source": "LiveFans",
+      "patterns": [
+        {
+          "row": 1,
+          "order_no": 1,
+          "subtitle": null,
+          "livefans_event_ids": [
+            226388
+          ],
+          "order_from_event_id": 226388,
+          "setlist": [
+            {
+              "title": "HELLO",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 821,
+              "song_title": "HELLO"
+            }
+          ],
+          "encore": []
+        }
+      ],
+      "subtitle_updates": []
+    },
+    {
+      "date1": "2011-09-17",
+      "tour_title": "LIVE\u798f\u5cf6 \u98a8\u3068\u30ed\u30c3\u30afSUPER\u91ce\u99ac\u8ffd",
+      "mode": "new",
+      "source": "LiveFans",
+      "patterns": [
+        {
+          "row": 1,
+          "order_no": 1,
+          "subtitle": null,
+          "livefans_event_ids": [
+            199801
+          ],
+          "order_from_event_id": 199801,
+          "setlist": [
+            {
+              "title": "\u660e\u65e5\u3078\u306e\u30de\u30fc\u30c1",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 818,
+              "song_title": "\u660e\u65e5\u3078\u306e\u30de\u30fc\u30c1"
+            },
+            {
+              "title": "HELLO",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 821,
+              "song_title": "HELLO"
+            },
+            {
+              "title": "IT'S ONLY LOVE",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 810,
+              "song_title": "IT\u2019S ONLY LOVE"
+            },
+            {
+              "title": "\u5bb6\u65cf\u306b\u306a\u308d\u3046\u3088",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 900,
+              "song_title": "\u5bb6\u65cf\u306b\u306a\u308d\u3046\u3088"
+            },
+            {
+              "title": "Revolution//Evolution",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 1826,
+              "song_title": "Revolution//Evolution"
+            },
+            {
+              "title": "fighting pose",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 901,
+              "song_title": "fighting pose"
+            },
+            {
+              "title": "\u5fc3color\uff5ea song for the wonderful year\uff5e",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 898,
+              "song_title": "\u5fc3color \u301ca song for the wonderful year\u301c"
+            },
+            {
+              "title": "\u685c\u5742",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 842,
+              "song_title": "\u685c\u5742"
+            }
+          ],
+          "encore": []
+        }
+      ],
+      "subtitle_updates": []
+    },
+    {
+      "date1": "2012-11-30",
+      "tour_title": "Act Against AIDS 2012 \u300cTHE VARIETY 20\u300d",
+      "mode": "new",
+      "source": "LiveFans",
+      "patterns": [
+        {
+          "row": 1,
+          "order_no": 1,
+          "subtitle": null,
+          "livefans_event_ids": [
+            115557
+          ],
+          "order_from_event_id": 115557,
+          "setlist": [
+            {
+              "title": "GAME",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 905,
+              "song_title": "GAME"
+            },
+            {
+              "title": "Beautiful life",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 904,
+              "song_title": "Beautiful life"
+            },
+            {
+              "title": "\u5bb6\u65cf\u306b\u306a\u308d\u3046\u3088",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 900,
+              "song_title": "\u5bb6\u65cf\u306b\u306a\u308d\u3046\u3088"
+            }
+          ],
+          "encore": []
+        }
+      ],
+      "subtitle_updates": []
+    },
+    {
+      "date1": "2013-07-14",
+      "tour_title": "Amuse 35th Anniversary BBQ in\u3064\u307e\u604b \uff5e\u50d5\u3089\u306e\u30d3\u30fc\u30c8\u3092\u55b0\u3089\u3048\u30b3\u30e9!\uff5e",
+      "mode": "new",
+      "source": "LiveFans",
+      "patterns": [
+        {
+          "row": 1,
+          "order_no": 1,
+          "subtitle": null,
+          "livefans_event_ids": [
+            175484
+          ],
+          "order_from_event_id": 175484,
+          "setlist": [
+            {
+              "title": "vs.\uff5e\u77e5\u899a\u3068\u5feb\u697d\u306e\u87ba\u65cb\uff5e",
+              "alternative_title": "vs.2013 \u301c\u77e5\u899a\u3068\u5feb\u697d\u306e\u87ba\u65cb\u301c",
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 895,
+              "song_title": "vs. \u301c\u77e5\u899a\u3068\u5feb\u697d\u306e\u87ba\u65cb\u301c"
+            },
+            {
+              "title": "Heart",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 826,
+              "song_title": "Heart"
+            },
+            {
+              "title": "vs.\uff5e\u77e5\u899a\u3068\u5feb\u697d\u306e\u87ba\u65cb\uff5e",
+              "alternative_title": "vs.2013 \u301c\u77e5\u899a\u3068\u5feb\u697d\u306e\u87ba\u65cb\u301c",
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 895,
+              "song_title": "vs. \u301c\u77e5\u899a\u3068\u5feb\u697d\u306e\u87ba\u65cb\u301c"
+            },
+            {
+              "title": "Peach!!",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 838,
+              "song_title": "Peach!!"
+            },
+            {
+              "title": "\u604b\u306e\u9b54\u529b",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 917,
+              "song_title": "\u604b\u306e\u9b54\u529b"
+            },
+            {
+              "title": "\u8679",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 857,
+              "song_title": "\u8679"
+            },
+            {
+              "title": "Get the groove",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 907,
+              "song_title": "Get the groove"
+            },
+            {
+              "title": "Revolution//Evolution",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 1826,
+              "song_title": "Revolution//Evolution"
+            },
+            {
+              "title": "\u5316\u8eab",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 877,
+              "song_title": "\u5316\u8eab"
+            },
+            {
+              "title": "\u3042\u306e\u590f\u3082 \u6d77\u3082 \u7a7a\u3082",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 867,
+              "song_title": "\u3042\u306e\u590f\u3082 \u6d77\u3082 \u7a7a\u3082"
+            },
+            {
+              "title": "Squall",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 841,
+              "song_title": "Squall"
+            }
+          ],
+          "encore": []
+        }
+      ],
+      "subtitle_updates": []
+    },
+    {
+      "date1": "2015-06-15",
+      "tour_title": "-The \u516d\u5341th Anniv.- ROCK\u5341 CHAR LIVE IN \u65e5\u672c\u6b66\u9053\u9928",
+      "mode": "new",
+      "source": "LiveFans",
+      "patterns": [
+        {
+          "row": 1,
+          "order_no": 1,
+          "subtitle": null,
+          "livefans_event_ids": [
+            454229
+          ],
+          "order_from_event_id": 454229,
+          "setlist": [
+            {
+              "title": "7\u67087\u65e5",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 1902,
+              "song_title": "7\u67087\u65e5"
+            }
+          ],
+          "encore": [
+            {
+              "title": "Shinin' You, Shinin' Day",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": "Char",
+              "featuring_type": "artist",
+              "song_id": null,
+              "song_title": null
+            }
+          ]
+        }
+      ],
+      "subtitle_updates": []
+    },
+    {
+      "date1": "2017-10-28",
+      "tour_title": "KANPAI JAPAN LIVE 2017",
+      "mode": "new",
+      "source": "LiveFans",
+      "patterns": [
+        {
+          "row": 1,
+          "order_no": 1,
+          "subtitle": null,
+          "livefans_event_ids": [
+            876152
+          ],
+          "order_from_event_id": 876152,
+          "setlist": [
+            {
+              "title": "HELLO",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 821,
+              "song_title": "HELLO"
+            },
+            {
+              "title": "\u30b9\u30c6\u30fc\u30b8\u306e\u9b54\u7269",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 920,
+              "song_title": "\u30b9\u30c6\u30fc\u30b8\u306e\u9b54\u7269"
+            },
+            {
+              "title": "I am a HERO",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 919,
+              "song_title": "I am a HERO"
+            },
+            {
+              "title": "\u8056\u57df",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 923,
+              "song_title": "\u8056\u57df"
+            },
+            {
+              "title": "\u6700\u611b",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 884,
+              "song_title": "\u6700\u611b"
+            },
+            {
+              "title": "Humbucker vs. Single-Coil",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 925,
+              "song_title": "Humbucker vs. Single-Coil"
+            },
+            {
+              "title": "Revolution//Evolution",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 1826,
+              "song_title": "Revolution//Evolution"
+            },
+            {
+              "title": "\u5316\u8eab",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 877,
+              "song_title": "\u5316\u8eab"
+            },
+            {
+              "title": "\u8679",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 857,
+              "song_title": "\u8679"
+            }
+          ],
+          "encore": []
+        }
+      ],
+      "subtitle_updates": []
+    },
+    {
+      "date1": "2019-08-10",
+      "tour_title": "KANPAI JAPAN LIVE 2019",
+      "mode": "new",
+      "source": "LiveFans",
+      "patterns": [
+        {
+          "row": 1,
+          "order_no": 1,
+          "subtitle": null,
+          "livefans_event_ids": [
+            1164405
+          ],
+          "order_from_event_id": 1164405,
+          "setlist": [
+            {
+              "title": "\u6697\u95c7\u306e\u4e2d\u3067\u98db\u3079",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 931,
+              "song_title": "\u6697\u95c7\u306e\u4e2d\u3067\u98db\u3079"
+            },
+            {
+              "title": "\u30b9\u30c6\u30fc\u30b8\u306e\u9b54\u7269",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 920,
+              "song_title": "\u30b9\u30c6\u30fc\u30b8\u306e\u9b54\u7269"
+            },
+            {
+              "title": "HELLO",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 821,
+              "song_title": "HELLO"
+            },
+            {
+              "title": "Revolution//Evolution",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 1826,
+              "song_title": "Revolution//Evolution"
+            },
+            {
+              "title": "GAME",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 905,
+              "song_title": "GAME"
+            },
+            {
+              "title": "Squall",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 841,
+              "song_title": "Squall"
+            },
+            {
+              "title": "\u8679",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 857,
+              "song_title": "\u8679"
+            },
+            {
+              "title": "\u96f6 -ZERO-",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 927,
+              "song_title": "\u96f6 -ZERO-"
+            },
+            {
+              "title": "\u7532\u5b50\u5712",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 928,
+              "song_title": "\u7532\u5b50\u5712"
+            },
+            {
+              "title": "\u5c11\u5e74",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 1828,
+              "song_title": "\u5c11\u5e74"
+            }
+          ],
+          "encore": []
+        }
+      ],
+      "subtitle_updates": []
+    },
+    {
+      "date1": "2020-03-21",
+      "tour_title": "30th ANNIVERSARY KICK-OFF STUDIO LIVE\u300e\u5e8f\u300f",
+      "mode": "new",
+      "source": "LiveFans",
+      "patterns": [
+        {
+          "row": 1,
+          "order_no": 1,
+          "subtitle": null,
+          "livefans_event_ids": [
+            1250214
+          ],
+          "order_from_event_id": 1250214,
+          "setlist": [
+            {
+              "title": "\u5c11\u5e74",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 1828,
+              "song_title": "\u5c11\u5e74"
+            },
+            {
+              "title": "\u6700\u611b",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 884,
+              "song_title": "\u6700\u611b"
+            },
+            {
+              "title": "\u660e\u65e5\u306e\u2606SHOW",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 875,
+              "song_title": "\u660e\u65e5\u306e\u2606SHOW"
+            },
+            {
+              "title": "\u8679",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 857,
+              "song_title": "\u8679"
+            },
+            {
+              "title": "Heart",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 826,
+              "song_title": "Heart"
+            },
+            {
+              "title": "HELLO",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 821,
+              "song_title": "HELLO"
+            },
+            {
+              "title": "\u5bb6\u65cf\u306b\u306a\u308d\u3046\u3088",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 900,
+              "song_title": "\u5bb6\u65cf\u306b\u306a\u308d\u3046\u3088"
+            },
+            {
+              "title": "\u7d04\u675f\u306e\u4e18",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 787,
+              "song_title": "\u7d04\u675f\u306e\u4e18"
+            },
+            {
+              "title": "Dear",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 816,
+              "song_title": "Dear"
+            },
+            {
+              "title": "\u9053\u6a19",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 878,
+              "song_title": "\u9053\u6a19"
+            },
+            {
+              "title": "Good night",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 785,
+              "song_title": "Good night"
+            },
+            {
+              "title": "\u685c\u5742",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 842,
+              "song_title": "\u685c\u5742"
+            },
+            {
+              "title": "\u59cb\u307e\u308a\u304c\u307e\u305f\u59cb\u307e\u3063\u3066\u3086\u304f",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 939,
+              "song_title": "\u59cb\u307e\u308a\u304c\u307e\u305f\u59cb\u307e\u3063\u3066\u3086\u304f"
+            }
+          ],
+          "encore": []
+        }
+      ],
+      "subtitle_updates": []
+    }
+  ]
+}

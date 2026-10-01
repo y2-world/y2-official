@@ -1,0 +1,285 @@
+{
+  "artist_id": 1,
+  "tours": [
+    {
+      "title": "w-inds.～PRIME OF LIFE～ X'mas EVENT 2003",
+      "type": 1,
+      "date1": "2003-12-23",
+      "date2": null,
+      "venue": "横浜赤レンガ倉庫",
+      "schedule": null,
+      "livefans_event_ids": [
+        347899
+      ]
+    },
+    {
+      "title": "テレビ朝日主催スペシャルライブ",
+      "type": 2,
+      "date1": "2005-03-06",
+      "date2": null,
+      "venue": "新木場STUDIO COAST",
+      "schedule": null,
+      "livefans_event_ids": [
+        348123
+      ]
+    },
+    {
+      "title": "w-inds. Xmas Special Event",
+      "type": 1,
+      "date1": "2008-12-23",
+      "date2": null,
+      "venue": "Zepp Tokyo",
+      "schedule": null,
+      "livefans_event_ids": [
+        4946
+      ]
+    },
+    {
+      "title": "w-inds. X'mas LIVE 2009",
+      "type": 1,
+      "date1": "2009-12-19",
+      "date2": null,
+      "venue": "新木場STUDIO COAST",
+      "schedule": null,
+      "livefans_event_ids": [
+        4984
+      ]
+    },
+    {
+      "title": "MTV LIVE 05.30.10",
+      "type": 2,
+      "date1": "2010-05-30",
+      "date2": null,
+      "venue": "国立代々木競技場",
+      "schedule": null,
+      "livefans_event_ids": [
+        365108
+      ]
+    },
+    {
+      "title": "お台場合衆国2011～ぼくらがNIPPON応援団!～めざましライブ2011",
+      "type": 2,
+      "date1": "2011-08-12",
+      "date2": null,
+      "venue": "お台場合衆国2011 合衆国サンサンアイランド MUSICスタジアム",
+      "schedule": null,
+      "livefans_event_ids": [
+        56675
+      ]
+    },
+    {
+      "title": "お台場合衆国2012 ～ここから始まる! NIPPON応援団!～ めざましライブ2012",
+      "type": 2,
+      "date1": "2012-08-24",
+      "date2": null,
+      "venue": "お台場合衆国2012 お台場合衆国 MY BEAT スタジアム",
+      "schedule": null,
+      "livefans_event_ids": [
+        103609
+      ]
+    },
+    {
+      "title": "日・ASEAN音楽祭～災害復興への祈り～",
+      "type": 2,
+      "date1": "2013-11-28",
+      "date2": null,
+      "venue": "NHKホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        194364
+      ]
+    },
+    {
+      "title": "フィリピン台風被災児童支援イベント",
+      "type": 2,
+      "date1": "2014-02-23",
+      "date2": null,
+      "venue": "舞浜アンフィシアター",
+      "schedule": null,
+      "livefans_event_ids": [
+        240619,
+        240620
+      ]
+    },
+    {
+      "title": "SEAGAIA MUSIC RESORT 2014",
+      "type": 2,
+      "date1": "2014-06-29",
+      "date2": null,
+      "venue": "フェニックス・シーガイア・リゾート 特設会場",
+      "schedule": null,
+      "livefans_event_ids": [
+        307985
+      ]
+    },
+    {
+      "title": "MTV ZUSHI FES 14 supported by RIVIERA",
+      "type": 2,
+      "date1": "2014-08-09",
+      "date2": null,
+      "venue": "リビエラ逗子マリーナ 特設会場",
+      "schedule": null,
+      "livefans_event_ids": [
+        309443
+      ]
+    },
+    {
+      "title": "Guam Live International Music Festival",
+      "type": 2,
+      "date1": "2015-06-06",
+      "date2": null,
+      "venue": "Paseo Stadium",
+      "schedule": null,
+      "livefans_event_ids": [
+        495852
+      ]
+    },
+    {
+      "title": "Sports of Heart 2015 応援ライブ",
+      "type": 2,
+      "date1": "2015-10-18",
+      "date2": null,
+      "venue": "国立代々木競技場 第一体育館",
+      "schedule": null,
+      "livefans_event_ids": [
+        546650
+      ]
+    },
+    {
+      "title": "RISING FES 2015～2016",
+      "type": 2,
+      "date1": "2015-12-29",
+      "date2": "2015-12-31",
+      "venue": "舞浜アンフィシアター",
+      "schedule": null,
+      "livefans_event_ids": [
+        584423,
+        584433,
+        585092,
+        585052,
+        585061
+      ]
+    },
+    {
+      "title": "2017 m.c.A・T 祭「俺フェス」",
+      "type": 2,
+      "date1": "2017-03-11",
+      "date2": null,
+      "venue": "舞浜アンフィシアター",
+      "schedule": null,
+      "livefans_event_ids": [
+        764426
+      ]
+    },
+    {
+      "title": "「INVISIBLE」発売記念フリーライブ",
+      "type": 2,
+      "date1": "2017-03-14",
+      "date2": null,
+      "venue": "東京ドームシティ ラクーア ガーデンステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        784276
+      ]
+    },
+    {
+      "title": "musicるTV × BREAK OUT presents LOVE BOX 2017",
+      "type": 2,
+      "date1": "2017-04-01",
+      "date2": null,
+      "venue": "国立代々木競技場 第一体育館",
+      "schedule": null,
+      "livefans_event_ids": [
+        787310
+      ]
+    },
+    {
+      "title": "スカパー! サマーフェス 2017 powered by FULL CHORUS \"うた\"\"踊る\"夏の陣",
+      "type": 2,
+      "date1": "2017-07-28",
+      "date2": null,
+      "venue": "日本武道館",
+      "schedule": null,
+      "livefans_event_ids": [
+        818019
+      ]
+    },
+    {
+      "title": "TOKUFUKU LIVE Connect! Vol.3",
+      "type": 2,
+      "date1": "2018-06-21",
+      "date2": null,
+      "venue": "Zepp Tokyo",
+      "schedule": null,
+      "livefans_event_ids": [
+        944135
+      ]
+    },
+    {
+      "title": "Fes ADSR 2018 -Attitude Dance Sing Rhythm-",
+      "type": 2,
+      "date1": "2018-07-07",
+      "date2": null,
+      "venue": "お台場野外特設会場J地区",
+      "schedule": null,
+      "livefans_event_ids": [
+        923525
+      ]
+    },
+    {
+      "title": "第2回 日・ASEAN音楽祭",
+      "type": 2,
+      "date1": "2018-10-04",
+      "date2": null,
+      "venue": "NHKホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1034231
+      ]
+    },
+    {
+      "title": "SOUL POWER ヨコハマ SUMMIT 2019",
+      "type": 2,
+      "date1": "2019-08-19",
+      "date2": null,
+      "venue": "パシフィコ横浜 国立大ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1168652
+      ]
+    },
+    {
+      "title": "MONSTER HALLOWEEN CARNIVAL 2019",
+      "type": 2,
+      "date1": "2019-10-27",
+      "date2": null,
+      "venue": "堂島リバーフォーラム",
+      "schedule": null,
+      "livefans_event_ids": [
+        1179254
+      ]
+    },
+    {
+      "title": "MTV LIVE MATCH 2022.06.05",
+      "type": 2,
+      "date1": "2022-06-05",
+      "date2": null,
+      "venue": "幕張メッセ 国際展示場 9～11ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1423481
+      ]
+    },
+    {
+      "title": "Da-iCE TWO MAN LIVE TOUR 2022 -REVERSi-",
+      "type": 2,
+      "date1": "2022-07-03",
+      "date2": null,
+      "venue": "札幌文化芸術劇場hitaru",
+      "schedule": null,
+      "livefans_event_ids": [
+        1455744
+      ]
+    }
+  ]
+}

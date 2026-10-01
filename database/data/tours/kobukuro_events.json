@@ -1,0 +1,690 @@
+{
+  "artist_id": 6,
+  "tours": [
+    {
+      "title": "コブクロ",
+      "type": 2,
+      "date1": "2001-12-19",
+      "date2": null,
+      "venue": "ESP学園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1025328
+      ]
+    },
+    {
+      "title": "「願いの詩 > 太陽」リリース記念イベント",
+      "type": 2,
+      "date1": "2002-07-10",
+      "date2": null,
+      "venue": "サンシャインシティ",
+      "schedule": null,
+      "livefans_event_ids": [
+        6257
+      ]
+    },
+    {
+      "title": "大妻女子大学 千代田祭",
+      "type": 2,
+      "date1": "2002-10-13",
+      "date2": null,
+      "venue": "大妻女子大学 千代田キャンパス",
+      "schedule": null,
+      "livefans_event_ids": [
+        6258
+      ]
+    },
+    {
+      "title": "城西大学第35回 高麗祭",
+      "type": 2,
+      "date1": "2002-11-03",
+      "date2": null,
+      "venue": "城西大学 坂戸キャンパス 総合体育館",
+      "schedule": null,
+      "livefans_event_ids": [
+        6259
+      ]
+    },
+    {
+      "title": "OVER THE RAINBOWBRIDGE!! Vol.3",
+      "type": 2,
+      "date1": "2002-12-08",
+      "date2": null,
+      "venue": "studio DREAM MAKER",
+      "schedule": null,
+      "livefans_event_ids": [
+        6260
+      ]
+    },
+    {
+      "title": "OVER THE RAINBOWBRIDGE!! Vol.4",
+      "type": 2,
+      "date1": "2003-02-09",
+      "date2": null,
+      "venue": "studio DREAM MAKER",
+      "schedule": null,
+      "livefans_event_ids": [
+        6261
+      ]
+    },
+    {
+      "title": "OVER THE RAINBOWBRIDGE!! Vol.5",
+      "type": 2,
+      "date1": "2003-03-02",
+      "date2": null,
+      "venue": "studio DREAM MAKER",
+      "schedule": null,
+      "livefans_event_ids": [
+        6262
+      ]
+    },
+    {
+      "title": "FM802 MEET THE WORLD BEAT 2003",
+      "type": 2,
+      "date1": "2003-07-27",
+      "date2": null,
+      "venue": "万博記念公園 もみじ川芝生広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        315295
+      ]
+    },
+    {
+      "title": "Young Pop Live プレミアコンサート",
+      "type": 2,
+      "date1": "2003-08-24",
+      "date2": null,
+      "venue": "オアシス21",
+      "schedule": null,
+      "livefans_event_ids": [
+        391311
+      ]
+    },
+    {
+      "title": "グレータートウキョウフェスティバル GTF SUPER MUSIC PARTY '03",
+      "type": 2,
+      "date1": "2003-08-25",
+      "date2": null,
+      "venue": "東京国際フォーラム ホールA",
+      "schedule": null,
+      "livefans_event_ids": [
+        234449
+      ]
+    },
+    {
+      "title": "YOSAKOI JAMBOREE 2003",
+      "type": 2,
+      "date1": "2003-08-31",
+      "date2": null,
+      "venue": "天然色劇場",
+      "schedule": null,
+      "livefans_event_ids": [
+        234454
+      ]
+    },
+    {
+      "title": "輪之内600人ライブ",
+      "type": 2,
+      "date1": "2003-10-25",
+      "date2": null,
+      "venue": "輪之内町文化会館",
+      "schedule": null,
+      "livefans_event_ids": [
+        391308
+      ]
+    },
+    {
+      "title": "\"突然ライブ\" ～たまにはこんなんもええんちゃう Vol.1～",
+      "type": 2,
+      "date1": "2004-02-22",
+      "date2": null,
+      "venue": "Zepp Osaka",
+      "schedule": null,
+      "livefans_event_ids": [
+        391294
+      ]
+    },
+    {
+      "title": "サウンド・ルネッサンス コブクロ",
+      "type": 2,
+      "date1": "2004-05-07",
+      "date2": null,
+      "venue": "ザ・シンフォニーホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        391296
+      ]
+    },
+    {
+      "title": "突然ライブ",
+      "type": 2,
+      "date1": "2005-02-11",
+      "date2": null,
+      "venue": "Zepp Tokyo",
+      "schedule": null,
+      "livefans_event_ids": [
+        391345
+      ]
+    },
+    {
+      "title": "SOUND MARINA 2005～Feel the Voice 4～",
+      "type": 2,
+      "date1": "2005-08-27",
+      "date2": null,
+      "venue": "広島港出島野外特設会場",
+      "schedule": null,
+      "livefans_event_ids": [
+        226290
+      ]
+    },
+    {
+      "title": "日本万国博覧会開催35周年記念 朝日新聞21 LIVE in EXPO'70「風に吹かれて 2005」",
+      "type": 2,
+      "date1": "2005-10-01",
+      "date2": null,
+      "venue": "万博記念公園 もみじ川芝生広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        823980
+      ]
+    },
+    {
+      "title": "東京CIRCUIT Vol.4",
+      "type": 2,
+      "date1": "2005-11-07",
+      "date2": null,
+      "venue": "Zepp Tokyo",
+      "schedule": null,
+      "livefans_event_ids": [
+        1353438
+      ]
+    },
+    {
+      "title": "Excite Music Festival '06",
+      "type": 2,
+      "date1": "2006-07-02",
+      "date2": null,
+      "venue": "国立代々木競技場 第一体育館",
+      "schedule": null,
+      "livefans_event_ids": [
+        239929
+      ]
+    },
+    {
+      "title": "ap bank fes '06",
+      "type": 2,
+      "date1": "2006-07-15",
+      "date2": null,
+      "venue": "つま恋 スポーツ広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        19425
+      ]
+    },
+    {
+      "title": "SOUND MARINA 2006 ～Feel the Voice 5～",
+      "type": 2,
+      "date1": "2006-08-19",
+      "date2": null,
+      "venue": "広島港出島野外特設会場",
+      "schedule": null,
+      "livefans_event_ids": [
+        485558
+      ]
+    },
+    {
+      "title": "LIVE IN EXPO '70 朝日新聞 21 LIVE 「風に吹かれて 2006」",
+      "type": 2,
+      "date1": "2006-09-09",
+      "date2": null,
+      "venue": "万博記念公園 もみじ川芝生広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        805217
+      ]
+    },
+    {
+      "title": "ap bank fes '07",
+      "type": 2,
+      "date1": "2007-07-16",
+      "date2": null,
+      "venue": "つま恋 スポーツ広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        306523
+      ]
+    },
+    {
+      "title": "風に吹かれて2007",
+      "type": 2,
+      "date1": "2007-10-13",
+      "date2": null,
+      "venue": "万博記念公園 もみじ川芝生広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        501643
+      ]
+    },
+    {
+      "title": "ap bank fes '08",
+      "type": 2,
+      "date1": "2008-07-21",
+      "date2": null,
+      "venue": "つま恋 スポーツ広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        264838
+      ]
+    },
+    {
+      "title": "J-WAVE LIVE 2000+8",
+      "type": 2,
+      "date1": "2008-08-15",
+      "date2": null,
+      "venue": "国立代々木競技場 第一体育館",
+      "schedule": null,
+      "livefans_event_ids": [
+        147609
+      ]
+    },
+    {
+      "title": "ayaka LIVE TOUR 2008 Sing to the sky",
+      "type": 2,
+      "date1": "2008-09-17",
+      "date2": null,
+      "venue": "東京国際フォーラム",
+      "schedule": null,
+      "livefans_event_ids": [
+        7669
+      ]
+    },
+    {
+      "title": "Excite Music Festival'08",
+      "type": 2,
+      "date1": "2008-09-20",
+      "date2": null,
+      "venue": "さいたまスーパーアリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        146691
+      ]
+    },
+    {
+      "title": "WARNER MUSIC JAPAN 40th Anniversary～100年MUSIC FESTIVAL～",
+      "type": 2,
+      "date1": "2010-10-30",
+      "date2": "2010-10-31",
+      "venue": "日本武道館",
+      "schedule": null,
+      "livefans_event_ids": [
+        146517,
+        146526
+      ]
+    },
+    {
+      "title": "EMTG MUSIC Fes. 2010",
+      "type": 2,
+      "date1": "2010-12-11",
+      "date2": "2010-12-12",
+      "venue": "さいたまスーパーアリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        45875,
+        45876
+      ]
+    },
+    {
+      "title": "めざましスーパーライブ in 沖縄",
+      "type": 2,
+      "date1": "2011-02-27",
+      "date2": null,
+      "venue": "宜野湾海浜公園 屋外劇場",
+      "schedule": null,
+      "livefans_event_ids": [
+        345885
+      ]
+    },
+    {
+      "title": "富山ストリートライブ",
+      "type": 1,
+      "date1": "2013-12-13",
+      "date2": null,
+      "venue": "富山グランドプラザ",
+      "schedule": null,
+      "livefans_event_ids": [
+        209924
+      ]
+    },
+    {
+      "title": "TBC夏まつり2014 絆みやぎ～KEEP ON!～",
+      "type": 2,
+      "date1": "2014-07-27",
+      "date2": null,
+      "venue": "勾当台公園 市民広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        338277
+      ]
+    },
+    {
+      "title": "MONSTER baSH 2014",
+      "type": 2,
+      "date1": "2014-08-23",
+      "date2": null,
+      "venue": "国営讃岐まんのう公園内 芝生広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        326498
+      ]
+    },
+    {
+      "title": "音楽と髭達 2014 -Rock'n Roll Stadium-",
+      "type": 2,
+      "date1": "2014-08-30",
+      "date2": null,
+      "venue": "HARD OFF ECOスタジアム新潟",
+      "schedule": null,
+      "livefans_event_ids": [
+        312043
+      ]
+    },
+    {
+      "title": "RockCorps supported by JT 2014 Celebration",
+      "type": 2,
+      "date1": "2014-09-06",
+      "date2": null,
+      "venue": "あづま総合体育館 メインアリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        364840
+      ]
+    },
+    {
+      "title": "大坂の陣400年音楽祭",
+      "type": 2,
+      "date1": "2014-09-27",
+      "date2": null,
+      "venue": "大阪城西の丸庭園 特設会場",
+      "schedule": null,
+      "livefans_event_ids": [
+        354135
+      ]
+    },
+    {
+      "title": "テレビ朝日ドリームフェスティバル 2014",
+      "type": 2,
+      "date1": "2014-10-13",
+      "date2": null,
+      "venue": "国立代々木競技場 第一体育館",
+      "schedule": null,
+      "livefans_event_ids": [
+        327220
+      ]
+    },
+    {
+      "title": "第38回 関西大学統一学園祭「かんだいだもの。おかえり!! KOBUKURO×KU LIVE 2015」",
+      "type": 2,
+      "date1": "2015-11-03",
+      "date2": null,
+      "venue": "関西大学 千里山キャンパス 中央体育館",
+      "schedule": null,
+      "livefans_event_ids": [
+        541715
+      ]
+    },
+    {
+      "title": "慶應義塾大学 第57回三田祭前夜祭 コブクロ × KEIO",
+      "type": 2,
+      "date1": "2015-11-14",
+      "date2": null,
+      "venue": "慶應義塾大学 日吉キャンパス 日吉記念館",
+      "schedule": null,
+      "livefans_event_ids": [
+        541720
+      ]
+    },
+    {
+      "title": "FM802 MEET THE WORLD BEAT 2016",
+      "type": 2,
+      "date1": "2016-07-17",
+      "date2": null,
+      "venue": "万博記念公園 もみじ川芝生広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        640064
+      ]
+    },
+    {
+      "title": "KANPAI JAPAN LIVE 2017",
+      "type": 2,
+      "date1": "2017-10-28",
+      "date2": null,
+      "venue": "東京ドーム",
+      "schedule": null,
+      "livefans_event_ids": [
+        876151
+      ]
+    },
+    {
+      "title": "福岡天神シークレットLIVE",
+      "type": 2,
+      "date1": "2018-04-15",
+      "date2": null,
+      "venue": "福岡市役所西側ふれあい広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        1020113
+      ]
+    },
+    {
+      "title": "スッキリ SUPER LIVE in 武道館ッス 2018",
+      "type": 2,
+      "date1": "2018-04-21",
+      "date2": null,
+      "venue": "日本武道館",
+      "schedule": null,
+      "livefans_event_ids": [
+        919878
+      ]
+    },
+    {
+      "title": "結成20周年記念ストリートLIVE",
+      "type": 2,
+      "date1": "2018-09-08",
+      "date2": null,
+      "venue": "天王寺ミオ前",
+      "schedule": null,
+      "livefans_event_ids": [
+        1020114
+      ]
+    },
+    {
+      "title": "20TH ANNIVERSARY LIVE IN MIYAZAKI",
+      "type": 2,
+      "date1": "2018-09-16",
+      "date2": null,
+      "venue": "生目の杜運動公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        936744
+      ]
+    },
+    {
+      "title": "御堂筋オータムパーティー2018 御堂筋ランウェイ",
+      "type": 2,
+      "date1": "2018-11-04",
+      "date2": null,
+      "venue": "御堂筋",
+      "schedule": null,
+      "livefans_event_ids": [
+        1048086
+      ]
+    },
+    {
+      "title": "YouTube FanFest Music",
+      "type": 2,
+      "date1": "2018-12-11",
+      "date2": null,
+      "venue": "幕張メッセ イベントホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1055921
+      ]
+    },
+    {
+      "title": "宮沢和史・デビュー30周年記念コンサート ～あれから～",
+      "type": 2,
+      "date1": "2019-10-18",
+      "date2": null,
+      "venue": "Bunkamura オーチャードホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1141034
+      ]
+    },
+    {
+      "title": "大阪文化芸術フェス presents OSAKA GENKi PARK",
+      "type": 2,
+      "date1": "2020-10-10",
+      "date2": "2020-10-11",
+      "venue": "万博記念公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1267666,
+        1267680
+      ]
+    },
+    {
+      "title": "「Star Made」リリース記念 スペシャルミニLIVE&TALKイベント",
+      "type": 2,
+      "date1": "2021-12-10",
+      "date2": null,
+      "venue": "Zepp Haneda",
+      "schedule": null,
+      "livefans_event_ids": [
+        1368982
+      ]
+    },
+    {
+      "title": "大阪 MUSIC LOVER ～Road to 2025～",
+      "type": 2,
+      "date1": "2021-12-17",
+      "date2": null,
+      "venue": "大阪城ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1362848
+      ]
+    },
+    {
+      "title": "flumpool Road to 15th anniversary Dream Live with コブクロ 「FOR ROOTS～天王寺ストリートメイド～」",
+      "type": 2,
+      "date1": "2023-02-16",
+      "date2": null,
+      "venue": "大阪城ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1491605
+      ]
+    },
+    {
+      "title": "ALL SEASONS BEST 購入者から抽選!1夜限りの\"超プレミアムライブ\"",
+      "type": 2,
+      "date1": "2024-04-27",
+      "date2": null,
+      "venue": "umeda TRAD",
+      "schedule": null,
+      "livefans_event_ids": [
+        1669205
+      ]
+    },
+    {
+      "title": "ごぶごぶフェスティバル2024",
+      "type": 2,
+      "date1": "2024-05-11",
+      "date2": null,
+      "venue": "万博記念公園 もみじ川芝生広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        1644630
+      ]
+    },
+    {
+      "title": "スキマフェス",
+      "type": 2,
+      "date1": "2024-07-13",
+      "date2": null,
+      "venue": "Aichi Sky Expo",
+      "schedule": null,
+      "livefans_event_ids": [
+        1646519
+      ]
+    },
+    {
+      "title": "WANIMA pre. 1CHANCE FESTIVAL 2024",
+      "type": 2,
+      "date1": "2024-08-25",
+      "date2": null,
+      "venue": "熊本県農業公園カントリーパーク",
+      "schedule": null,
+      "livefans_event_ids": [
+        1680742
+      ]
+    },
+    {
+      "title": "音道楽EXPO",
+      "type": 2,
+      "date1": "2025-05-31",
+      "date2": null,
+      "venue": "EXPO 2025 大阪・関西万博 EXPO ホール「シャインハット」",
+      "schedule": null,
+      "livefans_event_ids": [
+        1808586
+      ]
+    },
+    {
+      "title": "OSAKA MUSIC LOVER -Everyone Lively-",
+      "type": 2,
+      "date1": "2025-06-08",
+      "date2": null,
+      "venue": "大阪城ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1795917
+      ]
+    },
+    {
+      "title": "OSAKA MUSIC LOVER EXPO ARENA 2025",
+      "type": 2,
+      "date1": "2025-09-14",
+      "date2": null,
+      "venue": "EXPOアリーナ「Matsuri」",
+      "schedule": null,
+      "livefans_event_ids": [
+        1824942
+      ]
+    },
+    {
+      "title": "IZUMO OROCHI FES 2025",
+      "type": 2,
+      "date1": "2025-11-22",
+      "date2": null,
+      "venue": "出雲ドーム",
+      "schedule": null,
+      "livefans_event_ids": [
+        1848917
+      ]
+    },
+    {
+      "title": "HY SKY Fes 2026",
+      "type": 2,
+      "date1": "2026-03-20",
+      "date2": null,
+      "venue": "沖縄県総合運動公園 多目的広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        1857981
+      ]
+    }
+  ]
+}

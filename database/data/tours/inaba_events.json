@@ -1,0 +1,105 @@
+{
+  "artist_id": 39,
+  "tours": [
+    {
+      "title": "ROCK NIGHT OPENING ACT",
+      "type": 2,
+      "date1": "2003-03-20",
+      "date2": null,
+      "venue": "hillsパン工場",
+      "schedule": null,
+      "livefans_event_ids": [
+        137938
+      ]
+    },
+    {
+      "title": "THE ROCK ODYSSEY 2004",
+      "type": 2,
+      "date1": "2004-07-24",
+      "date2": null,
+      "venue": "横浜国際総合競技場",
+      "schedule": null,
+      "livefans_event_ids": [
+        21136
+      ]
+    },
+    {
+      "title": "SUMMER SONIC 2004",
+      "type": 2,
+      "date1": "2004-08-07",
+      "date2": "2004-08-08",
+      "venue": null,
+      "schedule": "2004/08/07 SUMMER SONIC 2004会場 [千葉マリンスタジアム / 幕張メッセ]\n2004/08/08 SUMMER SONIC 2004会場 [南港WTCオープンエアスタジアム / インテックス大阪 / Zepp Osaka]",
+      "livefans_event_ids": [
+        15977,
+        16013
+      ]
+    },
+    {
+      "title": "MONSTER baSH 2024",
+      "type": 2,
+      "date1": "2024-08-24",
+      "date2": null,
+      "venue": "国営讃岐まんのう公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1676286
+      ]
+    },
+    {
+      "title": "テレビ朝日ドリームフェスティバル2024",
+      "type": 2,
+      "date1": "2024-08-25",
+      "date2": null,
+      "venue": "東京体育館",
+      "schedule": null,
+      "livefans_event_ids": [
+        1680010
+      ]
+    },
+    {
+      "title": "SPACE SHOWER SWEET LOVE SHOWER 2025 -30th ANNIVERSARY-",
+      "type": 2,
+      "date1": "2025-08-31",
+      "date2": null,
+      "venue": "山中湖交流プラザきらら",
+      "schedule": null,
+      "livefans_event_ids": [
+        1790248
+      ]
+    },
+    {
+      "title": "[SKA] SHOWDOWN",
+      "type": 2,
+      "date1": "2026-03-31",
+      "date2": null,
+      "venue": "東京ガーデンシアター",
+      "schedule": null,
+      "livefans_event_ids": [
+        1894827
+      ]
+    },
+    {
+      "title": "WE'RE BROS. TOUR 2026 DOME LIVE 龍、涼風至",
+      "type": 2,
+      "date1": "2026-08-23",
+      "date2": null,
+      "venue": "京セラドーム大阪",
+      "schedule": null,
+      "livefans_event_ids": [
+        1920377
+      ]
+    },
+    {
+      "title": "WANIMA pre. 1CHANCE FESTIVAL 2026",
+      "type": 2,
+      "date1": "2026-09-26",
+      "date2": null,
+      "venue": "熊本県農業公園カントリーパーク",
+      "schedule": null,
+      "livefans_event_ids": [
+        1970988
+      ]
+    }
+  ]
+}

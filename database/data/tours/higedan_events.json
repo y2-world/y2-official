@@ -1,0 +1,1076 @@
+{
+  "artist_id": 27,
+  "tours": [
+    {
+      "title": "Official髭男dism",
+      "type": 2,
+      "date1": "2013-11-17",
+      "date2": null,
+      "venue": "松江B1",
+      "schedule": null,
+      "livefans_event_ids": [
+        1916954
+      ]
+    },
+    {
+      "title": "今夜は髭Tonight! vol.2 ～Official髭男dism ワンマンライブ～",
+      "type": 1,
+      "date1": "2014-03-07",
+      "date2": null,
+      "venue": "松江AZTiC canova",
+      "schedule": null,
+      "livefans_event_ids": [
+        1916335
+      ]
+    },
+    {
+      "title": "neverl∀nd",
+      "type": 2,
+      "date1": "2014-03-16",
+      "date2": null,
+      "venue": "米子AZTiC laughs",
+      "schedule": null,
+      "livefans_event_ids": [
+        1454558
+      ]
+    },
+    {
+      "title": "Official髭男dism",
+      "type": 2,
+      "date1": "2014-06-12",
+      "date2": null,
+      "venue": "松江Pianoman",
+      "schedule": null,
+      "livefans_event_ids": [
+        1916984
+      ]
+    },
+    {
+      "title": "アコースティックワンマンライブ",
+      "type": 1,
+      "date1": "2014-07-13",
+      "date2": null,
+      "venue": "松江Pianoman",
+      "schedule": null,
+      "livefans_event_ids": [
+        1916986
+      ]
+    },
+    {
+      "title": "歌ってhappy!",
+      "type": 2,
+      "date1": "2014-09-26",
+      "date2": null,
+      "venue": "松江AZTiC canova",
+      "schedule": null,
+      "livefans_event_ids": [
+        371980
+      ]
+    },
+    {
+      "title": "MINAMI WHEEL 2014",
+      "type": 2,
+      "date1": "2014-10-12",
+      "date2": null,
+      "venue": "MINAMI WHEEL 2014会場",
+      "schedule": null,
+      "livefans_event_ids": [
+        378995
+      ]
+    },
+    {
+      "title": "山根万理奈&official 髭男dism ツーマンライブ 「ワールドワイド LOVE真っ最中」@松江 AZTiC canova",
+      "type": 2,
+      "date1": "2014-12-21",
+      "date2": null,
+      "venue": "松江AZTiC canova",
+      "schedule": null,
+      "livefans_event_ids": [
+        396502
+      ]
+    },
+    {
+      "title": "赤壁の髭湯会 Vol.2 ～お茶吸えば 鐘が鳴るなり ダンディズム～",
+      "type": 2,
+      "date1": "2015-01-24",
+      "date2": null,
+      "venue": "松江AZTiC canova",
+      "schedule": null,
+      "livefans_event_ids": [
+        1917007
+      ]
+    },
+    {
+      "title": "NEXT KOBE!!!",
+      "type": 2,
+      "date1": "2015-02-01",
+      "date2": null,
+      "venue": "神戸VARIT.",
+      "schedule": null,
+      "livefans_event_ids": [
+        1917009
+      ]
+    },
+    {
+      "title": "Strummin' Night",
+      "type": 2,
+      "date1": "2015-02-08",
+      "date2": null,
+      "venue": "新代田FEVER",
+      "schedule": null,
+      "livefans_event_ids": [
+        491784
+      ]
+    },
+    {
+      "title": "Special Wednesday",
+      "type": 2,
+      "date1": "2015-02-11",
+      "date2": null,
+      "venue": "KYOTO MUSE",
+      "schedule": null,
+      "livefans_event_ids": [
+        426453
+      ]
+    },
+    {
+      "title": "ちゃんもえんたーていめんと Vol.1",
+      "type": 2,
+      "date1": "2015-02-14",
+      "date2": null,
+      "venue": "福山Cable",
+      "schedule": null,
+      "livefans_event_ids": [
+        1917021
+      ]
+    },
+    {
+      "title": "今夜は髭Tonight! Vol.3 ～Official髭男dismワンマンライブ～",
+      "type": 1,
+      "date1": "2015-03-06",
+      "date2": null,
+      "venue": "松江B1",
+      "schedule": null,
+      "livefans_event_ids": [
+        1865677
+      ]
+    },
+    {
+      "title": "Official髭男dism",
+      "type": 2,
+      "date1": "2015-03-13",
+      "date2": null,
+      "venue": "松江AZTiC canova",
+      "schedule": null,
+      "livefans_event_ids": [
+        1917029
+      ]
+    },
+    {
+      "title": "mutation",
+      "type": 2,
+      "date1": "2015-04-05",
+      "date2": null,
+      "venue": "心斎橋FANJ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1917030
+      ]
+    },
+    {
+      "title": "アコースティックワンマン",
+      "type": 1,
+      "date1": "2015-04-09",
+      "date2": null,
+      "venue": "松江学園Teddy's",
+      "schedule": null,
+      "livefans_event_ids": [
+        1917032
+      ]
+    },
+    {
+      "title": "Official髭男dism",
+      "type": 2,
+      "date1": "2015-04-12",
+      "date2": null,
+      "venue": "IMAGE",
+      "schedule": null,
+      "livefans_event_ids": [
+        1917034
+      ]
+    },
+    {
+      "title": "健太郎 pre. ワンダーウォール \"Official髭男dism 「ラブとピースは君の中」リリースツアー\"",
+      "type": 2,
+      "date1": "2015-04-18",
+      "date2": null,
+      "venue": "栄R.A.D",
+      "schedule": null,
+      "livefans_event_ids": [
+        535574
+      ]
+    },
+    {
+      "title": "鶴47都道府県TOUR「Live & Soul」～もう、寂しい想いはさせたくない～",
+      "type": 2,
+      "date1": "2015-04-21",
+      "date2": null,
+      "venue": "松江AZTiC canova",
+      "schedule": null,
+      "livefans_event_ids": [
+        433699
+      ]
+    },
+    {
+      "title": "Mix Box",
+      "type": 2,
+      "date1": "2015-04-29",
+      "date2": null,
+      "venue": "天神Queblick",
+      "schedule": null,
+      "livefans_event_ids": [
+        452077
+      ]
+    },
+    {
+      "title": "GOLD RUSH2015",
+      "type": 2,
+      "date1": "2015-05-02",
+      "date2": null,
+      "venue": "GOLD RUSH2015会場 [APOLLO BASE / 新栄CLUB ROCK'N ROLL / DAYTRIVE / 新栄LIVE HOUSE Tiny7 / 栄R.A.D / 栄Party'z]",
+      "schedule": null,
+      "livefans_event_ids": [
+        440672
+      ]
+    },
+    {
+      "title": "「ラブとピースは君の中」リリース記念ミニライブ&サイン会",
+      "type": 2,
+      "date1": "2015-05-04",
+      "date2": null,
+      "venue": "TOWER RECORDS名古屋PARCO",
+      "schedule": null,
+      "livefans_event_ids": [
+        1917041
+      ]
+    },
+    {
+      "title": "GOLD RUSH 2015 京都編 day.4",
+      "type": 2,
+      "date1": "2015-05-05",
+      "date2": null,
+      "venue": "京都RAD mini",
+      "schedule": null,
+      "livefans_event_ids": [
+        471263
+      ]
+    },
+    {
+      "title": "「ラブとピースは君の中」リリース記念ミニライブ&サイン会",
+      "type": 2,
+      "date1": "2015-05-16",
+      "date2": "2015-05-17",
+      "venue": null,
+      "schedule": "2015/05/16 TOWER RECORDS広島\n2015/05/17 TOWER RECORDS難波",
+      "livefans_event_ids": [
+        1917052,
+        1917054
+      ]
+    },
+    {
+      "title": "Official髭男dismワンマンライブ ラブとピースは君の中",
+      "type": 1,
+      "date1": "2015-05-29",
+      "date2": null,
+      "venue": "松江AZTiC canova",
+      "schedule": null,
+      "livefans_event_ids": [
+        471261
+      ]
+    },
+    {
+      "title": "「ラブとピースは君の中」リリース記念ミニライブ&サイン会",
+      "type": 2,
+      "date1": "2015-05-30",
+      "date2": null,
+      "venue": "TOWER RECORDS新宿",
+      "schedule": null,
+      "livefans_event_ids": [
+        1917056
+      ]
+    },
+    {
+      "title": "SAKAE SP-RING 2015",
+      "type": 2,
+      "date1": "2015-06-06",
+      "date2": null,
+      "venue": "SAKAE SP-RING 2015会場 [Diamond Hall / APOLLO BASE / 名古屋CLUB QUATTRO / HOLIDAY NEXT NAGOYA / RAD HALL / TIGHT ROPE / 栄R.A.D / 新栄CLUB ROCK'N ROLL / 名古屋LIVE HALL M.I.D / 名古屋ビジュアルアーツ Air Hall / SCHOOL OF MUSIC / FLEX LOUNGE / club JB'S / EDITS / MUJICA]",
+      "schedule": null,
+      "livefans_event_ids": [
+        471795
+      ]
+    },
+    {
+      "title": "島根県立大学出雲キャンパスつわぶき祭",
+      "type": 2,
+      "date1": "2015-06-13",
+      "date2": null,
+      "venue": "島根県立大学 出雲キャンパス",
+      "schedule": null,
+      "livefans_event_ids": [
+        1917059
+      ]
+    },
+    {
+      "title": "米子市音楽祭",
+      "type": 2,
+      "date1": "2015-06-27",
+      "date2": null,
+      "venue": "米子市公会堂",
+      "schedule": null,
+      "livefans_event_ids": [
+        1917063
+      ]
+    },
+    {
+      "title": "MINAMI WHEEL 2015",
+      "type": 2,
+      "date1": "2015-10-10",
+      "date2": null,
+      "venue": "MINAMI WHEEL 2015会場",
+      "schedule": null,
+      "livefans_event_ids": [
+        530307
+      ]
+    },
+    {
+      "title": "FM802 FUNKY MARKET",
+      "type": 2,
+      "date1": "2016-05-03",
+      "date2": null,
+      "venue": "万博記念公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        636682
+      ]
+    },
+    {
+      "title": "Eggs presents TOKYO CALLING 2016",
+      "type": 2,
+      "date1": "2016-09-18",
+      "date2": null,
+      "venue": "TOKYO CALLING 2016会場 [新宿LOFT / 新宿LOFT BAR STAGE / 新宿Motion / 新宿Marble / 新宿MARZ / HOLIDAY SHINJUKU / 新宿RUIDO K4 / 新宿ACB HALL / 新宿SAMURAI / 新宿club SCIENCE]",
+      "schedule": null,
+      "livefans_event_ids": [
+        695940
+      ]
+    },
+    {
+      "title": "ツタロックスペシャルライブ\"3MAN!!\"Vol.3",
+      "type": 2,
+      "date1": "2017-05-12",
+      "date2": null,
+      "venue": "新代田FEVER",
+      "schedule": null,
+      "livefans_event_ids": [
+        798737
+      ]
+    },
+    {
+      "title": "JAPAN'S NEXT vol.17",
+      "type": 2,
+      "date1": "2017-06-03",
+      "date2": null,
+      "venue": "恵比寿LIQUIDROOM",
+      "schedule": null,
+      "livefans_event_ids": [
+        802810
+      ]
+    },
+    {
+      "title": "10th Anniversary!! 『Mujack Dream Land 2017』",
+      "type": 2,
+      "date1": "2017-06-23",
+      "date2": null,
+      "venue": "Music Club JANUS",
+      "schedule": null,
+      "livefans_event_ids": [
+        803070
+      ]
+    },
+    {
+      "title": "Official髭男dism",
+      "type": 2,
+      "date1": "2017-07-17",
+      "date2": null,
+      "venue": "高松DIME",
+      "schedule": null,
+      "livefans_event_ids": [
+        827604
+      ]
+    },
+    {
+      "title": "TBC夏まつり2017 絆みやぎ～イチばん近くに～",
+      "type": 2,
+      "date1": "2017-07-22",
+      "date2": null,
+      "venue": "勾当台公園 市民広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        841793
+      ]
+    },
+    {
+      "title": "ROCK IN JAPAN FESTIVAL 2017",
+      "type": 2,
+      "date1": "2017-08-06",
+      "date2": null,
+      "venue": "国営ひたち海浜公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        822421
+      ]
+    },
+    {
+      "title": "ひげダッシュ!",
+      "type": 2,
+      "date1": "2017-09-16",
+      "date2": null,
+      "venue": "阿倍野ROCKTOWN",
+      "schedule": null,
+      "livefans_event_ids": [
+        847983
+      ]
+    },
+    {
+      "title": "MEGA☆ROCKS 2017",
+      "type": 2,
+      "date1": "2017-10-01",
+      "date2": null,
+      "venue": "MEGA☆ROCKS 2017会場 [仙台Rensa / 仙台darwin / 仙台CLUB JUNK BOX / 仙台MACANA / HooK SENDAI / LIVE HOUSE enn 2nd / LIVE HOUSE enn 3rd / 仙台Space Zero / HIGHBURY / TOWER RECORDS仙台パルコ]",
+      "schedule": null,
+      "livefans_event_ids": [
+        859195
+      ]
+    },
+    {
+      "title": "MINAMI WHEEL 2017",
+      "type": 2,
+      "date1": "2017-10-07",
+      "date2": null,
+      "venue": "MINAMI WHEEL 2017会場",
+      "schedule": null,
+      "livefans_event_ids": [
+        841025
+      ]
+    },
+    {
+      "title": "夢チカLIVE VOL.123",
+      "type": 2,
+      "date1": "2017-10-21",
+      "date2": null,
+      "venue": "札幌KRAPS HALL",
+      "schedule": null,
+      "livefans_event_ids": [
+        1075345
+      ]
+    },
+    {
+      "title": "COUNTDOWN JAPAN 17/18",
+      "type": 2,
+      "date1": "2017-12-31",
+      "date2": null,
+      "venue": "幕張メッセ",
+      "schedule": null,
+      "livefans_event_ids": [
+        880116
+      ]
+    },
+    {
+      "title": "A FLOOD OF CIRCUS 大巡業 2018",
+      "type": 2,
+      "date1": "2018-01-19",
+      "date2": null,
+      "venue": "金沢vanvan V4",
+      "schedule": null,
+      "livefans_event_ids": [
+        881917
+      ]
+    },
+    {
+      "title": "Official髭男dism",
+      "type": 2,
+      "date1": "2018-04-08",
+      "date2": null,
+      "venue": "小田原ダイナシティ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1477750
+      ]
+    },
+    {
+      "title": "J-WAVE & Roppongi Hills present TOKYO M.A.P.S ～YOSHIKI MIZUNO EDITION～",
+      "type": 2,
+      "date1": "2018-05-05",
+      "date2": null,
+      "venue": "六本木ヒルズアリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        930601
+      ]
+    },
+    {
+      "title": "TOKYO METROPOLITAN ROCK FESTIVAL 2018",
+      "type": 2,
+      "date1": "2018-05-27",
+      "date2": null,
+      "venue": "若洲公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        906771
+      ]
+    },
+    {
+      "title": "SUMMER TIME LOVER CIRCUIT「サマラバ!」2018",
+      "type": 2,
+      "date1": "2018-06-30",
+      "date2": null,
+      "venue": "サマラバ!会場 [仙台Rensa / 仙台dariwn / 仙台CLUB JUNK BOX / 仙台MACANA / Hook SENDAI / LIVE HOUSE enn2nd/LIVE HOUSE enn3rd]",
+      "schedule": null,
+      "livefans_event_ids": [
+        922224
+      ]
+    },
+    {
+      "title": "J-WAVE LIVE SUMMER JAM 2018 supported by antenna",
+      "type": 2,
+      "date1": "2018-07-14",
+      "date2": null,
+      "venue": "横浜アリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        960030
+      ]
+    },
+    {
+      "title": "NUMBER SHOT 2018",
+      "type": 2,
+      "date1": "2018-07-22",
+      "date2": null,
+      "venue": "国営海の中道海浜公園 野外劇場",
+      "schedule": null,
+      "livefans_event_ids": [
+        940194
+      ]
+    },
+    {
+      "title": "WILD BUNCH FEST. 2018",
+      "type": 2,
+      "date1": "2018-07-28",
+      "date2": null,
+      "venue": "山口きらら博記念公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        955487
+      ]
+    },
+    {
+      "title": "未確認フェスティバル2018",
+      "type": 2,
+      "date1": "2018-07-29",
+      "date2": null,
+      "venue": "TSUTAYA O-WEST",
+      "schedule": null,
+      "livefans_event_ids": [
+        999155
+      ]
+    },
+    {
+      "title": "ROCK KIDS 802-OCHIKEN Goes ON!!-SPECIAL LIVE HIGH!HIGH!HIGH!",
+      "type": 2,
+      "date1": "2018-08-03",
+      "date2": null,
+      "venue": "なんばHatch",
+      "schedule": null,
+      "livefans_event_ids": [
+        958821
+      ]
+    },
+    {
+      "title": "ROCK IN JAPAN FESTIVAL 2018",
+      "type": 2,
+      "date1": "2018-08-11",
+      "date2": null,
+      "venue": "国営ひたち海浜公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        970153
+      ]
+    },
+    {
+      "title": "宗像フェス2018 ～Fukutsu Koinoura～",
+      "type": 2,
+      "date1": "2018-09-09",
+      "date2": null,
+      "venue": "恋の浦",
+      "schedule": null,
+      "livefans_event_ids": [
+        1019592
+      ]
+    },
+    {
+      "title": "AMBITIOUS TOHOKU FES 2018",
+      "type": 2,
+      "date1": "2018-09-15",
+      "date2": null,
+      "venue": "ゼビオアリーナ仙台",
+      "schedule": null,
+      "livefans_event_ids": [
+        973157
+      ]
+    },
+    {
+      "title": "テレビ朝日ドリームフェスティバル 2018",
+      "type": 2,
+      "date1": "2018-09-16",
+      "date2": null,
+      "venue": "幕張メッセ 国際展示場 9～11ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        993338
+      ]
+    },
+    {
+      "title": "J-WAVE SPARK LIVE Vol.4",
+      "type": 2,
+      "date1": "2018-09-19",
+      "date2": null,
+      "venue": "EX THEATER ROPPONGI",
+      "schedule": null,
+      "livefans_event_ids": [
+        1001168
+      ]
+    },
+    {
+      "title": "PIA MUSIC COMPLEX 2018",
+      "type": 2,
+      "date1": "2018-09-29",
+      "date2": null,
+      "venue": "若洲公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        994292
+      ]
+    },
+    {
+      "title": "ZIP-FM 25th ANNIVERSARY ZIP AUTUMN SQUARE 2018",
+      "type": 2,
+      "date1": "2018-10-06",
+      "date2": null,
+      "venue": "久屋大通公園 久屋広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        1023284
+      ]
+    },
+    {
+      "title": "MINAMI WHEEL 2018",
+      "type": 2,
+      "date1": "2018-10-08",
+      "date2": null,
+      "venue": null,
+      "schedule": "2018/10/08 心斎橋BIG STEP（Eggs presents FM802 MINAMI WHEEL 2018 OPENING FLASH!）\n2018/10/08 MINAMI WHEEL 2018会場",
+      "livefans_event_ids": [
+        1034367,
+        1025234
+      ]
+    },
+    {
+      "title": "『Stand By You EP』Free Acoustic Live",
+      "type": 2,
+      "date1": "2018-10-14",
+      "date2": null,
+      "venue": "ラゾーナ川崎プラザ ルーファ広場 グランドステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1024882
+      ]
+    },
+    {
+      "title": "拓殖大学 文京キャンパス 紅陵祭",
+      "type": 2,
+      "date1": "2018-10-20",
+      "date2": null,
+      "venue": "拓殖大学 文京キャンパス 後藤新平・新渡戸稲造記念講堂",
+      "schedule": null,
+      "livefans_event_ids": [
+        1024884
+      ]
+    },
+    {
+      "title": "広島経済大学 経大祭",
+      "type": 2,
+      "date1": "2018-10-21",
+      "date2": null,
+      "venue": "広島経済大学 特設メインステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1040652
+      ]
+    },
+    {
+      "title": "関西外国語大学 外大祭",
+      "type": 2,
+      "date1": "2018-10-26",
+      "date2": null,
+      "venue": "関西外国語大学 谷本記念講堂",
+      "schedule": null,
+      "livefans_event_ids": [
+        1024886
+      ]
+    },
+    {
+      "title": "愛知淑徳大学 淑楓祭 『Special Guest Live』",
+      "type": 2,
+      "date1": "2018-10-27",
+      "date2": null,
+      "venue": "愛知淑徳大学 長久手キャンパス 体育館",
+      "schedule": null,
+      "livefans_event_ids": [
+        1007729
+      ]
+    },
+    {
+      "title": "大手前大学 大手前祭",
+      "type": 2,
+      "date1": "2018-11-11",
+      "date2": null,
+      "venue": "大手前大学 いたみ稲野キャンパス 体育館",
+      "schedule": null,
+      "livefans_event_ids": [
+        1020724
+      ]
+    },
+    {
+      "title": "CROSS FM 25th Anniversary MUSIC JUNCTION 2018",
+      "type": 2,
+      "date1": "2018-12-26",
+      "date2": null,
+      "venue": "福岡国際センター",
+      "schedule": null,
+      "livefans_event_ids": [
+        1048239
+      ]
+    },
+    {
+      "title": "FM802 ROCK FESTIVAL RADIO CRAZY 2018",
+      "type": 2,
+      "date1": "2018-12-27",
+      "date2": null,
+      "venue": "インテックス大阪",
+      "schedule": null,
+      "livefans_event_ids": [
+        1035535
+      ]
+    },
+    {
+      "title": "COUNTDOWN JAPAN 18/19",
+      "type": 2,
+      "date1": "2018-12-31",
+      "date2": null,
+      "venue": "幕張メッセ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1035839
+      ]
+    },
+    {
+      "title": "Spotify presents Early Noise Special",
+      "type": 2,
+      "date1": "2019-03-28",
+      "date2": null,
+      "venue": "EX THEATER ROPPONGI",
+      "schedule": null,
+      "livefans_event_ids": [
+        1071945
+      ]
+    },
+    {
+      "title": "ROCK AX vol.2",
+      "type": 2,
+      "date1": "2019-04-18",
+      "date2": null,
+      "venue": "TOKYO DOME CITY HALL",
+      "schedule": null,
+      "livefans_event_ids": [
+        1088835
+      ]
+    },
+    {
+      "title": "POP HILL 2019 in KANAZAWA",
+      "type": 2,
+      "date1": "2019-04-27",
+      "date2": null,
+      "venue": "石川県産業展示館 4号館",
+      "schedule": null,
+      "livefans_event_ids": [
+        1070921
+      ]
+    },
+    {
+      "title": "VIVA LA ROCK 2019",
+      "type": 2,
+      "date1": "2019-05-04",
+      "date2": null,
+      "venue": "さいたまスーパーアリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1052129
+      ]
+    },
+    {
+      "title": "Official髭男dismニューシングル「Pretender」発売記念フリーライブ",
+      "type": 2,
+      "date1": "2019-05-18",
+      "date2": null,
+      "venue": "ダイバーシティ東京プラザ フェスティバル広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        1122562
+      ]
+    },
+    {
+      "title": "OSAKA METROPOLITAN ROCK FESTIVAL 2019",
+      "type": 2,
+      "date1": "2019-05-19",
+      "date2": null,
+      "venue": "海とのふれあい広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        1067511
+      ]
+    },
+    {
+      "title": "TOKYO METROPOLITAN ROCK FESTIVAL 2019",
+      "type": 2,
+      "date1": "2019-05-26",
+      "date2": null,
+      "venue": "若洲公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1067503
+      ]
+    },
+    {
+      "title": "NOW PLAYING JAPAN LIVE vol.3",
+      "type": 2,
+      "date1": "2019-05-28",
+      "date2": null,
+      "venue": "新木場STUDIO COAST",
+      "schedule": null,
+      "livefans_event_ids": [
+        1117135
+      ]
+    },
+    {
+      "title": "FM802 30PARTY SPECIAL LIVE RADIO MAGIC",
+      "type": 2,
+      "date1": "2019-06-02",
+      "date2": null,
+      "venue": "大阪城ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1111130
+      ]
+    },
+    {
+      "title": "\"テレビ朝日・六本木ヒルズ 夏祭り\"スペシャル・ライヴ",
+      "type": 2,
+      "date1": "2019-08-01",
+      "date2": null,
+      "venue": "六本木ヒルズアリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1148852
+      ]
+    },
+    {
+      "title": "ROCK IN JAPAN FESTIVAL 2019",
+      "type": 2,
+      "date1": "2019-08-03",
+      "date2": null,
+      "venue": "国営ひたち海浜公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1105295
+      ]
+    },
+    {
+      "title": "SUMMER SONIC 2019",
+      "type": 2,
+      "date1": "2019-08-17",
+      "date2": null,
+      "venue": "SUMMER SONIC 2019会場 [ZOZOマリンスタジアム / 幕張メッセ]",
+      "schedule": null,
+      "livefans_event_ids": [
+        1109433
+      ]
+    },
+    {
+      "title": "ロックロックこんにちは!Ver.23 ～News-23～",
+      "type": 2,
+      "date1": "2019-08-24",
+      "date2": null,
+      "venue": "Zepp Namba",
+      "schedule": null,
+      "livefans_event_ids": [
+        1137376
+      ]
+    },
+    {
+      "title": "音楽と髭達2019 -最後の花火-",
+      "type": 2,
+      "date1": "2019-08-31",
+      "date2": null,
+      "venue": "HARD OFF ECOスタジアム新潟",
+      "schedule": null,
+      "livefans_event_ids": [
+        1128155
+      ]
+    },
+    {
+      "title": "SPACE SHOWER SWEET LOVE SHOWER 2019",
+      "type": 2,
+      "date1": "2019-09-01",
+      "date2": null,
+      "venue": "山中湖交流プラザきらら",
+      "schedule": null,
+      "livefans_event_ids": [
+        1112289,
+        1112297
+      ]
+    },
+    {
+      "title": "FM FUKUI BEAT PHOENIX 2019",
+      "type": 2,
+      "date1": "2019-09-16",
+      "date2": null,
+      "venue": "フェニックス・プラザ 大ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1151121
+      ]
+    },
+    {
+      "title": "SPACE SHOWER TV \"LIVE with YOU\"",
+      "type": 2,
+      "date1": "2019-09-24",
+      "date2": null,
+      "venue": "Zepp Nagoya",
+      "schedule": null,
+      "livefans_event_ids": [
+        1183933
+      ]
+    },
+    {
+      "title": "FM802 ROCK FESTIVAL RADIO CRAZY 2019",
+      "type": 2,
+      "date1": "2019-12-25",
+      "date2": null,
+      "venue": "インテックス大阪",
+      "schedule": null,
+      "livefans_event_ids": [
+        1184988
+      ]
+    },
+    {
+      "title": "COUNTDOWN JAPAN 19/20",
+      "type": 2,
+      "date1": "2019-12-28",
+      "date2": null,
+      "venue": "幕張メッセ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1175687
+      ]
+    },
+    {
+      "title": "FM802 MUSIC FREAKS LIVE",
+      "type": 2,
+      "date1": "2020-02-19",
+      "date2": null,
+      "venue": "Zepp Osaka Bayside",
+      "schedule": null,
+      "livefans_event_ids": [
+        1214209
+      ]
+    },
+    {
+      "title": "TOOY#1",
+      "type": 2,
+      "date1": "2022-09-12",
+      "date2": null,
+      "venue": "豊洲PIT",
+      "schedule": null,
+      "livefans_event_ids": [
+        1456558
+      ]
+    },
+    {
+      "title": "UVERworld VS シリーズ \"UVERworld vs Official髭男dism\"",
+      "type": 2,
+      "date1": "2024-12-26",
+      "date2": null,
+      "venue": "日本武道館",
+      "schedule": null,
+      "livefans_event_ids": [
+        1727334
+      ]
+    },
+    {
+      "title": "SUMMER SONIC 2025",
+      "type": 2,
+      "date1": "2025-08-16",
+      "date2": "2025-08-17",
+      "venue": null,
+      "schedule": "2025/08/16 SUMMER SONIC 2025 会場 [ZOZOマリンスタジアム / 幕張メッセ]\n2025/08/17 万博記念公園",
+      "livefans_event_ids": [
+        1779412,
+        1779445
+      ]
+    },
+    {
+      "title": "SPACE SHOWER SWEET LOVE SHOWER 2025 -30th ANNIVERSARY-",
+      "type": 2,
+      "date1": "2025-08-30",
+      "date2": null,
+      "venue": "山中湖交流プラザきらら",
+      "schedule": null,
+      "livefans_event_ids": [
+        1790228
+      ]
+    },
+    {
+      "title": "WANIMA pre. 1CHANCE FESTIVAL 2025",
+      "type": 2,
+      "date1": "2025-09-07",
+      "date2": null,
+      "venue": "熊本県農業公園カントリーパーク",
+      "schedule": null,
+      "livefans_event_ids": [
+        1795140
+      ]
+    },
+    {
+      "title": "ROCK IN JAPAN FESTIVAL 2025",
+      "type": 2,
+      "date1": "2025-09-20",
+      "date2": null,
+      "venue": "千葉市蘇我スポーツ公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1812790
+      ]
+    }
+  ]
+}

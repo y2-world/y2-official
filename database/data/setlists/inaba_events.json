@@ -1,0 +1,831 @@
+{
+  "artist_id": 39,
+  "new_songs": [],
+  "review_notes": [
+    "2004-08-07 SUMMER SONIC 2004 | 8.7 \u5343\u8449: \u4ed6\u30d1\u30bf\u30fc\u30f3\u304b\u3089 Touch \u304c\u629c\u3051\u3066\u3044\u308b\u3060\u3051"
+  ],
+  "setlists": [
+    {
+      "date1": "2003-03-20",
+      "tour_title": "ROCK NIGHT OPENING ACT",
+      "mode": "new",
+      "source": "LiveFans",
+      "patterns": [
+        {
+          "row": 1,
+          "order_no": 1,
+          "subtitle": null,
+          "livefans_event_ids": [
+            137938
+          ],
+          "order_from_event_id": 137938,
+          "setlist": [
+            {
+              "title": "O.NO.RE",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 673,
+              "song_title": "O.NO.RE"
+            },
+            {
+              "title": "\u304f\u3061\u3073\u308b",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 656,
+              "song_title": "\u304f\u3061\u3073\u308b"
+            },
+            {
+              "title": "Here I am!!",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 681,
+              "song_title": "Here I am!!"
+            },
+            {
+              "title": "LOVE LETTER",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 674,
+              "song_title": "LOVE LETTER"
+            },
+            {
+              "title": "Touch",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 675,
+              "song_title": "Touch"
+            },
+            {
+              "title": "\u6ce2",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 658,
+              "song_title": "\u6ce2"
+            },
+            {
+              "title": "AKATSUKI",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 685,
+              "song_title": "AKATSUKI"
+            },
+            {
+              "title": "Seno de Revolution",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 683,
+              "song_title": "S\u1ebdno de Revolution"
+            },
+            {
+              "title": "TRASH",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 676,
+              "song_title": "TRASH"
+            },
+            {
+              "title": "\u611b\u306a\u304d\u9053",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 668,
+              "song_title": "\u611b\u306a\u304d\u9053"
+            }
+          ],
+          "encore": []
+        }
+      ],
+      "subtitle_updates": []
+    },
+    {
+      "date1": "2004-07-24",
+      "tour_title": "THE ROCK ODYSSEY 2004",
+      "mode": "new",
+      "source": "LiveFans",
+      "patterns": [
+        {
+          "row": 1,
+          "order_no": 1,
+          "subtitle": null,
+          "livefans_event_ids": [
+            21136
+          ],
+          "order_from_event_id": 21136,
+          "setlist": [
+            {
+              "title": "\u6b63\u9762\u885d\u7a81",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 693,
+              "song_title": "\u6b63\u9762\u885d\u7a81"
+            },
+            {
+              "title": "Here I am!!",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 681,
+              "song_title": "Here I am!!"
+            },
+            {
+              "title": "arizona",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 661,
+              "song_title": "arizona"
+            },
+            {
+              "title": "Touch",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 675,
+              "song_title": "Touch"
+            },
+            {
+              "title": "\u7720\u308c\u306a\u3044\u306e\u306f\u8ab0\u306e\u305b\u3044",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 659,
+              "song_title": "\u7720\u308c\u306a\u3044\u306e\u306f\u8ab0\u306e\u305b\u3044"
+            },
+            {
+              "title": "\u304a\u304b\u3048\u308a",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 691,
+              "song_title": "\u304a\u304b\u3048\u308a"
+            },
+            {
+              "title": "Soul Station",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 660,
+              "song_title": "Soul Station"
+            },
+            {
+              "title": "Wonderland",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 688,
+              "song_title": "Wonderland"
+            },
+            {
+              "title": "O.NO.RE",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 673,
+              "song_title": "O.NO.RE"
+            },
+            {
+              "title": "CHAIN",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 671,
+              "song_title": "CHAIN"
+            },
+            {
+              "title": "TRASH",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 676,
+              "song_title": "TRASH"
+            },
+            {
+              "title": "AKATSUKI",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 685,
+              "song_title": "AKATSUKI"
+            },
+            {
+              "title": "\u611b\u306a\u304d\u9053",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 668,
+              "song_title": "\u611b\u306a\u304d\u9053"
+            }
+          ],
+          "encore": []
+        }
+      ],
+      "subtitle_updates": []
+    },
+    {
+      "date1": "2004-08-07",
+      "tour_title": "SUMMER SONIC 2004",
+      "mode": "new",
+      "source": "LiveFans",
+      "patterns": [
+        {
+          "row": 1,
+          "order_no": 1,
+          "subtitle": "8.7 \u5343\u8449",
+          "livefans_event_ids": [
+            15977
+          ],
+          "order_from_event_id": 15977,
+          "setlist": [
+            {
+              "title": "\u6b63\u9762\u885d\u7a81",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 693,
+              "song_title": "\u6b63\u9762\u885d\u7a81"
+            },
+            {
+              "title": "Here I am!!",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 681,
+              "song_title": "Here I am!!"
+            },
+            {
+              "title": "arizona",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 661,
+              "song_title": "arizona"
+            },
+            {
+              "title": "Wonderland",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 688,
+              "song_title": "Wonderland"
+            },
+            {
+              "title": "O.NO.RE",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 673,
+              "song_title": "O.NO.RE"
+            },
+            {
+              "title": "CHAIN",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 671,
+              "song_title": "CHAIN"
+            },
+            {
+              "title": "TRASH",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 676,
+              "song_title": "TRASH"
+            },
+            {
+              "title": "AKATSUKI",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 685,
+              "song_title": "AKATSUKI"
+            },
+            {
+              "title": "\u611b\u306a\u304d\u9053",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 668,
+              "song_title": "\u611b\u306a\u304d\u9053"
+            }
+          ],
+          "encore": []
+        },
+        {
+          "row": 1,
+          "order_no": 2,
+          "subtitle": "8.8 \u5927\u962a",
+          "livefans_event_ids": [
+            16013
+          ],
+          "order_from_event_id": 16013,
+          "setlist": [
+            {
+              "title": "\u6b63\u9762\u885d\u7a81",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 693,
+              "song_title": "\u6b63\u9762\u885d\u7a81"
+            },
+            {
+              "title": "Here I am!!",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 681,
+              "song_title": "Here I am!!"
+            },
+            {
+              "title": "arizona",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 661,
+              "song_title": "arizona"
+            },
+            {
+              "title": "Touch",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 675,
+              "song_title": "Touch"
+            },
+            {
+              "title": "Wonderland",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 688,
+              "song_title": "Wonderland"
+            },
+            {
+              "title": "O.NO.RE",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 673,
+              "song_title": "O.NO.RE"
+            },
+            {
+              "title": "CHAIN",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 671,
+              "song_title": "CHAIN"
+            },
+            {
+              "title": "TRASH",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 676,
+              "song_title": "TRASH"
+            },
+            {
+              "title": "AKATSUKI",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 685,
+              "song_title": "AKATSUKI"
+            },
+            {
+              "title": "\u611b\u306a\u304d\u9053",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 668,
+              "song_title": "\u611b\u306a\u304d\u9053"
+            }
+          ],
+          "encore": []
+        }
+      ],
+      "subtitle_updates": []
+    },
+    {
+      "date1": "2024-08-24",
+      "tour_title": "MONSTER baSH 2024",
+      "mode": "new",
+      "source": "LiveFans",
+      "patterns": [
+        {
+          "row": 1,
+          "order_no": 1,
+          "subtitle": null,
+          "livefans_event_ids": [
+            1676286
+          ],
+          "order_from_event_id": 1676286,
+          "setlist": [
+            {
+              "title": "\u30de\u30a4\u30df\u30e9\u30a4",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 705,
+              "song_title": "\u30de\u30a4\u30df\u30e9\u30a4"
+            },
+            {
+              "title": "BANTAM",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 739,
+              "song_title": "BANTAM"
+            },
+            {
+              "title": "Chateau Blanc",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 747,
+              "song_title": "Chateau Blanc"
+            },
+            {
+              "title": "\u9060\u304f\u307e\u3067",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 670,
+              "song_title": "\u9060\u304f\u307e\u3067"
+            },
+            {
+              "title": "CHAIN",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 671,
+              "song_title": "CHAIN"
+            },
+            {
+              "title": "\u7fbd",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 733,
+              "song_title": "\u7fbd"
+            }
+          ],
+          "encore": []
+        }
+      ],
+      "subtitle_updates": []
+    },
+    {
+      "date1": "2024-08-25",
+      "tour_title": "\u30c6\u30ec\u30d3\u671d\u65e5\u30c9\u30ea\u30fc\u30e0\u30d5\u30a7\u30b9\u30c6\u30a3\u30d0\u30eb2024",
+      "mode": "new",
+      "source": "LiveFans",
+      "patterns": [
+        {
+          "row": 1,
+          "order_no": 1,
+          "subtitle": null,
+          "livefans_event_ids": [
+            1680010
+          ],
+          "order_from_event_id": 1680010,
+          "setlist": [
+            {
+              "title": "NOW",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 741,
+              "song_title": "NOW"
+            },
+            {
+              "title": "\u30de\u30a4\u30df\u30e9\u30a4",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 705,
+              "song_title": "\u30de\u30a4\u30df\u30e9\u30a4"
+            },
+            {
+              "title": "BANTAM",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 739,
+              "song_title": "BANTAM"
+            },
+            {
+              "title": "\u6ce2",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 658,
+              "song_title": "\u6ce2"
+            },
+            {
+              "title": "Chateau Blanc",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 747,
+              "song_title": "Chateau Blanc"
+            },
+            {
+              "title": "Stray Hearts",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 740,
+              "song_title": "Stray Hearts"
+            },
+            {
+              "title": "CHAIN",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 671,
+              "song_title": "CHAIN"
+            },
+            {
+              "title": "\u7fbd",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 733,
+              "song_title": "\u7fbd"
+            },
+            {
+              "title": "YELLOW",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 738,
+              "song_title": "YELLOW"
+            },
+            {
+              "title": "\u9060\u304f\u307e\u3067",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 670,
+              "song_title": "\u9060\u304f\u307e\u3067"
+            },
+            {
+              "title": "Okay",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 703,
+              "song_title": "Okay"
+            }
+          ],
+          "encore": []
+        }
+      ],
+      "subtitle_updates": []
+    },
+    {
+      "date1": "2025-08-31",
+      "tour_title": "SPACE SHOWER SWEET LOVE SHOWER 2025 -30th ANNIVERSARY-",
+      "mode": "new",
+      "source": "LiveFans",
+      "patterns": [
+        {
+          "row": 1,
+          "order_no": 1,
+          "subtitle": null,
+          "livefans_event_ids": [
+            1790248
+          ],
+          "order_from_event_id": 1790248,
+          "setlist": [
+            {
+              "title": "Action",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": "\u6771\u4eac\u30b9\u30ab\u30d1\u30e9\u30c0\u30a4\u30b9\u30aa\u30fc\u30b1\u30b9\u30c8\u30e9",
+              "featuring_type": "artist",
+              "song_id": null,
+              "song_title": null
+            }
+          ],
+          "encore": []
+        }
+      ],
+      "subtitle_updates": []
+    },
+    {
+      "date1": "2026-03-31",
+      "tour_title": "[SKA] SHOWDOWN",
+      "mode": "new",
+      "source": "LiveFans",
+      "patterns": [
+        {
+          "row": 1,
+          "order_no": 1,
+          "subtitle": null,
+          "livefans_event_ids": [
+            1894827
+          ],
+          "order_from_event_id": 1894827,
+          "setlist": [
+            {
+              "title": "\u30bf\u30a4\u30e0\u30ab\u30d7\u30bb\u30eb",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": "\u6771\u4eac\u30b9\u30ab\u30d1\u30e9\u30c0\u30a4\u30b9\u30aa\u30fc\u30b1\u30b9\u30c8\u30e9",
+              "featuring_type": "artist",
+              "song_id": null,
+              "song_title": null
+            },
+            {
+              "title": "Action",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": "\u6771\u4eac\u30b9\u30ab\u30d1\u30e9\u30c0\u30a4\u30b9\u30aa\u30fc\u30b1\u30b9\u30c8\u30e9",
+              "featuring_type": "artist",
+              "song_id": null,
+              "song_title": null
+            }
+          ],
+          "encore": []
+        }
+      ],
+      "subtitle_updates": []
+    },
+    {
+      "date1": "2026-08-23",
+      "tour_title": "WE'RE BROS. TOUR 2026 DOME LIVE \u9f8d\u3001\u6dbc\u98a8\u81f3",
+      "mode": "new",
+      "source": "LiveFans",
+      "patterns": [
+        {
+          "row": 1,
+          "order_no": 1,
+          "subtitle": null,
+          "livefans_event_ids": [
+            1920377
+          ],
+          "order_from_event_id": 1920377,
+          "setlist": [
+            {
+              "title": "\u6728\u661f feat. \u7a32\u8449\u6d69\u5fd7",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": "\u798f\u5c71\u96c5\u6cbb",
+              "featuring_type": "artist",
+              "song_id": null,
+              "song_title": null
+            }
+          ],
+          "encore": []
+        }
+      ],
+      "subtitle_updates": []
+    },
+    {
+      "date1": "2026-09-26",
+      "tour_title": "WANIMA pre. 1CHANCE FESTIVAL 2026",
+      "mode": "new",
+      "source": "LiveFans",
+      "patterns": [
+        {
+          "row": 1,
+          "order_no": 1,
+          "subtitle": null,
+          "livefans_event_ids": [
+            1970988
+          ],
+          "order_from_event_id": 1970988,
+          "setlist": [
+            {
+              "title": "YELLOW",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 738,
+              "song_title": "YELLOW"
+            },
+            {
+              "title": "\u30de\u30a4\u30df\u30e9\u30a4",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 705,
+              "song_title": "\u30de\u30a4\u30df\u30e9\u30a4"
+            },
+            {
+              "title": "\u6ce2",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 658,
+              "song_title": "\u6ce2"
+            },
+            {
+              "title": "\u30bf\u30c3\u30c1",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 751,
+              "song_title": "\u30bf\u30c3\u30c1"
+            },
+            {
+              "title": "\u7fbd",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 733,
+              "song_title": "\u7fbd"
+            },
+            {
+              "title": "\u6b63\u9762\u885d\u7a81",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 693,
+              "song_title": "\u6b63\u9762\u885d\u7a81"
+            }
+          ],
+          "encore": []
+        }
+      ],
+      "subtitle_updates": []
+    }
+  ]
+}

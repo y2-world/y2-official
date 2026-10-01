@@ -1,0 +1,2678 @@
+{
+  "artist_id": 10,
+  "tours": [
+    {
+      "title": "Augusta Camp 2002",
+      "type": 2,
+      "date1": "2002-08-04",
+      "date2": null,
+      "venue": "千葉マリンスタジアム",
+      "schedule": null,
+      "livefans_event_ids": [
+        312418
+      ]
+    },
+    {
+      "title": "Augusta Camp 2003",
+      "type": 2,
+      "date1": "2003-08-23",
+      "date2": null,
+      "venue": "千葉マリンスタジアム",
+      "schedule": null,
+      "livefans_event_ids": [
+        312435
+      ]
+    },
+    {
+      "title": "Augusta Camp 2003",
+      "type": 2,
+      "date1": "2003-08-30",
+      "date2": null,
+      "venue": "神戸ポートアイランド 2期芝生エリア メガKobe",
+      "schedule": null,
+      "livefans_event_ids": [
+        312426
+      ]
+    },
+    {
+      "title": "Augusta Camp 2004",
+      "type": 2,
+      "date1": "2004-07-19",
+      "date2": null,
+      "venue": "富士急ハイランド コニファーフォレスト",
+      "schedule": null,
+      "livefans_event_ids": [
+        312443
+      ]
+    },
+    {
+      "title": "FM802 MEET THE WORLD BEAT 2004",
+      "type": 2,
+      "date1": "2004-07-25",
+      "date2": null,
+      "venue": "万博記念公園 もみじ川芝生広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        112164
+      ]
+    },
+    {
+      "title": "学園祭ライブ",
+      "type": 2,
+      "date1": "2004-11-07",
+      "date2": null,
+      "venue": "東京電機大学 東京千住キャンパス",
+      "schedule": null,
+      "livefans_event_ids": [
+        35259
+      ]
+    },
+    {
+      "title": "学園祭ライブ",
+      "type": 2,
+      "date1": "2004-11-13",
+      "date2": null,
+      "venue": "吉備国際大学 高梁キャンパス",
+      "schedule": null,
+      "livefans_event_ids": [
+        35260
+      ]
+    },
+    {
+      "title": "学園祭ライブ",
+      "type": 2,
+      "date1": "2004-11-20",
+      "date2": null,
+      "venue": "同志社女子大学 栄光館 ファウラーチャペル",
+      "schedule": null,
+      "livefans_event_ids": [
+        35261
+      ]
+    },
+    {
+      "title": "宇都宮大学峰ヶ丘祭 MELODY STAFF presents スキマスイッチLIVE 2004",
+      "type": 2,
+      "date1": "2004-11-21",
+      "date2": null,
+      "venue": "宇都宮大学 峰キャンパス 第1体育館",
+      "schedule": null,
+      "livefans_event_ids": [
+        35262
+      ]
+    },
+    {
+      "title": "ap bank fes '05",
+      "type": 2,
+      "date1": "2005-07-18",
+      "date2": null,
+      "venue": "つま恋 スポーツ広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        19424
+      ]
+    },
+    {
+      "title": "FM802 MEET THE WORLD BEAT 2005",
+      "type": 2,
+      "date1": "2005-07-24",
+      "date2": null,
+      "venue": "万博記念公園 もみじ川芝生広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        145185
+      ]
+    },
+    {
+      "title": "J-WAVE LIVE 2000+5",
+      "type": 2,
+      "date1": "2005-08-19",
+      "date2": null,
+      "venue": "国立代々木競技場 第一体育館",
+      "schedule": null,
+      "livefans_event_ids": [
+        134840
+      ]
+    },
+    {
+      "title": "Yohito Teraoka Presents 「Golden Circle vol.8」",
+      "type": 2,
+      "date1": "2005-11-20",
+      "date2": null,
+      "venue": "品川プリンスホテル ステラボール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1517453
+      ]
+    },
+    {
+      "title": "明治安田生命Presents KAZUMASA ODA TOUR 2005\"大好きな君に\"",
+      "type": 2,
+      "date1": "2005-12-07",
+      "date2": null,
+      "venue": "日本武道館",
+      "schedule": null,
+      "livefans_event_ids": [
+        138635
+      ]
+    },
+    {
+      "title": "FM802 × DoCoMo ACCESS! SPECIAL LIVE「COLORS OF CHERRY」",
+      "type": 2,
+      "date1": "2006-05-23",
+      "date2": null,
+      "venue": "Baltimore Convention Center",
+      "schedule": null,
+      "livefans_event_ids": [
+        891
+      ]
+    },
+    {
+      "title": "Excite Music Festival '06",
+      "type": 2,
+      "date1": "2006-07-02",
+      "date2": null,
+      "venue": "国立代々木競技場 第一体育館",
+      "schedule": null,
+      "livefans_event_ids": [
+        239928
+      ]
+    },
+    {
+      "title": "ap bank fes '06",
+      "type": 2,
+      "date1": "2006-07-16",
+      "date2": null,
+      "venue": "つま恋 スポーツ広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        483
+      ]
+    },
+    {
+      "title": "Augusta Camp 2006",
+      "type": 2,
+      "date1": "2006-07-22",
+      "date2": null,
+      "venue": "富士急ハイランド コニファーフォレスト",
+      "schedule": null,
+      "livefans_event_ids": [
+        312448
+      ]
+    },
+    {
+      "title": "FM802 MEET THE WORLD BEAT 2006",
+      "type": 2,
+      "date1": "2006-07-23",
+      "date2": null,
+      "venue": "万博記念公園 もみじ川芝生広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        153049
+      ]
+    },
+    {
+      "title": "HIGHER GROUND 2006",
+      "type": 2,
+      "date1": "2006-07-30",
+      "date2": null,
+      "venue": "国営海の中道海浜公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        183348
+      ]
+    },
+    {
+      "title": "SOUND MARINA 2006 ～Feel the Voice 5～",
+      "type": 2,
+      "date1": "2006-08-19",
+      "date2": null,
+      "venue": "広島港出島野外特設会場",
+      "schedule": null,
+      "livefans_event_ids": [
+        485561
+      ]
+    },
+    {
+      "title": "Augusta Camp 2007",
+      "type": 2,
+      "date1": "2007-07-29",
+      "date2": null,
+      "venue": "グッドウィルドーム",
+      "schedule": null,
+      "livefans_event_ids": [
+        516020
+      ]
+    },
+    {
+      "title": "ロックロックこんにちは! in 仙台",
+      "type": 2,
+      "date1": "2007-08-16",
+      "date2": null,
+      "venue": "Zepp Sendai",
+      "schedule": null,
+      "livefans_event_ids": [
+        457878
+      ]
+    },
+    {
+      "title": "SOUND MARINA 2007 ～Feel the Voice Special～",
+      "type": 2,
+      "date1": "2007-09-02",
+      "date2": null,
+      "venue": "広島港出島野外特設会場",
+      "schedule": null,
+      "livefans_event_ids": [
+        226424
+      ]
+    },
+    {
+      "title": "ap bank fes '08",
+      "type": 2,
+      "date1": "2008-07-19",
+      "date2": null,
+      "venue": "つま恋 スポーツ広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        303498
+      ]
+    },
+    {
+      "title": "Augusta Camp 2008",
+      "type": 2,
+      "date1": "2008-07-26",
+      "date2": null,
+      "venue": "西武ドーム",
+      "schedule": null,
+      "livefans_event_ids": [
+        312491
+      ]
+    },
+    {
+      "title": "Augusta Camp 2008",
+      "type": 2,
+      "date1": "2008-08-09",
+      "date2": null,
+      "venue": "泉大津フェニックス",
+      "schedule": null,
+      "livefans_event_ids": [
+        685657
+      ]
+    },
+    {
+      "title": "FM802 STILL20 SPECIAL LIVE<RADIO MAGIC>",
+      "type": 2,
+      "date1": "2009-05-30",
+      "date2": null,
+      "venue": "大阪城ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        417924
+      ]
+    },
+    {
+      "title": "J-WAVE LIVE 2000+9",
+      "type": 2,
+      "date1": "2009-08-14",
+      "date2": null,
+      "venue": "国立代々木競技場 第一体育館",
+      "schedule": null,
+      "livefans_event_ids": [
+        139440
+      ]
+    },
+    {
+      "title": "SOUND MARINA 2009 ～Feel the Voice LOVE&PEACE～",
+      "type": 2,
+      "date1": "2009-08-15",
+      "date2": null,
+      "venue": "広島市民球場",
+      "schedule": null,
+      "livefans_event_ids": [
+        485574
+      ]
+    },
+    {
+      "title": "ロックロックこんにちは! in 仙台 ～10th Anniversary Special～",
+      "type": 2,
+      "date1": "2009-08-22",
+      "date2": null,
+      "venue": "国営みちのく杜の湖畔公園 北地区 風の草原",
+      "schedule": null,
+      "livefans_event_ids": [
+        106999
+      ]
+    },
+    {
+      "title": "音楽と髭達 2009 -Way-",
+      "type": 2,
+      "date1": "2009-08-29",
+      "date2": null,
+      "venue": "国営越後丘陵公園 野外特設ステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        244489
+      ]
+    },
+    {
+      "title": "Augusta Camp 2009 ～Extra～",
+      "type": 2,
+      "date1": "2009-09-12",
+      "date2": null,
+      "venue": "ナガシマスパーランド 芝生広場特設ステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        312514
+      ]
+    },
+    {
+      "title": "Augusta Camp 2009 ～Extra～",
+      "type": 2,
+      "date1": "2009-10-24",
+      "date2": null,
+      "venue": "さいたまスーパーアリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        312507
+      ]
+    },
+    {
+      "title": "KDDI presents Music Lovers Live 2010",
+      "type": 2,
+      "date1": "2010-06-05",
+      "date2": null,
+      "venue": "横浜アリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        326779
+      ]
+    },
+    {
+      "title": "JOIN ALIVE 2010",
+      "type": 2,
+      "date1": "2010-07-17",
+      "date2": null,
+      "venue": "JOIN ALIVE 2010会場 [いわみざわ公園野外音楽堂キタオン / 北海道グリーンランド遊園地]",
+      "schedule": null,
+      "livefans_event_ids": [
+        6854
+      ]
+    },
+    {
+      "title": "ap bank fes '10",
+      "type": 2,
+      "date1": "2010-07-19",
+      "date2": null,
+      "venue": "つま恋 スポーツ広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        265309
+      ]
+    },
+    {
+      "title": "お台場合衆国2010～笑うBayには福きたる!!～ めざましライブ",
+      "type": 2,
+      "date1": "2010-07-20",
+      "date2": null,
+      "venue": "オダイバランド",
+      "schedule": null,
+      "livefans_event_ids": [
+        497644
+      ]
+    },
+    {
+      "title": "HIGHER GROUND 2010",
+      "type": 2,
+      "date1": "2010-07-24",
+      "date2": null,
+      "venue": "国営海の中道海浜公園 野外劇場",
+      "schedule": null,
+      "livefans_event_ids": [
+        6855
+      ]
+    },
+    {
+      "title": "FM802 MEET THE WORLD BEAT 2010",
+      "type": 2,
+      "date1": "2010-07-25",
+      "date2": null,
+      "venue": "万博記念公園 もみじ川芝生広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        106460
+      ]
+    },
+    {
+      "title": "Augusta Camp 2010",
+      "type": 2,
+      "date1": "2010-08-14",
+      "date2": "2010-08-15",
+      "venue": "夢の島公園 陸上競技場",
+      "schedule": null,
+      "livefans_event_ids": [
+        259206,
+        259210
+      ]
+    },
+    {
+      "title": "SOUND MARINA '10 ～Arena Special～",
+      "type": 2,
+      "date1": "2010-09-11",
+      "date2": null,
+      "venue": "広島県立総合体育館 広島グリーンアリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        485591
+      ]
+    },
+    {
+      "title": "家族 Fes. 2010",
+      "type": 2,
+      "date1": "2010-10-09",
+      "date2": null,
+      "venue": "ラグーナ蒲郡 ラグーナビーチ",
+      "schedule": null,
+      "livefans_event_ids": [
+        46030
+      ]
+    },
+    {
+      "title": "星屑の隙間に木村基博",
+      "type": 2,
+      "date1": "2010-11-28",
+      "date2": null,
+      "venue": "大阪城ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        422604
+      ]
+    },
+    {
+      "title": "奄美大島豪雨災害 復興支援チャリティライブ 「ディ!ディ!」",
+      "type": 2,
+      "date1": "2010-12-15",
+      "date2": null,
+      "venue": "新木場STUDIO COAST",
+      "schedule": null,
+      "livefans_event_ids": [
+        148574
+      ]
+    },
+    {
+      "title": "COUNTDOWN JAPAN 10/11",
+      "type": 2,
+      "date1": "2010-12-29",
+      "date2": null,
+      "venue": "幕張メッセ",
+      "schedule": null,
+      "livefans_event_ids": [
+        81410
+      ]
+    },
+    {
+      "title": "au by KDDI presents オンタマカーニバル 2011",
+      "type": 2,
+      "date1": "2011-01-29",
+      "date2": null,
+      "venue": "横浜アリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        227357
+      ]
+    },
+    {
+      "title": "めざましスーパーライブ in 沖縄",
+      "type": 2,
+      "date1": "2011-02-26",
+      "date2": null,
+      "venue": "宜野湾海浜公園 屋外劇場",
+      "schedule": null,
+      "livefans_event_ids": [
+        345873
+      ]
+    },
+    {
+      "title": "東日本大震災支援チャリティーコンサート What a Wonderful World in KANSAI",
+      "type": 2,
+      "date1": "2011-05-14",
+      "date2": null,
+      "venue": "万博記念公園 東の広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        106462
+      ]
+    },
+    {
+      "title": "Sing for EAST",
+      "type": 2,
+      "date1": "2011-06-11",
+      "date2": null,
+      "venue": "神戸国際会館こくさいホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        224036
+      ]
+    },
+    {
+      "title": "ap bank fes '11 Fund for Japan",
+      "type": 2,
+      "date1": "2011-07-17",
+      "date2": null,
+      "venue": "つま恋 スポーツ広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        267775
+      ]
+    },
+    {
+      "title": "FM802 MEET THE WORLD BEAT 2011",
+      "type": 2,
+      "date1": "2011-07-24",
+      "date2": null,
+      "venue": "万博記念公園 もみじ川芝生広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        106466
+      ]
+    },
+    {
+      "title": "Augusta Camp 2011",
+      "type": 2,
+      "date1": "2011-07-30",
+      "date2": null,
+      "venue": "横浜赤レンガ倉庫 赤レンガパーク 野外特設ステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        312533
+      ]
+    },
+    {
+      "title": "情熱大陸 SPECIAL LIVE SUMMER TIME BONANZA'11",
+      "type": 2,
+      "date1": "2011-08-06",
+      "date2": null,
+      "venue": "夢の島公園 陸上競技場",
+      "schedule": null,
+      "livefans_event_ids": [
+        478982
+      ]
+    },
+    {
+      "title": "ROCK IN JAPAN FESTIVAL 2011",
+      "type": 2,
+      "date1": "2011-08-07",
+      "date2": null,
+      "venue": "国営ひたち海浜公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        54951
+      ]
+    },
+    {
+      "title": "音霊 OTODAMA SEA STUDIO 2011 「スキマスイッチ×Salyu～これはヤバい!!見たい!!～」",
+      "type": 2,
+      "date1": "2011-08-17",
+      "date2": null,
+      "venue": "逗子海岸OTODAMA SEA STUDIO",
+      "schedule": null,
+      "livefans_event_ids": [
+        224892
+      ]
+    },
+    {
+      "title": "MONSTER baSH 2011",
+      "type": 2,
+      "date1": "2011-08-20",
+      "date2": null,
+      "venue": "国営讃岐まんのう公園内 芝生広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        56326
+      ]
+    },
+    {
+      "title": "情熱大陸 SPECIAL LIVE SUMMER TIME BONANZA'11",
+      "type": 2,
+      "date1": "2011-08-27",
+      "date2": null,
+      "venue": "札幌芸術の森 野外ステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        478973
+      ]
+    },
+    {
+      "title": "お台場合衆国2011～ぼくらがNIPPON応援団!～めざましライブ2011",
+      "type": 2,
+      "date1": "2011-08-30",
+      "date2": null,
+      "venue": "お台場合衆国2011 合衆国サンサンアイランド MUSICスタジアム",
+      "schedule": null,
+      "livefans_event_ids": [
+        56698
+      ]
+    },
+    {
+      "title": "SOUND MARINA '11 ～One voice, One power.～",
+      "type": 2,
+      "date1": "2011-09-03",
+      "date2": null,
+      "venue": "広島県立総合体育館 広島グリーンアリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        56373
+      ]
+    },
+    {
+      "title": "HIGHER GROUND 2011",
+      "type": 2,
+      "date1": "2011-09-17",
+      "date2": null,
+      "venue": "国営海の中道海浜公園 野外劇場",
+      "schedule": null,
+      "livefans_event_ids": [
+        57682
+      ]
+    },
+    {
+      "title": "ぴあ 39th FAREWELL \"39 -THANK YOU-\" ～車輪小僧の大回転～",
+      "type": 2,
+      "date1": "2011-11-03",
+      "date2": null,
+      "venue": "幕張メッセ 国際展示場 9～11ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        57498
+      ]
+    },
+    {
+      "title": "COUNTDOWN JAPAN 11/12",
+      "type": 2,
+      "date1": "2011-12-29",
+      "date2": null,
+      "venue": "幕張メッセ",
+      "schedule": null,
+      "livefans_event_ids": [
+        59424
+      ]
+    },
+    {
+      "title": "TOUR 2012\"musium\" premium preview for DELUXE",
+      "type": 1,
+      "date1": "2012-01-15",
+      "date2": null,
+      "venue": "恵比寿LIQUIDROOM",
+      "schedule": null,
+      "livefans_event_ids": [
+        80153
+      ]
+    },
+    {
+      "title": "Office Augusta 20th Anniversary Special 山崎まさよし スキマスイッチ 秦 基博 A Night With Strings ～Featuring 服部隆之～",
+      "type": 2,
+      "date1": "2012-02-25",
+      "date2": null,
+      "venue": "日本武道館",
+      "schedule": null,
+      "livefans_event_ids": [
+        80544
+      ]
+    },
+    {
+      "title": "The Birthday Party in Masashi Super Arena -60人のまさしくんWORLD-",
+      "type": 2,
+      "date1": "2012-04-10",
+      "date2": null,
+      "venue": "さいたまスーパーアリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        141281
+      ]
+    },
+    {
+      "title": "スキマスイッチ, さかいゆう, 元ちとせ",
+      "type": 2,
+      "date1": "2012-06-15",
+      "date2": null,
+      "venue": "Billboard Live OSAKA",
+      "schedule": null,
+      "livefans_event_ids": [
+        94271,
+        94272
+      ]
+    },
+    {
+      "title": "JOIN ALIVE 2012",
+      "type": 2,
+      "date1": "2012-07-21",
+      "date2": null,
+      "venue": "JOIN ALIVE 2012会場 [いわみざわ公園野外音楽堂キタオン / 北海道グリーンランド遊園地]",
+      "schedule": null,
+      "livefans_event_ids": [
+        98523
+      ]
+    },
+    {
+      "title": "HIGHER GROUND 2012",
+      "type": 2,
+      "date1": "2012-07-29",
+      "date2": null,
+      "venue": "国営海の中道海浜公園 野外劇場",
+      "schedule": null,
+      "livefans_event_ids": [
+        98581
+      ]
+    },
+    {
+      "title": "Office Augusta 20th Anniversary Augusta Camp 2012 in YOKOHAMA",
+      "type": 2,
+      "date1": "2012-08-04",
+      "date2": "2012-08-05",
+      "venue": "横浜赤レンガ倉庫 赤レンガパーク 野外特設ステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        84791,
+        99215
+      ]
+    },
+    {
+      "title": "ap bank fes '12 Fund for Japan",
+      "type": 2,
+      "date1": "2012-08-18",
+      "date2": null,
+      "venue": "国営みちのく杜の湖畔公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        267930
+      ]
+    },
+    {
+      "title": "スキマスイッチ×miwa",
+      "type": 2,
+      "date1": "2012-08-22",
+      "date2": null,
+      "venue": "逗子海岸OTODAMA SEA STUDIO",
+      "schedule": null,
+      "livefans_event_ids": [
+        95613
+      ]
+    },
+    {
+      "title": "音楽と髭達 2012 -rainbow-",
+      "type": 2,
+      "date1": "2012-08-25",
+      "date2": null,
+      "venue": "国営越後丘陵公園 野外特設ステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        99170
+      ]
+    },
+    {
+      "title": "SOUND MARINA '12",
+      "type": 2,
+      "date1": "2012-09-02",
+      "date2": null,
+      "venue": "広島県立総合体育館 広島グリーンアリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        111027
+      ]
+    },
+    {
+      "title": "Office Augusta 20th Anniversary Augusta Camp 2012 Premium in KOCHI",
+      "type": 2,
+      "date1": "2012-09-17",
+      "date2": null,
+      "venue": "高知県立県民文化ホール オレンジホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        312554
+      ]
+    },
+    {
+      "title": "Office Augusta 20th Anniversary Augusta Camp 2012 in AMAMI",
+      "type": 2,
+      "date1": "2012-10-21",
+      "date2": null,
+      "venue": "奄美市大浜海浜公園野外ステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        312545
+      ]
+    },
+    {
+      "title": "TOKYO M.A.P.S",
+      "type": 2,
+      "date1": "2013-05-05",
+      "date2": null,
+      "venue": "六本木ヒルズアリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        166419
+      ]
+    },
+    {
+      "title": "音楽ノチカラ 2nd LIVE",
+      "type": 2,
+      "date1": "2013-06-03",
+      "date2": null,
+      "venue": "Zepp Namba",
+      "schedule": null,
+      "livefans_event_ids": [
+        172381
+      ]
+    },
+    {
+      "title": "Sukimaswitch in Augusta Camp 2013 ～Sukimaswitch 10th Anniversary～",
+      "type": 2,
+      "date1": "2013-07-27",
+      "date2": null,
+      "venue": "横浜赤レンガ倉庫 赤レンガパーク 野外特設ステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        313424
+      ]
+    },
+    {
+      "title": "お台場合衆国2013めざましライブ",
+      "type": 2,
+      "date1": "2013-08-27",
+      "date2": null,
+      "venue": "お台場合衆国2013 お台場合衆国サンサンアイランド 合衆国Open Summer スタジアム",
+      "schedule": null,
+      "livefans_event_ids": [
+        180740
+      ]
+    },
+    {
+      "title": "音霊 OTODAMA SEA STUDIO 2013 「スキマスイッチ×福原美穂 ～これはやばい!!!～」",
+      "type": 2,
+      "date1": "2013-08-28",
+      "date2": null,
+      "venue": "逗子海岸OTODAMA SEA STUDIO",
+      "schedule": null,
+      "livefans_event_ids": [
+        167815
+      ]
+    },
+    {
+      "title": "SOUND MARINA '13",
+      "type": 2,
+      "date1": "2013-09-01",
+      "date2": null,
+      "venue": "広島県立総合体育館 広島グリーンアリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        186477
+      ]
+    },
+    {
+      "title": "「EX THEATER OPENING SERIES 2014 NEW YEAR PREMIUM \"GO LIVE VOL.1″」",
+      "type": 2,
+      "date1": "2014-01-19",
+      "date2": null,
+      "venue": "EX THEATER ROPPONGI",
+      "schedule": null,
+      "livefans_event_ids": [
+        206097
+      ]
+    },
+    {
+      "title": "SHINJUKU LOFT 15th ANNIVERSARY PREMIUM LIVE SERIES 2014 THE DREAM MATCH#1",
+      "type": 2,
+      "date1": "2014-04-09",
+      "date2": null,
+      "venue": "新宿LOFT",
+      "schedule": null,
+      "livefans_event_ids": [
+        279324
+      ]
+    },
+    {
+      "title": "J-WAVE TOKYO PIANO JAMBOREE",
+      "type": 2,
+      "date1": "2014-04-13",
+      "date2": null,
+      "venue": "両国国技館",
+      "schedule": null,
+      "livefans_event_ids": [
+        241757
+      ]
+    },
+    {
+      "title": "OTODAMA FOREST STUDIO in 秋川渓谷 -10周年SPECIAL-",
+      "type": 2,
+      "date1": "2014-04-20",
+      "date2": null,
+      "venue": "十里木ランド",
+      "schedule": null,
+      "livefans_event_ids": [
+        241178
+      ]
+    },
+    {
+      "title": "「SAYONARA 国立競技場FINAL WEEK JAPAN NIGHT」\"Yell for Japan\"",
+      "type": 2,
+      "date1": "2014-05-28",
+      "date2": null,
+      "venue": "国立競技場",
+      "schedule": null,
+      "livefans_event_ids": [
+        280857
+      ]
+    },
+    {
+      "title": "めざまし LIVE COUNTRY TOUR 2014 in NATORI",
+      "type": 2,
+      "date1": "2014-07-05",
+      "date2": null,
+      "venue": "名取市文化会館",
+      "schedule": null,
+      "livefans_event_ids": [
+        329563
+      ]
+    },
+    {
+      "title": "JOIN ALIVE 2014",
+      "type": 2,
+      "date1": "2014-07-19",
+      "date2": null,
+      "venue": "JOIN ALIVE 2014会場 [いわみざわ公園野外音楽堂キタオン / 北海道グリーンランド遊園地]",
+      "schedule": null,
+      "livefans_event_ids": [
+        275885
+      ]
+    },
+    {
+      "title": "Augusta Camp 2014",
+      "type": 2,
+      "date1": "2014-07-26",
+      "date2": null,
+      "venue": "山中湖交流プラザきらら",
+      "schedule": null,
+      "livefans_event_ids": [
+        313413
+      ]
+    },
+    {
+      "title": "音霊 OTODAMA SEA STUDIO 2014 「安藤裕子×スキマスイッチ ～10周年スペシャルジョイント～」",
+      "type": 2,
+      "date1": "2014-08-05",
+      "date2": null,
+      "venue": "由比ガ浜OTODAMA SEA STUDIO",
+      "schedule": null,
+      "livefans_event_ids": [
+        381254
+      ]
+    },
+    {
+      "title": "ROCK IN JAPAN FESTIVAL 2014",
+      "type": 2,
+      "date1": "2014-08-10",
+      "date2": null,
+      "venue": "国営ひたち海浜公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        293489
+      ]
+    },
+    {
+      "title": "SUMMER SONIC 2014",
+      "type": 2,
+      "date1": "2014-08-16",
+      "date2": null,
+      "venue": "SUMMER SONIC 2014会場 [QVCマリンフィールド / 幕張メッセ]",
+      "schedule": null,
+      "livefans_event_ids": [
+        309579
+      ]
+    },
+    {
+      "title": "J-WAVE LIVE 2000+14",
+      "type": 2,
+      "date1": "2014-08-31",
+      "date2": null,
+      "venue": "国立代々木競技場 第一体育館",
+      "schedule": null,
+      "livefans_event_ids": [
+        312081
+      ]
+    },
+    {
+      "title": "うたたね 2014",
+      "type": 2,
+      "date1": "2014-09-06",
+      "date2": null,
+      "venue": "広島西飛行場 滑走路特設ステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        342469
+      ]
+    },
+    {
+      "title": "大坂の陣400年音楽祭",
+      "type": 2,
+      "date1": "2014-09-28",
+      "date2": null,
+      "venue": "大阪城西の丸庭園 特設会場",
+      "schedule": null,
+      "livefans_event_ids": [
+        354139
+      ]
+    },
+    {
+      "title": "テレビ朝日ドリームフェスティバル 2014",
+      "type": 2,
+      "date1": "2014-10-11",
+      "date2": null,
+      "venue": "国立代々木競技場 第一体育館",
+      "schedule": null,
+      "livefans_event_ids": [
+        357949
+      ]
+    },
+    {
+      "title": "ミュージックドラゴン LIVE 2014",
+      "type": 2,
+      "date1": "2014-11-09",
+      "date2": null,
+      "venue": "横浜アリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        370219
+      ]
+    },
+    {
+      "title": "J-WAVE CHRISTMAS LIVE @ TOKYO CITY VIEW",
+      "type": 2,
+      "date1": "2014-12-02",
+      "date2": null,
+      "venue": "六本木ヒルズ展望台 東京シティビュー内 MADO LOUNGE SPICE",
+      "schedule": null,
+      "livefans_event_ids": [
+        397581
+      ]
+    },
+    {
+      "title": "ニュー・アルバム「スキマスイッチ」発売記念フリーイベント",
+      "type": 2,
+      "date1": "2014-12-06",
+      "date2": null,
+      "venue": "ゲートシティ大崎",
+      "schedule": null,
+      "livefans_event_ids": [
+        617302
+      ]
+    },
+    {
+      "title": "COUNTDOWN JAPAN 14/15",
+      "type": 2,
+      "date1": "2014-12-31",
+      "date2": null,
+      "venue": "幕張メッセ 国際展示場",
+      "schedule": null,
+      "livefans_event_ids": [
+        385586
+      ]
+    },
+    {
+      "title": "音霊 OTODAMA SEA STUDIO 2015「スキマスイッチ × 片平里菜～夏の思い出に～」",
+      "type": 2,
+      "date1": "2015-07-15",
+      "date2": null,
+      "venue": "由比ガ浜OTODAMA SEA STUDIO",
+      "schedule": null,
+      "livefans_event_ids": [
+        483273
+      ]
+    },
+    {
+      "title": "JOIN ALIVE 2015",
+      "type": 2,
+      "date1": "2015-07-18",
+      "date2": null,
+      "venue": "JOIN ALIVE 2015会場 [いわみざわ公園野外音楽堂キタオン / 北海道グリーンランド遊園地]",
+      "schedule": null,
+      "livefans_event_ids": [
+        473059
+      ]
+    },
+    {
+      "title": "めざましクラシックス～サマースペシャル´15～",
+      "type": 2,
+      "date1": "2015-07-23",
+      "date2": null,
+      "venue": "サントリーホール 大ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        523990
+      ]
+    },
+    {
+      "title": "NUMBER SHOT 2015",
+      "type": 2,
+      "date1": "2015-07-25",
+      "date2": null,
+      "venue": "国営海の中道海浜公園 野外劇場",
+      "schedule": null,
+      "livefans_event_ids": [
+        459034
+      ]
+    },
+    {
+      "title": "ROCK IN JAPAN FESTIVAL 2015",
+      "type": 2,
+      "date1": "2015-08-02",
+      "date2": null,
+      "venue": "国営ひたち海浜公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        475707
+      ]
+    },
+    {
+      "title": "Music Resort うたたね 2015 At Home Hiroshima",
+      "type": 2,
+      "date1": "2015-08-15",
+      "date2": null,
+      "venue": "旧広島市民球場跡地 野外特設ステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        493483
+      ]
+    },
+    {
+      "title": "ロックのほそ道",
+      "type": 2,
+      "date1": "2015-08-16",
+      "date2": "2015-08-18",
+      "venue": null,
+      "schedule": "2015/08/16 リンクステーションホール青森\n2015/08/18 仙台サンプラザ ホール",
+      "livefans_event_ids": [
+        493456,
+        493453
+      ]
+    },
+    {
+      "title": "FREEDOM aozora 2015 東北",
+      "type": 2,
+      "date1": "2015-08-22",
+      "date2": null,
+      "venue": "国営みちのく杜の湖畔公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        489731
+      ]
+    },
+    {
+      "title": "音楽と髭達 2015 -MUSIC STADIUM-",
+      "type": 2,
+      "date1": "2015-08-29",
+      "date2": null,
+      "venue": "HARD OFF ECOスタジアム新潟",
+      "schedule": null,
+      "livefans_event_ids": [
+        479330
+      ]
+    },
+    {
+      "title": "YAMAZAKI MASAYOSHI in Augusta Camp 2015～20th Anniversary～",
+      "type": 2,
+      "date1": "2015-09-26",
+      "date2": null,
+      "venue": "横浜赤レンガ倉庫 赤レンガパーク 野外特設ステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        467673
+      ]
+    },
+    {
+      "title": "第11回海辺のまちの音楽祭一夜限りの大復活祭 with AUGUSTA CAMP EXTRA in 境港",
+      "type": 2,
+      "date1": "2015-10-03",
+      "date2": null,
+      "venue": "境港公共マリーナ 多目的広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        522006
+      ]
+    },
+    {
+      "title": "静岡県立大学 第29回 剣祭",
+      "type": 2,
+      "date1": "2015-10-25",
+      "date2": null,
+      "venue": "静岡県立大学 大講堂",
+      "schedule": null,
+      "livefans_event_ids": [
+        535789
+      ]
+    },
+    {
+      "title": "JFL presents LIVE FOR THE NEXT supported by ELECOM",
+      "type": 2,
+      "date1": "2015-10-28",
+      "date2": null,
+      "venue": "Zepp Namba",
+      "schedule": null,
+      "livefans_event_ids": [
+        534249
+      ]
+    },
+    {
+      "title": "豊洲野音CARNIVAL ～InterFM897 開局記念～",
+      "type": 2,
+      "date1": "2015-10-31",
+      "date2": null,
+      "venue": "豊洲野外音楽広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        543181
+      ]
+    },
+    {
+      "title": "スキマスイッチのミッドナイト・グッドモーニン!!-出張編-",
+      "type": 1,
+      "date1": "2015-11-11",
+      "date2": "2015-11-14",
+      "venue": null,
+      "schedule": "2015/11/11 ゲートシティ大崎\n2015/11/14 あべのキューズモール スカイコート",
+      "livefans_event_ids": [
+        556305,
+        556306
+      ]
+    },
+    {
+      "title": "Denka presents J-WAVE LIVE～WINTER",
+      "type": 2,
+      "date1": "2015-12-13",
+      "date2": null,
+      "venue": "Bunkamura オーチャードホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        549495
+      ]
+    },
+    {
+      "title": "塩谷哲プロデュース Saltish Night vol.XIX",
+      "type": 2,
+      "date1": "2015-12-23",
+      "date2": null,
+      "venue": "中野サンプラザ ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        531766
+      ]
+    },
+    {
+      "title": "COUNTDOWN JAPAN 15/16",
+      "type": 2,
+      "date1": "2015-12-31",
+      "date2": null,
+      "venue": "幕張メッセ",
+      "schedule": null,
+      "livefans_event_ids": [
+        547754
+      ]
+    },
+    {
+      "title": "「ZEPPIN」SPECIAL～the goodtime sound of music～",
+      "type": 2,
+      "date1": "2016-03-13",
+      "date2": null,
+      "venue": "Zepp Tokyo",
+      "schedule": null,
+      "livefans_event_ids": [
+        574127
+      ]
+    },
+    {
+      "title": "Live 2016「頂き物」",
+      "type": 2,
+      "date1": "2016-05-21",
+      "date2": null,
+      "venue": "中野サンプラザ ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        583490
+      ]
+    },
+    {
+      "title": "JOIN ALIVE 2016",
+      "type": 2,
+      "date1": "2016-07-16",
+      "date2": null,
+      "venue": "JOIN ALIVE 2016会場 [いわみざわ公園野外音楽堂キタオン / 北海道グリーンランド遊園地]",
+      "schedule": null,
+      "livefans_event_ids": [
+        642827
+      ]
+    },
+    {
+      "title": "ANI-ROCK FES.「NARUTO THE LIVE 2016」",
+      "type": 2,
+      "date1": "2016-07-17",
+      "date2": null,
+      "venue": "幕張メッセ イベントホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        614250
+      ]
+    },
+    {
+      "title": "NUMBER SHOT 2016",
+      "type": 2,
+      "date1": "2016-07-23",
+      "date2": null,
+      "venue": "国営海の中道海浜公園 野外劇場",
+      "schedule": null,
+      "livefans_event_ids": [
+        618023
+      ]
+    },
+    {
+      "title": "ROCK IN JAPAN FESTIVAL 2016",
+      "type": 2,
+      "date1": "2016-08-06",
+      "date2": null,
+      "venue": "国営ひたち海浜公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        646749
+      ]
+    },
+    {
+      "title": "音霊 OTODAMA SEA STUDIO 2016「真夏の思い出 2016'」",
+      "type": 2,
+      "date1": "2016-08-19",
+      "date2": null,
+      "venue": "由比ガ浜OTODAMA SEA STUDIO",
+      "schedule": null,
+      "livefans_event_ids": [
+        634452
+      ]
+    },
+    {
+      "title": "MONSTER baSH 2016",
+      "type": 2,
+      "date1": "2016-08-21",
+      "date2": null,
+      "venue": "国営讃岐まんのう公園内 芝生広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        628697
+      ]
+    },
+    {
+      "title": "Music Resort うたたね 2016 しまなみ",
+      "type": 2,
+      "date1": "2016-09-03",
+      "date2": null,
+      "venue": "みろくの里 ツネイシフィールド特設ステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        655513
+      ]
+    },
+    {
+      "title": "Augusta Camp 2016 ～produced by 秦 基博～",
+      "type": 2,
+      "date1": "2016-09-17",
+      "date2": null,
+      "venue": "富士急ハイランド コニファーフォレスト",
+      "schedule": null,
+      "livefans_event_ids": [
+        613998
+      ]
+    },
+    {
+      "title": "SHINJUKU LOFT 40TH ANNIVERSARY MUSIC FES DREAM MATCH 2016",
+      "type": 2,
+      "date1": "2016-09-25",
+      "date2": null,
+      "venue": "TSUTAYA O-EAST",
+      "schedule": null,
+      "livefans_event_ids": [
+        682188
+      ]
+    },
+    {
+      "title": "MBS音祭 開局65周年記念スペシャル supported by uP!!!",
+      "type": 2,
+      "date1": "2016-10-08",
+      "date2": null,
+      "venue": "大阪城ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        684795
+      ]
+    },
+    {
+      "title": "毎日がクリスマス2016",
+      "type": 2,
+      "date1": "2016-12-13",
+      "date2": "2016-12-14",
+      "venue": "横浜赤レンガ倉庫1号館 3Fホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        697681,
+        1354030
+      ]
+    },
+    {
+      "title": "COUNTDOWN JAPAN 16/17",
+      "type": 2,
+      "date1": "2016-12-29",
+      "date2": null,
+      "venue": "幕張メッセ",
+      "schedule": null,
+      "livefans_event_ids": [
+        717611
+      ]
+    },
+    {
+      "title": "Daiwa Sakura Aid Dedicate to-gang451-星屑の隙間に木村基博",
+      "type": 2,
+      "date1": "2017-02-12",
+      "date2": null,
+      "venue": "大阪城ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        710970
+      ]
+    },
+    {
+      "title": "35th Anniversary スタ☆レビ大宴会～6時間大コラボレーションライブ～大抽選会付き",
+      "type": 2,
+      "date1": "2017-05-20",
+      "date2": null,
+      "venue": "さいたまスーパーアリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        724501
+      ]
+    },
+    {
+      "title": "ミュージャック10周年アニバーサリー Livejack Special",
+      "type": 2,
+      "date1": "2017-06-03",
+      "date2": null,
+      "venue": "オリックス劇場",
+      "schedule": null,
+      "livefans_event_ids": [
+        796100
+      ]
+    },
+    {
+      "title": "20th Anniversary めざましクラシックス サマーフェスティバル 2017",
+      "type": 2,
+      "date1": "2017-07-28",
+      "date2": null,
+      "venue": "東京芸術劇場 コンサートホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        783419
+      ]
+    },
+    {
+      "title": "情熱大陸ライブ 2017",
+      "type": 2,
+      "date1": "2017-08-05",
+      "date2": null,
+      "venue": "葛西臨海公園 汐風の広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        793753
+      ]
+    },
+    {
+      "title": "ROCK IN JAPAN FESTIVAL 2017",
+      "type": 2,
+      "date1": "2017-08-12",
+      "date2": null,
+      "venue": "国営ひたち海浜公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        817488
+      ]
+    },
+    {
+      "title": "Special Summer LIVE 2017 SUKIMASWITCH ×カルピスウォーター",
+      "type": 2,
+      "date1": "2017-08-29",
+      "date2": null,
+      "venue": "新宿BLAZE",
+      "schedule": null,
+      "livefans_event_ids": [
+        863363
+      ]
+    },
+    {
+      "title": "SENDAI OTO Festival 2017",
+      "type": 2,
+      "date1": "2017-09-03",
+      "date2": null,
+      "venue": "グランディ・21 セキスイハイムスーパーアリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        799651
+      ]
+    },
+    {
+      "title": "Yamaha Acoustic Mind 2017～THE SESSION～",
+      "type": 2,
+      "date1": "2017-09-17",
+      "date2": null,
+      "venue": "赤坂BLITZ",
+      "schedule": null,
+      "livefans_event_ids": [
+        813710
+      ]
+    },
+    {
+      "title": "Augusta Camp 2017",
+      "type": 2,
+      "date1": "2017-09-23",
+      "date2": null,
+      "venue": "富士急ハイランド コニファーフォレスト",
+      "schedule": null,
+      "livefans_event_ids": [
+        805812
+      ]
+    },
+    {
+      "title": "メ～テレ秋まつり2017",
+      "type": 2,
+      "date1": "2017-09-24",
+      "date2": null,
+      "venue": "久屋大通公園 久屋広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        854706
+      ]
+    },
+    {
+      "title": "フラワーカンパニーズ presents DRAGON DELUXE 2017",
+      "type": 2,
+      "date1": "2017-10-14",
+      "date2": null,
+      "venue": "Diamond Hall",
+      "schedule": null,
+      "livefans_event_ids": [
+        840508
+      ]
+    },
+    {
+      "title": "COUNTDOWN JAPAN 17/18",
+      "type": 2,
+      "date1": "2017-12-28",
+      "date2": null,
+      "venue": "幕張メッセ",
+      "schedule": null,
+      "livefans_event_ids": [
+        880107
+      ]
+    },
+    {
+      "title": "Tokyo Wedding Showcase",
+      "type": 2,
+      "date1": "2018-06-24",
+      "date2": null,
+      "venue": "代々木公園 イベント広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        981960
+      ]
+    },
+    {
+      "title": "J-WAVE LIVE SUMMER JAM 2018 supported by antenna",
+      "type": 2,
+      "date1": "2018-07-15",
+      "date2": null,
+      "venue": "横浜アリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        965818
+      ]
+    },
+    {
+      "title": "ROCK IN JAPAN FESTIVAL 2018",
+      "type": 2,
+      "date1": "2018-08-05",
+      "date2": null,
+      "venue": "国営ひたち海浜公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        961772
+      ]
+    },
+    {
+      "title": "a-nation 2018",
+      "type": 2,
+      "date1": "2018-08-18",
+      "date2": null,
+      "venue": "ヤンマースタジアム長居",
+      "schedule": null,
+      "livefans_event_ids": [
+        956911
+      ]
+    },
+    {
+      "title": "Augusta Camp Present's \"Singers & Songwriters\"",
+      "type": 2,
+      "date1": "2018-08-19",
+      "date2": null,
+      "venue": "中野サンプラザ ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        988063
+      ]
+    },
+    {
+      "title": "音楽と髭達2018 -ONE STORY-",
+      "type": 2,
+      "date1": "2018-08-25",
+      "date2": null,
+      "venue": "HARD OFF ECOスタジアム新潟",
+      "schedule": null,
+      "livefans_event_ids": [
+        966973
+      ]
+    },
+    {
+      "title": "Augusta Camp 2018 ‐20th Anniversary -",
+      "type": 2,
+      "date1": "2018-09-23",
+      "date2": null,
+      "venue": "富士急ハイランド コニファーフォレスト",
+      "schedule": null,
+      "livefans_event_ids": [
+        923831
+      ]
+    },
+    {
+      "title": "エアトリ presents 毎日がクリスマス 2018",
+      "type": 2,
+      "date1": "2018-12-19",
+      "date2": null,
+      "venue": "横浜赤レンガ倉庫1号館 3Fホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1051222
+      ]
+    },
+    {
+      "title": "COUNTDOWN JAPAN 18/19",
+      "type": 2,
+      "date1": "2018-12-28",
+      "date2": null,
+      "venue": "幕張メッセ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1028235
+      ]
+    },
+    {
+      "title": "別冊カドカワ×昭和音楽大学×A.C.P.C. 楽演祭",
+      "type": 2,
+      "date1": "2019-01-17",
+      "date2": null,
+      "venue": "昭和音楽大学 テアトロ・ジーリオ・ショウワ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1052694
+      ]
+    },
+    {
+      "title": "POP HILL 2019 in KANAZAWA",
+      "type": 2,
+      "date1": "2019-04-27",
+      "date2": null,
+      "venue": "石川県産業展示館 4号館",
+      "schedule": null,
+      "livefans_event_ids": [
+        1114968
+      ]
+    },
+    {
+      "title": "JAPAN JAM 2019",
+      "type": 2,
+      "date1": "2019-05-05",
+      "date2": null,
+      "venue": "千葉市蘇我スポーツ公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1095237
+      ]
+    },
+    {
+      "title": "FM802 30PARTY SPECIAL LIVE RADIO MAGIC",
+      "type": 2,
+      "date1": "2019-06-02",
+      "date2": null,
+      "venue": "大阪城ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1111134
+      ]
+    },
+    {
+      "title": "JOIN ALIVE 2019",
+      "type": 2,
+      "date1": "2019-07-13",
+      "date2": null,
+      "venue": "JOIN ALIVE 2019会場 [いわみざわ公園野外音楽堂キタオン / 北海道グリーンランド遊園地]",
+      "schedule": null,
+      "livefans_event_ids": [
+        1113889
+      ]
+    },
+    {
+      "title": "NUMBER SHOT 2019",
+      "type": 2,
+      "date1": "2019-07-21",
+      "date2": null,
+      "venue": "国営海の中道海浜公園 野外劇場",
+      "schedule": null,
+      "livefans_event_ids": [
+        1107941
+      ]
+    },
+    {
+      "title": "ROCK IN JAPAN FESTIVAL 2019",
+      "type": 2,
+      "date1": "2019-08-12",
+      "date2": null,
+      "venue": "国営ひたち海浜公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1123356
+      ]
+    },
+    {
+      "title": "SUMMER SONIC 2019",
+      "type": 2,
+      "date1": "2019-08-16",
+      "date2": null,
+      "venue": "SUMMER SONIC 2019会場 [ZOZOマリンスタジアム / 幕張メッセ]",
+      "schedule": null,
+      "livefans_event_ids": [
+        1162186
+      ]
+    },
+    {
+      "title": "MONSTER baSH 2019",
+      "type": 2,
+      "date1": "2019-08-25",
+      "date2": null,
+      "venue": "国営讃岐まんのう公園内 芝生広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        1114415
+      ]
+    },
+    {
+      "title": "OTODAMA SEA STUDIO 2019「浜風に吹かれて 2019」",
+      "type": 2,
+      "date1": "2019-08-30",
+      "date2": null,
+      "venue": "三浦海岸OTODAMA SEA STUDIO",
+      "schedule": null,
+      "livefans_event_ids": [
+        1143168
+      ]
+    },
+    {
+      "title": "Augusta Camp 2019",
+      "type": 2,
+      "date1": "2019-09-15",
+      "date2": null,
+      "venue": "富士急ハイランド コニファーフォレスト",
+      "schedule": null,
+      "livefans_event_ids": [
+        1108593
+      ]
+    },
+    {
+      "title": "バズリズムLIVE 2019",
+      "type": 2,
+      "date1": "2019-11-10",
+      "date2": null,
+      "venue": "横浜アリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1179524
+      ]
+    },
+    {
+      "title": "COUNTDOWN JAPAN 19/20",
+      "type": 2,
+      "date1": "2019-12-30",
+      "date2": null,
+      "venue": "幕張メッセ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1186015
+      ]
+    },
+    {
+      "title": "Augusta Camp 2020",
+      "type": 2,
+      "date1": "2020-09-26",
+      "date2": "2020-09-27",
+      "venue": "オンラインライブ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1263683,
+        1263684
+      ]
+    },
+    {
+      "title": "HAKUBA ヤッホー! FESTIVAL ～白馬ノ音～",
+      "type": 2,
+      "date1": "2020-10-04",
+      "date2": null,
+      "venue": "白馬岩岳マウンテンリゾート山頂 特設ステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1275083
+      ]
+    },
+    {
+      "title": "バズリズムLIVE 2020",
+      "type": 2,
+      "date1": "2020-11-08",
+      "date2": null,
+      "venue": "横浜アリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1272522
+      ]
+    },
+    {
+      "title": "GREENS 30th Anniversary special LIVE 『スキマとYAMA-KANのスイッチオン』",
+      "type": 2,
+      "date1": "2020-11-28",
+      "date2": null,
+      "venue": "大阪城ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1273293
+      ]
+    },
+    {
+      "title": "JAPAN JAM 2021",
+      "type": 2,
+      "date1": "2021-05-04",
+      "date2": null,
+      "venue": "千葉市蘇我スポーツ公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1303506
+      ]
+    },
+    {
+      "title": "NUMBER SHOT 2021",
+      "type": 2,
+      "date1": "2021-07-18",
+      "date2": null,
+      "venue": "福岡PayPayドーム",
+      "schedule": null,
+      "livefans_event_ids": [
+        1319053
+      ]
+    },
+    {
+      "title": "Animelo Summer Live 2021 -COLORS-",
+      "type": 2,
+      "date1": "2021-08-27",
+      "date2": null,
+      "venue": "さいたまスーパーアリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1260914
+      ]
+    },
+    {
+      "title": "音楽と髭達 2021-夏の約束-",
+      "type": 2,
+      "date1": "2021-08-28",
+      "date2": null,
+      "venue": "朱鷺メッセ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1329196
+      ]
+    },
+    {
+      "title": "SPECIAL ONLINE LIVE powered by J-WAVE",
+      "type": 1,
+      "date1": "2021-09-12",
+      "date2": null,
+      "venue": "オンラインライブ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1346889
+      ]
+    },
+    {
+      "title": "Augusta Camp 2021",
+      "type": 2,
+      "date1": "2021-09-25",
+      "date2": null,
+      "venue": "オンラインライブ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1328845
+      ]
+    },
+    {
+      "title": "JAPAN JAM 2022",
+      "type": 2,
+      "date1": "2022-05-07",
+      "date2": null,
+      "venue": "千葉市蘇我スポーツ公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1396092
+      ]
+    },
+    {
+      "title": "アルペンアウトドアーズ プレゼンツ『HAKUBA ヤッホー! FESTIVAL 2022』",
+      "type": 2,
+      "date1": "2022-05-29",
+      "date2": null,
+      "venue": "白馬岩岳マウンテンリゾート",
+      "schedule": null,
+      "livefans_event_ids": [
+        1365038
+      ]
+    },
+    {
+      "title": "ROCK IN JAPAN FESTIVAL 2022",
+      "type": 2,
+      "date1": "2022-08-11",
+      "date2": null,
+      "venue": "千葉市蘇我スポーツ公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1430301
+      ]
+    },
+    {
+      "title": "MONSTER baSH 2022",
+      "type": 2,
+      "date1": "2022-08-21",
+      "date2": null,
+      "venue": "国営讃岐まんのう公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1436751
+      ]
+    },
+    {
+      "title": "Office Augusta 30th MUSIC BATON Vol.10 スキマスイッチ『The baton has passed』",
+      "type": 2,
+      "date1": "2022-09-03",
+      "date2": null,
+      "venue": "duo MUSIC EXCHANGE",
+      "schedule": null,
+      "livefans_event_ids": [
+        1463010,
+        1463011
+      ]
+    },
+    {
+      "title": "COUNTDOWN JAPAN 22/23",
+      "type": 2,
+      "date1": "2022-12-30",
+      "date2": null,
+      "venue": "幕張メッセ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1480324
+      ]
+    },
+    {
+      "title": "現場至上主義2023",
+      "type": 2,
+      "date1": "2023-02-02",
+      "date2": null,
+      "venue": "Zepp Osaka Bayside",
+      "schedule": null,
+      "livefans_event_ids": [
+        1481773
+      ]
+    },
+    {
+      "title": "HY SKY Fes 2023",
+      "type": 2,
+      "date1": "2023-03-18",
+      "date2": null,
+      "venue": "沖縄県総合運動公園 多目的広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        1464300
+      ]
+    },
+    {
+      "title": "音市音座 2023",
+      "type": 2,
+      "date1": "2023-03-25",
+      "date2": null,
+      "venue": "日本ガイシホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1515209
+      ]
+    },
+    {
+      "title": "FM802 MEET THE WORLD BEAT 2023",
+      "type": 2,
+      "date1": "2023-05-27",
+      "date2": null,
+      "venue": "万博記念公園 もみじ川芝生広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        1523873
+      ]
+    },
+    {
+      "title": "HAKUBA ヤッホー! FESTIVAL 2023",
+      "type": 2,
+      "date1": "2023-05-28",
+      "date2": null,
+      "venue": "白馬岩岳マウンテンリゾート山頂 特設ステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1520956
+      ]
+    },
+    {
+      "title": "テレビ信州「ゆうがたGet!」presents 『YOU ga TARGET!!!』",
+      "type": 2,
+      "date1": "2023-07-19",
+      "date2": null,
+      "venue": "キッセイ文化ホール 大ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1576129
+      ]
+    },
+    {
+      "title": "ROCK IN JAPAN FESTIVAL 2023",
+      "type": 2,
+      "date1": "2023-08-05",
+      "date2": null,
+      "venue": "千葉市蘇我スポーツ公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1552576
+      ]
+    },
+    {
+      "title": "RISING SUN ROCK FESTIVAL 2023 in EZO",
+      "type": 2,
+      "date1": "2023-08-12",
+      "date2": null,
+      "venue": "石狩湾新港樽川ふ頭横野外特設ステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1562310
+      ]
+    },
+    {
+      "title": "MONSTER baSH 2023",
+      "type": 2,
+      "date1": "2023-08-20",
+      "date2": null,
+      "venue": "国営讃岐まんのう公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1534856
+      ]
+    },
+    {
+      "title": "完全メシpresent​s スキマスイッチ20周年特別公演「完全-KANZEN-」配信ライブ​ ～好きなことを全力で、自由にやっちゃいますスペシャル～",
+      "type": 2,
+      "date1": "2023-09-02",
+      "date2": null,
+      "venue": "オンラインライブ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1565275
+      ]
+    },
+    {
+      "title": "長岡米百俵フェス ～花火と食と音楽と～2023",
+      "type": 2,
+      "date1": "2023-10-07",
+      "date2": null,
+      "venue": "東山ファミリーランド",
+      "schedule": null,
+      "livefans_event_ids": [
+        1553904
+      ]
+    },
+    {
+      "title": "Eggs presents FM802 MINAMI WHEEL 2023 25th ANNIVERSARY",
+      "type": 2,
+      "date1": "2023-10-09",
+      "date2": null,
+      "venue": "Eggs presents FM802 MINAMI WHEEL 2023 25th ANNIVERSARY会場",
+      "schedule": null,
+      "livefans_event_ids": [
+        1596911
+      ]
+    },
+    {
+      "title": "亜細亜大学 第65回アジア祭「Asia Festival Special Live 2023」",
+      "type": 2,
+      "date1": "2023-11-03",
+      "date2": null,
+      "venue": "亜細亜大学 3号館 講堂",
+      "schedule": null,
+      "livefans_event_ids": [
+        1608817
+      ]
+    },
+    {
+      "title": "テレビ朝日ドリームフェスティバル2023",
+      "type": 2,
+      "date1": "2023-11-05",
+      "date2": null,
+      "venue": "幕張メッセ 国際展示場 1～4ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1595825
+      ]
+    },
+    {
+      "title": "802 RADIO MASTERS 15th Anniversary LIVE ～GO! HAPPY GO!～",
+      "type": 2,
+      "date1": "2023-11-26",
+      "date2": null,
+      "venue": "大阪城ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1616493
+      ]
+    },
+    {
+      "title": "COUNTDOWN JAPAN 23/24",
+      "type": 2,
+      "date1": "2023-12-28",
+      "date2": null,
+      "venue": "幕張メッセ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1601869
+      ]
+    },
+    {
+      "title": "20!+39!=59! TOUR",
+      "type": 2,
+      "date1": "2024-01-11",
+      "date2": null,
+      "venue": "Zepp Haneda",
+      "schedule": null,
+      "livefans_event_ids": [
+        1616717
+      ]
+    },
+    {
+      "title": "「Augusta Camp in U-NEXT ～Favorite Songs～」Vol.9 \"スキマスイッチ THE PLAYLIST Premium selection\"",
+      "type": 2,
+      "date1": "2024-03-26",
+      "date2": null,
+      "venue": "Billboard Live TOKYO",
+      "schedule": null,
+      "livefans_event_ids": [
+        1641012,
+        1641013
+      ]
+    },
+    {
+      "title": "HAKUBA ヤッホー! FESTIVAL 2024",
+      "type": 2,
+      "date1": "2024-05-26",
+      "date2": null,
+      "venue": "白馬岩岳マウンテンリゾート山頂 特設ステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1679646
+      ]
+    },
+    {
+      "title": "スキマフェス",
+      "type": 2,
+      "date1": "2024-07-13",
+      "date2": "2024-07-14",
+      "venue": "Aichi Sky Expo",
+      "schedule": null,
+      "livefans_event_ids": [
+        1625220,
+        1625225
+      ]
+    },
+    {
+      "title": "ROCK IN JAPAN FESTIVAL 2024",
+      "type": 2,
+      "date1": "2024-08-04",
+      "date2": null,
+      "venue": "千葉市蘇我スポーツ公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1675180
+      ]
+    },
+    {
+      "title": "テレビ信州 presents 『YOU ga TARGET!!!』",
+      "type": 2,
+      "date1": "2024-08-07",
+      "date2": null,
+      "venue": "まつもと市民芸術館 主ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1678793
+      ]
+    },
+    {
+      "title": "音楽と髭達 2024 - END OF SUMMER -",
+      "type": 2,
+      "date1": "2024-08-31",
+      "date2": null,
+      "venue": "HARD OFF ECOスタジアム新潟",
+      "schedule": null,
+      "livefans_event_ids": [
+        1677305
+      ]
+    },
+    {
+      "title": "IZUMO OROCHI FES 2024 in MATSUE",
+      "type": 2,
+      "date1": "2024-09-07",
+      "date2": null,
+      "venue": "松江市総合体育館",
+      "schedule": null,
+      "livefans_event_ids": [
+        1687656
+      ]
+    },
+    {
+      "title": "Augusta Camp 2024",
+      "type": 2,
+      "date1": "2024-09-21",
+      "date2": null,
+      "venue": "富士急ハイランド コニファーフォレスト",
+      "schedule": null,
+      "livefans_event_ids": [
+        1718582
+      ]
+    },
+    {
+      "title": "KANタービレ～今夜は帰さナイトフィーバー～",
+      "type": 2,
+      "date1": "2024-11-12",
+      "date2": null,
+      "venue": "ぴあアリーナMM",
+      "schedule": null,
+      "livefans_event_ids": [
+        1678907
+      ]
+    },
+    {
+      "title": "ToyosuPIT 10th ANNIVERSARY Special Live「フラカンとスキマのデラックス・ドラゴン」supported by エンタメサイト ぴあ",
+      "type": 2,
+      "date1": "2025-01-14",
+      "date2": null,
+      "venue": "豊洲PIT",
+      "schedule": null,
+      "livefans_event_ids": [
+        1737010
+      ]
+    },
+    {
+      "title": "ジゴロック 2025～大分\"地獄極楽\"ROCK FESTIVAL～",
+      "type": 2,
+      "date1": "2025-04-19",
+      "date2": null,
+      "venue": "大分スポーツ公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1751040
+      ]
+    },
+    {
+      "title": "Bubbling & Boiling Music & Arts Festival-The North of China",
+      "type": 2,
+      "date1": "2025-05-04",
+      "date2": null,
+      "venue": "金島音楽広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        1805823
+      ]
+    },
+    {
+      "title": "ごぶごぶフェスティバル2025",
+      "type": 2,
+      "date1": "2025-05-10",
+      "date2": null,
+      "venue": "万博記念公園 もみじ川芝生広場",
+      "schedule": null,
+      "livefans_event_ids": [
+        1769575
+      ]
+    },
+    {
+      "title": "HAKUBA ヤッホー! FESTIVAL 2025",
+      "type": 2,
+      "date1": "2025-05-25",
+      "date2": null,
+      "venue": "白馬岩岳マウンテンリゾート山頂 特設ステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1788376
+      ]
+    },
+    {
+      "title": "FLOW THE FESTIVAL 2025",
+      "type": 2,
+      "date1": "2025-06-14",
+      "date2": null,
+      "venue": "ぴあアリーナMM",
+      "schedule": null,
+      "livefans_event_ids": [
+        1774251
+      ]
+    },
+    {
+      "title": "テレビ信州 presents 『YOU ga TARGET!!!』",
+      "type": 2,
+      "date1": "2025-07-04",
+      "date2": null,
+      "venue": "ホクト文化ホール 大ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1799809
+      ]
+    },
+    {
+      "title": "JOIN ALIVE 2025",
+      "type": 2,
+      "date1": "2025-07-20",
+      "date2": null,
+      "venue": "いわみざわ公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1789013
+      ]
+    },
+    {
+      "title": "LuckyFes 2025",
+      "type": 2,
+      "date1": "2025-08-09",
+      "date2": null,
+      "venue": "国営ひたち海浜公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1787902
+      ]
+    },
+    {
+      "title": "MONSTER baSH 2025",
+      "type": 2,
+      "date1": "2025-08-24",
+      "date2": null,
+      "venue": "国営讃岐まんのう公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1791722
+      ]
+    },
+    {
+      "title": "ASUTO MUSIC PARK 2025",
+      "type": 2,
+      "date1": "2025-08-31",
+      "date2": null,
+      "venue": "ASUTO MUSIC PARK 2025会場 [ゼビオアリーナ仙台 / 杜の広場公園]",
+      "schedule": null,
+      "livefans_event_ids": [
+        1805989
+      ]
+    },
+    {
+      "title": "Augusta Camp 2025 ～YAMAZAKI MASAYOSHI 30th Anniversary～",
+      "type": 2,
+      "date1": "2025-09-06",
+      "date2": null,
+      "venue": "ぴあアリーナMM",
+      "schedule": null,
+      "livefans_event_ids": [
+        1816601
+      ]
+    },
+    {
+      "title": "EBISU SHOJI presents UMK SEAGAIA JamNight 2025",
+      "type": 2,
+      "date1": "2025-09-13",
+      "date2": null,
+      "venue": "フェニックス・シーガイア・リゾート シーガイアスクエア1",
+      "schedule": null,
+      "livefans_event_ids": [
+        1806032
+      ]
+    },
+    {
+      "title": "OSAKA MUSIC LOVER EXPO ARENA 2025",
+      "type": 2,
+      "date1": "2025-09-15",
+      "date2": null,
+      "venue": "EXPOアリーナ「Matsuri」",
+      "schedule": null,
+      "livefans_event_ids": [
+        1824944
+      ]
+    },
+    {
+      "title": "Mt.FUJIMAKI 2025",
+      "type": 2,
+      "date1": "2025-09-27",
+      "date2": null,
+      "venue": "山中湖交流プラザきらら",
+      "schedule": null,
+      "livefans_event_ids": [
+        1811866
+      ]
+    },
+    {
+      "title": "山田裕貴のオールナイトニッポン ドラゴンフェニックス甲子園山田裕貴のオールナイトニッポン ドラゴンフェニックス甲子園",
+      "type": 2,
+      "date1": "2025-10-26",
+      "date2": null,
+      "venue": "横浜アリーナ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1848730
+      ]
+    },
+    {
+      "title": "WONDERLIVET 2025",
+      "type": 2,
+      "date1": "2025-11-15",
+      "date2": null,
+      "venue": "KINTEX Hall 7～8, 10",
+      "schedule": null,
+      "livefans_event_ids": [
+        1856508
+      ]
+    },
+    {
+      "title": "FM802 ROCK FESTIVAL RADIO CRAZY 2025",
+      "type": 2,
+      "date1": "2025-12-28",
+      "date2": null,
+      "venue": "インテックス大阪",
+      "schedule": null,
+      "livefans_event_ids": [
+        1885530,
+        1867403
+      ]
+    },
+    {
+      "title": "COUNTDOWN JAPAN 25/26",
+      "type": 2,
+      "date1": "2025-12-30",
+      "date2": null,
+      "venue": "幕張メッセ 国際展示場 1～11ホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1867596
+      ]
+    },
+    {
+      "title": "ライブナタリー \"スキマスイッチ × Penthouse\"",
+      "type": 2,
+      "date1": "2026-02-08",
+      "date2": null,
+      "venue": "Kanadevia Hall",
+      "schedule": null,
+      "livefans_event_ids": [
+        1874975
+      ]
+    },
+    {
+      "title": "SCANDAL TOUR 2026 \"SCANDALの対バンツアー\"",
+      "type": 2,
+      "date1": "2026-02-26",
+      "date2": null,
+      "venue": "KT Zepp Yokohama",
+      "schedule": null,
+      "livefans_event_ids": [
+        1874734
+      ]
+    },
+    {
+      "title": "超いきものがかりフェス デビュー20周年だよ!! ～ありがとうって伝えたくて～",
+      "type": 2,
+      "date1": "2026-03-14",
+      "date2": null,
+      "venue": "LaLa arena TOKYO-BAY",
+      "schedule": null,
+      "livefans_event_ids": [
+        1874067
+      ]
+    },
+    {
+      "title": "festhalle 10th anniversary presents 『PARADE』",
+      "type": 2,
+      "date1": "2026-03-26",
+      "date2": null,
+      "venue": "高松festhalle",
+      "schedule": null,
+      "livefans_event_ids": [
+        1904735
+      ]
+    },
+    {
+      "title": "EIGHT BALL FESTIVAL 2026",
+      "type": 2,
+      "date1": "2026-03-28",
+      "date2": null,
+      "venue": "CONVEX岡山",
+      "schedule": null,
+      "livefans_event_ids": [
+        1888333
+      ]
+    },
+    {
+      "title": "音市音座2026",
+      "type": 2,
+      "date1": "2026-04-04",
+      "date2": null,
+      "venue": "NGKスポーツプラザ クロコくんホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1801921
+      ]
+    },
+    {
+      "title": "緑黄色大夜祭2026",
+      "type": 2,
+      "date1": "2026-04-26",
+      "date2": null,
+      "venue": "Aichi Sky Expo ホールA",
+      "schedule": null,
+      "livefans_event_ids": [
+        1892884
+      ]
+    },
+    {
+      "title": "SUPER J-HITS RADIO 30th Anniversary Live 「音礼・綴(おんれいつづり)」",
+      "type": 2,
+      "date1": "2026-04-28",
+      "date2": null,
+      "venue": "フェスティバルホール",
+      "schedule": null,
+      "livefans_event_ids": [
+        1899297
+      ]
+    },
+    {
+      "title": "HAKUBA ヤッホー ! FESTIVAL 2026",
+      "type": 2,
+      "date1": "2026-05-24",
+      "date2": null,
+      "venue": "白馬岩岳マウンテンリゾート山頂 特設ステージ",
+      "schedule": null,
+      "livefans_event_ids": [
+        1909030
+      ]
+    },
+    {
+      "title": "JOIN ALIVE 2026",
+      "type": 2,
+      "date1": "2026-07-18",
+      "date2": null,
+      "venue": "いわみざわ公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1928399
+      ]
+    },
+    {
+      "title": "MONSTER baSH 2026",
+      "type": 2,
+      "date1": "2026-08-22",
+      "date2": null,
+      "venue": "国営讃岐まんのう公園",
+      "schedule": null,
+      "livefans_event_ids": [
+        1949200
+      ]
+    },
+    {
+      "title": "音楽と髭達2026 - TIME MACHINE -",
+      "type": 2,
+      "date1": "2026-08-29",
+      "date2": null,
+      "venue": "HARD OFF ECOスタジアム新潟",
+      "schedule": null,
+      "livefans_event_ids": [
+        1941840
+      ]
+    },
+    {
+      "title": "熱闘JAM 2026",
+      "type": 2,
+      "date1": "2026-09-23",
+      "date2": null,
+      "venue": "GLION ARENA KOBE",
+      "schedule": null,
+      "livefans_event_ids": [
+        1947561
+      ]
+    }
+  ]
+}
