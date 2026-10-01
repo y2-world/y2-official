@@ -13,34 +13,6 @@ class DbConcertController extends Controller
 {
     private const SUMMARY_WITHOUT_DIFFERENCES_TOUR_IDS = [47, 218, 220];
 
-    // Summaryの差分がある公演に加え、同一パターンでもSummaryを表示する公演を判定する。
-    private function tourHasSetlistSummary(DbConcert $tour, $songs): bool
-    {
-        if (in_array((int) $tour->id, self::SUMMARY_WITHOUT_DIFFERENCES_TOUR_IDS, true)) {
-            return true;
-        }
-
-        $tourSetlists = DbSetlist::where('tour_id', $tour->id)->orderBy('order_no', 'asc')->get();
-        return $tourSetlists
-            ->groupBy(fn ($m) => $m->row ?? 1)
-            ->contains(function ($rowSetlists) use ($songs) {
-                if ($rowSetlists->count() < 2) {
-                    return false;
-                }
-                $summary = buildSetlistPatternSummary($rowSetlists, $songs);
-                $hasVariantDifference = collect(array_merge($summary['setlist'], $summary['encore']))
-                    ->contains(fn ($row) => count($row['variants']) > 1);
-                $setlistCounts = $rowSetlists->map(fn ($s) => count($s->setlist ?? []));
-                $encoreCounts = $rowSetlists->map(fn ($s) => count($s->encore ?? []));
-                $totalCounts = $rowSetlists->map(fn ($s) => count($s->setlist ?? []) + count($s->encore ?? []));
-                $hasCountDifference = $setlistCounts->unique()->count() > 1
-                    || $encoreCounts->unique()->count() > 1
-                    || $totalCounts->unique()->count() > 1;
-
-                return $hasVariantDifference || $hasCountDifference;
-            });
-    }
-
     public function index($artistId)
     {
         $artist = Artist::findOrFail($artistId);
@@ -179,14 +151,18 @@ class DbConcertController extends Controller
                   });
             }))->orderBy('date1')->orderBy('id');
 
-        // Previous/NextはSummaryの有無に関係なく、隣のライブに移動する。Summaryを見ている間は、
-        // 移動先にSummaryがあればSummaryのまま、無ければ通常の表示で開く
-        // （Summaryが無いライブをSummaryで開くと「このライブにはSummaryがありません」だけになるため）。
+        // Previous/NextはSummaryの有無に関係なく、隣のライブに移動する
         $previous = $previousQuery->first();
         $next = $nextQuery->first();
-        $previousHasSummary = $tab === 'summary' && $previous && $this->tourHasSetlistSummary($previous, $songs);
-        $nextHasSummary = $tab === 'summary' && $next && $this->tourHasSetlistSummary($next, $songs);
 
-        return view('db_concerts.show', compact('songs', 'previous', 'next', 'previousHasSummary', 'nextHasSummary', 'tours', 'tourSetlists', 'artist', 'setlistSummaries', 'summaryRows', 'from', 'tab', 'summaryRowTitles'));
+        // Summaryを見ながらPrevious/Nextで移動している間は、Summaryの無いライブを通っても
+        // その先のライブでSummaryに戻れるよう、Summaryで見ている状態（?tab=summary）を引き継ぐ。
+        // Summaryの無いライブ自体は通常の表示で開く（Summaryで開くと中身が無いため）
+        $summaryMode = $tab === 'summary';
+        if ($summaryMode && $setlistSummaries->isEmpty()) {
+            $tab = null;
+        }
+
+        return view('db_concerts.show', compact('songs', 'previous', 'next', 'summaryMode', 'tours', 'tourSetlists', 'artist', 'setlistSummaries', 'summaryRows', 'from', 'tab', 'summaryRowTitles'));
     }
 }

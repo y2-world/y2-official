@@ -9,10 +9,12 @@
     @php
         // Previous/Nextで移動してもtype絞り込み一覧の範囲・Summary専用表示を
         // 維持できるよう、現在のfrom/tabをクエリとして引き継ぐ
-        // Summaryを見ている間は、移動先にSummaryがあるときだけ ?tab=summary を引き継ぐ（無ければ通常の表示）
+        // Summaryで見ている間は、Summaryの無いライブを通っても ?tab=summary を引き継ぐ
+        // （Summaryの無いライブは通常の表示で開き、その先にSummaryがあればまたSummaryで開く）
         $normalPrevNextQuery = !empty($from) ? '?from=' . $from : '';
-        $previousQuery = !empty($previousHasSummary) ? '?tab=summary' : $normalPrevNextQuery;
-        $nextQuery = !empty($nextHasSummary) ? '?tab=summary' : $normalPrevNextQuery;
+        $previousQuery = $nextQuery = !empty($summaryMode)
+            ? '?tab=summary' . (!empty($from) ? '&from=' . urlencode($from) : '')
+            : $normalPrevNextQuery;
         $standardViewQuery = '?view=standard' . (!empty($from) ? '&from=' . urlencode($from) : '');
 
         // 関数の重複定義を防ぐためにチェック
