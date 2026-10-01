@@ -4579,6 +4579,35 @@ a.setlist-card:hover {
     margin: 10px 0 25px;
 }
 
+/* スマホではタブを折り返さず1列に並べる。入りきるときは中央に寄せ、入りきらないときは横スクロールにする
+   （justify-content: center だと左端が切れるので、両端の余白を auto にして中央に寄せる） */
+@media (max-width: 768px) {
+    .stats-tab-bar {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .stats-tab-bar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .stats-tab-bar > :first-child {
+        margin-left: auto;
+    }
+
+    .stats-tab-bar > :last-child {
+        margin-right: auto;
+    }
+
+    .stats-tab-bar .stats-tab-btn {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+}
+
 /* プロフィール（アバター・名前・自己紹介） */
 .profile-header {
     display: flex;
