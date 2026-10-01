@@ -1285,6 +1285,27 @@ if (!function_exists('buildSetlistPatternSummary')) {
         $setlistRows = $sortAndCleanSummaryRows($setlistRows);
         $encoreRows = $sortAndCleanSummaryRows($encoreRows);
 
+        // アンコールの1つの行に、ENCOREの曲とDOUBLE ENCORE（2つ目以降のアンコール）の曲が
+        // 混ざった場合は、アンコールごとの行に分ける。行の並びも、アンコールの順
+        // （ENCORE → DOUBLE ENCORE …）にまとめ直す（同じアンコールの中では元の並びのまま）。
+        // 位置合わせはアンコールの区切りを見ないため、公演ごとにアンコールの曲数が違うと混ざることがある
+        $splitEncoreRowsByBlock = function (array $rows): array {
+            $rowsByBlock = [];
+            foreach ($rows as $row) {
+                $variantsByBlock = [];
+                foreach ($row['variants'] as $entry) {
+                    $variantsByBlock[(int) ($entry['encore_block'] ?? 0)][] = $entry;
+                }
+                foreach ($variantsByBlock as $block => $variants) {
+                    $rowsByBlock[$block][] = ['variants' => $variants];
+                }
+            }
+            ksort($rowsByBlock);
+
+            return array_merge(...array_values($rowsByBlock ?: [[]]));
+        };
+        $encoreRows = $splitEncoreRowsByBlock($encoreRows);
+
         return [
             'setlist' => $setlistRows,
             'encore' => $encoreRows,
