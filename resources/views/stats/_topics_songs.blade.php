@@ -47,7 +47,9 @@
 @endif
 
 @if (count($topicDormant))
-<div class="stats-section visible">
+{{-- 50曲まで出し、最初は10曲だけ見せる（残りは Show More で開く）。シングルのみの切り替えと一緒に、その場で表示を変える --}}
+@php $dormantShown = 10; @endphp
+<div class="stats-section visible" id="topicDormantSection">
     <div class="section-title-wrapper" style="flex-direction: column; align-items: center; gap: 10px;">
         <h2 class="section-title" style="text-align: center;"><i class="fas fa-hourglass-half"></i> Long Time No Play
         <span class="section-title-desc">いちばん長い間演奏されていない曲</span></h2>
@@ -67,7 +69,7 @@
             @foreach (['all' => $topicDormant, 'singles' => $topicDormantSingles] as $kind => $rows)
             <tbody data-kind="{{ $kind }}" @if ($kind === 'singles') style="display: none;" @endif>
                 @foreach ($rows as $index => $row)
-                <tr>
+                <tr @if ($index >= $dormantShown) data-more="1" style="display: none;" @endif>
                     <td class="rank-col">{!! $topicRank($rows, $index, 'years') !!}</td>
                     <td class="song-title">{!! $topicSongLink($row) !!}</td>
                     <td>{!! $topicTourLine($row['last']) !!}</td>
@@ -82,18 +84,46 @@
             @foreach (['all' => $topicDormant, 'singles' => $topicDormantSingles] as $kind => $rows)
                 @foreach ($rows as $index => $row)
                     @include('stats._stacked_row', ['rank' => $topicRank($rows, $index, 'years'), 'song' => $topicSongLink($row), 'artist' => null, 'showArtist' => false,
-                        'lines' => [['tour' => $topicTourLink($row['last'])]], 'badge' => $topicYears($row), 'kind' => $kind, 'hidden' => $kind === 'singles'])
+                        'lines' => [['tour' => $topicTourLink($row['last'])]], 'badge' => $topicYears($row), 'kind' => $kind, 'hidden' => $kind === 'singles', 'more' => $index >= $dormantShown])
                 @endforeach
             @endforeach
         </table>
+        @if (max(count($topicDormant), count($topicDormantSingles)) > $dormantShown)
+        <div class="show-more-container" id="dormantShowMoreContainer">
+            <button type="button" class="show-more-btn" id="dormantShowMore">
+                Show More <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+        @endif
     </div>
 </div>
 <script>
-document.getElementById('dormantSinglesOnly')?.addEventListener('change', function (e) {
-    document.querySelectorAll('tbody[data-kind]').forEach(function (tbody) {
-        tbody.style.display = (tbody.dataset.kind === 'singles') === e.target.checked ? '' : 'none';
-    });
-});
+(function () {
+    var section = document.getElementById('topicDormantSection');
+    var singles = document.getElementById('dormantSinglesOnly');
+    var button = document.getElementById('dormantShowMore');
+    var expanded = false;
+    var counts = { all: {{ count($topicDormant) }}, singles: {{ count($topicDormantSingles) }} };
+    // 選んでいる一覧（全曲 / シングルのみ）と、開いているかどうかに合わせて、PCの表とスマホの表の両方を出し分ける
+    function render() {
+        var kind = singles && singles.checked ? 'singles' : 'all';
+        section.querySelectorAll('.topic-pc tbody[data-kind]').forEach(function (tbody) {
+            tbody.style.display = tbody.dataset.kind === kind ? '' : 'none';
+            tbody.querySelectorAll('tr[data-more]').forEach(function (tr) { tr.style.display = expanded ? '' : 'none'; });
+        });
+        section.querySelectorAll('.topic-sp tbody.stacked-item[data-kind]').forEach(function (tbody) {
+            tbody.style.display = tbody.dataset.kind === kind && (expanded || !tbody.dataset.more) ? '' : 'none';
+        });
+        if (button) {
+            document.getElementById('dormantShowMoreContainer').style.display = counts[kind] > {{ $dormantShown }} ? '' : 'none';
+            button.classList.toggle('expanded', expanded);
+            button.innerHTML = expanded ? 'Show Less <i class="fas fa-chevron-up"></i>' : 'Show More <i class="fas fa-chevron-down"></i>';
+        }
+    }
+    if (singles) singles.addEventListener('change', render);
+    if (button) button.addEventListener('click', function () { expanded = !expanded; render(); });
+    render();
+})();
 </script>
 @endif
 

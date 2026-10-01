@@ -109,8 +109,8 @@ class ArtistTopics
     }
 
     // いちばん長い間演奏されていない曲：最後の演奏から時間がたっている順。$minTours 以上のツアー（同じライブシリーズは1つ）で演奏された曲だけ、
-    // $singlesOnly ならシングルの表題曲だけ
-    public function dormant(int $minTours = 1, bool $singlesOnly = false): array
+    // $singlesOnly ならシングルの表題曲だけ。$limit 曲まで
+    public function dormant(int $minTours = 1, bool $singlesOnly = false, int $limit = self::LIST_SIZE): array
     {
         $today = now()->toDateString();
         $singles = $singlesOnly ? $this->singleSongIds() : null;
@@ -126,7 +126,7 @@ class ArtistTopics
         }
         usort($rows, fn ($a, $b) => $b['years'] <=> $a['years']);
 
-        return array_slice($rows, 0, self::LIST_SIZE);
+        return array_slice($rows, 0, $limit);
     }
 
     // 定番曲だったのに演奏されなくなった曲：5ツアー（同じライブシリーズは1つ）以上で演奏されてきたのに、最後の演奏からいちばん時間がたっている曲
