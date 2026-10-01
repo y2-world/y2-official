@@ -44,12 +44,6 @@ class ArtistResource extends Resource
                     ->default(1)
                     ->formatStateUsing(fn ($state) => $state == 1)
                     ->dehydrateStateUsing(fn ($state) => $state ? 1 : 0),
-                Toggle::make('stats_event_toggle')
-                    ->label('Database statsに「イベントを含める」を出す')
-                    ->helperText('オンにすると、最初はフェス・イベントを除いて数え、チェックを入れたときだけ含める（フェス・イベントの多いアーティスト向け）')
-                    ->onColor('success')
-                    ->offColor('gray')
-                    ->default(false),
             ]);
     }
 

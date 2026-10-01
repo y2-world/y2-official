@@ -59,11 +59,9 @@ class StatsController extends Controller
             if (!$artistId) {
                 return redirect('/database');
             }
-            // 管理画面で「イベントを含める」を出すにしたアーティストは、チェックしたときだけフェス・イベント（type=2）も数える
-            $toggle = (bool) Artist::whereKey((int) $artistId)->value('stats_event_toggle');
             $type = in_array($request->get('type'), ['tours', 'events'], true)
                 ? $request->get('type')
-                : (!$toggle || $request->boolean('include_events') ? 'all' : 'no_events');
+                : 'all';
             return $this->getDatabaseStats((int)$artistId, $type);
         }
 
@@ -425,7 +423,7 @@ class StatsController extends Controller
         $isHikigatariArtist = $artistId === \App\Support\EncoreBlocks::HIKIGATARI_ARTIST_ID;
         $songStatsNoDoubleEncore = $isHikigatariArtist ? $this->getDatabaseSongStats($artistId, $type, true) : [];
         // トピックス（久しぶりに演奏された曲など）
-        $topics = new \App\Support\ArtistTopics($artistId, $type !== 'no_events');
+        $topics = new \App\Support\ArtistTopics($artistId);
         $topicRevivals = $topics->revivals();
         // Long Time No Play は50曲まで（最初の10曲だけ見せて、残りは折りたたむ）
         $topicDormant = $topics->dormant(1, false, 50);
@@ -438,18 +436,13 @@ class StatsController extends Controller
         $longestSetlists = $this->getDatabaseLongestSetlists($artistId, $type);
         $yearStats = $this->getDatabaseYearStats($artistId, $type);
 
-        $hasEvents = (bool) $artist->stats_event_toggle;
         // タブの「Artists」：セットリストが登録されているアーティストのDatabaseのstatsに切り替える（今のアーティストを選んだ状態）
         $tourArtistIds = DbConcert::whereIn('id', DbSetlist::distinct()->pluck('tour_id'))->distinct()->pluck('artist_id');
         $tabArtists = \App\Support\JapaneseNameSorter::sortBy(Artist::whereIn('id', $tourArtistIds)->get(), 'name')
-            ->map(fn ($a) => ['name' => $a->name, 'url' => route('stats.index', ['tab' => 'database', 'artist_id' => $a->id] + ($hasEvents && $type === 'all' ? ['include_events' => 1] : [])), 'current' => (int) $a->id === $artistId])
+            ->map(fn ($a) => ['name' => $a->name, 'url' => route('stats.index', ['tab' => 'database', 'artist_id' => $a->id]), 'current' => (int) $a->id === $artistId])
             ->values()->all();
 
-        $includeEvents = $type !== 'no_events';
-
         return view('stats.database', compact(
-            'includeEvents',
-            'hasEvents',
             'tabArtists',
             'artist',
             'overallStats',
@@ -694,9 +687,7 @@ class StatsController extends Controller
 
     private function applyDatabaseTypeFilter($query, string $type): void
     {
-        if ($type === 'no_events') {
-            $query->whereNotIn('type', [2]);
-        } elseif ($type === 'tours') {
+        if ($type === 'tours') {
             $query->whereIn('type', [0, 1]);
         } elseif ($type === 'events') {
             $query->where('type', 2);

@@ -38,7 +38,7 @@
                     </select>
                     <select class="year-select" name="select" onChange="location.href=value;">
                         <option value="" disabled>Live</option>
-                        <option value="{{ route('database.live', $artist->id) }}{{ $artist->stats_event_toggle ? '?type=all' : '' }}" {{ !$type || $type === 'all' ? 'selected' : '' }}>All</option>
+                        <option value="{{ route('database.live', $artist->id) }}" {{ !$type ? 'selected' : '' }}>All</option>
                         <option value="{{ route('database.live', $artist->id) }}?type=1" {{ $type == '1' ? 'selected' : '' }}>Live</option>
                         <option value="{{ route('database.live', $artist->id) }}?type=6" {{ $type == '6' ? 'selected' : '' }}>Tours</option>
                         <option value="{{ route('database.live', $artist->id) }}?type=5" {{ $type == '5' ? 'selected' : '' }}>単発ライブ</option>

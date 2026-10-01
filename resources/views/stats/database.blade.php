@@ -14,19 +14,6 @@
                     <p class="stats-subtitle">{{ isset($artist) ? 'セットリスト統計' : 'ライブ演奏履歴とデータ分析' }}</p>
 
                     @isset($artist)
-                    {{-- フェス・イベント（type=2）も数えるか。チェックを変えたら読み直す（最初はイベントを除く） --}}
-                    @if ($hasEvents)
-                    {{-- 行き先のURLはサーバー側で作る（このページでは window.URL が別のものに上書きされていて new URL() が使えない） --}}
-                    <div class="unique-tour-toggle" style="margin: 0 0 20px; display: flex; justify-content: center;">
-                        <label class="unique-tour-label" style="color: rgba(255, 255, 255, 0.9);">
-                            <input type="checkbox" id="includeEvents" class="unique-tour-checkbox" {{ $includeEvents ? 'checked' : '' }}
-                                data-on="?{{ http_build_query(array_merge(request()->query(), ['include_events' => 1])) }}"
-                                data-off="?{{ http_build_query(\Illuminate\Support\Arr::except(request()->query(), ['include_events'])) }}"
-                                onchange="location.href = this.checked ? this.dataset.on : this.dataset.off;">
-                            <span class="unique-tour-text">イベントを含める</span>
-                        </label>
-                    </div>
-                    @endif
                     <!-- Overall Stats Cards -->
                     <div class="row stats-cards">
                         <div class="col-md-3 col-sm-6 mb-4">
@@ -35,7 +22,7 @@
                                     <i class="fas fa-guitar"></i>
                                 </div>
                                 <div class="stat-value">{{ $overallStats['total_tours'] }}</div>
-                                <div class="stat-label">Total Tours</div>
+                                <div class="stat-label">Total Lives</div>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-6 mb-4">
@@ -53,7 +40,7 @@
                                     <i class="fas fa-star"></i>
                                 </div>
                                 <div class="stat-value">{{ $overallStats['unique_songs_in_tours'] }}</div>
-                                <div class="stat-label">Songs in Tours</div>
+                                <div class="stat-label">Songs Performed</div>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-6 mb-4">
@@ -86,8 +73,8 @@
                     <div class="stats-section visible">
                         <div class="section-title-wrapper" style="flex-direction: column; align-items: center; gap: 10px;">
                             <h2 class="section-title" style="text-align: center;">
-                                <i class="fas fa-fire"></i> Most Performed Songs in Tours
-    <span class="section-title-desc">演奏されたツアーの数が多い曲</span></h2>
+                                <i class="fas fa-fire"></i> Most Performed Songs
+    <span class="section-title-desc">演奏されたツアー・ライブの数が多い曲</span></h2>
                             @if (!empty($isHikigatariArtist) && !empty($doubleEncoreSongStats))
                             {{-- 福山雅治のみ：演奏回数を、DOUBLE ENCORE（弾き語り）を除いて数える（その場で表を切り替える） --}}
                             <div class="unique-tour-toggle" style="margin-left: 0;">
@@ -153,7 +140,7 @@
                     <div class="stats-section visible">
                         <h2 class="section-title">
                             <i class="fas fa-guitar"></i> Most Performed DOUBLE ENCORE Songs
-    <span class="section-title-desc">DOUBLE ENCOREで演奏されたツアーの数が多い曲</span></h2>
+    <span class="section-title-desc">DOUBLE ENCOREで演奏されたツアー・ライブの数が多い曲</span></h2>
                         <div class="stats-table-container">
                             <table class="stats-table">
                                 <thead>
@@ -207,7 +194,7 @@
                     <div class="stats-section visible">
                         <h2 class="section-title">
                             <i class="fas fa-play"></i> Most Used Opening Songs
-    <span class="section-title-desc">1曲目に演奏されたツアーの数が多い曲</span></h2>
+    <span class="section-title-desc">1曲目に演奏されたツアー・ライブの数が多い曲</span></h2>
                         <div class="stats-table-container">
                             <table class="stats-table">
                                 <thead>
@@ -257,7 +244,7 @@
                         <div class="section-title-wrapper" style="flex-direction: column; align-items: center; gap: 10px;">
                             <h2 class="section-title" style="text-align: center;">
                                 <i class="fas fa-star"></i> Most Performed Encore Songs
-    <span class="section-title-desc">アンコールで演奏されたツアーの数が多い曲</span></h2>
+    <span class="section-title-desc">アンコールで演奏されたツアー・ライブの数が多い曲</span></h2>
                             @if (!empty($isHikigatariArtist) && !empty($doubleEncoreSongStats))
                             {{-- 福山雅治のみ：アンコールの回数を、DOUBLE ENCORE（弾き語り）を除いて数える（その場で表を切り替える） --}}
                             <div class="unique-tour-toggle" style="margin-left: 0;">

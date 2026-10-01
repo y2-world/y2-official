@@ -5,7 +5,7 @@
 @if (count($topicClosingSongs))
 <div class="stats-section visible">
     <h2 class="section-title"><i class="fas fa-flag-checkered"></i> Most Used Closing Songs
-    <span class="section-title-desc">本編の最後に演奏されたツアーの数が多い曲</span></h2>
+    <span class="section-title-desc">本編の最後に演奏されたツアー・ライブの数が多い曲</span></h2>
     <div class="stats-table-container">
         <table class="stats-table">
             <thead><tr><th class="rank-col">Rank</th><th>Song Title</th><th class="count-col">Times Performed</th></tr></thead>

@@ -17,10 +17,6 @@ class DbConcertController extends Controller
     {
         $artist = Artist::findOrFail($artistId);
         $type = request()->input('type');
-        // 管理画面で「イベントを含める」を出すにしたアーティスト（フェス・イベントの多いアーティスト）は、最初はイベントを除いた「Live」を出す。All は type=all
-        if ($type === null && $artist->stats_event_toggle) {
-            $type = '1';
-        }
 
         $liveQuery = DbConcert::where('artist_id', $artistId)->orderBy('date1', 'desc');
 
