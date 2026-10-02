@@ -342,7 +342,8 @@ class StatsController extends Controller
         $artistStats = [];
         foreach ($artistShowCounts as $artistId => $count) {
             $artist = Artist::find($artistId);
-            if ($artist) {
+            // 公開しているアーティストだけ（ランキング・タブの切り替えの両方）
+            if ($artist && (int) $artist->visible === 1) {
                 $artistStats[] = [
                     'id' => $artist->id,
                     'name' => $artist->name,
@@ -438,7 +439,7 @@ class StatsController extends Controller
 
         // タブの「Artists」：セットリストが登録されているアーティストのDatabaseのstatsに切り替える（今のアーティストを選んだ状態）
         $tourArtistIds = DbConcert::whereIn('id', DbSetlist::distinct()->pluck('tour_id'))->distinct()->pluck('artist_id');
-        $tabArtists = \App\Support\JapaneseNameSorter::sortBy(Artist::whereIn('id', $tourArtistIds)->get(), 'name')
+        $tabArtists = \App\Support\JapaneseNameSorter::sortBy(Artist::whereIn('id', $tourArtistIds)->where('visible', 1)->get(), 'name')
             ->map(fn ($a) => ['name' => $a->name, 'url' => route('stats.index', ['tab' => 'database', 'artist_id' => $a->id]), 'current' => (int) $a->id === $artistId])
             ->values()->all();
 
@@ -922,7 +923,11 @@ class StatsController extends Controller
             ->map(fn ($a) => ['name' => $a['name'], 'url' => route('stats.artist', $a['id']), 'current' => (int) $a['id'] === (int) $artistId])
             ->values()->all();
 
+        // 曲が登録されていないアーティストはスタンプ帳が作れないので、ボタンを出さない
+        $hasStampBook = DbSong::where('artist_id', (int) $artistId)->exists();
+
         return view('stats.artist', compact(
+            'hasStampBook',
             'tabArtists',
             'artist',
             'allSongs',

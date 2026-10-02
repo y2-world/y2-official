@@ -8,7 +8,7 @@
     <span class="section-title-desc">本編の最後に演奏されたツアー・ライブの数が多い曲</span></h2>
     <div class="stats-table-container">
         <table class="stats-table">
-            <thead><tr><th class="rank-col">Rank</th><th>Song Title</th><th class="count-col">Times Performed</th></tr></thead>
+            <thead><tr><th class="rank-col">Rank</th><th>Song Title</th><th class="count-col">Times</th></tr></thead>
             <tbody>
                 @foreach ($topicClosingSongs as $index => $row)
                 @php $showRank = $index === 0 || $topicClosingSongs[$index - 1]['count'] !== $row['count']; @endphp

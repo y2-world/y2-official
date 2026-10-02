@@ -19,11 +19,13 @@
                     <h1 class="stats-title">{{ $artist->name }}</h1>
                     <p class="stats-subtitle">{{ $isOwner ? 'My Artist Statistics' : (($statsUser->name ?: 'ゲスト') . ' のArtist Statistics') }}</p>
 
+                    @if ($stampsRoute)
                     <div class="stamp-book-link-wrapper" style="margin: -18px 0 45px;">
                         <a href="{{ $stampsRoute }}" class="stamp-book-link">
                             <i class="fas fa-stamp"></i> View Live Stamp Book
                         </a>
                     </div>
+                    @endif
 
                     <!-- Overall Stats Cards -->
                     <div class="row stats-cards">
@@ -84,7 +86,7 @@
                                     <tr>
                                         <th class="rank-col">Rank</th>
                                         <th>Song Title</th>
-                                        <th class="count-col">Times Listened</th>
+                                        <th class="count-col">Times</th>
                                     </tr>
                                 </thead>
                                 <tbody>

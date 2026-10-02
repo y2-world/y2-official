@@ -49,7 +49,7 @@ class DbSongController extends Controller
             ->toArray();
 
         // アーティスト一覧（検索フォーム用）
-        $artists = Artist::orderBy('id', 'asc')->get();
+        $artists = \App\Support\JapaneseNameSorter::sortBy(Artist::where('visible', 1)->get(), 'name');
 
         // AJAXリクエストの場合はJSON形式で返す
         if (request()->wantsJson() || request()->ajax()) {

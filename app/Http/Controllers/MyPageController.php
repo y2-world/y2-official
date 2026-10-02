@@ -194,6 +194,10 @@ class MyPageController extends Controller
             }
             $uniqueSongs = count($songIdsByArtist[$ref]);
             $totalSongs = DbSong::where('artist_id', $artist->id)->count();
+            // 曲が登録されていないアーティストはスタンプ帳が作れないので出さない
+            if ($totalSongs === 0) {
+                continue;
+            }
             $artistSongStats->push([
                 'id' => $ref,
                 'name' => $artist->name,
@@ -209,6 +213,9 @@ class MyPageController extends Controller
             }
             $uniqueSongs = count($songIdsByArtist[$ref]);
             $totalSongs = UserSong::where('user_artist_id', $artist->id)->count();
+            if ($totalSongs === 0) {
+                continue;
+            }
             $artistSongStats->push([
                 'id' => $ref,
                 'name' => $artist->name,

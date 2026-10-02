@@ -38,8 +38,10 @@ class MyPageStatsController extends Controller
             ->filter()
             ->unique();
 
-        $officialArtists = JapaneseNameSorter::sortBy(Artist::whereIn('id', $attendedOfficialArtistIds)->get());
-        $userArtists = JapaneseNameSorter::sortBy(UserArtist::whereIn('id', $attendedUserArtistIds)->get());
+        // 曲が登録されていないアーティストはスタンプ帳が作れないので出さない
+        $officialArtists = JapaneseNameSorter::sortBy(Artist::whereIn('id', $attendedOfficialArtistIds)->whereHas('songs')->get());
+        $userArtists = JapaneseNameSorter::sortBy(UserArtist::whereIn('id', $attendedUserArtistIds)
+            ->whereIn('id', \App\Models\UserSong::select('user_artist_id'))->get());
 
         return view('mypage.stats.stamps_index', compact('officialArtists', 'userArtists'));
     }
@@ -191,7 +193,10 @@ class MyPageStatsController extends Controller
             ->values();
 
         $artistRef = 'official-' . $artist->id;
-        $stampsRoute = route('mypage.stats.stamps', $this->isOwner() ? $artistRef : ['artistId' => $artistRef, 'user' => $this->statsUser->id]);
+        // 曲が登録されていないアーティストはスタンプ帳のボタンを出さない（null）
+        $stampsRoute = \App\Models\DbSong::where('artist_id', $artist->id)->exists()
+            ? route('mypage.stats.stamps', $this->isOwner() ? $artistRef : ['artistId' => $artistRef, 'user' => $this->statsUser->id])
+            : null;
         $isOwner = $this->isOwner();
         $statsUser = $this->statsUser;
         $tabArtists = $this->tabArtists($artistRef);
@@ -318,7 +323,10 @@ class MyPageStatsController extends Controller
             ->values();
 
         $artistRef = 'user-' . $artist->id;
-        $stampsRoute = route('mypage.stats.stamps', $this->isOwner() ? $artistRef : ['artistId' => $artistRef, 'user' => $this->statsUser->id]);
+        // 曲が登録されていないアーティストはスタンプ帳のボタンを出さない（null）
+        $stampsRoute = \App\Models\UserSong::where('user_artist_id', $artist->id)->exists()
+            ? route('mypage.stats.stamps', $this->isOwner() ? $artistRef : ['artistId' => $artistRef, 'user' => $this->statsUser->id])
+            : null;
         $isOwner = $this->isOwner();
         $statsUser = $this->statsUser;
         $tabArtists = $this->tabArtists($artistRef);

@@ -73,7 +73,7 @@
                     <div class="stats-section visible">
                         <div class="section-title-wrapper" style="flex-direction: column; align-items: center; gap: 10px;">
                             <h2 class="section-title" style="text-align: center;">
-                                <i class="fas fa-fire"></i> Most Performed Songs
+                                <i class="fas fa-fire"></i> Most Performed Songs (<span id="dbSongCountLabel">{{ count(array_filter($songStats, fn($s) => $s['count'] > 0)) }}</span>)
     <span class="section-title-desc">演奏されたツアー・ライブの数が多い曲</span></h2>
                             @if (!empty($isHikigatariArtist) && !empty($doubleEncoreSongStats))
                             {{-- 福山雅治のみ：演奏回数を、DOUBLE ENCORE（弾き語り）を除いて数える（その場で表を切り替える） --}}
@@ -91,7 +91,7 @@
                                     <tr>
                                         <th class="rank-col">Rank</th>
                                         <th>Song Title</th>
-                                        <th class="count-col">Times Performed</th>
+                                        <th class="count-col">Times</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -147,7 +147,7 @@
                                     <tr>
                                         <th class="rank-col">Rank</th>
                                         <th>Song Title</th>
-                                        <th class="count-col">Times Performed</th>
+                                        <th class="count-col">Times</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -201,7 +201,7 @@
                                     <tr>
                                         <th class="rank-col">Rank</th>
                                         <th>Song Title</th>
-                                        <th class="count-col">Times Used</th>
+                                        <th class="count-col">Times</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -261,7 +261,7 @@
                                     <tr>
                                         <th class="rank-col">Rank</th>
                                         <th>Song Title</th>
-                                        <th class="count-col">Times Performed</th>
+                                        <th class="count-col">Times</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -466,6 +466,7 @@ function renderRanking(tableId, data, collapseAfter) {
 document.getElementById('excludeDoubleEncoreSongs')?.addEventListener('change', function (e) {
     const data = e.target.checked ? dbSongStats.noDoubleEncore : dbSongStats.normal;
     renderRanking('dbSongStatsTable', data, 10);
+    document.getElementById('dbSongCountLabel').textContent = data.filter(s => s.count > 0).length;
 });
 document.getElementById('excludeDoubleEncoreEncore')?.addEventListener('change', function (e) {
     renderRanking('dbEncoreStatsTable', e.target.checked ? dbEncoreStats.noDoubleEncore : dbEncoreStats.normal, 0);

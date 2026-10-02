@@ -18,9 +18,9 @@
 
                     <div class="row stats-cards">
                         @foreach([
-                            ['value' => $overallStats['total_concerts'], 'label' => 'Total Tours', 'icon' => 'fa-guitar'],
+                            ['value' => $overallStats['total_concerts'], 'label' => 'Total Lives', 'icon' => 'fa-guitar'],
                             ['value' => $overallStats['total_songs'], 'label' => 'Total Songs', 'icon' => 'fa-music'],
-                            ['value' => $overallStats['unique_songs_played'], 'label' => 'Songs in Setlists', 'icon' => 'fa-star'],
+                            ['value' => $overallStats['unique_songs_played'], 'label' => 'Songs Performed', 'icon' => 'fa-star'],
                             ['value' => $overallStats['avg_setlist_length'], 'label' => 'Avg Songs/Show', 'icon' => 'fa-chart-line'],
                         ] as $card)
                             <div class="col-md-3 col-sm-6 mb-4">
@@ -34,9 +34,9 @@
                     </div>
 
                     @foreach([
-                        ['title' => 'Most Performed Songs in Tours', 'icon' => 'fa-fire', 'items' => $songStats, 'count_label' => 'Times Performed', 'accordion' => true],
-                        ['title' => 'Most Performed Encore Songs', 'icon' => 'fa-star', 'items' => $encoreSongStats, 'count_label' => 'Times Performed', 'accordion' => false],
-                        ['title' => 'Most Used Opening Songs', 'icon' => 'fa-play', 'items' => $openingSongStats, 'count_label' => 'Times Used', 'accordion' => false],
+                        ['title' => 'Most Performed Songs', 'icon' => 'fa-fire', 'items' => $songStats, 'count_label' => 'Times', 'accordion' => true],
+                        ['title' => 'Most Performed Encore Songs', 'icon' => 'fa-star', 'items' => $encoreSongStats, 'count_label' => 'Times', 'accordion' => false],
+                        ['title' => 'Most Used Opening Songs', 'icon' => 'fa-play', 'items' => $openingSongStats, 'count_label' => 'Times', 'accordion' => false],
                     ] as $section)
                         <section class="stats-section visible">
                             <h2 class="section-title"><i class="fas {{ $section['icon'] }}"></i> {{ $section['title'] }} ({{ $section['items']->filter(fn ($song) => $song['count'] > 0)->count() }})</h2>
