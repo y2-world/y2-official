@@ -58,23 +58,23 @@
         {{-- これからのライブ --}}
         @if($upcomingSetlists->count() > 0)
             <h3 style="margin-top: 0; margin-bottom: 15px;">Upcoming Shows</h3>
-            <table class="table table-striped">
+            <table class="table table-striped fixed-cols">
                 <thead>
                     <tr>
-                        <th class="mobile">#</th>
-                        <th class="mobile">開催日</th>
+                        <th class="mobile col-no">#</th>
+                        <th class="mobile col-date">開催日</th>
                         @if (request('type') != 2)
                             <th class="sp">アーティスト / タイトル</th>
-                            <th class="pc">アーティスト</th>
+                            <th class="pc col-artist">アーティスト</th>
                         @endif
                         @if (request('type') == 2)
-                            <th class="pc"></th>
+                            <th class="pc col-artist"></th>
                             <th class="sp">タイトル</th>
                             <th class="pc">タイトル</th>
                         @else
                             <th class="pc">タイトル</th>
                         @endif
-                        <th class="pc">会場</th>
+                        <th class="pc col-venue">会場</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -123,23 +123,23 @@
 
         {{-- 今までのライブ --}}
         <h3 style="margin-top: {{ $upcomingSetlists->count() > 0 ? '30px' : '0' }}; margin-bottom: 15px;">Past Shows</h3>
-        <table class="table table-striped">
+        <table class="table table-striped fixed-cols">
             <thead>
                 <tr>
-                    <th class="mobile">#</th>
-                    <th class="mobile">開催日</th>
+                    <th class="mobile col-no">#</th>
+                    <th class="mobile col-date">開催日</th>
                     @if (request('type') != 2)
                         <th class="sp">アーティスト / タイトル</th>
-                        <th class="pc">アーティスト</th>
+                        <th class="pc col-artist">アーティスト</th>
                     @endif
                     @if (request('type') == 2)
-                        <th class="pc"></th>
+                        <th class="pc col-artist"></th>
                         <th class="sp">タイトル</th>
                         <th class="pc">タイトル</th>
                     @else
                         <th class="pc">タイトル</th>
                     @endif
-                    <th class="pc">会場</th>
+                    <th class="pc col-venue">会場</th>
                 </tr>
             </thead>
             <tbody id="setlists-container">

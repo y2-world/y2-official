@@ -85,13 +85,13 @@
                         @if ($performanceTours->isEmpty())
                             <p style="color: #718096; text-align: center;">演奏記録がありません。</p>
                         @else
-                            <table class="table table-striped count">
+                            <table class="table table-striped count fixed-cols">
                                 <thead>
                                     <tr>
-                                        <th class="mobile">#</th>
-                                        <th class="mobile">開催日</th>
+                                        <th class="mobile col-no">#</th>
+                                        <th class="mobile col-date">開催日</th>
                                         <th class="mobile">タイトル</th>
-                                        @if ($isHikigatariArtist)<th class="mobile" title="弾き語り（DOUBLE ENCORE）"><i class="fa-solid fa-guitar"></i></th>@endif
+                                        @if ($isHikigatariArtist)<th class="mobile col-icon" title="弾き語り（DOUBLE ENCORE）"><i class="fa-solid fa-guitar"></i></th>@endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -118,14 +118,14 @@
                     @if ($setlists->isEmpty())
                         <p style="color: #718096; text-align: center;">参加記録がありません。</p>
                     @else
-                        <table class="table table-striped count">
+                        <table class="table table-striped count fixed-cols">
                             <thead>
                                 <tr>
-                                    <th class="mobile">#</th>
-                                    <th class="mobile">開催日</th>
+                                    <th class="mobile col-no">#</th>
+                                    <th class="mobile col-date">開催日</th>
                                     <th class="mobile">タイトル</th>
-                                    @if ($isHikigatariArtist)<th class="mobile" title="弾き語り（DOUBLE ENCORE）"><i class="fa-solid fa-guitar"></i></th>@endif
-                                    <th class="pc">会場</th>
+                                    @if ($isHikigatariArtist)<th class="mobile col-icon" title="弾き語り（DOUBLE ENCORE）"><i class="fa-solid fa-guitar"></i></th>@endif
+                                    <th class="pc col-venue">会場</th>
                                 </tr>
                             </thead>
                             <tbody>

@@ -994,6 +994,26 @@ th {
     white-space: nowrap;
 }
 
+/* ライブ・セトリの一覧の表：列の幅を見出しで決め、データの長さで変わらないようにする（長い文字は列の中で折り返す）。タイトルの列は残りの幅 */
+.table.fixed-cols {
+    table-layout: fixed;
+    width: 100%;
+}
+.table.fixed-cols td {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+/* 番号と開催日（最初の2列）は折り返さない */
+.table.fixed-cols td:nth-child(-n+2) {
+    white-space: nowrap;
+}
+.table.fixed-cols .col-no { width: 4.5em; }
+.table.fixed-cols .col-date { width: 12em; }
+.table.fixed-cols .col-date-range { width: 16em; }
+.table.fixed-cols .col-artist { width: 15%; }
+.table.fixed-cols .col-venue { width: 28%; }
+.table.fixed-cols .col-icon { width: 2.5em; }
+
 .schedule-text {
     font-size: 13px;
 }

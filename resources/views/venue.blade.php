@@ -38,12 +38,12 @@
 
     <div class="container-lg database-year-content">
         @if (!$data->isEmpty())
-            <table class="table table-striped count">
+            <table class="table table-striped count fixed-cols">
                 <thead>
                     <tr>
-                        <th class="mobile">#</th>
-                        <th class="mobile">開催日</th>
-                        <th class="pc">アーティスト</th>
+                        <th class="mobile col-no">#</th>
+                        <th class="mobile col-date">開催日</th>
+                        <th class="pc col-artist">アーティスト</th>
                         <th class="sp">アーティスト / タイトル</th>
                         <th class="pc">タイトル</th>
                     </tr>

@@ -68,13 +68,13 @@
     </div>
 
     <div class="container database-year-content">
-        <table class="table table-striped">
+        <table class="table table-striped fixed-cols">
             <thead>
                 <tr>
-                    <th class="mobile">#</th>
-                    <th class="mobile">開催日</th>
+                    <th class="mobile col-no">#</th>
+                    <th class="mobile col-date-range">開催日</th>
                     <th class="mobile">タイトル</th>
-                    <th class="pc">会場</th>
+                    <th class="pc col-venue">会場</th>
                 </tr>
             </thead>
             <tbody id="tours-container">
