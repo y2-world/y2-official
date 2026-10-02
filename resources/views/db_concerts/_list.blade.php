@@ -9,6 +9,8 @@
         @endif
         <td class="td_title"><a href="{{ route('live.show', $tour->id) }}{{ !empty($type) ? '?from=type' : '' }}">{{ $tour->title }}</a>
         </td>
+        @if (($type ?? null) !== '6')
         <td class="pc_venue">{{ $tour->venue }}</td>
+        @endif
     </tr>
 @endforeach

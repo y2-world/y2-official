@@ -89,7 +89,7 @@
                                 <thead>
                                     <tr>
                                         <th class="mobile col-no">#</th>
-                                        <th class="mobile col-date">開催日</th>
+                                        <th class="mobile col-date-range">開催日</th>
                                         <th class="mobile">タイトル</th>
                                         @if ($isHikigatariArtist)<th class="mobile col-icon" title="弾き語り（DOUBLE ENCORE）"><i class="fa-solid fa-guitar"></i></th>@endif
                                     </tr>

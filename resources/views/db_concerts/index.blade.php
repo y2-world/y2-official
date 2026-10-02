@@ -74,7 +74,10 @@
                     <th class="mobile col-no">#</th>
                     <th class="mobile col-date-range">開催日</th>
                     <th class="mobile">タイトル</th>
+                    {{-- ツアーだけの一覧では会場が入っていないので、会場の列を出さない --}}
+                    @if ($type !== '6')
                     <th class="pc col-venue">会場</th>
+                    @endif
                 </tr>
             </thead>
             <tbody id="tours-container">

@@ -1003,7 +1003,7 @@ th {
     white-space: normal;
     overflow-wrap: anywhere;
 }
-/* 番号と開催日（最初の2列）は折り返さない */
+/* 番号と開催日（最初の2列）は折り返さない。開催日の列は期間（「2023.01.07 - 2023.01.20」）も1行で入る幅にする */
 .table.fixed-cols td:nth-child(-n+2) {
     white-space: nowrap;
 }
@@ -1013,6 +1013,10 @@ th {
 .table.fixed-cols .col-artist { width: 15%; }
 .table.fixed-cols .col-venue { width: 28%; }
 .table.fixed-cols .col-icon { width: 2.5em; }
+/* 会場・アーティストの列を出さない幅（991px以下）では、番号の列を少し細くする（開催日は1行のまま） */
+@media (max-width: 991px) {
+    .table.fixed-cols .col-no { width: 4em; }
+}
 
 .schedule-text {
     font-size: 13px;
