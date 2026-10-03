@@ -252,8 +252,14 @@ if ('scrollRestoration' in history) {
 }
 document.addEventListener('DOMContentLoaded', function () {
     function updateSongFeaturingWrap() {
+        var isSinglePatternOnDesktop = window.innerWidth > 767
+            && {{ isset($setlistSummaries) && $setlistSummaries->count() <= 2 ? 'true' : 'false' }};
+
         document.querySelectorAll('.setlist-song-featuring').forEach(function (item) {
             item.classList.remove('is-feature-wrap');
+            if (isSinglePatternOnDesktop) {
+                return;
+            }
             if (!item.querySelector('.setlist-featuring')) {
                 return;
             }
