@@ -106,7 +106,7 @@
         </div>
         @include('db_concerts._summary_page')
     @else
-        <div class="setlist-standard-page{{ isset($setlistSummaries) && $setlistSummaries->count() ? ' has-responsive-summary' : '' }}{{ request()->query('view') === 'standard' ? ' is-mobile-selected' : '' }}">
+        <div class="setlist-standard-page{{ $totalOlCount === 1 ? ' is-single-pattern' : '' }}{{ isset($setlistSummaries) && $setlistSummaries->count() ? ' has-responsive-summary' : '' }}{{ request()->query('view') === 'standard' ? ' is-mobile-selected' : '' }}">
         <div class="{{ $totalOlCount >= 3 ? 'container-fluid' : 'container' }} database-year-content">
             <div class="row justify-content-center">
                 <div class="{{ $colClass }}">
@@ -253,7 +253,7 @@ if ('scrollRestoration' in history) {
 document.addEventListener('DOMContentLoaded', function () {
     function updateSongFeaturingWrap() {
         var isSinglePatternOnDesktop = window.innerWidth > 767
-            && {{ isset($setlistSummaries) && $setlistSummaries->count() <= 2 ? 'true' : 'false' }};
+            && {{ $totalOlCount === 1 ? 'true' : 'false' }};
 
         document.querySelectorAll('.setlist-song-featuring').forEach(function (item) {
             item.classList.remove('is-feature-wrap');
