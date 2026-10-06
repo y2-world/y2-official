@@ -33,7 +33,7 @@
                             ]);
                             $isOwner = $attendance->external_user_id === \Illuminate\Support\Facades\Auth::guard('external')->id();
                         @endphp
-                        <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'timeline']) }}" class="timeline-card" data-attendance-id="{{ $attendance->id }}">
+                        <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'timeline']) }}" class="timeline-card{{ $attendance->is_planned ? ' is-planned' : '' }}" data-attendance-id="{{ $attendance->id }}">
                             <div class="timeline-card-header">
                                 <div class="timeline-card-meta">
                                     <span class="timeline-card-user" data-nav-url="{{ route('mypage.users.stats', $attendance->external_user_id) }}">{{ $attendance->externalUser->name ?: 'ゲスト' }}</span>
@@ -48,9 +48,16 @@
                                         {{ $attendance->attended_date?->format('Y.m.d') ?? '-' }}
                                     </span>
                                 </div>
-                                {{-- セットリストをまだ選んでいない参加予定の投稿は、右上にバッジ --}}
+                                {{-- セットリストをまだ選んでいない参加予定の投稿は、右上に「参加予定」のバッジ。
+                                     公演日以降は、本人には代わりにセットリストを追加する「＋」を出す --}}
                                 @if ($attendance->is_planned)
-                                    <span class="timeline-planned-badge">参加予定</span>
+                                    @if ($isOwner && $attendance->can_add_setlist)
+                                        <span class="mypage-add-button timeline-planned-add" title="セットリストを追加" data-nav-url="{{ route('mypage.attendances.add_setlist', $attendance) }}">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                    @else
+                                        <span class="timeline-planned-badge">参加予定</span>
+                                    @endif
                                 @endif
                             </div>
 
@@ -149,15 +156,31 @@
         font-size: 0.8rem;
     }
     /* セットリストをまだ選んでいない参加予定の投稿のバッジ */
+    /* 見出しの横に列を取るとタイトルの幅が狭くなるので、カードの右上に重ねて置く */
     .timeline-planned-badge {
-        display: inline-block;
-        flex: 0 0 auto;
+        position: absolute;
+        top: 14px;
+        right: 14px;
         padding: 2px 10px;
         border-radius: 10px;
         background: #ede7f6;
         color: #764ba2;
         font-size: 0.7rem;
         white-space: nowrap;
+    }
+    /* 公演日以降の参加予定（本人）：バッジの代わりに右上に出すセットリスト追加の「＋」 */
+    .timeline-planned-add {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+        cursor: pointer;
+    }
+    /* バッジと重なるのはいちばん上のユーザー名の行だけなので、その行だけバッジの手前で折り返す */
+    .timeline-card.is-planned .timeline-card-user {
+        max-width: calc(100% - 72px);
     }
     </style>
 
