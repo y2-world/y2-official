@@ -32,6 +32,13 @@ class UserDiscController extends Controller
         $isOwner = $artist->external_user_id === auth('external')->id();
         $number = $disc::ordinalNumbers($artist->id)[$disc->id] ?? null;
 
-        return view('mypage.user_discs.show', compact('disc', 'kind', 'artist', 'songs', 'tracksByDisc', 'isOwner', 'number'));
+        // 前後（公式と同じく、同じアーティストの発売日の順。同じ日なら id の順）
+        $siblings = $disc::where('user_artist_id', $artist->id);
+        $previous = (clone $siblings)->where(fn ($q) => $q->where('date', '<', $disc->date)->orWhere(fn ($q2) => $q2->where('date', $disc->date)->where('id', '<', $disc->id)))
+            ->orderByDesc('date')->orderByDesc('id')->first();
+        $next = (clone $siblings)->where(fn ($q) => $q->where('date', '>', $disc->date)->orWhere(fn ($q2) => $q2->where('date', $disc->date)->where('id', '>', $disc->id)))
+            ->orderBy('date')->orderBy('id')->first();
+
+        return view('mypage.user_discs.show', compact('disc', 'kind', 'artist', 'songs', 'tracksByDisc', 'isOwner', 'number', 'previous', 'next'));
     }
 }

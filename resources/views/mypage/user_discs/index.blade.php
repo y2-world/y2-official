@@ -10,8 +10,7 @@
                 ['label' => $artist->name, 'url' => route('mypage.user_artists.show', $artist->id)],
                 ['label' => $label],
             ]])
-            <h1 class="database-title" style="text-align: center;">{{ $label }}</h1>
-            <p class="database-subtitle" style="text-align: center;">{{ $artist->name }} — {{ $kind === 'albums' ? 'すべてのアルバム' : 'すべてのシングル' }}</p>
+            @include('mypage.user_artists._discography_header', ['title' => $label, 'subtitle' => $kind === 'albums' ? 'すべてのアルバムコレクション' : 'すべてのシングルコレクション', 'current' => $kind])
         </div>
     </div>
 
@@ -38,14 +37,12 @@
                 <tbody>
                     @foreach ($discs as $disc)
                         <tr>
-                            {{-- 番号は発売日の順で自動（種類ごと）。番号の無い EP・ベストアルバムは種類を出す --}}
+                            {{-- 番号は発売日の順で自動（種類ごと）。公式と同じく、EP は「EP」、ミニアルバム・ベストアルバムは空 --}}
                             <td>
                                 @if ($kind === 'singles')
                                     {{ $disc->ep ? 'EP' : ($numbers[$disc->id] ?? '') }}
-                                @elseif ($disc->best)
-                                    ベストアルバム
-                                @elseif ($disc->mini)
-                                    ミニアルバム {{ $numbers[$disc->id] ?? '' }}
+                                @elseif ($disc->best || $disc->mini)
+                                    {{-- 公式と同じく、ミニアルバム・ベストアルバムには番号を出さない --}}
                                 @else
                                     {{ $numbers[$disc->id] ?? '' }}
                                 @endif

@@ -20,7 +20,20 @@ class UserSongController extends Controller
         $artist = UserArtist::findOrFail($artistId);
         $songs = UserSong::where('user_artist_id', $artistId)->orderBy('sort_order')->get();
 
-        return view('mypage.user_songs.index', compact('artist', 'songs'));
+        // 曲ごとの収録シングル・アルバム（公式の曲の一覧と同じく、それぞれ発売日がいちばん早いもの）。まとめて1回で読む
+        $firstDiscBySong = function (string $model) use ($artistId) {
+            $bySong = [];
+            foreach ($model::where('user_artist_id', $artistId)->orderBy('date')->orderBy('id')->get() as $disc) {
+                foreach ($disc->tracklist ?? [] as $track) {
+                    $bySong[(int) ($track['id'] ?? 0)] ??= $disc;
+                }
+            }
+            return $bySong;
+        };
+        $singlesBySong = $firstDiscBySong(\App\Models\UserSingle::class);
+        $albumsBySong = $firstDiscBySong(\App\Models\UserAlbum::class);
+
+        return view('mypage.user_songs.index', compact('artist', 'songs', 'singlesBySong', 'albumsBySong'));
     }
 
     public function show(Request $request, $id)
