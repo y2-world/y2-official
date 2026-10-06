@@ -65,7 +65,7 @@
                 <div class="setlists-header-row">
                     <div style="flex-shrink: 0;">
                         @php
-                            $viewerLabel = $isSelf ? '参加記録' : ($targetUser->name ?: 'ゲスト') . 'の参加記録';
+                            $viewerLabel = $isSelf ? 'すべてのセットリスト' : ($targetUser->name ?: 'ゲスト') . 'の参加記録';
                             $viewerLabelWithYear = $isSelf ? 'この年のすべてのセットリスト' : 'この年の' . $viewerLabel;
                         @endphp
                         @if ($filterArtist)
