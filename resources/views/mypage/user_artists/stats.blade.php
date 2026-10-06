@@ -13,8 +13,17 @@
                     <div class="mb-3">
                         <a href="{{ route('mypage.user_artists.index') }}" class="stats-link stats-back-link">← Database</a>
                     </div>
-                    <h1 class="stats-title">{{ $artist->name }} Statistics</h1>
+                    <h1 class="stats-title">{{ $artist->name }}</h1>
                     <p class="stats-subtitle">セットリスト統計</p>
+
+                    {{-- 自分の参加記録の stats へのリンク（参加記録があるときだけ） --}}
+                    @if ($hasAttended)
+                    <div class="stamp-book-link-wrapper" style="margin: -18px 0 45px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+                        <a href="{{ route('mypage.stats.artist', 'user-' . $artist->id) }}" class="stamp-book-link">
+                            <i class="fas fa-ticket"></i> My Statistics
+                        </a>
+                    </div>
+                    @endif
 
                     <div class="row stats-cards">
                         @foreach([

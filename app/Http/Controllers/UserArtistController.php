@@ -108,7 +108,13 @@ class UserArtistController extends Controller
         arsort($yearCounts);
         $yearStats = collect($yearCounts)->take(10)->map(fn ($count, $year) => (object) ['year' => $year, 'count' => $count])->values();
 
+        // 自分のスタンプ帳・stats へのリンクは、このアーティストの参加記録があるときだけ出す
+        $hasAttended = (bool) \Illuminate\Support\Facades\Auth::guard('external')->user()?->attendances()
+            ->whereHas('userSetlist.concert', fn ($q) => $q->where('user_artist_id', $artist->id))
+            ->exists();
+
         return view('mypage.user_artists.stats', compact(
+            'hasAttended',
             'artist', 'overallStats', 'songStats', 'encoreSongStats', 'openingSongStats', 'longestSetlists', 'yearStats'
         ));
     }

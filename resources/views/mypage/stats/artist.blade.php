@@ -19,13 +19,22 @@
                     <h1 class="stats-title">{{ $artist->name }}</h1>
                     <p class="stats-subtitle">{{ $isOwner ? 'My Artist Statistics' : (($statsUser->name ?: 'ゲスト') . ' のArtist Statistics') }}</p>
 
-                    @if ($stampsRoute)
-                    <div class="stamp-book-link-wrapper" style="margin: -18px 0 45px;">
+                    {{-- スタンプ帳と、このアーティストの Database（演奏記録）の stats へのリンク --}}
+                    @php
+                        $databaseStatsUrl = str_starts_with($artistRef, 'user-')
+                            ? route('mypage.user_artists.stats', (int) substr($artistRef, 5))
+                            : route('stats.index', ['tab' => 'database', 'artist_id' => (int) substr($artistRef, 9)]);
+                    @endphp
+                    <div class="stamp-book-link-wrapper" style="margin: -18px 0 45px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+                        @if ($stampsRoute)
                         <a href="{{ $stampsRoute }}" class="stamp-book-link">
                             <i class="fas fa-stamp"></i> View Live Stamp Book
                         </a>
+                        @endif
+                        <a href="{{ $databaseStatsUrl }}" class="stamp-book-link">
+                            <i class="fas fa-database"></i> Database Stats
+                        </a>
                     </div>
-                    @endif
 
                     <!-- Overall Stats Cards -->
                     <div class="row stats-cards">

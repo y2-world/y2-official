@@ -449,9 +449,24 @@ class StatsController extends Controller
         // Yuki が参加したライブの stats（Setlists）があるか（単独ライブかフェスで参加していれば）
         $hasPersonalStats = $this->getPersonalArtistStats()->contains(fn ($a) => (int) data_get($a, 'id') === $artistId);
 
+        // 参加記録の stats へのリンク（未ログインなら出さない）。Yuki 本人なら Yuki の stats（Yuki's Stats）、
+        // それ以外のログイン中のユーザーなら、そのアーティストの参加記録があるときだけ自分の stats（My Statistics）
+        $externalUser = \Illuminate\Support\Facades\Auth::guard('external')->user();
+        $personalStatsLink = null;
+        if (!$externalUser) {
+            $personalStatsLink = null;
+        } elseif (!$externalUser->is_yuki) {
+            $attended = $externalUser->attendances()->whereHas('dbSetlist.tour', fn ($q) => $q->where('artist_id', $artistId))->exists();
+            if ($attended) {
+                $personalStatsLink = ['url' => route('mypage.stats.artist', 'official-' . $artistId), 'label' => 'My Statistics'];
+            }
+        } elseif ($hasPersonalStats) {
+            $personalStatsLink = ['url' => route('stats.artist', $artistId), 'label' => "Yuki's Stats"];
+        }
+
         return view('stats.database', compact(
             'recentSongStats',
-            'hasPersonalStats',
+            'personalStatsLink',
             'tabArtists',
             'artist',
             'overallStats',

@@ -10,15 +10,15 @@
         <div class="row justify-content-center">
             <div class="col-xl-10">
                 <div class="element js-fadein">
-                    <h1 class="stats-title">{{ isset($artist) ? $artist->name . ' Statistics' : 'Statistics' }}</h1>
+                    <h1 class="stats-title">{{ isset($artist) ? $artist->name : 'Statistics' }}</h1>
                     <p class="stats-subtitle">{{ isset($artist) ? 'セットリスト統計' : 'ライブ演奏履歴とデータ分析' }}</p>
 
                     @isset($artist)
-                    {{-- Yuki が参加したライブの stats（Setlists）へのリンク --}}
-                    @if (!empty($hasPersonalStats))
+                    {{-- 参加したライブの stats へのリンク（Yuki 本人は Yuki's Stats、ほかのログイン中のユーザーは My Statistics、未ログインは無し） --}}
+                    @if (!empty($personalStatsLink))
                     <div class="stamp-book-link-wrapper" style="margin: -18px 0 45px; display: flex; justify-content: center;">
-                        <a href="{{ route('stats.artist', $artist->id) }}" class="stamp-book-link">
-                            <i class="fas fa-ticket"></i> Setlist Stats
+                        <a href="{{ $personalStatsLink['url'] }}" class="stamp-book-link">
+                            <i class="fas fa-ticket"></i> {{ $personalStatsLink['label'] }}
                         </a>
                     </div>
                     @endif
