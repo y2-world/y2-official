@@ -43,7 +43,7 @@ class AttendanceController extends Controller
 
         $query = $targetUser
             ->attendances()
-            ->with(['dbSetlist.tour.artist', 'userSetlist.concert.artist']);
+            ->with(['dbSetlist.tour.artist', 'userSetlist.concert.artist', 'dbConcert.artist', 'userConcert.artist']);
 
         $artistId = $request->input('artist_id'); // "official-{id}" or "user-{id}"
         $filterArtist = null;
@@ -193,6 +193,8 @@ class AttendanceController extends Controller
     // ユーザー登録アーティストは誰が登録したかに関わらず全ユーザーが閲覧・選択できる。
     public function create()
     {
+        // 新しく登録を始めるときは、参加予定にセットリストを付けている途中の状態を捨てる
+        session()->forget('attach_attendance_id');
         $officialArtists = JapaneseNameSorter::sortBy(Artist::whereHas('tours')->get());
         $myArtists = JapaneseNameSorter::sortBy(UserArtist::get());
 
@@ -302,9 +304,14 @@ class AttendanceController extends Controller
             $tourSetlists = UserSetlist::where('user_concert_id', $id)->orderBy('row', 'asc')->orderBy('order_no', 'asc')->get();
         }
 
+        // 開催期間がまだ終わっていないツアーでは、いちばん上に「参加予定」を出す
+        // （参加予定にセットリストを付けている途中は出さない）
+        $attachTarget = $this->attachTarget($kind, (int) $id);
+        $canPlan = !$attachTarget && substr((string) ($tour->date2 ?: $tour->date1), 0, 10) >= now()->toDateString();
+
         // パターンが1つしかなくても曲目未入力（空）の場合だけは、
-        // プレビューする内容が無いので曲目入力画面へ直接進める
-        if ($tourSetlists->count() === 1) {
+        // プレビューする内容が無いので曲目入力画面へ直接進める（参加予定を選べるときは選択画面を出す）
+        if ($tourSetlists->count() === 1 && !$canPlan) {
             $only = $tourSetlists->first();
             if (empty($only->setlist) && empty($only->encore)) {
                 $artistRef = $kind === 'official' ? 'official-' . $tour->artist_id : 'user-' . $tour->user_artist_id;
@@ -314,7 +321,7 @@ class AttendanceController extends Controller
 
         $songs = $kind === 'official' ? DbSong::orderBy('sort_order', 'asc')->get() : UserSong::where('user_artist_id', $tour->user_artist_id)->orderBy('sort_order', 'asc')->get();
 
-        return view('mypage.attendances.setlists', compact('tour', 'tourSetlists', 'songs', 'kind', 'tourId'));
+        return view('mypage.attendances.setlists', compact('tour', 'tourSetlists', 'songs', 'kind', 'tourId', 'canPlan', 'attachTarget'));
     }
 
     // 既存ツアーに、別日程用の新しいセットリストパターンを追加する画面へ進む（未保存）
@@ -419,9 +426,19 @@ class AttendanceController extends Controller
 
         // 単発ライブで開始日のみ分かっている場合は、参加日の初期値として使う
         $defaultAttendedDate = $tourDate1 && !$tourDate2 ? $tourDate1 : null;
+        $defaultVenue = null;
+
+        // 参加予定にセットリストを付けているところなら、参加予定の日付・会場を初期値にする
+        if ($tourId !== 'new') {
+            [$attachKind, $attachTourId] = $this->splitRef($tourId);
+            if ($attachTarget = $this->attachTarget($attachKind, (int) $attachTourId)) {
+                $defaultAttendedDate = $attachTarget->attended_date?->format('Y-m-d') ?? $defaultAttendedDate;
+                $defaultVenue = $attachTarget->venue;
+            }
+        }
 
         return view('mypage.attendances.confirm', compact(
-            'artistId', 'artistName', 'tourId', 'tourTitle', 'tourDate1', 'tourDate2', 'setlist', 'encore', 'defaultAttendedDate', 'isFes'
+            'artistId', 'artistName', 'tourId', 'tourTitle', 'tourDate1', 'tourDate2', 'setlist', 'encore', 'defaultAttendedDate', 'defaultVenue', 'isFes'
         ));
     }
 
@@ -528,11 +545,21 @@ class AttendanceController extends Controller
                 'encore' => $toSongIds($data['encore'] ?? []),
             ]);
 
-            return Auth::guard('external')->user()->attendances()->create([
+            $attendanceData = [
                 'user_setlist_id' => $userSetlist->id,
                 'attended_date' => $data['attended_date'],
                 'venue' => $data['venue'] ?? null,
-            ]);
+            ];
+
+            // 参加予定にセットリストを付けているところなら、新しく作らずにその記録に付ける
+            $attachTarget = $this->attachTarget('user', (int) $tour->id);
+            if ($attachTarget) {
+                $attachTarget->update($attendanceData + ['db_concert_id' => null, 'user_concert_id' => null]);
+                session()->forget('attach_attendance_id');
+                return $attachTarget;
+            }
+
+            return Auth::guard('external')->user()->attendances()->create($attendanceData);
         });
 
         return redirect()->route('mypage.attendances.show', $attendance)
@@ -639,12 +666,17 @@ class AttendanceController extends Controller
         $scheduleOptions = $tour->parseScheduleEntries();
 
         $selectedDailySongs = request('selected_daily_songs', []);
+        $attachTarget = $this->attachTarget($kind, (int) $tour->id);
 
-        return view('mypage.attendances.form', compact('setlistId', 'kind', 'setlist', 'tour', 'defaultAttendedDate', 'scheduleOptions', 'selectedDailySongs'));
+        return view('mypage.attendances.form', compact('setlistId', 'kind', 'setlist', 'tour', 'defaultAttendedDate', 'scheduleOptions', 'selectedDailySongs', 'attachTarget'));
     }
 
     public function store(Request $request)
     {
+        if ($request->filled('planned_tour_id')) {
+            return $this->storePlanned($request);
+        }
+
         $userId = Auth::guard('external')->id();
         $setlistId = $request->input('setlist_id');
         [$kind, $id] = $this->splitRef($setlistId);
@@ -699,10 +731,95 @@ class AttendanceController extends Controller
         $data[$kind === 'official' ? 'db_setlist_id' : 'user_setlist_id'] = $id;
         $data['selected_daily_songs'] = $selectedDailySongs;
 
+        // 参加予定にセットリストを付けているところなら、新しく作らずにその記録に付ける
+        $attachTarget = $this->attachTarget($kind, (int) $tour->id);
+        if ($attachTarget) {
+            $attachTarget->update($data + ['db_concert_id' => null, 'user_concert_id' => null]);
+            session()->forget('attach_attendance_id');
+            return redirect()->route('mypage.attendances.show', $attachTarget)
+                ->with('success', 'セットリストを追加しました。');
+        }
+
         $attendance = Auth::guard('external')->user()->attendances()->create($data);
 
         return redirect()->route('mypage.attendances.show', $attendance)
             ->with('success', 'セットリストを追加しました。');
+    }
+
+    // 参加予定（セットリストパターンを選ばない記録）の参加日・会場の入力。開催期間が終わっていないツアーだけ
+    public function plannedForm($tourId)
+    {
+        [$kind, $id] = $this->splitRef($tourId);
+        $tour = $kind === 'official' ? DbConcert::with('artist')->findOrFail($id) : UserConcert::with('artist')->findOrFail($id);
+        abort_unless(substr((string) ($tour->date2 ?: $tour->date1), 0, 10) >= now()->toDateString(), 404);
+
+        $setlist = null;
+        $setlistId = null;
+        $planned = true;
+        $defaultAttendedDate = !$tour->date2 ? $tour->date1 : null;
+        // 候補は今日以降の公演だけ
+        $scheduleOptions = array_values(array_filter($tour->parseScheduleEntries(), fn ($option) => $option['date'] >= now()->toDateString()));
+        $selectedDailySongs = [];
+        $attachTarget = null;
+
+        return view('mypage.attendances.form', compact('setlistId', 'kind', 'setlist', 'tour', 'defaultAttendedDate', 'scheduleOptions', 'selectedDailySongs', 'attachTarget', 'planned', 'tourId'));
+    }
+
+    private function storePlanned(Request $request)
+    {
+        $userId = Auth::guard('external')->id();
+        $tourId = (string) $request->input('planned_tour_id');
+        [$kind, $id] = $this->splitRef($tourId);
+        $tour = $kind === 'official' ? DbConcert::findOrFail($id) : UserConcert::findOrFail($id);
+        $column = $kind === 'official' ? 'db_concert_id' : 'user_concert_id';
+
+        $validator = Validator::make($request->all(), [
+            'attended_date' => [
+                'required',
+                'date',
+                Rule::unique('external_user_attendances')->where(fn ($query) => $query->where('external_user_id', $userId)->where($column, $id)),
+            ],
+            'venue' => ['required', 'string', 'max:255'],
+        ], [
+            'attended_date.unique' => 'この公演はすでに参加予定に登録されています。',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('mypage.attendances.planned', $tourId)->withErrors($validator)->withInput();
+        }
+
+        $attendance = Auth::guard('external')->user()->attendances()->create($validator->validated() + [$column => $tour->id]);
+
+        return redirect()->route('mypage.attendances.show', $attendance)
+            ->with('success', '参加予定を追加しました。');
+    }
+
+    // 参加予定の記録に、セットリスト（パターン）を付ける。いつものパターン選択から進み、最後に新しく作らずこの記録に付ける
+    public function addSetlist(ExternalUserAttendance $attendance)
+    {
+        $this->authorizeOwnership($attendance);
+        abort_unless($attendance->is_planned, 404);
+
+        session(['attach_attendance_id' => $attendance->id]);
+        $tourRef = ($attendance->is_official ? 'official-' : 'user-') . ($attendance->db_concert_id ?: $attendance->user_concert_id);
+
+        return redirect()->route('mypage.attendances.setlists', $tourRef);
+    }
+
+    // セットリストを付けている途中の参加予定の記録（本人のもので、選んでいるツアーと同じときだけ）
+    private function attachTarget(string $kind, int $tourId): ?ExternalUserAttendance
+    {
+        $attendanceId = session('attach_attendance_id');
+        if (!$attendanceId) {
+            return null;
+        }
+        $attendance = ExternalUserAttendance::where('external_user_id', Auth::guard('external')->id())->find($attendanceId);
+        if (!$attendance || !$attendance->is_planned) {
+            return null;
+        }
+        $plannedTourId = $kind === 'official' ? $attendance->db_concert_id : $attendance->user_concert_id;
+
+        return (int) $plannedTourId === $tourId ? $attendance : null;
     }
 
     // 参加記録の詳細（セットリスト表示）。Timeline経由で誰でも他人の投稿を閲覧できるが、
@@ -712,10 +829,11 @@ class AttendanceController extends Controller
         $userId = Auth::guard('external')->id();
         $isOwner = $attendance->external_user_id === $userId;
 
-        $attendance->load(['externalUser', 'dbSetlist.tour.artist', 'userSetlist.concert.artist', 'comments']);
-        $isOfficial = (bool) $attendance->db_setlist_id;
-        $tourSetlists = collect([$isOfficial ? $attendance->dbSetlist : $attendance->userSetlist]);
-        $tour = $isOfficial ? $attendance->dbSetlist->tour : $attendance->userSetlist->concert;
+        $attendance->load(['externalUser', 'dbSetlist.tour.artist', 'userSetlist.concert.artist', 'dbConcert.artist', 'userConcert.artist', 'comments']);
+        $isOfficial = $attendance->is_official;
+        // 参加予定の記録はセットリストを持たない（セトリは出さず、本人には追加の「＋」を出す）
+        $tourSetlists = $attendance->is_planned ? collect() : collect([$isOfficial ? $attendance->dbSetlist : $attendance->userSetlist]);
+        $tour = $attendance->attendedTour;
         $artist = $tour->artist;
         $songs = $isOfficial ? DbSong::orderBy('sort_order', 'asc')->get() : UserSong::where('user_artist_id', $artist->id)->orderBy('sort_order', 'asc')->get();
 
@@ -790,6 +908,9 @@ class AttendanceController extends Controller
                         ->where('external_user_id', Auth::guard('external')->id())
                         ->where('db_setlist_id', $attendance->db_setlist_id)
                         ->where('user_setlist_id', $attendance->user_setlist_id)
+                        // 参加予定の記録は、同じツアーの参加予定とだけ比べる
+                        ->where('db_concert_id', $attendance->db_concert_id)
+                        ->where('user_concert_id', $attendance->user_concert_id)
                 )->ignore($attendance->id),
             ],
             'venue' => ['required', 'string', 'max:255'],

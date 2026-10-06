@@ -11,7 +11,6 @@ use App\Models\ExternalUser;
 use App\Models\UserArtist;
 use App\Models\UserSetlist;
 use App\Models\UserSong;
-use App\Support\JapaneseNameSorter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,6 +25,7 @@ class MyPageStatsController extends Controller
     {
         $attendances = Auth::guard('external')->user()
             ->attendances()
+            ->withSetlist()
             ->with(['dbSetlist.tour', 'userSetlist.concert'])
             ->get();
 
@@ -38,12 +38,18 @@ class MyPageStatsController extends Controller
             ->filter()
             ->unique();
 
-        // 曲が登録されていないアーティストはスタンプ帳が作れないので出さない
-        $officialArtists = JapaneseNameSorter::sortBy(Artist::whereIn('id', $attendedOfficialArtistIds)->whereHas('songs')->get());
-        $userArtists = JapaneseNameSorter::sortBy(UserArtist::whereIn('id', $attendedUserArtistIds)
-            ->whereIn('id', \App\Models\UserSong::select('user_artist_id'))->get());
+        // 曲が登録されていないアーティストはスタンプ帳が作れないので出さない。
+        // 公式・ユーザー登録をまとめて、初めてライブに行った順に並べる（My Statistics のスタンプのタブと同じ）
+        $firstDates = \App\Models\ExternalUserAttendance::firstDatesByArtistRef($attendances);
+        $stampBookArtists = Artist::whereIn('id', $attendedOfficialArtistIds)->whereHas('songs')->get()
+            ->map(fn ($artist) => ['ref' => 'official-' . $artist->id, 'name' => $artist->name])
+            ->concat(UserArtist::whereIn('id', $attendedUserArtistIds)
+                ->whereIn('id', \App\Models\UserSong::select('user_artist_id'))->get()
+                ->map(fn ($artist) => ['ref' => 'user-' . $artist->id, 'name' => $artist->name]))
+            ->sortBy(fn ($artist) => $firstDates[$artist['ref']] ?? '9999-12-31')
+            ->values();
 
-        return view('mypage.stats.stamps_index', compact('officialArtists', 'userArtists'));
+        return view('mypage.stats.stamps_index', compact('stampBookArtists'));
     }
 
     // アーティスト別の自分専用統計（/stats/artist/{id} のMy Page版）。
@@ -66,7 +72,7 @@ class MyPageStatsController extends Controller
     // タブの「Artists」：統計を見ているユーザーが参加したアーティスト（公式・自分で登録したもの）に切り替える
     private function tabArtists(string $currentRef): array
     {
-        $attendances = $this->statsUser->attendances()->with(['dbSetlist.tour.artist', 'userSetlist.concert.artist'])->get();
+        $attendances = $this->statsUser->attendances()->withSetlist()->with(['dbSetlist.tour.artist', 'userSetlist.concert.artist'])->get();
         $artists = [];
         foreach ($attendances as $attendance) {
             if ($artist = $attendance->dbSetlist?->tour?->artist) {

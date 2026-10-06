@@ -9,8 +9,8 @@
                 ['label' => 'セットリストを編集'],
             ]])
             @php
-                $editSetlist = $attendance->db_setlist_id ? $attendance->dbSetlist : $attendance->userSetlist;
-                $editTour = $attendance->db_setlist_id ? $editSetlist?->tour : $editSetlist?->concert;
+                $editSetlist = $attendance->attendedSetlist;
+                $editTour = $attendance->attendedTour;
             @endphp
             <h1 class="database-title" style="text-align: center;">セットリストを編集</h1>
             <p class="database-subtitle" style="text-align: center;">

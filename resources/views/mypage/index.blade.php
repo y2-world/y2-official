@@ -346,7 +346,7 @@
                                 }
                             </style>
                             <div class="stamp-book-link-wrapper" style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-start;">
-                                @foreach ($artistSongStats as $artistStat)
+                                @foreach ($stampBookArtists as $artistStat)
                                     <a href="{{ $stampsUrl($artistStat['id']) }}" class="stamp-book-link">
                                         <i class="fas fa-stamp"></i> {{ $artistStat['name'] }}
                                     </a>

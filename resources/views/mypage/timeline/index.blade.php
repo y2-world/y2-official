@@ -27,7 +27,7 @@
                             $tour = $attendance->attendedTour;
                             // アーティスト名は常に自分の参加記録一覧（フィルタ済み）へ遷移する。
                             $artistNavUrl = route('mypage.attendances.index', [
-                                'artist_id' => $attendance->db_setlist_id
+                                'artist_id' => $attendance->is_official
                                     ? 'official-' . $tour?->artist_id
                                     : 'user-' . $tour?->user_artist_id,
                             ]);

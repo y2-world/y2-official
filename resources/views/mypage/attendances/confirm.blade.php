@@ -66,7 +66,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="venue" class="form-label">会場</label>
-                        <input type="text" class="form-control" id="venue" name="venue" value="{{ old('venue') }}" required>
+                        <input type="text" class="form-control" id="venue" name="venue" value="{{ old('venue', $defaultVenue ?? '') }}" required>
                     </div>
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-outline-dark w-100">登録</button>

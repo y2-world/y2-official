@@ -15,7 +15,7 @@
             ]])
             <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">セットリスト登録</p>
             <h1 class="database-title" style="text-align: center; overflow-wrap: break-word; word-break: break-word;">{{ $tour->title }}</h1>
-            <p class="database-subtitle" style="text-align: center;">参加したセットリストパターンを選択</p>
+            <p class="database-subtitle" style="text-align: center;">{{ $attachTarget ? '参加予定にセットリストを追加：パターンを選択' : '参加したセットリストパターンを選択' }}</p>
         </div>
     </div>
 
@@ -31,6 +31,18 @@
                             </button>
                         </form>
                     </div>
+                @endif
+
+                {{-- 開催期間が終わっていないツアーは、パターンを選ばずに「参加予定」として登録できる --}}
+                @if ($canPlan)
+                    <a href="{{ route('mypage.attendances.planned', $tourId) }}" class="select-card" style="margin-bottom: 24px;">
+                        <span class="select-card-icon"><i class="fa-solid fa-calendar-plus"></i></span>
+                        <span class="select-card-body">
+                            <span class="select-card-title">参加予定</span>
+                            <span class="select-card-meta">セットリストはライブ後に追加</span>
+                        </span>
+                        <i class="fa-solid fa-chevron-right select-card-arrow"></i>
+                    </a>
                 @endif
 
                 @if ($tourSetlists->isEmpty())

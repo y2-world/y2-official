@@ -89,9 +89,21 @@
     <div class="container database-year-content">
         <div class="row justify-content-center">
             <div class="col-xl-9">
-                <div class="setlist" style="width: 100%;">
-                    @include('mypage.attendances._setlist_cards', ['setlistModel' => $isOfficial ? $attendance->dbSetlist : $attendance->userSetlist, 'songs' => $songs, 'kind' => $isOfficial ? 'official' : 'user', 'isFromTimeline' => $isFromTimeline, 'selectedDailySongs' => $attendance->selected_daily_songs ?? []])
-                </div>
+                @if ($attendance->is_planned)
+                    {{-- 参加予定：セットリストはまだ無い。本人には、ライブ後にセットリスト（パターン）を追加する「＋」を出す --}}
+                    <div style="text-align: center; padding: 30px 0 10px;">
+                        <p style="color: #718096; margin-bottom: 16px;"><i class="fa-solid fa-calendar-plus" style="margin-right: 6px;"></i>参加予定</p>
+                        @if ($isOwner)
+                            <a href="{{ route('mypage.attendances.add_setlist', $attendance) }}" class="mypage-add-button" title="セットリストを追加">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        @endif
+                    </div>
+                @else
+                    <div class="setlist" style="width: 100%;">
+                        @include('mypage.attendances._setlist_cards', ['setlistModel' => $isOfficial ? $attendance->dbSetlist : $attendance->userSetlist, 'songs' => $songs, 'kind' => $isOfficial ? 'official' : 'user', 'isFromTimeline' => $isFromTimeline, 'selectedDailySongs' => $attendance->selected_daily_songs ?? []])
+                    </div>
+                @endif
 
                 <div class="timeline-card timeline-card--plain" style="margin-top: 40px;">
                     <div class="timeline-card-footer" style="margin: 20px 0;">

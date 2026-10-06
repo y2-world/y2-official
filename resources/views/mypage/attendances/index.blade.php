@@ -268,7 +268,7 @@
                     <tbody>
                         @foreach ($attendances as $attendance)
                             @php
-                                $isOfficial = (bool) $attendance->db_setlist_id;
+                                $isOfficial = $attendance->is_official;
                                 $tour = $attendance->attendedTour;
                                 $isFes = in_array((int) ($tour?->type ?? 0), [2, 3, 4], true);
                                 $artistRef = $tour?->artist ? ($isOfficial ? 'official' : 'user') . '-' . $tour->artist->id : null;
@@ -324,7 +324,7 @@
                         <tbody>
                             @foreach ($group['rows'] as $index => $attendance)
                                 @php
-                                    $isOfficial = (bool) $attendance->db_setlist_id;
+                                    $isOfficial = $attendance->is_official;
                                     $tour = $attendance->attendedTour;
                                     $isFes = in_array((int) ($tour?->type ?? 0), [2, 3, 4], true);
                                     $artistRef = $tour?->artist ? ($isOfficial ? 'official' : 'user') . '-' . $tour->artist->id : null;

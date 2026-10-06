@@ -20,6 +20,9 @@ class TimelineController extends Controller
             'externalUser',
             'dbSetlist.tour.artist',
             'userSetlist.concert.artist',
+            // 参加予定（セットリスト未選択）の投稿は、ツアー・ライブを直接指している
+            'dbConcert.artist',
+            'userConcert.artist',
             'comments',
         ]);
 

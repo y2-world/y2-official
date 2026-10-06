@@ -171,7 +171,11 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
             Route::get('create/setlists/{setlistId}/daily', [AttendanceController::class, 'dailySongs'])->name('daily_songs')->where('setlistId', '(official|user)-[0-9]+');
             Route::post('create/setlists/{setlistId}/daily', [AttendanceController::class, 'dailySongsConfirm'])->name('daily_songs.confirm')->where('setlistId', '(official|user)-[0-9]+');
             Route::get('create/setlists/{setlistId}', [AttendanceController::class, 'form'])->name('form')->where('setlistId', '(official|user)-[0-9]+');
+            // 参加予定（セットリストパターンを選ばずに、参加日・会場だけ登録する）
+            Route::get('create/tours/{tourId}/planned', [AttendanceController::class, 'plannedForm'])->name('planned')->where('tourId', '(official|user)-[0-9]+');
             Route::post('/', [AttendanceController::class, 'store'])->name('store');
+            // 参加予定の記録にセットリスト（パターン）を付ける
+            Route::get('{attendance}/add-setlist', [AttendanceController::class, 'addSetlist'])->name('add_setlist');
             Route::get('{attendance}/edit', [AttendanceController::class, 'edit'])->name('edit');
             Route::put('{attendance}', [AttendanceController::class, 'update'])->name('update');
             Route::delete('{attendance}', [AttendanceController::class, 'destroy'])->name('destroy');

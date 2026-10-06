@@ -14,10 +14,10 @@
             <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">セットリスト登録</p>
             <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">{{ $tour->artist->name }}</p>
             <h1 class="database-title" style="text-align: center;">{{ $tour->title }}</h1>
-            @if ($setlist->subtitle)
+            @if ($setlist?->subtitle)
                 <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">{{ $setlist->subtitle }}</p>
             @endif
-            <p class="database-subtitle" style="text-align: center;">参加日・会場を入力</p>
+            <p class="database-subtitle" style="text-align: center;">{{ !empty($planned) ? '参加予定：参加日・会場を入力' : ($attachTarget ? '参加予定にセットリストを追加' : '参加日・会場を入力') }}</p>
         </div>
     </div>
 
@@ -34,10 +34,34 @@
                     </div>
                 @endif
 
-                @if (count($scheduleOptions) === 1)
+                @if ($attachTarget)
+                    {{-- 参加予定にセットリストを付ける：参加日・会場は参加予定で決めたものをそのまま使う --}}
                     <form method="POST" action="{{ route('mypage.attendances.store') }}">
                         @csrf
                         <input type="hidden" name="setlist_id" value="{{ $setlistId }}">
+                        <input type="hidden" name="attended_date" value="{{ $attachTarget->attended_date?->format('Y-m-d') }}">
+                        <input type="hidden" name="venue" value="{{ $attachTarget->venue }}">
+                        @foreach ($selectedDailySongs ?? [] as $songUuid)
+                            <input type="hidden" name="selected_daily_songs[]" value="{{ $songUuid }}">
+                        @endforeach
+                        <div class="mb-3">
+                            <label class="form-label">参加日</label>
+                            <div class="form-control" style="background-color: #f8f9fa;">{{ $attachTarget->attended_date?->format('Y.m.d') }}</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">会場</label>
+                            <div class="form-control" style="background-color: #f8f9fa;">{{ $attachTarget->venue }}</div>
+                        </div>
+                        <button type="submit" class="btn btn-outline-dark w-100">セットリストを追加</button>
+                    </form>
+                @elseif (count($scheduleOptions) === 1)
+                    <form method="POST" action="{{ route('mypage.attendances.store') }}">
+                        @csrf
+                        @if (!empty($planned))
+                            <input type="hidden" name="planned_tour_id" value="{{ $tourId }}">
+                        @else
+                            <input type="hidden" name="setlist_id" value="{{ $setlistId }}">
+                        @endif
                         <input type="hidden" name="attended_date" value="{{ $scheduleOptions[0]['date'] }}">
                         <input type="hidden" name="venue" value="{{ $scheduleOptions[0]['venue'] }}">
                         @foreach ($selectedDailySongs ?? [] as $songUuid)
@@ -56,7 +80,11 @@
                 @elseif (count($scheduleOptions) > 1)
                     <form method="POST" action="{{ route('mypage.attendances.store') }}">
                         @csrf
-                        <input type="hidden" name="setlist_id" value="{{ $setlistId }}">
+                        @if (!empty($planned))
+                            <input type="hidden" name="planned_tour_id" value="{{ $tourId }}">
+                        @else
+                            <input type="hidden" name="setlist_id" value="{{ $setlistId }}">
+                        @endif
                         <input type="hidden" id="attended_date" name="attended_date" value="{{ old('attended_date') }}">
                         <input type="hidden" id="venue" name="venue" value="{{ old('venue') }}">
                         @foreach ($selectedDailySongs ?? [] as $songUuid)
@@ -85,7 +113,11 @@
                 @else
                     <form method="POST" action="{{ route('mypage.attendances.store') }}">
                         @csrf
-                        <input type="hidden" name="setlist_id" value="{{ $setlistId }}">
+                        @if (!empty($planned))
+                            <input type="hidden" name="planned_tour_id" value="{{ $tourId }}">
+                        @else
+                            <input type="hidden" name="setlist_id" value="{{ $setlistId }}">
+                        @endif
                         @foreach ($selectedDailySongs ?? [] as $songUuid)
                             <input type="hidden" name="selected_daily_songs[]" value="{{ $songUuid }}">
                         @endforeach

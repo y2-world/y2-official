@@ -12,7 +12,7 @@
                     <h1 class="stats-title">My Stamp Books</h1>
                     <p class="stats-subtitle">参加したライブのアーティストごとに、演奏された曲を集めよう</p>
 
-                    @if ($officialArtists->isEmpty() && $userArtists->isEmpty())
+                    @if ($stampBookArtists->isEmpty())
                         <p style="text-align: center; color: #999; margin-top: 40px;">まだスタンプ帳を作れるアーティストがありません。</p>
                     @else
                         <style>
@@ -23,14 +23,9 @@
                             }
                         </style>
                         <div class="stamp-book-link-wrapper" style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-start; margin-top: 24px;">
-                            @foreach ($officialArtists as $artist)
-                                <a href="{{ route('mypage.stats.stamps', 'official-' . $artist->id) }}" class="stamp-book-link">
-                                    <i class="fas fa-stamp"></i> {{ $artist->name }}
-                                </a>
-                            @endforeach
-                            @foreach ($userArtists as $artist)
-                                <a href="{{ route('mypage.stats.stamps', 'user-' . $artist->id) }}" class="stamp-book-link">
-                                    <i class="fas fa-stamp"></i> {{ $artist->name }}
+                            @foreach ($stampBookArtists as $artist)
+                                <a href="{{ route('mypage.stats.stamps', $artist['ref']) }}" class="stamp-book-link">
+                                    <i class="fas fa-stamp"></i> {{ $artist['name'] }}
                                 </a>
                             @endforeach
                         </div>

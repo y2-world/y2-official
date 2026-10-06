@@ -31,7 +31,9 @@ class MyPageController extends Controller
     {
         $isOwner = (int) optional(Auth::guard('external')->user())->id === (int) $user->id;
         $statsUser = $user;
+        // 参加予定（セットリストを選んでいない記録）は統計に数えない
         $attendances = $user->attendances()
+            ->withSetlist()
             ->with(['dbSetlist.tour.artist', 'userSetlist.concert.artist'])
             ->orderByDesc('attended_date')
             ->get();
@@ -225,6 +227,9 @@ class MyPageController extends Controller
             ]);
         }
         $artistSongStats = $artistSongStats->sortByDesc('percentage')->values();
+        // スタンプ帳へのボタンは、初めてライブに行った順に並べる（Unique Songs by Artist の表は割合の高い順のまま）
+        $firstDates = \App\Models\ExternalUserAttendance::firstDatesByArtistRef($attendances);
+        $stampBookArtists = $artistSongStats->sortBy(fn ($stat) => $firstDates[$stat['id']] ?? '9999-12-31')->values();
 
         $officialArtistStats = $dbAttendances
             // type=4（ソロ）は本人単独のプロジェクトであり、アーティスト本体の参加数には含めない
@@ -289,6 +294,6 @@ class MyPageController extends Controller
          'topicWelcomeBack' => $topicWelcomeBack, 'topicRecentFirst' => $topicRecentFirst, 'topicRecentFirstAll' => $topicRecentFirstAll]
             = \App\Support\ArtistTopics::combined($heardByArtist);
 
-        return view('mypage.index', compact('attendances', 'overallStats', 'topSongs', 'topSongsUnique', 'artistStats', 'artistSongStats', 'venueStats', 'yearStats', 'topicHeardRevivals', 'topicFirstHeard', 'topicWelcomeBack', 'topicRecentFirst', 'topicRecentFirstAll', 'isOwner', 'asProfile', 'statsUser'));
+        return view('mypage.index', compact('attendances', 'overallStats', 'topSongs', 'topSongsUnique', 'artistStats', 'artistSongStats', 'stampBookArtists', 'venueStats', 'yearStats', 'topicHeardRevivals', 'topicFirstHeard', 'topicWelcomeBack', 'topicRecentFirst', 'topicRecentFirstAll', 'isOwner', 'asProfile', 'statsUser'));
     }
 }
