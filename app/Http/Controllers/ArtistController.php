@@ -117,7 +117,12 @@ class ArtistController extends Controller
             })
             ->toArray();
 
+        // Database にライブか曲が登録されているアーティストだけ、名前から Database のアーティストページへ移れるようにする
+        $hasDatabase = $artist && $artist->visible
+            && (\App\Models\DbConcert::where('artist_id', $artist->id)->exists() || \App\Models\DbSong::where('artist_id', $artist->id)->exists());
+
         return view('artists.show', [
+            'hasDatabase' => $hasDatabase,
             'setlists' => $setlists,
             'artist' => $artist,
             'artists' => $artists,

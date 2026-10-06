@@ -11,7 +11,8 @@
         <div class="container">
             <div class="setlists-header-row">
                 <div style="flex-shrink: 0;">
-                    <h1 class="database-title" style="white-space: nowrap;">{{ $artist->name }}</h1>
+                    {{-- Database にライブか曲が登録されているアーティストは、名前から Database のアーティストページへ --}}
+                    <h1 class="database-title" style="white-space: nowrap;">@if ($hasDatabase)<a href="{{ route('database.artist', $artist->id) }}" style="color: inherit; text-decoration: none;">{{ $artist->name }}</a>@else{{ $artist->name }}@endif</h1>
                     <p class="database-subtitle" style="margin: 4px 0 0;">すべてのセットリスト</p>
                 </div>
                 <div class="header-selects" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; overflow-x: auto; max-width: 100%;">

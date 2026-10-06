@@ -20,7 +20,11 @@
                     </a>
                 @endif
             </p>
-            <h1 class="database-title" style="">{{ $tour->title ?? '' }}</h1>
+            @php
+                // ツアー名からライブのページへ（公式は Database、ユーザー登録はそのライブのページ）
+                $tourLink = $tour ? ($isOfficial ? route('live.show', $tour->id) : route('mypage.user_concerts.show', $tour->id)) : null;
+            @endphp
+            <h1 class="database-title" style="">@if ($tourLink)<a href="{{ $tourLink }}" style="color: inherit; text-decoration: none;">{{ $tour->title }}</a>@else{{ $tour->title ?? '' }}@endif</h1>
             <p class="database-subtitle" id="attendanceDisplay" style="@if ($errors->any()) display: none; @endif">
                 @if ($attendance->attended_date)
                     {{ $attendance->attended_date->format('Y.m.d') }}

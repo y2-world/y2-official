@@ -69,7 +69,13 @@
                             $viewerLabelWithYear = $isSelf ? 'My Live Attendances' : 'この年の' . $viewerLabel;
                         @endphp
                         @if ($filterArtist)
-                            <h1 class="database-title" style="white-space: nowrap;">{{ $filterArtist->name }}</h1>
+                            @php
+                                // アーティスト名からアーティストのページへ（公式は Database にライブか曲があるときだけ、ユーザー登録はそのアーティストのページ）
+                                $filterArtistLink = str_starts_with((string) $artistId, 'official-')
+                                    ? ($filterArtist->visible && (\App\Models\DbConcert::where('artist_id', $filterArtist->id)->exists() || \App\Models\DbSong::where('artist_id', $filterArtist->id)->exists()) ? route('database.artist', $filterArtist->id) : null)
+                                    : route('mypage.user_artists.show', $filterArtist->id);
+                            @endphp
+                            <h1 class="database-title" style="white-space: nowrap;">@if ($filterArtistLink)<a href="{{ $filterArtistLink }}" style="color: inherit; text-decoration: none;">{{ $filterArtist->name }}</a>@else{{ $filterArtist->name }}@endif</h1>
                             <p class="database-subtitle" style="margin: 4px 0 0;">{{ $viewerLabel }}</p>
                         @elseif ($year)
                             <h1 class="database-title" style="white-space: nowrap;">{{ $year }}</h1>
