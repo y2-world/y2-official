@@ -57,6 +57,14 @@ document.addEventListener('DOMContentLoaded', function () {
         if (performedOnly && slot.dataset.neverPerformed === '1') {
             return false;
         }
+        // Incompleted: まだ聴いていない曲だけ
+        if (key === 'incompleted') {
+            return slot.dataset.done !== '1';
+        }
+        // Unperformed: ライブで一度も演奏されていない曲だけ
+        if (key === 'unperformed') {
+            return slot.dataset.neverPerformed === '1';
+        }
         return !key || slot.dataset.filterKeys.split(' ').includes(key);
     }
 
@@ -101,6 +109,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const visibleSet = new Set(visibleSlots);
         const ordered = orderedSlots(key);
         ordered.forEach(function (slot) { book.appendChild(slot); });
+        // 「No songs match this filter.」は台紙の中の最後に置いておく
+        if (noMatchEl && noMatchEl.parentNode === book) {
+            book.appendChild(noMatchEl);
+        }
         let order = 0;
         ordered.forEach(function (slot) {
             const show = visibleSet.has(slot);
@@ -120,6 +132,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function apply(animate) {
         const key = select ? select.value : '';
+        // 並び順・曲名の表記の切り替えはアルバム／シングルのときだけ（Incompleted は元の並びのまま）
+        const orderKey = key === 'incompleted' || key === 'unperformed' ? '' : key;
         const performedOnly = checkbox ? checkbox.checked : false;
         const visibleSlots = slots.filter(function (slot) { return matches(slot, key, performedOnly); });
         updateSummary(visibleSlots);
@@ -127,13 +141,13 @@ document.addEventListener('DOMContentLoaded', function () {
         clearTimeout(swapTimer);
         if (!animate || reduceMotion) {
             book.classList.remove('is-filtering');
-            showSlots(visibleSlots, false, key);
+            showSlots(visibleSlots, false, orderKey);
             return;
         }
 
         book.classList.add('is-filtering');
         swapTimer = setTimeout(function () {
-            showSlots(visibleSlots, true, key);
+            showSlots(visibleSlots, true, orderKey);
             book.classList.remove('is-filtering');
         }, 180);
     }

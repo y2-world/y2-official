@@ -72,8 +72,9 @@
                                     @endif
                                 </div>
                             @endforeach
+                            {{-- 絞り込みで1曲も無いときのメッセージ（台紙の中に出す） --}}
+                            <p class="stamp-empty stamp-empty-in-book" id="stampFilterNoMatch" hidden>No songs match this filter.</p>
                         </div>
-                        <p class="stamp-empty" id="stampFilterNoMatch" hidden>No songs match this filter.</p>
                     @endif
                 </div>
             </div>

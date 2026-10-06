@@ -3659,6 +3659,17 @@ h5.setlist-subtitle-heading {
     padding: 40px 0;
 }
 
+/* 台紙の中に出すとき（絞り込みで1曲も無い）は、台紙の横幅いっぱいに、台紙の上で読める色で */
+.stamp-book .stamp-empty-in-book {
+    grid-column: 1 / -1;
+    color: #8a7f6a;
+    padding: 30px 0;
+    margin: 0;
+}
+.stamp-book .stamp-empty-in-book[hidden] {
+    display: none;
+}
+
 .stamp-book {
     background: #f3ede1;
     background-image:

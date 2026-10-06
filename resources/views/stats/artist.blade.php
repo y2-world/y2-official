@@ -12,11 +12,19 @@
                     <h1 class="stats-title">{{ $artist->name }}</h1>
                     <p class="stats-subtitle">Artist Statistics</p>
 
-                    @if ($hasStampBook)
-                    <div class="stamp-book-link-wrapper" style="margin: -18px 0 45px;">
+                    {{-- スタンプ帳と、このアーティストの Database（公式の演奏記録）の stats へのリンク --}}
+                    @if ($hasStampBook || $hasDatabaseStats)
+                    <div class="stamp-book-link-wrapper" style="margin: -18px 0 45px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+                        @if ($hasStampBook)
                         <a href="{{ route('stats.stamps', $artist->id) }}" class="stamp-book-link">
                             <i class="fas fa-stamp"></i> View Live Stamp Book
                         </a>
+                        @endif
+                        @if ($hasDatabaseStats)
+                        <a href="{{ route('stats.index', ['tab' => 'database', 'artist_id' => $artist->id]) }}" class="stamp-book-link">
+                            <i class="fas fa-database"></i> Database Stats
+                        </a>
+                        @endif
                     </div>
                     @endif
 

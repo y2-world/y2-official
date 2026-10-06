@@ -115,7 +115,10 @@ class DbConcertController extends Controller
                     return $summary;
                 }
 
-                if (!in_array((int) $tours->id, self::SUMMARY_WITHOUT_DIFFERENCES_TOUR_IDS, true)) {
+                // 曲目は同じで順番だけ違う場合も、order_noが最後のパターンをSummaryに使う
+                $orders = $rowSetlists->map(fn ($s) => json_encode(array_map(fn ($i) => $i['song'] ?? null, array_merge($s->setlist ?? [], $s->encore ?? []))));
+                $onlyOrderDiffers = $orders->unique()->count() > 1;
+                if (!$onlyOrderDiffers && !in_array((int) $tours->id, self::SUMMARY_WITHOUT_DIFFERENCES_TOUR_IDS, true)) {
                     return null;
                 }
 

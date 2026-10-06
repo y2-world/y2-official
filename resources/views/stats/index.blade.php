@@ -147,7 +147,7 @@
                                     <tr>
                                         <th class="rank-col">Rank</th>
                                         <th>Artist Name</th>
-                                        <th class="count-col">Shows Attended</th>
+                                        <th class="count-col">Shows</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -247,7 +247,7 @@
                                 <thead>
                                     <tr>
                                         <th>Year</th>
-                                        <th class="count-col">Shows Attended</th>
+                                        <th class="count-col">Shows</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -279,7 +279,7 @@
                                 <thead>
                                     <tr>
                                         <th>Month</th>
-                                        <th class="count-col">Shows Attended</th>
+                                        <th class="count-col">Shows</th>
                                     </tr>
                                 </thead>
                                 <tbody>

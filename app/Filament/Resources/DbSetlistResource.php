@@ -105,6 +105,18 @@ class DbSetlistResource extends Resource
                                 $set('row_title', $title ?? '');
                             }),
 
+                        // ツアーにスケジュールがあるときは、スケジュールから日付（と会場）を選んでタイトルに入れられる。入れた後も手で直せる
+                        Forms\Components\Select::make('_schedule_pick')
+                            ->label('スケジュールから選ぶ')
+                            ->multiple()
+                            ->options(fn (Get $get) => static::scheduleOptions($get('tour_id')))
+                            ->visible(fn (Get $get) => count(static::scheduleOptions($get('tour_id'))) > 0)
+                            ->dehydrated(false)
+                            ->live()
+                            ->afterStateUpdated(fn ($state, $set) => $set('subtitle', implode(' ', (array) $state)))
+                            ->helperText('選んだ順に「7.17 中野サンプラザ」の形でタイトルに入ります。会場名は都市名などに直してください。')
+                            ->columnSpanFull(),
+
                         Forms\Components\Textarea::make('subtitle')
                             ->label('タイトル（日付や説明）')
                             ->helperText('例: 「7.17 大阪」のように入力すると、最初の空白より後ろ（地名など）が自動で小さいグレー文字になります。')
@@ -492,5 +504,23 @@ class DbSetlistResource extends Resource
             'create' => Pages\CreateDbSetlist::route('/create'),
             'edit' => Pages\EditDbSetlist::route('/{record}/edit'),
         ];
+    }
+
+    // ツアーのスケジュール（「2021/5/1(土) 会場」「06/13 会場」「7月13日 会場」など）を、
+    // パターンのタイトルに使う「月.日 会場」の選択肢にする（キーも同じ文字列）
+    public static function scheduleOptions($tourId): array
+    {
+        $schedule = $tourId ? (string) \App\Models\DbConcert::whereKey($tourId)->value('schedule') : '';
+        $options = [];
+        foreach (preg_split('/\r\n|\r|\n/', $schedule) as $line) {
+            if (!preg_match('/^\s*(?:\d{4}\s*[\/.年]\s*)?(\d{1,2})\s*[\/.月]\s*(\d{1,2})日?\s*(?:[(（][^)）]*[)）])?\s*(.*)$/u', $line, $m)) {
+                continue;
+            }
+            // 会場名から、かっこ書き（延期・振替・県名などの注記）を外す
+            $venue = trim(preg_replace('/\s*[(（][^)）]*[)）]|【[^】]*】|《[^》]*》/u', '', $m[3]));
+            $label = (int) $m[1] . '.' . (int) $m[2] . ($venue !== '' ? ' ' . $venue : '');
+            $options[$label] = $label;
+        }
+        return $options;
     }
 }

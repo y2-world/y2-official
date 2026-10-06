@@ -895,6 +895,8 @@ class SlSetlistResource extends Resource
                     ->modalHeading('セットリストパターンを追加')
                     ->modalSubmitActionLabel('追加する')
                     ->form(fn (SlSetlist $record) => static::featuredSongChoiceFields($record, $record->dbConcert))
+                    // カバー・共演曲など選ぶものが無いときは、確認画面を出さずにそのまま追加する
+                    ->modalHidden(fn (SlSetlist $record) => static::featuredUnlinkedSlSongsFor($record, $record->dbConcert)->isEmpty())
                     ->action(function (array $data, SlSetlist $record) {
                         $tour = $record->dbConcert;
                         if (!$tour) {
