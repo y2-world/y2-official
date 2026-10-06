@@ -53,7 +53,8 @@ class UserArtistController extends Controller
                 $mainSongs = $this->songIds($setlist->setlist ?? []);
                 $encoreSongs = $this->songIds($setlist->encore ?? []);
                 $allSongs = array_merge($mainSongs, $encoreSongs);
-                $songEntryCount += count(array_merge($setlist->setlist ?? [], $setlist->encore ?? []));
+                // メドレーは1曲、日替わりの候補は1か所につき1曲として数える
+                $songEntryCount += countActualSongs($setlist->setlist ?? []) + countActualSongs($setlist->encore ?? []);
 
                 foreach (array_unique($allSongs) as $songId) {
                     $performedSongIds[$songId] = true;
@@ -71,7 +72,7 @@ class UserArtistController extends Controller
                     $longestSetlists[] = [
                         'concert' => $concert,
                         'setlist' => $setlist,
-                        'song_count' => count($this->countableSongIds(array_merge($setlist->setlist ?? [], $setlist->encore ?? []))),
+                        'song_count' => countActualSongs($setlist->setlist ?? []) + countActualSongs($setlist->encore ?? []),
                     ];
                 }
             }
@@ -124,17 +125,6 @@ class UserArtistController extends Controller
         $ids = [];
         foreach ($items as $item) {
             if (isset($item['song']) && is_numeric($item['song'])) {
-                $ids[] = (int) $item['song'];
-            }
-        }
-        return $ids;
-    }
-
-    private function countableSongIds(array $items): array
-    {
-        $ids = [];
-        foreach ($items as $item) {
-            if (isset($item['song']) && is_numeric($item['song']) && !empty($item['song']) && empty($item['is_daily'])) {
                 $ids[] = (int) $item['song'];
             }
         }

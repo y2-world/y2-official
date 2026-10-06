@@ -507,7 +507,8 @@ class StatsController extends Controller
         $totalSongCount = 0;
         $setlistCount = $tourSetlists->count();
         foreach ($tourSetlists as $setlist) {
-            $totalSongCount += count(array_merge($setlist->setlist ?? [], $setlist->encore ?? []));
+            // メドレーは1曲、日替わりの候補は1か所につき1曲として数える
+            $totalSongCount += countActualSongs($setlist->setlist ?? []) + countActualSongs($setlist->encore ?? []);
         }
         $avgSetlistLength = $setlistCount > 0 ? round($totalSongCount / $setlistCount, 1) : 0;
 
@@ -678,12 +679,8 @@ class StatsController extends Controller
         $lengths = [];
 
         foreach ($tourSetlists as $setlist) {
-            $count = 0;
-            foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
-                if (isset($s['song']) && !empty($s['song']) && empty($s['is_daily'])) {
-                    $count++;
-                }
-            }
+            // メドレーは1曲、日替わりの候補は1か所につき1曲として数える
+            $count = countActualSongs($setlist->setlist ?? []) + countActualSongs($setlist->encore ?? []);
             if ($count > 0) {
                 $tour = DbConcert::find($setlist->tour_id);
                 $lengths[] = [
