@@ -203,7 +203,7 @@
                                 <tbody>
                                     @foreach($yearStats as $yearData)
                                     <tr>
-                                        <td class="year-col"><a href="{{ url('/setlists/years/' . $yearData->year) }}" class="stats-link">{{ $yearData->year }}</a></td>
+                                        <td class="year-col"><a href="{{ url('/setlists/artists/' . $artist->id) }}?year={{ $yearData->year }}" class="stats-link">{{ $yearData->year }}</a></td>
                                         <td class="count-col">
                                             <div class="year-bar-container">
                                                 <div class="year-bar-wrapper">
@@ -254,7 +254,7 @@
                                             @endif
                                         </td>
                                         <td class="song-title">
-                                            <a href="{{ url('/venue') }}?keyword={{ urlencode($venue->venue) }}" class="stats-link">{{ $venue->venue }}</a>
+                                            <a href="{{ url('/setlists/artists/' . $artist->id) }}?venue={{ urlencode($venue->venue) }}" class="stats-link">{{ $venue->venue }}</a>
                                         </td>
                                         <td class="count-col">
                                             <span class="count-badge">{{ $venue->count }}</span>

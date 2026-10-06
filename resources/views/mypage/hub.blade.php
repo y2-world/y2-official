@@ -38,16 +38,16 @@
                             <i class="fa-solid fa-chevron-right select-card-arrow"></i>
                         </a>
 
-                        <a href="{{ route('mypage.stats') }}" class="select-card">
+                        <a href="{{ route('mypage.attendances.index') }}" class="select-card">
                             <span class="select-card-body">
-                                <span class="select-card-title"><i class="fa-solid fa-chart-simple" style="margin-right: 10px;"></i> My Statistics</span>
+                                <span class="select-card-title"><i class="fa-solid fa-list" style="margin-right: 10px;"></i> My Setlists</span>
                             </span>
                             <i class="fa-solid fa-chevron-right select-card-arrow"></i>
                         </a>
 
-                        <a href="{{ route('mypage.stamps.index') }}" class="select-card">
+                        <a href="{{ route('mypage.stats') }}" class="select-card">
                             <span class="select-card-body">
-                                <span class="select-card-title"><i class="fa-solid fa-stamp" style="margin-right: 10px;"></i> My Stamp Books</span>
+                                <span class="select-card-title"><i class="fa-solid fa-chart-simple" style="margin-right: 10px;"></i> My Statistics</span>
                             </span>
                             <i class="fa-solid fa-chevron-right select-card-arrow"></i>
                         </a>

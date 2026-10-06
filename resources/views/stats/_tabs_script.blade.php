@@ -11,6 +11,8 @@ function showStatsTab(name) {
     history.replaceState(null, '', url);
 }
 var initialStatsTab = new URL(window.location.href).searchParams.get('stats_tab');
+// My Statistics の「Setlists」タブは「Data」に名前を変えたので、古いリンク（?stats_tab=setlists）も Data で開く
+if (initialStatsTab === 'setlists') { initialStatsTab = 'data'; }
 if (initialStatsTab && document.querySelector('button.stats-tab-btn[data-stats-tab="' + initialStatsTab + '"]')) {
     showStatsTab(initialStatsTab);
 }

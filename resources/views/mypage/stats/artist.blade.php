@@ -19,22 +19,31 @@
                     <h1 class="stats-title">{{ $artist->name }}</h1>
                     <p class="stats-subtitle">{{ $isOwner ? '参加記録' : (($statsUser->name ?: 'ゲスト') . ' の参加記録') }}</p>
 
-                    {{-- スタンプ帳と、このアーティストの Database（演奏記録）の stats へのリンク --}}
+                    {{-- スタンプ帳と、このアーティストの Database（演奏記録）の stats へのリンク（Database に曲が1件でもあるときだけ。セットリストは曲が無いと登録できない） --}}
                     @php
-                        $databaseStatsUrl = str_starts_with($artistRef, 'user-')
-                            ? route('mypage.user_artists.stats', (int) substr($artistRef, 5))
-                            : route('stats.index', ['tab' => 'database', 'artist_id' => (int) substr($artistRef, 9)]);
+                        $isUserArtistRef = str_starts_with($artistRef, 'user-');
+                        $refArtistId = (int) substr($artistRef, $isUserArtistRef ? 5 : 9);
+                        $hasDatabaseStats = $isUserArtistRef
+                            ? \App\Models\UserSong::where('user_artist_id', $refArtistId)->exists()
+                            : \App\Models\DbSong::where('artist_id', $refArtistId)->exists();
+                        $databaseStatsUrl = $isUserArtistRef
+                            ? route('mypage.user_artists.stats', $refArtistId)
+                            : route('stats.index', ['tab' => 'database', 'artist_id' => $refArtistId]);
                     @endphp
+                    @if ($stampsRoute || $hasDatabaseStats)
                     <div class="stamp-book-link-wrapper stats-link-row" style="margin: -18px 0 45px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
                         @if ($stampsRoute)
                         <a href="{{ $stampsRoute }}" class="stamp-book-link">
                             <i class="fas fa-stamp"></i> View Live Stamp Book
                         </a>
                         @endif
+                        @if ($hasDatabaseStats)
                         <a href="{{ $databaseStatsUrl }}" class="stamp-book-link">
                             <i class="fas fa-database"></i> Database Stats
                         </a>
+                        @endif
                     </div>
+                    @endif
 
                     <!-- Overall Stats Cards -->
                     <div class="row stats-cards">

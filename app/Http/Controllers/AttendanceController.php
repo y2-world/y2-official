@@ -74,6 +74,7 @@ class AttendanceController extends Controller
         $songKind = null;
         // My Live Attendancesタブ用：自分の参加記録を古い順に見ていったとき、そのアーティストの
         // 曲の中で何番目に初めて登場したか。自分がまだこの曲を聴いた記録がなければnullのまま。
+        $initialTitle = null;
         $songNumberMine = null;
         $previousSongMine = null;
         $nextSongMine = null;
@@ -115,6 +116,16 @@ class AttendanceController extends Controller
                 }
 
                 $tourSetlists = $song->performedTourSetlists();
+
+                // 別表記で開いたとき（?title=）は、その表記が演奏記録にあれば見出しもその表記にする（setlists の曲のページと同じ）
+                $performanceTitles = $tourSetlists
+                    ->flatMap(fn ($setlist) => \App\Support\PerformanceTitles::in(
+                        array_merge($setlist->setlist ?? [], $setlist->encore ?? []),
+                        fn ($entry) => is_numeric($entry) && (int) $entry === (int) $songIdValue,
+                        $song->title
+                    ))
+                    ->unique()->values()->all();
+                $initialTitle = \App\Support\PerformanceTitles::pick($performanceTitles, $request->query('title'));
 
                 if ($songKind === 'official') {
                     $tours = $tourSetlists->pluck('tour')->filter()->unique('id')->values();
@@ -173,7 +184,7 @@ class AttendanceController extends Controller
             'attendances', 'officialArtists', 'myArtists', 'artistId', 'song', 'songKind',
             'songNumberMine', 'previousSongMine', 'nextSongMine',
             'songNumberPerformances', 'previousSongPerformances', 'nextSongPerformances',
-            'filterArtist', 'years', 'year', 'venue', 'targetUser', 'tours', 'secondTab'
+            'filterArtist', 'years', 'year', 'venue', 'targetUser', 'tours', 'secondTab', 'initialTitle'
         ));
     }
 

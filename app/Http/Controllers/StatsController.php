@@ -882,6 +882,8 @@ class StatsController extends Controller
             ->map(function ($items, $year) {
                 return (object)['year' => $year, 'count' => $items->count()];
             })
+            // 回数の多い順（同じ回数なら新しい年から）
+            ->sortKeysDesc()
             ->sortByDesc('count')
             ->values();
 
@@ -942,8 +944,8 @@ class StatsController extends Controller
 
         // 曲が登録されていないアーティストはスタンプ帳が作れないので、ボタンを出さない
         $hasStampBook = DbSong::where('artist_id', (int) $artistId)->exists();
-        // このアーティストの Database（公式の演奏記録）の stats があるか（セトリが1件でもあれば）
-        $hasDatabaseStats = DbSetlist::whereIn('tour_id', DbConcert::where('artist_id', (int) $artistId)->select('id'))->exists();
+        // このアーティストの Database（公式の演奏記録）の stats があるか（曲が1件でもあれば。セットリストは曲が無いと登録できない）
+        $hasDatabaseStats = DbSong::where('artist_id', (int) $artistId)->exists();
 
         return view('stats.artist', compact(
             'hasStampBook',

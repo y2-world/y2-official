@@ -182,7 +182,9 @@ class MyPageStatsController extends Controller
             ->filter(fn ($a) => $a->attended_date)
             ->groupBy(fn ($a) => $a->attended_date->format('Y'))
             ->map(fn ($group, $year) => (object) ['year' => $year, 'count' => $group->count()])
+            // 回数の多い順（同じ回数なら新しい年から）。Yuki の stats と同じ
             ->sortKeysDesc()
+            ->sortByDesc('count')
             ->values();
 
         $venueStats = $attendances
@@ -312,7 +314,9 @@ class MyPageStatsController extends Controller
             ->filter(fn ($a) => $a->attended_date)
             ->groupBy(fn ($a) => $a->attended_date->format('Y'))
             ->map(fn ($group, $year) => (object) ['year' => $year, 'count' => $group->count()])
+            // 回数の多い順（同じ回数なら新しい年から）。Yuki の stats と同じ
             ->sortKeysDesc()
+            ->sortByDesc('count')
             ->values();
 
         $venueStats = $attendances

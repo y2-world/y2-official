@@ -97,7 +97,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($songStats as $index => $song)
+                                    @forelse($songStats as $index => $song)
                                     @php
                                         $showRank = $index === 0 || $songStats[$index - 1]['count'] !== $song['count'];
                                         $actualRank = $index + 1;
@@ -126,7 +126,11 @@
                                             <span class="count-badge">{{ $song['count'] }}</span>
                                         </td>
                                     </tr>
-                                    @endforeach
+                                    @empty
+                                    <tr>
+                                        <td colspan="4">まだ参加したライブが記録されていません。</td>
+                                    </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
@@ -151,7 +155,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($artistStats as $index => $artist)
+                                    @forelse($artistStats as $index => $artist)
                                     @php
                                         $showRank = $index === 0 || $artistStats[$index - 1]['show_count'] !== $artist['show_count'];
                                         $actualRank = $index + 1;
@@ -177,7 +181,11 @@
                                             <span class="count-badge">{{ $artist['show_count'] }}</span>
                                         </td>
                                     </tr>
-                                    @endforeach
+                                    @empty
+                                    <tr>
+                                        <td colspan="3">まだ参加したライブが記録されていません。</td>
+                                    </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                             @if(count($artistStats) > 10)
@@ -205,7 +213,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($venueStats as $index => $venue)
+                                    @forelse($venueStats as $index => $venue)
                                     @php
                                         $showRank = $index === 0 || $venueStats[$index - 1]->count !== $venue->count;
                                         $actualRank = $index + 1;
@@ -231,7 +239,11 @@
                                             <span class="count-badge">{{ $venue->count }}</span>
                                         </td>
                                     </tr>
-                                    @endforeach
+                                    @empty
+                                    <tr>
+                                        <td colspan="3">まだ参加したライブが記録されていません。</td>
+                                    </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
@@ -251,7 +263,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($yearStats as $yearStat)
+                                    @forelse($yearStats as $yearStat)
                                     <tr>
                                         <td class="year-col"><a href="{{ url('/setlists/years/' . $yearStat->year) }}" class="stats-link">{{ $yearStat->year }}</a></td>
                                         <td class="count-col">
@@ -263,7 +275,11 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    @endforeach
+                                    @empty
+                                    <tr>
+                                        <td colspan="2">まだ参加したライブが記録されていません。</td>
+                                    </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
@@ -283,7 +299,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($monthStats as $monthStat)
+                                    @forelse($monthStats as $monthStat)
                                     <tr>
                                         <td class="year-col">{{ $monthStat->month }}</td>
                                         <td class="count-col">
@@ -295,7 +311,11 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    @endforeach
+                                    @empty
+                                    <tr>
+                                        <td colspan="2">まだ参加したライブが記録されていません。</td>
+                                    </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>

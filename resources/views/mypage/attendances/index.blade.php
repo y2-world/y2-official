@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Yuki Official - セットリスト一覧')
+@section('title', 'Yuki Official - My Setlists')
 
 @php
     // user_id指定時は他ユーザーの一覧を見ている。全リンクにuser_idを引き継がないと
@@ -24,7 +24,7 @@
                 @if ($songNumberMine)
                     <p class="database-subtitle song-number-mine" style="{{ $secondTab === 'mine' ? '' : 'display: none;' }}">#{{ $songNumberMine }}</p>
                 @endif
-                <h1 class="database-title" style="">{{ $song->title }}</h1>
+                <h1 class="database-title" style="">{{ $initialTitle ?? $song->title }}</h1>
 
                 <div style="font-size: 1rem; color: rgba(255, 255, 255, 0.9); line-height: 1.8;">
                     @if ($song->artist)
@@ -84,7 +84,16 @@
                             <h1 class="database-title" style="white-space: nowrap;">{{ $venue }}</h1>
                             <p class="database-subtitle" style="margin: 4px 0 0;">{{ $viewerLabel }}</p>
                         @else
-                            <h1 class="database-title" style="white-space: nowrap;">{{ $isSelf ? 'My Live Attendances' : ($targetUser->name ?: 'ゲスト') . ' Live Attendances' }}</h1>
+                            {{-- 絞り込みなし：本家の Setlists と同じ作りの「My Setlists」。本人には参加記録の追加ボタンを出す --}}
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <h1 class="database-title" style="white-space: nowrap;">{{ $isSelf ? 'My Setlists' : ($targetUser->name ?: 'ゲスト') . "'s Setlists" }}</h1>
+                                @if ($isSelf)
+                                    <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-button" title="セットリストを追加" style="background: white; color: #764ba2; flex: 0 0 auto;">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </a>
+                                @endif
+                            </div>
+                            <p class="database-subtitle" style="margin: 4px 0 0;">すべてのセットリスト</p>
                         @endif
                     </div>
                     <div class="header-selects" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; overflow-x: auto; max-width: 100%;">
@@ -111,13 +120,13 @@
                         </select>
                     </div>
                     <div class="setlists-search-pc" style="min-width: 320px; position: relative; overflow: visible; flex-shrink: 0; display: none;">
-                        @livewire('my-page-song-search')
+                        @livewire('my-page-song-search', ['artistId' => str_starts_with((string) $artistId, 'official-') ? (int) substr($artistId, 9) : null])
                     </div>
                 </div>
 
                 {{-- 検索フォーム（SP表示） --}}
                 <div class="sp" id="spSearchFormMyAttendances" style="margin-top: 15px; display: none;">
-                    @livewire('my-page-song-search')
+                    @livewire('my-page-song-search', ['artistId' => str_starts_with((string) $artistId, 'official-') ? (int) substr($artistId, 9) : null])
                 </div>
             @endif
         </div>
@@ -287,52 +296,71 @@
                     </tbody>
                 </table>
             @else
-                {{-- 全件表示：sl_setlists/index.blade.php（Setlistsトップ）と同じ6列構成 --}}
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th class="mobile">#</th>
-                            <th class="mobile">開催日</th>
-                            <th class="sp">アーティスト / タイトル</th>
-                            <th class="pc">アーティスト</th>
-                            <th class="pc">タイトル</th>
-                            <th class="pc">会場</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($attendances as $index => $attendance)
-                            @php
-                                $isOfficial = (bool) $attendance->db_setlist_id;
-                                $tour = $attendance->attendedTour;
-                                $isFes = in_array((int) ($tour?->type ?? 0), [2, 3, 4], true);
-                                $artistRef = $tour?->artist ? ($isOfficial ? 'official' : 'user') . '-' . $tour->artist->id : null;
-                            @endphp
+                {{-- 全件表示：sl_setlists/index.blade.php（Setlistsトップ）と同じく、これからのライブと今までのライブに分け、
+                     今までのライブは新しい順（# は大きい数から）。会場は会場で絞り込んだ一覧へ --}}
+                @php
+                    $today = now()->toDateString();
+                    $isUpcoming = fn ($a) => $a->attended_date && $a->attended_date->toDateString() > $today;
+                    $upcomingAttendances = $attendances->filter($isUpcoming)->values();
+                    $pastAttendances = $attendances->reject($isUpcoming)->reverse()->values();
+                    $attendanceGroups = array_filter([
+                        $upcomingAttendances->isNotEmpty() ? ['label' => 'Upcoming Shows', 'rows' => $upcomingAttendances, 'countDown' => false] : null,
+                        ['label' => 'Past Shows', 'rows' => $pastAttendances, 'countDown' => true],
+                    ]);
+                @endphp
+                @foreach ($attendanceGroups as $group)
+                    <h3 style="margin-top: {{ $loop->first ? '0' : '30px' }}; margin-bottom: 15px;">{{ $group['label'] }}</h3>
+                    <table class="table table-striped fixed-cols">
+                        <thead>
                             <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td>{{ $attendance->attended_date?->format('Y.m.d') ?? '-' }}</td>
-                                @if ($tour?->artist && !$isFes)
-                                    <td class="sp">
-                                        <a href="{{ route('mypage.attendances.index', $userIdParam + ['artist_id' => $artistRef]) }}">{{ $tour->artist->name }}</a>
-                                        /
-                                        <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'attendances']) }}">{{ $tour->title ?? '-' }}</a>
-                                    </td>
-                                    <td class="pc td_artist">
-                                        <a href="{{ route('mypage.attendances.index', $userIdParam + ['artist_id' => $artistRef]) }}">{{ $tour->artist->name }}</a>
-                                    </td>
-                                @else
-                                    <td class="sp">
-                                        <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'attendances']) }}">{{ $tour->title ?? '-' }}</a>
-                                    </td>
-                                    <td class="pc"></td>
-                                @endif
-                                <td class="pc">
-                                    <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'attendances']) }}">{{ $tour->title ?? '-' }}</a>
-                                </td>
-                                <td class="pc">{{ $attendance->venue }}</td>
+                                <th class="mobile col-no">#</th>
+                                <th class="mobile col-date">開催日</th>
+                                <th class="sp">アーティスト / タイトル</th>
+                                <th class="pc col-artist">アーティスト</th>
+                                <th class="pc">タイトル</th>
+                                <th class="pc col-venue">会場</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($group['rows'] as $index => $attendance)
+                                @php
+                                    $isOfficial = (bool) $attendance->db_setlist_id;
+                                    $tour = $attendance->attendedTour;
+                                    $isFes = in_array((int) ($tour?->type ?? 0), [2, 3, 4], true);
+                                    $artistRef = $tour?->artist ? ($isOfficial ? 'official' : 'user') . '-' . $tour->artist->id : null;
+                                    $showUrl = route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'attendances']);
+                                @endphp
+                                <tr>
+                                    <td>{{ $group['countDown'] ? $group['rows']->count() - $index : $index + 1 }}</td>
+                                    <td>{{ $attendance->attended_date?->format('Y.m.d') ?? '-' }}</td>
+                                    @if ($tour?->artist && !$isFes)
+                                        <td class="sp">
+                                            <a href="{{ route('mypage.attendances.index', $userIdParam + ['artist_id' => $artistRef]) }}">{{ $tour->artist->name }}</a>
+                                            /
+                                            <a href="{{ $showUrl }}">{{ $tour->title ?? '-' }}</a>
+                                        </td>
+                                        <td class="pc td_artist">
+                                            <a href="{{ route('mypage.attendances.index', $userIdParam + ['artist_id' => $artistRef]) }}">{{ $tour->artist->name }}</a>
+                                        </td>
+                                    @else
+                                        <td class="sp">
+                                            <a href="{{ $showUrl }}">{{ $tour->title ?? '-' }}</a>
+                                        </td>
+                                        <td class="pc"></td>
+                                    @endif
+                                    <td class="pc">
+                                        <a href="{{ $showUrl }}">{{ $tour->title ?? '-' }}</a>
+                                    </td>
+                                    <td class="pc">
+                                        @if ($attendance->venue)
+                                            <a href="{{ route('mypage.attendances.index', $userIdParam + ['venue' => $attendance->venue]) }}">{{ $attendance->venue }}</a>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endforeach
             @endif
         @endif
         @endif

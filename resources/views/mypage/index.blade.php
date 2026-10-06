@@ -18,8 +18,6 @@
     $artistUrl = fn ($ref) => $isOfficialRef($ref) ? route('database.artist', $refId($ref)) : route('mypage.user_artists.show', $refId($ref));
     $artistStatsUrl = fn ($ref) => $isOwner ? route('mypage.stats.artist', $ref) : route('mypage.stats.artist', ['artistId' => $ref, 'user' => $statsUser->id]);
     $stampsUrl = fn ($ref) => $isOwner ? route('mypage.stats.stamps', $ref) : route('mypage.stats.stamps', ['artistId' => $ref, 'user' => $statsUser->id]);
-    // 参加したライブのタイトルは、その投稿（Timelineと同じ投稿のページ。本人以外も見られる）へ
-    $attendanceUrl = fn ($attendance, $tour) => route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'stats']);
     $link = fn ($url, $text) => $url ? '<a href="' . e($url) . '" class="stats-link">' . e($text) . '</a>' : e($text);
 @endphp
 <div class="stats-wrapper">
@@ -90,7 +88,7 @@
                     {{-- 全体のstatsと同じく、タブで分ける：Songs（曲）／Setlists（参加記録・アーティスト・会場・時期）／Stamps（スタンプ帳）／Artists（アーティスト別のstatsへ移動） --}}
                     <div class="stats-tab-bar">
                         <button type="button" class="stats-tab-btn is-active" data-stats-tab="songs">Songs</button>
-                        <button type="button" class="stats-tab-btn" data-stats-tab="setlists">Setlists</button>
+                        <button type="button" class="stats-tab-btn" data-stats-tab="data">Data</button>
                         <button type="button" class="stats-tab-btn" data-stats-tab="stamps">Stamps</button>
                         {{-- Artists：選んだアーティストのstatsに移動する --}}
                         @if (count($artistStats))
@@ -182,78 +180,7 @@
                     @includeWhen(isset($topicHeardRevivals), 'stats._topics_listener', ['showFirstListens' => false, 'topicArtistUrl' => fn ($id) => $artistUrl('official-' . $id)])
                     </div>
 
-                    <div class="stats-tab-panel" data-stats-panel="setlists" style="display: none;">
-                    <!-- Attendances Section -->
-                    <div class="stats-section visible">
-                        <div class="section-title-wrapper" style="flex-direction: row !important; flex-wrap: nowrap; align-items: center; min-width: 0;">
-                            <h2 class="section-title" style="text-align: center !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; flex: 1 1 auto; margin-bottom: 0;">
-                                <i class="fas fa-calendar-check"></i> My Live Attendances
-    <span class="section-title-desc">参加したライブの記録</span></h2>
-                            @if ($isOwner)
-                            <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-button" title="セットリストを追加" style="flex: 0 0 auto;">
-                                <i class="fas fa-plus"></i>
-                            </a>
-                            @endif
-                        </div>
-                        <div class="database-year-content" style="padding: 0;">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th class="mobile">#</th>
-                                        <th class="mobile">開催日</th>
-                                        <th class="sp">アーティスト / タイトル</th>
-                                        <th class="pc td_artist">アーティスト</th>
-                                        <th class="pc">タイトル</th>
-                                        <th class="pc">会場</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php $attendanceStart = count($attendances); @endphp
-                                    @forelse ($attendances as $index => $attendance)
-                                        @php
-                                            $tour = $attendance->attendedTour;
-                                            $isFes = in_array((int)($tour?->type ?? 0), [2, 3, 4], true);
-                                            $artistRef = $attendance->db_setlist_id
-                                                ? 'official-' . $tour?->artist_id
-                                                : 'user-' . $tour?->user_artist_id;
-                                        @endphp
-                                        <tr class="{{ $index >= 10 ? 'hidden-row-attendances' : '' }}">
-                                            <td>{{ $attendanceStart - $index }}</td>
-                                            <td>{{ $attendance->attended_date?->format('Y.m.d') ?? '-' }}</td>
-                                            <td class="sp">
-                                                @if ($tour?->artist && !$isFes)
-                                                    {!! $link($artistUrl($artistRef), $tour->artist->name) !!}
-                                                    /
-                                                @endif
-                                                {!! $link($attendanceUrl($attendance, $tour), $tour->title ?? '-') !!}
-                                            </td>
-                                            <td class="pc td_artist">
-                                                @if ($tour?->artist && !$isFes)
-                                                    {!! $link($artistUrl($artistRef), $tour->artist->name) !!}
-                                                @endif
-                                            </td>
-                                            <td class="pc">
-                                                {!! $link($attendanceUrl($attendance, $tour), $tour->title ?? '-') !!}
-                                            </td>
-                                            <td class="pc">{{ $attendance->venue }}</td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="6">まだ参加したライブが記録されていません。@if ($isOwner)右上の「＋」から追加してください。@endif</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                            @if (count($attendances) > 10)
-                                <div class="show-more-container">
-                                    <button class="show-more-btn" onclick="toggleAttendanceRows(this)">
-                                        Show More <i class="fas fa-chevron-down"></i>
-                                    </button>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-
+                    <div class="stats-tab-panel" data-stats-panel="data" style="display: none;">
                     <!-- Artist Statistics Section -->
                     <div class="stats-section visible">
                         <div class="section-title-wrapper">
@@ -495,20 +422,6 @@
 
 @include('stats._tabs_script')
 <script>
-function toggleAttendanceRows(button) {
-    const hiddenRows = document.querySelectorAll('.hidden-row-attendances');
-    const isExpanded = button.classList.contains('expanded');
-
-    hiddenRows.forEach(row => {
-        row.style.display = isExpanded ? 'none' : 'table-row';
-    });
-
-    button.classList.toggle('expanded');
-    button.innerHTML = isExpanded
-        ? 'Show More <i class="fas fa-chevron-down"></i>'
-        : 'Show Less <i class="fas fa-chevron-up"></i>';
-}
-
 function toggleSongRows(button) {
     const hiddenRows = document.querySelectorAll('.hidden-row-songs');
     const isExpanded = button.classList.contains('expanded');

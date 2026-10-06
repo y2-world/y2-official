@@ -95,13 +95,21 @@ class ArtistController extends Controller
             });
 
         // 指定されたアーティストのセットリストを取得
-        $setlists = SlSetlist::where('artist_id', $artist->id)
-        ->orWhere(function ($query) use ($artistId) {
-            $query->whereRaw($this->jsonArrayContainsArtistSql('fes_setlist'), [$artistId])
-            ->orWhereRaw($this->jsonArrayContainsArtistSql('fes_encore'), [$artistId]);
+        // 統計の Shows by Year・Top Venues から来たときは、その年・その会場だけに絞り込む（?year= / ?venue=）
+        $filterYear = request()->query('year');
+        $filterVenue = request()->query('venue');
+        $setlists = SlSetlist::where(function ($query) use ($artist, $artistId) {
+            $query->where('artist_id', $artist->id)
+                ->orWhere(function ($query) use ($artistId) {
+                    $query->whereRaw($this->jsonArrayContainsArtistSql('fes_setlist'), [$artistId])
+                    ->orWhereRaw($this->jsonArrayContainsArtistSql('fes_encore'), [$artistId]);
+                });
         })
+        ->when($filterYear, fn ($query) => $query->where('year', $filterYear))
+        ->when($filterVenue, fn ($query) => $query->where('venue', $filterVenue))
         ->orderBy('date', 'asc')
-        ->paginate(100);
+        ->paginate(100)
+        ->withQueryString();
 
         // 検索候補（曲名のみ）- 表示中のアーティストの楽曲のみ
         $suggestions = \App\Models\SlSong::query()
@@ -122,6 +130,8 @@ class ArtistController extends Controller
             && (\App\Models\DbConcert::where('artist_id', $artist->id)->exists() || \App\Models\DbSong::where('artist_id', $artist->id)->exists());
 
         return view('artists.show', [
+            'filterYear' => $filterYear,
+            'filterVenue' => $filterVenue,
             'hasDatabase' => $hasDatabase,
             'setlists' => $setlists,
             'artist' => $artist,

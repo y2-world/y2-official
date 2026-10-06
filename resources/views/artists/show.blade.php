@@ -13,7 +13,7 @@
                 <div style="flex-shrink: 0;">
                     {{-- Database にライブか曲が登録されているアーティストは、名前から Database のアーティストページへ --}}
                     <h1 class="database-title" style="white-space: nowrap;">@if ($hasDatabase)<a href="{{ route('database.artist', $artist->id) }}" style="color: inherit; text-decoration: none;">{{ $artist->name }}</a>@else{{ $artist->name }}@endif</h1>
-                    <p class="database-subtitle" style="margin: 4px 0 0;">すべてのセットリスト</p>
+                    <p class="database-subtitle" style="margin: 4px 0 0;">{{ $filterYear ? $filterYear . '年のセットリスト' : ($filterVenue ? $filterVenue . ' のセットリスト' : 'すべてのセットリスト') }}</p>
                 </div>
                 <div class="header-selects" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; overflow-x: auto; max-width: 100%;">
                     {{-- 虫眼鏡アイコン（SP表示のみ） --}}

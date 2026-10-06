@@ -69,7 +69,8 @@
                             ? route('songs.show', array_filter(['id' => $songModel->id, 'tab' => 'mine', 'title' => $alternativeTitle && $alternativeTitle !== $songModel->title ? $alternativeTitle : null]))
                             : route('mypage.user_songs.show', ['id' => $songModel->id, 'tab' => 'mine']);
                     } elseif ($songModel) {
-                        $link = route('mypage.attendances.index', ['song_id' => $kind . '-' . $songModel->id]);
+                        // 別表記で載っている曲は、曲のページもその表記で開く
+                        $link = route('mypage.attendances.index', array_filter(['song_id' => $kind . '-' . $songModel->id, 'title' => $alternativeTitle && $alternativeTitle !== $songModel->title ? $alternativeTitle : null]));
                     } else {
                         $link = null;
                     }

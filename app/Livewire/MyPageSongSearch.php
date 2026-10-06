@@ -48,6 +48,8 @@ class MyPageSongSearch extends Component
     {
         $songs = DbSong::with('artist')
             ->whereIn('id', $this->heardSongIds())
+            // アーティストで絞り込んでいるときは、そのアーティストの曲だけ（ツアーで演奏された他のアーティストの曲は出さない）
+            ->when($this->artistId, fn ($q) => $q->where('artist_id', $this->artistId))
             ->get();
 
         $this->songs = \App\Support\JapaneseNameSorter::sortBy($songs, 'title')
@@ -68,6 +70,8 @@ class MyPageSongSearch extends Component
 
         $songs = DbSong::with('artist')
             ->whereIn('id', $this->heardSongIds())
+            // アーティストで絞り込んでいるときは、そのアーティストの曲だけ（ツアーで演奏された他のアーティストの曲は出さない）
+            ->when($this->artistId, fn ($q) => $q->where('artist_id', $this->artistId))
             ->whereRaw('LOWER(title) LIKE LOWER(?)', [$escaped . '%'])
             ->get();
 
