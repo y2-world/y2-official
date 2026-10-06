@@ -69,6 +69,15 @@ class YearController extends Controller
             abort(404);
         }
 
+        // Live Type（/setlists と同じ）：1 = 単独ライブ、2 = フェス。年そのものの有無は絞り込む前に見る
+        $filterType = request()->query('type');
+        $yearArtistIds = $setlists->pluck('artist_id')->filter()->unique()->values();
+        if ($filterType === '1') {
+            $setlists = $setlists->where('fes', 0)->values();
+        } elseif ($filterType === '2') {
+            $setlists = $setlists->whereIn('fes', [1, 2])->values();
+        }
+
         // アーティストと年のデータを取得
         $artists = Artist::orderBy('id', 'asc')->where('visible', 1)->get();
 
@@ -105,6 +114,8 @@ class YearController extends Controller
 
         // ビューにデータを渡す
         return view('years.show', [
+            'filterType' => $filterType,
+            'yearArtistIds' => $yearArtistIds,
             'setlists' => $setlists,
             'year' => $year,
             'artists' => $artists,

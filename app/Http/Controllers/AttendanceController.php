@@ -153,26 +153,33 @@ class AttendanceController extends Controller
 
         $userId = $targetUser->id;
 
-        $officialArtists = JapaneseNameSorter::sortBy(Artist::whereHas('tours', function ($q) use ($userId) {
-            $q->whereHas('tourSetlists', function ($q2) use ($userId) {
-                $q2->whereHas('attendances', function ($q3) use ($userId) {
-                    $q3->where('external_user_id', $userId);
-                });
+        // セレクトの候補は、もう一方の絞り込みに合わせる（本家と同じ）。
+        // 年で絞り込んでいればその年に参加したアーティストだけ、アーティストで絞り込んでいればそのアーティストに参加した年だけ
+        $inYear = fn ($q) => $q->where('external_user_id', $userId)->when($year, fn ($q2) => $q2->whereYear('attended_date', $year));
+
+        $officialArtists = JapaneseNameSorter::sortBy(Artist::whereHas('tours', function ($q) use ($inYear) {
+            $q->whereHas('tourSetlists', function ($q2) use ($inYear) {
+                $q2->whereHas('attendances', $inYear);
             });
         })->get());
 
-        $myArtists = JapaneseNameSorter::sortBy(UserArtist::whereHas('concerts', function ($q) use ($userId) {
-                $q->whereHas('setlists', function ($q2) use ($userId) {
-                    $q2->whereHas('attendances', function ($q3) use ($userId) {
-                        $q3->where('external_user_id', $userId);
-                    });
+        $myArtists = JapaneseNameSorter::sortBy(UserArtist::whereHas('concerts', function ($q) use ($inYear) {
+                $q->whereHas('setlists', function ($q2) use ($inYear) {
+                    $q2->whereHas('attendances', $inYear);
                 });
             })
             ->get());
 
-        $years = $targetUser
-            ->attendances()
-            ->whereNotNull('attended_date')
+        $yearQuery = $targetUser->attendances()->whereNotNull('attended_date');
+        if ($artistId) {
+            [$yearArtistKind, $yearArtistId] = $this->splitRef($artistId);
+            if ($yearArtistKind === 'official') {
+                $yearQuery->whereHas('dbSetlist.tour', fn ($q) => $q->where('artist_id', $yearArtistId)->where('type', '!=', 4));
+            } else {
+                $yearQuery->whereHas('userSetlist.concert', fn ($q) => $q->where('user_artist_id', $yearArtistId));
+            }
+        }
+        $years = $yearQuery
             ->get()
             ->pluck('attended_date')
             ->map(fn ($date) => $date->format('Y'))

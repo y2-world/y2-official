@@ -84,20 +84,12 @@ class ArtistController extends Controller
         // アーティスト一覧と年のデータを取得
         $artists = Artist::orderBy('id', 'asc')->where('visible', 1)->get();
 
-        // Setlistから年のリストを取得
-        $years = SlSetlist::select('year')
-            ->whereNotNull('year')
-            ->distinct()
-            ->orderBy('year', 'asc')
-            ->pluck('year')
-            ->map(function ($year) {
-                return (object)['year' => $year];
-            });
-
         // 指定されたアーティストのセットリストを取得
         // 統計の Shows by Year・Top Venues から来たときは、その年・その会場だけに絞り込む（?year= / ?venue=）
         $filterYear = request()->query('year');
         $filterVenue = request()->query('venue');
+        // Live Type（/setlists と同じ）：1 = 単独ライブ、2 = フェス
+        $filterType = request()->query('type');
         $setlists = SlSetlist::where(function ($query) use ($artist, $artistId) {
             $query->where('artist_id', $artist->id)
                 ->orWhere(function ($query) use ($artistId) {
@@ -107,9 +99,23 @@ class ArtistController extends Controller
         })
         ->when($filterYear, fn ($query) => $query->where('year', $filterYear))
         ->when($filterVenue, fn ($query) => $query->where('venue', $filterVenue))
+        ->when($filterType === '1', fn ($query) => $query->where('fes', 0))
+        ->when($filterType === '2', fn ($query) => $query->whereIn('fes', [1, 2]))
         ->orderBy('date', 'asc')
         ->paginate(100)
         ->withQueryString();
+
+        // 年のセレクトは、このアーティストのセットリスト（フェスの出演も含む）がある年だけ
+        $years = SlSetlist::where(function ($query) use ($artist, $artistId) {
+            $query->where('artist_id', $artist->id)
+                ->orWhereRaw($this->jsonArrayContainsArtistSql('fes_setlist'), [$artistId])
+                ->orWhereRaw($this->jsonArrayContainsArtistSql('fes_encore'), [$artistId]);
+        })
+            ->whereNotNull('year')
+            ->distinct()
+            ->orderBy('year', 'asc')
+            ->pluck('year')
+            ->map(fn ($year) => (object) ['year' => $year]);
 
         // 検索候補（曲名のみ）- 表示中のアーティストの楽曲のみ
         $suggestions = \App\Models\SlSong::query()
@@ -129,8 +135,15 @@ class ArtistController extends Controller
         $hasDatabase = $artist && $artist->visible
             && (\App\Models\DbConcert::where('artist_id', $artist->id)->exists() || \App\Models\DbSong::where('artist_id', $artist->id)->exists());
 
+        // アーティストを切り替えるとき、年を引き継げる（その年にセットリストがある）アーティスト
+        $artistIdsInFilterYear = $filterYear
+            ? SlSetlist::where('year', $filterYear)->whereNotNull('artist_id')->distinct()->pluck('artist_id')->all()
+            : [];
+
         return view('artists.show', [
+            'artistIdsInFilterYear' => $artistIdsInFilterYear,
             'filterYear' => $filterYear,
+            'filterType' => $filterType,
             'filterVenue' => $filterVenue,
             'hasDatabase' => $hasDatabase,
             'setlists' => $setlists,

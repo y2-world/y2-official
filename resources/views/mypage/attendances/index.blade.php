@@ -1,12 +1,19 @@
 @extends('layouts.app')
-@section('title', 'Yuki Official - My Setlists')
-
 @php
     // user_id指定時は他ユーザーの一覧を見ている。全リンクにuser_idを引き継がないと
     // 「アーティストで絞り込んだ瞬間、閲覧者自身のデータに切り替わる」バグになる。
     $isSelf = $targetUser->id === \Illuminate\Support\Facades\Auth::guard('external')->id();
     $userIdParam = $isSelf ? [] : ['user_id' => $targetUser->id];
+
+    // ブラウザのタブのタイトルは、本家（曲・アーティスト・年・会場のページ）と同じく絞り込みに合わせる
+    $pageTitle = $song ? ($initialTitle ?? $song->title)
+        : ($filterArtist ? $filterArtist->name
+        : ($year ? $year
+        : ($venue ? 'Venue : ' . $venue
+        : ($isSelf ? 'My Setlists' : ($targetUser->name ?: 'ゲスト') . "'s Setlists"))));
 @endphp
+
+@section('title', 'Yuki Official - ' . $pageTitle)
 
 @section('content')
     <div class="database-hero database-hero--nav">

@@ -18,16 +18,26 @@
                     <button type="button" id="spSearchButtonYears" class="sp" onclick="var form = document.getElementById('spSearchFormYears'); var icon = this.querySelector('i'); if (form.style.display === 'none' || form.style.display === '') { form.style.display='block'; icon.className='fa-solid fa-xmark'; } else { form.style.display='none'; icon.className='fa-solid fa-magnifying-glass'; }" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
                         <i class="fa-solid fa-magnifying-glass" style="font-size: 14px;"></i>
                     </button>
+                    {{-- /setlists と同じ Stats と Live Type --}}
+                    @php $typeQuery = $filterType ? 'type=' . $filterType : ''; @endphp
+                    <a class="year-select year-select-link" href="{{ route('stats.index', ['tab' => 'personal']) }}">Stats</a>
+                    <select class="year-select" name="select" onchange="if (this.value) window.location.href=this.value;">
+                        <option value="" disabled>Live Type</option>
+                        <option value="{{ url('/setlists/years', $year->year) }}" {{ $filterType ? '' : 'selected' }}>All</option>
+                        <option value="{{ url('/setlists/years', $year->year) }}?type=1" {{ $filterType === '1' ? 'selected' : '' }}>Live</option>
+                        <option value="{{ url('/setlists/years', $year->year) }}?type=2" {{ $filterType === '2' ? 'selected' : '' }}>Fes</option>
+                    </select>
+                    {{-- アーティストを選ぶと、そのアーティストのこの年のセットリストに絞り込む（候補はこの年にセットリストがあるアーティスト） --}}
                     <select class="year-select" name="select" onChange="location.href=value;">
-                        <option value="" disabled selected>Artists</option>
-                        @foreach ($artists as $artistItem)
-                            <option value="{{ url('/setlists/artists', $artistItem->id) }}">{{ $artistItem->name }}</option>
+                        <option value="{{ url('/setlists/years', $year->year) }}{{ $typeQuery ? '?' . $typeQuery : '' }}" selected>All Artists</option>
+                        @foreach ($artists->whereIn('id', $yearArtistIds) as $artistItem)
+                            <option value="{{ url('/setlists/artists', $artistItem->id) }}?year={{ $year->year }}{{ $typeQuery ? '&' . $typeQuery : '' }}">{{ $artistItem->name }}</option>
                         @endforeach
                     </select>
                     <select class="year-select" name="select" onChange="location.href=value;">
                         <option value="" disabled>Years</option>
                         @foreach ($years as $yearItem)
-                            <option value="{{ url('/setlists/years', $yearItem->year) }}" {{ $yearItem->year == $year->year ? 'selected' : '' }}>{{ $yearItem->year }}</option>
+                            <option value="{{ url('/setlists/years', $yearItem->year) }}{{ $typeQuery ? '?' . $typeQuery : '' }}" {{ $yearItem->year == $year->year ? 'selected' : '' }}>{{ $yearItem->year }}</option>
                         @endforeach
                     </select>
                 </div>
