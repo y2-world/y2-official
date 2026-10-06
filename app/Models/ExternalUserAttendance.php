@@ -60,6 +60,12 @@ class ExternalUserAttendance extends Model
         return !$this->db_setlist_id && !$this->user_setlist_id;
     }
 
+    // 参加予定の記録に、セットリストを追加できるか（公演日以降）
+    public function getCanAddSetlistAttribute(): bool
+    {
+        return $this->is_planned && $this->attended_date && $this->attended_date->toDateString() <= now()->toDateString();
+    }
+
     // 公式のツアー（db_concerts）の記録か。参加予定の記録はパターンが無いので、ツアーの列でも見る
     public function getIsOfficialAttribute(): bool
     {

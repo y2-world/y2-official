@@ -48,6 +48,10 @@
                                         {{ $attendance->attended_date?->format('Y.m.d') ?? '-' }}
                                     </span>
                                 </div>
+                                {{-- セットリストをまだ選んでいない参加予定の投稿は、右上にバッジ --}}
+                                @if ($attendance->is_planned)
+                                    <span class="timeline-planned-badge">参加予定</span>
+                                @endif
                             </div>
 
                             <div class="timeline-card-footer">
@@ -143,6 +147,17 @@
     .timeline-card-sub {
         color: #999;
         font-size: 0.8rem;
+    }
+    /* セットリストをまだ選んでいない参加予定の投稿のバッジ */
+    .timeline-planned-badge {
+        display: inline-block;
+        flex: 0 0 auto;
+        padding: 2px 10px;
+        border-radius: 10px;
+        background: #ede7f6;
+        color: #764ba2;
+        font-size: 0.7rem;
+        white-space: nowrap;
     }
     </style>
 

@@ -90,13 +90,15 @@
         <div class="row justify-content-center">
             <div class="col-xl-9">
                 @if ($attendance->is_planned)
-                    {{-- 参加予定：セットリストはまだ無い。本人には、ライブ後にセットリスト（パターン）を追加する「＋」を出す --}}
+                    {{-- 参加予定：セットリストはまだ無い。公演日より前は「参加予定」、公演日以降は本人に「セットリストを追加」を出す --}}
                     <div style="text-align: center; padding: 30px 0 10px;">
-                        <p style="color: #718096; margin-bottom: 16px;"><i class="fa-solid fa-calendar-plus" style="margin-right: 6px;"></i>参加予定</p>
-                        @if ($isOwner)
-                            <a href="{{ route('mypage.attendances.add_setlist', $attendance) }}" class="mypage-add-button" title="セットリストを追加">
-                                <i class="fas fa-plus"></i>
+                        @if ($isOwner && $attendance->can_add_setlist)
+                            <a href="{{ route('mypage.attendances.add_setlist', $attendance) }}" style="display: inline-flex; align-items: center; gap: 10px; color: #764ba2; text-decoration: none;">
+                                <span class="mypage-add-button"><i class="fas fa-plus"></i></span>
+                                セットリストを追加
                             </a>
+                        @else
+                            <p style="color: #718096; margin-bottom: 0;"><i class="fa-solid fa-calendar-plus" style="margin-right: 6px;"></i>参加予定</p>
                         @endif
                     </div>
                 @else

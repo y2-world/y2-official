@@ -798,7 +798,8 @@ class AttendanceController extends Controller
     public function addSetlist(ExternalUserAttendance $attendance)
     {
         $this->authorizeOwnership($attendance);
-        abort_unless($attendance->is_planned, 404);
+        // セットリストを追加できるのは公演日以降
+        abort_unless($attendance->can_add_setlist, 404);
 
         session(['attach_attendance_id' => $attendance->id]);
         $tourRef = ($attendance->is_official ? 'official-' : 'user-') . ($attendance->db_concert_id ?: $attendance->user_concert_id);
