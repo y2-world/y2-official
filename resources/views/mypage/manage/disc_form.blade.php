@@ -2,8 +2,10 @@
 
 @php
     $kindLabel = $kind === 'album' ? 'アルバム' : 'シングル';
-    // 入力エラーで戻ったときは、入力していた曲名を出し直す
-    $initialTracks = old('tracks', $discTracks);
+    // 入力エラーで戻ったときは、入力していた曲名・別表記を出し直す（ディスクごとに [['title' => 曲名, 'exception' => 別表記], ...]）
+    $initialTracks = old('tracks')
+        ? collect(old('tracks'))->map(fn ($titles, $disc) => collect(array_values($titles))->map(fn ($title, $i) => ['title' => $title, 'exception' => array_values(old('exceptions.' . $disc, []))[$i] ?? ''])->all())->values()->all()
+        : $discTracks;
 @endphp
 
 @section('title', $artist->name . ' ' . $kindLabel . ($disc ? 'を編集' : 'を追加') . ' - Manage My Artists & Setlists')
@@ -15,7 +17,7 @@
                 ['label' => 'My Page', 'url' => route('mypage.index')],
                 ['label' => 'Manage My Artists & Setlists', 'url' => route('mypage.manage.index')],
                 ['label' => $artist->name, 'url' => route('mypage.manage.artist', $artist->id)],
-                ['label' => 'シングル・アルバムを管理', 'url' => route('mypage.manage.discs', $artist->id)],
+                ['label' => $kindLabel . 'を管理', 'url' => route('mypage.manage.discs', [$artist->id, $kind])],
                 ['label' => $disc ? $disc->title : $kindLabel . 'を追加'],
             ]])
             <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">{{ $artist->name }}</p>
@@ -52,7 +54,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="disc_date" class="form-label">発売日</label>
-                        <input type="date" class="form-control" id="disc_date" name="date" value="{{ old('date', $disc?->date?->format('Y-m-d')) }}">
+                        <input type="date" class="form-control" id="disc_date" name="date" value="{{ old('date', $disc?->date?->format('Y-m-d')) }}" required>
                     </div>
                     {{-- シングルは EP、アルバムはミニアルバム・ベスト（公式と同じ） --}}
                     <div class="mb-4" style="display: flex; gap: 20px; flex-wrap: wrap;">
@@ -134,6 +136,22 @@
         outline: none;
         box-shadow: none;
     }
+    .setlist-song-row .song-row-inputs {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+    }
+    /* 「曲名」「別表記」は、入力した文字と見分けられるよう薄い色のプレースホルダーにする */
+    .setlist-song-row .song-row-inputs input::placeholder {
+        color: #c4c4c4;
+        opacity: 1;
+    }
+    .setlist-song-row .song-row-exception {
+        font-size: 0.8em !important;
+        color: #888;
+        padding-top: 0 !important;
+    }
     .setlist-song-row .remove-row-btn {
         background: none;
         border: none;
@@ -164,8 +182,8 @@
             </div>
         `;
         document.getElementById('discSections').appendChild(section);
-        section.querySelector('.mypage-add-button').addEventListener('click', () => addSongRow(containerId, ''));
-        (titles.length ? titles : ['']).forEach((title) => addSongRow(containerId, title, true));
+        section.querySelector('.mypage-add-button').addEventListener('click', () => addSongRow(containerId, null));
+        (titles.length ? titles : [null]).forEach((track) => addSongRow(containerId, track, true));
     }
 
     function addSongRow(containerId, value, keepFocus) {
@@ -178,10 +196,14 @@
                 <button type="button" class="song-row-reorder-down" title="下へ"><i class="fa-solid fa-chevron-down"></i></button>
             </div>
             <span class="song-row-number"></span>
-            <input type="text" class="form-control" name="tracks[${container.dataset.discIndex}][]" list="songTitleOptions" placeholder="曲名">
+            <div class="song-row-inputs">
+                <input type="text" class="form-control song-row-title" name="tracks[${container.dataset.discIndex}][]" list="songTitleOptions" placeholder="曲名">
+                <input type="text" class="form-control song-row-exception" name="exceptions[${container.dataset.discIndex}][]" placeholder="別表記">
+            </div>
             <button type="button" class="remove-row-btn" title="削除"><i class="fa-solid fa-trash"></i></button>
         `;
-        row.querySelector('input').value = value || '';
+        row.querySelector('.song-row-title').value = (value && value.title) || '';
+        row.querySelector('.song-row-exception').value = (value && value.exception) || '';
         row.querySelector('.remove-row-btn').addEventListener('click', () => { row.remove(); renumberRows(containerId); });
         row.querySelector('.song-row-reorder-up').addEventListener('click', () => {
             const prev = row.previousElementSibling;
@@ -197,7 +219,7 @@
         });
         container.appendChild(row);
         renumberRows(containerId);
-        if (!keepFocus) row.querySelector('input').focus();
+        if (!keepFocus) row.querySelector('.song-row-title').focus();
     }
 
     function renumberRows(containerId) {
@@ -207,6 +229,6 @@
     }
 
     // 登録済みの収録曲（新しく作るときは空の1行）を出す
-    @json(array_values($initialTracks)).forEach((titles) => addDiscSection(Object.values(titles || {}).filter((t) => t !== null)));
+    @json(array_values($initialTracks)).forEach((tracks) => addDiscSection(Object.values(tracks || {}).filter((t) => t && t.title !== undefined)));
     </script>
 @endsection

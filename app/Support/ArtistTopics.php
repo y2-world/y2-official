@@ -293,6 +293,11 @@ class ArtistTopics
     private function isNewSong(int $songId, string $date): bool
     {
         $this->releaseDates ??= $this->releaseDates();
+        // マイページで作ったアーティストは登録されたツアーが少なく、「初めて演奏された日」が当てにならないので、
+        // 発売日（登録したシングル・アルバム）が分からない曲は新曲として扱わない
+        if ($this->userArtist && !isset($this->releaseDates[$songId])) {
+            return false;
+        }
         $tours = $this->sortedTours($songId);
         $debut = $this->releaseDates[$songId] ?? ($tours ? substr($this->tours[$tours[0]]->date1, 0, 10) : $date);
 

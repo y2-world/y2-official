@@ -215,7 +215,7 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
             Route::match(['post', 'delete'], 'artists/{artistId}/concerts/{concertId}/setlists/{setlistId}', [ManageController::class, 'destroySetlist'])->name('setlists.destroy');
 
             // シングル・アルバム（{kind} は single / album）
-            Route::get('artists/{artistId}/discs', [\App\Http\Controllers\ManageDiscController::class, 'index'])->name('discs');
+            Route::get('artists/{artistId}/discs/{kind}', [\App\Http\Controllers\ManageDiscController::class, 'index'])->name('discs')->where('kind', 'single|album');
             Route::get('artists/{artistId}/discs/create', [\App\Http\Controllers\ManageDiscController::class, 'create'])->name('discs.create');
             Route::post('artists/{artistId}/discs', [\App\Http\Controllers\ManageDiscController::class, 'store'])->name('discs.store');
             Route::get('artists/{artistId}/discs/{kind}/{discId}/edit', [\App\Http\Controllers\ManageDiscController::class, 'edit'])->name('discs.edit')->where('kind', 'single|album');

@@ -48,10 +48,18 @@
                         <i class="fa-solid fa-chevron-right select-card-arrow"></i>
                     </a>
 
-                    <a href="{{ route('mypage.manage.discs', $artist->id) }}" class="select-card">
+                    <a href="{{ route('mypage.manage.discs', [$artist->id, 'single']) }}" class="select-card">
                         <span class="select-card-body">
-                            <span class="select-card-title"><i class="fa-solid fa-compact-disc" style="margin-right: 10px;"></i> シングル・アルバムを管理</span>
-                            <span class="select-card-meta">{{ $singlesCount }}シングル ・ {{ $albumsCount }}アルバム</span>
+                            <span class="select-card-title"><i class="fa-solid fa-compact-disc" style="margin-right: 10px;"></i> シングルを管理</span>
+                            <span class="select-card-meta">{{ $singlesCount }}シングル</span>
+                        </span>
+                        <i class="fa-solid fa-chevron-right select-card-arrow"></i>
+                    </a>
+
+                    <a href="{{ route('mypage.manage.discs', [$artist->id, 'album']) }}" class="select-card">
+                        <span class="select-card-body">
+                            <span class="select-card-title"><i class="fa-solid fa-record-vinyl" style="margin-right: 10px;"></i> アルバムを管理</span>
+                            <span class="select-card-meta">{{ $albumsCount }}アルバム</span>
                         </span>
                         <i class="fa-solid fa-chevron-right select-card-arrow"></i>
                     </a>

@@ -19,10 +19,13 @@
         @if ($discs->isEmpty())
             <p style="text-align: center; color: #999; margin-top: 40px;">
                 {{ $kind === 'albums' ? 'まだアルバムが登録されていません。' : 'まだシングルが登録されていません。' }}
-                @if ($isOwner)
-                    <br><a href="{{ route('mypage.manage.discs', $artist->id) }}">シングル・アルバムを管理</a>
-                @endif
             </p>
+            {{-- 作った本人には、登録するためのボタンを出す --}}
+            @if ($isOwner)
+                <div style="text-align: center; margin-top: 16px;">
+                    <a href="{{ route('mypage.manage.discs', [$artist->id, $kind === 'albums' ? 'album' : 'single']) }}" class="btn-pill">{{ $kind === 'albums' ? 'アルバムを管理' : 'シングルを管理' }}</a>
+                </div>
+            @endif
         @else
             <table class="table table-striped">
                 <thead>

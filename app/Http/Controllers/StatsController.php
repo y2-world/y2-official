@@ -309,6 +309,14 @@ class StatsController extends Controller
         $today = now()->toDateString();
         $setlists = SlSetlist::where('date', '<=', $today)->get();
         $artistShowCounts = [];
+        // アーティストごとに初めてライブに行った日（ドロップダウンの並びに使う）
+        $firstDates = [];
+        $markFirst = function ($artistId, $date) use (&$firstDates) {
+            $date = substr((string) $date, 0, 10);
+            if (!isset($firstDates[$artistId]) || $date < $firstDates[$artistId]) {
+                $firstDates[$artistId] = $date;
+            }
+        };
 
         foreach ($setlists as $setlist) {
             // 単独ライブ
@@ -318,6 +326,7 @@ class StatsController extends Controller
                     $artistShowCounts[$artistId] = 0;
                 }
                 $artistShowCounts[$artistId]++;
+                $markFirst($artistId, $setlist->date);
             }
 
             // フェスの場合、出演アーティストごとにカウント
@@ -333,6 +342,7 @@ class StatsController extends Controller
                         $artistShowCounts[$fesArtistId] = 0;
                     }
                     $artistShowCounts[$fesArtistId]++;
+                    $markFirst($fesArtistId, $setlist->date);
                 }
             }
         }
@@ -348,6 +358,7 @@ class StatsController extends Controller
                     'id' => $artist->id,
                     'name' => $artist->name,
                     'show_count' => $count,
+                    'first_date' => $firstDates[$artistId] ?? null,
                 ];
             }
         }
@@ -938,7 +949,9 @@ class StatsController extends Controller
         $topicRecentFirstAll = $topics->recentFirstListens($heard, false);
 
         // タブの「Artists」：参加したアーティストに切り替える（今のアーティストを選んだ状態）
+        // 初めてライブに行った順
         $tabArtists = collect($this->getPersonalArtistStats())
+            ->sortBy('first_date')
             ->map(fn ($a) => ['name' => $a['name'], 'url' => route('stats.artist', $a['id']), 'current' => (int) $a['id'] === (int) $artistId])
             ->values()->all();
 

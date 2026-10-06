@@ -83,7 +83,9 @@ class MyPageStatsController extends Controller
                 $artists['user-' . $artist->id]['count']++;
             }
         }
-        uasort($artists, fn ($a, $b) => $b['count'] <=> $a['count']);
+        // 初めてライブに行った順
+        $firstDates = \App\Models\ExternalUserAttendance::firstDatesByArtistRef($attendances);
+        uksort($artists, fn ($a, $b) => strcmp($firstDates[$a] ?? '9999', $firstDates[$b] ?? '9999'));
 
         return collect($artists)->map(fn ($a, $ref) => [
             'name' => $a['name'],

@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
-@section('title', $artist->name . ' シングル・アルバムを管理 - Manage My Artists & Setlists')
-@section('og_title', $artist->name . ' シングル・アルバムを管理 - Yuki Official')
+@php $kindLabel = $kind === 'album' ? 'アルバム' : 'シングル'; @endphp
+@section('title', $artist->name . ' ' . $kindLabel . 'を管理 - Manage My Artists & Setlists')
+@section('og_title', $artist->name . ' ' . $kindLabel . 'を管理 - Yuki Official')
 
 @section('content')
     <div class="database-hero database-hero--detail manage-page">
@@ -10,21 +11,20 @@
                 ['label' => 'My Page', 'url' => route('mypage.index')],
                 ['label' => 'Manage My Artists & Setlists', 'url' => route('mypage.manage.index')],
                 ['label' => $artist->name, 'url' => route('mypage.manage.artist', $artist->id)],
-                ['label' => 'シングル・アルバムを管理'],
+                ['label' => $kindLabel . 'を管理'],
             ]])
             <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">{{ $artist->name }}</p>
-            <h1 class="database-title" style="text-align: center;">シングル・アルバムを管理</h1>
+            <h1 class="database-title" style="text-align: center;">{{ $kindLabel }}を管理</h1>
         </div>
     </div>
 
     <div class="container database-content">
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                {{-- シングルとアルバムを分けて並べる（発売日の古い順）。「＋」でそれぞれを追加 --}}
-                @foreach ([['kind' => 'single', 'label' => 'Singles', 'items' => $singles, 'empty' => 'まだシングルがありません。'], ['kind' => 'album', 'label' => 'Albums', 'items' => $albums, 'empty' => 'まだアルバムがありません。']] as $section)
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin: {{ $loop->first ? '0' : '36px' }} 0 16px;">
-                        <h3 style="margin: 0;">{{ $section['label'] }}</h3>
-                        <a href="{{ route('mypage.manage.discs.create', ['artistId' => $artist->id, 'kind' => $section['kind']]) }}" class="mypage-add-button" title="{{ $section['kind'] === 'album' ? 'アルバム' : 'シングル' }}を追加">
+                {{-- 発売日の新しい順。「＋」で追加 --}}
+                @foreach ([['kind' => $kind, 'items' => $discs, 'empty' => 'まだ' . $kindLabel . 'がありません。']] as $section)
+                    <div style="text-align: center; margin-bottom: 24px;">
+                        <a href="{{ route('mypage.manage.discs.create', ['artistId' => $artist->id, 'kind' => $section['kind']]) }}" class="mypage-add-button" title="{{ $kindLabel }}を追加">
                             <i class="fas fa-plus"></i>
                         </a>
                     </div>
@@ -42,7 +42,7 @@
                                     <span class="select-card-body">
                                         <span class="select-card-title">{{ $disc->title }}</span>
                                         <span class="select-card-meta">
-                                            {{ $disc->date?->format('Y.m.d') ?? '発売日未入力' }} ・ {{ count($disc->tracklist ?? []) }}曲
+                                            {{ $disc->date?->format('Y.m.d') }} ・ {{ count($disc->tracklist ?? []) }}曲
                                             @if ($badges) ・ {{ implode(' / ', $badges) }} @endif
                                         </span>
                                     </span>

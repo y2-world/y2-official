@@ -14,13 +14,15 @@ use Illuminate\Support\Facades\DB;
 // 収録曲はセットリストの曲目と同じく曲名で入力し、保存のときに UserSong に置き換える（無い曲名は曲として登録する）
 class ManageDiscController extends Controller
 {
-    public function index($artistId)
+    // シングル・アルバムは別々のページ（{kind} は single / album）
+    public function index($artistId, $kind)
     {
         $artist = $this->ownArtist($artistId);
-        $singles = UserSingle::where('user_artist_id', $artist->id)->orderBy('date')->orderBy('id')->get();
-        $albums = UserAlbum::where('user_artist_id', $artist->id)->orderBy('date')->orderBy('id')->get();
+        $model = $kind === 'album' ? UserAlbum::class : UserSingle::class;
+        // ツアーを管理と同じく、新しい順
+        $discs = $model::where('user_artist_id', $artist->id)->orderByDesc('date')->orderByDesc('id')->get();
 
-        return view('mypage.manage.discs', compact('artist', 'singles', 'albums'));
+        return view('mypage.manage.discs', compact('artist', 'kind', 'discs'));
     }
 
     public function create(Request $request, $artistId)
@@ -45,7 +47,7 @@ class ManageDiscController extends Controller
             $kind === 'album' ? UserAlbum::create($attributes) : UserSingle::create($attributes);
         });
 
-        return redirect()->route('mypage.manage.discs', $artist->id)
+        return redirect()->route('mypage.manage.discs', [$artist->id, $kind])
             ->with('success', ($kind === 'album' ? 'アルバム' : 'シングル') . 'を追加しました。');
     }
 
@@ -59,7 +61,7 @@ class ManageDiscController extends Controller
         $titles = UserSong::whereIn('id', collect($disc->tracklist ?? [])->pluck('id'))->pluck('title', 'id');
         $discTracks = [];
         foreach ($disc->tracklist ?? [] as $track) {
-            $discTracks[max(0, (int) ($track['disc'] ?? 1) - 1)][] = $titles[$track['id']] ?? '';
+            $discTracks[max(0, (int) ($track['disc'] ?? 1) - 1)][] = ['title' => $titles[$track['id']] ?? '', 'exception' => $track['exception'] ?? ''];
         }
         ksort($discTracks);
         $discTracks = array_values($discTracks) ?: [[]];
@@ -77,7 +79,7 @@ class ManageDiscController extends Controller
             $disc->update($this->attributes($artist, $kind, $data, $request));
         });
 
-        return redirect()->route('mypage.manage.discs', $artist->id)
+        return redirect()->route('mypage.manage.discs', [$artist->id, $kind])
             ->with('success', ($kind === 'album' ? 'アルバム' : 'シングル') . 'を更新しました。');
     }
 
@@ -90,7 +92,7 @@ class ManageDiscController extends Controller
             return response()->json(['message' => '削除しました。']);
         }
 
-        return redirect()->route('mypage.manage.discs', $artist->id)->with('success', '削除しました。');
+        return redirect()->route('mypage.manage.discs', [$artist->id, $kind])->with('success', '削除しました。');
     }
 
     // 作った本人のアーティストだけ
@@ -119,12 +121,18 @@ class ManageDiscController extends Controller
     {
         return $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'date' => ['nullable', 'date'],
+            // 番号（1st・2nd …）と並びは発売日で決めるので必須
+            'date' => ['required', 'date'],
             'tracks' => ['array'],
             'tracks.*' => ['array'],
             'tracks.*.*' => ['nullable', 'string', 'max:255'],
+            // 収録曲ごとの別表記。tracks と同じ並び
+            'exceptions' => ['array'],
+            'exceptions.*' => ['array'],
+            'exceptions.*.*' => ['nullable', 'string', 'max:255'],
         ], [
             'title.required' => 'タイトルを入力してください。',
+            'date.required' => '発売日を入力してください。',
         ]);
     }
 
@@ -132,26 +140,37 @@ class ManageDiscController extends Controller
     private function attributes(UserArtist $artist, string $kind, array $data, Request $request): array
     {
         $tracklist = [];
+        $exceptions = array_values($data['exceptions'] ?? []);
         foreach (array_values($data['tracks'] ?? []) as $discIndex => $titles) {
-            foreach ($titles as $title) {
+            $discExceptions = array_values($exceptions[$discIndex] ?? []);
+            foreach (array_values($titles) as $trackIndex => $title) {
                 $title = trim((string) $title);
                 if ($title === '') {
                     continue;
                 }
                 $song = UserSong::firstOrCreateByTitle($artist->id, $title);
-                $tracklist[] = $kind === 'album' ? ['id' => $song->id, 'disc' => $discIndex + 1] : ['id' => $song->id];
+                $track = ['id' => $song->id];
+                // 別表記は、曲名と違うときだけ持つ（公式の exception と同じ）
+                $exception = trim((string) ($discExceptions[$trackIndex] ?? ''));
+                if ($exception !== '' && $exception !== $song->title) {
+                    $track['exception'] = $exception;
+                }
+                if ($kind === 'album') {
+                    $track['disc'] = $discIndex + 1;
+                }
+                $tracklist[] = $track;
             }
         }
         // ディスクが1枚だけのアルバムは、ディスク番号を持たない（公式と同じ）
         if ($kind === 'album' && collect($tracklist)->pluck('disc')->unique()->count() <= 1) {
-            $tracklist = array_map(fn ($track) => ['id' => $track['id']], $tracklist);
+            $tracklist = array_map(fn ($track) => array_diff_key($track, ['disc' => true]), $tracklist);
         }
 
         $attributes = [
             'user_artist_id' => $artist->id,
             'external_user_id' => Auth::guard('external')->id(),
             'title' => $data['title'],
-            'date' => $data['date'] ?? null,
+            'date' => $data['date'],
             'tracklist' => $tracklist,
         ];
 

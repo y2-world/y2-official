@@ -24,12 +24,15 @@
                 @endif
             </p>
             <h1 class="database-title">{{ $disc->title }}</h1>
-            @if ($disc->date)
-                <p class="database-subtitle">Release: {{ $disc->date->format('Y.m.d') }}</p>
-            @endif
-            @if ($isOwner)
-                <p style="margin-top: 8px;">
-                    <a href="{{ route('mypage.manage.discs.edit', [$artist->id, $kind === 'albums' ? 'album' : 'single', $disc->id]) }}" style="color: white; font-size: 0.85rem;"><i class="fa-solid fa-pen"></i> 編集</a>
+            {{-- 本人には、セトリの詳細ページと同じくペンのアイコンだけの編集リンクを、発売日の右に出す --}}
+            @if ($disc->date || $isOwner)
+                <p class="database-subtitle">
+                    @if ($disc->date)
+                        Release: {{ $disc->date->format('Y.m.d') }}
+                    @endif
+                    @if ($isOwner)
+                        <a href="{{ route('mypage.manage.discs.edit', [$artist->id, $kind === 'albums' ? 'album' : 'single', $disc->id]) }}" title="編集" style="color: white; margin-left: 6px;"><i class="fa-solid fa-pen" style="font-size: 0.75em;"></i></a>
+                    @endif
                 </p>
             @endif
         </div>

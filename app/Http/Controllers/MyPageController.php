@@ -227,7 +227,7 @@ class MyPageController extends Controller
             ]);
         }
         $artistSongStats = $artistSongStats->sortByDesc('percentage')->values();
-        // スタンプ帳へのボタンは、初めてライブに行った順に並べる（Unique Songs by Artist の表は割合の高い順のまま）
+        // スタンプ帳へのボタンとアーティストのドロップダウンは、初めてライブに行った順に並べる（表は回数・割合の順のまま）
         $firstDates = \App\Models\ExternalUserAttendance::firstDatesByArtistRef($attendances);
         $stampBookArtists = $artistSongStats->sortBy(fn ($stat) => $firstDates[$stat['id']] ?? '9999-12-31')->values();
 
@@ -258,6 +258,7 @@ class MyPageController extends Controller
             });
 
         $artistStats = collect($officialArtistStats)->merge($userArtistStats)->sortByDesc('show_count')->values();
+        $tabArtistStats = $artistStats->sortBy(fn ($stat) => $firstDates[$stat['id']] ?? '9999-12-31')->values();
 
         $venueStats = $attendances
             ->filter(fn ($a) => $a->venue)
@@ -294,6 +295,6 @@ class MyPageController extends Controller
          'topicWelcomeBack' => $topicWelcomeBack, 'topicRecentFirst' => $topicRecentFirst, 'topicRecentFirstAll' => $topicRecentFirstAll]
             = \App\Support\ArtistTopics::combined($heardByArtist);
 
-        return view('mypage.index', compact('attendances', 'overallStats', 'topSongs', 'topSongsUnique', 'artistStats', 'artistSongStats', 'stampBookArtists', 'venueStats', 'yearStats', 'topicHeardRevivals', 'topicFirstHeard', 'topicWelcomeBack', 'topicRecentFirst', 'topicRecentFirstAll', 'isOwner', 'asProfile', 'statsUser'));
+        return view('mypage.index', compact('attendances', 'overallStats', 'topSongs', 'topSongsUnique', 'artistStats', 'tabArtistStats', 'artistSongStats', 'stampBookArtists', 'venueStats', 'yearStats', 'topicHeardRevivals', 'topicFirstHeard', 'topicWelcomeBack', 'topicRecentFirst', 'topicRecentFirstAll', 'isOwner', 'asProfile', 'statsUser'));
     }
 }

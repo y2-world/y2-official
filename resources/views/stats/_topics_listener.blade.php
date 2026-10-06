@@ -32,23 +32,30 @@
 @endphp
 
 @if (count($topicRecentFirst) || count($topicRecentFirstAll))
+@php
+    // 新曲を除くと0曲になる・除いても変わらないときは、チェックを出さずに全部を出す
+    $recentShowToggle = count($topicRecentFirst) && $topicRecentFirst != $topicRecentFirstAll;
+    $recentDefault = count($topicRecentFirst) ? 'exclude' : 'all';
+@endphp
 <div class="stats-section visible">
     <div class="section-title-wrapper" style="flex-direction: column; align-items: center; gap: 10px;">
         <h2 class="section-title" style="text-align: center;"><i class="fas fa-seedling"></i> Recent First Listens
         <span class="section-title-desc">最近、初めて生で聴いた曲</span></h2>
         {{-- 新曲（そのライブの1年前以降に発売された曲と、発売前だった曲）を除いて見る。最初は除いた状態 --}}
+        @if ($recentShowToggle)
         <div class="unique-tour-toggle" style="margin-left: 0;">
             <label class="unique-tour-label">
                 <input type="checkbox" class="unique-tour-checkbox" id="recentFirstExcludeNew" checked>
                 <span class="unique-tour-text">新曲を除く</span>
             </label>
         </div>
+        @endif
     </div>
     <div class="stats-table-container">
         <table class="stats-table topic-pc">
             <thead><tr><th>Song Title</th>@if ($topicShowArtist)<th>Artist</th>@endif<th>Tour Title</th><th class="count-col">Date</th></tr></thead>
             @foreach (['exclude' => $topicRecentFirst, 'all' => $topicRecentFirstAll] as $kind => $rows)
-            <tbody data-recent-kind="{{ $kind }}" @if ($kind === 'all') style="display: none;" @endif>
+            <tbody data-recent-kind="{{ $kind }}" @if ($kind !== $recentDefault) style="display: none;" @endif>
                 @foreach ($rows as $row)
                 <tr>
                     <td class="song-title">{!! $topicSongLinkMarked($row) !!}</td>
@@ -67,7 +74,7 @@
                     {{-- 日付はバッジに入りきらないので、右端に小さく出す --}}
                     @include('stats._stacked_row', ['rank' => null, 'song' => $topicSongLinkMarked($row), 'artist' => $topicShowArtist ? $topicArtistCell($row) : null, 'showArtist' => $topicShowArtist,
                         'lines' => [['tour' => $topicShowTitle($row['show'], $row['show_url'] ?? null)]], 'badge' => null, 'rightText' => date('Y.m.d', strtotime($row['date'])),
-                        'kind' => 'recent-' . $kind, 'hidden' => $kind === 'all'])
+                        'kind' => 'recent-' . $kind, 'hidden' => $kind !== $recentDefault])
                 @endforeach
             @endforeach
         </table>
@@ -148,13 +155,17 @@ document.getElementById('recentFirstExcludeNew')?.addEventListener('change', fun
     <div class="section-title-wrapper" style="flex-direction: column; align-items: center; gap: 10px;">
         <h2 class="section-title" style="text-align: center;"><i class="fas fa-seedling"></i> First Listens by Year
         <span class="section-title-desc">その年に初めて生で聴いた曲</span></h2>
-        {{-- 新曲（そのライブの1年前以降に発売された曲と、発売前だった曲）を除いて見る。ページを読み込み直さずにその場で切り替える --}}
+        {{-- 新曲（そのライブの1年前以降に発売された曲と、発売前だった曲）を除いて見る。ページを読み込み直さずにその場で切り替える。
+             新曲とそれ以外の両方があるときだけ出す（片方しか無いと、除くと空になる・除いても変わらない） --}}
+        @php $firstHeardSongs = collect($topicFirstHeard)->flatten(1); @endphp
+        @if ($firstHeardSongs->contains('new', true) && $firstHeardSongs->contains('new', false))
         <div class="unique-tour-toggle" style="margin-left: 0;">
             <label class="unique-tour-label">
                 <input type="checkbox" class="unique-tour-checkbox" id="firstListensExcludeNew" checked>
                 <span class="unique-tour-text">新曲を除く</span>
             </label>
         </div>
+        @endif
     </div>
     <div class="stats-table-container">
         <table class="stats-table" id="firstListensTable">

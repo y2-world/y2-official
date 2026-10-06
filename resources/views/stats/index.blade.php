@@ -62,7 +62,8 @@
                         @if (count($artistStats))
                         <select class="stats-tab-btn stats-tab-select" onchange="if (this.value) location.href = this.value;">
                             <option value="" selected>All</option>
-                            @foreach ($artistStats as $tabArtist)
+                            {{-- 初めてライブに行った順 --}}
+                            @foreach (collect($artistStats)->sortBy('first_date') as $tabArtist)
                                 <option value="{{ route('stats.artist', $tabArtist['id']) }}">{{ $tabArtist['name'] }}</option>
                             @endforeach
                         </select>
