@@ -10,7 +10,7 @@
             <div class="col-xl-10">
                 <div class="element js-fadein">
                     <h1 class="stats-title">{{ $artist->name }}</h1>
-                    <p class="stats-subtitle">Artist Statistics</p>
+                    <p class="stats-subtitle">参加記録</p>
 
                     {{-- スタンプ帳と、このアーティストの Database（公式の演奏記録）の stats へのリンク --}}
                     @if ($hasStampBook || $hasDatabaseStats)

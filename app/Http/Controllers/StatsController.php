@@ -419,8 +419,6 @@ class StatsController extends Controller
         $artist = Artist::findOrFail($artistId);
         $overallStats = $this->getDatabaseOverallStats($artistId, $type);
         $songStats = $this->getDatabaseSongStats($artistId, $type);
-        // Recent Staples: 直近5年に始まったツアー・ライブで、演奏されたツアー・ライブの数が多い曲（上位10曲）
-        $recentSongStats = array_slice($this->getDatabaseSongStats($artistId, $type, false, now()->subYears(5)->toDateString()), 0, 10);
         $encoreSongStats = $this->getDatabaseEncoreSongStats($artistId, $type);
         // 福山雅治のみ：DOUBLE ENCORE（弾き語り）を除いた版も用意して、画面上のチェックでその場で切り替える
         $isHikigatariArtist = $artistId === \App\Support\EncoreBlocks::HIKIGATARI_ARTIST_ID;
@@ -465,7 +463,6 @@ class StatsController extends Controller
         }
 
         return view('stats.database', compact(
-            'recentSongStats',
             'personalStatsLink',
             'tabArtists',
             'artist',
@@ -531,14 +528,10 @@ class StatsController extends Controller
         return $excludeDoubleEncore ? \App\Support\EncoreBlocks::withoutDoubleEncore($encore) : $encore;
     }
 
-    // $since を渡すと、その日以降に始まったツアー・ライブだけで数え、演奏されていない曲（0回）は足さない（Recent Staples 用）
-    private function getDatabaseSongStats(int $artistId, string $type = 'all', bool $excludeDoubleEncore = false, ?string $since = null)
+    private function getDatabaseSongStats(int $artistId, string $type = 'all', bool $excludeDoubleEncore = false)
     {
         $songArtistIds = DbSong::pluck('artist_id', 'id');
         $tourIds = $this->databaseConcertIds($this->crossoverTourArtistIds($artistId), $type);
-        if ($since) {
-            $tourIds = DbConcert::whereIn('id', $tourIds)->whereDate('date1', '>=', $since)->whereDate('date1', '<=', now()->toDateString())->pluck('id');
-        }
         $tourSetlists = DbSetlist::whereIn('tour_id', $tourIds)->get();
         $songTourCounts = [];
 
@@ -563,10 +556,6 @@ class StatsController extends Controller
         foreach ($counts as $songId => $count) {
             $song = DbSong::find($songId);
             if ($song) $stats[] = ['song_id' => $songId, 'title' => $song->title, 'count' => $count];
-        }
-
-        if ($since) {
-            return $stats;
         }
 
         // ツアーで一度も演奏されていない曲をリストの最後に追加（演奏回数0）

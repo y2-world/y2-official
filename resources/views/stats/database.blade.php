@@ -142,44 +142,6 @@
                         </div>
                     </div>
 
-                    {{-- Recent Staples: 直近5年に始まったツアー・ライブで、演奏されたツアー・ライブの数が多い曲 --}}
-                    @if (!empty($recentSongStats))
-                    <div class="stats-section visible">
-                        <h2 class="section-title">
-                            <i class="fas fa-clock-rotate-left"></i> Recent Staples
-    <span class="section-title-desc">直近5年のツアー・ライブで、演奏された数が多い曲</span></h2>
-                        <div class="stats-table-container">
-                            <table class="stats-table">
-                                <thead>
-                                    <tr>
-                                        <th class="rank-col">Rank</th>
-                                        <th>Song Title</th>
-                                        <th class="count-col">Times</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($recentSongStats as $index => $song)
-                                    @php $showRank = $index === 0 || $recentSongStats[$index - 1]['count'] !== $song['count']; @endphp
-                                    <tr>
-                                        <td class="rank-col">
-                                            @if($showRank)
-                                                @if($index === 0)<span class="rank-badge gold">🏆</span>
-                                                @elseif($index === 1)<span class="rank-badge silver">🥈</span>
-                                                @elseif($index === 2)<span class="rank-badge bronze">🥉</span>
-                                                @else<span class="rank-number">{{ $index + 1 }}</span>
-                                                @endif
-                                            @endif
-                                        </td>
-                                        <td class="song-title"><a href="{{ url('/database/songs/' . $song['song_id']) }}" class="stats-link">{{ $song['title'] }}</a></td>
-                                        <td class="count-col"><span class="count-badge">{{ $song['count'] }}</span></td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    @endif
-
                     @if (!empty($isHikigatariArtist) && !empty($doubleEncoreSongStats))
                     @php $doubleEncoreSongStatsTop = array_slice($doubleEncoreSongStats, 0, 10); @endphp
                     <!-- DOUBLE ENCORE Songs Section（福山雅治のみ。DOUBLE ENCOREは弾き語り） -->
