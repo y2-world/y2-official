@@ -105,7 +105,7 @@ class DbSetlistResource extends Resource
                                 $set('row_title', $title ?? '');
                             }),
 
-                        // ツアーにスケジュールがあるときは、スケジュールから日付（と会場）を選んでタイトルに入れられる。入れた後も手で直せる
+                        // ツアーにスケジュールがあるときは、スケジュールから日付（と地名）を選んでタイトルに入れられる。入れた後も手で直せる
                         Forms\Components\Select::make('_schedule_pick')
                             ->label('スケジュールから選ぶ')
                             ->multiple()
@@ -113,8 +113,20 @@ class DbSetlistResource extends Resource
                             ->visible(fn (Get $get) => count(static::scheduleOptions($get('tour_id'))) > 0)
                             ->dehydrated(false)
                             ->live()
-                            ->afterStateUpdated(fn ($state, $set) => $set('subtitle', implode(' ', (array) $state)))
-                            ->helperText('選んだ順に「7.17 中野サンプラザ」の形でタイトルに入ります。会場名は都市名などに直してください。')
+                            // 選んだ日は今のタイトルの後ろに足し、選択を外した日はタイトルから取る（手で書いた部分はそのまま）
+                            ->afterStateUpdated(function ($state, $old, Get $get, $set) {
+                                $state = (array) $state;
+                                $old = (array) $old;
+                                $subtitle = (string) $get('subtitle');
+                                foreach (array_diff($old, $state) as $removed) {
+                                    $subtitle = preg_replace('/(^|\s)' . preg_quote($removed, '/') . '(?=\s|$)/u', '', $subtitle);
+                                }
+                                foreach (array_diff($state, $old) as $added) {
+                                    $subtitle = rtrim($subtitle) . ($subtitle !== '' && trim($subtitle) !== '' ? ' ' : '') . $added;
+                                }
+                                $set('subtitle', trim($subtitle));
+                            })
+                            ->helperText('選んだ順に「7.17 大阪」のように日付と地名がタイトルの後ろに足されます（単発のライブは日付だけ）。地名が違うときは手で直してください。')
                             ->columnSpanFull(),
 
                         Forms\Components\Textarea::make('subtitle')
@@ -506,21 +518,83 @@ class DbSetlistResource extends Resource
         ];
     }
 
-    // ツアーのスケジュール（「2021/5/1(土) 会場」「06/13 会場」「7月13日 会場」など）を、
-    // パターンのタイトルに使う「月.日 会場」の選択肢にする（キーも同じ文字列）
+    // ツアーのスケジュール（「2021/5/1(土) 会場」「06/13 会場」「7月13日 会場」「10.6,7 会場」など）を、
+    // パターンのタイトルに使う選択肢にする。表示は「月.日 会場名」、選んだときに入る文字（キー）は「月.日 地名」。
+    // 同じ地名が2日以上あれば日付順に「仙台1」「仙台2」、単発のライブは日付だけ
     public static function scheduleOptions($tourId): array
     {
-        $schedule = $tourId ? (string) \App\Models\DbConcert::whereKey($tourId)->value('schedule') : '';
-        $options = [];
-        foreach (preg_split('/\r\n|\r|\n/', $schedule) as $line) {
-            if (!preg_match('/^\s*(?:\d{4}\s*[\/.年]\s*)?(\d{1,2})\s*[\/.月]\s*(\d{1,2})日?\s*(?:[(（][^)）]*[)）])?\s*(.*)$/u', $line, $m)) {
+        $concert = $tourId ? \App\Models\DbConcert::find($tourId) : null;
+        $dates = [];
+        foreach (preg_split('/\r\n|\r|\n/', (string) $concert?->schedule) as $line) {
+            // 日付は「8.31,9.1」「1.28,29,31,2.1」のように、月が途中で変わりながら並ぶことがある
+            $day = '\d{1,2}日?(?:\s*[(（][^)）]*[)）])?';
+            if (!preg_match('/^\s*(?:\d{4}\s*[\/.年]\s*)?(\d{1,2}\s*[\/.月]\s*' . $day . '(?:\s*[,，、・]\s*(?:\d{1,2}\s*[\/.月]\s*)?' . $day . ')*)\s*(.*)$/u', $line, $m)) {
                 continue;
             }
             // 会場名から、かっこ書き（延期・振替・県名などの注記）を外す
-            $venue = trim(preg_replace('/\s*[(（][^)）]*[)）]|【[^】]*】|《[^》]*》/u', '', $m[3]));
-            $label = (int) $m[1] . '.' . (int) $m[2] . ($venue !== '' ? ' ' . $venue : '');
-            $options[$label] = $label;
+            $venue = trim(preg_replace('/\s*[(（][^)）]*[)）]|【[^】]*】|《[^》]*》/u', '', $m[2]));
+            $month = null;
+            foreach (preg_split('/\s*[,，、・]\s*/u', preg_replace('/\s*[(（][^)）]*[)）]|日/u', '', $m[1])) as $item) {
+                if (preg_match('/^(\d{1,2})\s*[\/.月]\s*(\d{1,2})$/u', $item, $md)) {
+                    $month = (int) $md[1];
+                    $item = $md[2];
+                }
+                $dates[$month . '.' . (int) $item] = $venue;
+            }
+        }
+
+        // 同じ地名が続く日をひとまとまりにし、まとまりの中で1から番号を付ける（離れて同じ地名に戻ったら1から数え直す）
+        $runs = [];
+        foreach ($dates as $date => $venue) {
+            $place = static::venuePlace($venue);
+            $last = count($runs) - 1;
+            if ($last >= 0 && $runs[$last]['place'] === $place) {
+                $runs[$last]['dates'][$date] = $venue;
+            } else {
+                $runs[] = ['place' => $place, 'dates' => [$date => $venue]];
+            }
+        }
+        $options = [];
+        foreach ($runs as $run) {
+            $n = 0;
+            foreach ($run['dates'] as $date => $venue) {
+                $n++;
+                $key = (int) $concert->type === 1 || $run['place'] === ''
+                    ? $date
+                    : $date . ' ' . $run['place'] . (count($run['dates']) > 1 ? $n : '');
+                $options[$key] = $date . ($venue !== '' ? ' ' . $venue : '');
+            }
         }
         return $options;
+    }
+
+    // 会場名から、パターンタイトルに使う地名を決める。config/venue_places.php（これまでのタイトルから集めた対応）に
+    // あればそれ、無ければ会場名の頭の地名（「名古屋国際会議場」→名古屋）や「○○市」、分からなければ会場名のまま
+    public static function venuePlace(string $venue): string
+    {
+        $map = config('venue_places', []);
+        // 「※公演中止」のような注記は外す
+        $venue = trim(preg_replace('/\s*※.*$/u', '', $venue));
+        if ($venue === '' || isset($map[$venue])) {
+            return $map[$venue] ?? '';
+        }
+        // 「盛岡市民文化ホール 大ホール」のように、知っている会場名にホール名などが付いているもの
+        $known = array_filter(array_keys($map), fn ($name) => mb_strlen($name) >= 4 && str_starts_with($venue, $name));
+        if ($known) {
+            usort($known, fn ($a, $b) => mb_strlen($b) <=> mb_strlen($a));
+            return $map[$known[0]];
+        }
+        $prefs = ['北海道', '青森', '岩手', '宮城', '秋田', '山形', '福島', '茨城', '栃木', '群馬', '埼玉', '千葉', '東京', '神奈川', '新潟', '富山', '石川', '福井', '山梨', '長野', '岐阜', '静岡', '愛知', '三重', '滋賀', '京都', '大阪', '兵庫', '奈良', '和歌山', '鳥取', '島根', '岡山', '広島', '山口', '徳島', '香川', '愛媛', '高知', '福岡', '佐賀', '長崎', '熊本', '大分', '宮崎', '鹿児島', '沖縄'];
+        $placeNames = array_unique(array_merge(array_values($map), $prefs));
+        usort($placeNames, fn ($a, $b) => mb_strlen($b) <=> mb_strlen($a));
+        foreach ($placeNames as $place) {
+            if ($place !== '' && str_starts_with($venue, $place)) {
+                return $place;
+            }
+        }
+        if (preg_match('/^([^\s市]{1,4}?)市/u', $venue, $m)) {
+            return $m[1];
+        }
+        return $venue;
     }
 }

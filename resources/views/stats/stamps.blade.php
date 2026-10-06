@@ -74,7 +74,7 @@
 @endsection
 
 @section('page-script')
-<script src="{{ asset('/js/stamp-book.js?v=20260930a') }}"></script>
+<script src="{{ asset('/js/stamp-book.js?v=20261006a') }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.js-stamp-tap').forEach(function (frame) {

@@ -205,7 +205,7 @@
                                                 @endif
                                             @endif
                                         </td>
-                                        <td class="song-title">{{ $venue->venue }}</td>
+                                        <td class="venue-name">@if ($isOwner)<a href="{{ route('mypage.attendances.index', ['artist_id' => $artistRef, 'venue' => $venue->venue]) }}" class="stats-link">{{ $venue->venue }}</a>@else{{ $venue->venue }}@endif</td>
                                         <td class="count-col">
                                             <span class="count-badge">{{ $venue->count }}</span>
                                         </td>

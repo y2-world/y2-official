@@ -57,6 +57,12 @@ class AdminPanelProvider extends PanelProvider
                     EditDbSetlist::class,
                 ],
             )
+            // 複数選択の入力欄は幅をプレースホルダーの文字数×半角1文字分にするため、日本語だと途中で切れる。
+            // プレースホルダーが出ている間は欄の幅いっぱいにする
+            ->renderHook(
+                PanelsRenderHook::HEAD_END,
+                fn (): string => '<style>.choices__inner .choices__input--cloned:placeholder-shown{min-width:100%!important}</style>',
+            )
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
