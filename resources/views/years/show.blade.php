@@ -35,7 +35,7 @@
                         @endforeach
                     </select>
                     <select class="year-select" name="select" onChange="location.href=value;">
-                        <option value="" disabled>Years</option>
+                        <option value="{{ url('/setlists') }}{{ $typeQuery ? '?' . $typeQuery : '' }}">All Years</option>
                         @foreach ($years as $yearItem)
                             <option value="{{ url('/setlists/years', $yearItem->year) }}{{ $typeQuery ? '?' . $typeQuery : '' }}" {{ $yearItem->year == $year->year ? 'selected' : '' }}>{{ $yearItem->year }}</option>
                         @endforeach
@@ -54,6 +54,10 @@
     </div>
 
     <div class="container-lg database-year-content">
+        {{-- Live Type で絞り込んで0件のときは、アーティストのページと同じメッセージ --}}
+        @if ($setlists->isEmpty())
+            <p style="text-align: center; color: #999; margin-top: 40px;">セットリストがありません。</p>
+        @else
         <table class="table table-striped count fixed-cols">
             <thead>
                 <tr>
@@ -95,6 +99,7 @@
                 @endforeach
             </tbody>
         </table>
+        @endif
         </div>
     </div>
     <br>
