@@ -20,6 +20,10 @@
                         <option value="{{ route('mypage.timeline.index', ['user_id' => 'all']) }}" {{ $filterUser ? '' : 'selected' }}>すべての投稿</option>
                         <option value="{{ route('mypage.timeline.index', ['user_id' => $myId]) }}" {{ $filterUser && $filterUser->id === $myId ? 'selected' : '' }}>自分の投稿</option>
                     </select>
+                    {{-- 参加記録（セットリスト）の追加。My Setlists の見出しの横のボタンと同じ --}}
+                    <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-button" title="セットリストを追加">
+                        <i class="fas fa-plus"></i>
+                    </a>
                 </div>
                 <div id="timelineList">
                     @foreach ($attendances as $attendance)
