@@ -18,7 +18,8 @@
 @endphp
 
 @if (count($topicRevivals))
-<div class="stats-section visible">
+{{-- 50曲まで出し、最初は10曲だけ見せる（残りは Show More で開く） --}}
+<div class="stats-section visible" id="topicRevivalsSection">
     <h2 class="section-title"><i class="fas fa-rotate-left"></i> Long-Awaited Returns
     <span class="section-title-desc">前の演奏から長い間をおいて、久しぶりに演奏された曲</span></h2>
     <div class="stats-table-container">
@@ -26,7 +27,7 @@
             <thead><tr><th class="rank-col">Rank</th><th>Song Title</th><th>Tour Title</th><th class="count-col">Years</th></tr></thead>
             <tbody>
                 @foreach ($topicRevivals as $index => $row)
-                <tr>
+                <tr @if ($index >= 10) data-more="1" style="display: none;" @endif>
                     <td class="rank-col">{!! $topicRank($topicRevivals, $index, 'years') !!}</td>
                     <td class="song-title">{!! $topicSongLink($row) !!}</td>
                     <td>{!! $topicTourLine($row['from']) !!}<br>→ {!! $topicTourLine($row['to']) !!}</td>
@@ -39,11 +40,33 @@
             @include('stats._stacked_head', ['hasRank' => true, 'badgeLabel' => 'Years', 'showArtist' => false])
             @foreach ($topicRevivals as $index => $row)
                 @include('stats._stacked_row', ['rank' => $topicRank($topicRevivals, $index, 'years'), 'song' => $topicSongLink($row), 'artist' => null, 'showArtist' => false,
-                    'lines' => [['tour' => $topicTourLink($row['from'])], ['tour' => '→ ' . $topicTourLink($row['to'])]], 'badge' => $topicYears($row)])
+                    'lines' => [['tour' => $topicTourLink($row['from'])], ['tour' => '→ ' . $topicTourLink($row['to'])]], 'badge' => $topicYears($row), 'more' => $index >= 10])
             @endforeach
         </table>
+        @if (count($topicRevivals) > 10)
+        <div class="show-more-container">
+            <button type="button" class="show-more-btn" id="revivalsShowMore">
+                Show More <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+        @endif
     </div>
 </div>
+<script>
+(function () {
+    var section = document.getElementById('topicRevivalsSection');
+    var button = document.getElementById('revivalsShowMore');
+    if (!button) return;
+    var expanded = false;
+    // PCの表の行と、スマホの表の1曲ぶん（tbody）の両方を開け閉めする
+    button.addEventListener('click', function () {
+        expanded = !expanded;
+        section.querySelectorAll('[data-more]').forEach(function (el) { el.style.display = expanded ? '' : 'none'; });
+        button.classList.toggle('expanded', expanded);
+        button.innerHTML = expanded ? 'Show Less <i class="fas fa-chevron-up"></i>' : 'Show More <i class="fas fa-chevron-down"></i>';
+    });
+})();
+</script>
 @endif
 
 @if (count($topicDormant))

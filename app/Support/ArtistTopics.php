@@ -70,7 +70,7 @@ class ArtistTopics
     // ===== Databaseのstats =====
 
     // 久しぶりに演奏された曲：前の演奏ツアーから次の演奏ツアーまでがいちばん空いた曲（間の年数が長い順）
-    public function revivals(): array
+    public function revivals(int $limit = self::LIST_SIZE): array
     {
         $rows = [];
         foreach (array_keys($this->toursBySong) as $songId) {
@@ -89,7 +89,7 @@ class ArtistTopics
         }
         usort($rows, fn ($a, $b) => $b['years'] <=> $a['years']);
 
-        return array_slice($rows, 0, self::LIST_SIZE);
+        return array_slice($rows, 0, $limit);
     }
 
     // 同じライブシリーズを1つにまとめるためのキー（B'z の -Preview- / -Intermission- / -Extra- など、同じツアーの延長として

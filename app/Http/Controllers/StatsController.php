@@ -425,7 +425,8 @@ class StatsController extends Controller
         $songStatsNoDoubleEncore = $isHikigatariArtist ? $this->getDatabaseSongStats($artistId, $type, true) : [];
         // トピックス（久しぶりに演奏された曲など）
         $topics = new \App\Support\ArtistTopics($artistId);
-        $topicRevivals = $topics->revivals();
+        // Long-Awaited Returns も50曲まで（最初の10曲だけ見せて、残りは折りたたむ）
+        $topicRevivals = $topics->revivals(50);
         // Long Time No Play は50曲まで（最初の10曲だけ見せて、残りは折りたたむ）
         $topicDormant = $topics->dormant(1, false, 50);
         $topicDormantSingles = $topics->dormant(1, true, 50);
