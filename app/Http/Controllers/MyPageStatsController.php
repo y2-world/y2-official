@@ -341,6 +341,24 @@ class MyPageStatsController extends Controller
         $statsUser = $this->statsUser;
         $tabArtists = $this->tabArtists($artistRef);
 
+        // トピックス（公式アーティストと同じ。登録したシングル・アルバムの発売日で新曲を判定する）
+        $heard = $attendances->filter(fn ($a) => $a->userSetlist)->map(fn ($a) => [
+            'date' => $a->attended_date ? $a->attended_date->format('Y-m-d') : substr((string) optional($a->userSetlist->concert)->date1, 0, 10),
+            'title' => optional($a->userSetlist->concert)->title,
+            'url' => route('mypage.attendances.show', ['attendance' => $a, 'from' => 'stats']),
+            'song_ids' => collect(array_merge($a->userSetlist->setlist ?? [], $a->userSetlist->encore ?? []))
+                ->filter(fn ($s) => is_numeric($s['song'] ?? null))->map(fn ($s) => (int) $s['song'])->values()->all(),
+        ])->values()->all();
+        $topics = new \App\Support\ArtistTopics((int) $artist->id, true);
+        $topicHeardRevivals = $topics->heardRevivals($heard);
+        $topicFirstHeard = $topics->firstHeardTimeline($heard);
+        $topicWelcomeBack = $topics->welcomeBack($heard);
+        $topicRecentFirst = $topics->recentFirstListens($heard);
+        $topicRecentFirstAll = $topics->recentFirstListens($heard, false);
+        // トピックスの曲・ツアーのリンク先はマイページのページ
+        $topicSongUrl = fn ($songId) => route('mypage.user_songs.show', $songId);
+        $topicTourUrl = fn ($tourId) => route('mypage.user_concerts.show', $tourId);
+
         return view('mypage.stats.artist', compact(
             'artist',
             'artistRef',
@@ -353,7 +371,14 @@ class MyPageStatsController extends Controller
             'allSongs',
             'allSongsUnique',
             'yearStats',
-            'venueStats'
+            'venueStats',
+            'topicHeardRevivals',
+            'topicFirstHeard',
+            'topicWelcomeBack',
+            'topicRecentFirst',
+            'topicRecentFirstAll',
+            'topicSongUrl',
+            'topicTourUrl'
         ));
     }
 
@@ -490,8 +515,11 @@ class MyPageStatsController extends Controller
         $playedUserSongIds = $playedUserSongIdsNormal + $playedUserSongIdsFes;
         $fesOnlyUserSongIds = array_diff_key($playedUserSongIdsFes, $playedUserSongIdsNormal);
 
+        // 登録したシングル・アルバムで絞り込めるようにする（公式のスタンプ帳と同じ）
+        $stampFilters = $this->stampDiscographyFilters((int) $artistId, true);
+
         $userSongs = UserSong::where('user_artist_id', $artistId)->orderBy('sort_order')->get();
-        $stamps = $userSongs->map(function (UserSong $song) use ($playedUserSongIds, $everPerformedUserSongIds, $fesOnlyUserSongIds) {
+        $stamps = $userSongs->map(function (UserSong $song) use ($playedUserSongIds, $everPerformedUserSongIds, $fesOnlyUserSongIds, $stampFilters) {
             return [
                 'song_id' => $song->id,
                 'song_url' => $this->isOwner() ? route('mypage.attendances.index', ['song_id' => 'user-' . $song->id]) : null,
@@ -499,10 +527,13 @@ class MyPageStatsController extends Controller
                 'done' => isset($playedUserSongIds[$song->id]),
                 'never_performed' => !isset($everPerformedUserSongIds[$song->id]),
                 'fes_only' => isset($fesOnlyUserSongIds[$song->id]),
+                'filter_keys' => $this->stampFilterKeys($song->id, $stampFilters),
+                'track_titles' => $this->stampTrackTitles($song->id, $stampFilters),
+                'track_orders' => $this->stampTrackOrders($song->id, $stampFilters),
             ];
         });
 
-        return $this->renderStampsView($artist, $stamps, $externalUser);
+        return $this->renderStampsView($artist, $stamps, $externalUser, $stampFilters);
     }
 
     private function renderStampsView($artist, $stamps, $externalUser, ?array $stampFilters = null)

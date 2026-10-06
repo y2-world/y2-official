@@ -80,13 +80,18 @@ trait ComputesDbSongStamps
     // EPは全曲）、アルバムはベスト盤も含めtracklistの収録曲すべてを対象にする。
     // exceptionは表記違いの表示名にも使われるため、曲IDがあれば収録曲として数える。
     // 絞り込み時は、スタンプの曲名をそのシングル・アルバム側の表記（exception）に差し替える。
-    private function stampDiscographyFilters(int $artistId): array
+    // $userArtist = true のときは、マイページで作ったアーティストのシングル・アルバム（user_singles / user_albums）で作る
+    private function stampDiscographyFilters(int $artistId, bool $userArtist = false): array
     {
+        $singleModel = $userArtist ? \App\Models\UserSingle::class : DbSingle::class;
+        $albumModel = $userArtist ? \App\Models\UserAlbum::class : DbAlbum::class;
+        $artistColumn = $userArtist ? 'user_artist_id' : 'artist_id';
+
         $songTracks = fn ($tracklist) => collect($tracklist ?? [])
             ->filter(fn ($track) => is_numeric($track['id'] ?? null));
 
-        $singleTitleTracks = DbSingle::where('artist_id', $artistId)->orderBy('date')->orderBy('id')->get()
-            ->flatMap(function (DbSingle $single) use ($songTracks) {
+        $singleTitleTracks = $singleModel::where($artistColumn, $artistId)->orderBy('date')->orderBy('id')->get()
+            ->flatMap(function ($single) use ($songTracks) {
                 $tracklist = $single->tracklist ?? [];
                 if (!$single->ep) {
                     $tracklist = array_slice($tracklist, 0, count(preg_split('/[\/／]/u', $single->title ?? '')));
@@ -95,8 +100,8 @@ trait ComputesDbSongStamps
             })
             ->unique(fn ($track) => (int) $track['id']);
 
-        $albums = DbAlbum::where('artist_id', $artistId)->orderBy('date')->orderBy('id')->get()
-            ->map(fn (DbAlbum $album) => [
+        $albums = $albumModel::where($artistColumn, $artistId)->orderBy('date')->orderBy('id')->get()
+            ->map(fn ($album) => [
                 'key' => 'album-' . $album->id,
                 'title' => $album->title,
                 // 曲ID => 曲順（同じ曲が複数回入る場合は最初の位置）

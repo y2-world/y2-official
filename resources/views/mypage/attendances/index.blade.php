@@ -44,6 +44,28 @@
                     @endif
                 </div>
 
+                {{-- 入っているシングル・アルバム（曲のページと同じ）。公式の曲は Database、マイページで作った曲はマイページのページへ --}}
+                @php
+                    $songSingle = $song->singleFromTracklist;
+                    $songAlbum = $song->albumFromTracklist;
+                    $isOfficialSong = $songKind === 'official';
+                    $songAlbumTitle = $isOfficialSong && $songAlbum ? $song->albumDisplayTitleFromTracklist : $songAlbum?->title;
+                @endphp
+                @if ($songSingle)
+                    <p class="database-subtitle" style="font-weight: 400;"><strong>Single:</strong> <a href="{{ $isOfficialSong ? route('singles.show', $songSingle->id) : route('mypage.user_singles.show', $songSingle->id) }}" style="color: white; text-decoration: underline;">{{ $songSingle->title }}</a></p>
+                    @if ($songSingle->date)
+                        <p class="database-subtitle">Release: {{ \Carbon\Carbon::parse($songSingle->date)->format('Y.m.d') }}</p>
+                    @endif
+                @endif
+                @if ($songAlbum)
+                    <p class="database-subtitle" style="font-weight: 400;"><strong>Album:</strong> <a href="{{ $isOfficialSong ? route('albums.show', $songAlbum->id) : route('mypage.user_albums.show', $songAlbum->id) }}" style="color: white; text-decoration: underline;">{{ $songAlbumTitle }}</a></p>
+                    @if ($songAlbum->date)
+                        <p class="database-subtitle">Release: {{ \Carbon\Carbon::parse($songAlbum->date)->format('Y.m.d') }}</p>
+                    @endif
+                @elseif ($isOfficialSong || \App\Models\UserAlbum::where('user_artist_id', $song->user_artist_id)->exists())
+                    <p class="database-subtitle">アルバム未収録</p>
+                @endif
+
                 {{-- 虫眼鏡アイコン（SP表示のみ、見出しブロックの右下）：押すとフォームが開き、ボタン自体は隠れる --}}
                 <button type="button" id="spSearchButtonMyPageSong" class="sp" onclick="document.getElementById('spSearchButtonMyPageSong').style.display='none'; document.getElementById('spSearchFormMyPageSong').style.display='block';" style="position: absolute; bottom: 8px; right: 8px; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
                     <i class="fa-solid fa-magnifying-glass" style="font-size: 14px;"></i>
@@ -73,7 +95,7 @@
                     <div style="flex-shrink: 0;">
                         @php
                             $viewerLabel = $isSelf ? 'すべてのセットリスト' : ($targetUser->name ?: 'ゲスト') . 'の参加記録';
-                            $viewerLabelWithYear = $isSelf ? 'この年のすべてのセットリスト' : 'この年の' . $viewerLabel;
+                            $viewerLabelWithYear = $viewerLabel;
                         @endphp
                         @if ($filterArtist)
                             @php
@@ -160,7 +182,7 @@
                 </button>
                 <button type="button" class="song-performance-tab-btn @if($secondTab === 'mine') is-active @endif" data-tab-target="second-tab-panel"
                     style="padding: 8px 16px; border-radius: 20px; font-weight: 500; cursor: pointer; {{ $secondTab === 'mine' ? 'background: #667eea; color: white; border: none;' : 'background: white; color: #667eea; border: 1px solid #667eea;' }}">
-                    参加記録
+                    My Live Attendances
                 </button>
             </div>
 

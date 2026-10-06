@@ -114,7 +114,26 @@ class UserArtistController extends Controller
             ->whereHas('userSetlist.concert', fn ($q) => $q->where('user_artist_id', $artist->id))
             ->exists();
 
+        // 公式の Database Stats と同じトピックス（登録したシングル・アルバムの発売日も使う）
+        $topics = new \App\Support\ArtistTopics($artist->id, true);
+        $topicRevivals = $topics->revivals(50);
+        $topicDormant = $topics->dormant(1, false, 50);
+        $topicDormantSingles = $topics->dormant(1, true, 50);
+        $topicLateDebuts = $topics->lateDebuts();
+        $topicClosingSongs = array_slice($topics->closingSongs(), 0, 10);
+
+        // タブの「Artists」：ほかのアーティストの stats に切り替える。
+        // 公式アーティスト（本家の Database Stats と同じく、セットリストが登録されていて Database に出しているもの）を先に、マイページで作られたアーティストを全部その後に
+        $officialTourArtistIds = \App\Models\DbConcert::whereIn('id', \App\Models\DbSetlist::distinct()->pluck('tour_id'))->distinct()->pluck('artist_id');
+        $tabArtists = \App\Support\JapaneseNameSorter::sortBy(\App\Models\Artist::whereIn('id', $officialTourArtistIds)->where('visible', 1)->get(), 'name')
+            ->map(fn ($a) => ['name' => $a->name, 'url' => route('stats.index', ['tab' => 'database', 'artist_id' => $a->id]), 'current' => false])
+            ->concat(\App\Support\JapaneseNameSorter::sortBy(UserArtist::get(), 'name')
+                ->map(fn ($a) => ['name' => $a->name, 'url' => route('mypage.user_artists.stats', $a->id), 'current' => (int) $a->id === (int) $artist->id]))
+            ->values()->all();
+
         return view('mypage.user_artists.stats', compact(
+            'tabArtists',
+            'topicRevivals', 'topicDormant', 'topicDormantSingles', 'topicLateDebuts', 'topicClosingSongs',
             'hasAttended',
             'artist', 'overallStats', 'songStats', 'encoreSongStats', 'openingSongStats', 'longestSetlists', 'yearStats'
         ));

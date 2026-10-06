@@ -18,6 +18,27 @@ class UserSong extends Model
         return $this->belongsTo(UserArtist::class, 'user_artist_id');
     }
 
+    // この曲が入っているシングル・アルバムのうち、発売日がいちばん早いもの（公式の DbSong の singleFromTracklist / albumFromTracklist と同じ）
+    public function getSingleFromTracklistAttribute()
+    {
+        return $this->firstDiscContaining(UserSingle::class);
+    }
+
+    public function getAlbumFromTracklistAttribute()
+    {
+        return $this->firstDiscContaining(UserAlbum::class);
+    }
+
+    private function firstDiscContaining(string $model)
+    {
+        $songId = (int) $this->id;
+
+        return $model::where('user_artist_id', $this->user_artist_id)
+            ->orderByRaw('date IS NULL')->orderBy('date')->orderBy('id')
+            ->get()
+            ->first(fn ($disc) => collect($disc->tracklist ?? [])->contains(fn ($track) => (int) ($track['id'] ?? 0) === $songId));
+    }
+
     // 大文字小文字を無視して既存曲を検索し、無ければ作成する。
     // MySQL時代はutf8mb4_unicode_ci照合順序により firstOrCreate(['title' => $title]) が
     // 自動的に大文字小文字を無視していたが、Postgresのデフォルト照合順序は区別するため、

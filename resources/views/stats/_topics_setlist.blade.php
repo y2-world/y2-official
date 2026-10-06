@@ -1,6 +1,8 @@
 {{-- Databaseのstats「Setlist」タブのトピックス（本編ラスト曲）（App\Support\ArtistTopics） --}}
 @php
-    $topicSongLink = fn ($row) => '<a href="' . e(url('/database/songs/' . $row['song_id'])) . '" class="stats-link">' . e($row['title']) . '</a>';
+    // 曲のリンク先は $topicSongUrl（ID => URL）で変えられる（マイページで作ったアーティストではマイページのページへ）。渡さなければ Database
+    $topicSongUrl ??= fn ($id) => url('/database/songs/' . $id);
+    $topicSongLink = fn ($row) => '<a href="' . e($topicSongUrl($row['song_id'])) . '" class="stats-link">' . e($row['title']) . '</a>';
 @endphp
 @if (count($topicClosingSongs))
 <div class="stats-section visible">

@@ -56,10 +56,18 @@
                         <i class="fa-solid fa-music"></i>
                     </div>
                     <h3 class="card-title">Discography</h3>
-                    <p class="card-description">すべての楽曲（{{ $artist->songs_count }}曲）</p>
+                    <p class="card-description">すべての楽曲（{{ $artist->songs_count }}曲）・シングル・アルバム</p>
                     <div class="card-links">
                         <a href="{{ route('mypage.user_artists.songs', $artist->id) }}" class="database-link">
                             <span>Songs</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <a href="{{ route('mypage.user_artists.singles', $artist->id) }}" class="database-link">
+                            <span>Singles</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <a href="{{ route('mypage.user_artists.albums', $artist->id) }}" class="database-link">
+                            <span>Albums</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>

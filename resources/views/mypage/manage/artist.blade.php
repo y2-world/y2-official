@@ -48,6 +48,14 @@
                         <i class="fa-solid fa-chevron-right select-card-arrow"></i>
                     </a>
 
+                    <a href="{{ route('mypage.manage.discs', $artist->id) }}" class="select-card">
+                        <span class="select-card-body">
+                            <span class="select-card-title"><i class="fa-solid fa-compact-disc" style="margin-right: 10px;"></i> シングル・アルバムを管理</span>
+                            <span class="select-card-meta">{{ $singlesCount }}シングル ・ {{ $albumsCount }}アルバム</span>
+                        </span>
+                        <i class="fa-solid fa-chevron-right select-card-arrow"></i>
+                    </a>
+
                     <a href="{{ route('mypage.manage.concerts', $artist->id) }}" class="select-card">
                         <span class="select-card-body">
                             <span class="select-card-title"><i class="fa-solid fa-calendar-check" style="margin-right: 10px;"></i> ツアーを管理</span>

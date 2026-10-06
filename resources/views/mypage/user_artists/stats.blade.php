@@ -42,10 +42,113 @@
                         @endforeach
                     </div>
 
+                    {{-- 本家の Database Stats と同じく、Songs（曲ごとのランキング・トピックス）／Data（セトリの中の位置や曲数、年ごとのツアー数）のタブで分ける --}}
+                    <div class="stats-tab-bar">
+                        <button type="button" class="stats-tab-btn is-active" data-stats-tab="songs">Songs</button>
+                        <button type="button" class="stats-tab-btn" data-stats-tab="data">Data</button>
+                        {{-- Artists：ほかのアーティストの stats へ切り替える --}}
+                        @if (count($tabArtists) > 1)
+                        <select class="stats-tab-btn stats-tab-select" onchange="if (this.value) location.href = this.value;" aria-label="Artists">
+                            @foreach ($tabArtists as $tabArtist)
+                                <option value="{{ $tabArtist['url'] }}" {{ $tabArtist['current'] ? 'selected' : '' }}>{{ $tabArtist['name'] }}</option>
+                            @endforeach
+                        </select>
+                        @endif
+                    </div>
+
+                    <div class="stats-tab-panel" data-stats-panel="songs">
                     @foreach([
                         ['title' => 'Most Performed Songs', 'icon' => 'fa-fire', 'items' => $songStats, 'count_label' => 'Times', 'accordion' => true],
-                        ['title' => 'Most Performed Encore Songs', 'icon' => 'fa-star', 'items' => $encoreSongStats, 'count_label' => 'Times', 'accordion' => false],
+                    ] as $section)
+                        <section class="stats-section visible">
+                            <h2 class="section-title"><i class="fas {{ $section['icon'] }}"></i> {{ $section['title'] }} ({{ $section['items']->filter(fn ($song) => $song['count'] > 0)->count() }})</h2>
+                            @if($section['items']->isEmpty())
+                                <p>該当するデータはありません。</p>
+                            @else
+                                <div class="stats-table-container">
+                                    <table class="stats-table">
+                                        <thead><tr><th class="rank-col">Rank</th><th>Song Title</th><th class="count-col">{{ $section['count_label'] }}</th></tr></thead>
+                                        <tbody>
+                                            @foreach($section['items'] as $index => $song)
+                                                @php
+                                                    $showRank = $index === 0 || $section['items'][$index - 1]['count'] !== $song['count'];
+                                                @endphp
+                                                <tr class="{{ $section['accordion'] && $index >= 10 ? 'hidden-row' : '' }}">
+                                                    <td class="rank-col">
+                                                        @if($showRank)
+                                                            @if($index === 0)<span class="rank-badge gold">🏆</span>
+                                                            @elseif($index === 1)<span class="rank-badge silver">🥈</span>
+                                                            @elseif($index === 2)<span class="rank-badge bronze">🥉</span>
+                                                            @else<span class="rank-number">{{ $index + 1 }}</span>@endif
+                                                        @endif
+                                                    </td>
+                                                    <td class="song-title"><a href="{{ route('mypage.user_songs.show', $song['id']) }}" class="stats-link">{{ $song['title'] }}</a></td>
+                                                    <td class="count-col"><span class="count-badge">{{ $song['count'] }}</span></td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                    @if($section['accordion'] && $section['items']->count() > 10)
+                                        <div class="show-more-container">
+                                            <button class="show-more-btn" type="button" onclick="toggleStatsRows(this)">Show More <i class="fas fa-chevron-down"></i></button>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endif
+                        </section>
+                    @endforeach
+
+                    {{-- 公式の Database Stats と同じトピックス。曲・ツアーのリンク先はマイページのページ --}}
+                    @include('stats._topics_songs', ['topicSongUrl' => fn ($id) => route('mypage.user_songs.show', $id), 'topicTourUrl' => fn ($id) => route('mypage.user_concerts.show', $id)])
+                    </div>
+
+                    <div class="stats-tab-panel" data-stats-panel="data" style="display: none;">
+                    @foreach([
                         ['title' => 'Most Used Opening Songs', 'icon' => 'fa-play', 'items' => $openingSongStats, 'count_label' => 'Times', 'accordion' => false],
+                    ] as $section)
+                        <section class="stats-section visible">
+                            <h2 class="section-title"><i class="fas {{ $section['icon'] }}"></i> {{ $section['title'] }} ({{ $section['items']->filter(fn ($song) => $song['count'] > 0)->count() }})</h2>
+                            @if($section['items']->isEmpty())
+                                <p>該当するデータはありません。</p>
+                            @else
+                                <div class="stats-table-container">
+                                    <table class="stats-table">
+                                        <thead><tr><th class="rank-col">Rank</th><th>Song Title</th><th class="count-col">{{ $section['count_label'] }}</th></tr></thead>
+                                        <tbody>
+                                            @foreach($section['items'] as $index => $song)
+                                                @php
+                                                    $showRank = $index === 0 || $section['items'][$index - 1]['count'] !== $song['count'];
+                                                @endphp
+                                                <tr class="{{ $section['accordion'] && $index >= 10 ? 'hidden-row' : '' }}">
+                                                    <td class="rank-col">
+                                                        @if($showRank)
+                                                            @if($index === 0)<span class="rank-badge gold">🏆</span>
+                                                            @elseif($index === 1)<span class="rank-badge silver">🥈</span>
+                                                            @elseif($index === 2)<span class="rank-badge bronze">🥉</span>
+                                                            @else<span class="rank-number">{{ $index + 1 }}</span>@endif
+                                                        @endif
+                                                    </td>
+                                                    <td class="song-title"><a href="{{ route('mypage.user_songs.show', $song['id']) }}" class="stats-link">{{ $song['title'] }}</a></td>
+                                                    <td class="count-col"><span class="count-badge">{{ $song['count'] }}</span></td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                    @if($section['accordion'] && $section['items']->count() > 10)
+                                        <div class="show-more-container">
+                                            <button class="show-more-btn" type="button" onclick="toggleStatsRows(this)">Show More <i class="fas fa-chevron-down"></i></button>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endif
+                        </section>
+                    @endforeach
+
+                    {{-- 本編ラスト曲（本家の Data タブと同じ位置）。曲のリンク先はマイページのページ --}}
+                    @include('stats._topics_setlist', ['topicSongUrl' => fn ($id) => route('mypage.user_songs.show', $id)])
+
+                    @foreach([
+                        ['title' => 'Most Performed Encore Songs', 'icon' => 'fa-star', 'items' => $encoreSongStats, 'count_label' => 'Times', 'accordion' => false],
                     ] as $section)
                         <section class="stats-section visible">
                             <h2 class="section-title"><i class="fas {{ $section['icon'] }}"></i> {{ $section['title'] }} ({{ $section['items']->filter(fn ($song) => $song['count'] > 0)->count() }})</h2>
@@ -140,11 +243,13 @@
                             </div>
                         @endif
                     </section>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+@include('stats._tabs_script')
 <script>
 function toggleStatsRows(button) {
     const container = button.closest('.stats-table-container');

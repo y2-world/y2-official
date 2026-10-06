@@ -20,25 +20,44 @@ class ArtistTopics
     // [曲ID => [ツアーID => true]]
     private array $toursBySong = [];
 
-    public function __construct(private int $artistId)
+    // $userArtist = true のときは、マイページで作ったアーティスト（user_songs / user_concerts / user_setlists / user_singles / user_albums）で計算する
+    public function __construct(private int $artistId, private bool $userArtist = false)
     {
-        $this->songs = DbSong::where('artist_id', $artistId)->pluck('title', 'id')->all();
+        $songModel = $userArtist ? \App\Models\UserSong::class : DbSong::class;
+        $tourModel = $userArtist ? \App\Models\UserConcert::class : DbConcert::class;
+        $this->songs = $songModel::where($this->artistColumn(), $artistId)->pluck('title', 'id')->all();
         $today = now()->toDateString();
-        $this->tours = DbConcert::where('artist_id', $artistId)
+        $this->tours = $tourModel::where($this->artistColumn(), $artistId)
             ->whereNotNull('date1')
             ->whereDate('date1', '<=', $today)
             ->orderBy('date1')
             ->get(['id', 'title', 'date1', 'date2'])
             ->keyBy('id')
             ->all();
-        foreach (DbSetlist::whereIn('tour_id', array_keys($this->tours))->get() as $setlist) {
-            $this->setlistsByTour[$setlist->tour_id][] = $setlist;
+        $setlists = $userArtist
+            ? \App\Models\UserSetlist::whereIn('user_concert_id', array_keys($this->tours))->get()
+            : DbSetlist::whereIn('tour_id', array_keys($this->tours))->get();
+        foreach ($setlists as $setlist) {
+            $tourId = $userArtist ? $setlist->user_concert_id : $setlist->tour_id;
+            $this->setlistsByTour[$tourId][] = $setlist;
             foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $item) {
                 if ($this->isSong($item)) {
-                    $this->toursBySong[(int) $item['song']][$setlist->tour_id] = true;
+                    $this->toursBySong[(int) $item['song']][$tourId] = true;
                 }
             }
         }
+    }
+
+    private function artistColumn(): string
+    {
+        return $this->userArtist ? 'user_artist_id' : 'artist_id';
+    }
+
+    private function discModels(): array
+    {
+        return $this->userArtist
+            ? [\App\Models\UserSingle::class, \App\Models\UserAlbum::class]
+            : [\App\Models\DbSingle::class, \App\Models\DbAlbum::class];
     }
 
     private function isSong($item): bool
@@ -153,7 +172,7 @@ class ArtistTopics
     private function singleSongIds(): array
     {
         $ids = [];
-        foreach (\App\Models\DbSingle::where('artist_id', $this->artistId)->get(['title', 'tracklist', 'ep']) as $single) {
+        foreach ($this->discModels()[0]::where($this->artistColumn(), $this->artistId)->get(['title', 'tracklist', 'ep']) as $single) {
             $tracks = $single->tracklist ?? [];
             if (!$single->ep) {
                 $tracks = array_slice($tracks, 0, count(preg_split('/[\/／]/u', $single->title ?? '')));
@@ -286,8 +305,8 @@ class ArtistTopics
     private function releaseDates(): array
     {
         $dates = [];
-        foreach ([\App\Models\DbSingle::class, \App\Models\DbAlbum::class] as $model) {
-            foreach ($model::where('artist_id', $this->artistId)->whereNotNull('date')->get(['date', 'tracklist']) as $disc) {
+        foreach ($this->discModels() as $model) {
+            foreach ($model::where($this->artistColumn(), $this->artistId)->whereNotNull('date')->get(['date', 'tracklist']) as $disc) {
                 $date = substr((string) $disc->date, 0, 10);
                 foreach ($disc->tracklist ?? [] as $track) {
                     if (is_numeric($track['id'] ?? null)) {

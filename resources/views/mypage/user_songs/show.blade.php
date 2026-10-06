@@ -20,6 +20,26 @@
                 <p class="database-subtitle song-number-mine" style="{{ $secondTab === 'mine' ? '' : 'display: none;' }}"># {{ $songNumberMine }}</p>
             @endif
             <h1 class="database-title">{{ $song->title }}</h1>
+            {{-- 入っているシングル・アルバム（公式の曲のページと同じ） --}}
+            @php
+                $single = $song->singleFromTracklist;
+                $album = $song->albumFromTracklist;
+            @endphp
+            @if ($single)
+                <p class="database-subtitle" style="font-weight: 400;"><strong>Single:</strong> <a href="{{ route('mypage.user_singles.show', $single->id) }}" style="color: white; text-decoration: underline;">{{ $single->title }}</a></p>
+                @if ($single->date)
+                    <p class="database-subtitle">Release: {{ $single->date->format('Y.m.d') }}</p>
+                @endif
+            @endif
+            @if ($album)
+                <p class="database-subtitle" style="font-weight: 400;"><strong>Album:</strong> <a href="{{ route('mypage.user_albums.show', $album->id) }}" style="color: white; text-decoration: underline;">{{ $album->title }}</a></p>
+                @if ($album->date)
+                    <p class="database-subtitle">Release: {{ $album->date->format('Y.m.d') }}</p>
+                @endif
+            @elseif (\App\Models\UserAlbum::where('user_artist_id', $song->user_artist_id)->exists())
+                {{-- アルバムを1枚も登録していないアーティストでは出さない --}}
+                <p class="database-subtitle">アルバム未収録</p>
+            @endif
         </div>
     </div>
 
@@ -40,7 +60,7 @@
             </button>
             <button type="button" class="song-performance-tab-btn @if($secondTab === 'mine') is-active @endif" data-tab-target="second-tab-panel"
                 style="padding: 8px 16px; border-radius: 20px; font-weight: 500; cursor: pointer; {{ $secondTab === 'mine' ? 'border: none; background: #667eea; color: white;' : 'border: 1px solid #667eea; background: white; color: #667eea;' }}">
-                参加記録
+                My Live Attendances
             </button>
         </div>
 

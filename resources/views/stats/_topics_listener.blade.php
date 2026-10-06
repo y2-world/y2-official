@@ -15,7 +15,10 @@
     $topicShowLink = fn ($date, $title, $url) => e(substr($date, 0, 4)) . ' / ' . ($url ? '<a href="' . e($url) . '" class="stats-link">' . e($title) . '</a>' : e($title));
     // スマホ：参加した公演のタイトル（リンク先があればリンクに）。日付は下の段に小さく出す
     $topicShowTitle = fn ($title, $url) => $url ? '<a href="' . e($url) . '" class="stats-link">' . e($title) . '</a>' : e($title);
-    $topicSongLink = fn ($row) => '<a href="' . e(url('/database/songs/' . $row['song_id'])) . '" class="stats-link">' . e($row['title']) . '</a>';
+    // 曲・ツアーのリンク先は $topicSongUrl / $topicTourUrl（ID => URL）で変えられる（マイページで作ったアーティストではマイページのページへ）。渡さなければ Database
+    $topicSongUrl ??= fn ($id) => url('/database/songs/' . $id);
+    $topicTourUrl ??= fn ($id) => route('live.show', $id);
+    $topicSongLink = fn ($row) => '<a href="' . e($topicSongUrl($row['song_id'])) . '" class="stats-link">' . e($row['title']) . '</a>';
     // 新曲以外（リリースから時間がたってから初めて聴けた曲）は太字にする
     $topicSongLinkMarked = fn ($row) => empty($row['new']) ? '<span style="font-weight: 700;">' . $topicSongLink($row) . '</span>' : $topicSongLink($row);
 
@@ -122,7 +125,7 @@ document.getElementById('recentFirstExcludeNew')?.addEventListener('change', fun
                     <td class="rank-col">{!! $topicRank($topicHeardRevivals, $index, 'years') !!}</td>
                     <td class="song-title">{!! $topicSongLink($row) !!}</td>
                     @if ($topicShowArtist)<td>@if (isset($topicArtistUrl, $row['artist_id']))<a href="{{ $topicArtistUrl($row['artist_id']) }}" class="stats-link">{{ $row['artist'] }}</a>@else{{ $row['artist'] ?? '' }}@endif</td>@endif
-                    <td style="font-size: 0.85em;">{{ substr($row['previous']['date'], 0, 4) }} / <a href="{{ route('live.show', $row['previous']['id']) }}" class="stats-link">{{ $row['previous']['title'] }}</a><br>
+                    <td style="font-size: 0.85em;">{{ substr($row['previous']['date'], 0, 4) }} / <a href="{{ $topicTourUrl($row['previous']['id']) }}" class="stats-link">{{ $row['previous']['title'] }}</a><br>
                         → {!! $topicShowLink($row['date'], $row['show'], $row['show_url'] ?? null) !!}</td>
                     <td class="count-col"><span class="count-badge">{{ number_format($row['years'], 1) }}年</span></td>
                 </tr>
@@ -133,7 +136,7 @@ document.getElementById('recentFirstExcludeNew')?.addEventListener('change', fun
             @include('stats._stacked_head', ['hasRank' => true, 'badgeLabel' => 'Years', 'showArtist' => $topicShowArtist])
             @foreach ($topicHeardRevivals as $index => $row)
                 @include('stats._stacked_row', ['rank' => $topicRank($topicHeardRevivals, $index, 'years'), 'song' => $topicSongLink($row), 'artist' => $topicShowArtist ? $topicArtistCell($row) : null, 'showArtist' => $topicShowArtist,
-                    'lines' => [['tour' => $topicShowTitle($row['previous']['title'], route('live.show', $row['previous']['id']))], ['tour' => '→ ' . $topicShowTitle($row['show'], $row['show_url'] ?? null)]], 'badge' => number_format($row['years'], 1) . '年'])
+                    'lines' => [['tour' => $topicShowTitle($row['previous']['title'], $topicTourUrl($row['previous']['id']))], ['tour' => '→ ' . $topicShowTitle($row['show'], $row['show_url'] ?? null)]], 'badge' => number_format($row['years'], 1) . '年'])
             @endforeach
         </table>
     </div>

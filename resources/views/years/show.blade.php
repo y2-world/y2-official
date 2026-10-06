@@ -11,7 +11,7 @@
             <div class="setlists-header-row">
                 <div style="flex-shrink: 0;">
                     <h1 class="database-title" style="white-space: nowrap;">{{ $year->year }}</h1>
-                    <p class="database-subtitle" style="margin: 4px 0 0;">この年のすべてのセットリスト</p>
+                    <p class="database-subtitle" style="margin: 4px 0 0;">すべてのセットリスト</p>
                 </div>
                 <div class="header-selects" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; overflow-x: auto; max-width: 100%;">
                     {{-- 虫眼鏡アイコン（SP表示のみ） --}}

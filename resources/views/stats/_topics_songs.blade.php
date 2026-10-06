@@ -9,8 +9,11 @@
         return [0 => '<span class="rank-badge gold">🏆</span>', 1 => '<span class="rank-badge silver">🥈</span>', 2 => '<span class="rank-badge bronze">🥉</span>'][$index]
             ?? '<span class="rank-number">' . ($index + 1) . '</span>';
     };
-    $topicSongLink = fn ($row) => '<a href="' . e(url('/database/songs/' . $row['song_id'])) . '" class="stats-link">' . e($row['title']) . '</a>';
-    $topicTourLink = fn ($tour) => '<a href="' . e(route('live.show', $tour['id'])) . '" class="stats-link">' . e($tour['title']) . '</a>';
+    // 曲・ツアーのリンク先は $topicSongUrl / $topicTourUrl（ID => URL）で変えられる（マイページで作ったアーティストではマイページのページへ）。渡さなければ Database
+    $topicSongUrl ??= fn ($id) => url('/database/songs/' . $id);
+    $topicTourUrl ??= fn ($id) => route('live.show', $id);
+    $topicSongLink = fn ($row) => '<a href="' . e($topicSongUrl($row['song_id'])) . '" class="stats-link">' . e($row['title']) . '</a>';
+    $topicTourLink = fn ($tour) => '<a href="' . e($topicTourUrl($tour['id'])) . '" class="stats-link">' . e($tour['title']) . '</a>';
     $topicYear = fn ($date) => e(substr($date, 0, 4));
     // PC：「1992 / ツアー名」の形で、ツアー名だけをリンクにする
     $topicTourLine = fn ($tour) => '<span style="font-size: 0.85em;">' . $topicYear($tour['date']) . ' / ' . $topicTourLink($tour) . '</span>';

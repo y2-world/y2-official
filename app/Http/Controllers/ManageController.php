@@ -65,7 +65,10 @@ class ManageController extends Controller
         $songsCount = UserSong::where('user_artist_id', $artistId)->count();
         $concertsCount = UserConcert::where('user_artist_id', $artistId)->count();
 
-        return view('mypage.manage.artist', compact('artist', 'songsCount', 'concertsCount'));
+        $singlesCount = \App\Models\UserSingle::where('user_artist_id', $artistId)->count();
+        $albumsCount = \App\Models\UserAlbum::where('user_artist_id', $artistId)->count();
+
+        return view('mypage.manage.artist', compact('artist', 'songsCount', 'concertsCount', 'singlesCount', 'albumsCount'));
     }
 
     // アーティスト名のインライン編集（曲名編集と同じUI・Ajaxパターン）

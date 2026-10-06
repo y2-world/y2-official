@@ -147,6 +147,11 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
         Route::get('artists/{artistId}/stats', [UserArtistController::class, 'stats'])->name('user_artists.stats');
         Route::get('live/{id}', [UserConcertController::class, 'show'])->name('user_concerts.show');
         Route::get('songs/{id}', [UserSongController::class, 'show'])->name('user_songs.show');
+        // ユーザーのアーティストのシングル・アルバム
+        Route::get('artists/{artistId}/singles', [\App\Http\Controllers\UserDiscController::class, 'index'])->name('user_artists.singles')->defaults('kind', 'singles');
+        Route::get('artists/{artistId}/albums', [\App\Http\Controllers\UserDiscController::class, 'index'])->name('user_artists.albums')->defaults('kind', 'albums');
+        Route::get('singles/{id}', [\App\Http\Controllers\UserDiscController::class, 'show'])->name('user_singles.show')->defaults('kind', 'singles');
+        Route::get('albums/{id}', [\App\Http\Controllers\UserDiscController::class, 'show'])->name('user_albums.show')->defaults('kind', 'albums');
 
         Route::prefix('timeline')->name('timeline.')->group(function () {
             Route::get('/', [TimelineController::class, 'index'])->name('index');
@@ -208,6 +213,14 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
             Route::match(['post', 'delete'], 'artists/{artistId}', [ManageController::class, 'destroyArtist'])->name('artists.destroy');
             Route::match(['post', 'delete'], 'artists/{artistId}/concerts/{concertId}', [ManageController::class, 'destroyConcert'])->name('concerts.destroy');
             Route::match(['post', 'delete'], 'artists/{artistId}/concerts/{concertId}/setlists/{setlistId}', [ManageController::class, 'destroySetlist'])->name('setlists.destroy');
+
+            // シングル・アルバム（{kind} は single / album）
+            Route::get('artists/{artistId}/discs', [\App\Http\Controllers\ManageDiscController::class, 'index'])->name('discs');
+            Route::get('artists/{artistId}/discs/create', [\App\Http\Controllers\ManageDiscController::class, 'create'])->name('discs.create');
+            Route::post('artists/{artistId}/discs', [\App\Http\Controllers\ManageDiscController::class, 'store'])->name('discs.store');
+            Route::get('artists/{artistId}/discs/{kind}/{discId}/edit', [\App\Http\Controllers\ManageDiscController::class, 'edit'])->name('discs.edit')->where('kind', 'single|album');
+            Route::post('artists/{artistId}/discs/{kind}/{discId}/edit', [\App\Http\Controllers\ManageDiscController::class, 'update'])->name('discs.update')->where('kind', 'single|album');
+            Route::match(['post', 'delete'], 'artists/{artistId}/discs/{kind}/{discId}', [\App\Http\Controllers\ManageDiscController::class, 'destroy'])->name('discs.destroy')->where('kind', 'single|album');
         });
 
         Route::get('settings', [ExternalAuthController::class, 'showSettings'])->name('settings');
