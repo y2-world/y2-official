@@ -40,7 +40,7 @@
             </button>
             <button type="button" class="song-performance-tab-btn @if($secondTab === 'mine') is-active @endif" data-tab-target="second-tab-panel"
                 style="padding: 8px 16px; border-radius: 20px; font-weight: 500; cursor: pointer; {{ $secondTab === 'mine' ? 'border: none; background: #667eea; color: white;' : 'border: 1px solid #667eea; background: white; color: #667eea;' }}">
-                My Live Attendances
+                参加記録
             </button>
         </div>
 
