@@ -20,63 +20,8 @@ class SlSongController extends Controller
         $song = SlSong::findOrFail($id);
         $title = $song->title;
 
-        // この曲が含まれるセットリストを検索
-        $setlists = SlSetlist::all()->filter(function ($setlist) use ($id, $title) {
-            // setlist フィールドをチェック
-            $setlistArr = is_array($setlist->setlist)
-                ? $setlist->setlist
-                : json_decode($setlist->setlist ?? '[]', true);
-
-            // encore フィールドをチェック
-            $encoreArr = is_array($setlist->encore)
-                ? $setlist->encore
-                : json_decode($setlist->encore ?? '[]', true);
-
-            // fes_setlist フィールドをチェック
-            $fesSetlistArr = is_array($setlist->fes_setlist)
-                ? $setlist->fes_setlist
-                : json_decode($setlist->fes_setlist ?? '[]', true);
-
-            // fes_encore フィールドをチェック
-            $fesEncoreArr = is_array($setlist->fes_encore)
-                ? $setlist->fes_encore
-                : json_decode($setlist->fes_encore ?? '[]', true);
-
-            // fes_setlist/fes_encoreのblockアイテムを展開
-            $expandFes = function ($items) {
-                $result = [];
-                foreach ($items as $item) {
-                    if (($item['type'] ?? 'song') === 'block') {
-                        foreach ($item['songs'] ?? [] as $s) {
-                            $result[] = $s;
-                        }
-                    } else {
-                        $result[] = $item;
-                    }
-                }
-                return $result;
-            };
-
-            $allLists = array_merge($setlistArr, $encoreArr, $expandFes($fesSetlistArr), $expandFes($fesEncoreArr));
-
-            foreach ($allLists as $entry) {
-                // 数値IDの場合：SetlistSongのIDと一致するか
-                if (is_numeric($entry['song'] ?? null) && (int)$entry['song'] === (int)$id) {
-                    return true;
-                }
-
-                // 文字列の場合：タイトルが一致するか（例外処理）
-                if (!is_numeric($entry['song'] ?? null)) {
-                    $entryTitle = preg_replace('/\s*\[[^\]]+\]/u', '', $entry['song'] ?? '');
-                    if (trim($entryTitle) === $title) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        })
-        ->sortByDesc('date')
-        ->values();
+        // この曲が含まれるセットリスト（新しい順）
+        $setlists = $song->performedSetlists();
 
         // このページは常に2タブ構成：
         // 「Yuki's Live Attendances」＝上記$setlists（セットリストサイト全体の記録、常に表示・

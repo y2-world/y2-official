@@ -25,7 +25,7 @@
                             ? route('mypage.user_artists.stats', (int) substr($artistRef, 5))
                             : route('stats.index', ['tab' => 'database', 'artist_id' => (int) substr($artistRef, 9)]);
                     @endphp
-                    <div class="stamp-book-link-wrapper" style="margin: -18px 0 45px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+                    <div class="stamp-book-link-wrapper stats-link-row" style="margin: -18px 0 45px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
                         @if ($stampsRoute)
                         <a href="{{ $stampsRoute }}" class="stamp-book-link">
                             <i class="fas fa-stamp"></i> View Live Stamp Book

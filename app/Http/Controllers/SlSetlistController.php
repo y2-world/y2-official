@@ -133,8 +133,18 @@ class SlSetlistController extends Controller
         // Previous/Nextの移動範囲をその一覧と同じ範囲（年内 / アーティスト内 / 同一会場内）に絞り込む。
         // 該当しない・指定が無い場合は従来通り全セットリスト中で前後に移動する。
         $from = $request->query('from');
-        $scopeQuery = function ($query) use ($from, $setlists) {
-            if ($from === 'year') {
+        // 曲のページから来た場合は、その曲を演奏したセットリストの中だけで前後に移動する
+        // （setlists/songs からは from=slsong-{曲ID}、database/songs の Yuki's Live Attendances からは from=song-{曲ID}）
+        $songSetlistIds = null;
+        if (preg_match('/^slsong-(\d+)$/', (string) $from, $m) && ($fromSong = \App\Models\SlSong::find($m[1]))) {
+            $songSetlistIds = $fromSong->performedSetlists()->pluck('id')->all();
+        } elseif (preg_match('/^song-(\d+)$/', (string) $from, $m) && ($fromSong = \App\Models\DbSong::find($m[1]))) {
+            $songSetlistIds = $fromSong->performedSlSetlists()->pluck('id')->all();
+        }
+        $scopeQuery = function ($query) use ($from, $setlists, $songSetlistIds) {
+            if ($songSetlistIds !== null) {
+                $query->whereIn('id', $songSetlistIds);
+            } elseif ($from === 'year') {
                 $query->where('year', $setlists->year);
             } elseif ($from === 'artist' && $setlists->artist_id) {
                 $query->where('artist_id', $setlists->artist_id);

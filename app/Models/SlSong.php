@@ -134,4 +134,68 @@ class SlSong extends Model
     {
         return $this->belongsTo(DbSong::class);
     }
+
+    // この曲が含まれるセットリスト（fes の block の中も見る。文字のまま入っている曲はタイトルで照合）。新しい順
+    public function performedSetlists()
+    {
+        $id = $this->id;
+        $title = $this->title;
+
+        return SlSetlist::all()->filter(function ($setlist) use ($id, $title) {
+            // setlist フィールドをチェック
+            $setlistArr = is_array($setlist->setlist)
+                ? $setlist->setlist
+                : json_decode($setlist->setlist ?? '[]', true);
+
+            // encore フィールドをチェック
+            $encoreArr = is_array($setlist->encore)
+                ? $setlist->encore
+                : json_decode($setlist->encore ?? '[]', true);
+
+            // fes_setlist フィールドをチェック
+            $fesSetlistArr = is_array($setlist->fes_setlist)
+                ? $setlist->fes_setlist
+                : json_decode($setlist->fes_setlist ?? '[]', true);
+
+            // fes_encore フィールドをチェック
+            $fesEncoreArr = is_array($setlist->fes_encore)
+                ? $setlist->fes_encore
+                : json_decode($setlist->fes_encore ?? '[]', true);
+
+            // fes_setlist/fes_encoreのblockアイテムを展開
+            $expandFes = function ($items) {
+                $result = [];
+                foreach ($items as $item) {
+                    if (($item['type'] ?? 'song') === 'block') {
+                        foreach ($item['songs'] ?? [] as $s) {
+                            $result[] = $s;
+                        }
+                    } else {
+                        $result[] = $item;
+                    }
+                }
+                return $result;
+            };
+
+            $allLists = array_merge($setlistArr, $encoreArr, $expandFes($fesSetlistArr), $expandFes($fesEncoreArr));
+
+            foreach ($allLists as $entry) {
+                // 数値IDの場合：SetlistSongのIDと一致するか
+                if (is_numeric($entry['song'] ?? null) && (int)$entry['song'] === (int)$id) {
+                    return true;
+                }
+
+                // 文字列の場合：タイトルが一致するか（例外処理）
+                if (!is_numeric($entry['song'] ?? null)) {
+                    $entryTitle = preg_replace('/\s*\[[^\]]+\]/u', '', $entry['song'] ?? '');
+                    if (trim($entryTitle) === $title) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        })
+        ->sortByDesc('date')
+        ->values();
+    }
 }

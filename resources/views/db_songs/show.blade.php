@@ -127,7 +127,7 @@
                                 @elseif(isset($tour->date1) && !isset($tour->date2))
                                     <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
                                 @endif
-                                <td class="td_title"><a href="{{ route('live.show', $tour->id) }}">{{ $tour->title }}</a>
+                                <td class="td_title"><a href="{{ route('live.show', ['id' => $tour->id, 'from' => 'song-' . $songs->id]) }}">{{ $tour->title }}</a>
                                 </td>
                                 @if ($isHikigatariArtist)@include('songs._hikigatari_cell', ['hikigatari' => isset($hikigatariTourIds[$tour->id]), 'normal' => isset($normalTourIds[$tour->id])])@endif
                             </tr>
@@ -158,7 +158,7 @@
                             <tr data-titles="{{ json_encode($secondTabTitles[$setlist->id] ?? [], JSON_UNESCAPED_UNICODE) }}" @if ($isHikigatariArtist && isset($hikigatariSecondTabIds[$setlist->id]) && !isset($normalSecondTabIds[$setlist->id])) data-double-encore-only="1" @endif>
                                 <td></td>
                                 <td class="td_date">{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
-                                <td class="td_title"><a href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
+                                <td class="td_title"><a href="{{ route('setlists.show', $setlist->id) }}{{ $secondTab === 'yuki' ? '?from=song-' . $songs->id : '' }}">{{ $setlist->title }}</a></td>
                                 @if ($isHikigatariArtist)@include('songs._hikigatari_cell', ['hikigatari' => isset($hikigatariSecondTabIds[$setlist->id]), 'normal' => isset($normalSecondTabIds[$setlist->id])])@endif
                                 <td class="pc"><a href="{{ url('/venue?keyword=' . urlencode($setlist->venue)) }}">{{ $setlist->venue }}</a></td>
                             </tr>

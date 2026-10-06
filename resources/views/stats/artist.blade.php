@@ -14,7 +14,7 @@
 
                     {{-- スタンプ帳と、このアーティストの Database（公式の演奏記録）の stats へのリンク --}}
                     @if ($hasStampBook || $hasDatabaseStats)
-                    <div class="stamp-book-link-wrapper" style="margin: -18px 0 45px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+                    <div class="stamp-book-link-wrapper stats-link-row" style="margin: -18px 0 45px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
                         @if ($hasStampBook)
                         <a href="{{ route('stats.stamps', $artist->id) }}" class="stamp-book-link">
                             <i class="fas fa-stamp"></i> View Live Stamp Book

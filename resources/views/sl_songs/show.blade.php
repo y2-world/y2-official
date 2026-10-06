@@ -134,7 +134,7 @@
                                         <td></td>
                                         <td class="td_date">{{ date('Y.m.d', strtotime($setlist->date)) }}</td>
                                         <td class="td_title"><a
-                                                href="{{ route('setlists.show', $setlist->id) }}">{{ $setlist->title }}</a></td>
+                                                href="{{ route('setlists.show', $setlist->id) }}?from=slsong-{{ $song->id }}">{{ $setlist->title }}</a></td>
                                             @if ($isHikigatariArtist)@include('songs._hikigatari_cell', ['hikigatari' => isset($hikigatariSetlistIds[$setlist->id]), 'normal' => isset($normalSetlistIds[$setlist->id])])@endif
                                         <td class="pc"><a
                                                 href="{{ url('/venue?keyword=' . urlencode($setlist->venue)) }}">{{ $setlist->venue }}</a>

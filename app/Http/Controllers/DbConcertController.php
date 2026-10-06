@@ -62,9 +62,16 @@ class DbConcertController extends Controller
         // 該当しない・指定が無い場合は従来通りアーティスト内の全ライブから前後に移動する。
         $from = $request->query('from');
         $tab = $request->query('tab');
-        $scopeQuery = function ($query) use ($from, $tours) {
+        // 曲のページ（database/songs）から来た場合（from=song-{曲ID}）は、その曲を演奏したライブの中だけで前後に移動する
+        $songTourIds = null;
+        if (preg_match('/^song-(\d+)$/', (string) $from, $m) && ($fromSong = DbSong::find($m[1]))) {
+            $songTourIds = $fromSong->performedTourSetlists()->pluck('tour_id')->unique()->values()->all();
+        }
+        $scopeQuery = function ($query) use ($from, $tours, $songTourIds) {
             if ($from === 'type') {
                 $query->where('type', $tours->type);
+            } elseif ($songTourIds !== null) {
+                $query->whereIn('id', $songTourIds);
             }
             return $query;
         };
