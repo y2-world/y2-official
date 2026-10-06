@@ -1017,6 +1017,11 @@ th {
 @media (max-width: 991px) {
     .table.fixed-cols .col-no { width: 4em; }
 }
+/* モバイルでは開催日の列を日付が1行で入るだけの幅にして、アーティスト/タイトルとの間を詰める */
+@media (max-width: 576px) {
+    .table.fixed-cols .col-date { width: 9em; }
+    .table.fixed-cols .col-date-range { width: 14.5em; }
+}
 
 .schedule-text {
     font-size: 13px;
