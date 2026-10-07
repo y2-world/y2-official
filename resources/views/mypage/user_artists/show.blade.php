@@ -2,8 +2,8 @@
 @section('title', 'Yuki Official - ' . $artist->name . ' Database')
 @section('og_title', $artist->name . ' Database - Yuki Official')
 
-{{-- ユーザーが登録したアーティストのトップ。Databaseのアーティストのトップ（database/artist）と同じ形で、
-     シングル・アルバム・年ごとのページは無いので、Live と Discography（Songs）だけ --}}
+{{-- ユーザーが登録したアーティストのトップ。Databaseのアーティストのトップ（database/artist）と同じ形・同じ文言で、
+     年ごとのページ（Biography）は無いので、Live と Discography だけ --}}
 @section('content')
     <div class="database-hero database-hero--nav">
         <div class="container" style="position: relative;">
@@ -35,7 +35,7 @@
                         <i class="fa-solid fa-guitar"></i>
                     </div>
                     <h3 class="card-title">Live</h3>
-                    <p class="card-description">セットリスト統計、すべてのツアー（{{ $artist->concerts_count }}ツアー）</p>
+                    <p class="card-description">セットリスト統計、すべてのツアー、イベント情報</p>
                     <div class="card-links">
                         <a href="{{ route('mypage.user_artists.stats', $artist->id) }}" class="database-link">
                             <span>Stats</span>
@@ -56,7 +56,7 @@
                         <i class="fa-solid fa-music"></i>
                     </div>
                     <h3 class="card-title">Discography</h3>
-                    <p class="card-description">すべての楽曲（{{ $artist->songs_count }}曲）・シングル・アルバム</p>
+                    <p class="card-description">すべての楽曲、シングル、アルバムを閲覧</p>
                     <div class="card-links">
                         <a href="{{ route('mypage.user_artists.songs', $artist->id) }}" class="database-link">
                             <span>Songs</span>

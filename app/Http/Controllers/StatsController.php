@@ -100,8 +100,13 @@ class StatsController extends Controller
                 ];
             })
             ->filter()
+            // 公式の Database に曲が無くても、マイページで作られた同じ名前のアーティストと結び付いていれば、その曲で数えて入れる
+            ->concat($this->linkedStampBookSongStats())
             ->sortByDesc('percentage')
             ->values();
+        foreach ($stampBookSongStats as $stat) {
+            $artistIdsWithDbSongs[$stat['id']] ??= true;
+        }
 
         // トピックス（最近初めて聴いた曲・久しぶりに聴いた曲・自分が聴いた「久しぶり」・初めて聴いた曲の年表）を全アーティスト分まとめる。
         // 参加記録の曲（SlSong）を紐付いたDatabaseの曲（DbSong）に置き換え、その曲のアーティストごとに分ける
@@ -353,7 +358,8 @@ class StatsController extends Controller
         foreach ($artistShowCounts as $artistId => $count) {
             $artist = Artist::find($artistId);
             // 公開しているアーティストだけ（ランキング・タブの切り替えの両方）
-            if ($artist && (int) $artist->visible === 1) {
+            // マイページで作られた同じ名前のアーティストと結び付いていれば、非公開でも出す（そのデータで stats・スタンプ帳を見せる）
+            if ($artist && ((int) $artist->visible === 1 || \App\Support\ArtistLink::userArtistFor($artist))) {
                 $artistStats[] = [
                     'id' => $artist->id,
                     'name' => $artist->name,
@@ -920,8 +926,18 @@ class StatsController extends Controller
         $doubleEncoreSongs = $isHikigatariArtist ? $this->listenedSongStats($setlists, (int) $artistId, false, 'only') : [];
 
         // トピックス（最近初めて聴いた曲・久しぶりに聴いた曲・自分が聴いた「久しぶり」・初めて聴いた曲の年表）。
-        // 参加記録の曲（SlSong）を、紐付いたDatabaseの曲（DbSong）に置き換えて使う
-        $slToDbSong = SlSong::whereNotNull('db_song_id')->pluck('db_song_id', 'id');
+        // 参加記録の曲（SlSong）を、紐付いたDatabaseの曲（DbSong）に置き換えて使う。
+        // 公式の Database に曲が無く、マイページで作られた同じ名前のアーティストと結び付いていれば、曲名でそのアーティストの曲に置き換える
+        $topicUserArtist = DbSong::where('artist_id', (int) $artistId)->exists() ? null : \App\Support\ArtistLink::userArtistFor($artist);
+        if ($topicUserArtist) {
+            $userSongIdsByTitle = \App\Models\UserSong::where('user_artist_id', $topicUserArtist->id)->get()
+                ->mapWithKeys(fn ($song) => [\App\Support\ArtistLink::normalize($song->title) => $song->id]);
+            $slToDbSong = SlSong::where('artist_id', (int) $artistId)->get()
+                ->mapWithKeys(fn ($slSong) => [$slSong->id => $userSongIdsByTitle[\App\Support\ArtistLink::normalize($slSong->title)] ?? null])
+                ->filter();
+        } else {
+            $slToDbSong = SlSong::whereNotNull('db_song_id')->pluck('db_song_id', 'id');
+        }
         $heard = [];
         foreach ($setlists as $setlist) {
             $items = [];
@@ -941,7 +957,10 @@ class StatsController extends Controller
                 $heard[] = ['date' => substr((string) $setlist->date, 0, 10), 'title' => $setlist->title, 'url' => route('setlists.show', $setlist->id), 'song_ids' => $songIds];
             }
         }
-        $topics = new \App\Support\ArtistTopics((int) $artistId);
+        $topics = $topicUserArtist ? new \App\Support\ArtistTopics($topicUserArtist->id, true) : new \App\Support\ArtistTopics((int) $artistId);
+        // 結び付いたアーティストのトピックスは、曲・ライブのリンク先をマイページのページにする
+        $topicSongUrl = $topicUserArtist ? fn ($songId) => route('mypage.user_songs.show', $songId) : null;
+        $topicTourUrl = $topicUserArtist ? fn ($tourId) => route('mypage.user_concerts.show', $tourId) : null;
         $topicHeardRevivals = $topics->heardRevivals($heard);
         $topicFirstHeard = $topics->firstHeardTimeline($heard);
         $topicWelcomeBack = $topics->welcomeBack($heard);
@@ -955,14 +974,22 @@ class StatsController extends Controller
             ->map(fn ($a) => ['name' => $a['name'], 'url' => route('stats.artist', $a['id']), 'current' => (int) $a['id'] === (int) $artistId])
             ->values()->all();
 
-        // 曲が登録されていないアーティストはスタンプ帳が作れないので、ボタンを出さない
-        $hasStampBook = DbSong::where('artist_id', (int) $artistId)->exists();
+        // 曲が登録されていないアーティストはスタンプ帳が作れないので、ボタンを出さない。
+        // 公式の Database に曲が無くても、マイページで作られた同じ名前のアーティストに曲があれば、その曲でスタンプ帳・stats を出す
+        $linkedUserArtist = DbSong::where('artist_id', (int) $artistId)->exists() ? null : \App\Support\ArtistLink::userArtistFor($artist);
+        $hasStampBook = DbSong::where('artist_id', (int) $artistId)->exists() || ($linkedUserArtist && $linkedUserArtist->songs()->exists());
         // このアーティストの Database（公式の演奏記録）の stats があるか（曲が1件でもあれば。セットリストは曲が無いと登録できない）
-        $hasDatabaseStats = DbSong::where('artist_id', (int) $artistId)->exists();
+        $hasDatabaseStats = $hasStampBook;
+        $databaseStatsUrl = $linkedUserArtist
+            ? route('mypage.user_artists.stats', $linkedUserArtist->id)
+            : route('stats.index', ['tab' => 'database', 'artist_id' => $artist->id]);
 
         return view('stats.artist', compact(
+            'topicSongUrl',
+            'topicTourUrl',
             'hasStampBook',
             'hasDatabaseStats',
+            'databaseStatsUrl',
             'tabArtists',
             'artist',
             'allSongs',
@@ -1100,6 +1127,10 @@ class StatsController extends Controller
         // ここに含まれない曲は「ライブでそもそも未演奏」として台紙自体をグレー表示する。
         $everPerformedDbSongIds = $this->everPerformedDbSongIds((int)$artistId);
 
+        if (!DbSong::where('artist_id', $artistId)->exists() && ($linkedUserArtist = \App\Support\ArtistLink::userArtistFor($artist))) {
+            return $this->linkedUserArtistStampBook($artist, $linkedUserArtist, $playedSlSongIdsNormal, $playedSlSongIdsFes);
+        }
+
         $stampFilters = $this->stampDiscographyFilters((int)$artistId);
 
         $dbSongs = DbSong::where('artist_id', $artistId)->orderBy('sort_order')->get();
@@ -1135,5 +1166,85 @@ class StatsController extends Controller
             'performedPercentage',
             'stampFilters'
         ));
+    }
+
+    // トップの Stamps タブ用：公式の Database に曲が無く、マイページで作られた同じ名前のアーティストと結び付いた参加アーティストの、
+    // 聴いた曲の数（setlists で聴いた曲を曲名でユーザーの曲に結び付ける）と全曲数
+    private function linkedStampBookSongStats(): array
+    {
+        $artistIdsWithDbSongs = DbSong::select('artist_id')->distinct()->pluck('artist_id')->flip();
+        $playedSlSongIds = [];
+        foreach (SlSetlist::where('date', '<=', now()->toDateString())->get() as $setlist) {
+            foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? [], $this->flattenFesSongs($setlist->fes_setlist ?? []), $this->flattenFesSongs($setlist->fes_encore ?? [])) as $songData) {
+                if (is_numeric($songData['song'] ?? null)) {
+                    $playedSlSongIds[(int) $songData['song']] = true;
+                }
+            }
+        }
+        $stats = [];
+        foreach ($this->getPersonalArtistStats() as $artistStat) {
+            $artist = Artist::find($artistStat['id']);
+            if (!$artist || isset($artistIdsWithDbSongs[$artist->id]) || !($userArtist = \App\Support\ArtistLink::userArtistFor($artist))) {
+                continue;
+            }
+            $userTitles = \App\Models\UserSong::where('user_artist_id', $userArtist->id)->pluck('title')->map(fn ($t) => \App\Support\ArtistLink::normalize($t))->flip();
+            if ($userTitles->isEmpty()) {
+                continue;
+            }
+            $heard = SlSong::where('artist_id', $artist->id)->get()
+                ->filter(fn ($slSong) => isset($playedSlSongIds[$slSong->id]) && isset($userTitles[\App\Support\ArtistLink::normalize($slSong->title)]))
+                ->map(fn ($slSong) => \App\Support\ArtistLink::normalize($slSong->title))->unique()->count();
+            $total = $userTitles->count();
+            $stats[] = ['id' => $artist->id, 'name' => $artist->name, 'done_count' => $heard, 'total_count' => $total, 'percentage' => $total > 0 ? round($heard / $total * 100, 1) : 0];
+        }
+
+        return $stats;
+    }
+
+    // 公式の Database に曲が無いアーティストのスタンプ帳を、マイページで作られた同じ名前のアーティストの曲で作る。
+    // setlists で聴いた曲（SlSong）は曲名でユーザーの曲に結び付ける。演奏されたことがあるかは、そのアーティストの登録ライブで見る
+    private function linkedUserArtistStampBook(Artist $artist, \App\Models\UserArtist $userArtist, array $playedNormal, array $playedFes)
+    {
+        $norm = fn ($title) => \App\Support\ArtistLink::normalize((string) $title);
+        $slTitles = SlSong::where('artist_id', $artist->id)->pluck('title', 'id');
+        $heardNormal = [];
+        $heardFes = [];
+        foreach ($slTitles as $slSongId => $title) {
+            if (isset($playedNormal[$slSongId])) {
+                $heardNormal[$norm($title)] = true;
+            }
+            if (isset($playedFes[$slSongId])) {
+                $heardFes[$norm($title)] = true;
+            }
+        }
+
+        $everPerformed = $this->everPerformedUserSongIds($userArtist->id);
+        $stampFilters = $this->stampDiscographyFilters($userArtist->id, true);
+        $stamps = \App\Models\UserSong::where('user_artist_id', $userArtist->id)->orderBy('sort_order')->get()
+            ->map(function ($song) use ($norm, $heardNormal, $heardFes, $everPerformed, $stampFilters) {
+                $key = $norm($song->title);
+                $done = isset($heardNormal[$key]) || isset($heardFes[$key]);
+                return [
+                    'song_id' => $song->id,
+                    'song_url' => route('mypage.user_songs.show', $song->id),
+                    'title' => $song->title,
+                    'done' => $done,
+                    // 聴いた曲は、ライブで演奏されたことがある
+                    'never_performed' => !$done && !isset($everPerformed[$song->id]),
+                    'fes_only' => isset($heardFes[$key]) && !isset($heardNormal[$key]),
+                    'hikigatari_only' => false,
+                    'filter_keys' => $this->stampFilterKeys($song->id, $stampFilters),
+                    'track_titles' => $this->stampTrackTitles($song->id, $stampFilters),
+                    'track_orders' => $this->stampTrackOrders($song->id, $stampFilters),
+                ];
+            });
+
+        $totalCount = $stamps->count();
+        $doneCount = $stamps->where('done', true)->count();
+        $percentage = $totalCount > 0 ? round(($doneCount / $totalCount) * 100, 1) : 0;
+        $performedCount = $stamps->where('never_performed', false)->count();
+        $performedPercentage = $performedCount > 0 ? round(($doneCount / $performedCount) * 100, 1) : 0;
+
+        return view('stats.stamps', compact('artist', 'stamps', 'totalCount', 'doneCount', 'percentage', 'performedCount', 'performedPercentage', 'stampFilters'));
     }
 }

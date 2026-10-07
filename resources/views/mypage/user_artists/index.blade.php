@@ -15,41 +15,42 @@
     </div>
 
     <div class="container database-content">
-        @if ($artists->isEmpty())
+        @if ($cards->isEmpty())
             <p style="text-align: center; color: #999;">まだ登録されているアーティストがありません。</p>
         @else
             <div class="timeline-filter-row">
                 <select class="timeline-user-select" onchange="if (this.value) window.location.href=this.value;">
                     <option value="{{ route('mypage.user_artists.index') }}" selected>すべて</option>
                     {{-- 公式の Database のアーティストも混ぜて名前順に並べる（公式は公式のアーティストのページへ） --}}
-                    @foreach ($dropdownArtists as $item)
-                        <option value="{{ $item->url }}">{{ $item->name }}</option>
+                    @foreach ($cards as $card)
+                        <option value="{{ $card->show_url }}">{{ $card->name }}</option>
                     @endforeach
                 </select>
             </div>
             <div class="row justify-content-center">
-                @foreach ($artists as $artist)
+                {{-- 公式の Database のアーティストとマイページで作られたアーティストを、名前順に --}}
+                @foreach ($cards as $card)
                     <div class="col-lg-4 mb-4">
                         <div class="database-card">
                             <div class="card-icon">
                                 <i class="fa-solid fa-music"></i>
                             </div>
-                            <h3 class="card-title">{{ $artist->name }}</h3>
-                            <p class="card-description">{{ $artist->songs_count }}曲 / {{ $artist->concerts_count }}ツアー</p>
+                            <h3 class="card-title">{{ $card->name }}</h3>
+                            <p class="card-description">{{ $card->songs_count }}曲 / {{ $card->concerts_count }}ツアー</p>
                             <div class="card-links">
-                                <a href="{{ route('mypage.user_artists.stats', $artist->id) }}" class="database-link">
+                                <a href="{{ $card->stats_url }}" class="database-link">
                                     <span>Stats</span>
                                     <i class="fa-solid fa-arrow-right"></i>
                                 </a>
-                                <a href="{{ route('mypage.user_artists.live', $artist->id) }}" class="database-link">
+                                <a href="{{ $card->live_url }}" class="database-link">
                                     <span>Live</span>
                                     <i class="fa-solid fa-arrow-right"></i>
                                 </a>
-                                <a href="{{ route('mypage.user_artists.songs', $artist->id) }}" class="database-link">
+                                <a href="{{ $card->songs_url }}" class="database-link">
                                     <span>Songs</span>
                                     <i class="fa-solid fa-arrow-right"></i>
                                 </a>
-                                <a href="{{ route('mypage.user_artists.show', $artist->id) }}" class="database-link">
+                                <a href="{{ $card->show_url }}" class="database-link">
                                     <span>View All</span>
                                     <i class="fa-solid fa-arrow-right"></i>
                                 </a>

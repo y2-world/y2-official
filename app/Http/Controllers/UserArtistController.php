@@ -18,20 +18,35 @@ class UserArtistController extends Controller
             UserArtist::withCount(['concerts', 'songs'])->get()
         );
 
-        // ドロップダウンには公式の Database のアーティスト（公開していて、曲かライブがあるもの）も並べる
-        $officialArtists = JapaneseNameSorter::sortBy(
-            \App\Models\Artist::where('visible', 1)
-                ->where(fn ($q) => $q->whereHas('songs')->orWhereIn('id', \App\Models\DbConcert::select('artist_id')))
-                ->get()
-        );
-
-        $dropdownArtists = JapaneseNameSorter::sortBy(
-            $officialArtists->map(fn ($a) => (object) ['name' => $a->name, 'url' => route('database.artist', $a->id)])
-                ->concat($artists->map(fn ($a) => (object) ['name' => $a->name, 'url' => route('mypage.user_artists.show', $a->id)])),
+        // 公式の Database のアーティスト（公開していて、曲かライブがあるもの）も、マイページで作られたアーティストと混ぜて名前順に並べる。
+        // 公式のアーティストは、公式の Database のページへ
+        $officialArtists = \App\Models\Artist::where('visible', 1)
+            ->where(fn ($q) => $q->whereHas('songs')->orWhereIn('id', \App\Models\DbConcert::select('artist_id')))
+            ->get();
+        $songCounts = \App\Models\DbSong::whereIn('artist_id', $officialArtists->pluck('id'))->selectRaw('artist_id, count(*) as c')->groupBy('artist_id')->pluck('c', 'artist_id');
+        $tourCounts = \App\Models\DbConcert::whereIn('artist_id', $officialArtists->pluck('id'))->selectRaw('artist_id, count(*) as c')->groupBy('artist_id')->pluck('c', 'artist_id');
+        $cards = JapaneseNameSorter::sortBy(
+            $officialArtists->map(fn ($a) => (object) [
+                'name' => $a->name,
+                'songs_count' => $songCounts[$a->id] ?? 0,
+                'concerts_count' => $tourCounts[$a->id] ?? 0,
+                'stats_url' => route('stats.index', ['tab' => 'database', 'artist_id' => $a->id]),
+                'live_url' => route('database.live', $a->id),
+                'songs_url' => route('database.songs', $a->id),
+                'show_url' => route('database.artist', $a->id),
+            ])->concat($artists->map(fn ($a) => (object) [
+                'name' => $a->name,
+                'songs_count' => $a->songs_count,
+                'concerts_count' => $a->concerts_count,
+                'stats_url' => route('mypage.user_artists.stats', $a->id),
+                'live_url' => route('mypage.user_artists.live', $a->id),
+                'songs_url' => route('mypage.user_artists.songs', $a->id),
+                'show_url' => route('mypage.user_artists.show', $a->id),
+            ])),
             'name'
         )->values();
 
-        return view('mypage.user_artists.index', compact('artists', 'dropdownArtists'));
+        return view('mypage.user_artists.index', compact('cards'));
     }
 
     // アーティストのトップ（Databaseのアーティストのトップ database/artist と同じ形）。Live・Discography への入口

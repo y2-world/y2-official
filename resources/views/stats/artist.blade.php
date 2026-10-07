@@ -21,7 +21,7 @@
                         </a>
                         @endif
                         @if ($hasDatabaseStats)
-                        <a href="{{ route('stats.index', ['tab' => 'database', 'artist_id' => $artist->id]) }}" class="stamp-book-link">
+                        <a href="{{ $databaseStatsUrl }}" class="stamp-book-link">
                             <i class="fas fa-database"></i> Database Stats
                         </a>
                         @endif
