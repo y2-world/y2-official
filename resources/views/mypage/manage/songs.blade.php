@@ -72,8 +72,13 @@
     .manage-row.is-drag-ghost { opacity: 0.4; }
     .manage-row.is-drag-chosen { box-shadow: 0 6px 18px rgba(102, 126, 234, 0.3); }
     /* 指（マウス）について動くカード */
-    /* 「≡」は長押しでつかむので、スマホの長押しメニュー（コピーなど）や文字の選択を出さない */
-    .manage-drag-handle { -webkit-touch-callout: none; user-select: none; -webkit-user-select: none; }
+    /* 「≡」は長押しでつかむので、スマホの長押しメニュー（コピーなど）や文字の選択を出さない。
+       曲の行の文字も選べないようにする（曲名の編集は入力欄で行う） */
+    .manage-drag-handle,
+    #songList .manage-row,
+    #songList .manage-row *:not(input) { -webkit-touch-callout: none; user-select: none; -webkit-user-select: none; }
+    /* ドラッグ中は、ページの端での「引っ張り」（引っ張って更新など）を止める */
+    html.is-song-dragging, body.is-song-dragging { overscroll-behavior: none; }
     /* ドラッグしている間は、ページ全体で文字の選択・長押しメニューを止め、ボタンや入力欄を押せなくする */
     body.is-song-dragging, body.is-song-dragging * { user-select: none !important; -webkit-user-select: none !important; -webkit-touch-callout: none !important; }
     body.is-song-dragging button, body.is-song-dragging input, body.is-song-dragging a, body.is-song-dragging form { pointer-events: none !important; }
@@ -93,6 +98,15 @@
                 if (document.body.classList.contains('is-song-dragging')) e.preventDefault();
             });
         });
+        // 「≡」を押した瞬間に、ブラウザの標準の動き（文字の選択・長押しメニュー・スクロール・引っ張って更新）を止める。
+        // ドラッグの処理（SortableJS）はそのままこのイベントを受け取れる
+        songList.addEventListener('touchstart', (e) => {
+            if (e.target.closest('.manage-drag-handle')) e.preventDefault();
+        }, { passive: false });
+        // ドラッグ中は、指の動きでページが引っ張られないようにする
+        document.addEventListener('touchmove', (e) => {
+            if (document.body.classList.contains('is-song-dragging')) e.preventDefault();
+        }, { passive: false });
         // 「≡」の長押しで出る右クリック・長押しメニューは、いつも出さない
         songList.addEventListener('contextmenu', (e) => {
             if (e.target.closest('.manage-drag-handle')) e.preventDefault();
@@ -117,8 +131,12 @@
                 forceAutoScrollFallback: true,
                 scrollSensitivity: 80,
                 scrollSpeed: 12,
-                onStart: () => document.body.classList.add('is-song-dragging'),
+                onStart: () => {
+                    document.documentElement.classList.add('is-song-dragging');
+                    document.body.classList.add('is-song-dragging');
+                },
                 onEnd: (e) => {
+                    document.documentElement.classList.remove('is-song-dragging');
                     document.body.classList.remove('is-song-dragging');
                     window.getSelection()?.removeAllRanges();
                     if (e.oldIndex !== e.newIndex) persistSongOrder();
