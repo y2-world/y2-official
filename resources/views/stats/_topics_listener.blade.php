@@ -13,7 +13,8 @@
     };
     // PC：参加した公演を「2015 / タイトル」の形で（タイトルだけをリンクに）
     $topicShowLink = fn ($date, $title, $url) => e(substr($date, 0, 4)) . ' / ' . ($url ? '<a href="' . e($url) . '" class="stats-link">' . e($title) . '</a>' : e($title));
-    // スマホ：参加した公演のタイトル（リンク先があればリンクに）。日付は下の段に小さく出す
+    // スマホ：参加した公演のタイトル（リンク先があればリンクに）。Recent First Listens は日付を右端に出すのでこちら。
+    // Welcome Back・Long-Awaited Returns I Heard はスマホでも「年 / タイトル」（$topicShowLink）
     $topicShowTitle = fn ($title, $url) => $url ? '<a href="' . e($url) . '" class="stats-link">' . e($title) . '</a>' : e($title);
     // 曲・ツアーのリンク先は $topicSongUrl / $topicTourUrl（ID => URL）で変えられる（マイページで作ったアーティストではマイページのページへ）。渡さなければ Database
     $topicSongUrl ??= fn ($id) => url('/database/songs/' . $id);
@@ -112,7 +113,7 @@ document.getElementById('recentFirstExcludeNew')?.addEventListener('change', fun
             @include('stats._stacked_head', ['hasRank' => true, 'badgeLabel' => 'Years', 'showArtist' => $topicShowArtist])
             @foreach ($topicWelcomeBack as $index => $row)
                 @include('stats._stacked_row', ['rank' => $topicRank($topicWelcomeBack, $index, 'years'), 'song' => $topicSongLink($row), 'artist' => $topicShowArtist ? $topicArtistCell($row) : null, 'showArtist' => $topicShowArtist,
-                    'lines' => [['tour' => $topicShowTitle($row['from']['title'], $row['from']['url'] ?? null)], ['tour' => '→ ' . $topicShowTitle($row['to']['title'], $row['to']['url'] ?? null)]], 'badge' => number_format($row['years'], 1) . '年'])
+                    'lines' => [['tour' => $topicShowLink($row['from']['date'], $row['from']['title'], $row['from']['url'] ?? null)], ['tour' => '→ ' . $topicShowLink($row['to']['date'], $row['to']['title'], $row['to']['url'] ?? null)]], 'badge' => number_format($row['years'], 1) . '年'])
             @endforeach
         </table>
     </div>
@@ -143,7 +144,7 @@ document.getElementById('recentFirstExcludeNew')?.addEventListener('change', fun
             @include('stats._stacked_head', ['hasRank' => true, 'badgeLabel' => 'Years', 'showArtist' => $topicShowArtist])
             @foreach ($topicHeardRevivals as $index => $row)
                 @include('stats._stacked_row', ['rank' => $topicRank($topicHeardRevivals, $index, 'years'), 'song' => $topicSongLink($row), 'artist' => $topicShowArtist ? $topicArtistCell($row) : null, 'showArtist' => $topicShowArtist,
-                    'lines' => [['tour' => $topicShowTitle($row['previous']['title'], $topicTourUrl($row['previous']['id']))], ['tour' => '→ ' . $topicShowTitle($row['show'], $row['show_url'] ?? null)]], 'badge' => number_format($row['years'], 1) . '年'])
+                    'lines' => [['tour' => $topicShowLink($row['previous']['date'], $row['previous']['title'], $topicTourUrl($row['previous']['id']))], ['tour' => '→ ' . $topicShowLink($row['date'], $row['show'], $row['show_url'] ?? null)]], 'badge' => number_format($row['years'], 1) . '年'])
             @endforeach
         </table>
     </div>
