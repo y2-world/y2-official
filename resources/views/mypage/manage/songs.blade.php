@@ -72,8 +72,11 @@
     .manage-row.is-drag-ghost { opacity: 0.4; }
     .manage-row.is-drag-chosen { box-shadow: 0 6px 18px rgba(102, 126, 234, 0.3); }
     /* 指（マウス）について動くカード */
-    /* ドラッグ中は曲名の文字を選択しない */
-    #songList.is-dragging, #songList.is-dragging * { user-select: none; -webkit-user-select: none; }
+    /* 「≡」は長押しでつかむので、スマホの長押しメニュー（コピーなど）や文字の選択を出さない */
+    .manage-drag-handle { -webkit-touch-callout: none; user-select: none; -webkit-user-select: none; }
+    /* ドラッグしている間は、ページ全体で文字の選択・長押しメニューを止め、ボタンや入力欄を押せなくする */
+    body.is-song-dragging, body.is-song-dragging * { user-select: none !important; -webkit-user-select: none !important; -webkit-touch-callout: none !important; }
+    body.is-song-dragging button, body.is-song-dragging input, body.is-song-dragging a, body.is-song-dragging form { pointer-events: none !important; }
     .manage-row.is-drag-fallback { opacity: 0.95 !important; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18); transition: none !important; }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
@@ -84,6 +87,17 @@
 
         // --- ドラッグで並べ替え。誤操作を防ぐため「≡」をつかんだときだけ動かす（スマホは少し長押ししてから）。
         //     画面の端まで持っていくと自動でスクロールする。離したら並びを保存する ---
+        // ドラッグ中はコピー・右クリックのメニュー・文字の選択の始まりを止める
+        ['copy', 'cut', 'contextmenu', 'selectstart'].forEach((type) => {
+            document.addEventListener(type, (e) => {
+                if (document.body.classList.contains('is-song-dragging')) e.preventDefault();
+            });
+        });
+        // 「≡」の長押しで出る右クリック・長押しメニューは、いつも出さない
+        songList.addEventListener('contextmenu', (e) => {
+            if (e.target.closest('.manage-drag-handle')) e.preventDefault();
+        });
+
         if (window.Sortable) {
             Sortable.create(songList, {
                 handle: '.manage-drag-handle',
@@ -103,9 +117,10 @@
                 forceAutoScrollFallback: true,
                 scrollSensitivity: 80,
                 scrollSpeed: 12,
-                onStart: () => songList.classList.add('is-dragging'),
+                onStart: () => document.body.classList.add('is-song-dragging'),
                 onEnd: (e) => {
-                    songList.classList.remove('is-dragging');
+                    document.body.classList.remove('is-song-dragging');
+                    window.getSelection()?.removeAllRanges();
                     if (e.oldIndex !== e.newIndex) persistSongOrder();
                 },
             });
