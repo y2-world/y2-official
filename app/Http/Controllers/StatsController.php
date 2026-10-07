@@ -958,8 +958,11 @@ class StatsController extends Controller
             }
         }
         $topics = $topicUserArtist ? new \App\Support\ArtistTopics($topicUserArtist->id, true) : new \App\Support\ArtistTopics((int) $artistId);
-        // 結び付いたアーティストのトピックスは、曲・ライブのリンク先をマイページのページにする
-        $topicSongUrl = $topicUserArtist ? fn ($songId) => route('mypage.user_songs.show', $songId) : null;
+        // 曲のリンクは、2つ目のタブ（ログインしている人で決まる。Yuki なら Yuki's Live Attendances）で開く（?tab=mine）。
+        // 結び付いたアーティストの曲・ライブは、マイページのページへ
+        $topicSongUrl = $topicUserArtist
+            ? fn ($songId) => route('mypage.user_songs.show', ['id' => $songId, 'tab' => 'mine'])
+            : fn ($songId) => route('songs.show', ['id' => $songId, 'tab' => 'mine']);
         $topicTourUrl = $topicUserArtist ? fn ($tourId) => route('mypage.user_concerts.show', $tourId) : null;
         $topicHeardRevivals = $topics->heardRevivals($heard);
         $topicFirstHeard = $topics->firstHeardTimeline($heard);
@@ -1226,7 +1229,8 @@ class StatsController extends Controller
                 $done = isset($heardNormal[$key]) || isset($heardFes[$key]);
                 return [
                     'song_id' => $song->id,
-                    'song_url' => route('mypage.user_songs.show', $song->id),
+                    // マイページの曲のページを、2つ目のタブ（自分の参加記録）で開く
+                    'song_url' => route('mypage.user_songs.show', ['id' => $song->id, 'tab' => 'mine']),
                     'title' => $song->title,
                     'done' => $done,
                     // 聴いた曲は、ライブで演奏されたことがある
