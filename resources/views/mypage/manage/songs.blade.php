@@ -69,8 +69,13 @@
         touch-action: none;
     }
     .manage-drag-handle:active { cursor: grabbing; }
-    .manage-row.is-drag-ghost { opacity: 0.4; }
-    .manage-row.is-drag-chosen { box-shadow: 0 6px 18px rgba(102, 126, 234, 0.3); }
+    /* 動かし済みのカード（ページを開き直すまで残す） */
+    .manage-row.is-moved { border: 2px solid #a99cf0 !important; background: #faf8ff; }
+    /* 一覧の中の移動先：うすい紫の背景と点線の枠（中身は薄く） */
+    .manage-row.is-drag-ghost { background: #f3f0ff !important; border: 2px dashed #667eea !important; }
+    .manage-row.is-drag-ghost > * { opacity: 0.35; }
+    /* 動かしているカードは、紫の太い枠で目立たせる */
+    .manage-row.is-drag-chosen { box-shadow: 0 6px 18px rgba(102, 126, 234, 0.3); border: 2px solid #667eea !important; }
     /* 指（マウス）について動くカード */
     /* 「≡」は長押しでつかむので、スマホの長押しメニュー（コピーなど）や文字の選択を出さない。
        曲の行の文字も選べないようにする（曲名の編集は入力欄で行う） */
@@ -82,7 +87,7 @@
     /* ドラッグしている間は、ページ全体で文字の選択・長押しメニューを止め、ボタンや入力欄を押せなくする */
     body.is-song-dragging, body.is-song-dragging * { user-select: none !important; -webkit-user-select: none !important; -webkit-touch-callout: none !important; }
     body.is-song-dragging button, body.is-song-dragging input, body.is-song-dragging a, body.is-song-dragging form { pointer-events: none !important; }
-    .manage-row.is-drag-fallback { opacity: 0.95 !important; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18); transition: none !important; }
+    .manage-row.is-drag-fallback { opacity: 0.95 !important; box-shadow: 0 10px 24px rgba(102, 126, 234, 0.35); border: 2px solid #667eea !important; transition: none !important; }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
     <script>
@@ -139,7 +144,10 @@
                     document.documentElement.classList.remove('is-song-dragging');
                     document.body.classList.remove('is-song-dragging');
                     window.getSelection()?.removeAllRanges();
-                    if (e.oldIndex !== e.newIndex) persistSongOrder();
+                    if (e.oldIndex !== e.newIndex) {
+                        e.item.classList.add('is-moved');
+                        persistSongOrder();
+                    }
                 },
             });
         }
