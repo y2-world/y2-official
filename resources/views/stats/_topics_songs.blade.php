@@ -18,6 +18,8 @@
     // PC：「1992 / ツアー名」の形で、ツアー名だけをリンクにする
     $topicTourLine = fn ($tour) => '<span style="font-size: 0.85em;">' . $topicYear($tour['date']) . ' / ' . $topicTourLink($tour) . '</span>';
     $topicYears = fn ($row) => number_format($row['years'], 1) . '年';
+    // スマホ：「年 / ツアー名」（パソコンと同じ）
+    $topicTourWithYear = fn ($tour) => $topicYear($tour['date']) . ' / ' . $topicTourLink($tour);
 @endphp
 
 @if (count($topicRevivals))
@@ -43,7 +45,7 @@
             @include('stats._stacked_head', ['hasRank' => true, 'badgeLabel' => 'Years', 'showArtist' => false])
             @foreach ($topicRevivals as $index => $row)
                 @include('stats._stacked_row', ['rank' => $topicRank($topicRevivals, $index, 'years'), 'song' => $topicSongLink($row), 'artist' => null, 'showArtist' => false,
-                    'lines' => [['tour' => $topicTourLink($row['from'])], ['tour' => '→ ' . $topicTourLink($row['to'])]], 'badge' => $topicYears($row), 'more' => $index >= 10])
+                    'lines' => [['tour' => $topicTourWithYear($row['from'])], ['tour' => '→ ' . $topicTourWithYear($row['to'])]], 'badge' => $topicYears($row), 'more' => $index >= 10])
             @endforeach
         </table>
         @if (count($topicRevivals) > 10)
@@ -110,7 +112,7 @@
             @foreach (['all' => $topicDormant, 'singles' => $topicDormantSingles] as $kind => $rows)
                 @foreach ($rows as $index => $row)
                     @include('stats._stacked_row', ['rank' => $topicRank($rows, $index, 'years'), 'song' => $topicSongLink($row), 'artist' => null, 'showArtist' => false,
-                        'lines' => [['tour' => $topicTourLink($row['last'])]], 'badge' => $topicYears($row), 'kind' => $kind, 'hidden' => $kind === 'singles', 'more' => $index >= $dormantShown])
+                        'lines' => [['tour' => $topicTourWithYear($row['last'])]], 'badge' => $topicYears($row), 'kind' => $kind, 'hidden' => $kind === 'singles', 'more' => $index >= $dormantShown])
                 @endforeach
             @endforeach
         </table>
@@ -175,7 +177,7 @@
             @include('stats._stacked_head', ['hasRank' => true, 'badgeLabel' => 'Years', 'showArtist' => false])
             @foreach ($topicLateDebuts as $index => $row)
                 @include('stats._stacked_row', ['rank' => $topicRank($topicLateDebuts, $index, 'years'), 'song' => $topicSongLink($row), 'artist' => null, 'showArtist' => false,
-                    'lines' => [['tour' => e(date('Y.m.d', strtotime($row['released'])))], ['tour' => '→ ' . $topicTourLink($row['first'])]], 'badge' => $topicYears($row)])
+                    'lines' => [['tour' => e(date('Y.m.d', strtotime($row['released'])))], ['tour' => '→ ' . $topicTourWithYear($row['first'])]], 'badge' => $topicYears($row)])
             @endforeach
         </table>
     </div>
