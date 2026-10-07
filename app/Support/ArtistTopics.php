@@ -228,7 +228,8 @@ class ArtistTopics
                 }
                 $prevTour = $this->tours[$prev];
                 $years = self::years(substr($prevTour->date2 ?? $prevTour->date1, 0, 10), $show['date']);
-                if ($years >= 1 && (!isset($rows[$songId]) || $years > $rows[$songId]['years'])) {
+                // 1年未満でも、前の演奏から間が空いていれば出す（空いた年数の長い順に上位だけ出すので、長いものが先に並ぶ）
+                if ($years > 0 && (!isset($rows[$songId]) || $years > $rows[$songId]['years'])) {
                     $rows[$songId] = ['song_id' => $songId, 'title' => $this->songs[$songId], 'years' => $years, 'date' => $show['date'], 'show' => $show['title'] ?? '', 'show_url' => $show['url'] ?? null, 'previous' => $this->tourInfo($prev)];
                 }
             }
