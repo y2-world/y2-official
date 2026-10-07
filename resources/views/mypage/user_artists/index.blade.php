@@ -21,8 +21,9 @@
             <div class="timeline-filter-row">
                 <select class="timeline-user-select" onchange="if (this.value) window.location.href=this.value;">
                     <option value="{{ route('mypage.user_artists.index') }}" selected>すべて</option>
-                    @foreach ($artists as $artist)
-                        <option value="{{ route('mypage.user_artists.show', $artist->id) }}">{{ $artist->name }}</option>
+                    {{-- 公式の Database のアーティストも混ぜて名前順に並べる（公式は公式のアーティストのページへ） --}}
+                    @foreach ($dropdownArtists as $item)
+                        <option value="{{ $item->url }}">{{ $item->name }}</option>
                     @endforeach
                 </select>
             </div>

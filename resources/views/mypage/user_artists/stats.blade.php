@@ -63,7 +63,7 @@
                         <section class="stats-section visible">
                             <h2 class="section-title"><i class="fas {{ $section['icon'] }}"></i> {{ $section['title'] }} ({{ $section['items']->filter(fn ($song) => $song['count'] > 0)->count() }})</h2>
                             @if($section['items']->isEmpty())
-                                <p>該当するデータはありません。</p>
+                                <p style="color: #718096; text-align: center; font-size: 0.9rem; margin: 10px 0;">該当するデータはありません。</p>
                             @else
                                 <div class="stats-table-container">
                                     <table class="stats-table">
@@ -109,7 +109,7 @@
                         <section class="stats-section visible">
                             <h2 class="section-title"><i class="fas {{ $section['icon'] }}"></i> {{ $section['title'] }} ({{ $section['items']->filter(fn ($song) => $song['count'] > 0)->count() }})</h2>
                             @if($section['items']->isEmpty())
-                                <p>該当するデータはありません。</p>
+                                <p style="color: #718096; text-align: center; font-size: 0.9rem; margin: 10px 0;">該当するデータはありません。</p>
                             @else
                                 <div class="stats-table-container">
                                     <table class="stats-table">
@@ -153,7 +153,7 @@
                         <section class="stats-section visible">
                             <h2 class="section-title"><i class="fas {{ $section['icon'] }}"></i> {{ $section['title'] }} ({{ $section['items']->filter(fn ($song) => $song['count'] > 0)->count() }})</h2>
                             @if($section['items']->isEmpty())
-                                <p>該当するデータはありません。</p>
+                                <p style="color: #718096; text-align: center; font-size: 0.9rem; margin: 10px 0;">該当するデータはありません。</p>
                             @else
                                 <div class="stats-table-container">
                                     <table class="stats-table">
@@ -191,7 +191,7 @@
                     <section class="stats-section visible">
                         <h2 class="section-title"><i class="fas fa-list-ol"></i> Longest Setlists</h2>
                         @if(empty($longestSetlists))
-                            <p>該当するデータはありません。</p>
+                            <p style="color: #718096; text-align: center; font-size: 0.9rem; margin: 10px 0;">該当するデータはありません。</p>
                         @else
                             <div class="stats-table-container">
                                 <table class="stats-table">
@@ -221,7 +221,7 @@
                     <section class="stats-section visible">
                         <h2 class="section-title"><i class="fas fa-calendar-alt"></i> Tours by Year</h2>
                         @if($yearStats->isEmpty())
-                            <p>該当するデータはありません。</p>
+                            <p style="color: #718096; text-align: center; font-size: 0.9rem; margin: 10px 0;">該当するデータはありません。</p>
                         @else
                             <div class="stats-table-container">
                                 <table class="stats-table has-bar-indicator">

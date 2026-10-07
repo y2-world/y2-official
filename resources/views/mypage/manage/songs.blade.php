@@ -41,10 +41,8 @@
                 <div id="songList">
                     @foreach ($songs as $song)
                         <div class="manage-row" data-song-id="{{ $song->id }}">
-                            <div class="manage-reorder-buttons">
-                                <button type="button" class="manage-reorder-up" title="上へ"><i class="fa-solid fa-chevron-up"></i></button>
-                                <button type="button" class="manage-reorder-down" title="下へ"><i class="fa-solid fa-chevron-down"></i></button>
-                            </div>
+                            {{-- ここをつかんでドラッグで並べ替える（スマホは少し長押ししてから） --}}
+                            <span class="manage-drag-handle" title="ドラッグで並べ替え"><i class="fa-solid fa-grip-lines"></i></span>
                             <span class="manage-row-title" data-title="{{ $song->title }}">{{ $song->title }}</span>
                             <input type="text" class="manage-row-title-input" value="{{ $song->title }}" hidden>
                             <button type="button" class="manage-edit-btn" data-update-url="{{ route('mypage.manage.songs.update', [$artist->id, $song->id]) }}" title="編集">
@@ -62,24 +60,54 @@
         </div>
     </div>
 
+    <style>
+    .manage-drag-handle {
+        flex-shrink: 0;
+        color: #bbb;
+        cursor: grab;
+        padding: 6px 8px 6px 2px;
+        touch-action: none;
+    }
+    .manage-drag-handle:active { cursor: grabbing; }
+    .manage-row.is-drag-ghost { opacity: 0.4; }
+    .manage-row.is-drag-chosen { box-shadow: 0 6px 18px rgba(102, 126, 234, 0.3); }
+    /* 指（マウス）について動くカード */
+    /* ドラッグ中は曲名の文字を選択しない */
+    #songList.is-dragging, #songList.is-dragging * { user-select: none; -webkit-user-select: none; }
+    .manage-row.is-drag-fallback { opacity: 0.95 !important; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18); transition: none !important; }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
     <script>
     (function () {
         const songList = document.getElementById('songList');
         if (!songList) return;
 
-        // --- 上下ボタンで1つずつ順位を入れ替える（ドラッグ操作は誤操作が多いため） ---
-        function setupReorder(row) {
-            row.querySelector('.manage-reorder-up').addEventListener('click', () => {
-                const prev = row.previousElementSibling;
-                if (!prev) return;
-                songList.insertBefore(row, prev);
-                persistSongOrder();
-            });
-            row.querySelector('.manage-reorder-down').addEventListener('click', () => {
-                const next = row.nextElementSibling;
-                if (!next) return;
-                songList.insertBefore(next, row);
-                persistSongOrder();
+        // --- ドラッグで並べ替え。誤操作を防ぐため「≡」をつかんだときだけ動かす（スマホは少し長押ししてから）。
+        //     画面の端まで持っていくと自動でスクロールする。離したら並びを保存する ---
+        if (window.Sortable) {
+            Sortable.create(songList, {
+                handle: '.manage-drag-handle',
+                draggable: '.manage-row',
+                animation: 150,
+                delay: 150,
+                delayOnTouchOnly: true,
+                ghostClass: 'is-drag-ghost',
+                chosenClass: 'is-drag-chosen',
+                // ブラウザ任せのドラッグだと、つかんだカードが指（マウス）について動かないことがあるので、
+                // カードを複製して追従させる方式にする
+                forceFallback: true,
+                fallbackOnBody: false,
+                fallbackClass: 'is-drag-fallback',
+                fallbackTolerance: 3,
+                scroll: true,
+                forceAutoScrollFallback: true,
+                scrollSensitivity: 80,
+                scrollSpeed: 12,
+                onStart: () => songList.classList.add('is-dragging'),
+                onEnd: (e) => {
+                    songList.classList.remove('is-dragging');
+                    if (e.oldIndex !== e.newIndex) persistSongOrder();
+                },
             });
         }
 
@@ -177,7 +205,6 @@
         }
 
         songList.querySelectorAll('.manage-row').forEach((row) => {
-            setupReorder(row);
             setupInlineEdit(row);
             row.querySelector('.manage-delete-btn').addEventListener('click', () => requestDelete(row));
         });

@@ -20,8 +20,15 @@
                         <option value="{{ route('mypage.timeline.index', ['user_id' => 'all']) }}" {{ $filterUser ? '' : 'selected' }}>すべての投稿</option>
                         <option value="{{ route('mypage.timeline.index', ['user_id' => $myId]) }}" {{ $filterUser && $filterUser->id === $myId ? 'selected' : '' }}>自分の投稿</option>
                     </select>
-                    {{-- 参加記録（セットリスト）の追加。My Setlists の見出しの横のボタンと同じ --}}
-                    <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-button" title="セットリストを追加">
+                </div>
+                {{-- 参加予定（セットリストをまだ選んでいない投稿）を隠す。選んだ状態はブラウザに覚えておく --}}
+                <div style="position: relative; display: flex; justify-content: center; align-items: center; min-height: 34px; margin: -22px 0 8px;">
+                    <label class="unique-tour-label" style="margin: 0;">
+                        <input type="checkbox" id="timelineExcludePlanned" class="unique-tour-checkbox">
+                        <span class="unique-tour-text">参加予定を除く</span>
+                    </label>
+                    {{-- 参加記録（セットリスト）の追加。投稿のすぐ上の右端に置く --}}
+                    <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-button" title="セットリストを追加" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%);">
                         <i class="fas fa-plus"></i>
                     </a>
                 </div>
@@ -187,6 +194,22 @@
         max-width: calc(100% - 72px);
     }
     </style>
+
+    <script>
+    (function () {
+        var box = document.getElementById('timelineExcludePlanned');
+        if (!box) return;
+        var apply = function () {
+            document.querySelectorAll('.timeline-card.is-planned').forEach(function (card) { card.style.display = box.checked ? 'none' : ''; });
+        };
+        try { box.checked = localStorage.getItem('timelineExcludePlanned') === '1'; } catch (e) {}
+        apply();
+        box.addEventListener('change', function () {
+            try { localStorage.setItem('timelineExcludePlanned', box.checked ? '1' : '0'); } catch (e) {}
+            apply();
+        });
+    })();
+    </script>
 
     <script>
     // initTimelineCardはlayouts/app.blade.php側の<script>で定義されるが、

@@ -18,7 +18,20 @@ class UserArtistController extends Controller
             UserArtist::withCount(['concerts', 'songs'])->get()
         );
 
-        return view('mypage.user_artists.index', compact('artists'));
+        // ドロップダウンには公式の Database のアーティスト（公開していて、曲かライブがあるもの）も並べる
+        $officialArtists = JapaneseNameSorter::sortBy(
+            \App\Models\Artist::where('visible', 1)
+                ->where(fn ($q) => $q->whereHas('songs')->orWhereIn('id', \App\Models\DbConcert::select('artist_id')))
+                ->get()
+        );
+
+        $dropdownArtists = JapaneseNameSorter::sortBy(
+            $officialArtists->map(fn ($a) => (object) ['name' => $a->name, 'url' => route('database.artist', $a->id)])
+                ->concat($artists->map(fn ($a) => (object) ['name' => $a->name, 'url' => route('mypage.user_artists.show', $a->id)])),
+            'name'
+        )->values();
+
+        return view('mypage.user_artists.index', compact('artists', 'dropdownArtists'));
     }
 
     // アーティストのトップ（Databaseのアーティストのトップ database/artist と同じ形）。Live・Discography への入口
