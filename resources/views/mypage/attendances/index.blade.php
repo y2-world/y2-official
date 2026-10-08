@@ -6,7 +6,7 @@
     $userIdParam = $isSelf ? [] : ['user_id' => $targetUser->id];
 
     // ブラウザのタブのタイトルは、本家（曲・アーティスト・年・会場のページ）と同じく絞り込みに合わせる
-    $pageTitle = $song ? ($initialTitle ?? $song->title)
+    $pageTitle = $song ? ($song->title)
         : ($filterArtist ? $filterArtist->name
         : ($year ? $year
         : ($venue ? 'Venue : ' . $venue
@@ -31,7 +31,7 @@
                 @if ($songNumberMine)
                     <p class="database-subtitle song-number-mine" style="{{ $secondTab === 'mine' ? '' : 'display: none;' }}">#{{ $songNumberMine }}</p>
                 @endif
-                <h1 class="database-title" style="">{{ $initialTitle ?? $song->title }}</h1>
+                <h1 class="database-title" style="">{{ $song->title }}</h1>
 
                 <div style="font-size: 1rem; color: rgba(255, 255, 255, 0.9); line-height: 1.8;">
                     @if ($song->artist)
@@ -175,6 +175,8 @@
             </style>
             <div class="row justify-content-center">
             <div class="col-xl-9">
+            {{-- 別表記で演奏されたことがある曲は、曲のページと同じく「All / 表記1 / 表記2」で絞り込む --}}
+            @include('songs._title_filter', ['songTitle' => $song->title])
             <div class="song-performance-tabs" style="display: flex; gap: 8px; margin-bottom: 15px;">
                 <button type="button" class="song-performance-tab-btn @if($secondTab === 'performances') is-active @endif" data-tab-target="live-performances-panel"
                     style="padding: 8px 16px; border: none; border-radius: 20px; font-weight: 500; cursor: pointer; {{ $secondTab === 'performances' ? 'background: #667eea; color: white;' : 'background: white; color: #667eea; border: 1px solid #667eea;' }}">
@@ -200,7 +202,7 @@
                         </thead>
                         <tbody>
                             @foreach ($tours as $tour)
-                                <tr>
+                                <tr data-titles="{{ json_encode($tourTitles[$tour->id] ?? [], JSON_UNESCAPED_UNICODE) }}">
                                     <td></td>
                                     @if (isset($tour->date1) && isset($tour->date2))
                                         <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }} -
@@ -239,7 +241,7 @@
                         </thead>
                         <tbody>
                             @foreach ($attendances as $attendance)
-                                <tr>
+                                <tr data-titles="{{ json_encode($attendanceTitles[$attendance->id] ?? [], JSON_UNESCAPED_UNICODE) }}">
                                     <td></td>
                                     <td>{{ $attendance->attended_date?->format('Y.m.d') ?? '-' }}</td>
                                     <td><a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'attendances']) }}">{{ $attendance->attendedTour->title ?? '-' }}</a></td>

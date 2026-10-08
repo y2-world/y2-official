@@ -2,7 +2,7 @@
 @section('title', 'Yuki Official - ' . $disc->title)
 
 @section('content')
-    <div class="database-hero database-hero--detail">
+    <div class="database-hero database-hero--detail has-hero-edit">
         <div class="container" style="position: relative;">
             @include('database._breadcrumb', ['breadcrumbs' => [
                 ['label' => 'My Page', 'url' => route('mypage.index')],
@@ -24,16 +24,12 @@
                 @endif
             </p>
             <h1 class="database-title">{{ $disc->title }}</h1>
-            {{-- 本人には、セトリの詳細ページと同じくペンのアイコンだけの編集リンクを、発売日の右に出す --}}
-            @if ($disc->date || $isOwner)
-                <p class="database-subtitle">
-                    @if ($disc->date)
-                        Release: {{ $disc->date->format('Y.m.d') }}
-                    @endif
-                    @if ($isOwner)
-                        <a href="{{ route('mypage.manage.discs.edit', [$artist->id, $kind === 'albums' ? 'album' : 'single', $disc->id]) }}" title="編集" style="color: white; margin-left: 6px;"><i class="fa-solid fa-pen" style="font-size: 0.75em;"></i></a>
-                    @endif
-                </p>
+            @if ($disc->date)
+                <p class="database-subtitle">Release: {{ $disc->date->format('Y.m.d') }}</p>
+            @endif
+            {{-- 本人には、ほかのページと同じく右下に「編集」 --}}
+            @if ($isOwner)
+                <a href="{{ route('mypage.manage.discs.edit', [$artist->id, $kind === 'albums' ? 'album' : 'single', $disc->id]) }}" class="hero-edit-btn">編集</a>
             @endif
         </div>
     </div>

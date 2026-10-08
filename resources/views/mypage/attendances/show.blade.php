@@ -2,7 +2,7 @@
 @section('title', 'Yuki Official - ' . ($tour->title ?? 'セットリスト'))
 
 @section('content')
-    <div class="database-hero database-hero--detail">
+    <div class="database-hero database-hero--detail has-hero-edit @if ($errors->any()) is-hero-editing @endif">
         <div class="container">
             @include('database._breadcrumb', ['breadcrumbs' => [
                 ['label' => 'My Page', 'url' => route('mypage.index')],
@@ -31,12 +31,15 @@
                 @endif
                 <br>
                 {{ $attendance->venue }}
-                @if ($isOwner)
-                    <a href="#" id="attendanceEditToggle" style="color: white; margin-left: 6px;" title="参加日・会場を編集" onclick="event.preventDefault(); toggleAttendanceEdit();">
-                        <i class="fa-solid fa-pen" style="font-size: 0.75em;"></i>
-                    </a>
-                @endif
             </p>
+            @if ($isOwner)
+                {{-- 参加日・会場の編集。アーティストの管理画面と同じく、押すと入力欄を出して「保存」に変わり、もう一度押すと保存する --}}
+                <div class="hero-edit-actions @if ($errors->any()) is-editing @endif">
+                    <a href="#" id="attendanceEditToggle" class="hero-edit-btn" onclick="event.preventDefault(); attendanceEditButtonPressed();">{{ $errors->any() ? '保存' : '編集' }}</a>
+                    {{-- 編集中だけ、「保存」の隣に出す --}}
+                    <a href="#" id="attendanceDeleteButton" class="hero-edit-btn" onclick="event.preventDefault(); if (confirm('このセットリストを削除しますか？')) { document.getElementById('attendanceDeleteForm').submit(); }" @unless ($errors->any()) hidden @endunless>削除</a>
+                </div>
+            @endif
             @unless ($isOwner)
                 <p class="database-subtitle" style="text-align: center;">
                     by <a href="{{ route('mypage.users.stats', $attendance->external_user_id) }}" style="color: white; text-decoration: underline;">{{ $attendance->externalUser->name ?: 'ゲスト' }}</a>
@@ -60,14 +63,12 @@
                     <div style="display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center;">
                         <input type="date" name="attended_date" value="{{ old('attended_date', $attendance->attended_date?->format('Y-m-d')) }}" style="border-radius: 6px; border: none; padding: 4px 8px; font-size: 0.85rem;" required>
                         <input type="text" name="venue" value="{{ old('venue', $attendance->venue) }}" placeholder="会場" style="border-radius: 6px; border: none; padding: 4px 8px; font-size: 0.85rem;" required>
-                        <span style="display: inline-flex; align-items: center; gap: 8px; flex-wrap: nowrap; flex-shrink: 0;">
-                            <button type="submit" style="background: none; border: none; color: white; cursor: pointer; padding: 4px;" title="保存">
-                                <i class="fa-solid fa-check"></i>
-                            </button>
-                            <a href="#" style="color: white; cursor: pointer; padding: 4px;" title="このセットリストを削除" onclick="event.preventDefault(); if (confirm('このセットリストを削除しますか？')) { document.getElementById('attendanceDeleteForm').submit(); }">
-                                <i class="fa-solid fa-trash"></i>
-                            </a>
-                        </span>
+                    </div>
+                    {{-- 保存せずに閉じる（ツアーの編集フォームと同じ×を、下の真ん中に） --}}
+                    <div style="height: 26px; margin-top: 14px; display: flex; align-items: center; justify-content: center;">
+                        <button type="button" style="background: none; border: none; color: white; cursor: pointer; padding: 0 4px; line-height: 1;" title="閉じる" onclick="toggleAttendanceEdit(false);">
+                            <span class="close-x-thin" style="font-size: 18px;"></span>
+                        </button>
                     </div>
                 </form>
 
@@ -77,9 +78,22 @@
                 </form>
 
                 <script>
-                function toggleAttendanceEdit() {
-                    document.getElementById('attendanceDisplay').style.display = 'none';
-                    document.getElementById('attendanceEditForm').style.display = 'block';
+                // 編集中はボタンを「保存」にし、閉じたら「編集」に戻す
+                function toggleAttendanceEdit(editing) {
+                    document.getElementById('attendanceDisplay').style.display = editing ? 'none' : '';
+                    document.getElementById('attendanceEditForm').style.display = editing ? 'block' : 'none';
+                    document.getElementById('attendanceEditToggle').textContent = editing ? '保存' : '編集';
+                    document.getElementById('attendanceDeleteButton').hidden = !editing;
+                    document.querySelector('.hero-edit-actions').classList.toggle('is-editing', editing);
+                    document.querySelector('.database-hero').classList.toggle('is-hero-editing', editing);
+                }
+                function attendanceEditButtonPressed() {
+                    const form = document.getElementById('attendanceEditForm');
+                    if (form.style.display === 'block') {
+                        form.requestSubmit();
+                    } else {
+                        toggleAttendanceEdit(true);
+                    }
                 }
                 </script>
             @endif

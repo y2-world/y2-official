@@ -82,7 +82,7 @@
                                 <i class="fa-solid fa-chevron-down"></i>
                             </button>
                             <div class="setlist-pick-body" @if ($tourSetlists->count() !== 1) hidden @endif>
-                                @include('db_concerts._setlist_rows', ['tourSetlists' => collect([$setlist]), 'songs' => $songs])
+                                @include('db_concerts._setlist_rows', ['tourSetlists' => collect([$setlist]), 'songs' => $songs, 'noSongLinks' => true])
                                 <div class="setlist-pick-confirm">
                                     <a href="{{ route('mypage.attendances.daily_songs', $kind . '-' . $setlist->id) }}" class="btn-pill">
                                         選択

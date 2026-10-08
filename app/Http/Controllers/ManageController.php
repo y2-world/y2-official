@@ -142,6 +142,7 @@ class ManageController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'date1' => ['required', 'date'],
             'date2' => ['nullable', 'date', 'after_or_equal:date1'],
+            'schedule' => ['nullable', 'string', 'max:10000'],
         ]);
 
         if ($validator->fails()) {
@@ -157,6 +158,7 @@ class ManageController extends Controller
             'type' => $request->boolean('is_fes') ? 2 : 1,
             'date1' => $data['date1'],
             'date2' => $data['date2'] ?? null,
+            'schedule' => filled($data['schedule'] ?? null) ? trim($data['schedule']) : null,
         ]);
 
         return redirect()->route('mypage.manage.concerts', $artistId)->with('success', 'ツアーを追加しました。');
@@ -276,6 +278,7 @@ class ManageController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'date1' => ['nullable', 'date'],
             'date2' => ['nullable', 'date'],
+            'schedule' => ['nullable', 'string', 'max:10000'],
         ]);
 
         if ($validator->fails()) {
@@ -289,6 +292,7 @@ class ManageController extends Controller
             'title' => $request->input('title'),
             'date1' => $request->input('date1') ?: null,
             'date2' => $request->input('date2') ?: null,
+            'schedule' => filled($request->input('schedule')) ? trim($request->input('schedule')) : null,
         ]);
 
         if ($request->wantsJson()) {

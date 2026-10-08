@@ -232,7 +232,7 @@ class DbSongController extends Controller
         // DOUBLE ENCOREで演奏されたことが無い曲では、弾き語りの列と「DOUBLE ENCOREを除く」を出さない
         $isHikigatariArtist = $isHikigatariArtist && ($hikigatariTourIds || $hikigatariSecondTabIds);
 
-        $performanceTitles = \App\Support\PerformanceTitles::options(...array_values($tourTitles), ...array_values($secondTabTitles));
+        $performanceTitles = \App\Support\PerformanceTitles::options($songs->title, ...array_values($tourTitles), ...array_values($secondTabTitles));
         // スタンプ等から ?title= で来た場合は、その表記を選んだ状態で開く
         $initialTitle = \App\Support\PerformanceTitles::pick($performanceTitles, $request->query('title'));
 

@@ -4,7 +4,7 @@
 @section('og_title', $concert->title . ' セットリストを管理 - Yuki Official')
 
 @section('content')
-    <div class="database-hero database-hero--detail manage-page">
+    <div class="database-hero database-hero--detail manage-page has-hero-edit">
         <div class="container">
             @include('database._breadcrumb', ['breadcrumbs' => [
                 ['label' => 'My Page', 'url' => route('mypage.index')],
@@ -16,9 +16,6 @@
             <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">{{ $artist->name }}</p>
             <h1 class="database-title" style="text-align: center;">
                 {{ $concert->title }}
-                <button type="button" class="manage-edit-btn" id="concertInfoEditToggle" title="編集" style="color: rgba(255, 255, 255, 0.8); vertical-align: middle; font-size: 0.5em;">
-                    <i class="fa-solid fa-pen"></i>
-                </button>
             </h1>
             <p class="database-subtitle" style="text-align: center;">
                 @if ($concert->date1)
@@ -30,6 +27,8 @@
                     開催期間未設定
                 @endif
             </p>
+            {{-- ツアー情報（ツアー名・開催期間・SCHEDULE）の編集 --}}
+            <button type="button" id="concertInfoEditToggle" class="hero-edit-btn">編集</button>
         </div>
     </div>
 
@@ -68,9 +67,22 @@
                             <input type="date" class="form-control" id="concert_date2" name="date2" value="{{ $concert->date2 }}">
                         </div>
                     </div>
+                    <div class="mb-3">
+                            <label for="concert_schedule" class="form-label">SCHEDULE</label>
+                            {{-- 公式のツアーと同じ書き方。参加登録で、参加日をこの公演から選べるようになる --}}
+                            <textarea class="form-control" id="concert_schedule" name="schedule" rows="5" placeholder="2026/10/8(水) 日本武道館&#10;2026/10/9(木) 日本武道館">{{ $concert->schedule }}</textarea>
+                    </div>
                     <button type="submit" class="btn btn-outline-dark w-100">保存</button>
+                    {{-- ツアーの追加フォームと同じ×で閉じる（保存はしない） --}}
+                    <div style="text-align: center; margin-top: 8px;">
+                        <button type="button" id="concertInfoClose" style="background: none; border: none; color: #999; cursor: pointer; padding: 20px;" title="閉じる">
+                            <span class="close-x-thin" style="font-size: 30px;"></span>
+                        </button>
+                    </div>
                 </form>
 
+                {{-- ツアー情報を編集している間は、パターンの一覧と追加ボタンを隠す --}}
+                <div id="setlistPatternsSection">
                 <div id="setlistList">
                 @foreach ($setlists as $index => $setlist)
                     <div class="manage-row" style="display: block;" data-setlist-id="{{ $setlist->id }}">
@@ -172,6 +184,7 @@
                     <button type="button" id="newSetlistPatternBtn" class="mypage-add-button" title="セットリストパターンを追加" style="border: none;">
                         <i class="fas fa-plus"></i>
                     </button>
+                </div>
                 </div>
 
                 {{-- 新規パターン用フォームの雛形。「＋」を押した時にこれを複製して表示する。
@@ -318,13 +331,19 @@
         renumberRows(container);
     });
 
-    document.getElementById('concertInfoEditToggle').addEventListener('click', () => {
-        const form = document.getElementById('concertInfoForm');
-        form.hidden = !form.hidden;
-        if (!form.hidden) {
-            form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // ツアー情報の編集フォームを開いている間は、ほかのもの（パターンの一覧・追加ボタン）を隠す
+    function setConcertInfoEditing(editing) {
+        document.getElementById('concertInfoForm').hidden = !editing;
+        document.getElementById('setlistPatternsSection').hidden = editing;
+        document.getElementById('concertInfoEditToggle').hidden = editing;
+        if (editing) {
+            document.getElementById('concertInfoForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
+    }
+    document.getElementById('concertInfoEditToggle').addEventListener('click', () => {
+        setConcertInfoEditing(document.getElementById('concertInfoForm').hidden);
     });
+    document.getElementById('concertInfoClose').addEventListener('click', () => setConcertInfoEditing(false));
 
     // 鉛筆アイコンをクリックすると、パターン名の見出し表示を隠し、
     // 曲目・パターン名をまとめて編集できるフォームを表示する（アイコンは鉛筆→下矢印に変わり、

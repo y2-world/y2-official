@@ -112,7 +112,7 @@ class SlSongController extends Controller
         // DOUBLE ENCOREで演奏されたことが無い曲では、弾き語りの列と「DOUBLE ENCOREを除く」を出さない
         $isHikigatariArtist = $isHikigatariArtist && ($hikigatariSetlistIds || $hikigatariTourIds);
 
-        $performanceTitles = \App\Support\PerformanceTitles::options(...array_values($tourTitles), ...array_values($setlistTitles));
+        $performanceTitles = \App\Support\PerformanceTitles::options($title, ...array_values($tourTitles), ...array_values($setlistTitles));
         $initialTitle = \App\Support\PerformanceTitles::pick($performanceTitles, $request->query('title'));
 
         // 検索候補（曲名 + アーティスト名）

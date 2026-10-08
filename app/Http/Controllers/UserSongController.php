@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserArtist;
+use App\Models\UserSetlist;
 use App\Models\UserSong;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -73,9 +74,31 @@ class UserSongController extends Controller
         $previousMine = $previousSongIdMine ? UserSong::find($previousSongIdMine) : null;
         $nextMine = $nextSongIdMine ? UserSong::find($nextSongIdMine) : null;
 
+        // 表記ごとの絞り込み（All / 表記1 / 表記2）。公式の楽曲ページと同じく、別表記（alternative_title）で
+        // 演奏されたことがある曲だけ出す。一覧の行ごとに、その公演で使われた表記を持たせる
+        $isThisSong = fn ($songId) => is_numeric($songId) && (int) $songId === (int) $song->id;
+        $titlesIn = fn (UserSetlist $setlist) => \App\Support\PerformanceTitles::in(
+            array_merge($setlist->setlist ?? [], $setlist->encore ?? []), $isThisSong, $song->title
+        );
+        $tourTitles = [];
+        // 表記のボタンは公式と同じく古い順（ライブの開始日、同じライブの中はパターンの順）
+        foreach ($tourSetlists->sortBy(fn (UserSetlist $setlist) => [(string) ($setlist->concert->date1 ?? ''), (int) $setlist->order_no]) as $setlist) {
+            $tourTitles[$setlist->user_concert_id] = array_values(array_unique(array_merge($tourTitles[$setlist->user_concert_id] ?? [], $titlesIn($setlist))));
+        }
+        $secondTabTitles = [];
+        $myAttendances = Auth::guard('external')->user()->attendances()
+            ->whereIn('user_setlist_id', $tourSetlists->pluck('id'))->with('userSetlist')->get();
+        foreach ($myAttendances as $attendance) {
+            $concertId = $attendance->userSetlist->user_concert_id;
+            $secondTabTitles[$concertId] = array_values(array_unique(array_merge($secondTabTitles[$concertId] ?? [], $titlesIn($attendance->userSetlist))));
+        }
+        $performanceTitles = \App\Support\PerformanceTitles::options($song->title, ...array_values($tourTitles), ...array_values($secondTabTitles));
+        // セットリストやスタンプから ?title= で来た場合は、その表記を選んだ状態で開く
+        $initialTitle = \App\Support\PerformanceTitles::pick($performanceTitles, $request->query('title'));
+
         return view('mypage.user_songs.show', compact(
             'song', 'tours', 'previous', 'next', 'songNumber', 'secondTab', 'secondTabSetlists',
-            'songNumberMine', 'previousMine', 'nextMine'
+            'songNumberMine', 'previousMine', 'nextMine', 'tourTitles', 'secondTabTitles', 'performanceTitles', 'initialTitle'
         ));
     }
 }

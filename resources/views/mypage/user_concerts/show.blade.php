@@ -55,8 +55,18 @@
         <div class="row justify-content-center">
             <div class="{{ $colClass }}">
                 <div class="setlist" style="width: 100%;">
-                    @include('db_concerts._setlist_rows', ['tourSetlists' => $tourSetlists, 'songs' => $songs, 'songLinkResolver' => fn ($song) => route('mypage.user_songs.show', $song->id)])
+                    @include('db_concerts._setlist_rows', ['tourSetlists' => $tourSetlists, 'songs' => $songs, 'songLinkResolver' => fn ($song, $alternativeTitle = '') => route('mypage.user_songs.show', array_filter(['id' => $song->id, 'title' => $alternativeTitle && $alternativeTitle !== $song->title ? $alternativeTitle : null]))])
                 </div>
+                {{-- 公式のライブのページと同じく、日程表を出す --}}
+                @if (filled($tour->schedule))
+                    <div class="schedule-text">
+                        @if ($tourSetlists->count())
+                            <hr>
+                        @endif
+                        <h5>SCHEDULE</h5>
+                        {!! nl2br(e($tour->schedule)) !!}
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -99,7 +109,9 @@
                                                 <strong>
                                             @endif
                                             @if ($variant['song_id'])
-                                                <a href="{{ route('mypage.user_songs.show', $variant['song_id']) }}">{{ $variant['title'] }}</a>
+                                                {{-- 別表記の候補は、曲のページもその表記で開く --}}
+                                                @php $variantSongTitle = $songs->find($variant['song_id'])?->title; @endphp
+                                                <a href="{{ route('mypage.user_songs.show', array_filter(['id' => $variant['song_id'], 'title' => $variantSongTitle && $variant['title'] !== $variantSongTitle ? $variant['title'] : null])) }}">{{ $variant['title'] }}</a>
                                             @else
                                                 {{ $variant['title'] }}
                                             @endif

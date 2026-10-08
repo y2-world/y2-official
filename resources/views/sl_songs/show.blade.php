@@ -14,7 +14,7 @@
             @if ($performanceSongNumber)
                 <p class="database-subtitle song-number-performances" style="{{ $initialTab === 'performances' ? '' : 'display: none;' }}">#{{ $performanceSongNumber }}</p>
             @endif
-            <h1 class="database-title" style="">{{ $initialTitle ?? $song->title }}</h1>
+            <h1 class="database-title" style="">{{ $song->title }}</h1>
 
             <div style="font-size: 1rem; color: rgba(255, 255, 255, 0.9); line-height: 1.8;">
                 @if ($song->artist)

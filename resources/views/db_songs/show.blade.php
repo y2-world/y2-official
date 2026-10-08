@@ -27,10 +27,9 @@
             @endif
             <h1 class="database-title sp" style="margin-bottom: 4px; cursor: pointer;"
                 onclick="document.getElementById('spSearchFormSongs').style.display='block'; document.querySelector('.database-title.sp').style.display='none';">
-                {{ $initialTitle ?? $songs->title }}
+                {{ $songs->title }}
             </h1>
-            {{-- 表記で絞り込んでいるときは、見出しもその表記にする（Allなら曲名） --}}
-            <h1 class="database-title pc" style="">{{ $initialTitle ?? $songs->title }}</h1>
+            <h1 class="database-title pc" style="">{{ $songs->title }}</h1>
 
             @php
                 $single = $songs->singleFromTracklist;

@@ -27,12 +27,16 @@ class PerformanceTitles
         return array_values(array_unique($titles));
     }
 
-    // 行ごとの表記の一覧から、ボタンに出す表記（古い順）を作る。表記が1つだけなら絞り込みは出さない
-    public static function options(array ...$titlesByRow): array
+    // 行ごとの表記の一覧から、ボタンに出す表記（古い順）を作る。表記が曲名の1つだけなら絞り込みは出さない
+    // （元の曲名と違う表記でしか演奏していないときは、その表記で開けるように出す）
+    public static function options(string $songTitle, array ...$titlesByRow): array
     {
         $titles = collect($titlesByRow)->flatten()->unique()->values()->all();
+        if (count($titles) === 1 && $titles[0] === self::normalize($songTitle)) {
+            return [];
+        }
 
-        return count($titles) >= 2 ? $titles : [];
+        return $titles;
     }
 
     // ?title= で指定された表記を選ぶ。空白の違いは無視し、大文字・小文字まで一致するものを優先する

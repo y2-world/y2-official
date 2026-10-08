@@ -13,6 +13,7 @@ class UserConcert extends Model
         'type',
         'date1',
         'date2',
+        'schedule',
     ];
 
     public function externalUser()
@@ -30,10 +31,18 @@ class UserConcert extends Model
         return $this->hasMany(UserSetlist::class);
     }
 
-    // db_concerts.parseScheduleEntries()相当。ユーザー登録ツアーはschedule/venue列を持たないため、
-    // 候補は作らず常に空を返し、参加日入力フォームでは常に手入力にフォールバックさせる。
+    // 日程表（schedule）から参加日・会場の候補を作る。読み方は公式のツアー（DbConcert::parseScheduleEntries）と同じ。
+    // 日程表が無ければ候補は空で、参加日入力フォームは手入力になる
     public function parseScheduleEntries(): array
     {
-        return [];
+        if (!filled($this->schedule)) {
+            return [];
+        }
+
+        return (new DbConcert())->forceFill([
+            'schedule' => $this->schedule,
+            'date1' => $this->date1,
+            'date2' => $this->date2,
+        ])->parseScheduleEntries();
     }
 }

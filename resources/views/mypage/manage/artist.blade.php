@@ -4,7 +4,7 @@
 @section('og_title', $artist->name . ' - Manage My Artists & Setlists - Yuki Official')
 
 @section('content')
-    <div class="database-hero database-hero--detail manage-page">
+    <div class="database-hero database-hero--detail manage-page has-hero-edit">
         <div class="container">
             @include('database._breadcrumb', ['breadcrumbs' => [
                 ['label' => 'My Page', 'url' => route('mypage.index')],
@@ -12,17 +12,20 @@
                 ['label' => $artist->name],
             ]])
             <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">Manage My Artists & Setlists</p>
-            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 12px;">
-                <span style="width: 1rem; flex-shrink: 0;"></span>
+            <div style="display: flex; align-items: center; justify-content: center; margin-top: 12px;">
                 <h1 class="database-title" style="text-align: center; margin-bottom: 0;">
                     <span class="manage-artist-name" data-title="{{ $artist->name }}">{{ $artist->name }}</span>
                 </h1>
                 <input type="text" class="manage-artist-name-input form-control" value="{{ $artist->name }}" hidden style="max-width: 240px; font-size: 1rem; padding: 6px 12px;">
-                <button type="button" class="manage-edit-btn" data-update-url="{{ route('mypage.manage.artists.update', $artist->id) }}" title="編集" style="color: white; font-size: 1rem; flex-shrink: 0; width: 1rem;">
-                    <i class="fa-solid fa-pen"></i>
-                    <i class="fa-solid fa-check" hidden></i>
+            </div>
+            {{-- 編集中だけ、保存せずに閉じる×を入力欄の下の真ん中に（参加記録の画面と同じ） --}}
+            <div id="artistNameEditClose" hidden style="height: 26px; margin-top: 14px; justify-content: center; align-items: center;">
+                <button type="button" style="background: none; border: none; color: white; cursor: pointer; padding: 0 4px; line-height: 1;" title="閉じる">
+                    <span class="close-x-thin" style="font-size: 18px;"></span>
                 </button>
             </div>
+            {{-- アーティスト名の編集。押すとその場で書き換えて「保存」になる --}}
+            <button type="button" id="artistNameEditBtn" class="hero-edit-btn" data-update-url="{{ route('mypage.manage.artists.update', $artist->id) }}">編集</button>
         </div>
     </div>
 
@@ -80,20 +83,25 @@
     (function () {
         const nameSpan = document.querySelector('.manage-artist-name');
         const nameInput = document.querySelector('.manage-artist-name-input');
-        const editBtn = document.querySelector('.manage-edit-btn');
+        const editBtn = document.getElementById('artistNameEditBtn');
         if (!nameSpan || !nameInput || !editBtn) return;
 
-        const penIcon = editBtn.querySelector('.fa-pen');
-        const checkIcon = editBtn.querySelector('.fa-check');
         const updateUrl = editBtn.dataset.updateUrl;
         let isEditing = false;
+        const closeRow = document.getElementById('artistNameEditClose');
+        // 編集中は×の行を出し、その下の余白を詰める（参加記録の画面と同じ）
+        const setEditingLayout = (editing) => {
+            closeRow.hidden = !editing;
+            closeRow.style.display = editing ? 'flex' : '';
+            document.querySelector('.database-hero').classList.toggle('is-hero-editing', editing);
+        };
 
         const startEdit = () => {
             isEditing = true;
             nameSpan.hidden = true;
             nameInput.hidden = false;
-            penIcon.hidden = true;
-            checkIcon.hidden = false;
+            editBtn.textContent = '保存';
+            setEditingLayout(true);
             nameInput.value = nameSpan.dataset.title;
             nameInput.focus();
             nameInput.setSelectionRange(nameInput.value.length, nameInput.value.length);
@@ -104,8 +112,8 @@
             const newName = nameInput.value.trim();
             nameInput.hidden = true;
             nameSpan.hidden = false;
-            penIcon.hidden = false;
-            checkIcon.hidden = true;
+            editBtn.textContent = '編集';
+            setEditingLayout(false);
 
             if (newName === '' || newName === nameSpan.dataset.title) return;
 
@@ -133,6 +141,11 @@
             } else {
                 startEdit();
             }
+        });
+        // ×は保存せずに閉じる
+        closeRow.querySelector('button').addEventListener('click', () => {
+            nameInput.value = nameSpan.dataset.title;
+            commitEdit();
         });
         nameInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') { e.preventDefault(); commitEdit(); }

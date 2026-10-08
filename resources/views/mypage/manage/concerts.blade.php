@@ -54,6 +54,11 @@
                             <label for="new_concert_date2" class="form-label">終了日（任意・単発の場合は空欄）</label>
                             <input type="date" class="form-control" id="new_concert_date2" name="date2" value="{{ old('date2') }}">
                         </div>
+                        <div class="mb-3">
+                            <label for="new_concert_schedule" class="form-label">SCHEDULE</label>
+                            {{-- 公式のツアーと同じ書き方。参加登録で、参加日をこの公演から選べるようになる --}}
+                            <textarea class="form-control" id="new_concert_schedule" name="schedule" rows="5" placeholder="2026/10/8(水) 日本武道館&#10;2026/10/9(木) 日本武道館">{{ old('schedule') }}</textarea>
+                        </div>
                         <button type="submit" class="btn btn-outline-dark w-100">追加</button>
                         <div style="text-align: center; margin-top: 8px;">
                             <button type="button" onclick="document.getElementById('newConcertForm').hidden = true; document.getElementById('newConcertToggle').hidden = false; if (!document.querySelector('#concertList .manage-artist-row')) { document.getElementById('noConcertsMessage').hidden = false; }" style="background: none; border: none; color: #999; cursor: pointer; padding: 20px;" title="閉じる">

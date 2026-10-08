@@ -75,6 +75,8 @@ class AttendanceController extends Controller
         // My Live Attendancesタブ用：自分の参加記録を古い順に見ていったとき、そのアーティストの
         // 曲の中で何番目に初めて登場したか。自分がまだこの曲を聴いた記録がなければnullのまま。
         $initialTitle = null;
+        // 曲で絞り込んでいるときの表記ごとの絞り込み用（曲で絞り込んでいなければ空のまま）
+        $tourTitles = [];
         $songNumberMine = null;
         $previousSongMine = null;
         $nextSongMine = null;
@@ -117,15 +119,18 @@ class AttendanceController extends Controller
 
                 $tourSetlists = $song->performedTourSetlists();
 
-                // 別表記で開いたとき（?title=）は、その表記が演奏記録にあれば見出しもその表記にする（setlists の曲のページと同じ）
-                $performanceTitles = $tourSetlists
-                    ->flatMap(fn ($setlist) => \App\Support\PerformanceTitles::in(
-                        array_merge($setlist->setlist ?? [], $setlist->encore ?? []),
-                        fn ($entry) => is_numeric($entry) && (int) $entry === (int) $songIdValue,
-                        $song->title
-                    ))
-                    ->unique()->values()->all();
-                $initialTitle = \App\Support\PerformanceTitles::pick($performanceTitles, $request->query('title'));
+                // 表記ごとの絞り込み（All / 表記1 / 表記2）。曲のページと同じく、一覧の行ごとにその公演で使われた表記を持たせ、
+                // 別表記で開いたとき（?title=）は、その表記で演奏した記録があればそのタブを選んだ状態で開く
+                $titlesIn = fn ($setlist) => $setlist ? \App\Support\PerformanceTitles::in(
+                    array_merge($setlist->setlist ?? [], $setlist->encore ?? []),
+                    fn ($entry) => is_numeric($entry) && (int) $entry === (int) $songIdValue,
+                    $song->title
+                ) : [];
+                $tourTitles = [];
+                $tourKey = fn ($setlist) => $songKind === 'official' ? $setlist->tour_id : $setlist->user_concert_id;
+                foreach ($tourSetlists as $setlist) {
+                    $tourTitles[$tourKey($setlist)] = array_values(array_unique(array_merge($tourTitles[$tourKey($setlist)] ?? [], $titlesIn($setlist))));
+                }
 
                 if ($songKind === 'official') {
                     $tours = $tourSetlists->pluck('tour')->filter()->unique('id')->values();
@@ -150,6 +155,17 @@ class AttendanceController extends Controller
             $query->orderBy('attended_date');
         }
         $attendances = $query->get();
+
+        // 曲で絞り込んでいるときの表記ごとの絞り込み。参加記録の行は、その参加記録のセットリストで使われた表記
+        $attendanceTitles = [];
+        $performanceTitles = [];
+        if ($song && isset($titlesIn)) {
+            foreach ($attendances as $attendance) {
+                $attendanceTitles[$attendance->id] = $titlesIn($songKind === 'official' ? $attendance->dbSetlist : $attendance->userSetlist);
+            }
+            $performanceTitles = \App\Support\PerformanceTitles::options($song->title, ...array_values($tourTitles), ...array_values($attendanceTitles));
+            $initialTitle = \App\Support\PerformanceTitles::pick($performanceTitles, $request->query('title'));
+        }
 
         $userId = $targetUser->id;
 
@@ -191,7 +207,8 @@ class AttendanceController extends Controller
             'attendances', 'officialArtists', 'myArtists', 'artistId', 'song', 'songKind',
             'songNumberMine', 'previousSongMine', 'nextSongMine',
             'songNumberPerformances', 'previousSongPerformances', 'nextSongPerformances',
-            'filterArtist', 'years', 'year', 'venue', 'targetUser', 'tours', 'secondTab', 'initialTitle'
+            'filterArtist', 'years', 'year', 'venue', 'targetUser', 'tours', 'secondTab', 'initialTitle',
+            'performanceTitles', 'tourTitles', 'attendanceTitles'
         ));
     }
 

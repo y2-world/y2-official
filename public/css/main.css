@@ -4809,3 +4809,43 @@ a.setlist-card:hover {
     color: #718096;
     padding-right: 6px !important;
 }
+
+/* ヘッダー（.database-hero）の「編集」ボタン。ヘッダーの高さを変えないよう、右下に重ねて置く */
+.database-hero.has-hero-edit {
+    position: relative;
+}
+.hero-edit-btn {
+    position: absolute;
+    right: 16px;
+    bottom: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    background: transparent;
+    color: white !important;
+    border-radius: 20px;
+    padding: 2px 14px;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    cursor: pointer;
+    text-decoration: none;
+}
+.hero-edit-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+/* 「保存」と「削除」のように、右下に並べて置くとき */
+.hero-edit-actions {
+    position: absolute;
+    right: 16px;
+    bottom: 10px;
+    display: flex;
+    gap: 6px;
+}
+.hero-edit-actions .hero-edit-btn {
+    position: static;
+}
+/* その場で編集している間は、いちばん下の行（×）の下の余白を詰め、ボタンもその行にそろえる */
+.database-hero.has-hero-edit.is-hero-editing {
+    padding-bottom: 10px;
+}
+.hero-edit-actions.is-editing {
+    bottom: 10px;
+}

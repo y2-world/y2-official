@@ -67,7 +67,7 @@
                     if ($songModel && $isFromTimeline) {
                         $link = $kind === 'official'
                             ? route('songs.show', array_filter(['id' => $songModel->id, 'tab' => 'mine', 'title' => $alternativeTitle && $alternativeTitle !== $songModel->title ? $alternativeTitle : null]))
-                            : route('mypage.user_songs.show', ['id' => $songModel->id, 'tab' => 'mine']);
+                            : route('mypage.user_songs.show', array_filter(['id' => $songModel->id, 'tab' => 'mine', 'title' => $alternativeTitle && $alternativeTitle !== $songModel->title ? $alternativeTitle : null]));
                     } elseif ($songModel) {
                         // 別表記で載っている曲は、曲のページもその表記で開く
                         $link = route('mypage.attendances.index', array_filter(['song_id' => $kind . '-' . $songModel->id, 'title' => $alternativeTitle && $alternativeTitle !== $songModel->title ? $alternativeTitle : null]));

@@ -53,6 +53,8 @@
                 }
             }
         </style>
+        {{-- 別表記で演奏されたことがある曲は、公式の楽曲ページと同じく「All / 表記1 / 表記2」で絞り込む --}}
+        @include('songs._title_filter', ['songTitle' => $song->title])
         <div class="song-performance-tabs" style="display: flex; gap: 8px; margin-bottom: 15px;">
             <button type="button" class="song-performance-tab-btn @if($secondTab === 'performances') is-active @endif" data-tab-target="live-performances-panel"
                 style="padding: 8px 16px; border-radius: 20px; font-weight: 500; cursor: pointer; {{ $secondTab === 'performances' ? 'border: none; background: #667eea; color: white;' : 'border: 1px solid #667eea; background: white; color: #667eea;' }}">
@@ -78,7 +80,7 @@
                     </thead>
                     <tbody>
                         @foreach ($tours as $tour)
-                            <tr>
+                            <tr data-titles="{{ json_encode($tourTitles[$tour->id] ?? [], JSON_UNESCAPED_UNICODE) }}">
                                 <td></td>
                                 @if ($tour->date1 && $tour->date2)
                                     <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }} - {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
@@ -109,7 +111,7 @@
                     </thead>
                     <tbody>
                         @foreach ($secondTabSetlists as $tour)
-                            <tr>
+                            <tr data-titles="{{ json_encode($secondTabTitles[$tour->id] ?? [], JSON_UNESCAPED_UNICODE) }}">
                                 <td></td>
                                 @if ($tour->date1 && $tour->date2)
                                     <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }} - {{ date('Y.m.d', strtotime($tour->date2)) }}</td>

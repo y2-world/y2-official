@@ -1,10 +1,12 @@
 {{-- $tourSetlists（DbSetlistのコレクション）と $songs（全DbSongのコレクション）を受け取り、
      row でグルーピングした複数パターンのセットリストを横並びで描画する。
      db_concerts/show.blade.php と mypage/attendances/show.blade.php から共通で利用する。
-     曲名のリンク先は既定でdatabase側の曲詳細だが、$songLinkResolver（fn($songModel) => string|null）を
-     渡すと呼び出し元でリンク先を差し替えられる（mypageでは自分の参加履歴一覧へ誘導するため）。 --}}
+     曲名のリンク先は既定でdatabase側の曲詳細だが、$songLinkResolver（fn($songModel, $alternativeTitle) => string|null）を
+     渡すと呼び出し元でリンク先を差し替えられる（mypageでは自分の参加履歴一覧へ誘導するため）。
+     $noSongLinks = true のときは曲名にリンクを付けない（参加登録のパターン選択画面など、選ぶための画面）。 --}}
 @php
     $songLinkResolver = $songLinkResolver ?? null;
+    $noSongLinks = $noSongLinks ?? false;
 @endphp
 @if ($tourSetlists->count())
     @php
@@ -123,7 +125,7 @@
 
                                                 if ($songModel) {
                                                     $title = !empty($alternativeTitle) ? $alternativeTitle : $songModel->title;
-                                                    $link = $songLinkResolver ? $songLinkResolver($songModel) : \App\Models\DbSong::showUrl($data['song'], $alternativeTitle);
+                                                    $link = $noSongLinks ? null : ($songLinkResolver ? $songLinkResolver($songModel, $alternativeTitle) : \App\Models\DbSong::showUrl($data['song'], $alternativeTitle));
                                                 } else {
                                                     $title = !empty($alternativeTitle) ? $alternativeTitle : $data['song'];
                                                     $link = null;

@@ -1,7 +1,7 @@
 {{-- 楽曲ページの一覧の絞り込み。
      ・表記：別表記（alternative_title）で演奏されたことがある曲だけ「All / 表記1 / 表記2」を出し、選んだ表記で
        演奏した行だけにする（セトリやスタンプに出ている表記と同じ公演だけを見られるようにするため）。
-       選んだ表記は見出し（.database-title）にも出し、Allなら曲名に戻す。
+       見出しはいつも元の曲名のまま（表記を選んでも変わるのはタブと一覧だけ）。
      ・DOUBLE ENCOREを除く：福山雅治の曲だけ。DOUBLE ENCORE（弾き語り）でだけ演奏した行を隠す。チェックボックスはタブの下（songs._double_encore_toggle）に置く。
      一覧の行には data-titles（その行で使われた表記のJSON）と、DOUBLE ENCOREでだけ演奏した行には
      data-double-encore-only を付けておく。隠した行は#の連番に数えられないので、番号は絞り込んだ後の回数になる。
@@ -23,15 +23,10 @@
         document.addEventListener('DOMContentLoaded', function () {
             var titleButtons = document.querySelectorAll('.song-title-filter-btn');
             var excludeCheckbox = document.getElementById('excludeDoubleEncore');
-            var headingEls = document.querySelectorAll('.database-title');
-            var songTitle = @json($songTitle);
             var currentTitle = @json($initialTitle);
 
             function applyFilters() {
                 var excludeDoubleEncore = excludeCheckbox ? excludeCheckbox.checked : false;
-                if (titleButtons.length) {
-                    headingEls.forEach(function (el) { el.textContent = currentTitle || songTitle; });
-                }
                 titleButtons.forEach(function (b) {
                     var active = (b.dataset.title || null) === currentTitle;
                     b.style.background = active ? '#764ba2' : 'white';
