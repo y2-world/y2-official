@@ -165,12 +165,14 @@
                                                         ? '/ ' . $featuring
                                                         : $featuring;
                                                 @endphp
+                                                {{-- メドレーの曲は、セットリストの表示と同じく改行して「~ 曲名」。改行は曲名の箱（inline-block）の外に入れる --}}
+                                                @if (!$loop->first && !empty($variant['medley']))<br>@endif
                                                 <span class="setlist-song-featuring">
                                                     @if ($isExtraRow && $loop->first)
                                                         <span class="setlist-extra-prefix">-&nbsp;</span>
                                                     @endif
                                                     @if (!$loop->first)
-                                                        <span class="setlist-summary-variant-separator">@if (!empty($variant['medley']))〜@else/@endif</span>
+                                                        <span class="setlist-summary-variant-separator">@if (!empty($variant['medley']))~@else/@endif</span>
                                                     @endif
                                                     @if (!($variant['is_common'] ?? true))
                                                         <strong>

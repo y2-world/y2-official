@@ -133,7 +133,8 @@
                                             @endphp
 
                                             @if ($isInline)
-                                                -
+                                                {{-- 日替わりの候補は「-」、メドレーは「~」（Summary のメドレーのつなぎと同じ） --}}
+                                                {{ $isMedley ? '~' : '-' }}
                                                 <span class="setlist-song-featuring">
                                                     @if ($link)
                                                         <a href="{{ $link }}" @if($isUnique) style="font-weight:900;" @endif>{{ $title }}</a>

@@ -1012,7 +1012,9 @@ th {
 .table.fixed-cols .col-date-range { width: 16em; }
 .table.fixed-cols .col-artist { width: 15%; }
 .table.fixed-cols .col-venue { width: 28%; }
-.table.fixed-cols .col-icon { width: 2.5em; }
+/* アイコンの列（福山雅治の弾き語りのギター・マイク）。セルの左右の余白の分も含めて、アイコン2つが入る幅にする */
+.table.fixed-cols .col-icon { width: calc(2.6em + 30px); }
+.table.fixed-cols th.col-icon { text-align: center; }
 /* 会場・アーティストの列を出さない幅（991px以下）では、番号の列を少し細くする（開催日は1行のまま） */
 @media (max-width: 991px) {
     .table.fixed-cols .col-no { width: 4em; }

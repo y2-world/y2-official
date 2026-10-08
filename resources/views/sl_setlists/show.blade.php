@@ -119,9 +119,9 @@
 
                             if ($isMedley) {
                                 if ($url !== '#') {
-                                    echo '- <a href="' . $url . '">' . $keyword . '</a>';
+                                    echo '~ <a href="' . $url . '">' . $keyword . '</a>';
                                 } else {
-                                    echo '- ' . $keyword;
+                                    echo '~ ' . $keyword;
                                 }
                                 if (!empty($featuring)) {
                                     echo $featuring;
@@ -211,9 +211,9 @@
 
                             if ($isMedley) {
                                 if ($url !== '#') {
-                                    echo '- <a href="' . $url . '">' . $keyword . '</a>';
+                                    echo '~ <a href="' . $url . '">' . $keyword . '</a>';
                                 } else {
-                                    echo '- ' . $keyword;
+                                    echo '~ ' . $keyword;
                                 }
                                 if (!empty($featuring)) {
                                     echo $featuring;
@@ -315,7 +315,7 @@
                                             : '';
                                         $isMedley = !empty($song['medley']) && $song['medley'] == 1;
                                         if ($isMedley) {
-                                            echo '- ';
+                                            echo '~ ';
                                             echo ($url !== '#') ? '<a href="' . $url . '">' . htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8') . '</a>' : htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8');
                                             echo $feat . (!empty($annotation) ? ' ' . $annotation : '') . '<br>';
                                         } else {
@@ -360,7 +360,7 @@
                                         $artistDisplay .= ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_COMPAT, 'UTF-8') . '</span>';
                                     }
                                     if ($isMedley) {
-                                        echo '- ';
+                                        echo '~ ';
                                         echo ($url !== '#') ? '<a href="' . $url . '">' . htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8') . '</a>' : htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8');
                                         echo $artistDisplay . (!empty($annotation) ? ' ' . $annotation : '') . '<br>';
                                     } else {
