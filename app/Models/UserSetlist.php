@@ -36,6 +36,45 @@ class UserSetlist extends Model
         return $this->hasMany(ExternalUserAttendance::class, 'user_setlist_id');
     }
 
+    // 曲目入力（曲名と別表記の組）を、セットリストの曲の配列にする。
+    // 曲名あり：その曲（無ければアーティストの曲として登録）。別表記が曲名と違えば alternative_title に持つ
+    // 曲名が空で別表記だけ：カバーなど。アーティストの曲として登録せず、公式と同じく曲名の文字列のまま持つ
+    // 両方空の行は捨てる
+    public static function itemsFromInput(int $userArtistId, array $titles, array $alternativeTitles = []): array
+    {
+        $items = [];
+        $alternativeTitles = array_values($alternativeTitles);
+        foreach (array_values($titles) as $i => $title) {
+            $title = trim((string) $title);
+            $alternativeTitle = trim((string) ($alternativeTitles[$i] ?? ''));
+            if ($title !== '') {
+                $song = UserSong::firstOrCreateByTitle($userArtistId, $title);
+                $item = ['song' => (string) $song->id];
+                if ($alternativeTitle !== '' && $alternativeTitle !== $song->title) {
+                    $item['alternative_title'] = $alternativeTitle;
+                }
+                $items[] = $item;
+            } elseif ($alternativeTitle !== '') {
+                $items[] = ['song' => $alternativeTitle];
+            }
+        }
+
+        return $items;
+    }
+
+    // 曲目入力の画面に出す、曲の行ごとの「曲名」と「別表記」（itemsFromInput の逆）
+    public static function inputRowsFromItems(array $items, $songTitles): array
+    {
+        return array_map(function ($item) use ($songTitles) {
+            $song = $item['song'] ?? '';
+            if (is_numeric($song) && isset($songTitles[(int) $song])) {
+                return ['title' => $songTitles[(int) $song], 'alternative_title' => $item['alternative_title'] ?? ''];
+            }
+
+            return ['title' => '', 'alternative_title' => ($item['alternative_title'] ?? '') ?: (string) $song];
+        }, array_values($items));
+    }
+
     // db_setlists同様、setlist/encoreの各アイテムにUUIDを自動付与する
     public function setSetlistAttribute($value)
     {

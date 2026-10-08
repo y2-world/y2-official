@@ -53,11 +53,14 @@
                         <input type="hidden" name="tour_date2" value="{{ $tourDate2 }}">
                         <input type="hidden" name="is_fes" value="{{ $isFes ? 1 : 0 }}">
                     @endif
-                    @foreach ($setlist as $title)
-                        <input type="hidden" name="setlist[]" value="{{ $title }}">
+                    {{-- 曲名と別表記（曲名が空ならカバーなど）を組で引き継ぐ --}}
+                    @foreach ($setlist as $row)
+                        <input type="hidden" name="setlist[]" value="{{ $row['title'] }}">
+                        <input type="hidden" name="setlist_alt[]" value="{{ $row['alternative_title'] }}">
                     @endforeach
-                    @foreach ($encore as $title)
-                        <input type="hidden" name="encore[]" value="{{ $title }}">
+                    @foreach ($encore as $row)
+                        <input type="hidden" name="encore[]" value="{{ $row['title'] }}">
+                        <input type="hidden" name="encore_alt[]" value="{{ $row['alternative_title'] }}">
                     @endforeach
 
                     <div class="mb-3">

@@ -100,24 +100,6 @@
         align-items: center;
         gap: 8px;
     }
-    .setlist-song-row .song-row-reorder-buttons {
-        display: flex;
-        flex-direction: column;
-        flex-shrink: 0;
-    }
-    .setlist-song-row .song-row-reorder-up,
-    .setlist-song-row .song-row-reorder-down {
-        background: none;
-        border: none;
-        color: #999;
-        cursor: pointer;
-        padding: 2px 6px;
-        line-height: 1;
-    }
-    .setlist-song-row .song-row-reorder-up:hover,
-    .setlist-song-row .song-row-reorder-down:hover {
-        color: #667eea;
-    }
     .setlist-song-row .song-row-number {
         flex: 0 0 auto;
         width: 1.4em;
@@ -161,6 +143,7 @@
         flex-shrink: 0;
     }
     </style>
+    @include('mypage.manage._song_rows_sortable')
     <script>
     const isAlbum = @json($kind === 'album');
     let discCount = 0;
@@ -191,10 +174,7 @@
         const row = document.createElement('div');
         row.className = 'setlist-song-row';
         row.innerHTML = `
-            <div class="song-row-reorder-buttons">
-                <button type="button" class="song-row-reorder-up" title="上へ"><i class="fa-solid fa-chevron-up"></i></button>
-                <button type="button" class="song-row-reorder-down" title="下へ"><i class="fa-solid fa-chevron-down"></i></button>
-            </div>
+            <span class="manage-drag-handle" title="ドラッグで並べ替え"><i class="fa-solid fa-grip-lines"></i></span>
             <span class="song-row-number"></span>
             <div class="song-row-inputs">
                 <input type="text" class="form-control song-row-title" name="tracks[${container.dataset.discIndex}][]" list="songTitleOptions" placeholder="曲名">
@@ -205,18 +185,8 @@
         row.querySelector('.song-row-title').value = (value && value.title) || '';
         row.querySelector('.song-row-exception').value = (value && value.exception) || '';
         row.querySelector('.remove-row-btn').addEventListener('click', () => { row.remove(); renumberRows(containerId); });
-        row.querySelector('.song-row-reorder-up').addEventListener('click', () => {
-            const prev = row.previousElementSibling;
-            if (!prev) return;
-            container.insertBefore(row, prev);
-            renumberRows(containerId);
-        });
-        row.querySelector('.song-row-reorder-down').addEventListener('click', () => {
-            const next = row.nextElementSibling;
-            if (!next) return;
-            container.insertBefore(next, row);
-            renumberRows(containerId);
-        });
+        // 曲の並べ替え（manage/songs）と同じく、「≡」をつかんでドラッグで並べ替える
+        makeSongRowsSortable(container, () => renumberRows(containerId));
         container.appendChild(row);
         renumberRows(containerId);
         if (!keepFocus) row.querySelector('.song-row-title').focus();

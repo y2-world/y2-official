@@ -402,6 +402,11 @@ class AttendanceController extends Controller
             'setlist.*' => ['nullable', 'string', 'max:255'],
             'encore' => ['array'],
             'encore.*' => ['nullable', 'string', 'max:255'],
+            // 曲ごとの別表記（setlist / encore と同じ並び）。曲名が空で別表記だけならカバーなど
+            'setlist_alt' => ['array'],
+            'setlist_alt.*' => ['nullable', 'string', 'max:255'],
+            'encore_alt' => ['array'],
+            'encore_alt.*' => ['nullable', 'string', 'max:255'],
         ]);
 
         if ($validator->fails()) {
@@ -428,8 +433,14 @@ class AttendanceController extends Controller
             $isFes = false;
         }
 
-        $setlist = array_values(array_filter($request->input('setlist', []), fn ($t) => trim((string) $t) !== ''));
-        $encore = array_values(array_filter($request->input('encore', []), fn ($t) => trim((string) $t) !== ''));
+        // 曲名と別表記を組にして、どちらも空の行だけ捨てる（曲名が空で別表記だけの行はカバーなど）
+        $toRows = fn (array $titles, array $alternativeTitles) => collect(array_values($titles))
+            ->map(fn ($title, $i) => ['title' => trim((string) $title), 'alternative_title' => trim((string) (array_values($alternativeTitles)[$i] ?? ''))])
+            ->filter(fn ($row) => $row['title'] !== '' || $row['alternative_title'] !== '')
+            ->values()
+            ->all();
+        $setlist = $toRows($request->input('setlist', []), $request->input('setlist_alt', []));
+        $encore = $toRows($request->input('encore', []), $request->input('encore_alt', []));
 
         // 単発ライブで開始日のみ分かっている場合は、参加日の初期値として使う
         $defaultAttendedDate = $tourDate1 && !$tourDate2 ? $tourDate1 : null;
@@ -463,6 +474,11 @@ class AttendanceController extends Controller
             'setlist.*' => ['nullable', 'string', 'max:255'],
             'encore' => ['array'],
             'encore.*' => ['nullable', 'string', 'max:255'],
+            // 曲ごとの別表記（setlist / encore と同じ並び）。曲名が空で別表記だけならカバーなど
+            'setlist_alt' => ['array'],
+            'setlist_alt.*' => ['nullable', 'string', 'max:255'],
+            'encore_alt' => ['array'],
+            'encore_alt.*' => ['nullable', 'string', 'max:255'],
             'attended_date' => ['required', 'date'],
             'venue' => ['required', 'string', 'max:255'],
         ]);
@@ -534,22 +550,9 @@ class AttendanceController extends Controller
                 }
             }
 
-            $toSongIds = function (array $titles) use ($userArtist) {
-                $items = [];
-                foreach ($titles as $title) {
-                    $title = trim((string) $title);
-                    if ($title === '') {
-                        continue;
-                    }
-                    $song = UserSong::firstOrCreateByTitle($userArtist->id, $title);
-                    $items[] = ['song' => (string) $song->id];
-                }
-                return $items;
-            };
-
             $userSetlist->update([
-                'setlist' => $toSongIds($data['setlist'] ?? []),
-                'encore' => $toSongIds($data['encore'] ?? []),
+                'setlist' => UserSetlist::itemsFromInput($userArtist->id, $data['setlist'] ?? [], $data['setlist_alt'] ?? []),
+                'encore' => UserSetlist::itemsFromInput($userArtist->id, $data['encore'] ?? [], $data['encore_alt'] ?? []),
             ]);
 
             $attendanceData = [

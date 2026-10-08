@@ -48,6 +48,7 @@
                         <input type="hidden" name="is_fes" value="{{ $isFes ? 1 : 0 }}">
                     @endif
 
+                    <h5 style="font-size: 0.9rem; color: #999; letter-spacing: 1px;">本編</h5>
                     <div id="setlistRows" class="setlist-song-rows"></div>
                     <div style="text-align: center; margin-bottom: 24px;">
                         <button type="button" class="mypage-add-button" title="曲を追加" onclick="addSongRow('setlistRows', 'setlist')" style="border: none;">
@@ -83,24 +84,6 @@
         align-items: center;
         gap: 8px;
     }
-    .setlist-song-row .song-row-reorder-buttons {
-        display: flex;
-        flex-direction: column;
-        flex-shrink: 0;
-    }
-    .setlist-song-row .song-row-reorder-up,
-    .setlist-song-row .song-row-reorder-down {
-        background: none;
-        border: none;
-        color: #999;
-        cursor: pointer;
-        padding: 2px 6px;
-        line-height: 1;
-    }
-    .setlist-song-row .song-row-reorder-up:hover,
-    .setlist-song-row .song-row-reorder-down:hover {
-        color: #667eea;
-    }
     .setlist-song-row .song-row-number {
         flex: 0 0 auto;
         width: 1.4em;
@@ -119,6 +102,22 @@
         outline: none;
         box-shadow: none;
     }
+    /* 曲名の下に別表記の欄（アルバムの登録画面と同じ）。曲名が空で別表記だけなら、カバーなどとして保存する */
+    .setlist-song-row .song-row-inputs {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+    }
+    .setlist-song-row .song-row-inputs input::placeholder {
+        color: #c4c4c4;
+        opacity: 1;
+    }
+    .setlist-song-row .song-row-alt {
+        font-size: 0.8em !important;
+        color: #888;
+        padding-top: 0 !important;
+    }
     .setlist-song-row .remove-row-btn {
         background: none;
         border: none;
@@ -128,18 +127,19 @@
         flex-shrink: 0;
     }
     </style>
+    @include('mypage.manage._song_rows_sortable')
     <script>
     function addSongRow(containerId, fieldName) {
         const container = document.getElementById(containerId);
         const row = document.createElement('div');
         row.className = 'setlist-song-row';
         row.innerHTML = `
-            <div class="song-row-reorder-buttons">
-                <button type="button" class="song-row-reorder-up" title="上へ"><i class="fa-solid fa-chevron-up"></i></button>
-                <button type="button" class="song-row-reorder-down" title="下へ"><i class="fa-solid fa-chevron-down"></i></button>
-            </div>
+            <span class="manage-drag-handle" title="ドラッグで並べ替え"><i class="fa-solid fa-grip-lines"></i></span>
             <span class="song-row-number"></span>
-            <input type="text" class="form-control" name="${fieldName}[]" list="songTitleOptions" placeholder="曲名">
+            <div class="song-row-inputs">
+                <input type="text" class="form-control song-row-title" name="${fieldName}[]" list="songTitleOptions" placeholder="曲名">
+                <input type="text" class="form-control song-row-alt" name="${fieldName}_alt[]" placeholder="別表記 / カバーなど">
+            </div>
             <button type="button" class="remove-row-btn" title="削除" onclick="this.closest('.setlist-song-row').remove(); renumberRows('${containerId}');">
                 <i class="fa-solid fa-trash"></i>
             </button>
@@ -147,23 +147,13 @@
         container.appendChild(row);
         setupSongRowDrag(row, container);
         renumberRows(containerId);
-        row.querySelector('input').focus();
+        row.querySelector('.song-row-title').focus();
     }
 
     // --- 上下ボタンで1つずつ順位を入れ替える（ドラッグ操作は誤操作が多いため） ---
     function setupSongRowDrag(row, container) {
-        row.querySelector('.song-row-reorder-up').addEventListener('click', () => {
-            const prev = row.previousElementSibling;
-            if (!prev) return;
-            container.insertBefore(row, prev);
-            renumberRows(container.id);
-        });
-        row.querySelector('.song-row-reorder-down').addEventListener('click', () => {
-            const next = row.nextElementSibling;
-            if (!next) return;
-            container.insertBefore(next, row);
-            renumberRows(container.id);
-        });
+        // 曲の並べ替え（manage/songs）と同じく、「≡」をつかんでドラッグで並べ替える
+        makeSongRowsSortable(container, () => renumberRows(container.id));
     }
 
     function renumberRows(containerId) {

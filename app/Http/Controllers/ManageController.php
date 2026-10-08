@@ -181,21 +181,6 @@ class ManageController extends Controller
         return view('mypage.manage.setlists', compact('artist', 'concert', 'setlists', 'songTitles'));
     }
 
-    // 曲名の配列（setlist_create画面と同じ形式）を、無ければ新規作成しつつsong_idの配列に変換する
-    private function songTitlesToSetlistItems(array $titles, $artistId): array
-    {
-        $items = [];
-        foreach ($titles as $title) {
-            $title = trim((string) $title);
-            if ($title === '') {
-                continue;
-            }
-            $song = UserSong::firstOrCreateByTitle((int) $artistId, $title);
-            $items[] = ['song' => (string) $song->id];
-        }
-        return $items;
-    }
-
     // 新しいセットリストパターンを、曲目データと一緒に作成する（「＋」ボタン自体は保存せず、
     // その場で開いた曲目編集フォームの「保存」を押した時点で初めてDBに書き込む）。
     public function storeSetlist(Request $request, $artistId, $concertId)
@@ -213,6 +198,11 @@ class ManageController extends Controller
             'setlist.*' => ['nullable', 'string', 'max:255'],
             'encore' => ['array'],
             'encore.*' => ['nullable', 'string', 'max:255'],
+            // 曲ごとの別表記（setlist / encore と同じ並び）。曲名が空で別表記だけならカバーなど
+            'setlist_alt' => ['array'],
+            'setlist_alt.*' => ['nullable', 'string', 'max:255'],
+            'encore_alt' => ['array'],
+            'encore_alt.*' => ['nullable', 'string', 'max:255'],
         ]);
 
         if ($validator->fails()) {
@@ -226,8 +216,8 @@ class ManageController extends Controller
             'order_no' => $nextOrderNo,
             'row' => 1,
             'subtitle' => $request->input('subtitle') ?: null,
-            'setlist' => $this->songTitlesToSetlistItems($request->input('setlist', []), $artistId),
-            'encore' => $this->songTitlesToSetlistItems($request->input('encore', []), $artistId),
+            'setlist' => UserSetlist::itemsFromInput((int) $artistId, $request->input('setlist', []), $request->input('setlist_alt', [])),
+            'encore' => UserSetlist::itemsFromInput((int) $artistId, $request->input('encore', []), $request->input('encore_alt', [])),
         ]);
 
         return redirect()->route('mypage.manage.setlists', [$artistId, $concertId])->with('success', 'セットリストパターンを追加しました。');
@@ -251,6 +241,11 @@ class ManageController extends Controller
             'setlist.*' => ['nullable', 'string', 'max:255'],
             'encore' => ['array'],
             'encore.*' => ['nullable', 'string', 'max:255'],
+            // 曲ごとの別表記（setlist / encore と同じ並び）。曲名が空で別表記だけならカバーなど
+            'setlist_alt' => ['array'],
+            'setlist_alt.*' => ['nullable', 'string', 'max:255'],
+            'encore_alt' => ['array'],
+            'encore_alt.*' => ['nullable', 'string', 'max:255'],
         ]);
 
         if ($validator->fails()) {
@@ -259,8 +254,8 @@ class ManageController extends Controller
 
         $setlist->update([
             'subtitle' => $request->input('subtitle') ?: null,
-            'setlist' => $this->songTitlesToSetlistItems($request->input('setlist', []), $artistId),
-            'encore' => $this->songTitlesToSetlistItems($request->input('encore', []), $artistId),
+            'setlist' => UserSetlist::itemsFromInput((int) $artistId, $request->input('setlist', []), $request->input('setlist_alt', [])),
+            'encore' => UserSetlist::itemsFromInput((int) $artistId, $request->input('encore', []), $request->input('encore_alt', [])),
         ]);
 
         return redirect()->route('mypage.manage.setlists', [$artistId, $concertId])->with('success', 'セットリストを更新しました。');

@@ -75,10 +75,8 @@
                 @foreach ($setlists as $index => $setlist)
                     <div class="manage-row" style="display: block;" data-setlist-id="{{ $setlist->id }}">
                         <div class="setlist-pattern-summary">
-                            <div class="manage-reorder-buttons">
-                                <button type="button" class="manage-reorder-up setlist-pattern-reorder-up" title="上へ"><i class="fa-solid fa-chevron-up"></i></button>
-                                <button type="button" class="manage-reorder-down setlist-pattern-reorder-down" title="下へ"><i class="fa-solid fa-chevron-down"></i></button>
-                            </div>
+                            {{-- ここをつかんでドラッグでパターンを並べ替える（スマホは少し長押ししてから） --}}
+                            <span class="manage-drag-handle setlist-pattern-drag-handle" title="ドラッグで並べ替え"><i class="fa-solid fa-grip-lines"></i></span>
                             <span class="select-card-icon"><i class="fa-solid fa-music"></i></span>
                             <span class="manage-row-title">
                                 @php
@@ -118,15 +116,16 @@
                             <div class="mb-3">
                                 <input type="text" class="form-control setlist-pattern-title-input" name="subtitle" placeholder="パターン名を入力（任意）" value="{{ $setlist->subtitle }}">
                             </div>
+                            <h5 style="font-size: 0.9rem; color: #999; letter-spacing: 1px;">本編</h5>
                             <div class="setlist-song-rows" data-field="setlist">
-                                @foreach ($setlist->setlist ?? [] as $item)
+                                @foreach (\App\Models\UserSetlist::inputRowsFromItems($setlist->setlist ?? [], $songTitles) as $inputRow)
                                     <div class="setlist-song-row">
-                                        <div class="song-row-reorder-buttons">
-                                            <button type="button" class="song-row-reorder-up" title="上へ"><i class="fa-solid fa-chevron-up"></i></button>
-                                            <button type="button" class="song-row-reorder-down" title="下へ"><i class="fa-solid fa-chevron-down"></i></button>
-                                        </div>
+                                        <span class="manage-drag-handle" title="ドラッグで並べ替え"><i class="fa-solid fa-grip-lines"></i></span>
                                         <span class="song-row-number"></span>
-                                        <input type="text" class="form-control" name="setlist[]" list="songTitleOptions" placeholder="曲名" value="{{ $songTitles[$item['song']] ?? '' }}">
+                                        <div class="song-row-inputs">
+                                            <input type="text" class="form-control song-row-title" name="setlist[]" list="songTitleOptions" placeholder="曲名" value="{{ $inputRow['title'] }}">
+                                            <input type="text" class="form-control song-row-alt" name="setlist_alt[]" placeholder="別表記 / カバーなど" value="{{ $inputRow['alternative_title'] }}">
+                                        </div>
                                         <button type="button" class="remove-row-btn" title="削除" onclick="const c = this.closest('.setlist-song-rows'); this.closest('.setlist-song-row').remove(); renumberRows(c);">
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
@@ -141,14 +140,14 @@
 
                             <h5 style="font-size: 0.9rem; color: #999; letter-spacing: 1px;">ENCORE</h5>
                             <div class="setlist-song-rows" data-field="encore">
-                                @foreach ($setlist->encore ?? [] as $item)
+                                @foreach (\App\Models\UserSetlist::inputRowsFromItems($setlist->encore ?? [], $songTitles) as $inputRow)
                                     <div class="setlist-song-row">
-                                        <div class="song-row-reorder-buttons">
-                                            <button type="button" class="song-row-reorder-up" title="上へ"><i class="fa-solid fa-chevron-up"></i></button>
-                                            <button type="button" class="song-row-reorder-down" title="下へ"><i class="fa-solid fa-chevron-down"></i></button>
-                                        </div>
+                                        <span class="manage-drag-handle" title="ドラッグで並べ替え"><i class="fa-solid fa-grip-lines"></i></span>
                                         <span class="song-row-number"></span>
-                                        <input type="text" class="form-control" name="encore[]" list="songTitleOptions" placeholder="曲名" value="{{ $songTitles[$item['song']] ?? '' }}">
+                                        <div class="song-row-inputs">
+                                            <input type="text" class="form-control song-row-title" name="encore[]" list="songTitleOptions" placeholder="曲名" value="{{ $inputRow['title'] }}">
+                                            <input type="text" class="form-control song-row-alt" name="encore_alt[]" placeholder="別表記 / カバーなど" value="{{ $inputRow['alternative_title'] }}">
+                                        </div>
                                         <button type="button" class="remove-row-btn" title="削除" onclick="const c = this.closest('.setlist-song-rows'); this.closest('.setlist-song-row').remove(); renumberRows(c);">
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
@@ -184,6 +183,7 @@
                             <div class="mb-3">
                                 <input type="text" class="form-control setlist-pattern-title-input" name="subtitle" placeholder="パターン名を入力（任意）">
                             </div>
+                            <h5 style="font-size: 0.9rem; color: #999; letter-spacing: 1px;">本編</h5>
                             <div class="setlist-song-rows" data-field="setlist"></div>
                             <div style="text-align: center; margin-bottom: 16px;">
                                 <button type="button" class="mypage-add-button" title="曲を追加" style="border: none;" onclick="addSetlistSongRow(this, 'setlist')">
@@ -233,24 +233,6 @@
         align-items: center;
         gap: 8px;
     }
-    .setlist-song-row .song-row-reorder-buttons {
-        display: flex;
-        flex-direction: column;
-        flex-shrink: 0;
-    }
-    .setlist-song-row .song-row-reorder-up,
-    .setlist-song-row .song-row-reorder-down {
-        background: none;
-        border: none;
-        color: #999;
-        cursor: pointer;
-        padding: 2px 6px;
-        line-height: 1;
-    }
-    .setlist-song-row .song-row-reorder-up:hover,
-    .setlist-song-row .song-row-reorder-down:hover {
-        color: #667eea;
-    }
     .setlist-song-row .song-row-number {
         flex: 0 0 auto;
         width: 1.4em;
@@ -270,6 +252,22 @@
         outline: none;
         box-shadow: none;
     }
+    /* 曲名の下に別表記の欄（アルバムの登録画面と同じ）。曲名が空で別表記だけなら、カバーなどとして保存する */
+    .setlist-song-row .song-row-inputs {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+    }
+    .setlist-song-row .song-row-inputs input::placeholder {
+        color: #c4c4c4;
+        opacity: 1;
+    }
+    .setlist-song-row .song-row-alt {
+        font-size: 0.8em !important;
+        color: #888;
+        padding-top: 0 !important;
+    }
     .setlist-song-row .remove-row-btn {
         background: none;
         border: none;
@@ -280,18 +278,19 @@
     }
     </style>
 
+    @include('mypage.manage._song_rows_sortable')
     <script>
     function addSetlistSongRow(button, fieldName) {
         const container = button.closest('div').previousElementSibling;
         const row = document.createElement('div');
         row.className = 'setlist-song-row';
         row.innerHTML = `
-            <div class="song-row-reorder-buttons">
-                <button type="button" class="song-row-reorder-up" title="上へ"><i class="fa-solid fa-chevron-up"></i></button>
-                <button type="button" class="song-row-reorder-down" title="下へ"><i class="fa-solid fa-chevron-down"></i></button>
-            </div>
+            <span class="manage-drag-handle" title="ドラッグで並べ替え"><i class="fa-solid fa-grip-lines"></i></span>
             <span class="song-row-number"></span>
-            <input type="text" class="form-control" name="${fieldName}[]" list="songTitleOptions" placeholder="曲名">
+            <div class="song-row-inputs">
+                <input type="text" class="form-control song-row-title" name="${fieldName}[]" list="songTitleOptions" placeholder="曲名">
+                <input type="text" class="form-control song-row-alt" name="${fieldName}_alt[]" placeholder="別表記 / カバーなど">
+            </div>
             <button type="button" class="remove-row-btn" title="削除" onclick="const c = this.closest('.setlist-song-rows'); this.closest('.setlist-song-row').remove(); renumberRows(c);">
                 <i class="fa-solid fa-trash"></i>
             </button>
@@ -299,23 +298,13 @@
         container.appendChild(row);
         setupSongRowDrag(row, container);
         renumberRows(container);
-        row.querySelector('input').focus();
+        row.querySelector('.song-row-title').focus();
     }
 
     // --- 上下ボタンで1つずつ順位を入れ替える（ドラッグ操作は誤操作が多いため） ---
     function setupSongRowDrag(row, container) {
-        row.querySelector('.song-row-reorder-up').addEventListener('click', () => {
-            const prev = row.previousElementSibling;
-            if (!prev) return;
-            container.insertBefore(row, prev);
-            renumberRows(container);
-        });
-        row.querySelector('.song-row-reorder-down').addEventListener('click', () => {
-            const next = row.nextElementSibling;
-            if (!next) return;
-            container.insertBefore(next, row);
-            renumberRows(container);
-        });
+        // 曲の並べ替え（manage/songs）と同じく、「≡」をつかんでドラッグで並べ替える
+        makeSongRowsSortable(container, () => renumberRows(container));
     }
 
     function renumberRows(container) {
@@ -412,8 +401,7 @@
         });
     });
 
-    // パターン自体（セットリストパターンの表示順）を上下ボタンで1つずつ入れ替える。
-    // 曲行の並べ替えと同じ考え方（ドラッグは誤操作が多いため上下ボタン方式）。
+    // パターン自体（セットリストパターンの表示順）を、曲の並べ替えと同じくドラッグで並べ替える。
     // 「パターンN」フォールバック表示はサーバー側で順序に応じて算出されるため、
     // ここではDOM上の並び替えとorder_noの保存だけ行い、番号表示はユーザーが
     // 手動でページを再読み込みした時点で正しい値になる。
@@ -430,23 +418,9 @@
         });
     }
 
-    document.querySelectorAll('.setlist-pattern-reorder-up').forEach((btn) => {
-        btn.addEventListener('click', () => {
-            const row = btn.closest('[data-setlist-id]');
-            const prev = row.previousElementSibling;
-            if (!prev || !prev.dataset.setlistId) return;
-            row.parentElement.insertBefore(row, prev);
-            persistSetlistOrder();
-        });
-    });
-    document.querySelectorAll('.setlist-pattern-reorder-down').forEach((btn) => {
-        btn.addEventListener('click', () => {
-            const row = btn.closest('[data-setlist-id]');
-            const next = row.nextElementSibling;
-            if (!next || !next.dataset.setlistId) return;
-            row.parentElement.insertBefore(next, row);
-            persistSetlistOrder();
-        });
+    makeSongRowsSortable(document.getElementById('setlistList'), persistSetlistOrder, {
+        draggable: '[data-setlist-id]',
+        handle: '.setlist-pattern-drag-handle',
     });
 
     // 「＋」を押しても何も保存せず、曲目編集フォーム（template）を複製して開いた状態で挿入するだけ。
@@ -474,6 +448,8 @@
                 document.getElementById('noSetlistsMessage').hidden = false;
             }
         });
+        // 参加登録の曲目入力と同じく、本編・アンコールに1行ずつ空の行を用意しておく
+        row.querySelectorAll('.mypage-add-button[onclick*="addSetlistSongRow"]').forEach((btn) => btn.click());
         row.querySelector('.setlist-pattern-title-input').focus();
         row.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
