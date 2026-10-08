@@ -96,7 +96,9 @@ class SlSongResource extends Resource
                 Tables\Filters\SelectFilter::make('artist')
                     ->relationship('artist', 'name', fn($query) => $query->where('visible', 1)->orderBy('id'))
                     ->label('アーティスト')
-                    ->searchable(),
+                    ->searchable()
+                    // 文字を入れなくても、開いたときに候補を出す
+                    ->preload(),
                 Tables\Filters\TernaryFilter::make('db_song_id')
                     ->label('DB紐付け状態')
                     ->nullable()

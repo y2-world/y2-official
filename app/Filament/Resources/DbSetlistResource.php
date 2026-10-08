@@ -476,7 +476,9 @@ class DbSetlistResource extends Resource
                 Tables\Filters\SelectFilter::make('tour')
                     ->relationship('tour', 'title')
                     ->label('ツアー')
-                    ->searchable(),
+                    ->searchable()
+                    // 文字を入れなくても、開いたときに候補を出す
+                    ->preload(),
             ])
             ->actions([
                 Tables\Actions\ReplicateAction::make()
