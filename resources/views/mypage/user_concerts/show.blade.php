@@ -103,8 +103,8 @@
                                         @endif
                                         @foreach ($row['variants'] as $variant)
                                             @if (!$loop->first)
-                                                {{-- メドレーの曲は改行して「~ 曲名」、日替わりの候補は「/」でつなぐ（公式の Summary と同じ） --}}
-                                                @if (!empty($variant['medley']))<br><span>~ </span>@else<span> / </span>@endif
+                                                {{-- メドレーの曲は改行せず「~」、日替わりの候補は「/」でつなぐ（公式の Summary と同じ） --}}
+                                                @if (!empty($variant['medley']))<span> ~ </span>@else<span> / </span>@endif
                                             @endif
                                             @if (!($variant['is_common'] ?? true))
                                                 <strong>

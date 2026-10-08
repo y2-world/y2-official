@@ -165,8 +165,7 @@
                                                         ? '/ ' . $featuring
                                                         : $featuring;
                                                 @endphp
-                                                {{-- メドレーの曲は、セットリストの表示と同じく改行して「~ 曲名」。改行は曲名の箱（inline-block）の外に入れる --}}
-                                                @if (!$loop->first && !empty($variant['medley']))<br>@endif
+                                                {{-- メドレーの曲は改行せず「~」でつなぐ（セットリストの表示とは違い、Summary は改行しない） --}}
                                                 <span class="setlist-song-featuring">
                                                     @if ($isExtraRow && $loop->first)
                                                         <span class="setlist-extra-prefix">-&nbsp;</span>
