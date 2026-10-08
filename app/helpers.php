@@ -1276,7 +1276,7 @@ if (!function_exists('buildSetlistPatternSummary')) {
         // 行になってしまう）への、人手による最終手段の救済措置。setlist/encore
         // それぞれのセクション内でのみ統合する（本編/アンコール境界をまたいだ
         // グループ指定は現状のデータ構造では想定しない）。
-        $applySummaryGroups = function (array $rows): array {
+        $applySummaryGroups = function (array $rows, $referenceKeys, $baseClusters): array {
             $rowIndexesByGroup = [];
             foreach ($rows as $rowIdx => $row) {
                 foreach ($row['variants'] as $entry) {
@@ -1294,7 +1294,32 @@ if (!function_exists('buildSetlistPatternSummary')) {
                 if (count($rowIndexes) < 2) {
                     continue;
                 }
+                // 統合先は、基準（最終公演）でその番号の曲をやった位置の行にする
+                // （例: tour377 row 2 の「花になれ / 強く儚く」は、最初の公演では輪廻の前だが最終公演では絶体絶命!!!の後ろ）。
+                // 基準でその番号の曲の前にある曲の数と、行の前にある「基準の曲の行」の数が同じ行を選ぶ。
+                // 基準にその番号が無いときや、合う行が無いときは、いちばん上の行
                 $targetRowIdx = min($rowIndexes);
+                $basePosition = null;
+                foreach ($baseClusters as $clusterIdx => $cluster) {
+                    if (in_array((string) $group, array_map('strval', array_filter(array_column($cluster, 'summary_group'), fn ($g) => $g !== null)), true)) {
+                        $basePosition = $clusterIdx;
+                        break;
+                    }
+                }
+                if ($basePosition !== null) {
+                    foreach ($rowIndexes as $candidateIdx) {
+                        $referenceRowsBefore = 0;
+                        for ($i = 0; $i < $candidateIdx; $i++) {
+                            if (!in_array($i, $rowIndexes, true) && collect($rows[$i]['variants'])->contains(fn ($entry) => $referenceKeys->has($entry['key']))) {
+                                $referenceRowsBefore++;
+                            }
+                        }
+                        if ($referenceRowsBefore === $basePosition) {
+                            $targetRowIdx = $candidateIdx;
+                            break;
+                        }
+                    }
+                }
                 foreach ($rowIndexes as $rowIdx) {
                     if ($rowIdx !== $targetRowIdx) {
                         $mergeInto[$rowIdx] = $targetRowIdx;
@@ -1336,8 +1361,8 @@ if (!function_exists('buildSetlistPatternSummary')) {
             return array_values(array_filter($rows, fn ($row) => !empty($row['variants'])));
         };
 
-        $setlistRows = $applySummaryGroups($setlistRows);
-        $encoreRows = $applySummaryGroups($encoreRows);
+        $setlistRows = $applySummaryGroups($setlistRows, $referenceKeysBySection['setlist'], $setlistClusterLists[$referenceIndex]);
+        $encoreRows = $applySummaryGroups($encoreRows, $referenceKeysBySection['encore'], $encoreClusterLists[$referenceIndex]);
 
         // summary_groupの統合で別行から候補が追加されているため、統合前の行順ではなく
         // 各候補の初出パターン順（同一パターン内は元の曲順）に並べ直す。
