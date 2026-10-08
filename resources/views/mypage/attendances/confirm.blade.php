@@ -13,6 +13,7 @@
                     $setlistCreateParams['title'] = $tourTitle;
                     $setlistCreateParams['date1'] = $tourDate1;
                     $setlistCreateParams['date2'] = $tourDate2;
+                    $setlistCreateParams['schedule'] = $tourSchedule;
                 }
             @endphp
             @include('database._breadcrumb', ['breadcrumbs' => [
@@ -51,6 +52,7 @@
                         <input type="hidden" name="tour_title" value="{{ $tourTitle }}">
                         <input type="hidden" name="tour_date1" value="{{ $tourDate1 }}">
                         <input type="hidden" name="tour_date2" value="{{ $tourDate2 }}">
+                        <input type="hidden" name="tour_schedule" value="{{ $tourSchedule }}">
                         <input type="hidden" name="is_fes" value="{{ $isFes ? 1 : 0 }}">
                     @endif
                     {{-- 曲名と別表記（曲名が空ならカバーなど）を組で引き継ぐ --}}
@@ -63,6 +65,27 @@
                         <input type="hidden" name="encore_alt[]" value="{{ $row['alternative_title'] }}">
                     @endforeach
 
+                    {{-- SCHEDULE があれば、その公演から参加日・会場を選べる（選ぶと下の欄に入る。手で直すこともできる） --}}
+                    @if (!empty($scheduleOptions))
+                        <div class="mb-3">
+                            <label for="schedule_select" class="form-label">参加日・会場を選択</label>
+                            <select class="form-control" id="schedule_select">
+                                <option value="" selected disabled>-- 選択してください --</option>
+                                @foreach ($scheduleOptions as $index => $option)
+                                    <option value="{{ $index }}" data-date="{{ $option['date'] }}" data-venue="{{ $option['venue'] }}">
+                                        {{ \Carbon\Carbon::parse($option['date'])->format('Y.m.d') }} {{ $option['venue'] }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <script>
+                        document.getElementById('schedule_select').addEventListener('change', function (e) {
+                            const selected = e.target.options[e.target.selectedIndex];
+                            document.getElementById('attended_date').value = selected.getAttribute('data-date') || '';
+                            document.getElementById('venue').value = selected.getAttribute('data-venue') || '';
+                        });
+                        </script>
+                    @endif
                     <div class="mb-3">
                         <label for="attended_date" class="form-label">参加日</label>
                         <input type="date" class="form-control" id="attended_date" name="attended_date" value="{{ old('attended_date', $defaultAttendedDate) }}" required>

@@ -34,9 +34,12 @@
 
                 @if ($canAddTour)
                     <div style="text-align: center;">
-                        <a href="#" id="newTourToggle" class="mypage-add-button" title="新しいツアーを追加" style="display: inline-flex; margin-bottom: 24px;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newTourForm').hidden = false; this.hidden = true; var msg = document.getElementById('noToursMessage'); if (msg) { msg.hidden = true; }" @else hidden @endif>
-                            <i class="fas fa-plus"></i>
-                        </a>
+                        <div class="mypage-add-row" style="margin-bottom: 24px;">
+                            <span class="mypage-add-row-label">ツアーを追加</span>
+                            <a href="#" id="newTourToggle" class="mypage-add-button" title="新しいツアーを追加" @if(!$errors->any()) onclick="event.preventDefault(); setNewTourFormOpen(true);" @else hidden @endif>
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </div>
                         <form id="newTourForm" method="POST" action="{{ route('mypage.attendances.tours.new', $artistId) }}" @if(!$errors->any()) hidden @endif class="new-item-form @unless($errors->any()) new-item-form--via-toggle @endunless">
                             @csrf
                             @if ($artistId === 'new')
@@ -60,9 +63,14 @@
                                 <label for="new_tour_date2" class="form-label">終了日（任意・単発の場合は空欄）</label>
                                 <input type="date" class="form-control" id="new_tour_date2" name="date2" value="{{ old('date2') }}">
                             </div>
+                            <div class="mb-3">
+                                <label for="new_tour_schedule" class="form-label">SCHEDULE</label>
+                                {{-- 公式のツアーと同じ書き方。参加日をこの公演から選べるようになる --}}
+                                <textarea class="form-control" id="new_tour_schedule" name="schedule" rows="5" placeholder="2026/10/8(水) 日本武道館&#10;2026/10/9(木) 日本武道館">{{ old('schedule') }}</textarea>
+                            </div>
                             <button type="submit" class="btn btn-outline-dark w-100">追加</button>
                             <div style="text-align: center; margin-top: 8px;">
-                                <button type="button" onclick="document.getElementById('newTourForm').hidden = true; document.getElementById('newTourToggle').hidden = false; var msg = document.getElementById('noToursMessage'); if (msg) { msg.hidden = false; }" style="background: none; border: none; color: #999; cursor: pointer; padding: 20px;" title="閉じる">
+                                <button type="button" onclick="setNewTourFormOpen(false);" style="background: none; border: none; color: #999; cursor: pointer; padding: 20px;" title="閉じる">
                                     <span class="close-x-thin" style="font-size: 30px;"></span>
                                 </button>
                             </div>
@@ -70,6 +78,8 @@
                     </div>
                 @endif
 
+                {{-- 新しいツアーのフォームを開いている間は、ツアーの一覧を隠す --}}
+                <div id="tourListSection" @if ($errors->any()) hidden @endif>
                 @if ($tours->isEmpty())
                     <p id="noToursMessage">このアーティストにはまだツアーが登録されていません。</p>
                 @else
@@ -91,7 +101,15 @@
                         @endforeach
                     </div>
                 @endif
+                </div>
             </div>
         </div>
     </div>
+    <script>
+    function setNewTourFormOpen(open) {
+        document.getElementById('newTourForm').hidden = !open;
+        document.getElementById('newTourToggle').hidden = open;
+        document.getElementById('tourListSection').hidden = open;
+    }
+    </script>
 @endsection

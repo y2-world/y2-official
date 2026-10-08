@@ -4849,3 +4849,19 @@ a.setlist-card:hover {
 .hero-edit-actions.is-editing {
     bottom: 10px;
 }
+
+/* 「＋」の追加ボタン。マイページのトップ（セットリストを追加）と同じく、右寄せで文字の右に置く */
+.mypage-add-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+.mypage-add-row-label {
+    color: #764ba2;
+    font-size: 0.85rem;
+}
+/* ボタンを隠したとき（フォームを開いている間など）は、文字ごと隠す */
+.mypage-add-row:has(> .mypage-add-button[hidden]) {
+    display: none;
+}

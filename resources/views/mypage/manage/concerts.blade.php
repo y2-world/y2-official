@@ -31,9 +31,12 @@
                 @endif
 
                 <div style="text-align: center;">
-                    <a href="#" id="newConcertToggle" class="mypage-add-button" title="ツアーを追加" style="display: inline-flex; margin-bottom: 24px;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newConcertForm').hidden = false; document.getElementById('noConcertsMessage').hidden = true; this.hidden = true;" @else hidden @endif>
-                        <i class="fas fa-plus"></i>
-                    </a>
+                    <div class="mypage-add-row" style="margin-bottom: 24px;">
+                        <span class="mypage-add-row-label">ツアーを追加</span>
+                        <a href="#" id="newConcertToggle" class="mypage-add-button" title="ツアーを追加" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newConcertForm').hidden = false; document.getElementById('noConcertsMessage').hidden = true; document.getElementById('concertList').hidden = true; this.hidden = true;" @else hidden @endif>
+                            <i class="fas fa-plus"></i>
+                        </a>
+                    </div>
                     <form id="newConcertForm" method="POST" action="{{ route('mypage.manage.concerts.store', $artist->id) }}" @if(!$errors->any()) hidden @endif class="new-item-form @unless($errors->any()) new-item-form--via-toggle @endunless">
                         @csrf
                         <div class="mb-3">
@@ -61,14 +64,15 @@
                         </div>
                         <button type="submit" class="btn btn-outline-dark w-100">追加</button>
                         <div style="text-align: center; margin-top: 8px;">
-                            <button type="button" onclick="document.getElementById('newConcertForm').hidden = true; document.getElementById('newConcertToggle').hidden = false; if (!document.querySelector('#concertList .manage-artist-row')) { document.getElementById('noConcertsMessage').hidden = false; }" style="background: none; border: none; color: #999; cursor: pointer; padding: 20px;" title="閉じる">
+                            <button type="button" onclick="document.getElementById('newConcertForm').hidden = true; document.getElementById('newConcertToggle').hidden = false; document.getElementById('concertList').hidden = false; if (!document.querySelector('#concertList .manage-artist-row')) { document.getElementById('noConcertsMessage').hidden = false; }" style="background: none; border: none; color: #999; cursor: pointer; padding: 20px;" title="閉じる">
                                 <span class="close-x-thin" style="font-size: 30px;"></span>
                             </button>
                         </div>
                     </form>
                 </div>
 
-                <div id="concertList" class="select-card-list">
+                {{-- ツアーを追加するフォームを開いている間は、一覧を隠す --}}
+                <div id="concertList" class="select-card-list" @if ($errors->any()) hidden @endif>
                     @foreach ($concerts as $concert)
                         <div class="manage-artist-row">
                             <a href="{{ route('mypage.manage.setlists', [$artist->id, $concert->id]) }}" class="select-card">

@@ -45,11 +45,6 @@
                     </div>
                 @endif
 
-                <datalist id="songTitleOptions">
-                    @foreach ($songTitles as $title)
-                        <option value="{{ $title }}"></option>
-                    @endforeach
-                </datalist>
 
                 <form method="POST" action="{{ route('mypage.manage.concerts.update', [$artist->id, $concert->id]) }}" id="concertInfoForm" hidden style="margin-bottom: 24px;">
                     @csrf
@@ -90,7 +85,7 @@
                             {{-- ここをつかんでドラッグでパターンを並べ替える（スマホは少し長押ししてから） --}}
                             <span class="manage-drag-handle setlist-pattern-drag-handle" title="ドラッグで並べ替え"><i class="fa-solid fa-grip-lines"></i></span>
                             <span class="select-card-icon"><i class="fa-solid fa-music"></i></span>
-                            <span class="manage-row-title">
+                            <a href="{{ route('mypage.manage.setlists.edit', [$artist->id, $concert->id, $setlist->id]) }}" class="manage-row-title" style="color: inherit; text-decoration: none;">
                                 @php
                                     $subtitleRendered = renderSubtitleWithGreyedVenues($setlist->subtitle);
                                     $subtitleHtml = implode('<br>', $subtitleRendered['lines']);
@@ -108,117 +103,30 @@
                                     $songCount = count($setlist->setlist ?? []) + count($setlist->encore ?? []);
                                 @endphp
                                 <span class="setlist-pattern-song-count" style="color: #999; font-size: 0.85rem; display: block;">{{ $songCount }}曲</span>
-                            </span>
+                            </a>
                             <div class="setlist-pattern-actions">
-                                <button type="button" class="manage-edit-btn setlist-pattern-edit-toggle" title="編集">
-                                    <i class="fa-solid fa-pen"></i>
-                                    <i class="fa-solid fa-chevron-down" hidden></i>
-                                </button>
                                 <button type="button" class="manage-edit-btn setlist-pattern-duplicate" data-duplicate-url="{{ route('mypage.manage.setlists.duplicate', [$artist->id, $concert->id, $setlist->id]) }}" title="複製">
                                     <i class="fa-solid fa-copy"></i>
                                 </button>
-                                <button type="button" class="manage-delete-btn setlist-pattern-delete" data-delete-url="{{ route('mypage.manage.setlists.destroy', [$artist->id, $concert->id, $setlist->id]) }}" title="削除">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
+                                {{-- ほかの一覧のカードと同じく「＞」で、そのパターンの編集ページへ --}}
+                                <a href="{{ route('mypage.manage.setlists.edit', [$artist->id, $concert->id, $setlist->id]) }}" class="setlist-pattern-open" title="編集">
+                                    <i class="fa-solid fa-chevron-right select-card-arrow"></i>
+                                </a>
                             </div>
                         </div>
-
-                        <form method="POST" action="{{ route('mypage.manage.setlists.update', [$artist->id, $concert->id, $setlist->id]) }}" class="setlist-pattern-form" hidden style="margin-top: 16px;">
-                            @csrf
-                            <div class="mb-3">
-                                <input type="text" class="form-control setlist-pattern-title-input" name="subtitle" placeholder="パターン名を入力（任意）" value="{{ $setlist->subtitle }}">
-                            </div>
-                            <h5 style="font-size: 0.9rem; color: #999; letter-spacing: 1px;">本編</h5>
-                            <div class="setlist-song-rows" data-field="setlist">
-                                @foreach (\App\Models\UserSetlist::inputRowsFromItems($setlist->setlist ?? [], $songTitles) as $inputRow)
-                                    <div class="setlist-song-row">
-                                        <span class="manage-drag-handle" title="ドラッグで並べ替え"><i class="fa-solid fa-grip-lines"></i></span>
-                                        <span class="song-row-number"></span>
-                                        <div class="song-row-inputs">
-                                            <input type="text" class="form-control song-row-title" name="setlist[]" list="songTitleOptions" placeholder="曲名" value="{{ $inputRow['title'] }}">
-                                            <input type="text" class="form-control song-row-alt" name="setlist_alt[]" placeholder="別表記 / カバーなど" value="{{ $inputRow['alternative_title'] }}">
-                                        </div>
-                                        <button type="button" class="remove-row-btn" title="削除" onclick="const c = this.closest('.setlist-song-rows'); this.closest('.setlist-song-row').remove(); renumberRows(c);">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </div>
-                                @endforeach
-                            </div>
-                            <div style="text-align: center; margin-bottom: 16px;">
-                                <button type="button" class="mypage-add-button" title="曲を追加" style="border: none;" onclick="addSetlistSongRow(this, 'setlist')">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-
-                            <h5 style="font-size: 0.9rem; color: #999; letter-spacing: 1px;">ENCORE</h5>
-                            <div class="setlist-song-rows" data-field="encore">
-                                @foreach (\App\Models\UserSetlist::inputRowsFromItems($setlist->encore ?? [], $songTitles) as $inputRow)
-                                    <div class="setlist-song-row">
-                                        <span class="manage-drag-handle" title="ドラッグで並べ替え"><i class="fa-solid fa-grip-lines"></i></span>
-                                        <span class="song-row-number"></span>
-                                        <div class="song-row-inputs">
-                                            <input type="text" class="form-control song-row-title" name="encore[]" list="songTitleOptions" placeholder="曲名" value="{{ $inputRow['title'] }}">
-                                            <input type="text" class="form-control song-row-alt" name="encore_alt[]" placeholder="別表記 / カバーなど" value="{{ $inputRow['alternative_title'] }}">
-                                        </div>
-                                        <button type="button" class="remove-row-btn" title="削除" onclick="const c = this.closest('.setlist-song-rows'); this.closest('.setlist-song-row').remove(); renumberRows(c);">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </div>
-                                @endforeach
-                            </div>
-                            <div style="text-align: center; margin-bottom: 16px;">
-                                <button type="button" class="mypage-add-button" title="曲を追加" style="border: none;" onclick="addSetlistSongRow(this, 'encore')">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-
-                            <button type="submit" class="btn btn-outline-dark w-100">保存</button>
-                        </form>
                     </div>
                 @endforeach
                 </div>
 
                 <p id="noSetlistsMessage" style="text-align: center; color: #999; margin-top: 0;" @if ($setlists->isNotEmpty()) hidden @endif>まだセットリストパターンがありません。</p>
 
-                <div style="margin-top: 24px; text-align: center;">
-                    <button type="button" id="newSetlistPatternBtn" class="mypage-add-button" title="セットリストパターンを追加" style="border: none;">
+                <div class="mypage-add-row" style="margin-top: 24px;">
+                    <span class="mypage-add-row-label">パターンを追加</span>
+                    <a href="{{ route('mypage.manage.setlists.create', [$artist->id, $concert->id]) }}" id="newSetlistPatternBtn" class="mypage-add-button" title="セットリストパターンを追加">
                         <i class="fas fa-plus"></i>
-                    </button>
+                    </a>
                 </div>
                 </div>
-
-                {{-- 新規パターン用フォームの雛形。「＋」を押した時にこれを複製して表示する。
-                     押しただけではDBに何も作らず、この中の「保存」を押した時点で初めてstoreSetlistへ送信する。 --}}
-                <template id="newSetlistPatternTemplate">
-                    <div class="manage-row" style="display: block;">
-                        <form method="POST" action="{{ route('mypage.manage.setlists.store', [$artist->id, $concert->id]) }}" class="setlist-pattern-form" style="margin-top: 16px;">
-                            @csrf
-                            <div class="mb-3">
-                                <input type="text" class="form-control setlist-pattern-title-input" name="subtitle" placeholder="パターン名を入力（任意）">
-                            </div>
-                            <h5 style="font-size: 0.9rem; color: #999; letter-spacing: 1px;">本編</h5>
-                            <div class="setlist-song-rows" data-field="setlist"></div>
-                            <div style="text-align: center; margin-bottom: 16px;">
-                                <button type="button" class="mypage-add-button" title="曲を追加" style="border: none;" onclick="addSetlistSongRow(this, 'setlist')">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-
-                            <h5 style="font-size: 0.9rem; color: #999; letter-spacing: 1px;">ENCORE</h5>
-                            <div class="setlist-song-rows" data-field="encore"></div>
-                            <div style="text-align: center; margin-bottom: 16px;">
-                                <button type="button" class="mypage-add-button" title="曲を追加" style="border: none;" onclick="addSetlistSongRow(this, 'encore')">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-
-                            <div class="d-flex gap-2">
-                                <button type="button" class="btn btn-outline-secondary w-100 new-setlist-pattern-cancel">キャンセル</button>
-                                <button type="submit" class="btn btn-outline-dark w-100">保存</button>
-                            </div>
-                        </form>
-                    </div>
-                </template>
             </div>
         </div>
     </div>
@@ -229,107 +137,21 @@
         align-items: center;
         gap: 12px;
     }
+    .setlist-pattern-open {
+        color: inherit;
+        text-decoration: none;
+        padding: 4px 2px 4px 6px;
+    }
     .setlist-pattern-actions {
         display: flex;
         align-items: center;
         gap: 8px;
         flex-shrink: 0;
     }
-    .setlist-song-row {
-        position: relative;
-        border-radius: 10px;
-        margin-bottom: 10px;
-        background: #f8f8f8;
-        border: 1px solid #eee;
-        padding: 10px 12px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .setlist-song-row .song-row-number {
-        flex: 0 0 auto;
-        width: 1.4em;
-        text-align: right;
-        color: #999;
-        font-size: 0.85em;
-    }
-    .setlist-song-row input[type="text"] {
-        flex: 1;
-        min-width: 0;
-        border: none;
-        padding: 4px 0;
-        background: transparent;
-        font-size: 0.9em;
-    }
-    .setlist-song-row input[type="text"]:focus {
-        outline: none;
-        box-shadow: none;
-    }
-    /* 曲名の下に別表記の欄（アルバムの登録画面と同じ）。曲名が空で別表記だけなら、カバーなどとして保存する */
-    .setlist-song-row .song-row-inputs {
-        flex: 1;
-        min-width: 0;
-        display: flex;
-        flex-direction: column;
-    }
-    .setlist-song-row .song-row-inputs input::placeholder {
-        color: #c4c4c4;
-        opacity: 1;
-    }
-    .setlist-song-row .song-row-alt {
-        font-size: 0.8em !important;
-        color: #888;
-        padding-top: 0 !important;
-    }
-    .setlist-song-row .remove-row-btn {
-        background: none;
-        border: none;
-        color: #dc3545;
-        cursor: pointer;
-        padding: 4px 8px;
-        flex-shrink: 0;
-    }
     </style>
 
     @include('mypage.manage._song_rows_sortable')
     <script>
-    function addSetlistSongRow(button, fieldName) {
-        const container = button.closest('div').previousElementSibling;
-        const row = document.createElement('div');
-        row.className = 'setlist-song-row';
-        row.innerHTML = `
-            <span class="manage-drag-handle" title="ドラッグで並べ替え"><i class="fa-solid fa-grip-lines"></i></span>
-            <span class="song-row-number"></span>
-            <div class="song-row-inputs">
-                <input type="text" class="form-control song-row-title" name="${fieldName}[]" list="songTitleOptions" placeholder="曲名">
-                <input type="text" class="form-control song-row-alt" name="${fieldName}_alt[]" placeholder="別表記 / カバーなど">
-            </div>
-            <button type="button" class="remove-row-btn" title="削除" onclick="const c = this.closest('.setlist-song-rows'); this.closest('.setlist-song-row').remove(); renumberRows(c);">
-                <i class="fa-solid fa-trash"></i>
-            </button>
-        `;
-        container.appendChild(row);
-        setupSongRowDrag(row, container);
-        renumberRows(container);
-        row.querySelector('.song-row-title').focus();
-    }
-
-    // --- 上下ボタンで1つずつ順位を入れ替える（ドラッグ操作は誤操作が多いため） ---
-    function setupSongRowDrag(row, container) {
-        // 曲の並べ替え（manage/songs）と同じく、「≡」をつかんでドラッグで並べ替える
-        makeSongRowsSortable(container, () => renumberRows(container));
-    }
-
-    function renumberRows(container) {
-        container.querySelectorAll('.setlist-song-row').forEach((row, index) => {
-            row.querySelector('.song-row-number').textContent = (index + 1) + '.';
-        });
-    }
-
-    document.querySelectorAll('.setlist-song-rows').forEach((container) => {
-        container.querySelectorAll('.setlist-song-row').forEach((row) => setupSongRowDrag(row, container));
-        renumberRows(container);
-    });
 
     // ツアー情報の編集フォームを開いている間は、ほかのもの（パターンの一覧・追加ボタン）を隠す
     function setConcertInfoEditing(editing) {
@@ -345,65 +167,7 @@
     });
     document.getElementById('concertInfoClose').addEventListener('click', () => setConcertInfoEditing(false));
 
-    // 鉛筆アイコンをクリックすると、パターン名の見出し表示を隠し、
-    // 曲目・パターン名をまとめて編集できるフォームを表示する（アイコンは鉛筆→下矢印に変わり、
-    // 開いている状態であることを示す）。
-    // もう一度押すと、保存はせずフォームを閉じてキャンセルする
-    // （実際の保存はフォーム下部の「保存」ボタンでのみ行う）。
-    document.querySelectorAll('.setlist-pattern-edit-toggle').forEach((btn) => {
-        const row = btn.closest('.manage-row');
-        const titleDisplay = row.querySelector('.setlist-pattern-title-display');
-        const titleFallback = row.querySelector('.setlist-pattern-title-fallback');
-        const songCount = row.querySelector('.setlist-pattern-song-count');
-        const form = row.querySelector('.setlist-pattern-form');
-        const titleInput = form.querySelector('.setlist-pattern-title-input');
-        const penIcon = btn.querySelector('.fa-pen');
-        const chevronIcon = btn.querySelector('.fa-chevron-down');
-
-        btn.addEventListener('click', () => {
-            const willEdit = form.hidden;
-            form.hidden = !willEdit;
-            titleDisplay.hidden = willEdit ? true : !titleDisplay.dataset.title;
-            if (titleFallback) {
-                titleFallback.hidden = willEdit;
-            }
-            songCount.hidden = willEdit;
-            penIcon.hidden = willEdit;
-            chevronIcon.hidden = !willEdit;
-
-            // 閉じるとき（キャンセル）は、パターン名の未保存な変更を編集前の値に戻す
-            // （曲目の追加・削除の取り消しは対象外。曲目を編集した場合は保存するか
-            // ページを再読み込みしてリセットしてほしい）。
-            if (!willEdit) {
-                titleInput.value = titleDisplay.dataset.title;
-            }
-        });
-    });
-
-    document.querySelectorAll('.setlist-pattern-delete').forEach((btn) => {
-        btn.addEventListener('click', () => {
-            if (!confirm('このセットリストパターンを削除しますか？')) return;
-            const row = btn.closest('.manage-row');
-            fetch(btn.dataset.deleteUrl, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json',
-                },
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    row.remove();
-                    showAppToast(data.message);
-                    if (!document.querySelector('[data-setlist-id]')) {
-                        document.getElementById('noSetlistsMessage').hidden = false;
-                    }
-                });
-        });
-    });
-
-    // パターンの複製：サーバー側で曲目・パターン名をそのままコピーした新規パターンを作成し、
-    // 一覧を再読み込みして末尾に追加されたそのカードを開いた状態で表示する。
+    // パターンの複製：サーバー側で曲目をコピーした新しいパターンを作り、その編集ページを開く
     document.querySelectorAll('.setlist-pattern-duplicate').forEach((btn) => {
         btn.addEventListener('click', () => {
             fetch(btn.dataset.duplicateUrl, {
@@ -442,51 +206,5 @@
         handle: '.setlist-pattern-drag-handle',
     });
 
-    // 「＋」を押しても何も保存せず、曲目編集フォーム（template）を複製して開いた状態で挿入するだけ。
-    // この中の「保存」を押した時点で初めてstoreSetlistへ送信され、DBに書き込まれる。
-    // 「キャンセル」または他のパターン追加を押した場合は、DOMから取り除くだけで何も残らない。
-    document.getElementById('newSetlistPatternBtn').addEventListener('click', function () {
-        // 既に開いている未保存フォームがあれば、二重に増やさず先に片付ける
-        document.querySelector('.new-setlist-pattern-row')?.remove();
-
-        const template = document.getElementById('newSetlistPatternTemplate');
-        const fragment = template.content.cloneNode(true);
-        const row = fragment.querySelector('.manage-row');
-        row.classList.add('new-setlist-pattern-row');
-
-        const setlistList = document.getElementById('setlistList');
-        setlistList.appendChild(fragment);
-        document.getElementById('noSetlistsMessage').hidden = true;
-        this.hidden = true;
-
-        const newSetlistPatternBtn = this;
-        row.querySelector('.new-setlist-pattern-cancel').addEventListener('click', () => {
-            row.remove();
-            newSetlistPatternBtn.hidden = false;
-            if (!document.querySelector('[data-setlist-id]')) {
-                document.getElementById('noSetlistsMessage').hidden = false;
-            }
-        });
-        // 参加登録の曲目入力と同じく、本編・アンコールに1行ずつ空の行を用意しておく
-        row.querySelectorAll('.mypage-add-button[onclick*="addSetlistSongRow"]').forEach((btn) => btn.click());
-        row.querySelector('.setlist-pattern-title-input').focus();
-        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    });
-
-    // 複製直後（?open=<setlistId>）は、そのカードの編集フォームを開いた状態で表示する
-    (function () {
-        const params = new URLSearchParams(window.location.search);
-        const openId = params.get('open');
-        if (!openId) return;
-
-        const row = document.querySelector(`[data-setlist-id="${openId}"]`);
-        const editBtn = row?.querySelector('.setlist-pattern-edit-toggle');
-        editBtn?.click();
-        row?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-        const url = new URL(window.location.href);
-        url.searchParams.delete('open');
-        window.history.replaceState({}, '', url);
-    })();
     </script>
 @endsection

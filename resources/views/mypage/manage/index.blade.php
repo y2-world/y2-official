@@ -29,9 +29,12 @@
                 @endif
 
                 <div style="text-align: center;">
-                    <a href="#" id="newArtistToggle" class="mypage-add-button" title="アーティストを追加" style="display: inline-flex; margin-bottom: 24px;" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newArtistForm').hidden = false; document.getElementById('noArtistsMessage')?.setAttribute('hidden', ''); this.hidden = true;" @else hidden @endif>
-                        <i class="fas fa-plus"></i>
-                    </a>
+                    <div class="mypage-add-row" style="margin-bottom: 24px;">
+                        <span class="mypage-add-row-label">アーティストを追加</span>
+                        <a href="#" id="newArtistToggle" class="mypage-add-button" title="アーティストを追加" @if(!$errors->any()) onclick="event.preventDefault(); setNewArtistFormOpen(true);" @else hidden @endif>
+                            <i class="fas fa-plus"></i>
+                        </a>
+                    </div>
                     <form id="newArtistForm" method="POST" action="{{ route('mypage.manage.artists.store') }}" @if(!$errors->any()) hidden @endif class="new-item-form @unless($errors->any()) new-item-form--via-toggle @endunless">
                         @csrf
                         <div class="mb-3">
@@ -40,16 +43,17 @@
                         </div>
                         <button type="submit" class="btn btn-outline-dark w-100">追加</button>
                         <div style="text-align: center; margin-top: 8px;">
-                            <button type="button" onclick="document.getElementById('newArtistForm').hidden = true; document.getElementById('newArtistToggle').hidden = false; document.getElementById('noArtistsMessage')?.removeAttribute('hidden');" style="background: none; border: none; color: #999; cursor: pointer; padding: 20px;" title="閉じる">
+                            <button type="button" onclick="setNewArtistFormOpen(false);" style="background: none; border: none; color: #999; cursor: pointer; padding: 20px;" title="閉じる">
                                 <span class="close-x-thin" style="font-size: 30px;"></span>
                             </button>
                         </div>
                     </form>
                 </div>
 
+                {{-- 「＋」で追加のフォームを開いている間は、一覧を隠す --}}
+                <div data-hide-while-adding @if ($errors->any()) hidden @endif>
                 @if ($artists->isEmpty())
-                    {{-- 「＋」で追加のフォームを開いている間は隠す（ツアーの画面と同じ） --}}
-                    <p id="noArtistsMessage" style="text-align: center; color: #999;" @if ($errors->any()) hidden @endif>まだアーティストを登録していません。</p>
+                    <p id="noArtistsMessage" style="text-align: center; color: #999;">まだアーティストを登録していません。</p>
                 @else
                     <div class="select-card-list">
                         @foreach ($artists as $artist)
@@ -68,6 +72,7 @@
                         @endforeach
                     </div>
                 @endif
+                </div>
             </div>
         </div>
     </div>
@@ -93,5 +98,13 @@
                 });
         });
     });
+    </script>
+    <script>
+    // 追加のフォームを開いている間は、一覧（data-hide-while-adding を付けたもの）を隠す
+    function setNewArtistFormOpen(open) {
+        document.getElementById('newArtistForm').hidden = !open;
+        document.getElementById('newArtistToggle').hidden = open;
+        document.querySelectorAll('[data-hide-while-adding]').forEach((el) => { el.hidden = open; });
+    }
     </script>
 @endsection

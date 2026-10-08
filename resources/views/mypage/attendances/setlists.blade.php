@@ -23,9 +23,10 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 @if ($kind === 'user')
-                    <div style="margin-bottom: 24px; text-align: center;">
-                        <form method="POST" action="{{ route('mypage.attendances.setlists.new_pattern', $tourId) }}">
+                    <div style="margin-bottom: 24px;">
+                        <form method="POST" action="{{ route('mypage.attendances.setlists.new_pattern', $tourId) }}" class="mypage-add-row">
                             @csrf
+                            <span class="mypage-add-row-label">パターンを追加</span>
                             <button type="submit" class="mypage-add-button" title="新しいセットリストパターンを追加" style="border: none;">
                                 <i class="fas fa-plus"></i>
                             </button>

@@ -178,9 +178,37 @@ class ManageController extends Controller
             ->orderBy('order_no')
             ->get();
 
-        $songTitles = UserSong::where('user_artist_id', $artistId)->orderBy('sort_order')->pluck('title', 'id');
+        return view('mypage.manage.setlists', compact('artist', 'concert', 'setlists'));
+    }
 
-        return view('mypage.manage.setlists', compact('artist', 'concert', 'setlists', 'songTitles'));
+    // セットリストパターンの追加・編集のページ（パターンごとの個別ページ）
+    public function createSetlist($artistId, $concertId)
+    {
+        return $this->setlistForm($artistId, $concertId, null);
+    }
+
+    public function editSetlist($artistId, $concertId, $setlistId)
+    {
+        return $this->setlistForm($artistId, $concertId, $setlistId);
+    }
+
+    private function setlistForm($artistId, $concertId, $setlistId)
+    {
+        $userId = Auth::guard('external')->id();
+
+        $artist = UserArtist::findOrFail($artistId);
+        abort_unless($artist->external_user_id === $userId, 403);
+
+        $concert = UserConcert::where('user_artist_id', $artistId)->findOrFail($concertId);
+        $setlist = $setlistId ? UserSetlist::where('user_concert_id', $concertId)->findOrFail($setlistId) : null;
+        abort_if($setlist && $setlist->external_user_id !== $userId, 403);
+
+        $songTitles = UserSong::where('user_artist_id', $artistId)->orderBy('sort_order')->pluck('title', 'id');
+        // 追加のときは、本編・アンコールに1行ずつ空の行を出す
+        $setlistRows = $setlist ? UserSetlist::inputRowsFromItems($setlist->setlist ?? [], $songTitles) : [['title' => '', 'alternative_title' => '']];
+        $encoreRows = $setlist ? UserSetlist::inputRowsFromItems($setlist->encore ?? [], $songTitles) : [['title' => '', 'alternative_title' => '']];
+
+        return view('mypage.manage.setlist_form', compact('artist', 'concert', 'setlist', 'songTitles', 'setlistRows', 'encoreRows'));
     }
 
     // 新しいセットリストパターンを、曲目データと一緒に作成する（「＋」ボタン自体は保存せず、
@@ -466,7 +494,8 @@ class ManageController extends Controller
             return response()->json(['message' => 'セットリストを削除しました。']);
         }
 
-        return redirect()->route('mypage.manage.concerts', $artistId)->with('success', 'セットリストを削除しました。');
+        // パターンの編集ページから削除したときは、パターンの一覧へ戻る
+        return redirect()->route('mypage.manage.setlists', [$artistId, $concertId])->with('success', 'セットリストパターンを削除しました。');
     }
 
     // セットリストパターンの並べ替え（曲の並べ替えと同じ、上下ボタン→order_no一括更新のAjax）
@@ -521,9 +550,10 @@ class ManageController extends Controller
         ]);
 
         if ($request->wantsJson()) {
-            return response()->json(['message' => 'セットリストパターンを複製しました。', 'redirect' => route('mypage.manage.setlists', [$artistId, $concertId, 'open' => $copy->id])]);
+            return response()->json(['message' => 'セットリストパターンを複製しました。', 'redirect' => route('mypage.manage.setlists.edit', [$artistId, $concertId, $copy->id])]);
         }
 
-        return redirect()->route('mypage.manage.setlists', [$artistId, $concertId, 'open' => $copy->id])->with('success', 'セットリストパターンを複製しました。');
+        // 複製したパターンの編集ページを開く
+        return redirect()->route('mypage.manage.setlists.edit', [$artistId, $concertId, $copy->id])->with('success', 'セットリストパターンを複製しました。');
     }
 }

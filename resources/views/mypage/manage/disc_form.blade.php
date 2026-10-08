@@ -158,7 +158,8 @@
         section.innerHTML = `
             ${isAlbum ? `<h6 class="disc-section-title" style="font-size: 0.85rem; color: #999; margin: 12px 0 8px;">Disc ${discCount}</h6>` : ''}
             <div id="${containerId}" class="setlist-song-rows" data-disc-index="${index}"></div>
-            <div style="text-align: center; margin-bottom: 24px;">
+            <div class="mypage-add-row" style="margin-bottom: 24px;">
+                <span class="mypage-add-row-label">曲を追加</span>
                 <button type="button" class="mypage-add-button" title="曲を追加" style="border: none;">
                     <i class="fas fa-plus"></i>
                 </button>

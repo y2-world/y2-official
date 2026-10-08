@@ -23,7 +23,8 @@
             <div class="col-lg-8">
                 {{-- 発売日の新しい順。「＋」で追加 --}}
                 @foreach ([['kind' => $kind, 'items' => $discs, 'empty' => 'まだ' . $kindLabel . 'がありません。']] as $section)
-                    <div style="text-align: center; margin-bottom: 24px;">
+                    <div class="mypage-add-row" style="margin-bottom: 24px;">
+                        <span class="mypage-add-row-label">{{ $kindLabel }}を追加</span>
                         <a href="{{ route('mypage.manage.discs.create', ['artistId' => $artist->id, 'kind' => $section['kind']]) }}" class="mypage-add-button" title="{{ $kindLabel }}を追加">
                             <i class="fas fa-plus"></i>
                         </a>

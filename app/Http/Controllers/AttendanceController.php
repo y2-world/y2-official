@@ -288,6 +288,7 @@ class AttendanceController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'date1' => ['nullable', 'date'],
             'date2' => ['nullable', 'date', 'after_or_equal:date1'],
+            'schedule' => ['nullable', 'string', 'max:10000'],
         ]);
 
         if ($validator->fails()) {
@@ -297,6 +298,9 @@ class AttendanceController extends Controller
         $data = $validator->validated();
 
         $params = ['artistId' => $artistId, 'tourId' => 'new', 'title' => $data['title']];
+        if (filled($data['schedule'] ?? null)) {
+            $params['schedule'] = trim($data['schedule']);
+        }
         if (!empty($data['date1'])) {
             $params['date1'] = $data['date1'];
         }
@@ -404,10 +408,12 @@ class AttendanceController extends Controller
             abort_if($tourTitle === '', 404);
             $tourDate1 = $request->query('date1');
             $tourDate2 = $request->query('date2');
+            $tourSchedule = $request->query('schedule');
             $isFes = $request->boolean('is_fes');
         }
+        $tourSchedule = $tourSchedule ?? null;
 
-        return view('mypage.attendances.setlist_create', compact('artistId', 'artistName', 'tourId', 'tourTitle', 'tourDate1', 'tourDate2', 'songOptions', 'isFes'));
+        return view('mypage.attendances.setlist_create', compact('artistId', 'artistName', 'tourId', 'tourTitle', 'tourDate1', 'tourDate2', 'tourSchedule', 'songOptions', 'isFes'));
     }
 
     // 曲目入力の次の画面（参加日・会場の入力）。まだDBには何も保存しない。
@@ -441,13 +447,19 @@ class AttendanceController extends Controller
             $tourTitle = $request->input('tour_title');
             $tourDate1 = $request->input('tour_date1');
             $tourDate2 = $request->input('tour_date2');
+            $tourSchedule = $request->input('tour_schedule');
             $isFes = $request->boolean('is_fes');
+            // 参加日・会場の候補は、入力した SCHEDULE から作る
+            $scheduleOptions = (new UserConcert())->forceFill(['schedule' => $tourSchedule, 'date1' => $tourDate1, 'date2' => $tourDate2])->parseScheduleEntries();
         } else {
             [$tourKind, $tourDbId] = $this->splitRef($tourId);
-            $tourTitle = $tourKind === 'official' ? DbConcert::findOrFail($tourDbId)->title : UserConcert::findOrFail($tourDbId)->title;
+            $existingTour = $tourKind === 'official' ? DbConcert::findOrFail($tourDbId) : UserConcert::findOrFail($tourDbId);
+            $tourTitle = $existingTour->title;
             $tourDate1 = null;
             $tourDate2 = null;
+            $tourSchedule = null;
             $isFes = false;
+            $scheduleOptions = $existingTour->parseScheduleEntries();
         }
 
         // 曲名と別表記を組にして、どちらも空の行だけ捨てる（曲名が空で別表記だけの行はカバーなど）
@@ -473,7 +485,7 @@ class AttendanceController extends Controller
         }
 
         return view('mypage.attendances.confirm', compact(
-            'artistId', 'artistName', 'tourId', 'tourTitle', 'tourDate1', 'tourDate2', 'setlist', 'encore', 'defaultAttendedDate', 'defaultVenue', 'isFes'
+            'artistId', 'artistName', 'tourId', 'tourTitle', 'tourDate1', 'tourDate2', 'tourSchedule', 'setlist', 'encore', 'defaultAttendedDate', 'defaultVenue', 'isFes', 'scheduleOptions'
         ));
     }
 
@@ -533,6 +545,7 @@ class AttendanceController extends Controller
                     'type' => $tourType,
                     'date1' => $request->input('tour_date1') ?: null,
                     'date2' => $request->input('tour_date2') ?: null,
+                    'schedule' => filled($request->input('tour_schedule')) ? trim($request->input('tour_schedule')) : null,
                 ]);
                 $userSetlist = UserSetlist::create([
                     'user_concert_id' => $tour->id,

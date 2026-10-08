@@ -45,12 +45,14 @@
                         <input type="hidden" name="tour_title" value="{{ $tourTitle }}">
                         <input type="hidden" name="tour_date1" value="{{ $tourDate1 }}">
                         <input type="hidden" name="tour_date2" value="{{ $tourDate2 }}">
+                        <input type="hidden" name="tour_schedule" value="{{ $tourSchedule }}">
                         <input type="hidden" name="is_fes" value="{{ $isFes ? 1 : 0 }}">
                     @endif
 
                     <h5 style="font-size: 0.9rem; color: #999; letter-spacing: 1px;">本編</h5>
                     <div id="setlistRows" class="setlist-song-rows"></div>
-                    <div style="text-align: center; margin-bottom: 24px;">
+                    <div class="mypage-add-row" style="margin-bottom: 24px;">
+                        <span class="mypage-add-row-label">曲を追加</span>
                         <button type="button" class="mypage-add-button" title="曲を追加" onclick="addSongRow('setlistRows', 'setlist')" style="border: none;">
                             <i class="fas fa-plus"></i>
                         </button>
@@ -58,7 +60,8 @@
 
                     <h5 style="font-size: 0.9rem; color: #999; letter-spacing: 1px;">ENCORE</h5>
                     <div id="encoreRows" class="setlist-song-rows"></div>
-                    <div style="text-align: center; margin-bottom: 24px;">
+                    <div class="mypage-add-row" style="margin-bottom: 24px;">
+                        <span class="mypage-add-row-label">曲を追加</span>
                         <button type="button" class="mypage-add-button" title="曲を追加" onclick="addSongRow('encoreRows', 'encore')" style="border: none;">
                             <i class="fas fa-plus"></i>
                         </button>

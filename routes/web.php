@@ -201,6 +201,9 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
             Route::post('artists/{artistId}/concerts', [ManageController::class, 'storeConcert'])->name('concerts.store');
             Route::get('artists/{artistId}/concerts/{concertId}/setlists', [ManageController::class, 'setlists'])->name('setlists');
             Route::post('artists/{artistId}/concerts/{concertId}/setlists', [ManageController::class, 'storeSetlist'])->name('setlists.store');
+            // パターンの追加・編集は、パターンごとのページで行う
+            Route::get('artists/{artistId}/concerts/{concertId}/setlists/create', [ManageController::class, 'createSetlist'])->name('setlists.create');
+            Route::get('artists/{artistId}/concerts/{concertId}/setlists/{setlistId}/edit', [ManageController::class, 'editSetlist'])->name('setlists.edit');
             Route::post('artists/{artistId}/concerts/{concertId}/edit', [ManageController::class, 'updateConcert'])->name('concerts.update');
             Route::post('artists/{artistId}/concerts/{concertId}/setlists/{setlistId}/edit', [ManageController::class, 'updateSetlist'])->name('setlists.update');
             Route::post('artists/{artistId}/concerts/{concertId}/setlists/reorder', [ManageController::class, 'reorderSetlists'])->name('setlists.reorder');
