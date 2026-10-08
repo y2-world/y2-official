@@ -14,11 +14,12 @@
     </div>
 
     <div class="container database-year-content">
-        <table class="table table-striped">
+        {{-- 公式のライブ一覧と同じく、開催日の列は期間が1行で入る幅にする --}}
+        <table class="table table-striped fixed-cols">
             <thead>
                 <tr>
-                    <th class="mobile">#</th>
-                    <th class="mobile">開催日</th>
+                    <th class="mobile col-no">#</th>
+                    <th class="mobile col-date-range">開催日</th>
                     <th class="mobile">タイトル</th>
                 </tr>
             </thead>

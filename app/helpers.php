@@ -619,7 +619,10 @@ if (!function_exists('mergePatternIntoBase')) {
                     // 挿入予定位置から3行以上離れていたため近傍±2では見つからず、
                     // 重複した独立行として挿入されてしまっていた）でも正しく統合する
                     // ため。
-                    $insertPos = $baseGapStart + $baseGapLen;
+                    // 挿入する位置は、そのパターンのギャップ内での位置に合わせる（ギャップの最後に固めると、
+                    // 例えば tour382 の「Cry Baby / ESCAPADE / Stand By You」で、ESCAPADE が
+                    // Stand By You の後ろに回ってしまう）
+                    $insertPos = $baseGapStart + min($otherPos - $otherGapStart, $baseGapLen);
                     $existingRowIndex = null;
                     for ($rowIdx = 0; $rowIdx < count($base); $rowIdx++) {
                         $existingIdentities = array_map('setlistEntryMergeIdentity', $base[$rowIdx]['variants']);
@@ -633,7 +636,7 @@ if (!function_exists('mergePatternIntoBase')) {
                     if ($existingRowIndex !== null) {
                         mergeEntriesPreservingEarliestOrder($base[$existingRowIndex]['variants'], $extraCluster);
                     } else {
-                        $insertions[$baseGapStart + $baseGapLen][] = $extraCluster;
+                        $insertions[$insertPos][] = $extraCluster;
                     }
                 }
             }
@@ -661,6 +664,45 @@ if (!function_exists('mergePatternIntoBase')) {
         }
 
         return $base;
+    }
+}
+
+if (!function_exists('setlistPatternLastShowRanks')) {
+    // 各パターンの subtitle（「1.31 大阪2 2.16 武道館2」「11.28-12.20」など）に書かれた公演日のうち、
+    // いちばん後の日を比べられる数にする（月*100+日）。subtitle には年が無いので、ツアーの最初の月
+    // （いちばん前のパターンの最初の日付）より前の月は年をまたいだものとして12か月足す。
+    // 「2021/2.10 豊橋1 2.11 豊橋2」のように年が書いてある日付（延期公演）は、年の無い日付より後として
+    // 年の順に並べる（その subtitle の中では、以降の日付も同じ年とみなす）。日付が読めないパターンは null
+    function setlistPatternLastShowRanks($patterns): array
+    {
+        $datesPerPattern = $patterns->map(function ($pattern) {
+            preg_match_all('/(?:(\d{4})\/)?(?<!\d)(\d{1,2})\.(\d{1,2})(?!\d)/', (string) ($pattern->subtitle ?? ''), $m, PREG_SET_ORDER);
+            $year = null;
+            $dates = [];
+            foreach ($m as $d) {
+                $year = $d[1] !== '' ? (int) $d[1] : $year;
+                if ((int) $d[2] >= 1 && (int) $d[2] <= 12 && (int) $d[3] >= 1 && (int) $d[3] <= 31) {
+                    $dates[] = [(int) $d[2], (int) $d[3], $year];
+                }
+            }
+
+            return $dates;
+        })->values();
+        $firstDates = $datesPerPattern->first(fn ($dates) => $dates !== []);
+        if ($firstDates === null) {
+            return array_fill(0, $patterns->count(), null);
+        }
+        $startMonth = $firstDates[0][0];
+
+        return $datesPerPattern->map(function ($dates) use ($startMonth) {
+            if ($dates === []) {
+                return null;
+            }
+
+            return max(array_map(fn ($d) => $d[2] !== null
+                ? ($d[2] * 100 + $d[0]) * 100 + $d[1]
+                : ($d[0] < $startMonth ? $d[0] + 12 : $d[0]) * 100 + $d[1], $dates));
+        })->all();
     }
 }
 
@@ -818,7 +860,7 @@ if (!function_exists('buildSetlistPatternSummary')) {
 
         // 「基準パターン」＝Summary上で無番号（-）にする曲を判定する土台。
         // setlist・encoreを合わせた合計クラスタ数（曲数）で、最も曲数が多い
-        // パターン（同数なら最後、最も新しいパターン）を1つだけ選び、setlist側・
+        // パターン（同数なら最終公演を含むパターン）を1つだけ選び、setlist側・
         // encore側の両方でこの同じパターンを基準として使う（setlist側と
         // encore側で別々に基準を選ぶと、例えばsetlist側は「水上バスを含む
         // パターンA」、encore側は「Tomorrow never knowsを含むパターンB」を
@@ -835,9 +877,17 @@ if (!function_exists('buildSetlistPatternSummary')) {
         // （そうしないとsetlist側とencore側で別々のパターンを基準にしてしまい
         // is_extra判定にねじれが生じるため）、そのパターンのsetlist側・encore側
         // それぞれのkey集合を別々に持つ。
+        // 同数のパターンが複数あるときは、最終公演を含むパターンを基準にする。
+        // order_no はパターンを作った順なので、最終公演のパターンが最後とは限らない
+        // （例: tour382 は 2.16 の最終公演が 1.31 と同じパターンで、2.15 だけのパターンが後ろにある）。
+        // 公演日は subtitle にしか無いので、そこから読む。読めないパターンがあれば order_no が最後のもの
         $totalLengths = $setlistClusterLists->map(fn ($list, $i) => count($list) + count($encoreClusterLists[$i]));
         $maxTotalLen = $totalLengths->max();
-        $referenceIndex = $totalLengths->keys()->filter(fn ($i) => $totalLengths[$i] === $maxTotalLen)->last();
+        $candidateIndexes = $totalLengths->keys()->filter(fn ($i) => $totalLengths[$i] === $maxTotalLen)->values();
+        $lastShowRanks = setlistPatternLastShowRanks($patterns->values());
+        $referenceIndex = $candidateIndexes->every(fn ($i) => $lastShowRanks[$i] !== null)
+            ? $candidateIndexes->sortBy(fn ($i) => [$lastShowRanks[$i], $i])->last()
+            : $candidateIndexes->last();
         $referenceKeysForSection = fn ($clusterLists) => collect($clusterLists[$referenceIndex])
             ->flatMap(fn ($cluster) => array_column($cluster, 'key'))
             ->flip();
@@ -912,7 +962,7 @@ if (!function_exists('buildSetlistPatternSummary')) {
             // より早いパターンのものへ更新されうるため、最終的な並び順は必ずしも
             // 基準列のパターン順にはならない（初出パターン順を優先する）。
             // 基準列は、is_extra判定用の基準（$referenceIndex：setlist+encoreの
-            // 合計曲数が最多、同点なら最後のパターン）と同じものを使う。
+            // 合計曲数が最多、同点なら最終公演を含むパターン）と同じものを使う。
             $baseIndex = $entryLists->has($referenceIndex) ? $referenceIndex : $entryLists->keys()->sortByDesc(fn ($i) => count($entryLists[$i]))->first();
             $base = collect($entryLists[$baseIndex])
                 ->map(fn ($cluster) => [
