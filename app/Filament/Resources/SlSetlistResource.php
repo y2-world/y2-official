@@ -184,8 +184,14 @@ class SlSetlistResource extends Resource
                                         Forms\Components\Grid::make(2)
                                             ->schema([
                                                 Forms\Components\Toggle::make('medley')
-                                                    ->label('メドレー')
-                                                    ->default(false),
+                                                    ->label('メドレー (2曲目以降)')
+                                                    ->default(false)
+                                                    ->live(),
+                                                // メドレーにチェックしたときだけ出す（タイトルのあるメドレーは少ない）。メドレーのどの曲に入れても、メドレーの曲の上にタイトルの行を出し、曲番はその行に付ける
+                                                Forms\Components\TextInput::make('medley_title')
+                                                    ->label('メドレーのタイトル')
+                                                    ->visible(fn (Forms\Get $get) => (bool) $get('medley'))
+                                                    ->maxLength(255),
                                             ]),
                                         Forms\Components\Radio::make('featuring_type')
                                             ->label('表示形式')
@@ -297,8 +303,14 @@ class SlSetlistResource extends Resource
                                                     ->label('ここから次のアンコール（ENCORE 2 など）')
                                                     ->default(false),
                                                 Forms\Components\Toggle::make('medley')
-                                                    ->label('メドレー')
-                                                    ->default(false),
+                                                    ->label('メドレー (2曲目以降)')
+                                                    ->default(false)
+                                                    ->live(),
+                                                // メドレーにチェックしたときだけ出す（タイトルのあるメドレーは少ない）。メドレーのどの曲に入れても、メドレーの曲の上にタイトルの行を出し、曲番はその行に付ける
+                                                Forms\Components\TextInput::make('medley_title')
+                                                    ->label('メドレーのタイトル')
+                                                    ->visible(fn (Forms\Get $get) => (bool) $get('medley'))
+                                                    ->maxLength(255),
                                             ]),
                                         Forms\Components\Radio::make('featuring_type')
                                             ->label('表示形式')
@@ -446,10 +458,16 @@ class SlSetlistResource extends Resource
                                     ->schema([
                                         Forms\Components\Grid::make(2)->schema([
                                             Forms\Components\Toggle::make('medley')
-                                                ->label('メドレー')
+                                                ->label('メドレー (2曲目以降)')
                                                 ->inline(false)
                                                 ->default(false)
+                                                ->live()
                                                 ->dehydrated(),
+                                            // メドレーにチェックしたときだけ出す（タイトルのあるメドレーは少ない）。メドレーのどの曲に入れても、メドレーの曲の上にタイトルの行を出し、曲番はその行に付ける
+                                            Forms\Components\TextInput::make('medley_title')
+                                                ->label('メドレーのタイトル')
+                                                ->visible(fn (Forms\Get $get) => (bool) $get('medley'))
+                                                ->maxLength(255),
                                             Forms\Components\TextInput::make('featuring')
                                                 ->label('共演者・アーティスト')
                                                 ->maxLength(255)
@@ -501,10 +519,16 @@ class SlSetlistResource extends Resource
                                             ->columnSpanFull(),
                                         Forms\Components\Grid::make(2)->schema([
                                             Forms\Components\Toggle::make('medley')
-                                                ->label('メドレー')
+                                                ->label('メドレー (2曲目以降)')
                                                 ->inline(false)
                                                 ->default(false)
+                                                ->live()
                                                 ->dehydrated(),
+                                            // メドレーにチェックしたときだけ出す（タイトルのあるメドレーは少ない）。メドレーのどの曲に入れても、メドレーの曲の上にタイトルの行を出し、曲番はその行に付ける
+                                            Forms\Components\TextInput::make('medley_title')
+                                                ->label('メドレーのタイトル')
+                                                ->visible(fn (Forms\Get $get) => (bool) $get('medley'))
+                                                ->maxLength(255),
                                             Forms\Components\TextInput::make('featuring')
                                                 ->label('共演者')
                                                 ->maxLength(255)
@@ -630,10 +654,16 @@ class SlSetlistResource extends Resource
                                     ->schema([
                                         Forms\Components\Grid::make(2)->schema([
                                             Forms\Components\Toggle::make('medley')
-                                                ->label('メドレー')
+                                                ->label('メドレー (2曲目以降)')
                                                 ->inline(false)
                                                 ->default(false)
+                                                ->live()
                                                 ->dehydrated(),
+                                            // メドレーにチェックしたときだけ出す（タイトルのあるメドレーは少ない）。メドレーのどの曲に入れても、メドレーの曲の上にタイトルの行を出し、曲番はその行に付ける
+                                            Forms\Components\TextInput::make('medley_title')
+                                                ->label('メドレーのタイトル')
+                                                ->visible(fn (Forms\Get $get) => (bool) $get('medley'))
+                                                ->maxLength(255),
                                             Forms\Components\TextInput::make('featuring')
                                                 ->label('共演者・アーティスト')
                                                 ->maxLength(255)
@@ -684,10 +714,16 @@ class SlSetlistResource extends Resource
                                             ->columnSpanFull(),
                                         Forms\Components\Grid::make(2)->schema([
                                             Forms\Components\Toggle::make('medley')
-                                                ->label('メドレー')
+                                                ->label('メドレー (2曲目以降)')
                                                 ->inline(false)
                                                 ->default(false)
+                                                ->live()
                                                 ->dehydrated(),
+                                            // メドレーにチェックしたときだけ出す（タイトルのあるメドレーは少ない）。メドレーのどの曲に入れても、メドレーの曲の上にタイトルの行を出し、曲番はその行に付ける
+                                            Forms\Components\TextInput::make('medley_title')
+                                                ->label('メドレーのタイトル')
+                                                ->visible(fn (Forms\Get $get) => (bool) $get('medley'))
+                                                ->maxLength(255),
                                             Forms\Components\TextInput::make('featuring')
                                                 ->label('共演者')
                                                 ->maxLength(255)

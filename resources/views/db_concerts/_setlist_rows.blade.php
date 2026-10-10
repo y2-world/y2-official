@@ -98,7 +98,7 @@
                                 <ol class="live-column {{ $totalItems >= 20 ? 'live-column-two-col' : '' }}">
                                     {{-- アンコールは ENCORE / DOUBLE ENCORE … のブロックごとに見出しを挟む（番号は本編からの続き） --}}
                                     @foreach (\App\Support\EncoreBlocks::sections($setlist, $encore, $encoreArtistId) as $encoreSection)
-                                        @php $section = $encoreSection['items']; @endphp
+                                        @php $section = \App\Support\Medley::liftTitles($encoreSection['items']); @endphp
                                         @if ($encoreSection['label'] && count($section))
                                             <div style="margin: 20px 0 0 0;">
                                                 <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">{{ $encoreSection['label'] }}</span>
@@ -132,9 +132,28 @@
                                                 }
                                             @endphp
 
-                                            @if ($isInline)
-                                                {{-- 日替わりの候補は「-」、メドレーは「~」（Summary のメドレーのつなぎと同じ） --}}
-                                                {{ $isMedley ? '~' : '-' }}
+                                            @php
+                                                $medleyTitle = !$isInline ? trim((string) ($data['medley_title'] ?? '')) : '';
+                                                // タイトルのあるメドレーの曲には「~」を付けない（メドレー以外の曲が来たら戻す）
+                                                if (!$isMedley) { $inTitledMedley = $medleyTitle !== ''; }
+                                            @endphp
+                                            @if ($medleyTitle !== '')
+                                                {{-- タイトルのあるメドレー：曲番はタイトルの行に付け、その下に曲を「~」なしで並べる --}}
+                                                <li>{{ $medleyTitle }}</li>
+                                                <span class="setlist-song-featuring">
+                                                    @if ($link)
+                                                        <a href="{{ $link }}" @if($isUnique) style="font-weight:900;" @endif>{{ $title }}</a>
+                                                    @else
+                                                        @if($isUnique)<span style="font-weight:900;">{{ $title }}</span>@else{{ $title }}@endif
+                                                    @endif
+                                                    @if(!empty($featuring))
+                                                        <span class="setlist-featuring">{{ $featuringDisplay }}</span>
+                                                    @endif
+                                                </span>
+                                                <br>
+                                            @elseif ($isInline)
+                                                {{-- 日替わりの候補は「-」、メドレーは「~」（Summary のメドレーのつなぎと同じ）。タイトルのあるメドレーは「~」なし --}}
+                                                @unless ($isMedley && !empty($inTitledMedley)){{ $isMedley ? '~' : '-' }}@endunless
                                                 <span class="setlist-song-featuring">
                                                     @if ($link)
                                                         <a href="{{ $link }}" @if($isUnique) style="font-weight:900;" @endif>{{ $title }}</a>

@@ -199,16 +199,22 @@ class DbSetlistResource extends Resource
                                 Forms\Components\Section::make('詳細設定')
                                     ->schema([
                                         Forms\Components\Toggle::make('is_daily')
-                                            ->label('日替わり')
+                                            ->label('日替わり (2曲目以降)')
                                             ->default(false)
                                             ->inline(false)
                                             ->live(),
 
                                         Forms\Components\Toggle::make('medley')
-                                            ->label('メドレー')
+                                            ->label('メドレー (2曲目以降)')
                                             ->default(false)
+                                            ->live()
                                             ->inline(false)
                                             ->live(),
+                                        // メドレーにチェックしたときだけ出す（タイトルのあるメドレーは少ない）。メドレーのどの曲に入れても、メドレーの曲の上にタイトルの行を出し、曲番はその行に付ける
+                                        Forms\Components\TextInput::make('medley_title')
+                                            ->label('メドレーのタイトル')
+                                            ->visible(fn (Forms\Get $get) => (bool) $get('medley'))
+                                            ->maxLength(255),
 
                                         Forms\Components\TextInput::make('daily_note')
                                             ->label('日替わり情報')
@@ -342,16 +348,22 @@ class DbSetlistResource extends Resource
                                             ->columnSpanFull(),
 
                                         Forms\Components\Toggle::make('is_daily')
-                                            ->label('日替わり')
+                                            ->label('日替わり (2曲目以降)')
                                             ->default(false)
                                             ->inline(false)
                                             ->live(),
 
                                         Forms\Components\Toggle::make('medley')
-                                            ->label('メドレー')
+                                            ->label('メドレー (2曲目以降)')
                                             ->default(false)
+                                            ->live()
                                             ->inline(false)
                                             ->live(),
+                                        // メドレーにチェックしたときだけ出す（タイトルのあるメドレーは少ない）。メドレーのどの曲に入れても、メドレーの曲の上にタイトルの行を出し、曲番はその行に付ける
+                                        Forms\Components\TextInput::make('medley_title')
+                                            ->label('メドレーのタイトル')
+                                            ->visible(fn (Forms\Get $get) => (bool) $get('medley'))
+                                            ->maxLength(255),
 
                                         Forms\Components\TextInput::make('daily_note')
                                             ->label('日替わり情報')

@@ -64,7 +64,7 @@
                         } else {
                             echo '<ol class="setlist" start="' . $startNumber . '">';
                         }
-                        foreach ((array) $setlistItems as $data) {
+                        foreach (\App\Support\Medley::liftTitles((array) $setlistItems) as $data) {
                             // songフィールドの処理：数値ならSetlistSongのID、文字列なら直接曲名
                             $songValue = $data['song'] ?? '';
                             $isNumericId = is_numeric($songValue);
@@ -116,12 +116,16 @@
                             }
 
                             $isMedley = !empty($data['medley']) && $data['medley'] == 1;
+                            // タイトルのあるメドレー（1曲目に medley_title）：曲番はタイトルの行に付け、その下に曲を「~」なしで並べる
+                            if (!$isMedley) { $titledMedley = false; }
+                            $medleyTitle = !$isMedley ? trim((string) ($data['medley_title'] ?? '')) : '';
+                            if ($medleyTitle !== '') { $count++; echo '<li>' . htmlspecialchars($medleyTitle, ENT_COMPAT, 'UTF-8') . '</li>'; $isMedley = true; $titledMedley = true; }
 
                             if ($isMedley) {
                                 if ($url !== '#') {
-                                    echo '~ <a href="' . $url . '">' . $keyword . '</a>';
+                                    echo (!empty($titledMedley) ? '' : '~ ') . '<a href="' . $url . '">' . $keyword . '</a>';
                                 } else {
-                                    echo '~ ' . $keyword;
+                                    echo (!empty($titledMedley) ? '' : '~ ') . $keyword;
                                 }
                                 if (!empty($featuring)) {
                                     echo $featuring;
@@ -156,7 +160,7 @@
                     // アンコールのみをレンダリングする関数（<ol>タグを開かない）
                     function renderEncoreSetlist($setlistItems, $artistId = null) {
                         $count = 0;
-                        foreach ((array) $setlistItems as $data) {
+                        foreach (\App\Support\Medley::liftTitles((array) $setlistItems) as $data) {
                             // songフィールドの処理：数値ならSetlistSongのID、文字列なら直接曲名
                             $songValue = $data['song'] ?? '';
                             $isNumericId = is_numeric($songValue);
@@ -208,12 +212,16 @@
                             }
 
                             $isMedley = !empty($data['medley']) && $data['medley'] == 1;
+                            // タイトルのあるメドレー（1曲目に medley_title）：曲番はタイトルの行に付け、その下に曲を「~」なしで並べる
+                            if (!$isMedley) { $titledMedley = false; }
+                            $medleyTitle = !$isMedley ? trim((string) ($data['medley_title'] ?? '')) : '';
+                            if ($medleyTitle !== '') { $count++; echo '<li>' . htmlspecialchars($medleyTitle, ENT_COMPAT, 'UTF-8') . '</li>'; $isMedley = true; $titledMedley = true; }
 
                             if ($isMedley) {
                                 if ($url !== '#') {
-                                    echo '~ <a href="' . $url . '">' . $keyword . '</a>';
+                                    echo (!empty($titledMedley) ? '' : '~ ') . '<a href="' . $url . '">' . $keyword . '</a>';
                                 } else {
-                                    echo '~ ' . $keyword;
+                                    echo (!empty($titledMedley) ? '' : '~ ') . $keyword;
                                 }
                                 if (!empty($featuring)) {
                                     echo $featuring;
@@ -273,7 +281,7 @@
                         // fes_setlistをレンダリング（type:'block'と'song'の混合対応）
                         function renderFesMixed($items, $artistIdToName, $setlistsTitle) {
                             $inSongList = false;
-                            foreach ((array) $items as $data) {
+                            foreach (\App\Support\Medley::liftTitles((array) $items) as $data) {
                                 $type = $data['type'] ?? 'song';
                                 if ($type === 'block') {
                                     // 開いているolを閉じる
@@ -292,7 +300,7 @@
                                         }
                                     }
                                     echo '<ol class="setlist">';
-                                    foreach ((array)($data['songs'] ?? []) as $song) {
+                                    foreach (\App\Support\Medley::liftTitles((array)($data['songs'] ?? [])) as $song) {
                                         $sv = $song['song'] ?? '';
                                         if (is_numeric($sv)) {
                                             $sm = \App\Models\SlSong::find($sv);
@@ -314,8 +322,12 @@
                                             ? ' <span style="color:#999;font-size:0.75em;">' . ($songFeaturingType === 'artist' ? '/ ' : '') . htmlspecialchars($song['featuring'], ENT_COMPAT, 'UTF-8') . '</span>'
                                             : '';
                                         $isMedley = !empty($song['medley']) && $song['medley'] == 1;
+                                        // タイトルのあるメドレー（1曲目に medley_title）：曲番はタイトルの行に付け、その下に曲を「~」なしで並べる
+                                        if (!$isMedley) { $titledMedley = false; }
+                            $medleyTitle = !$isMedley ? trim((string) ($song['medley_title'] ?? '')) : '';
+                                        if ($medleyTitle !== '') { echo '<li>' . htmlspecialchars($medleyTitle, ENT_COMPAT, 'UTF-8') . '</li>'; $isMedley = true; $titledMedley = true; }
                                         if ($isMedley) {
-                                            echo '~ ';
+                                            echo !empty($titledMedley) ? '' : '~ ';
                                             echo ($url !== '#') ? '<a href="' . $url . '">' . htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8') . '</a>' : htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8');
                                             echo $feat . (!empty($annotation) ? ' ' . $annotation : '') . '<br>';
                                         } else {
@@ -350,6 +362,10 @@
                                     if (!empty($data['alternative_title']) && $url !== '#') { $url .= '?' . http_build_query(['title' => $data['alternative_title']]); }
                                     $annotation = $parts['annotation'];
                                     $isMedley = !empty($data['medley']) && $data['medley'] == 1;
+                                    // タイトルのあるメドレー（1曲目に medley_title）：曲番はタイトルの行に付け、その下に曲を「~」なしで並べる
+                                    if (!$isMedley) { $titledMedley = false; }
+                            $medleyTitle = !$isMedley ? trim((string) ($data['medley_title'] ?? '')) : '';
+                                    if ($medleyTitle !== '') { echo '<li>' . htmlspecialchars($medleyTitle, ENT_COMPAT, 'UTF-8') . '</li>'; $isMedley = true; $titledMedley = true; }
                                     $artistDisplay = '';
                                     if ($artistName && $artistId) {
                                         $artistDisplay = ' <span style="color:#999;font-size:0.75em;">/ <a href="' . url('/setlists/artists', $artistId) . '" style="color:#999;">' . htmlspecialchars($artistName, ENT_COMPAT, 'UTF-8') . '</a></span>';
@@ -360,7 +376,7 @@
                                         $artistDisplay .= ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_COMPAT, 'UTF-8') . '</span>';
                                     }
                                     if ($isMedley) {
-                                        echo '~ ';
+                                        echo !empty($titledMedley) ? '' : '~ ';
                                         echo ($url !== '#') ? '<a href="' . $url . '">' . htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8') . '</a>' : htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8');
                                         echo $artistDisplay . (!empty($annotation) ? ' ' . $annotation : '') . '<br>';
                                     } else {
