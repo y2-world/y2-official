@@ -47,7 +47,13 @@
                         <a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'timeline']) }}" class="timeline-card{{ $attendance->is_planned ? ' is-planned' : '' }}" data-attendance-id="{{ $attendance->id }}">
                             <div class="timeline-card-header">
                                 <div class="timeline-card-meta">
-                                    <span class="timeline-card-user" data-nav-url="{{ route('mypage.users.stats', $attendance->external_user_id) }}">{{ $attendance->externalUser->name ?: 'ゲスト' }}</span>
+                                    {{-- ユーザー名の左にユーザーの画像（無ければ人のアイコン） --}}
+                                    <span class="timeline-card-user" data-nav-url="{{ route('mypage.users.stats', $attendance->external_user_id) }}">
+                                        @if ($attendance->externalUser->avatar_url)
+                                            <img src="{{ $attendance->externalUser->avatar_url }}" alt="" class="timeline-card-avatar">
+                                        @else
+                                            <span class="timeline-card-avatar timeline-card-avatar--placeholder"><i class="fa-solid fa-user"></i></span>
+                                        @endif{{ $attendance->externalUser->name ?: 'ゲスト' }}</span>
                                     @if ($tour?->artist)
                                         <span class="timeline-card-artist" data-nav-url="{{ $artistNavUrl }}">{{ $tour->artist->name }}</span>
                                     @endif
@@ -142,12 +148,30 @@
         gap: 2px;
         min-width: 0;
     }
+    /* 画像と名前の高さをそろえる */
     .timeline-card-user {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
         color: #333;
         font-size: 0.9rem;
         font-weight: 400;
         cursor: pointer;
+    }
+    .timeline-card-avatar {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        margin-right: 6px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
+    .timeline-card-avatar--placeholder {
+        background: #ede7f6;
+        color: #764ba2;
+        font-size: 0.65rem;
     }
     .timeline-card-artist {
         display: inline-block;
