@@ -12,9 +12,9 @@
                     <h1 class="database-title" style="white-space: nowrap;">{{ $keyword }}</h1>
                     <p class="database-subtitle" style="margin: 4px 0 0;">
                         @if ($data->isEmpty())
-                            会場検索結果・検索結果がありません
+                            この会場のセットリストはありません
                         @else
-                            会場検索結果・全{{ count($data) }}件
+                            すべてのセットリスト・全{{ count($data) }}件
                         @endif
                     </p>
                 </div>

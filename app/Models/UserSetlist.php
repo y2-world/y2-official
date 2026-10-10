@@ -62,6 +62,14 @@ class UserSetlist extends Model
         return $items;
     }
 
+    // 曲目入力（本編・アンコールの曲名と別表記）に1曲でも入っているか。0曲のパターンは保存させない
+    public static function inputHasSong(array $input): bool
+    {
+        return collect(['setlist', 'encore', 'setlist_alt', 'encore_alt'])
+            ->flatMap(fn ($key) => (array) ($input[$key] ?? []))
+            ->contains(fn ($value) => trim((string) $value) !== '');
+    }
+
     // 曲目入力の画面に出す、曲の行ごとの「曲名」と「別表記」（itemsFromInput の逆）
     public static function inputRowsFromItems(array $items, $songTitles): array
     {

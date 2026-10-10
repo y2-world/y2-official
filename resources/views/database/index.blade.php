@@ -1,10 +1,18 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - Database')
 @section('content')
-    <div class="database-hero database-hero--detail">
-        <div class="container">
-            <h1 class="database-title" style="text-align: center;">Database</h1>
-            <p class="database-subtitle" style="text-align: center; margin-top: 8px; margin-bottom: 0;">アーティストのライブ・楽曲データベース</p>
+    {{-- アーティストの Database のページと同じく、PC はタイトルの右にクイック楽曲検索（全アーティストの曲から） --}}
+    <div class="database-hero database-hero--nav">
+        <div class="container" style="position: relative;">
+            <div class="setlists-header-row">
+                <div style="flex-shrink: 0;">
+                    <h1 class="database-title" style="white-space: nowrap;">Database</h1>
+                    <p class="database-subtitle" style="margin: 4px 0 0;">アーティストのライブ・楽曲データベース</p>
+                </div>
+                <div class="setlists-search-pc" style="min-width: 320px; position: relative; overflow: visible; flex-shrink: 0;">
+                    @livewire('database-song-search')
+                </div>
+            </div>
         </div>
     </div>
 
@@ -16,6 +24,10 @@
                     <option value="{{ route('database.artist', $artist->id) }}">{{ $artist->name }}</option>
                 @endforeach
             </select>
+        </div>
+        {{-- スマホはアーティストの選択の下にクイック楽曲検索 --}}
+        <div class="sp" style="margin-bottom: 20px;">
+            @livewire('database-song-search')
         </div>
         <div class="row justify-content-center">
             @foreach ($artists as $artist)
@@ -29,21 +41,22 @@
                             <p class="card-description">{{ $artist->kana }}</p>
                         @endif
                         <p class="card-description">{{ $artist->songs_count }}曲 / {{ $artist->tours_count }}ツアー</p>
+                        {{-- リンクの名前の前にアイコン（Stats は setlists の Stats ボタンと同じ棒グラフ、Live はアーティストの Database のページの Live と同じギター） --}}
                         <div class="card-links">
                             <a href="{{ route('stats.index', ['tab' => 'database', 'artist_id' => $artist->id]) }}" class="database-link">
-                                <span>Stats</span>
+                                <span><i class="fa-solid fa-chart-simple" style="margin-right: 10px;"></i>Stats</span>
                                 <i class="fa-solid fa-arrow-right"></i>
                             </a>
                             <a href="{{ route('database.live', $artist->id) }}" class="database-link">
-                                <span>Live</span>
+                                <span><i class="fa-solid fa-guitar" style="margin-right: 10px;"></i>Live</span>
                                 <i class="fa-solid fa-arrow-right"></i>
                             </a>
                             <a href="{{ route('database.songs', $artist->id) }}" class="database-link">
-                                <span>Songs</span>
+                                <span><i class="fa-solid fa-music" style="margin-right: 10px;"></i>Songs</span>
                                 <i class="fa-solid fa-arrow-right"></i>
                             </a>
                             <a href="{{ route('database.artist', $artist->id) }}" class="database-link">
-                                <span>View All</span>
+                                <span><i class="fa-solid fa-database" style="margin-right: 10px;"></i>View All</span>
                                 <i class="fa-solid fa-arrow-right"></i>
                             </a>
                         </div>

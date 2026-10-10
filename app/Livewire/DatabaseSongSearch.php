@@ -17,15 +17,26 @@ class DatabaseSongSearch extends Component
         $this->loadInitialSongs();
     }
 
-    public function loadInitialSongs()
+    // アーティストを決めずに使うとき（Database のトップのクイック検索）は、公開中のアーティストの曲から探し、候補にアーティスト名も出す
+    private function songQuery()
     {
-        $songs = DbSong::when($this->artistId, fn($q) => $q->where('artist_id', $this->artistId))->get();
+        return DbSong::query()
+            ->when($this->artistId, fn($q) => $q->where('artist_id', $this->artistId))
+            ->when(!$this->artistId, fn($q) => $q->whereHas('artist', fn($a) => $a->where('visible', 1))->with('artist'));
+    }
 
-        $this->songs = \App\Support\JapaneseNameSorter::sortBy($songs, 'title')
+    private function toSuggestions($songs): array
+    {
+        return \App\Support\JapaneseNameSorter::sortBy($songs, 'title')
             ->take(10)
-            ->map(fn($song) => ['id' => $song->id, 'title' => $song->title])
+            ->map(fn($song) => ['id' => $song->id, 'title' => $song->title, 'artist' => $this->artistId ? null : $song->artist?->name])
             ->values()
             ->toArray();
+    }
+
+    public function loadInitialSongs()
+    {
+        $this->songs = $this->toSuggestions($this->songQuery()->get());
     }
 
     public function updatedSearch()
@@ -37,15 +48,11 @@ class DatabaseSongSearch extends Component
 
         $escaped = str_replace(['%', '_'], ['\%', '\_'], $this->search);
 
-        $songs = DbSong::when($this->artistId, fn($q) => $q->where('artist_id', $this->artistId))
+        $songs = $this->songQuery()
             ->whereRaw('LOWER(title) LIKE LOWER(?)', [$escaped . '%'])
             ->get();
 
-        $this->songs = \App\Support\JapaneseNameSorter::sortBy($songs, 'title')
-            ->take(10)
-            ->map(fn($song) => ['id' => $song->id, 'title' => $song->title])
-            ->values()
-            ->toArray();
+        $this->songs = $this->toSuggestions($songs);
     }
 
     public function selectSong($songId)

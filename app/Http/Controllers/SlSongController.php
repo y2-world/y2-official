@@ -38,12 +38,12 @@ class SlSongController extends Controller
         // 引き継ぐ。Live Performancesタブが無い曲では常にmine（唯一のタブ）。
         $initialTab = $hasLivePerformancesTab && $request->query('tab') === 'performances' ? 'performances' : 'mine';
 
-        // 前後のSetlistSong（Yuki's Live Attendancesタブ用：sl_songs.id順）
-        $previous = SlSong::where('artist_id', $song->artist_id)->where('id', '<', $song->id)->orderBy('id', 'desc')->first();
-        $next = SlSong::where('artist_id', $song->artist_id)->where('id', '>', $song->id)->orderBy('id')->first();
-
-        // アーティストごとのナンバリング（Yuki's Live Attendancesタブ用：sl_songs.id順）
-        $songNumber = SlSong::where('artist_id', $song->artist_id)->where('id', '<=', $song->id)->count();
+        // 前後のSetlistSongとアーティストごとのナンバリング（Yuki's Live Attendancesタブ用：聴いた順）
+        $heardOrder = SlSong::heardOrderIds((int) $song->artist_id);
+        $position = array_search((int) $song->id, $heardOrder, true);
+        $previous = $position > 0 ? SlSong::find($heardOrder[$position - 1]) : null;
+        $next = isset($heardOrder[$position + 1]) ? SlSong::find($heardOrder[$position + 1]) : null;
+        $songNumber = $position + 1;
 
         // Live Performancesタブ用：DbSong詳細ページと同じ、アーティスト内のsort_order順位・前後の曲。
         // 前後の曲があるかどうかの判定は常にDbSong基準（こちらが本来の並び順）で行う。

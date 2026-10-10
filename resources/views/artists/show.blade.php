@@ -22,7 +22,7 @@
                     </button>
                     {{-- /setlists と同じ Stats と Live Type。Stats はこのアーティストの統計、Live Type は選んでいる年を引き継ぐ --}}
                     @php $typeUrl = fn ($type) => url('/setlists/artists', $artist->id) . (($q = http_build_query(array_filter(['year' => $filterYear, 'type' => $type]))) ? '?' . $q : ''); @endphp
-                    <a class="year-select year-select-link" href="{{ route('stats.artist', $artist->id) }}">Stats</a>
+                    <a class="year-select year-select-link year-select-icon" href="{{ route('stats.artist', $artist->id) }}" title="Stats" aria-label="Stats"><i class="fa-solid fa-chart-simple"></i></a>
                     <select class="year-select" name="select" onchange="if (this.value) window.location.href=this.value;">
                         <option value="" disabled>Live Type</option>
                         <option value="{{ $typeUrl(null) }}" {{ $filterType ? '' : 'selected' }}>All</option>

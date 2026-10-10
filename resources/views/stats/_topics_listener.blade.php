@@ -56,9 +56,9 @@
         <table class="stats-table topic-pc">
             <thead><tr><th>Song Title</th>@if ($topicShowArtist)<th>Artist</th>@endif<th>Tour Title</th><th class="count-col">Date</th></tr></thead>
             @foreach (['exclude' => $topicRecentFirst, 'all' => $topicRecentFirstAll] as $kind => $rows)
-            <tbody data-recent-kind="{{ $kind }}" @if ($kind !== $recentDefault) style="display: none;" @endif>
-                @foreach ($rows as $row)
-                <tr>
+            <tbody data-recent-kind="{{ $kind }}" @if ($kind !== $recentDefault) style="display: none;" data-kind-hidden="1" @endif>
+                @foreach ($rows as $index => $row)
+                <tr @if ($index >= 10) data-more="1" style="display: none;" @endif>
                     <td class="song-title">{!! $topicSongLinkMarked($row) !!}</td>
                     @if ($topicShowArtist)<td>{!! $topicArtistCell($row) !!}</td>@endif
                     <td style="font-size: 0.85em;">@if (!empty($row['show_url']))<a href="{{ $row['show_url'] }}" class="stats-link">{{ $row['show'] }}</a>@else{{ $row['show'] }}@endif</td>
@@ -71,21 +71,33 @@
         <table class="stats-table stats-table-stacked topic-sp">
             @include('stats._stacked_head', ['hasRank' => false, 'badgeLabel' => 'Date', 'showArtist' => $topicShowArtist])
             @foreach (['exclude' => $topicRecentFirst, 'all' => $topicRecentFirstAll] as $kind => $rows)
-                @foreach ($rows as $row)
+                @foreach ($rows as $index => $row)
                     {{-- 日付はバッジに入りきらないので、右端に小さく出す --}}
                     @include('stats._stacked_row', ['rank' => null, 'song' => $topicSongLinkMarked($row), 'artist' => $topicShowArtist ? $topicArtistCell($row) : null, 'showArtist' => $topicShowArtist,
                         'lines' => [['tour' => $topicShowTitle($row['show'], $row['show_url'] ?? null)]], 'badge' => null, 'rightText' => date('Y.m.d', strtotime($row['date'])),
-                        'kind' => 'recent-' . $kind, 'hidden' => $kind !== $recentDefault])
+                        'kind' => 'recent-' . $kind, 'hidden' => $kind !== $recentDefault, 'more' => $index >= 10, 'kindHidden' => $kind !== $recentDefault])
                 @endforeach
             @endforeach
         </table>
+        @include('stats._show_more', ['count' => max(count($topicRecentFirst), count($topicRecentFirstAll))])
     </div>
 </div>
 <script>
 document.getElementById('recentFirstExcludeNew')?.addEventListener('change', function (e) {
     var shown = e.target.checked ? 'exclude' : 'all';
-    document.querySelectorAll('tbody[data-recent-kind]').forEach(function (t) { t.style.display = t.dataset.recentKind === shown ? '' : 'none'; });
-    document.querySelectorAll('tbody[data-kind^="recent-"]').forEach(function (t) { t.style.display = t.dataset.kind === 'recent-' + shown ? '' : 'none'; });
+    var section = e.target.closest('.stats-section');
+    var expanded = !!section.querySelector('.show-more-btn.expanded');
+    // 切り替えた一覧だけを出す。Show More を開いていないときは、11曲目からは隠したまま
+    section.querySelectorAll('tbody[data-recent-kind]').forEach(function (t) {
+        var on = t.dataset.recentKind === shown;
+        t.style.display = on ? '' : 'none';
+        on ? t.removeAttribute('data-kind-hidden') : t.setAttribute('data-kind-hidden', '1');
+    });
+    section.querySelectorAll('tbody[data-kind^="recent-"]').forEach(function (t) {
+        var on = t.dataset.kind === 'recent-' + shown;
+        on ? t.removeAttribute('data-kind-hidden') : t.setAttribute('data-kind-hidden', '1');
+        t.style.display = on && (expanded || !t.dataset.more) ? '' : 'none';
+    });
 });
 </script>
 @endif
@@ -99,7 +111,7 @@ document.getElementById('recentFirstExcludeNew')?.addEventListener('change', fun
             <thead><tr><th class="rank-col">Rank</th><th>Song Title</th>@if ($topicShowArtist)<th>Artist</th>@endif<th>Tour Title</th><th class="count-col">Years</th></tr></thead>
             <tbody>
                 @foreach ($topicWelcomeBack as $index => $row)
-                <tr>
+                <tr @if ($index >= 10) data-more="1" style="display: none;" @endif>
                     <td class="rank-col">{!! $topicRank($topicWelcomeBack, $index, 'years') !!}</td>
                     <td class="song-title">{!! $topicSongLink($row) !!}</td>
                     @if ($topicShowArtist)<td>{!! $topicArtistCell($row) !!}</td>@endif
@@ -113,9 +125,10 @@ document.getElementById('recentFirstExcludeNew')?.addEventListener('change', fun
             @include('stats._stacked_head', ['hasRank' => true, 'badgeLabel' => 'Years', 'showArtist' => $topicShowArtist])
             @foreach ($topicWelcomeBack as $index => $row)
                 @include('stats._stacked_row', ['rank' => $topicRank($topicWelcomeBack, $index, 'years'), 'song' => $topicSongLink($row), 'artist' => $topicShowArtist ? $topicArtistCell($row) : null, 'showArtist' => $topicShowArtist,
-                    'lines' => [['tour' => $topicShowLink($row['from']['date'], $row['from']['title'], $row['from']['url'] ?? null)], ['tour' => '→ ' . $topicShowLink($row['to']['date'], $row['to']['title'], $row['to']['url'] ?? null)]], 'badge' => number_format($row['years'], 1) . '年'])
+                    'lines' => [['tour' => $topicShowLink($row['from']['date'], $row['from']['title'], $row['from']['url'] ?? null)], ['tour' => '→ ' . $topicShowLink($row['to']['date'], $row['to']['title'], $row['to']['url'] ?? null)]], 'badge' => number_format($row['years'], 1) . '年', 'more' => $index >= 10])
             @endforeach
         </table>
+        @include('stats._show_more', ['count' => count($topicWelcomeBack)])
     </div>
 </div>
 @endif
@@ -129,7 +142,7 @@ document.getElementById('recentFirstExcludeNew')?.addEventListener('change', fun
             <thead><tr><th class="rank-col">Rank</th><th>Song Title</th>@if ($topicShowArtist)<th>Artist</th>@endif<th>Tour Title</th><th class="count-col">Years</th></tr></thead>
             <tbody>
                 @foreach ($topicHeardRevivals as $index => $row)
-                <tr>
+                <tr @if ($index >= 10) data-more="1" style="display: none;" @endif>
                     <td class="rank-col">{!! $topicRank($topicHeardRevivals, $index, 'years') !!}</td>
                     <td class="song-title">{!! $topicSongLink($row) !!}</td>
                     @if ($topicShowArtist)<td>@if (isset($topicArtistUrl, $row['artist_id']))<a href="{{ $topicArtistUrl($row['artist_id']) }}" class="stats-link">{{ $row['artist'] }}</a>@else{{ $row['artist'] ?? '' }}@endif</td>@endif
@@ -144,9 +157,10 @@ document.getElementById('recentFirstExcludeNew')?.addEventListener('change', fun
             @include('stats._stacked_head', ['hasRank' => true, 'badgeLabel' => 'Years', 'showArtist' => $topicShowArtist])
             @foreach ($topicHeardRevivals as $index => $row)
                 @include('stats._stacked_row', ['rank' => $topicRank($topicHeardRevivals, $index, 'years'), 'song' => $topicSongLink($row), 'artist' => $topicShowArtist ? $topicArtistCell($row) : null, 'showArtist' => $topicShowArtist,
-                    'lines' => [['tour' => $topicShowLink($row['previous']['date'], $row['previous']['title'], $topicTourUrl($row['previous']['id']))], ['tour' => '→ ' . $topicShowLink($row['date'], $row['show'], $row['show_url'] ?? null)]], 'badge' => number_format($row['years'], 1) . '年'])
+                    'lines' => [['tour' => $topicShowLink($row['previous']['date'], $row['previous']['title'], $topicTourUrl($row['previous']['id']))], ['tour' => '→ ' . $topicShowLink($row['date'], $row['show'], $row['show_url'] ?? null)]], 'badge' => number_format($row['years'], 1) . '年', 'more' => $index >= 10])
             @endforeach
         </table>
+        @include('stats._show_more', ['count' => count($topicHeardRevivals)])
     </div>
 </div>
 @endif

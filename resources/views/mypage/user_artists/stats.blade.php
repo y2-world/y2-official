@@ -10,9 +10,6 @@
         <div class="row justify-content-center">
             <div class="col-xl-10">
                 <div class="element js-fadein">
-                    <div class="mb-3">
-                        <a href="{{ route('mypage.user_artists.index') }}" class="stats-link stats-back-link">← Database</a>
-                    </div>
                     <h1 class="stats-title">{{ $artist->name }}</h1>
                     <p class="stats-subtitle">セットリスト統計</p>
 

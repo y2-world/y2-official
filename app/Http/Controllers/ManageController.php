@@ -235,6 +235,13 @@ class ManageController extends Controller
             'encore_alt.*' => ['nullable', 'string', 'max:255'],
         ]);
 
+        // 0曲のパターンは作らせない（曲名か別表記を1つ以上）
+        $validator->after(function ($validator) use ($request) {
+            if (!UserSetlist::inputHasSong($request->all())) {
+                $validator->errors()->add('setlist', '曲を1曲以上入力してください。');
+            }
+        });
+
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
@@ -277,6 +284,13 @@ class ManageController extends Controller
             'encore_alt' => ['array'],
             'encore_alt.*' => ['nullable', 'string', 'max:255'],
         ]);
+
+        // 0曲のパターンは作らせない（曲名か別表記を1つ以上）
+        $validator->after(function ($validator) use ($request) {
+            if (!UserSetlist::inputHasSong($request->all())) {
+                $validator->errors()->add('setlist', '曲を1曲以上入力してください。');
+            }
+        });
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();

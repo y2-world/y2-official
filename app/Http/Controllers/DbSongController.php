@@ -145,15 +145,16 @@ class DbSongController extends Controller
         $secondTabPrevious = null;
         $secondTabNext = null;
         if ($secondTab === 'yuki') {
-            // Yuki's Live Attendancesタブ用：sl_songs側の番号・前後の曲。sl_songsにはsort_orderが
-            // 無く、id自体が聴いた順（登録順）を表すため、DbSong側のsort_orderとは辿らず、
-            // SlSong.id順で直接前後の曲を求める（db_song_idで逆引きしたSlSongが無い＝このDbSongが
-            // まだSlSongに紐付いていない場合はタブ内の曲番を出さない）。
+            // Yuki's Live Attendancesタブ用：sl_songs側の番号・前後の曲。setlists/songs のページと同じく
+            // 聴いた順（はじめてセットリストに出てきた順、SlSong::heardOrderIds）で求める
+            // （db_song_idで逆引きしたSlSongが無い＝このDbSongがまだSlSongに紐付いていない場合はタブ内の曲番を出さない）。
             $mySlSong = $songs->slSongs()->first();
             if ($mySlSong) {
-                $secondTabSongNumber = \App\Models\SlSong::where('artist_id', $mySlSong->artist_id)->where('id', '<=', $mySlSong->id)->count();
-                $secondTabPrevious = \App\Models\SlSong::where('artist_id', $mySlSong->artist_id)->where('id', '<', $mySlSong->id)->orderBy('id', 'desc')->first();
-                $secondTabNext = \App\Models\SlSong::where('artist_id', $mySlSong->artist_id)->where('id', '>', $mySlSong->id)->orderBy('id')->first();
+                $heardOrder = \App\Models\SlSong::heardOrderIds((int) $mySlSong->artist_id);
+                $position = array_search((int) $mySlSong->id, $heardOrder, true);
+                $secondTabSongNumber = $position + 1;
+                $secondTabPrevious = $position > 0 ? \App\Models\SlSong::find($heardOrder[$position - 1]) : null;
+                $secondTabNext = isset($heardOrder[$position + 1]) ? \App\Models\SlSong::find($heardOrder[$position + 1]) : null;
             }
         } elseif ($secondTab === 'mine') {
             // My Live Attendancesタブ用：自分の参加記録内での初めて聴いた順・前後の曲

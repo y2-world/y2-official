@@ -143,7 +143,7 @@
                     </div>
 
                     @if (!empty($isHikigatariArtist) && !empty($doubleEncoreSongStats))
-                    @php $doubleEncoreSongStatsTop = array_slice($doubleEncoreSongStats, 0, 10); @endphp
+                    @php $doubleEncoreSongStatsTop = array_slice($doubleEncoreSongStats, 0, 25); @endphp
                     <!-- DOUBLE ENCORE Songs Section（福山雅治のみ。DOUBLE ENCOREは弾き語り） -->
                     <div class="stats-section visible">
                         <h2 class="section-title">
@@ -164,7 +164,7 @@
                                         $showRank = $index === 0 || $doubleEncoreSongStatsTop[$index - 1]['count'] !== $song['count'];
                                         $actualRank = $index + 1;
                                     @endphp
-                                    <tr>
+                                    <tr @if ($index >= 10) data-more="1" style="display: none;" @endif>
                                         <td class="rank-col">
                                             @if($showRank)
                                                 @if($index === 0)
@@ -188,6 +188,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            @include('stats._show_more', ['count' => count($doubleEncoreSongStatsTop)])
                         </div>
                     </div>
 

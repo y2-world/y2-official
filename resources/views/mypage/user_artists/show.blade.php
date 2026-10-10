@@ -38,11 +38,11 @@
                     <p class="card-description">セットリスト統計、すべてのツアー、イベント情報</p>
                     <div class="card-links">
                         <a href="{{ route('mypage.user_artists.stats', $artist->id) }}" class="database-link">
-                            <span>Stats</span>
+                            <span><i class="fa-solid fa-chart-simple" style="margin-right: 10px;"></i>Stats</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                         <a href="{{ route('mypage.user_artists.live', $artist->id) }}" class="database-link">
-                            <span>All</span>
+                            <span><i class="fa-solid fa-list" style="margin-right: 10px;"></i>All</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>
@@ -59,15 +59,15 @@
                     <p class="card-description">すべての楽曲、シングル、アルバムを閲覧</p>
                     <div class="card-links">
                         <a href="{{ route('mypage.user_artists.songs', $artist->id) }}" class="database-link">
-                            <span>Songs</span>
+                            <span><i class="fa-solid fa-music" style="margin-right: 10px;"></i>Songs</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                         <a href="{{ route('mypage.user_artists.singles', $artist->id) }}" class="database-link">
-                            <span>Singles</span>
+                            <span><i class="fa-solid fa-compact-disc" style="margin-right: 10px;"></i>Singles</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                         <a href="{{ route('mypage.user_artists.albums', $artist->id) }}" class="database-link">
-                            <span>Albums</span>
+                            <span><i class="fa-solid fa-record-vinyl" style="margin-right: 10px;"></i>Albums</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>

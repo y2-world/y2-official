@@ -81,12 +81,8 @@
                             <button type="button" class="btn btn-outline-danger w-100" onclick="if (confirm('このセットリストパターンを削除しますか？')) { document.getElementById('setlistDeleteForm').submit(); }">削除</button>
                         @endif
                     </div>
-                    {{-- 保存せずにパターンの一覧へ戻る（ツアーの編集フォームと同じ×） --}}
-                    <div style="text-align: center; margin-top: 8px;">
-                        <a href="{{ route('mypage.manage.setlists', [$artist->id, $concert->id]) }}" style="display: inline-block; color: #999; padding: 20px;" title="閉じる">
-                            <span class="close-x-thin" style="font-size: 30px;"></span>
-                        </a>
-                    </div>
+                    {{-- 保存せずにパターンの一覧へ戻る --}}
+                    <a href="{{ route('mypage.manage.setlists', [$artist->id, $concert->id]) }}" class="btn btn-outline-secondary w-100" style="margin-top: 8px;">戻る</a>
                 </form>
                 @if ($setlist)
                     <form method="POST" action="{{ route('mypage.manage.setlists.destroy', [$artist->id, $concert->id, $setlist->id]) }}" id="setlistDeleteForm" hidden>

@@ -91,6 +91,16 @@
                     </div>
                 </div>
             @else
+                {{-- 本家の Setlists（年・アーティスト・会場のページ）と同じく、パンくずを出す --}}
+                @php
+                    $setlistsCrumbLabel = $isSelf ? 'My Setlists' : ($targetUser->name ?: 'ゲスト') . "'s Setlists";
+                    $filterCrumbLabel = $filterArtist ? $filterArtist->name : ($year ?: ($venue ?: null));
+                @endphp
+                @include('database._breadcrumb', ['breadcrumbs' => array_values(array_filter([
+                    ['label' => 'My Page', 'url' => route('mypage.index')],
+                    $filterCrumbLabel ? ['label' => $setlistsCrumbLabel, 'url' => route('mypage.attendances.index', $userIdParam)] : ['label' => $setlistsCrumbLabel],
+                    $filterCrumbLabel ? ['label' => $filterCrumbLabel] : null,
+                ]))])
                 <div class="setlists-header-row">
                     <div style="flex-shrink: 0;">
                         @php
@@ -149,13 +159,22 @@
                         </select>
                     </div>
                     <div class="setlists-search-pc" style="min-width: 320px; position: relative; overflow: visible; flex-shrink: 0; display: none;">
-                        @livewire('my-page-song-search', ['artistId' => str_starts_with((string) $artistId, 'official-') ? (int) substr($artistId, 9) : null])
+                        {{-- 会場のページでは、本家の会場のページと同じく会場の検索（その人の参加記録の会場から） --}}
+                        @if ($venue)
+                            @livewire('venue-search', ['myPageUserId' => $targetUser->id, 'userIdParam' => $userIdParam['user_id'] ?? null], key('venue-search-pc'))
+                        @else
+                            @livewire('my-page-song-search', ['artistId' => str_starts_with((string) $artistId, 'official-') ? (int) substr($artistId, 9) : null])
+                        @endif
                     </div>
                 </div>
 
                 {{-- 検索フォーム（SP表示） --}}
                 <div class="sp" id="spSearchFormMyAttendances" style="margin-top: 15px; display: none;">
-                    @livewire('my-page-song-search', ['artistId' => str_starts_with((string) $artistId, 'official-') ? (int) substr($artistId, 9) : null])
+                    @if ($venue)
+                        @livewire('venue-search', ['myPageUserId' => $targetUser->id, 'userIdParam' => $userIdParam['user_id'] ?? null], key('venue-search-sp'))
+                    @else
+                        @livewire('my-page-song-search', ['artistId' => str_starts_with((string) $artistId, 'official-') ? (int) substr($artistId, 9) : null])
+                    @endif
                 </div>
             @endif
         </div>
@@ -293,7 +312,8 @@
                             <th class="pc">アーティスト</th>
                             <th class="sp">アーティスト / タイトル</th>
                             <th class="pc">タイトル</th>
-                            <th class="pc">会場</th>
+                            {{-- 会場のページでは全部同じ会場なので、会場の列は出さない --}}
+                            @unless ($venue)<th class="pc">会場</th>@endunless
                         </tr>
                     </thead>
                     <tbody>
@@ -321,7 +341,7 @@
                                     <td class="sp"><a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'attendances']) }}">{{ $tour->title ?? '-' }}</a></td>
                                 @endif
                                 <td class="pc"><a href="{{ route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'attendances']) }}">{{ $tour->title ?? '-' }}</a></td>
-                                <td class="pc">{{ $attendance->venue }}</td>
+                                @unless ($venue)<td class="pc">{{ $attendance->venue }}</td>@endunless
                             </tr>
                         @endforeach
                     </tbody>

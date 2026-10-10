@@ -12,7 +12,8 @@ use App\Models\DbSong;
 // 回数はどれも他のランキングと同じく「演奏されたツアーの数」で数える
 class ArtistTopics
 {
-    private const LIST_SIZE = 10;
+    // 一覧はこの曲数まで（statsでは最初の10曲だけ出し、残りは Show More）
+    private const LIST_SIZE = 25;
 
     private array $songs;
     private array $tours;

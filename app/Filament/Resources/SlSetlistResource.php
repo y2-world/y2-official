@@ -41,7 +41,15 @@ class SlSetlistResource extends Resource
                             ->relationship('artist', 'name', fn($query) => $query->orderBy('id'))
                             ->searchable()
                             ->preload()
-                            ->native(false),
+                            ->native(false)
+                            // 曲ごとのアーティストと同じく、＋ボタンから新しいアーティストを登録できる
+                            ->createOptionForm([
+                                Forms\Components\TextInput::make('name')
+                                    ->label('アーティスト名')
+                                    ->required()
+                                    ->maxLength(255),
+                            ])
+                            ->createOptionUsing(fn (array $data) => \App\Models\Artist::create(['name' => $data['name']])->id),
 
                         Forms\Components\TextInput::make('title')
                             ->label('タイトル')

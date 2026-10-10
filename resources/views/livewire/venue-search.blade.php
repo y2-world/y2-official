@@ -13,9 +13,9 @@
             console.error('Alpine.js watch error:', e);
         }
     },
-    selectVenue(venueName) {
-        if (venueName) {
-            window.location.href = '/venue?keyword=' + encodeURIComponent(venueName);
+    selectVenue(venue) {
+        if (venue && venue.url) {
+            window.location.href = venue.url;
         }
     },
     navigateDown() {
@@ -30,7 +30,7 @@
     },
     selectCurrent() {
         if (this.venues && this.selectedIndex >= 0 && this.selectedIndex < this.venues.length) {
-            this.selectVenue(this.venues[this.selectedIndex].name);
+            this.selectVenue(this.venues[this.selectedIndex]);
         }
     }
 }" class="search-wrapper" style="position: relative;">
@@ -52,7 +52,7 @@
         style="position: absolute; top: 100%; left: 0; width: auto; min-width: 300px; background: white; border: 1px solid #ddd; border-radius: 4px; margin-top: 4px; max-height: 190px; overflow-y: auto; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
         <template x-for="(venue, index) in (Array.isArray(venues) ? venues : [])" :key="venue.name || index">
             <div
-                @click="selectVenue(venue.name)"
+                @click="selectVenue(venue)"
                 :class="{ 'bg-gray-100': index === selectedIndex }"
                 class="song-search-suggestion"
                 style="padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #eee; color: black; text-align: left;"

@@ -432,6 +432,13 @@ class AttendanceController extends Controller
             'encore_alt.*' => ['nullable', 'string', 'max:255'],
         ]);
 
+        // 0曲のパターンは作らせない（曲名か別表記を1つ以上）
+        $validator->after(function ($validator) use ($request) {
+            if (!UserSetlist::inputHasSong($request->all())) {
+                $validator->errors()->add('setlist', '曲を1曲以上入力してください。');
+            }
+        });
+
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
@@ -511,6 +518,13 @@ class AttendanceController extends Controller
             'attended_date' => ['required', 'date'],
             'venue' => ['required', 'string', 'max:255'],
         ]);
+
+        // 0曲のパターンは作らせない（曲名か別表記を1つ以上）
+        $validator->after(function ($validator) use ($request) {
+            if (!UserSetlist::inputHasSong($request->all())) {
+                $validator->errors()->add('setlist', '曲を1曲以上入力してください。');
+            }
+        });
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();

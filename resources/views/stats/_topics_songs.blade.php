@@ -164,7 +164,7 @@
             <thead><tr><th class="rank-col">Rank</th><th>Song Title</th><th>Tour Title</th><th class="count-col">Years</th></tr></thead>
             <tbody>
                 @foreach ($topicLateDebuts as $index => $row)
-                <tr>
+                <tr @if ($index >= 10) data-more="1" style="display: none;" @endif>
                     <td class="rank-col">{!! $topicRank($topicLateDebuts, $index, 'years') !!}</td>
                     <td class="song-title">{!! $topicSongLink($row) !!}</td>
                     <td><span style="font-size: 0.85em;">{{ date('Y.m.d', strtotime($row['released'])) }}</span><br>→ {!! $topicTourLine($row['first']) !!}</td>
@@ -177,9 +177,10 @@
             @include('stats._stacked_head', ['hasRank' => true, 'badgeLabel' => 'Years', 'showArtist' => false])
             @foreach ($topicLateDebuts as $index => $row)
                 @include('stats._stacked_row', ['rank' => $topicRank($topicLateDebuts, $index, 'years'), 'song' => $topicSongLink($row), 'artist' => null, 'showArtist' => false,
-                    'lines' => [['tour' => e(date('Y.m.d', strtotime($row['released'])))], ['tour' => '→ ' . $topicTourWithYear($row['first'])]], 'badge' => $topicYears($row)])
+                    'lines' => [['tour' => e(date('Y.m.d', strtotime($row['released'])))], ['tour' => '→ ' . $topicTourWithYear($row['first'])]], 'badge' => $topicYears($row), 'more' => $index >= 10])
             @endforeach
         </table>
+        @include('stats._show_more', ['count' => count($topicLateDebuts)])
     </div>
 </div>
 @endif

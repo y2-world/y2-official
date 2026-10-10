@@ -18,9 +18,9 @@ class VenueController extends Controller
         $query = SlSetlist::query();
         $keyword = $request->input('keyword');
 
-        // キーワードが空でない場合のみ、検索条件を追加
+        // 検索結果ではなく、その会場のすべてのセットリスト（My Page の会場のページと同じく、会場名が一致するもの）
         if (!empty($keyword)) {
-            $query->where('venue', 'like', "%{$keyword}%");
+            $query->where('venue', $keyword);
         }
 
         $artists = Artist::orderBy('id', 'asc')->get();

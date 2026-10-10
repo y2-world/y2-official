@@ -413,4 +413,14 @@
             </div>
         </div>
     </div>
+    {{-- 曲のページから来たとき、その曲名を黄色で目立たせる（from=slsong-{曲ID} はその曲、from=song-{公式の曲ID} はその曲につながっている曲） --}}
+    @php
+        $highlightSlSongIds = [];
+        if (preg_match('/^slsong-(\d+)$/', (string) $from, $fromSongMatch)) {
+            $highlightSlSongIds = [(int) $fromSongMatch[1]];
+        } elseif (preg_match('/^song-(\d+)$/', (string) $from, $fromSongMatch)) {
+            $highlightSlSongIds = \App\Models\SlSong::where('db_song_id', $fromSongMatch[1])->pluck('id')->all();
+        }
+    @endphp
+    @include('partials._song_highlight', ['highlightPaths' => array_map(fn ($id) => '/setlists/songs/' . $id, $highlightSlSongIds)])
 @endsection

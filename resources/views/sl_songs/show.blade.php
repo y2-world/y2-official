@@ -104,7 +104,7 @@
                                             @elseif(isset($tour->date1) && !isset($tour->date2))
                                                 <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
                                             @endif
-                                            <td class="td_title"><a href="{{ route('live.show', $tour->id) }}">{{ $tour->title }}</a></td>
+                                            <td class="td_title"><a href="{{ route('live.show', ['id' => $tour->id, 'from' => 'song-' . $song->db_song_id]) }}">{{ $tour->title }}</a></td>
                                             @if ($isHikigatariArtist)@include('songs._hikigatari_cell', ['hikigatari' => isset($hikigatariTourIds[$tour->id]), 'normal' => isset($normalTourIds[$tour->id])])@endif
                                         </tr>
                                     @endforeach

@@ -3,14 +3,22 @@
 @section('og_title', "Database - Yuki Official")
 
 @section('content')
-    <div class="database-hero database-hero--detail manage-page">
-        <div class="container">
+    {{-- 公式の Database のトップと同じく、PC はタイトルの右にクイック楽曲検索（公式とマイページのアーティストの曲から） --}}
+    <div class="database-hero database-hero--nav">
+        <div class="container" style="position: relative;">
             @include('database._breadcrumb', ['breadcrumbs' => [
                 ['label' => 'My Page', 'url' => route('mypage.index')],
                 ['label' => "Database"],
             ]])
-            <h1 class="database-title" style="text-align: center;">Database</h1>
-            <p class="database-subtitle" style="text-align: center;">アーティストのライブ・楽曲データベース</p>
+            <div class="setlists-header-row">
+                <div style="flex-shrink: 0;">
+                    <h1 class="database-title" style="white-space: nowrap;">Database</h1>
+                    <p class="database-subtitle" style="margin: 4px 0 0;">アーティストのライブ・楽曲データベース</p>
+                </div>
+                <div class="setlists-search-pc" style="min-width: 320px; position: relative; overflow: visible; flex-shrink: 0;">
+                    @livewire('user-artist-song-search', [], key('mypage-database-search-pc'))
+                </div>
+            </div>
         </div>
     </div>
 
@@ -27,6 +35,10 @@
                     @endforeach
                 </select>
             </div>
+            {{-- スマホはアーティストの選択の下にクイック楽曲検索 --}}
+            <div class="sp" style="margin-bottom: 20px;">
+                @livewire('user-artist-song-search', [], key('mypage-database-search-sp'))
+            </div>
             <div class="row justify-content-center">
                 {{-- 公式の Database のアーティストとマイページで作られたアーティストを、名前順に --}}
                 @foreach ($cards as $card)
@@ -39,19 +51,19 @@
                             <p class="card-description">{{ $card->songs_count }}曲 / {{ $card->concerts_count }}ツアー</p>
                             <div class="card-links">
                                 <a href="{{ $card->stats_url }}" class="database-link">
-                                    <span>Stats</span>
+                                    <span><i class="fa-solid fa-chart-simple" style="margin-right: 10px;"></i>Stats</span>
                                     <i class="fa-solid fa-arrow-right"></i>
                                 </a>
                                 <a href="{{ $card->live_url }}" class="database-link">
-                                    <span>Live</span>
+                                    <span><i class="fa-solid fa-guitar" style="margin-right: 10px;"></i>Live</span>
                                     <i class="fa-solid fa-arrow-right"></i>
                                 </a>
                                 <a href="{{ $card->songs_url }}" class="database-link">
-                                    <span>Songs</span>
+                                    <span><i class="fa-solid fa-music" style="margin-right: 10px;"></i>Songs</span>
                                     <i class="fa-solid fa-arrow-right"></i>
                                 </a>
                                 <a href="{{ $card->show_url }}" class="database-link">
-                                    <span>View All</span>
+                                    <span><i class="fa-solid fa-database" style="margin-right: 10px;"></i>View All</span>
                                     <i class="fa-solid fa-arrow-right"></i>
                                 </a>
                             </div>

@@ -33,28 +33,28 @@
                     <p class="card-description">セットリスト統計、すべてのツアー、イベント情報</p>
                     <div class="card-links">
                         <a href="{{ route('stats.index', ['tab' => 'database', 'artist_id' => $artist->id, 'type' => 'all']) }}" class="database-link">
-                            <span>Stats</span>
+                            <span><i class="fa-solid fa-chart-simple" style="margin-right: 10px;"></i>Stats</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                         <a href="{{ route('database.live', $artist->id) }}" class="database-link">
-                            <span>All</span>
+                            <span><i class="fa-solid fa-list" style="margin-right: 10px;"></i>All</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                         <a href="{{ route('database.live', $artist->id) }}?type=1" class="database-link">
-                            <span>Tours</span>
+                            <span><i class="fa-solid fa-route" style="margin-right: 10px;"></i>Tours</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                         <a href="{{ route('database.live', $artist->id) }}?type=2" class="database-link">
-                            <span>Events</span>
+                            <span><i class="fa-solid fa-calendar-day" style="margin-right: 10px;"></i>Events</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                         @if($artist->name === 'Mr.Children')
                         <a href="{{ route('database.live', $artist->id) }}?type=3" class="database-link">
-                            <span>ap bank fes</span>
+                            <span><i class="fa-solid fa-leaf" style="margin-right: 10px;"></i>ap bank fes</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                         <a href="{{ route('database.live', $artist->id) }}?type=4" class="database-link">
-                            <span>Solo</span>
+                            <span><i class="fa-solid fa-microphone" style="margin-right: 10px;"></i>Solo</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                         @endif
@@ -72,15 +72,15 @@
                     <p class="card-description">すべての楽曲、シングル、アルバムを閲覧</p>
                     <div class="card-links">
                         <a href="{{ route('database.songs', $artist->id) }}" class="database-link">
-                            <span>Songs</span>
+                            <span><i class="fa-solid fa-music" style="margin-right: 10px;"></i>Songs</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                         <a href="{{ route('database.singles', $artist->id) }}" class="database-link">
-                            <span>Singles</span>
+                            <span><i class="fa-solid fa-compact-disc" style="margin-right: 10px;"></i>Singles</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                         <a href="{{ route('database.albums', $artist->id) }}" class="database-link">
-                            <span>Albums</span>
+                            <span><i class="fa-solid fa-record-vinyl" style="margin-right: 10px;"></i>Albums</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>

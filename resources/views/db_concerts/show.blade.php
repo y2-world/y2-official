@@ -635,6 +635,8 @@ function closeSetlistSummary() {
     }
 }
 </script>
+{{-- 曲のページから来たとき（from=song-{曲ID}）、その曲名を黄色で目立たせる --}}
+@include('partials._song_highlight', ['highlightPaths' => preg_match('/^song-(\d+)$/', (string) $from, $fromSongMatch) ? ['/database/songs/' . $fromSongMatch[1]] : []])
 @endsection
 
 @endsection

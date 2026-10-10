@@ -20,7 +20,7 @@
                     </button>
                     {{-- /setlists と同じ Stats と Live Type --}}
                     @php $typeQuery = $filterType ? 'type=' . $filterType : ''; @endphp
-                    <a class="year-select year-select-link" href="{{ route('stats.index', ['tab' => 'personal']) }}">Stats</a>
+                    <a class="year-select year-select-link year-select-icon" href="{{ route('stats.index', ['tab' => 'personal']) }}" title="Stats" aria-label="Stats"><i class="fa-solid fa-chart-simple"></i></a>
                     <select class="year-select" name="select" onchange="if (this.value) window.location.href=this.value;">
                         <option value="" disabled>Live Type</option>
                         <option value="{{ url('/setlists/years', $year->year) }}" {{ $filterType ? '' : 'selected' }}>All</option>

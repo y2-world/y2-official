@@ -14,7 +14,7 @@
             <tbody>
                 @foreach ($topicClosingSongs as $index => $row)
                 @php $showRank = $index === 0 || $topicClosingSongs[$index - 1]['count'] !== $row['count']; @endphp
-                <tr>
+                <tr @if ($index >= 10) data-more="1" style="display: none;" @endif>
                     <td class="rank-col">
                         @if ($showRank)
                             @if ($index === 0) <span class="rank-badge gold">🏆</span>
@@ -30,6 +30,7 @@
                 @endforeach
             </tbody>
         </table>
+        @include('stats._show_more', ['count' => count($topicClosingSongs)])
     </div>
 </div>
 @endif

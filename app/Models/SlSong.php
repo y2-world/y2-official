@@ -198,4 +198,34 @@ class SlSong extends Model
         ->sortByDesc('date')
         ->values();
     }
+
+    // アーティストの曲を「聴いた順」（はじめてセットリストに出てきた公演の日付順、同じ公演ならセットリストの順）に並べた id。
+    // 曲ページの Previous / Next と番号に使う。まだ聴いていない曲（これからの公演だけ・どこにも無い）は、そのあとに id 順
+    public static function heardOrderIds(int $artistId): array
+    {
+        $songs = static::where('artist_id', $artistId)->orderBy('id')->get(['id', 'title']);
+        $idSet = $songs->pluck('id')->flip();
+        $idByTitle = $songs->pluck('id', 'title');
+        $expandFes = fn ($items) => collect($items ?? [])->flatMap(fn ($item) => ($item['type'] ?? 'song') === 'block' ? ($item['songs'] ?? []) : [$item])->all();
+
+        $order = [];
+        $setlists = SlSetlist::where('date', '<=', now()->toDateString())->orderBy('date')->orderBy('id')->get();
+        foreach ($setlists as $setlist) {
+            $entries = array_merge((array) ($setlist->setlist ?? []), (array) ($setlist->encore ?? []), $expandFes($setlist->fes_setlist), $expandFes($setlist->fes_encore));
+            foreach ($entries as $entry) {
+                $song = $entry['song'] ?? null;
+                if (is_numeric($song)) {
+                    $id = isset($idSet[(int) $song]) ? (int) $song : null;
+                } else {
+                    // 文字列のまま入っている曲は、曲名が一致すればその曲（performedSetlists と同じ）
+                    $id = $idByTitle[trim(preg_replace('/\s*\[[^\]]+\]/u', '', (string) $song))] ?? null;
+                }
+                if ($id !== null && !isset($order[$id])) {
+                    $order[$id] = true;
+                }
+            }
+        }
+
+        return array_merge(array_keys($order), $songs->pluck('id')->reject(fn ($id) => isset($order[$id]))->values()->all());
+    }
 }
