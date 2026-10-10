@@ -47,7 +47,10 @@
                 @endif
 
                 @if ($tourSetlists->isEmpty())
-                    <p>このツアーにはまだセットリストが登録されていません。</p>
+                    {{-- 開催前のツアーにセットリストが無いのは当たり前なので、「まだ登録されていません」は出さない（参加予定だけ選べる） --}}
+                    @if (!$tour->date1 || \Carbon\Carbon::parse($tour->date1)->lte(now()->startOfDay()))
+                        <p>このツアーにはまだセットリストが登録されていません。</p>
+                    @endif
                 @else
                     @php
                         $groupTitlesByRowAndOrderNo = $kind === 'official'
