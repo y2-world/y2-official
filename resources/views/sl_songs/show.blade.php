@@ -4,7 +4,7 @@
     <div class="database-hero database-hero--detail">
         <div class="container" style="position: relative;">
             @include('database._breadcrumb', ['breadcrumbs' => [
-                ['label' => 'Setlists', 'url' => '/setlists'],
+                ['label' => "Yuki's Setlists", 'url' => '/setlists'],
                 ['label' => $song->title],
             ]])
             {{-- #（曲番）は選んでいるタブによって意味が変わる：Yuki's Live Attendances中はsl_songs.id順

@@ -1,7 +1,7 @@
 @extends('layouts.app')
-@section('title', 'Yuki Official - Setlists')
+@section('title', "Yuki Official - Yuki's Setlists")
 
-@section('og_title', 'Setlists - Yuki Official')
+@section('og_title', "Yuki's Setlists - Yuki Official")
 @section('og_description', 'Browse all setlists from Yuki Yoshida performances')
 @section('og_type', 'website')
 
@@ -10,7 +10,7 @@
         <div class="container">
             <div class="setlists-header-row">
                 <div style="flex-shrink: 0;">
-                    <h1 class="database-title" style="white-space: nowrap;">Setlists</h1>
+                    <h1 class="database-title" style="white-space: nowrap;">Yuki's Setlists</h1>
                     <p class="database-subtitle" style="margin: 4px 0 0;">すべてのセットリスト</p>
                  </div>
                 <div class="header-selects" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; overflow-x: auto; max-width: 100%;">

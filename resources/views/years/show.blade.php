@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Yuki Official - ' . $year->year)
 
-@section('og_title', $year->year . ' Setlists - Yuki Official')
+@section('og_title', $year->year . " Yuki's Setlists - Yuki Official")
 @section('og_description', 'All setlists from ' . $year->year)
 @section('og_type', 'website')
 

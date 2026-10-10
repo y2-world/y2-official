@@ -4,7 +4,7 @@
     <div class="database-hero database-hero--nav">
         <div class="container">
             @include('database._breadcrumb', ['breadcrumbs' => [
-                ['label' => 'Setlists', 'url' => '/setlists'],
+                ['label' => "Yuki's Setlists", 'url' => '/setlists'],
                 ['label' => $keyword],
             ]])
             <div class="setlists-header-row">
