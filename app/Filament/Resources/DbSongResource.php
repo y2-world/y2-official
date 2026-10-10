@@ -44,6 +44,11 @@ class DbSongResource extends Resource
                     ->label('タイトル')
                     ->required()
                     ->maxLength(255),
+                // 曲名にアーティストを入れずに済むように（例：あなたと → 絢香 × コブクロ）。セットリストでは「曲名 / アーティスト」
+                Forms\Components\TextInput::make('credit')
+                    ->label('アーティスト表記名')
+                    ->placeholder('例：絢香 × コブクロ')
+                    ->maxLength(255),
                 Forms\Components\Textarea::make('text')
                     ->label('説明')
                     ->rows(5)

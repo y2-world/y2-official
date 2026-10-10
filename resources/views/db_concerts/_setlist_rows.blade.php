@@ -125,6 +125,11 @@
 
                                                 if ($songModel) {
                                                     $title = !empty($alternativeTitle) ? $alternativeTitle : $songModel->title;
+                                                    // 曲にアーティスト表記があり、このセットリストで何も付いていなければ「曲名 / アーティスト」
+                                                    if ($featuring === '' && !empty($songModel->credit)) {
+                                                        $featuring = $songModel->credit;
+                                                        $featuringDisplay = '/ ' . $featuring;
+                                                    }
                                                     $link = $noSongLinks ? null : ($songLinkResolver ? $songLinkResolver($songModel, $alternativeTitle) : \App\Models\DbSong::showUrl($data['song'], $alternativeTitle));
                                                 } else {
                                                     $title = !empty($alternativeTitle) ? $alternativeTitle : $data['song'];

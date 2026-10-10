@@ -66,9 +66,9 @@
                                         @endif
                                     </div>
                                     @if ($stamp['song_url'])
-                                        <a href="{{ $stamp['song_url'] }}" class="stamp-slot-title">{{ $stamp['title'] }}</a>
+                                        <a href="{{ $stamp['song_url'] }}" class="stamp-slot-title">{{ $stamp['title'] }}</a>@if (!empty($stamp['credit']))<span class="stamp-slot-credit">{{ $stamp['credit'] }}</span>@endif
                                     @else
-                                        <span class="stamp-slot-title">{{ $stamp['title'] }}</span>
+                                        <span class="stamp-slot-title">{{ $stamp['title'] }}</span>@if (!empty($stamp['credit']))<span class="stamp-slot-credit">{{ $stamp['credit'] }}</span>@endif
                                     @endif
                                 </div>
                             @endforeach

@@ -750,8 +750,9 @@ if (!function_exists('buildSetlistPatternSummary')) {
                 'title' => $title,
                 'song_id' => $songId,
                 'key' => $songId !== null ? 'id:' . $songId : 'title:' . $title,
-                'featuring' => trim((string) ($item['featuring'] ?? '')),
-                'featuring_type' => $item['featuring_type'] ?? 'guest',
+                // 曲にアーティスト表記（DbSong.credit）があり、セットリストの方で何も付いていなければ「曲名 / アーティスト」
+                'featuring' => trim((string) ($item['featuring'] ?? '')) ?: (string) ($songModel?->credit ?? ''),
+                'featuring_type' => trim((string) ($item['featuring'] ?? '')) === '' && $songModel?->credit ? 'artist' : ($item['featuring_type'] ?? 'guest'),
                 'medley' => !empty($item['medley']),
                 // メドレーのタイトル（メドレーの1曲目に移してある。App\Support\Medley::liftTitles）
                 'medley_title' => trim((string) ($item['medley_title'] ?? '')) ?: null,

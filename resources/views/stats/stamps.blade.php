@@ -59,7 +59,7 @@
                                             </div>
                                         @endif
                                     </div>
-                                    <a href="{{ $stamp['song_url'] ?? route('songs.show', ['id' => $stamp['song_id'], 'tab' => 'mine']) }}" class="stamp-slot-title">{{ $stamp['title'] }}</a>
+                                    <a href="{{ $stamp['song_url'] ?? route('songs.show', ['id' => $stamp['song_id'], 'tab' => 'mine']) }}" class="stamp-slot-title">{{ $stamp['title'] }}</a>@if (!empty($stamp['credit']))<span class="stamp-slot-credit">{{ $stamp['credit'] }}</span>@endif
                                 </div>
                             @endforeach
                             {{-- 絞り込みで1曲も無いときのメッセージ（台紙の中に出す） --}}

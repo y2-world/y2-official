@@ -463,6 +463,8 @@ class MyPageStatsController extends Controller
                 'song_id' => $song->id,
                 'song_url' => $this->isOwner() ? route('mypage.attendances.index', ['song_id' => 'official-' . $song->id]) : url('/database/songs/' . $song->id),
                 'title' => $song->title,
+                // ほかの人との曲のアーティスト表記（スタンプでは曲名のあとに灰色で出す）
+                'credit' => $song->credit,
                 'done' => isset($playedDbSongIds[$song->id]),
                 'never_performed' => !isset($everPerformedDbSongIds[$song->id]),
                 'fes_only' => isset($fesOnlyDbSongIds[$song->id]),

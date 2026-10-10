@@ -13,6 +13,8 @@ class DbSong extends Model
 
     protected $fillable = [
         'title',
+        // 曲のアーティスト表記（「あなたと」の「絢香 × コブクロ」など）。セットリストでは「曲名 / アーティスト」と出す
+        'credit',
         'artist_id',
         'text',
         'sort_order',

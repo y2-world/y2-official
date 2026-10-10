@@ -3862,6 +3862,18 @@ h5.setlist-subtitle-heading {
     color: #667eea;
 }
 
+/* ほかの人との曲のアーティスト表記。曲名の下に、灰色で小さく */
+.stamp-slot-credit {
+    display: block;
+    width: 100%;
+    margin-top: 2px;
+    font-size: 0.55rem;
+    line-height: 1.25;
+    text-align: center;
+    color: #999;
+    word-break: break-word;
+}
+
 .stamp-slot.is-stamped .stamp-slot-title {
     color: #333;
     font-weight: 400;
@@ -3885,6 +3897,12 @@ h5.setlist-subtitle-heading {
     .stamp-slot-title {
         font-size: 0.5rem;
         margin-top: 4px;
+    }
+
+    /* スマホは曲名が 0.5rem なので、アーティストはそれより小さく */
+    .stamp-slot-credit {
+        font-size: 0.38rem;
+        margin-top: 1px;
     }
 }
 

@@ -30,6 +30,10 @@
                 {{ $songs->title }}
             </h1>
             <h1 class="database-title pc" style="">{{ $songs->title }}</h1>
+            {{-- ほかの人との曲は、曲名の下にアーティスト表記（例：絢香 × コブクロ） --}}
+            @if ($songs->credit)
+                <p class="database-subtitle" style="margin-top: 0;">{{ $songs->credit }}</p>
+            @endif
 
             @php
                 $single = $songs->singleFromTracklist;
