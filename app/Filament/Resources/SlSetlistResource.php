@@ -37,7 +37,8 @@ class SlSetlistResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('artist_id')
                             ->label('アーティスト')
-                            ->relationship('artist', 'name', fn($query) => $query->where('visible', 1)->orderBy('id'))
+                            // 非公開のアーティストも選べる（セットリストは非公開アーティストのものも登録する）
+                            ->relationship('artist', 'name', fn($query) => $query->orderBy('id'))
                             ->searchable()
                             ->preload()
                             ->native(false),
@@ -382,7 +383,7 @@ class SlSetlistResource extends Resource
                                 // artist は song/block 共通キー
                                 Forms\Components\Select::make('artist')
                                     ->label('アーティスト')
-                                    ->options(fn() => \App\Models\Artist::where('visible', 1)->orderBy('id')->pluck('name', 'id')->all())
+                                    ->options(fn() => \App\Models\Artist::orderBy('id')->pluck('name', 'id')->all())
                                     ->searchable()
                                     ->native(false)
                                     ->nullable()
@@ -567,7 +568,7 @@ class SlSetlistResource extends Resource
 
                                 Forms\Components\Select::make('artist')
                                     ->label('アーティスト')
-                                    ->options(fn() => \App\Models\Artist::where('visible', 1)->orderBy('id')->pluck('name', 'id')->all())
+                                    ->options(fn() => \App\Models\Artist::orderBy('id')->pluck('name', 'id')->all())
                                     ->searchable()
                                     ->native(false)
                                     ->nullable()
