@@ -1,0 +1,159 @@
+{
+  "artist_id": 38,
+  "source": "ja.wikipedia.org「藤井風」ライブ節（2026-10-10）",
+  "tours": [
+    {
+      "title": "“JAZZ&PIANO” The First",
+      "type": 0,
+      "date1": "2019-07-10",
+      "date2": "2019-08-20",
+      "venue": null,
+      "schedule": "7月10日(水) Mt.RAINIER HALL SHIBUYA PLEASURE PLEASURE\n7月11日(木) Mt.RAINIER HALL SHIBUYA PLEASURE PLEASURE\n8月20日(火) あいおいニッセイ同和損保 ザ・フェニックスホール"
+    },
+    {
+      "title": "“NAN-NAN SHOW”",
+      "type": 1,
+      "date1": "2019-11-17",
+      "date2": null,
+      "venue": "LINE CUBE SHIBUYA",
+      "schedule": null
+    },
+    {
+      "title": "“JAZZ & PIANO 2020”",
+      "type": 0,
+      "date1": "2020-07-27",
+      "date2": "2020-07-29",
+      "venue": null,
+      "schedule": "7月27日(月) JZ Brat SOUND OF TOKYO\n7月29日(水) umeda ALWAYS"
+    },
+    {
+      "title": "“NAN-NAN SHOW 2020” HELP EVER HURT NEVER",
+      "type": 1,
+      "date1": "2020-10-29",
+      "date2": null,
+      "venue": "日本武道館",
+      "schedule": null
+    },
+    {
+      "title": "“HELP EVER HALL TOUR”",
+      "type": 0,
+      "date1": "2020-12-25",
+      "date2": "2021-01-31",
+      "venue": null,
+      "schedule": "12月25日(金) ハーモニーホール座間\n12月27日(日) 三郷市文化会館 大ホール\n2021年\n1月9日(土) 昭和女子大学人見記念講堂\n1月10日(日) 昭和女子大学人見記念講堂\n1月16日(土) 東京エレクトロンホール宮城\n1月17日(日) 名古屋市公会堂\n1月21日(木) オリックス劇場\n1月24日(日) 札幌市民ホール\n1月27日(水) 神戸国際会館 こくさいホール\n1月28日(木) 福岡市民会館\n1月30日(土) サンポートホール高松 大ホール\n1月31日(日) 岡山市民会館"
+    },
+    {
+      "title": "“Free” Live 2021",
+      "type": 1,
+      "date1": "2021-09-04",
+      "date2": null,
+      "venue": "日産スタジアム",
+      "schedule": null
+    },
+    {
+      "title": "“HELP EVER ARENA TOUR”",
+      "type": 0,
+      "date1": "2021-10-02",
+      "date2": "2021-11-28",
+      "venue": null,
+      "schedule": "10月2日(土) 横浜アリーナ\n10月3日(日) 横浜アリーナ\n10月16日(土) 大阪城ホール\n10月17日(日) 大阪城ホール\n10月23日(土) 福岡マリンメッセA館\n10月24日(日) 福岡マリンメッセA館\n11月11日(木) 神戸ワールド記念ホール\n11月12日(金) 神戸ワールド記念ホール\n11月25日(木) 国立代々木競技場 第一体育館\n11月27日(土) 国立代々木競技場 第一体育館\n11月28日(日) 国立代々木競技場 第一体育館"
+    },
+    {
+      "title": "alone at home Tour 2022",
+      "type": 0,
+      "date1": "2022-05-19",
+      "date2": "2022-09-05",
+      "venue": null,
+      "schedule": "5月19日(木) 相模女子大学グリーンホール 大ホール\n5月21日(土) 本多の森ホール\n5月22日(日) 新潟県民会館\n5月25日(水) LINE CUBE SHIBUYA\n5月26日(木) LINE CUBE SHIBUYA\n5月28日(土) 高崎芸術劇場 大劇場\n5月29日(日) ホクト文化ホール 大ホール\n6月2日(木) アクトシティ浜松 大ホール\n6月3日(金) 三重県文化会館 大ホール\n6月8日(水) 森のホール21\n6月10日(金) センチュリーホール\n6月13日(月) オリックス劇場\n6月14日(火) オリックス劇場\n6月16日(木) 仙台サンプラザホール\n6月17日(金) 岩手県民会館\n6月23日(木) 帯広市民文化ホール\n6月24日(金) 札幌文化芸術劇場 hitaru\n6月28日(火) レクザムホール\n6月29日(水) 松山市民会館 大ホール\n7月2日(土) 倉敷市民会館\n7月3日(日) 米子コンベンションセンター BiG SHiP\n7月6日(水) 福岡サンパレス\n7月7日(木) 熊本城ホール メインホール\n7月9日(土) 川商ホール第一\n7月21日(木) 広島文化学園HBGホール\n7月28日(木) 昭和女子大学人見記念講堂\n7月29日(金) 昭和女子大学人見記念講堂\n8月20日(土) なら100年会館\n8月21日(日) 和歌山県民文化会館\n8月23日(火) 神戸国際会館 こくさいホール\n8月26日(金) 都城市総合文化ホール\n9月5日(月) ロームシアター京都"
+    },
+    {
+      "title": "LOVE ALL SERVE ALL STADIUM LIVE",
+      "type": 1,
+      "date1": "2022-10-15",
+      "date2": "2022-10-16",
+      "venue": "Panasonic Stadium Suita",
+      "schedule": "10月15日(土) Panasonic Stadium Suita\n10月16日(日) Panasonic Stadium Suita"
+    },
+    {
+      "title": "Fujii Kaze and the piano Asia Tour",
+      "type": 0,
+      "date1": "2023-06-24",
+      "date2": "2023-07-30",
+      "venue": null,
+      "schedule": "6月24日(土) KWANGWOON UNIVERSITY DONGHAE CULTURE & ARTS CENTER\n7月1日(土) KBank SIAM PIC-GANESHA THEATRE\n7月2日(日) KBank SIAM PIC-GANESHA THEATRE\n7月7日(金) KASABLANKA HALL\n7月9日(日) ZEPP KUALA LUMPUR\n7月13日(木) SHANGHAI CENTRE THEATRE\n7月14日(金) SHANGHAI CENTRE THEATRE\n7月22日(土) TAIPEI INTERNATIONAL CONVENTION CENTER(TICC)\n7月23日(日) TAIPEI INTERNATIONAL CONVENTION CENTER(TICC)\n7月29日(土) ACADEMIC COMMUNITY HALL, HKBU\n7月30日(日) ACADEMIC COMMUNITY HALL, HKBU"
+    },
+    {
+      "title": "Fujii Kaze and the piano U.S. Tour",
+      "type": 0,
+      "date1": "2024-05-30",
+      "date2": "2024-06-03",
+      "venue": null,
+      "schedule": "5月30日(木) United Theater on Broadway\n5月31日(金) United Theater on Broadway\n6月2日(日) Apollo Theater\n6月3日(月) Apollo Theater"
+    },
+    {
+      "title": "Stadium Live “Feelin’ Good”",
+      "type": 1,
+      "date1": "2024-08-24",
+      "date2": "2024-08-25",
+      "venue": "日産スタジアム",
+      "schedule": "8月24日(土) 日産スタジアム\n8月25日(日) 日産スタジアム"
+    },
+    {
+      "title": "Best of Fujii Kaze 2020-2024 ASIA TOUR",
+      "type": 0,
+      "date1": "2024-10-26",
+      "date2": "2024-12-14",
+      "venue": null,
+      "schedule": "10月26日(土) Singapore Indoor Stadium\n11月2日(土) Axiata Arena\n11月9日(土) Impact Arena\n11月10日(日) Impact Arena\n11月16日(土) Taipei Arena\n11月17日(日) Taipei Arena\n11月20日(水) Financial City Performing Center\n11月23日(土) Mercedes-Benz Arena\n11月24日(日) Mercedes-Benz Arena\n11月30日(土) Beach City International Stadium\n12月4日(水) AsiaWorld-Arena\n12月5日(木) AsiaWorld-Arena\n12月10日(火) SM Mall of Asia Arena\n12月14日(土) Gocheok Sky Dome"
+    },
+    {
+      "title": "Surprise Appearance",
+      "type": 1,
+      "date1": "2025-06-13",
+      "date2": null,
+      "venue": "Parc Paragon",
+      "schedule": null
+    },
+    {
+      "title": "EUROPE TOUR 2025",
+      "type": 0,
+      "date1": "2025-07-01",
+      "date2": "2025-07-10",
+      "venue": null,
+      "schedule": "7月1日(火) Admiralspalast\n7月6日(日) O2 Sheperd's Bush Empire\n7月7日(月) O2 Sheperd's Bush Empire\n7月10日(木) L'Olympia"
+    },
+    {
+      "title": "NORTH AMERICA TOUR 2025",
+      "type": 0,
+      "date1": "2025-08-04",
+      "date2": "2025-10-08",
+      "venue": null,
+      "schedule": "8月4日(月) The Danforth Music Hall\n8月7日(木) Bimbo's 365 Club\n8月11日(月) Greek Theatre\n8月13日(水) Balboa Theater\n10月5日(日) Auditorio BB\n10月7日(火) Tabernacle\n10月8日(水) Bayou Music Center"
+    },
+    {
+      "title": "Pre: Prema Tour",
+      "type": 0,
+      "date1": "2026-07-16",
+      "date2": "2026-08-05",
+      "venue": null,
+      "schedule": "7月16日(木) 真駒内セキスイハイムアイスアリーナ\n7月17日(金) 真駒内セキスイハイムアイスアリーナ\n7月28日(火) 広島グリーンアリーナ\n7月29日(水) 広島グリーンアリーナ\n8月4日(火) サンドーム福井\n8月5日(水) サンドーム福井"
+    },
+    {
+      "title": "Prema World Tour",
+      "type": 0,
+      "date1": "2026-10-31",
+      "date2": "2027-01-09",
+      "venue": null,
+      "schedule": "10月31日(土) National Stadium Kaohsiung\n11月14日(土) みずほPayPayドーム福岡\n11月15日(日) みずほPayPayドーム福岡\n12月10日(木) 京セラドーム大阪\n12月12日(土) 京セラドーム大阪\n12月13日(日) 京セラドーム大阪\n12月19日(土) 東京ドーム\n12月20日(日) 東京ドーム\n2027年\n1月9日(土) Gocheok Sky Dome"
+    },
+    {
+      "title": "ピアノリサイタル",
+      "type": 1,
+      "date1": "2026-11-20",
+      "date2": "2026-11-21",
+      "venue": "東京ドーム",
+      "schedule": "11月20日(金) 東京ドーム\n11月21日(土) 東京ドーム"
+    }
+  ],
+  "fixes": []
+}
