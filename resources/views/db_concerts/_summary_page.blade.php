@@ -105,6 +105,11 @@
                                                                 $featuringDisplay = $featuring !== '' && $featuringType === 'artist'
                                                                     ? '/ ' . $featuring
                                                                     : $featuring;
+                                                                // タイトルのあるメドレーは「タイトル（曲 ~ 曲 ~ …）」にする。かっこは曲名とすき間なしでつなぐ
+                                                                $medleyOpen = !empty($variant['medley_title']) ? e($variant['medley_title']) . '（' : '';
+                                                                if ($medleyOpen !== '') { $inTitledMedley = true; }
+                                                                $medleyClose = !empty($inTitledMedley) && empty(($row['variants'][$loop->index + 1] ?? [])['medley']) ? '）' : '';
+                                                                if ($medleyClose !== '') { $inTitledMedley = false; }
                                                             @endphp
                                                             {{-- メドレーの曲は改行せず「~」でつなぐ（セットリストの表示とは違い、Summary は改行しない） --}}
                                                             <span class="setlist-song-featuring">
@@ -118,9 +123,9 @@
                                                                     <strong>
                                                                 @endif
                                                                 @if ($variant['song_id'])
-                                                                    <a href="{{ \App\Models\DbSong::showUrl($variant['song_id'], $variant['title']) }}">{{ $variant['title'] }}</a>
+                                                                    {!! $medleyOpen !!}<a href="{{ \App\Models\DbSong::showUrl($variant['song_id'], $variant['title']) }}">{{ $variant['title'] }}</a>{!! $medleyClose !!}
                                                                 @else
-                                                                    {{ $variant['title'] }}
+                                                                    {!! $medleyOpen !!}{{ $variant['title'] }}{!! $medleyClose !!}
                                                                 @endif
                                                                 @if (!($variant['is_common'] ?? true))
                                                                     </strong>

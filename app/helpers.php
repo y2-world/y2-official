@@ -753,6 +753,8 @@ if (!function_exists('buildSetlistPatternSummary')) {
                 'featuring' => trim((string) ($item['featuring'] ?? '')),
                 'featuring_type' => $item['featuring_type'] ?? 'guest',
                 'medley' => !empty($item['medley']),
+                // メドレーのタイトル（メドレーの1曲目に移してある。App\Support\Medley::liftTitles）
+                'medley_title' => trim((string) ($item['medley_title'] ?? '')) ?: null,
                 'summary_group' => $summaryGroup !== '' ? $summaryGroup : null,
                 'encore_block' => (int) ($item['_encore_block'] ?? 0),
             ];
@@ -765,7 +767,7 @@ if (!function_exists('buildSetlistPatternSummary')) {
         // 入ってしまうため、_orderを使って最後にマージ結果全体を「本当の初出
         // パターン順」へ並べ替え直す必要がある。
         $toEntryClustersFor = function ($pattern, int $patternIndex, string $section) use ($extractEntry) {
-            $items = is_array($pattern->{$section} ?? null) ? $pattern->{$section} : [];
+            $items = is_array($pattern->{$section} ?? null) ? \App\Support\Medley::liftTitles($pattern->{$section}) : [];
             // アンコールの各曲に、何番目のアンコール（ENCORE / DOUBLE ENCORE …）かを持たせる。
             // daily_note（Summaryの日替わりの番号）はアンコールごとに数えるので、DOUBLE ENCORE 以降の番号は
             // ENCORE の同じ番号と別の枠として扱う（例: ENCORE の1と DOUBLE ENCORE の1は別の段）
