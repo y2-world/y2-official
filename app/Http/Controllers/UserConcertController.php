@@ -18,12 +18,17 @@ class UserConcertController extends Controller
     {
         $artist = UserArtist::findOrFail($artistId);
 
+        // 公式の Database のライブ一覧と同じく、?type=1 でツアー（単独）、?type=2 でイベント（フェス・複数アーティスト出演）だけにする。
+        // マイページのツアーの type は、登録のときの「フェス・複数アーティスト出演イベント」のチェックで 2、ほかは 1
+        $type = request()->input('type');
         $tours = UserConcert::where('user_artist_id', $artistId)
+            ->when($type === '1', fn ($q) => $q->where('type', '!=', 2))
+            ->when($type === '2', fn ($q) => $q->where('type', 2))
             ->orderByDesc('date1')
             ->orderByDesc('id')
             ->get();
 
-        return view('mypage.user_concerts.index', compact('artist', 'tours'));
+        return view('mypage.user_concerts.index', compact('artist', 'tours', 'type'));
     }
 
     // セットリスト内容だけを表示する閲覧専用ページ。参加登録の導線は一切持たない
