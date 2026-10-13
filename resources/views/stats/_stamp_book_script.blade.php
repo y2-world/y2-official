@@ -192,7 +192,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     slot.style.removeProperty('--stamp-deco');
                 }
-                slot.querySelector('.stamp-slot-deco-label').textContent = choice.dataset.label;
                 closeModal(pickModal);
                 // 色で絞り込み中なら表示を合わせる
                 const select = document.getElementById('stampFilterSelect');

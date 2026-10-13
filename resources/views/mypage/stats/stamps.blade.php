@@ -65,8 +65,6 @@
                                     @if (!empty($stamp['track_titles'])) data-track-titles="{{ json_encode($stamp['track_titles'], JSON_UNESCAPED_UNICODE) }}" @endif
                                     @if (!empty($stamp['track_orders'])) data-track-orders="{{ json_encode($stamp['track_orders']) }}" @endif>
                                     <div class="stamp-slot-frame js-stamp-tap" @if ($stamp['never_performed']) title="ライブで演奏されたことがない曲です" @endif>
-                                        {{-- 自分で選んだ色のタイトル（枠の飾り） --}}
-                                        <span class="stamp-slot-deco-label">{{ !empty($stamp['color_id']) ? optional($stampColors->firstWhere('id', $stamp['color_id']))->label : '' }}</span>
                                         @if ($stamp['done'])
                                             <div class="stamp-mark">
                                                 @if (!empty($stamp['hikigatari_only']))
