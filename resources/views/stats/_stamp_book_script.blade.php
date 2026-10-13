@@ -129,6 +129,22 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+    // ブラウザバックで戻ったとき、ページが開いたときの状態のまま出てくる（bfcache）ことがあるので、ページを離れるときと戻ったときに閉じておく
+    function resetModals() {
+        [editModal, pickModal].forEach(function (modal) {
+            if (modal) {
+                modal.hidden = true;
+                modal.classList.remove('is-closing');
+            }
+        });
+        document.body.classList.remove('stamp-deco-open');
+    }
+    window.addEventListener('pagehide', resetModals);
+    window.addEventListener('pageshow', function (e) {
+        if (e.persisted) {
+            resetModals();
+        }
+    });
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
             [editModal, pickModal].forEach(function (modal) { if (modal && !modal.hidden) closeModal(modal); });
