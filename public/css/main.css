@@ -1075,39 +1075,15 @@ h2 {
     border-bottom: 1px solid #ddd; /* 下に区切り線 */
 }
 
+/* ニュースの本文の中は、Bootstrap とサイト全体の CSS（h2 の上の余白・スマホの中央寄せ・段落の余白など）を効かせず、
+   ブラウザの素の表示にする（エディターで書いたとおりに出す）。文字の大きさ・色は .news-text から引き継ぐ */
+.news-text :where(p, h1, h2, h3, h4, h5, h6, ul, ol, li, blockquote, strong, b, em, i, del, s, hr, br) {
+    all: revert;
+}
+
 .news-text a {
     color: #0563c1;
     text-decoration: underline;
-}
-
-/* ニュースの本文の見出しは、Bootstrap の大きさ（画面が広いほど大きい）と余白を効かせず、本文に合わせて小さめに。
-   本文は Markdown（Enter は1行の改行、空の行で段落） */
-.news-text h1,
-.news-text h2,
-.news-text h3 {
-    font-weight: 400;
-    line-height: 1.4;
-    margin: 0 0 0.3em;
-}
-
-/* Bootstrap の段落・リストの下の余白（16px）は、ニュースの文字（12px）には大きすぎるので、文字の大きさに合わせる */
-.news-text p,
-.news-text ul,
-.news-text ol {
-    margin-bottom: 1em;
-}
-
-.news-text h1 { font-size: 1.6em; }
-.news-text h2 { font-size: 1.4em; }
-.news-text h3 { font-size: 1.2em; }
-
-.news-text > :first-child {
-    margin-top: 0;
-}
-
-.news-text ul,
-.news-text ol {
-    margin: 0.3em 0;
 }
 
 /* 最後のニュースアイテムの区切り線を非表示 */
