@@ -20,7 +20,7 @@
                 @elseif ($disc->best)
                     Best Album
                 @elseif ($disc->special)
-                    Special Album
+                    {{-- 企画盤は種類を出さない --}}
                 @else
                     {{ trim(($number ? ordinal($number) : '') . ($disc->mini ? ' Mini Album' : ' Album')) }}
                 @endif

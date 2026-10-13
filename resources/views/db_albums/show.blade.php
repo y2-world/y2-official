@@ -16,7 +16,7 @@
                 @if ($albums->best)
                     Best Album
                 @elseif ($albums->special)
-                    Special Album
+                    {{-- 企画盤は種類を出さない --}}
                 @elseif ($albums->mini && $albums->album_id)
                     {{ ordinal($albums->album_id) }} Mini Album
                 @elseif ($albums->mini)
