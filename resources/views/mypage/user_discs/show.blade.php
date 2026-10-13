@@ -19,6 +19,8 @@
                     {{ $disc->ep ? 'EP' : trim(($number ? ordinal($number) : '') . ' Single') }}
                 @elseif ($disc->best)
                     Best Album
+                @elseif ($disc->special)
+                    Special Album
                 @else
                     {{ trim(($number ? ordinal($number) : '') . ($disc->mini ? ' Mini Album' : ' Album')) }}
                 @endif

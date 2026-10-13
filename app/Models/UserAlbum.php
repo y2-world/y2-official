@@ -12,7 +12,7 @@ class UserAlbum extends Model
         'external_user_id',
         'title',
         'date',
-        'mini', 'best',
+        'mini', 'best', 'special',
         'tracklist',
     ];
 
@@ -21,6 +21,7 @@ class UserAlbum extends Model
         'tracklist' => 'array',
         'mini' => 'boolean',
         'best' => 'boolean',
+        'special' => 'boolean',
     ];
 
     public function artist()
@@ -38,10 +39,10 @@ class UserAlbum extends Model
     }
 
     // 同じアーティストの中で発売日の順に数えた番号（id => 番号）。公式は番号を手で入れるが、マイページは発売日の順で自動で数える。
-    // 種類ごとに別々に数え、番号を付けないもの（EP・ベストアルバム）は入れない。発売日が無いものは最後
+    // 種類ごとに別々に数え、番号を付けないもの（EP・ベストアルバム・企画盤）は入れない。発売日が無いものは最後
     public static function ordinalNumbers(int $userArtistId): array
     {
-        $kindOf = fn ($disc) => $disc->best ? null : ($disc->mini ? 'mini' : 'album');
+        $kindOf = fn ($disc) => ($disc->best || $disc->special) ? null : ($disc->mini ? 'mini' : 'album');
         $numbers = [];
         $counts = [];
         foreach (static::where('user_artist_id', $userArtistId)->orderByRaw('date IS NULL')->orderBy('date')->orderBy('id')->get() as $disc) {

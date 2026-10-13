@@ -41,8 +41,8 @@
                             <td>
                                 @if ($kind === 'singles')
                                     {{ $disc->ep ? 'EP' : ($numbers[$disc->id] ?? '') }}
-                                @elseif ($disc->best || $disc->mini)
-                                    {{-- 公式と同じく、ミニアルバム・ベストアルバムには番号を出さない --}}
+                                @elseif ($disc->best || $disc->mini || $disc->special)
+                                    {{-- 公式と同じく、ミニアルバム・ベストアルバム・企画盤には番号を出さない --}}
                                 @else
                                     {{ $numbers[$disc->id] ?? '' }}
                                 @endif

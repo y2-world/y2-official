@@ -69,6 +69,9 @@
                             <label style="display: inline-flex; align-items: center; gap: 6px;">
                                 <input type="checkbox" name="best" value="1" @checked(old('best', $disc?->best))> ベストアルバム
                             </label>
+                            <label style="display: inline-flex; align-items: center; gap: 6px;">
+                                <input type="checkbox" name="special" value="1" @checked(old('special', $disc?->special))> 企画盤
+                            </label>
                         @endif
                     </div>
 

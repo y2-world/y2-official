@@ -58,6 +58,11 @@ class DbAlbumResource extends Resource
                     ->label('ミニアルバム')
                     ->onColor('warning')
                     ->offColor('gray'),
+                // ライブ盤・カバー盤など。曲の「収録アルバム」の自動選択では、ベストと同じく選ばない
+                Forms\Components\Toggle::make('special')
+                    ->label('企画盤')
+                    ->onColor('info')
+                    ->offColor('gray'),
                 Forms\Components\Repeater::make('tracklist')
                     ->label('収録曲')
                     ->schema([
@@ -158,6 +163,10 @@ class DbAlbumResource extends Resource
                     ->label('ミニアルバム')
                     ->onColor('warning')
                     ->offColor('gray'),
+                Tables\Columns\ToggleColumn::make('special')
+                    ->label('企画盤')
+                    ->onColor('info')
+                    ->offColor('gray'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y.m.d H:i')
                     ->sortable()
@@ -177,6 +186,11 @@ class DbAlbumResource extends Resource
                     ->placeholder('すべて')
                     ->trueLabel('ベストアルバム')
                     ->falseLabel('オリジナルアルバム'),
+                Tables\Filters\TernaryFilter::make('special')
+                    ->label('企画盤')
+                    ->placeholder('すべて')
+                    ->trueLabel('企画盤')
+                    ->falseLabel('企画盤以外'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

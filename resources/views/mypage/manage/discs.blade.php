@@ -36,6 +36,7 @@
                                     $section['kind'] === 'single' && $disc->ep ? 'EP' : null,
                                     $section['kind'] === 'album' && $disc->mini ? 'ミニアルバム' : null,
                                     $section['kind'] === 'album' && $disc->best ? 'ベストアルバム' : null,
+                                    $section['kind'] === 'album' && $disc->special ? '企画盤' : null,
                                 ]);
                             @endphp
                             <div class="manage-artist-row">

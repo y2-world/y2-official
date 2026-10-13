@@ -15,6 +15,8 @@
             <p class="database-subtitle" style="">
                 @if ($albums->best)
                     Best Album
+                @elseif ($albums->special)
+                    Special Album
                 @elseif ($albums->mini && $albums->album_id)
                     {{ ordinal($albums->album_id) }} Mini Album
                 @elseif ($albums->mini)

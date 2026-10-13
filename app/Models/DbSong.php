@@ -121,10 +121,12 @@ class DbSong extends Model
         $songId = $this->id;
         $contains = fn($album) => collect($album->tracklist ?? [])->pluck('id')->contains((string) $songId);
 
-        return DbAlbum::where('artist_id', $this->artist_id)
+        // 初出のオリジナルアルバム（ベスト盤・企画盤ではないもの）を基準にする。オリジナルアルバムに入っていない曲だけ、ベスト盤・企画盤のいちばん早いもの
+        $albums = DbAlbum::where('artist_id', $this->artist_id)
             ->orderBy('date', 'asc')
-            ->get()
-            ->first($contains);
+            ->get();
+
+        return $albums->where('best', 0)->where('special', 0)->first($contains) ?? $albums->first($contains);
     }
 
     // 「Disc 1」「DISC-2」「Reel.3」「CD」「ボーナスCD」「Bonus Disc」のような、単なる収録媒体の分割を

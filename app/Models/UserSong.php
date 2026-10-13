@@ -24,16 +24,19 @@ class UserSong extends Model
         return $this->firstDiscContaining(UserSingle::class);
     }
 
+    // アルバムは初出のオリジナルアルバム（ベスト盤・企画盤ではないもの）を基準にする。オリジナルアルバムに入っていない曲だけ、ベスト盤・企画盤のいちばん早いもの
     public function getAlbumFromTracklistAttribute()
     {
-        return $this->firstDiscContaining(UserAlbum::class);
+        return $this->firstDiscContaining(UserAlbum::class, fn ($q) => $q->where('best', false)->where('special', false))
+            ?? $this->firstDiscContaining(UserAlbum::class);
     }
 
-    private function firstDiscContaining(string $model)
+    private function firstDiscContaining(string $model, ?\Closure $scope = null)
     {
         $songId = (int) $this->id;
 
         return $model::where('user_artist_id', $this->user_artist_id)
+            ->when($scope, $scope)
             ->orderByRaw('date IS NULL')->orderBy('date')->orderBy('id')
             ->get()
             ->first(fn ($disc) => collect($disc->tracklist ?? [])->contains(fn ($track) => (int) ($track['id'] ?? 0) === $songId));

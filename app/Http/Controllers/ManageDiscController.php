@@ -175,7 +175,7 @@ class ManageDiscController extends Controller
         ];
 
         return $kind === 'album'
-            ? $attributes + ['mini' => $request->boolean('mini'), 'best' => $request->boolean('best')]
+            ? $attributes + ['mini' => $request->boolean('mini'), 'best' => $request->boolean('best'), 'special' => $request->boolean('special')]
             : $attributes + ['ep' => $request->boolean('ep')];
     }
 }
