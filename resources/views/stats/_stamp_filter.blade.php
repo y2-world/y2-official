@@ -14,7 +14,7 @@
         @endif
         {{-- マイページのスタンプ帳：自分で付けた色（タイトル）で絞り込む --}}
         @if (!empty($stampColors) && count($stampColors))
-            <optgroup label="Colors">
+            <optgroup label="Themes">
                 @foreach ($stampColors as $color)
                     <option value="color:{{ $color->id }}" data-color="{{ $color->color }}">{{ $color->label }}</option>
                 @endforeach

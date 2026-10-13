@@ -189,6 +189,11 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             const slot = pickingSlot;
             const colorId = choice.dataset.colorId;
+            // 選択中の色付けを、前に選んでいたものから今選んだものへ移す（少し見せてから閉じる）
+            const choices = Array.from(pickModal.querySelectorAll('.js-stamp-deco-choice'));
+            const previous = choices.find(function (c) { return c.classList.contains('is-current'); });
+            choices.forEach(function (c) { c.classList.toggle('is-current', c === choice); });
+            const shownAt = Date.now();
             fetch(@json($decoMarkUrl ?? ''), {
                 method: 'POST',
                 headers: {
@@ -207,13 +212,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     slot.style.removeProperty('--stamp-deco');
                 }
-                closeModal(pickModal);
+                setTimeout(function () { closeModal(pickModal); }, Math.max(0, 350 - (Date.now() - shownAt)));
                 // 色で絞り込み中なら表示を合わせる
                 const select = document.getElementById('stampFilterSelect');
                 if (select && select.value.indexOf('color:') === 0) {
                     select.dispatchEvent(new Event('change'));
                 }
             }).catch(function () {
+                choices.forEach(function (c) { c.classList.toggle('is-current', c === previous); });
                 alert('保存できませんでした');
             });
         });

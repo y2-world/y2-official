@@ -4213,11 +4213,25 @@ body.stamp-deco-open {
     text-align: left;
     cursor: pointer;
     word-break: break-word;
+    transition: border-color 0.25s ease, background-color 0.25s ease;
 }
 
 .stamp-deco-choice.is-current {
     border-color: #667eea;
     background: #f5f6ff;
+}
+
+/* クリックしたときにブラウザが付けるフォーカスの枠（Mac ではアクセントカラーの色）は出さず、キーボードのときだけサイトの色の枠にする */
+.stamp-deco-modal button:focus:not(:focus-visible),
+.stamp-deco-modal input:focus:not(:focus-visible),
+.stamp-deco-edit-button:focus:not(:focus-visible) {
+    outline: none;
+}
+
+.stamp-deco-modal button:focus-visible,
+.stamp-deco-edit-button:focus-visible {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
 }
 
 /* スマホでは触れたところに hover の色が残り、選んでいないのに選んだように見えるので、マウスのときだけ */
