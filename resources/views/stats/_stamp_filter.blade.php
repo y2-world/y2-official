@@ -12,6 +12,14 @@
                 @endforeach
             </optgroup>
         @endif
+        {{-- マイページのスタンプ帳：自分で付けた色（タイトル）で絞り込む --}}
+        @if (!empty($stampColors) && count($stampColors))
+            <optgroup label="Colors">
+                @foreach ($stampColors as $color)
+                    <option value="color:{{ $color->id }}" data-color="{{ $color->color }}">{{ $color->label }}</option>
+                @endforeach
+            </optgroup>
+        @endif
         {{-- アルバムとの間に仕切り（見出し付きのグループ） --}}
         <optgroup label="Status">
             <option value="incompleted">Incompleted</option>

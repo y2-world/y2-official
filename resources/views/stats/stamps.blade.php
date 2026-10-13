@@ -40,6 +40,8 @@
                         <p class="stamp-empty">No songs registered in the database yet.</p>
                     @else
                         <div class="stamp-book">
+                            {{-- 絞り込んだときに、絞り込みの名前を出す --}}
+                            <p class="stamp-book-filter-title" id="stampBookFilterTitle" hidden></p>
                             @foreach ($stamps as $stamp)
                                 <div class="stamp-slot {{ $stamp['done'] ? 'is-stamped' : '' }} {{ $stamp['never_performed'] ? 'is-never-performed' : '' }} {{ $stamp['fes_only'] ? 'is-fes-only' : '' }} {{ !empty($stamp['hikigatari_only']) ? 'is-hikigatari-only' : '' }}"
                                     data-filter-keys="{{ implode(' ', $stamp['filter_keys'] ?? []) }}"
@@ -74,7 +76,7 @@
 @endsection
 
 @section('page-script')
-<script src="{{ asset('/js/stamp-book.js?v=20261006a') }}"></script>
+<script src="{{ asset('/js/stamp-book.js?v=20261013d') }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.js-stamp-tap').forEach(function (frame) {

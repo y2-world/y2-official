@@ -65,6 +65,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (key === 'unperformed') {
             return slot.dataset.neverPerformed === '1';
         }
+        // 自分で付けた色（マイページのスタンプ帳）
+        if (key.indexOf('color:') === 0) {
+            return slot.dataset.colorId === key.slice(6);
+        }
         return !key || slot.dataset.filterKeys.split(' ').includes(key);
     }
 
@@ -133,9 +137,26 @@ document.addEventListener('DOMContentLoaded', function () {
     function apply(animate) {
         const key = select ? select.value : '';
         // 並び順・曲名の表記の切り替えはアルバム／シングルのときだけ（Incompleted は元の並びのまま）
-        const orderKey = key === 'incompleted' || key === 'unperformed' ? '' : key;
+        const orderKey = key === 'incompleted' || key === 'unperformed' || key.indexOf('color:') === 0 ? '' : key;
         const performedOnly = checkbox ? checkbox.checked : false;
         const visibleSlots = slots.filter(function (slot) { return matches(slot, key, performedOnly); });
+        // 色で絞り込んだときは、スタンプ帳の枠をその色にする
+        const option = select ? select.options[select.selectedIndex] : null;
+        const tint = key.indexOf('color:') === 0 && option ? option.dataset.color : '';
+        book.classList.toggle('is-color-filtered', !!tint);
+        // 絞り込んだときは、台紙の上の段に絞り込みの名前を出す
+        const filterTitle = document.getElementById('stampBookFilterTitle');
+        if (filterTitle) {
+            const titled = !!key && !!option;
+            book.classList.toggle('is-filter-titled', titled);
+            filterTitle.hidden = !titled;
+            filterTitle.textContent = titled ? option.textContent.trim() : '';
+        }
+        if (tint) {
+            book.style.setProperty('--stamp-book-tint', tint);
+        } else {
+            book.style.removeProperty('--stamp-book-tint');
+        }
         updateSummary(visibleSlots);
 
         clearTimeout(swapTimer);

@@ -475,7 +475,7 @@ class MyPageStatsController extends Controller
             ];
         });
 
-        return $this->renderStampsView($artist, $stamps, $externalUser, $stampFilters);
+        return $this->renderStampsView($artist, $stamps, $externalUser, $stampFilters, 'official-' . $artist->id);
     }
 
     // ユーザー登録アーティストのスタンプ帳。「自分が参加したセットリストで演奏された曲か」
@@ -537,11 +537,58 @@ class MyPageStatsController extends Controller
             ];
         });
 
-        return $this->renderStampsView($artist, $stamps, $externalUser, $stampFilters);
+        return $this->renderStampsView($artist, $stamps, $externalUser, $stampFilters, 'user-' . $artist->id);
     }
 
-    private function renderStampsView($artist, $stamps, $externalUser, ?array $stampFilters = null)
+    // スタンプの色とタイトルを保存する（本人だけ。全部のスタンプ帳で共通）。colors: [{id?, color, label}]。送られなかった色は消す（その色のスタンプは色なしに戻る）
+    public function saveStampColors(Request $request, $artistId)
     {
+        $userId = Auth::guard('external')->id();
+        $data = $request->validate([
+            'colors' => ['array'],
+            'colors.*.id' => ['nullable', 'integer'],
+            'colors.*.color' => ['required', 'regex:/^#[0-9a-fA-F]{6}$/'],
+            'colors.*.label' => ['required', 'string', 'max:50'],
+        ]);
+        $keep = [];
+        foreach (array_values($data['colors'] ?? []) as $i => $row) {
+            $color = !empty($row['id'])
+                ? \App\Models\StampColor::where('external_user_id', $userId)->find($row['id'])
+                : null;
+            $color ??= new \App\Models\StampColor(['external_user_id' => $userId]);
+            $color->fill(['color' => strtolower($row['color']), 'label' => trim($row['label']), 'sort_order' => $i])->save();
+            $keep[] = $color->id;
+        }
+        \App\Models\StampColor::where('external_user_id', $userId)->whereNotIn('id', $keep)->delete();
+
+        return back();
+    }
+
+    // スタンプ（曲）の色を選ぶ（本人だけ）。color_id が空なら色なしにする
+    public function saveStampMark(Request $request, $artistId)
+    {
+        $userId = Auth::guard('external')->id();
+        $data = $request->validate(['song_id' => ['required', 'integer'], 'color_id' => ['nullable', 'integer']]);
+        $key = ['external_user_id' => $userId, 'artist_ref' => $artistId, 'song_id' => $data['song_id']];
+        if (empty($data['color_id'])) {
+            \App\Models\StampMark::where($key)->delete();
+        } else {
+            abort_unless(\App\Models\StampColor::where('external_user_id', $userId)->whereKey($data['color_id'])->exists(), 404);
+            \App\Models\StampMark::updateOrCreate($key, ['stamp_color_id' => $data['color_id']]);
+        }
+
+        return response()->json(['ok' => true]);
+    }
+
+    private function renderStampsView($artist, $stamps, $externalUser, ?array $stampFilters = null, string $artistRef = '')
+    {
+        // スタンプ帳の飾り：色とタイトル（全部のスタンプ帳で共通）と、このスタンプ帳でスタンプ（曲）ごとに選んだ色
+        $stampColors = \App\Models\StampColor::where('external_user_id', $externalUser->id)
+            ->orderBy('sort_order')->orderBy('id')->get(['id', 'color', 'label']);
+        $stampColorBySong = \App\Models\StampMark::where('external_user_id', $externalUser->id)->where('artist_ref', $artistRef)
+            ->pluck('stamp_color_id', 'song_id');
+        $stamps = $stamps->map(fn ($stamp) => $stamp + ['color_id' => $stampColorBySong[$stamp['song_id']] ?? null]);
+
         $totalCount = $stamps->count();
         $doneCount = $stamps->where('done', true)->count();
         $percentage = $totalCount > 0 ? round(($doneCount / $totalCount) * 100, 1) : 0;
@@ -553,6 +600,8 @@ class MyPageStatsController extends Controller
 
         return view('mypage.stats.stamps', compact(
             'artist',
+            'artistRef',
+            'stampColors',
             'stamps',
             'totalCount',
             'doneCount',

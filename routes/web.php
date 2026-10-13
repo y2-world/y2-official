@@ -190,6 +190,8 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
         Route::get('stamp-books', [MyPageStatsController::class, 'index'])->name('stamps.index');
         Route::get('stats/artist/{artistId}', [MyPageStatsController::class, 'artist'])->name('stats.artist');
         Route::get('stats/artist/{artistId}/stamps', [MyPageStatsController::class, 'stamps'])->name('stats.stamps');
+        Route::post('stats/artist/{artistId}/stamps/colors', [MyPageStatsController::class, 'saveStampColors'])->name('stats.stamps.colors')->where('artistId', '(official|user)-[0-9]+');
+        Route::post('stats/artist/{artistId}/stamps/mark', [MyPageStatsController::class, 'saveStampMark'])->name('stats.stamps.mark')->where('artistId', '(official|user)-[0-9]+');
 
         Route::prefix('manage')->name('manage.')->group(function () {
             Route::get('/', [ManageController::class, 'index'])->name('index');
