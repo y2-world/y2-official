@@ -40,7 +40,7 @@
                             <span><i class="fa-solid fa-list" style="margin-right: 10px;"></i>All</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
-                        <a href="{{ route('database.live', $artist->id) }}?type=1" class="database-link">
+                        <a href="{{ route('database.live', $artist->id) }}?type=6" class="database-link">
                             <span><i class="fa-solid fa-route" style="margin-right: 10px;"></i>Tours</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
