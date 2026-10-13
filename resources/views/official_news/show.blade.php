@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('og_title', $news->title . ' - Yuki Official')
-@section('og_description', strip_tags(Str::limit($news->text, 150)))
+@section('og_description', Str::limit(trim(strip_tags($news->text_html)), 150))
 @section('og_type', 'article')
 @if($news->image)
 @section('og_image', 'https://res.cloudinary.com/hqrgbxuiv/' . $news->image)
@@ -23,7 +23,7 @@
                         <div class="row">
                             <div class="col-md-7">
                                 <div class="news-text">
-                                    {!! $news->text !!}
+                                    {!! $news->text_html !!}
                                 </div>
                             </div>
                             <div class="col-md-5">
@@ -32,7 +32,7 @@
                         </div>
                         @else
                         <div class="news-text">
-                            {!! $news->text !!}
+                            {!! $news->text_html !!}
                         </div>
                         @endif
                         <div style="text-align: center; padding: 30px 0;">

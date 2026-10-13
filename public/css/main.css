@@ -801,6 +801,14 @@ select {
     max-width: min(350px, 80vw);
 }
 
+/* 1パターンのときは横に並ぶ列が無いので、PCでは列を中身に合わせて広げ（最大700px）、曲名と featuring を1行に収める */
+@media (min-width: 768px) {
+    .setlist-standard-page.is-single-pattern .setlist-pattern-wrap {
+        width: auto;
+        max-width: min(700px, 90vw);
+    }
+}
+
 .setlist-summary-wrap .live-column,
 .setlist-summary-popup .live-column {
     width: 100%;
@@ -1070,6 +1078,29 @@ h2 {
 .news-text a {
     color: #0563c1;
     text-decoration: underline;
+}
+
+/* ニュースの本文の見出しは、Bootstrap の大きさ（画面が広いほど大きい）と余白を効かせず、本文に合わせて小さめに。
+   本文は Markdown（Enter は1行の改行、空の行で段落） */
+.news-text h1,
+.news-text h2,
+.news-text h3 {
+    font-weight: 400;
+    line-height: 1.4;
+    margin: 0.3em 0 0.3em;
+}
+
+.news-text h1 { font-size: 1.6em; }
+.news-text h2 { font-size: 1.4em; }
+.news-text h3 { font-size: 1.2em; }
+
+.news-text > :first-child {
+    margin-top: 0;
+}
+
+.news-text ul,
+.news-text ol {
+    margin: 0.3em 0;
 }
 
 /* 最後のニュースアイテムの区切り線を非表示 */

@@ -54,7 +54,7 @@ class OfficialNewsController extends Controller
                 'title' => $news->title,
                 'date' => $news->date,
                 'published_at' => $news->published_at,
-                'text' => $news->text,
+                'text' => $news->text_html,
                 'image' => $news->image,
             ]);
         }

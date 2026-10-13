@@ -12,7 +12,6 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\Toggle;
@@ -48,9 +47,12 @@ class OfficialNewsResource extends Resource
                     ->seconds(false)
                     ->default(now())
                     ->required(),
-                RichEditor::make('text')
+                // Enter はそのまま1行の改行、空の行で段落（以前の RichEditor は Enter のたびに段落になり、表示で行の間が空いていた）
+                Forms\Components\MarkdownEditor::make('text')
                     ->label('本文')
-                    ->required(),
+                    ->toolbarButtons(['bold', 'italic', 'strike', 'link', 'heading', 'bulletList', 'orderedList', 'undo', 'redo'])
+                    ->required()
+                    ->columnSpanFull(),
                 Toggle::make('visible')
                     ->label('公開')
                     ->onColor('success')

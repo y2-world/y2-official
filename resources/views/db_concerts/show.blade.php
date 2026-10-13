@@ -258,8 +258,8 @@ if ('scrollRestoration' in history) {
 }
 document.addEventListener('DOMContentLoaded', function () {
     function updateSongFeaturingWrap() {
-        var isSinglePatternOnDesktop = window.innerWidth > 767
-            && {{ $totalOlCount === 1 ? 'true' : 'false' }};
+        // 1パターンのときは、PCでもスマホでも featuring を次の行に送らない（横に並ぶ列が無いので、自然な折り返しに任せる）
+        var isSinglePatternOnDesktop = {{ $totalOlCount === 1 ? 'true' : 'false' }};
 
         document.querySelectorAll('.setlist-song-featuring').forEach(function (item) {
             item.classList.remove('is-feature-wrap');
