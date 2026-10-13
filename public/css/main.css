@@ -1087,7 +1087,14 @@ h2 {
 .news-text h3 {
     font-weight: 400;
     line-height: 1.4;
-    margin: 0.3em 0 0.3em;
+    margin: 0 0 0.3em;
+}
+
+/* Bootstrap の段落・リストの下の余白（16px）は、ニュースの文字（12px）には大きすぎるので、文字の大きさに合わせる */
+.news-text p,
+.news-text ul,
+.news-text ol {
+    margin-bottom: 1em;
 }
 
 .news-text h1 { font-size: 1.6em; }
