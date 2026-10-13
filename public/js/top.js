@@ -164,7 +164,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <div class="music-item__gray">
                         <a style="color: black;" href="/music/${musicItem.id}">${musicItem.title}</a>
                         <p>
-                            ${musicItem.subtitle}<br>${formattedDate}
+                            ${musicItem.subtitle ? musicItem.subtitle + '<br>' : ''}${formattedDate}
                         </p>
                     </div>
                 </div>`;

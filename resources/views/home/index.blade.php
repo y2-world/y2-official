@@ -82,7 +82,7 @@
                                             <div class="music-item__gray">
                                                 <a style="color: black;" href="{{ route('music.show', $disc->id) }}">{{ $disc->title }}</a>
                                                 <p>
-                                                    {{ $disc->subtitle }}<br>{{ date('Y.m.d', strtotime($disc->date)) }}
+                                                    @if ($disc->subtitle){{ $disc->subtitle }}<br>@endif{{ date('Y.m.d', strtotime($disc->date)) }}
                                                 </p>
                                             </div>
                                         </div>
@@ -100,7 +100,7 @@
                                             <div class="music-item__gray">
                                                 <a style="color: black;" href="{{ route('music.show', $disc->id) }}">{{ $disc->title }}</a>
                                                 <p>
-                                                    {{ $disc->subtitle }}<br>{{ date('Y.m.d', strtotime($disc->date)) }}
+                                                    @if ($disc->subtitle){{ $disc->subtitle }}<br>@endif{{ date('Y.m.d', strtotime($disc->date)) }}
                                                 </p>
                                             </div>
                                         </div>

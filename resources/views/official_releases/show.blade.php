@@ -21,7 +21,7 @@
 @endphp
 
 @section('og_title', $discos->title)
-@section('og_description', $discos->subtitle . ' - ' . date('Y.m.d', strtotime($discos->date)))
+@section('og_description', ($discos->subtitle ? $discos->subtitle . ' - ' : '') . date('Y.m.d', strtotime($discos->date)))
 @section('og_image', $imageUrl)
 @section('og_type', 'music.album')
 
