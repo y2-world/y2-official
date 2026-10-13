@@ -15,7 +15,8 @@ class EditSlSong extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+                ->before(fn ($action, $record) => SlSongResource::blockDeleteIfUsed($action, $record)),
         ];
     }
 

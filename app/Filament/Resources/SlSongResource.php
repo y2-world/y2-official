@@ -111,14 +111,37 @@ class SlSongResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->before(fn ($action, SlSong $record) => static::blockDeleteIfUsed($action, $record)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->before(fn ($action, $records) => static::blockBulkDeleteIfUsed($action, $records)),
                 ]),
             ])
             ->defaultSort('id', 'desc');
+    }
+
+    // 使われている曲は消さない（消すとセットリストに番号だけが残り、画面に数字で出るため）
+    public static function blockDeleteIfUsed($action, SlSong $record): void
+    {
+        $usages = \App\Support\SongUsage::forSlSong($record->id);
+        if ($usages) {
+            \Filament\Notifications\Notification::make()->danger()->title('削除できません')
+                ->body(\App\Support\SongUsage::message($record->title, $usages))->persistent()->send();
+            $action->cancel();
+        }
+    }
+
+    public static function blockBulkDeleteIfUsed($action, \Illuminate\Support\Collection $records): void
+    {
+        $messages = $records->map(fn (SlSong $r) => ($u = \App\Support\SongUsage::forSlSong($r->id)) ? \App\Support\SongUsage::message($r->title, $u) : null)->filter();
+        if ($messages->isNotEmpty()) {
+            \Filament\Notifications\Notification::make()->danger()->title('削除できません（何も削除していません）')
+                ->body($messages->implode("\n\n"))->persistent()->send();
+            $action->cancel();
+        }
     }
 
     public static function getRelations(): array
