@@ -1161,7 +1161,9 @@ class StatsController extends Controller
         $performedCount = $stamps->where('never_performed', false)->count();
         $performedPercentage = $performedCount > 0 ? round(($doneCount / $performedCount) * 100, 1) : 0;
 
-        return view('stats.stamps', compact(
+        $stamps = ($yukiId = $this->yukiUserId()) ? \App\Support\StampDeco::withColors($stamps, $yukiId, 'official-' . $artist->id) : $stamps;
+
+        return view('stats.stamps', array_merge($this->yukiStampDeco('official-' . $artist->id), compact(
             'artist',
             'stamps',
             'totalCount',
@@ -1170,7 +1172,26 @@ class StatsController extends Controller
             'performedCount',
             'performedPercentage',
             'stampFilters'
-        ));
+        )));
+    }
+
+    // Yukiのスタンプ帳の枠の色とタイトル。マイページのYukiのアカウントのものを出し（同じアーティストならスタンプの色もマイページと共通）、
+    // そのアカウントでログインしているときだけ編集できる。保存はマイページと同じところに送る
+    private function yukiUserId(): ?int
+    {
+        return \App\Models\ExternalUser::where('is_yuki', true)->value('id');
+    }
+
+    private function yukiStampDeco(string $artistRef): array
+    {
+        $yukiId = $this->yukiUserId();
+
+        return [
+            'stampColors' => $yukiId ? \App\Support\StampDeco::colors($yukiId) : collect(),
+            'canEditDeco' => $yukiId && \Illuminate\Support\Facades\Auth::guard('external')->id() === $yukiId,
+            'decoColorsUrl' => route('mypage.stats.stamps.colors', $artistRef),
+            'decoMarkUrl' => route('mypage.stats.stamps.mark', $artistRef),
+        ];
     }
 
     // トップの Stamps タブ用：公式の Database に曲が無く、マイページで作られた同じ名前のアーティストと結び付いた参加アーティストの、
@@ -1251,6 +1272,8 @@ class StatsController extends Controller
         $performedCount = $stamps->where('never_performed', false)->count();
         $performedPercentage = $performedCount > 0 ? round(($doneCount / $performedCount) * 100, 1) : 0;
 
-        return view('stats.stamps', compact('artist', 'stamps', 'totalCount', 'doneCount', 'percentage', 'performedCount', 'performedPercentage', 'stampFilters'));
+        $stamps = ($yukiId = $this->yukiUserId()) ? \App\Support\StampDeco::withColors($stamps, $yukiId, 'user-' . $userArtist->id) : $stamps;
+
+        return view('stats.stamps', array_merge($this->yukiStampDeco('user-' . $userArtist->id), compact('artist', 'stamps', 'totalCount', 'doneCount', 'percentage', 'performedCount', 'performedPercentage', 'stampFilters')));
     }
 }

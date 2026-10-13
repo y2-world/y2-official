@@ -4078,6 +4078,50 @@ body.stamp-deco-open {
     display: none;
 }
 
+/* ふわっと出す（消すときもふわっと） */
+.stamp-deco-modal {
+    animation: stampDecoFadeIn 0.2s ease-out both;
+}
+
+.stamp-deco-modal .stamp-deco-dialog {
+    animation: stampDecoPopIn 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+.stamp-deco-modal.is-closing {
+    animation: stampDecoFadeOut 0.18s ease-in both;
+}
+
+.stamp-deco-modal.is-closing .stamp-deco-dialog {
+    animation: stampDecoPopOut 0.18s ease-in both;
+}
+
+@keyframes stampDecoFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes stampDecoFadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes stampDecoPopIn {
+    from { opacity: 0; transform: translateY(12px) scale(0.94); }
+    to { opacity: 1; transform: none; }
+}
+
+@keyframes stampDecoPopOut {
+    from { opacity: 1; transform: none; }
+    to { opacity: 0; transform: translateY(8px) scale(0.96); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stamp-deco-modal,
+    .stamp-deco-modal .stamp-deco-dialog {
+        animation: none;
+    }
+}
+
 .stamp-deco-dialog {
     position: relative;
     width: 100%;

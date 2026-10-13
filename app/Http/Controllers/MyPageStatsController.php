@@ -540,54 +540,29 @@ class MyPageStatsController extends Controller
         return $this->renderStampsView($artist, $stamps, $externalUser, $stampFilters, 'user-' . $artist->id);
     }
 
-    // スタンプの色とタイトルを保存する（本人だけ。全部のスタンプ帳で共通）。colors: [{id?, color, label}]。送られなかった色は消す（その色のスタンプは色なしに戻る）
+    // スタンプの枠の色とタイトルを保存する（本人だけ。全部のスタンプ帳で共通）
     public function saveStampColors(Request $request, $artistId)
     {
-        $userId = Auth::guard('external')->id();
-        $data = $request->validate([
-            'colors' => ['array'],
-            'colors.*.id' => ['nullable', 'integer'],
-            'colors.*.color' => ['required', 'regex:/^#[0-9a-fA-F]{6}$/'],
-            'colors.*.label' => ['required', 'string', 'max:50'],
-        ]);
-        $keep = [];
-        foreach (array_values($data['colors'] ?? []) as $i => $row) {
-            $color = !empty($row['id'])
-                ? \App\Models\StampColor::where('external_user_id', $userId)->find($row['id'])
-                : null;
-            $color ??= new \App\Models\StampColor(['external_user_id' => $userId]);
-            $color->fill(['color' => strtolower($row['color']), 'label' => trim($row['label']), 'sort_order' => $i])->save();
-            $keep[] = $color->id;
-        }
-        \App\Models\StampColor::where('external_user_id', $userId)->whereNotIn('id', $keep)->delete();
+        $data = $request->validate(\App\Support\StampDeco::colorRules());
+        \App\Support\StampDeco::saveColors(Auth::guard('external')->id(), $data['colors'] ?? []);
 
         return back();
     }
 
-    // スタンプ（曲）の色を選ぶ（本人だけ）。color_id が空なら色なしにする
+    // スタンプ（曲）の枠の色を選ぶ（本人だけ）。color_id が空なら色なしにする
     public function saveStampMark(Request $request, $artistId)
     {
-        $userId = Auth::guard('external')->id();
-        $data = $request->validate(['song_id' => ['required', 'integer'], 'color_id' => ['nullable', 'integer']]);
-        $key = ['external_user_id' => $userId, 'artist_ref' => $artistId, 'song_id' => $data['song_id']];
-        if (empty($data['color_id'])) {
-            \App\Models\StampMark::where($key)->delete();
-        } else {
-            abort_unless(\App\Models\StampColor::where('external_user_id', $userId)->whereKey($data['color_id'])->exists(), 404);
-            \App\Models\StampMark::updateOrCreate($key, ['stamp_color_id' => $data['color_id']]);
-        }
+        $data = $request->validate(\App\Support\StampDeco::markRules());
+        abort_unless(\App\Support\StampDeco::saveMark(Auth::guard('external')->id(), $artistId, (int) $data['song_id'], $data['color_id'] ?? null), 404);
 
         return response()->json(['ok' => true]);
     }
 
     private function renderStampsView($artist, $stamps, $externalUser, ?array $stampFilters = null, string $artistRef = '')
     {
-        // スタンプ帳の飾り：色とタイトル（全部のスタンプ帳で共通）と、このスタンプ帳でスタンプ（曲）ごとに選んだ色
-        $stampColors = \App\Models\StampColor::where('external_user_id', $externalUser->id)
-            ->orderBy('sort_order')->orderBy('id')->get(['id', 'color', 'label']);
-        $stampColorBySong = \App\Models\StampMark::where('external_user_id', $externalUser->id)->where('artist_ref', $artistRef)
-            ->pluck('stamp_color_id', 'song_id');
-        $stamps = $stamps->map(fn ($stamp) => $stamp + ['color_id' => $stampColorBySong[$stamp['song_id']] ?? null]);
+        // スタンプ帳の飾り：枠の色とタイトル（全部のスタンプ帳で共通）と、このスタンプ帳でスタンプ（曲）ごとに選んだ色
+        $stampColors = \App\Support\StampDeco::colors($externalUser->id);
+        $stamps = \App\Support\StampDeco::withColors($stamps, $externalUser->id, $artistRef);
 
         $totalCount = $stamps->count();
         $doneCount = $stamps->where('done', true)->count();
@@ -597,11 +572,17 @@ class MyPageStatsController extends Controller
         $performedPercentage = $performedCount > 0 ? round(($doneCount / $performedCount) * 100, 1) : 0;
 
         $isOwner = $externalUser->id === Auth::guard('external')->id();
+        $canEditDeco = $isOwner;
+        $decoColorsUrl = route('mypage.stats.stamps.colors', $artistRef);
+        $decoMarkUrl = route('mypage.stats.stamps.mark', $artistRef);
 
         return view('mypage.stats.stamps', compact(
             'artist',
             'artistRef',
             'stampColors',
+            'canEditDeco',
+            'decoColorsUrl',
+            'decoMarkUrl',
             'stamps',
             'totalCount',
             'doneCount',

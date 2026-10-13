@@ -39,17 +39,28 @@
                     @if ($totalCount === 0)
                         <p class="stamp-empty">No songs registered in the database yet.</p>
                     @else
-                        <div class="stamp-book">
+                        <div class="stamp-book {{ $canEditDeco ? 'is-owner' : '' }}">
                             {{-- 絞り込んだときに、絞り込みの名前を出す --}}
                             <p class="stamp-book-filter-title" id="stampBookFilterTitle" hidden></p>
+                            @if ($canEditDeco)
+                                {{-- 枠の色とタイトルの編集（マイページのYukiのアカウントでログインしているときだけ） --}}
+                                <button type="button" class="stamp-deco-edit-button" id="stampDecoEditButton" title="スタンプの枠の色とタイトルを編集" aria-label="スタンプの枠の色とタイトルを編集">
+                                    <i class="fa-solid fa-palette"></i>
+                                </button>
+                            @endif
                             @foreach ($stamps as $stamp)
                                 <div class="stamp-slot {{ $stamp['done'] ? 'is-stamped' : '' }} {{ $stamp['never_performed'] ? 'is-never-performed' : '' }} {{ $stamp['fes_only'] ? 'is-fes-only' : '' }} {{ !empty($stamp['hikigatari_only']) ? 'is-hikigatari-only' : '' }}"
                                     data-filter-keys="{{ implode(' ', $stamp['filter_keys'] ?? []) }}"
                                     data-done="{{ $stamp['done'] ? 1 : 0 }}"
                                     data-never-performed="{{ $stamp['never_performed'] ? 1 : 0 }}"
+                                    data-song-id="{{ $stamp['song_id'] }}"
+                                    data-color-id="{{ $stamp['color_id'] ?? '' }}"
+                                    @if (!empty($stamp['color_id']) && ($deco = $stampColors->firstWhere('id', $stamp['color_id']))) style="--stamp-deco: {{ $deco->color }};" @endif
                                     @if (!empty($stamp['track_titles'])) data-track-titles="{{ json_encode($stamp['track_titles'], JSON_UNESCAPED_UNICODE) }}" @endif
                                     @if (!empty($stamp['track_orders'])) data-track-orders="{{ json_encode($stamp['track_orders']) }}" @endif>
                                     <div class="stamp-slot-frame js-stamp-tap" @if ($stamp['never_performed']) title="ライブで演奏されたことがない曲です" @endif>
+                                        {{-- 選んだ色のタイトル（枠の飾り） --}}
+                                        <span class="stamp-slot-deco-label">{{ !empty($stamp['color_id']) ? optional($stampColors->firstWhere('id', $stamp['color_id']))->label : '' }}</span>
                                         @if ($stamp['done'])
                                             <div class="stamp-mark">
                                                 @if (!empty($stamp['hikigatari_only']))
@@ -73,38 +84,11 @@
         </div>
     </div>
 </div>
+
+@include('stats._stamp_deco_modals')
 @endsection
 
 @section('page-script')
-<script src="{{ asset('/js/stamp-book.js?v=20261013d') }}"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.js-stamp-tap').forEach(function (frame) {
-        frame.addEventListener('click', function () {
-            frame.classList.remove('is-tapped');
-            // リフローを挟んで再度クラスを付与し、同じアニメーションを連打でも毎回再生させる
-            void frame.offsetWidth;
-            frame.classList.add('is-tapped');
-        });
-        frame.addEventListener('animationend', function () {
-            frame.classList.remove('is-tapped');
-        });
-    });
-
-    // 済みスタンプは、スクロールして画面に入ってきた瞬間にパコンと押す
-    const stampObserver = new IntersectionObserver(function (entries, observer) {
-        entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('is-stamp-in');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.4 });
-
-    document.querySelectorAll('.stamp-slot.is-stamped .stamp-mark').forEach(function (mark) {
-        stampObserver.observe(mark);
-    });
-
-});
-</script>
+<script src="{{ asset('/js/stamp-book.js?v=20261013e') }}"></script>
+@include('stats._stamp_book_script')
 @endsection
