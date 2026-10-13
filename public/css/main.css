@@ -4215,10 +4215,17 @@ body.stamp-deco-open {
     word-break: break-word;
 }
 
-.stamp-deco-choice:hover,
 .stamp-deco-choice.is-current {
     border-color: #667eea;
     background: #f5f6ff;
+}
+
+/* スマホでは触れたところに hover の色が残り、選んでいないのに選んだように見えるので、マウスのときだけ */
+@media (hover: hover) {
+    .stamp-deco-choice:hover {
+        border-color: #667eea;
+        background: #f5f6ff;
+    }
 }
 
 .stamp-deco-swatch {
