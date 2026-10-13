@@ -68,7 +68,10 @@ document.addEventListener('DOMContentLoaded', function () {
     let pickingSlot = null;
 
     // ふわっと出して、ふわっと消す
+    // 長押しで開いたとき、指を離したときのクリックが、開いたばかりの画面の指の下の選択肢に当たらないよう、
+    // 開いたあとに画面の中で新しく押されたクリックだけを受け付ける
     function openModal(modal) {
+        modal._freshPress = false;
         modal.classList.remove('is-closing');
         modal.hidden = false;
         document.body.classList.add('stamp-deco-open');
@@ -108,6 +111,18 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!modal) {
             return;
         }
+        ['pointerdown', 'keydown'].forEach(function (type) {
+            modal.addEventListener(type, function () {
+                modal._freshPress = true;
+            });
+        });
+        // 押し始めが開く前のクリックは、ここで止める（選択肢・閉じる・背景のどれにも届かない）
+        modal.addEventListener('click', function (e) {
+            if (!modal._freshPress) {
+                e.stopImmediatePropagation();
+                e.preventDefault();
+            }
+        }, true);
         modal.addEventListener('click', function (e) {
             if (e.target === modal || e.target.closest('.js-stamp-deco-close')) {
                 closeModal(modal);
