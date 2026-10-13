@@ -392,8 +392,8 @@ class SlSetlistResource extends Resource
                                 Forms\Components\Select::make('type')
                                     ->label('種別')
                                     ->options([
-                                        'block' => 'ブロック（アーティスト単位）',
-                                        'song' => '1曲（交互）',
+                                        'block' => 'アーティスト',
+                                        'song' => '混合',
                                     ])
                                     ->default('block')
                                     ->live()
@@ -483,7 +483,7 @@ class SlSetlistResource extends Resource
 
                                 // type:'block' のみ表示
                                 Forms\Components\Repeater::make('songs')
-                                    ->label('曲リスト（ブロック内）')
+                                    ->hiddenLabel()
                                     ->schema([
                                         Forms\Components\Hidden::make('_uuid')
                                             ->default(fn() => \Illuminate\Support\Str::uuid()->toString()),
@@ -517,40 +517,61 @@ class SlSetlistResource extends Resource
                                                 return $song->id;
                                             })
                                             ->columnSpanFull(),
-                                        Forms\Components\Grid::make(2)->schema([
-                                            Forms\Components\Toggle::make('medley')
-                                                ->label('メドレー (2曲目以降)')
-                                                ->inline(false)
-                                                ->default(false)
-                                                ->live()
+                                        // 単独ライブと同じく、曲名以外の設定は「詳細設定」に折りたたむ
+                                        Forms\Components\Section::make('詳細設定')
+                                            ->schema([
+                                            Forms\Components\Grid::make(2)->schema([
+                                                Forms\Components\Toggle::make('medley')
+                                                    ->label('メドレー (2曲目以降)')
+                                                    ->inline(false)
+                                                    ->default(false)
+                                                    ->live()
+                                                    ->dehydrated(),
+                                                // メドレーにチェックしたときだけ出す（タイトルのあるメドレーは少ない）。メドレーのどの曲に入れても、メドレーの曲の上にタイトルの行を出し、曲番はその行に付ける
+                                                Forms\Components\TextInput::make('medley_title')
+                                                    ->label('メドレーのタイトル')
+                                                    ->visible(fn (Forms\Get $get) => (bool) $get('medley'))
+                                                    ->maxLength(255),
+                                                Forms\Components\TextInput::make('featuring')
+                                                    ->label('共演者')
+                                                    ->maxLength(255)
+                                                    ->dehydrated(),
+                                            ]),
+                                            Forms\Components\Radio::make('featuring_type')
+                                                ->label('表示形式')
+                                                ->options([
+                                                    'guest' => '共演者（feat.表記のまま表示）',
+                                                    'artist' => '別名義アーティスト（「 / 」区切りで表示）',
+                                                ])
+                                                ->default('guest')
+                                                ->inline()
                                                 ->dehydrated(),
-                                            // メドレーにチェックしたときだけ出す（タイトルのあるメドレーは少ない）。メドレーのどの曲に入れても、メドレーの曲の上にタイトルの行を出し、曲番はその行に付ける
-                                            Forms\Components\TextInput::make('medley_title')
-                                                ->label('メドレーのタイトル')
-                                                ->visible(fn (Forms\Get $get) => (bool) $get('medley'))
-                                                ->maxLength(255),
-                                            Forms\Components\TextInput::make('featuring')
-                                                ->label('共演者')
+                                            Forms\Components\TextInput::make('alternative_title')
+                                                ->label('別表記')
                                                 ->maxLength(255)
                                                 ->dehydrated(),
-                                        ]),
-                                        Forms\Components\Radio::make('featuring_type')
-                                            ->label('表示形式')
-                                            ->options([
-                                                'guest' => '共演者（feat.表記のまま表示）',
-                                                'artist' => '別名義アーティスト（「 / 」区切りで表示）',
                                             ])
-                                            ->default('guest')
-                                            ->inline()
-                                            ->dehydrated(),
-                                        Forms\Components\TextInput::make('alternative_title')
-                                            ->label('別表記')
-                                            ->maxLength(255)
-                                            ->dehydrated(),
+                                            ->collapsible()
+                                            ->collapsed()
+                                            ->compact()
+                                            ->columnSpanFull(),
                                     ])
                                     ->columns(1)
                                     ->defaultItems(1)
                                     ->reorderable()
+                                    // 曲番：公開ページと同じく、ブロックごとに1から（メドレーの2曲目以降は番号なし）
+                                    ->itemLabel(function (array $state, $component): ?string {
+                                        $number = 0;
+                                        foreach ((array) $component->getState() as $item) {
+                                            if (empty($item['medley'])) {
+                                                $number++;
+                                            }
+                                            if (($item['_uuid'] ?? null) === ($state['_uuid'] ?? null)) {
+                                                return empty($item['medley']) ? (string) $number : '';
+                                            }
+                                        }
+                                        return (string) ($number + 1);
+                                    })
                                     ->addActionLabel('曲を追加')
                                     ->hidden(fn(Forms\Get $get) => $get('type') !== 'block')
                                     ->columnSpanFull(),
@@ -563,8 +584,7 @@ class SlSetlistResource extends Resource
                                 $type = $state['type'] ?? 'song';
                                 if ($type === 'block') {
                                     $artistName = \App\Models\Artist::find($state['artist'] ?? null)?->name ?? 'ブロック';
-                                    $songCount = count($state['songs'] ?? []);
-                                    return "[ブロック] {$artistName} ({$songCount}曲)";
+                                    return $artistName;
                                 }
                                 $items = $component->getState();
                                 if (!is_array($items)) return '1';
@@ -590,8 +610,8 @@ class SlSetlistResource extends Resource
                                 Forms\Components\Select::make('type')
                                     ->label('種別')
                                     ->options([
-                                        'block' => 'ブロック（アーティスト単位）',
-                                        'song' => '1曲（交互）',
+                                        'block' => 'アーティスト',
+                                        'song' => '混合',
                                     ])
                                     ->default('block')
                                     ->live()
@@ -678,7 +698,7 @@ class SlSetlistResource extends Resource
                                     ->columnSpanFull(),
 
                                 Forms\Components\Repeater::make('songs')
-                                    ->label('曲リスト（ブロック内）')
+                                    ->hiddenLabel()
                                     ->schema([
                                         Forms\Components\Hidden::make('_uuid')
                                             ->default(fn() => \Illuminate\Support\Str::uuid()->toString()),
@@ -712,40 +732,61 @@ class SlSetlistResource extends Resource
                                                 return $song->id;
                                             })
                                             ->columnSpanFull(),
-                                        Forms\Components\Grid::make(2)->schema([
-                                            Forms\Components\Toggle::make('medley')
-                                                ->label('メドレー (2曲目以降)')
-                                                ->inline(false)
-                                                ->default(false)
-                                                ->live()
+                                        // 単独ライブと同じく、曲名以外の設定は「詳細設定」に折りたたむ
+                                        Forms\Components\Section::make('詳細設定')
+                                            ->schema([
+                                            Forms\Components\Grid::make(2)->schema([
+                                                Forms\Components\Toggle::make('medley')
+                                                    ->label('メドレー (2曲目以降)')
+                                                    ->inline(false)
+                                                    ->default(false)
+                                                    ->live()
+                                                    ->dehydrated(),
+                                                // メドレーにチェックしたときだけ出す（タイトルのあるメドレーは少ない）。メドレーのどの曲に入れても、メドレーの曲の上にタイトルの行を出し、曲番はその行に付ける
+                                                Forms\Components\TextInput::make('medley_title')
+                                                    ->label('メドレーのタイトル')
+                                                    ->visible(fn (Forms\Get $get) => (bool) $get('medley'))
+                                                    ->maxLength(255),
+                                                Forms\Components\TextInput::make('featuring')
+                                                    ->label('共演者')
+                                                    ->maxLength(255)
+                                                    ->dehydrated(),
+                                            ]),
+                                            Forms\Components\Radio::make('featuring_type')
+                                                ->label('表示形式')
+                                                ->options([
+                                                    'guest' => '共演者（feat.表記のまま表示）',
+                                                    'artist' => '別名義アーティスト（「 / 」区切りで表示）',
+                                                ])
+                                                ->default('guest')
+                                                ->inline()
                                                 ->dehydrated(),
-                                            // メドレーにチェックしたときだけ出す（タイトルのあるメドレーは少ない）。メドレーのどの曲に入れても、メドレーの曲の上にタイトルの行を出し、曲番はその行に付ける
-                                            Forms\Components\TextInput::make('medley_title')
-                                                ->label('メドレーのタイトル')
-                                                ->visible(fn (Forms\Get $get) => (bool) $get('medley'))
-                                                ->maxLength(255),
-                                            Forms\Components\TextInput::make('featuring')
-                                                ->label('共演者')
+                                            Forms\Components\TextInput::make('alternative_title')
+                                                ->label('別表記')
                                                 ->maxLength(255)
                                                 ->dehydrated(),
-                                        ]),
-                                        Forms\Components\Radio::make('featuring_type')
-                                            ->label('表示形式')
-                                            ->options([
-                                                'guest' => '共演者（feat.表記のまま表示）',
-                                                'artist' => '別名義アーティスト（「 / 」区切りで表示）',
                                             ])
-                                            ->default('guest')
-                                            ->inline()
-                                            ->dehydrated(),
-                                        Forms\Components\TextInput::make('alternative_title')
-                                            ->label('別表記')
-                                            ->maxLength(255)
-                                            ->dehydrated(),
+                                            ->collapsible()
+                                            ->collapsed()
+                                            ->compact()
+                                            ->columnSpanFull(),
                                     ])
                                     ->columns(1)
                                     ->defaultItems(1)
                                     ->reorderable()
+                                    // 曲番：公開ページと同じく、ブロックごとに1から（メドレーの2曲目以降は番号なし）
+                                    ->itemLabel(function (array $state, $component): ?string {
+                                        $number = 0;
+                                        foreach ((array) $component->getState() as $item) {
+                                            if (empty($item['medley'])) {
+                                                $number++;
+                                            }
+                                            if (($item['_uuid'] ?? null) === ($state['_uuid'] ?? null)) {
+                                                return empty($item['medley']) ? (string) $number : '';
+                                            }
+                                        }
+                                        return (string) ($number + 1);
+                                    })
                                     ->addActionLabel('曲を追加')
                                     ->hidden(fn(Forms\Get $get) => $get('type') !== 'block')
                                     ->columnSpanFull(),
@@ -758,8 +799,7 @@ class SlSetlistResource extends Resource
                                 $type = $state['type'] ?? 'song';
                                 if ($type === 'block') {
                                     $artistName = \App\Models\Artist::find($state['artist'] ?? null)?->name ?? 'ブロック';
-                                    $songCount = count($state['songs'] ?? []);
-                                    return "[ブロック] {$artistName} ({$songCount}曲)";
+                                    return $artistName;
                                 }
                                 $items = $component->getState();
                                 if (!is_array($items)) return '1';
