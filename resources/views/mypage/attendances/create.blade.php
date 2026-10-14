@@ -30,25 +30,6 @@
                     <p data-hide-while-adding @if ($errors->any()) hidden @endif>選択できるアーティストがまだありません。</p>
                 @endif
 
-                @if ($officialArtists->isNotEmpty())
-                    <div class="pick-card-grid" data-hide-while-adding @if ($errors->any()) hidden @endif>
-                        @foreach ($officialArtists as $artist)
-                            <a href="{{ route('mypage.attendances.tours', 'official-' . $artist->id) }}" class="pick-card">
-                                <div class="pick-card-header">
-                                    <span class="select-card-icon"><i class="fa-solid fa-music"></i></span>
-                                    <span class="select-card-body">
-                                        <span class="select-card-title">{{ $artist->name }}</span>
-                                    </span>
-                                </div>
-                            </a>
-                        @endforeach
-                    </div>
-                @endif
-
-                @if ($officialArtists->isNotEmpty() && $myArtists->isNotEmpty())
-                    <hr style="margin: 32px 0;" data-hide-while-adding @if ($errors->any()) hidden @endif>
-                @endif
-
                 <div style="text-align: center;">
                     <div class="mypage-add-row" style="margin-bottom: 24px;">
                         <span class="mypage-add-row-label">アーティストを追加</span>
@@ -71,10 +52,19 @@
                     </form>
                 </div>
 
-                @if ($myArtists->isNotEmpty())
+                {{-- 公式のアーティストと自分で追加したアーティストを分けずに、1つの一覧に名前順で並べる --}}
+                @php
+                    $allArtists = \App\Support\JapaneseNameSorter::sortBy(
+                        $officialArtists->map(fn ($artist) => (object) ['name' => $artist->name, 'ref' => 'official-' . $artist->id])
+                            ->concat($myArtists->map(fn ($artist) => (object) ['name' => $artist->name, 'ref' => 'user-' . $artist->id]))
+                            ->values(),
+                        'name'
+                    );
+                @endphp
+                @if (count($allArtists))
                     <div class="pick-card-grid" data-hide-while-adding @if ($errors->any()) hidden @endif>
-                        @foreach ($myArtists as $artist)
-                            <a href="{{ route('mypage.attendances.tours', 'user-' . $artist->id) }}" class="pick-card">
+                        @foreach ($allArtists as $artist)
+                            <a href="{{ route('mypage.attendances.tours', $artist->ref) }}" class="pick-card">
                                 <div class="pick-card-header">
                                     <span class="select-card-icon"><i class="fa-solid fa-music"></i></span>
                                     <span class="select-card-body">
