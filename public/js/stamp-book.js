@@ -173,11 +173,39 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 180);
     }
 
+    // 絞り込みを URL（?filter=…&performed=1）にも出し、その URL を開いたら同じ絞り込みで開く
+    function syncUrl() {
+        try {
+            const url = new URL(window.location.href);
+            if (select && select.value) {
+                url.searchParams.set('filter', select.value);
+            } else {
+                url.searchParams.delete('filter');
+            }
+            if (checkbox && checkbox.checked) {
+                url.searchParams.set('performed', '1');
+            } else {
+                url.searchParams.delete('performed');
+            }
+            history.replaceState(history.state, '', url.toString());
+        } catch (e) {
+            // URL を変えられなくても、絞り込み自体は動かす
+        }
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    if (select && params.has('filter') && Array.from(select.options).some(function (o) { return o.value === params.get('filter'); })) {
+        select.value = params.get('filter');
+    }
+    if (checkbox && params.has('performed')) {
+        checkbox.checked = params.get('performed') === '1';
+    }
+
     if (select) {
-        select.addEventListener('change', function () { apply(true); });
+        select.addEventListener('change', function () { apply(true); syncUrl(); });
     }
     if (checkbox) {
-        checkbox.addEventListener('change', function () { apply(true); });
+        checkbox.addEventListener('change', function () { apply(true); syncUrl(); });
     }
 
     // 戻る操作でブラウザがセレクト・チェックの状態を復元した場合も表示と集計を合わせる
