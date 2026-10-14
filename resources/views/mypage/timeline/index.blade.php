@@ -28,7 +28,7 @@
                         <span class="unique-tour-text">参加予定を除く</span>
                     </label>
                     {{-- 参加記録（セットリスト）の追加。投稿のすぐ上の右端に置く --}}
-                    <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-button" title="セットリストを追加" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%);">
+                    <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-button" title="参加記録を追加" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%);">
                         <i class="fas fa-plus"></i>
                     </a>
                 </div>

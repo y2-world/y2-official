@@ -127,7 +127,7 @@
                             <div style="display: flex; align-items: center; gap: 12px;">
                                 <h1 class="database-title" style="white-space: nowrap;">{{ $isSelf ? 'My Setlists' : ($targetUser->name ?: 'ゲスト') . "'s Setlists" }}</h1>
                                 @if ($isSelf)
-                                    <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-button" title="セットリストを追加" style="background: white; color: #764ba2; flex: 0 0 auto;">
+                                    <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-button" title="参加記録を追加" style="background: white; color: #764ba2; flex: 0 0 auto;">
                                         <i class="fa-solid fa-plus"></i>
                                     </a>
                                 @endif

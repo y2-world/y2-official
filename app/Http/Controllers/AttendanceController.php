@@ -616,8 +616,9 @@ class AttendanceController extends Controller
             return Auth::guard('external')->user()->attendances()->create($attendanceData);
         });
 
+        // 参加予定にセットリストを付けたときは「セットリストを追加」、新しく記録を作ったときは「参加記録を追加」
         return redirect()->route('mypage.attendances.show', $attendance)
-            ->with('success', 'セットリストを追加しました。');
+            ->with('success', $attendance->wasRecentlyCreated ? '参加記録を追加しました。' : 'セットリストを追加しました。');
     }
 
     // ステップ3.5: 日替わり曲の選択（選んだパターンにis_dailyの曲が1つでもある場合のみ）。
@@ -797,7 +798,7 @@ class AttendanceController extends Controller
         $attendance = Auth::guard('external')->user()->attendances()->create($data);
 
         return redirect()->route('mypage.attendances.show', $attendance)
-            ->with('success', 'セットリストを追加しました。');
+            ->with('success', '参加記録を追加しました。');
     }
 
     // 参加予定（セットリストパターンを選ばない記録）の参加日・会場の入力。開催期間が終わっていないツアーだけ

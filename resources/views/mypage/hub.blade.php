@@ -17,8 +17,8 @@
                     </div>
 
                     <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 32px;">
-                        <span style="color: rgba(255, 255, 255, 0.9); font-size: 0.85rem;">セットリストを追加</span>
-                        <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-button" title="セットリストを追加" style="background: white; color: #764ba2;">
+                        <span style="color: rgba(255, 255, 255, 0.9); font-size: 0.85rem;">参加記録を追加</span>
+                        <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-button" title="参加記録を追加" style="background: white; color: #764ba2;">
                             <i class="fas fa-plus"></i>
                         </a>
                     </div>
