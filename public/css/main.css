@@ -796,6 +796,13 @@ select {
     min-width: min(350px, 80vw);
 }
 
+/* Yuki のセットリストのページ（列が1つ）は、長い曲名で列が画面より広がって横スクロールにならないよう、
+   列が画面の幅まで縮んで曲名を折り返す（Database の横に並ぶパターンは今のまま） */
+.setlist-row--single > .live-column-wrap {
+    flex: 0 1 auto;
+    min-width: 0;
+}
+
 .setlist-pattern-wrap {
     width: min(350px, 80vw);
     max-width: min(350px, 80vw);
