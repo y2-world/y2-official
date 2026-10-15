@@ -6,6 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserConcert extends Model
 {
+
+    // SCHEDULE は「10月8日 (水) 会場」の形にそろえて保存する（管理画面・マイページ・取り込みのどこから保存しても同じ形になるように）
+    protected static function booted(): void
+    {
+        static::saving(function (self $concert) {
+            if (filled($concert->schedule) && ($concert->isDirty('schedule') || $concert->isDirty('date1') || $concert->isDirty('date2'))) {
+                $concert->schedule = \App\Support\ScheduleFormatter::format($concert->schedule, $concert->date1, $concert->date2)['text'];
+            }
+        });
+    }
     protected $fillable = [
         'external_user_id',
         'user_artist_id',
