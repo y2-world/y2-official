@@ -751,8 +751,8 @@ if (!function_exists('buildSetlistPatternSummary')) {
                 'song_id' => $songId,
                 'key' => $songId !== null ? 'id:' . $songId : 'title:' . $title,
                 // 曲にアーティスト表記（DbSong.credit）があり、セットリストの方で何も付いていなければ「曲名 / アーティスト」
-                'featuring' => trim((string) ($item['featuring'] ?? '')) ?: (string) ($songModel?->credit ?? ''),
-                'featuring_type' => trim((string) ($item['featuring'] ?? '')) === '' && $songModel?->credit ? 'artist' : ($item['featuring_type'] ?? 'guest'),
+                'featuring' => trim((string) ($item['featuring'] ?? '')) ?: (string) ($songModel?->setlistCredit() ?? ''),
+                'featuring_type' => trim((string) ($item['featuring'] ?? '')) === '' && $songModel?->setlistCredit() ? 'artist' : ($item['featuring_type'] ?? 'guest'),
                 'medley' => !empty($item['medley']),
                 // メドレーのタイトル（メドレーの1曲目に移してある。App\Support\Medley::liftTitles）
                 'medley_title' => trim((string) ($item['medley_title'] ?? '')) ?: null,
@@ -998,6 +998,11 @@ if (!function_exists('buildSetlistPatternSummary')) {
             'setlist' => $mergedSetlistResult['referenceKeys'],
             'encore' => $mergedEncoreResult['referenceKeys'],
         ];
+        // 基準パターンのアンコールが何ブロックまであるか（ENCORE 1 だけなら 0）。基準パターンに無いブロック
+        // （例: 基準の日は ENCORE 2 まで、ある日だけ ENCORE 3 がある）の曲は「-」にせず曲番を付ける
+        $referenceMaxEncoreBlock = collect($encoreClusterLists[$referenceIndex] ?? [])
+            ->flatMap(fn ($cluster) => array_column($cluster, 'encore_block'))
+            ->max() ?? -1;
         $base = array_merge($mergedSetlist, $mergedEncore);
 
         // is_common判定（その曲が全パターンで演奏されているか）に使う、keyごとの
@@ -1201,7 +1206,7 @@ if (!function_exists('buildSetlistPatternSummary')) {
             );
             $cleanedRow = [
                 'variants' => array_map(
-                    function ($entry) use ($patternCount, $totalVotesByKey, $referenceKeys, $referenceSummaryGroups) {
+                    function ($entry) use ($patternCount, $totalVotesByKey, $referenceKeys, $referenceSummaryGroups, $section, $referenceMaxEncoreBlock) {
                         $totalVotes = $totalVotesByKey[$entry['key']] ?? 0;
                         $isCommon = $totalVotes >= $patternCount;
                         // is_extra: 基準パターンに曲位置が無い追加曲かどうか。
@@ -1214,6 +1219,9 @@ if (!function_exists('buildSetlistPatternSummary')) {
                         $isExtra = $summaryGroup !== ''
                             ? !$referenceSummaryGroups->has($summaryGroup)
                             : !$referenceKeys->has($entry['key']);
+                        if ($section === 'encore' && (int) ($entry['encore_block'] ?? 0) > $referenceMaxEncoreBlock) {
+                            $isExtra = false;
+                        }
                         return collect($entry)
                             // summary_groupで別々の行を後から統合する場合にも、
                             // 初出パターン順を復元できるよう_orderと_clusterPositionは

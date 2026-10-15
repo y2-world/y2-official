@@ -13,6 +13,18 @@ class DbConcertController extends Controller
 {
     private const SUMMARY_WITHOUT_DIFFERENCES_TOUR_IDS = [47, 218, 220];
 
+    // 一覧の絞り込み（?type=）→ そこに出すライブの type。1 = Live（ツアーと単発ライブ）、6 = Tours、5 = 単発ライブ、2〜4 はそのまま
+    private static function listTypes($type): ?array
+    {
+        return match ((string) $type) {
+            '1' => [0, 1],
+            '6' => [0],
+            '5' => [1],
+            '2', '3', '4' => [(int) $type],
+            default => null,
+        };
+    }
+
     public function index($artistId)
     {
         $artist = Artist::findOrFail($artistId);
@@ -20,18 +32,8 @@ class DbConcertController extends Controller
 
         $liveQuery = DbConcert::where('artist_id', $artistId)->orderBy('date1', 'desc');
 
-        if ($type === '1') {
-            $liveQuery->whereIn('type', [0, 1]);
-        } elseif ($type === '6') {
-            $liveQuery->where('type', 0);
-        } elseif ($type === '5') {
-            $liveQuery->where('type', 1);
-        } elseif ($type === '2') {
-            $liveQuery->where('type', 2);
-        } elseif ($type === '3') {
-            $liveQuery->where('type', 3);
-        } elseif ($type === '4') {
-            $liveQuery->where('type', 4);
+        if ($types = self::listTypes($type)) {
+            $liveQuery->whereIn('type', $types);
         }
 
         $bios = $artist->years;
@@ -67,8 +69,12 @@ class DbConcertController extends Controller
         if (preg_match('/^song-(\d+)$/', (string) $from, $m) && ($fromSong = DbSong::find($m[1]))) {
             $songTourIds = $fromSong->performedTourSetlists()->pluck('tour_id')->unique()->values()->all();
         }
-        $scopeQuery = function ($query) use ($from, $tours, $songTourIds) {
-            if ($from === 'type') {
+        // from=type-{一覧の type}：その一覧と同じ範囲（Live ならツアーと単発ライブ）。from=type は前からのリンク用で、開いたライブと同じ type
+        $listTypes = preg_match('/^type-(\d+)$/', (string) $from, $m) ? self::listTypes($m[1]) : null;
+        $scopeQuery = function ($query) use ($from, $tours, $songTourIds, $listTypes) {
+            if ($listTypes !== null) {
+                $query->whereIn('type', $listTypes);
+            } elseif ($from === 'type') {
                 $query->where('type', $tours->type);
             } elseif ($songTourIds !== null) {
                 $query->whereIn('id', $songTourIds);
@@ -117,7 +123,15 @@ class DbConcertController extends Controller
                 $hasCountDifference = $setlistCounts->unique()->count() > 1
                     || $encoreCounts->unique()->count() > 1
                     || $totalCounts->unique()->count() > 1;
-                $hasDifference = $hasVariantDifference || $hasCountDifference;
+                // 曲数が同じでも、入っている曲が違えば差異あり（例: 5×20 は前半が「愛を叫べ」、後半が「BRAVE」で、
+                // 位置がずれるので同じ行に並ばず、曲数も同じ。順番だけの違いとみなすと最後のパターンしか出ない）
+                $songSets = $rowSetlists->map(function ($s) {
+                    $ids = array_map(fn ($i) => (string) ($i['song'] ?? ''), array_merge($s->setlist ?? [], $s->encore ?? []));
+                    sort($ids);
+                    return json_encode($ids);
+                });
+                $hasSongDifference = $songSets->unique()->count() > 1;
+                $hasDifference = $hasVariantDifference || $hasCountDifference || $hasSongDifference;
                 if ($hasDifference) {
                     return $summary;
                 }

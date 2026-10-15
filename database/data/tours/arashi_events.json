@@ -1,0 +1,50 @@
+{
+ "artist_id": 20,
+ "tours": [
+  {
+   "title": "国立競技場オープニングイベント HELLO, OUR STADIUM",
+   "type": 2,
+   "date1": "2019-12-21",
+   "date2": null,
+   "venue": "国立競技場",
+   "schedule": null,
+   "livefans_event_ids": [
+    1203007
+   ]
+  },
+  {
+   "title": "ARASHI SPECIAL SHOOTING \"5×20\" at Tokyo Dome 2019.12.23",
+   "type": 1,
+   "date1": "2019-12-23",
+   "date2": null,
+   "venue": "東京ドーム",
+   "schedule": null,
+   "livefans_event_ids": [
+    1177600
+   ]
+  },
+  {
+   "title": "Johnny's World Happy LIVE with YOU",
+   "type": 2,
+   "date1": "2020-04-01",
+   "date2": "2020-06-16",
+   "venue": "横浜アリーナ",
+   "schedule": "4月1日(水) 横浜アリーナ\n6月16日(火) 横浜アリーナ",
+   "livefans_event_ids": [
+    1255702,
+    1258763
+   ]
+  },
+  {
+   "title": "Spotify presents Tokyo Super Hits Live 2020",
+   "type": 2,
+   "date1": "2020-11-26",
+   "date2": null,
+   "venue": "オンライン",
+   "schedule": null,
+   "livefans_event_ids": [
+    1278358
+   ]
+  }
+ ]
+}

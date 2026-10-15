@@ -83,7 +83,7 @@
             <tbody id="tours-container">
                 @if ($tours->isEmpty())
                     <tr>
-                        <td colspan="4" class="text-center">ライブ情報がありません</td>
+                        <td colspan="{{ $type !== '6' ? 4 : 3 }}" class="text-center">ライブ情報がありません</td>
                     </tr>
                 @else
                     @include('db_concerts._list', ['tours' => $tours])

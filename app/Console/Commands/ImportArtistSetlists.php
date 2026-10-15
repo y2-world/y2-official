@@ -156,7 +156,7 @@ class ImportArtistSetlists extends Command
             $this->unmatched[$item['title']][] = $tour->date1 ? substr($tour->date1, 0, 10) : (string) $tour->id;
         }
 
-        return [
+        $row = [
             'song' => $songId !== null ? (string) $songId : $item['title'],
             'is_daily' => false,
             'medley' => (bool) ($item['medley'] ?? false),
@@ -165,5 +165,15 @@ class ImportArtistSetlists extends Command
             'featuring_type' => !empty($item['featuring']) ? ($item['featuring_type'] ?? 'guest') : null,
             'alternative_title' => $item['alternative_title'] ?? null,
         ];
+        // タイトルのあるメドレー（2曲目に持つ。管理画面と同じ）
+        if (!empty($item['medley_title'])) {
+            $row['medley_title'] = $item['medley_title'];
+        }
+        // ダブルアンコール：2つ目以降のアンコールの最初の曲（管理画面の「ここから次のアンコール」）
+        if (!empty($item['encore_block_start'])) {
+            $row['encore_block_start'] = true;
+        }
+
+        return $row;
     }
 }
