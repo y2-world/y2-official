@@ -151,6 +151,10 @@ class ImportArtistSetlists extends Command
             && $this->songTitlesById[(int) $item['song_id']] === ($item['song_title'] ?? null)) {
             $songId = (int) $item['song_id'];
         }
+        // 番号が合わないとき（ローカルで作ったデータを本番に入れるときなど）は、つないだ先の曲名（song_title）で探し、無ければ曲名で探す
+        if ($songId === null && !empty($item['song_title'])) {
+            $songId = $this->resolveSongId($item['song_title']);
+        }
         $songId ??= $this->resolveSongId($item['title']);
         if ($songId === null) {
             $this->unmatched[$item['title']][] = $tour->date1 ? substr($tour->date1, 0, 10) : (string) $tour->id;
