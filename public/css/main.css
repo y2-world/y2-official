@@ -5463,9 +5463,6 @@ a.setlist-card:hover {
     background: radial-gradient(circle, rgba(200, 55, 43, 0.07), rgba(200, 55, 43, 0) 70%);
     box-shadow: 0 0 0 1.5px rgba(200, 55, 43, 0.25) inset, 0 0 1px rgba(200, 55, 43, 0.4);
     position: relative;
-    /* 動きは transform と opacity だけ（スマホでも滑らかに動くよう、別の層で描く） */
-    will-change: transform, opacity;
-    backface-visibility: hidden;
 }
 
 /* 朱肉のかすれ：紙の色の細かい点をはんこの上に重ねる（フィルターは動くたびに描き直して重いので、模様の画像にする） */
@@ -5538,4 +5535,10 @@ a.setlist-card:hover {
 
 .stamp-book.is-hanko .stamp-mark {
     z-index: 2;
+}
+
+/* 押し終わった形（Safari で動きが途中で止まっても、押した後の大きさ・濃さになるように） */
+.stamp-book.is-hanko .stamp-mark.is-stamp-in {
+    transform: rotate(-14deg) scale(1);
+    opacity: 1;
 }
