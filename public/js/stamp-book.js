@@ -178,7 +178,8 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const url = new URL(window.location.href);
             if (select && select.value) {
-                url.searchParams.set('filter', select.value);
+                // テーマ（色）の絞り込みは、URL では「theme:ID」と出す（中の値は color:ID のまま）
+                url.searchParams.set('filter', select.value.replace(/^color:/, 'theme:'));
             } else {
                 url.searchParams.delete('filter');
             }
@@ -194,11 +195,40 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const params = new URLSearchParams(window.location.search);
-    if (select && params.has('filter') && Array.from(select.options).some(function (o) { return o.value === params.get('filter'); })) {
-        select.value = params.get('filter');
+    // 前の URL の「color:ID」も開けるようにする
+    const filterParam = (params.get('filter') || '').replace(/^theme:/, 'color:');
+    if (select && filterParam && Array.from(select.options).some(function (o) { return o.value === filterParam; })) {
+        select.value = filterParam;
     }
     if (checkbox && params.has('performed')) {
         checkbox.checked = params.get('performed') === '1';
+    }
+
+    // 見た目の切り替え（Stamps／Hanko）。台紙に is-hanko を付けるだけなので、絞り込みはそのまま。?view=hanko で URL に残す
+    const viewButtons = Array.from(document.querySelectorAll('[data-stamp-view]'));
+    function showView(view, updateUrl) {
+        book.classList.toggle('is-hanko', view === 'hanko');
+        viewButtons.forEach(function (b) { b.classList.toggle('is-active', b.dataset.stampView === view); });
+        if (!updateUrl) {
+            return;
+        }
+        try {
+            const url = new URL(window.location.href);
+            if (view === 'hanko') {
+                url.searchParams.set('view', 'hanko');
+            } else {
+                url.searchParams.delete('view');
+            }
+            history.replaceState(history.state, '', url.toString());
+        } catch (e) {
+            // URL を変えられなくても、見た目の切り替え自体は動かす
+        }
+    }
+    viewButtons.forEach(function (b) {
+        b.addEventListener('click', function () { showView(b.dataset.stampView, true); });
+    });
+    if (params.get('view') === 'hanko') {
+        showView('hanko', false);
     }
 
     if (select) {

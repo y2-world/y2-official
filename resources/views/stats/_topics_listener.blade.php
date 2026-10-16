@@ -1,7 +1,9 @@
 {{-- 参加記録と組み合わせたトピックス（App\Support\ArtistTopics）。Yukiのstatsとマイページのstatsで共通。
      PC（.topic-pc）はアーティスト・ツアーをそれぞれの列に、スマホ（.topic-sp）は崩れないよう段に分けて出す。
      全体のstatsでは $topicArtistUrl（アーティストID => リンク先）を渡すと、曲名の下のアーティスト名をリンクにする。
-     First Listens by Year は $showFirstListens = false で出さない（全体のstatsでは出さない） --}}
+     First Listens by Year は $showFirstListens = false で出さない（全体のstatsでは出さない）
+     $topicPart：'first' なら First Listens（Recent First Listens・First Listens by Year）だけ、'main' ならそれ以外（Welcome Back・Long-Awaited Returns I Heard）だけ。
+     渡さなければ全部（アーティストの stats では First Listens を別のタブに出す） --}}
 @php
     // 他のランキングと同じ見た目の順位（同じ値が続くときは順位を出さない）
     $topicRank = function (array $list, int $index, string $key) {
@@ -32,7 +34,8 @@
         ? '<a href="' . e($artistHref) . '" class="stats-link">' . e($row['artist']) . '</a>' : e($row['artist'] ?? '');
 @endphp
 
-@if (count($topicRecentFirst) || count($topicRecentFirstAll))
+@php $topicPart = $topicPart ?? null; @endphp
+@if ($topicPart !== 'main' && (count($topicRecentFirst) || count($topicRecentFirstAll)))
 @php
     // 新曲を除くと0曲になる・除いても変わらないときは、チェックを出さずに全部を出す
     $recentShowToggle = count($topicRecentFirst) && $topicRecentFirst != $topicRecentFirstAll;
@@ -102,7 +105,7 @@ document.getElementById('recentFirstExcludeNew')?.addEventListener('change', fun
 </script>
 @endif
 
-@if (count($topicWelcomeBack))
+@if ($topicPart !== 'first' && count($topicWelcomeBack))
 <div class="stats-section visible">
     <h2 class="section-title"><i class="fas fa-hand-sparkles"></i> Welcome Back
     <span class="section-title-desc">自分が聴いた中で、前に聴いてから久しぶりに聴いた曲</span></h2>
@@ -133,7 +136,7 @@ document.getElementById('recentFirstExcludeNew')?.addEventListener('change', fun
 </div>
 @endif
 
-@if (count($topicHeardRevivals))
+@if ($topicPart !== 'first' && count($topicHeardRevivals))
 <div class="stats-section visible">
     <h2 class="section-title"><i class="fas fa-rotate-left"></i> Long-Awaited Returns I Heard
     <span class="section-title-desc">参加したライブで聴いた曲が、前のツアーから何年ぶりの演奏だったか</span></h2>
@@ -165,7 +168,38 @@ document.getElementById('recentFirstExcludeNew')?.addEventListener('change', fun
 </div>
 @endif
 
-@if (($showFirstListens ?? true) && count($topicFirstHeard))
+
+@if ($topicPart !== 'first' && !empty($topicPersonalDormant))
+<div class="stats-section visible">
+    <h2 class="section-title"><i class="fas fa-hourglass-half"></i> Long Time No Play
+    <span class="section-title-desc">自分が聴いた曲で、最後に聴いてからいちばん長い間聴いていない曲</span></h2>
+    <div class="stats-table-container">
+        <table class="stats-table topic-pc">
+            <thead><tr><th class="rank-col">Rank</th><th>Song Title</th>@if ($topicShowArtist)<th>Artist</th>@endif<th>Tour Title</th><th class="count-col">Years</th></tr></thead>
+            <tbody>
+                @foreach ($topicPersonalDormant as $index => $row)
+                <tr @if ($index >= 10) data-more="1" style="display: none;" @endif>
+                    <td class="rank-col">{!! $topicRank($topicPersonalDormant, $index, 'years') !!}</td>
+                    <td class="song-title">{!! $topicSongLink($row) !!}</td>
+                    @if ($topicShowArtist)<td>{!! $topicArtistCell($row) !!}</td>@endif
+                    <td style="font-size: 0.85em;">{!! $topicShowLink($row['last']['date'], $row['last']['title'], $row['last']['url'] ?? null) !!}</td>
+                    <td class="count-col"><span class="count-badge">{{ number_format($row['years'], 1) }}年</span></td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        <table class="stats-table stats-table-stacked topic-sp">
+            @include('stats._stacked_head', ['hasRank' => true, 'badgeLabel' => 'Years', 'showArtist' => $topicShowArtist])
+            @foreach ($topicPersonalDormant as $index => $row)
+                @include('stats._stacked_row', ['rank' => $topicRank($topicPersonalDormant, $index, 'years'), 'song' => $topicSongLink($row), 'artist' => $topicShowArtist ? $topicArtistCell($row) : null, 'showArtist' => $topicShowArtist,
+                    'lines' => [['tour' => $topicShowLink($row['last']['date'], $row['last']['title'], $row['last']['url'] ?? null)]], 'badge' => number_format($row['years'], 1) . '年', 'more' => $index >= 10])
+            @endforeach
+        </table>
+        @include('stats._show_more', ['count' => count($topicPersonalDormant)])
+    </div>
+</div>
+@endif
+@if ($topicPart !== 'main' && ($showFirstListens ?? true) && count($topicFirstHeard))
 <div class="stats-section visible">
     <div class="section-title-wrapper" style="flex-direction: column; align-items: center; gap: 10px;">
         <h2 class="section-title" style="text-align: center;"><i class="fas fa-seedling"></i> First Listens by Year

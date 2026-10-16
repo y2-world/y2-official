@@ -5000,8 +5000,9 @@ a.setlist-card:hover {
 
 /* Databaseのstatsのタブ（Songs / Setlist） */
 .stats-tab-btn {
-    padding: 8px 20px;
+    padding: 7px 16px;
     border-radius: 20px;
+    font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
     border: 1px solid rgba(255, 255, 255, 0.8);
@@ -5038,7 +5039,7 @@ a.setlist-card:hover {
     background-repeat: no-repeat;
     background-position: right 12px center;
     font-family: inherit;
-    font-size: inherit;
+    font-size: 0.9rem;
 }
 
 .stats-tab-select option {
@@ -5081,6 +5082,12 @@ a.setlist-card:hover {
     .stats-tab-bar .stats-tab-btn {
         flex: 0 0 auto;
         white-space: nowrap;
+        font-size: 0.8rem;
+        padding: 6px 13px;
+    }
+
+    .stats-tab-bar .stats-tab-select {
+        padding-right: 28px;
     }
 }
 
@@ -5283,4 +5290,230 @@ a.setlist-card:hover {
 /* ボタンを隠したとき（フォームを開いている間など）は、文字ごと隠す */
 .mypage-add-row:has(> .mypage-add-button[hidden]) {
     display: none;
+}
+
+/* スタンプ帳の Hanko（大塚愛『愛 am BEST』の裏ジャケのような表）。左にはんこの欄、右に曲名。曲番は付けない */
+.stamp-view-tabs {
+    margin: 0 0 20px;
+}
+
+.stamp-book.is-hanko {
+    display: block;
+    background: #fff;
+    background-image: none;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.stamp-book.is-hanko .stamp-slot {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    grid-template-rows: auto auto;
+    align-items: center;
+    /* 罫線は上下の行で重ねて1本に見せる */
+    border: 1px solid #555;
+    margin-top: -1px;
+}
+
+.stamp-book.is-hanko .stamp-slot[hidden] {
+    display: none;
+}
+
+.stamp-book.is-hanko .stamp-slot-frame,
+.stamp-book.is-hanko .stamp-slot.is-stamped .stamp-slot-frame,
+.stamp-book.is-hanko .stamp-slot.is-stamped.is-fes-only .stamp-slot-frame,
+.stamp-book.is-hanko .stamp-slot.is-stamped.is-hikigatari-only .stamp-slot-frame {
+    grid-row: 1 / span 2;
+    width: 60px;
+    height: 100%;
+    min-height: 46px;
+    aspect-ratio: auto;
+    border: none;
+    border-right: 1px solid #555;
+    border-radius: 0;
+    background: transparent;
+}
+
+.stamp-book.is-hanko .stamp-slot.is-never-performed .stamp-slot-frame {
+    background: repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05) 4px, transparent 4px, transparent 8px);
+}
+
+/* はんこ：赤い丸。押したときの向きは少しずつずらして、手で押したように */
+.stamp-book.is-hanko .stamp-mark {
+    width: 36px;
+    height: 36px;
+    border: 2px solid #d8352a;
+    color: #d8352a;
+    box-shadow: 0 0 0 2px rgba(216, 53, 42, 0.12) inset;
+}
+
+.stamp-book.is-hanko .stamp-slot:nth-of-type(3n) .stamp-mark { margin-left: 3px; }
+.stamp-book.is-hanko .stamp-slot:nth-of-type(4n) .stamp-mark { margin-top: 2px; }
+
+.stamp-book.is-hanko .stamp-mark-text {
+    font-size: 0.5rem;
+    letter-spacing: 0;
+    font-weight: 700;
+}
+
+.stamp-book.is-hanko .stamp-slot-title {
+    grid-column: 2;
+    margin: 0;
+    padding: 12px 14px 0;
+    font-size: 0.95rem;
+    text-align: left;
+    color: #222;
+}
+
+.stamp-book.is-hanko .stamp-slot-credit {
+    grid-column: 2;
+    padding: 2px 14px 10px;
+    font-size: 0.7rem;
+    text-align: left;
+}
+
+/* アーティスト表記が無い行は、曲名の上下を同じ余白に */
+.stamp-book.is-hanko .stamp-slot-title:last-child {
+    padding-bottom: 12px;
+    grid-row: 1 / span 2;
+}
+
+.stamp-book.is-hanko .stamp-empty-in-book {
+    color: #888;
+}
+
+@media (max-width: 768px) {
+    .stamp-book.is-hanko {
+        padding: 16px;
+    }
+
+    .stamp-book.is-hanko .stamp-slot {
+        grid-template-columns: 48px 1fr;
+    }
+
+    .stamp-book.is-hanko .stamp-slot-frame,
+    .stamp-book.is-hanko .stamp-slot.is-stamped .stamp-slot-frame,
+    .stamp-book.is-hanko .stamp-slot.is-stamped.is-fes-only .stamp-slot-frame,
+    .stamp-book.is-hanko .stamp-slot.is-stamped.is-hikigatari-only .stamp-slot-frame {
+        width: 48px;
+        min-height: 40px;
+    }
+
+    .stamp-book.is-hanko .stamp-mark {
+        width: 30px;
+        height: 30px;
+    }
+
+    .stamp-book.is-hanko .stamp-mark-text {
+        font-size: 0.42rem;
+    }
+
+    .stamp-book.is-hanko .stamp-slot-title {
+        font-size: 0.85rem;
+        padding: 10px 10px 0;
+    }
+
+    .stamp-book.is-hanko .stamp-slot-title:last-child {
+        padding-bottom: 10px;
+    }
+
+    .stamp-book.is-hanko .stamp-slot-credit {
+        padding: 2px 10px 8px;
+    }
+}
+
+/* Hanko でも、編集ボタン（マイページ）と絞り込みのタイトルの分だけ上を空けて、表と重ならないように */
+.stamp-book.is-hanko.is-owner,
+.stamp-book.is-hanko.is-filter-titled {
+    padding-top: 80px;
+}
+
+@media (max-width: 768px) {
+    .stamp-book.is-hanko.is-owner,
+    .stamp-book.is-hanko.is-filter-titled {
+        padding-top: 56px;
+    }
+}
+
+/* Hanko の質感：少し黄みのある紙（細かいざらつき）、朱色のはんこ（かすれ・にじみ・押した向きのばらつき） */
+.stamp-book.is-hanko {
+    background-color: #fcf9f2;
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.38 0 0 0 0 0.25 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(236, 228, 210, 0.35));
+}
+
+.stamp-book.is-hanko .stamp-slot {
+    border-color: #6f6758;
+}
+
+.stamp-book.is-hanko .stamp-slot-frame,
+.stamp-book.is-hanko .stamp-slot.is-stamped .stamp-slot-frame,
+.stamp-book.is-hanko .stamp-slot.is-stamped.is-fes-only .stamp-slot-frame,
+.stamp-book.is-hanko .stamp-slot.is-stamped.is-hikigatari-only .stamp-slot-frame {
+    border-right-color: #6f6758;
+    box-shadow: none;
+}
+
+.stamp-book.is-hanko .stamp-mark {
+    border-width: 3px;
+    border-color: #c8372b;
+    color: #c8372b;
+    background: radial-gradient(circle, rgba(200, 55, 43, 0.07), rgba(200, 55, 43, 0) 70%);
+    box-shadow: 0 0 0 1.5px rgba(200, 55, 43, 0.25) inset, 0 0 1px rgba(200, 55, 43, 0.4);
+    filter: url(#hankoInk);
+    mix-blend-mode: multiply;
+}
+
+.stamp-book.is-hanko .stamp-mark-text {
+    font-family: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", serif;
+}
+
+/* 押した向き・濃さを行ごとに少しずつ変える（アニメーションの最後の向きを上書きしないよう、外側の余白と濃さで） */
+.stamp-book.is-hanko .stamp-slot:nth-of-type(5n+1) .stamp-mark { opacity: 0.95; margin-left: -2px; }
+.stamp-book.is-hanko .stamp-slot:nth-of-type(5n+2) .stamp-mark { opacity: 0.85; margin-top: 3px; }
+.stamp-book.is-hanko .stamp-slot:nth-of-type(5n+3) .stamp-mark { opacity: 0.9; margin-left: 2px; margin-top: -2px; }
+.stamp-book.is-hanko .stamp-slot:nth-of-type(5n+4) .stamp-mark { opacity: 0.8; }
+.stamp-book.is-hanko .stamp-slot:nth-of-type(5n) .stamp-mark { opacity: 0.92; margin-top: -3px; }
+
+.stamp-book.is-hanko .stamp-slot.is-fes-only .stamp-mark {
+    border-color: #2f5f9e;
+    color: #2f5f9e;
+    background: radial-gradient(circle, rgba(47, 95, 158, 0.07), rgba(47, 95, 158, 0) 70%);
+}
+
+/* テーマ：Stamps の枠の色と同じ色を、Hanko では行の左の帯にする */
+.stamp-book.is-hanko .stamp-slot:not([data-color-id=""]) .stamp-slot-frame {
+    box-shadow: inset 5px 0 0 var(--stamp-deco);
+}
+
+/* テーマで絞り込んだときは、台紙の枠をその色に（Stamps と同じ） */
+.stamp-book.is-hanko.is-color-filtered {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), inset 0 0 0 4px var(--stamp-book-tint);
+}
+
+/* Hanko でタップしたとき：欄（罫線）は動かさず、はんこだけを押し直すように軽く沈ませる */
+.stamp-book.is-hanko .stamp-slot-frame.is-tapped {
+    animation: none;
+}
+
+.stamp-book.is-hanko .stamp-slot-frame.is-tapped .stamp-mark.is-stamp-in {
+    /* 押したときの動き（stampIn）は終わったまま残し、沈む動きは scale だけで重ねる（stampIn をやり直さないように） */
+    animation: stampIn 0.35s ease-out forwards, hankoPress 0.32s ease-out;
+}
+
+@keyframes hankoPress {
+    0% {
+        scale: 1;
+        opacity: 1;
+    }
+    35% {
+        scale: 0.86;
+        opacity: 0.75;
+    }
+    100% {
+        scale: 1;
+        opacity: 1;
+    }
 }

@@ -267,6 +267,30 @@ class ArtistTopics
         return array_slice(array_values($rows), 0, self::LIST_SIZE);
     }
 
+    // 自分が聴いた曲で、最後に聴いてからいちばん長い間聴いていない曲（Long Time No Play の自分の版）：最後に聴いた日から今日までが長い順
+    public function personalDormant(array $heard, int $limit = 50): array
+    {
+        $today = now()->toDateString();
+        $last = [];
+        foreach ($heard as $show) {
+            if ($show['date'] > $today) {
+                continue;
+            }
+            foreach (array_unique($show['song_ids']) as $songId) {
+                if (isset($this->songs[$songId]) && (!isset($last[$songId]) || $last[$songId]['date'] < $show['date'])) {
+                    $last[$songId] = ['date' => $show['date'], 'title' => $show['title'] ?? '', 'url' => $show['url'] ?? null];
+                }
+            }
+        }
+        $rows = [];
+        foreach ($last as $songId => $show) {
+            $rows[] = ['song_id' => $songId, 'title' => $this->songs[$songId], 'last' => $show, 'years' => self::years($show['date'], $today)];
+        }
+        usort($rows, fn ($a, $b) => $b['years'] <=> $a['years']);
+
+        return array_slice($rows, 0, $limit);
+    }
+
     // 最近初めて聴いた曲：初めて生で聴いた曲を、新しい順に。新曲（そのライブの1年前以降に発売された曲と、発売前だった曲）は、
     // 聴けて当たり前なので除く
     public function recentFirstListens(array $heard, bool $excludeNew = true): array

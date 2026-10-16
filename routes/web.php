@@ -56,6 +56,8 @@ Route::prefix('database')->group(function () {
     Route::prefix('artists/{artistId}')->group(function () {
         Route::get('/', [DatabaseController::class, 'show'])->name('database.artist');
         Route::get('songs', [DbSongController::class, 'index'])->name('database.songs');
+        // 登録していない曲（セットリストに名前だけで入っている曲）：その曲を演奏したライブの一覧（?title=曲名）
+        Route::get('song', [DbSongController::class, 'textSong'])->name('database.text_song');
         Route::get('singles', [DbSingleController::class, 'index'])->name('database.singles');
         Route::get('albums', [DbAlbumController::class, 'index'])->name('database.albums');
         Route::get('live', [DbConcertController::class, 'index'])->name('database.live');

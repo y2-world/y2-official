@@ -299,6 +299,17 @@ class DbSongController extends Controller
         //
     }
 
+    // 登録していない曲（セットリストに名前だけで入っている曲）のページ：その曲を演奏したライブの一覧。会場のページと同じ考え方
+    public function textSong(Request $request, $artistId)
+    {
+        $artist = \App\Models\Artist::findOrFail($artistId);
+        $title = trim((string) $request->query('title', ''));
+        abort_if($title === '', 404);
+        $setlists = \App\Support\TextSongs::setlists((int) $artist->id, $title);
+
+        return view('db_songs.text_song', compact('artist', 'title', 'setlists'));
+    }
+
     public function search(Request $request)
     {
         try {

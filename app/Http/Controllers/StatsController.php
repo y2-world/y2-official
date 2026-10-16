@@ -967,6 +967,8 @@ class StatsController extends Controller
         $topicHeardRevivals = $topics->heardRevivals($heard);
         $topicFirstHeard = $topics->firstHeardTimeline($heard);
         $topicWelcomeBack = $topics->welcomeBack($heard);
+        // Long Time No Play（参加記録の版）：自分が最後に聴いてからいちばん長い間聴いていない曲（50曲まで）
+        $topicPersonalDormant = $topics->personalDormant($heard);
         $topicRecentFirst = $topics->recentFirstListens($heard);
         $topicRecentFirstAll = $topics->recentFirstListens($heard, false);
 
@@ -1001,6 +1003,7 @@ class StatsController extends Controller
             'topicHeardRevivals',
             'topicFirstHeard',
             'topicWelcomeBack',
+            'topicPersonalDormant',
             'topicRecentFirst',
             'topicRecentFirstAll',
             'allSongsNoDoubleEncore',

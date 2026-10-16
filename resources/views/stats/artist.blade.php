@@ -53,6 +53,10 @@
                     {{-- 全体のstatsと同じタブ：Songs（曲）／Data（公演の年・会場）／Artists（ほかのアーティストへ切り替え）。スタンプ帳のボタンは見出しの下 --}}
                     <div class="stats-tab-bar">
                         <button type="button" class="stats-tab-btn is-active" data-stats-tab="songs">Songs</button>
+                        {{-- 初めて生で聴いた曲（Recent First Listens・First Listens by Year）は別のタブ --}}
+                        @if (isset($topicHeardRevivals) && (count($topicRecentFirst) || count($topicRecentFirstAll) || count($topicFirstHeard)))
+                        <button type="button" class="stats-tab-btn" data-stats-tab="first">First Listens</button>
+                        @endif
                         <button type="button" class="stats-tab-btn" data-stats-tab="data">Data</button>
                         @if (count($tabArtists))
                         <select class="stats-tab-btn stats-tab-select" onchange="if (this.value) location.href = this.value;" aria-label="Artists">
@@ -183,8 +187,14 @@
                     </div>
                     @endif
 
-                    @includeWhen(isset($topicHeardRevivals), 'stats._topics_listener')
+                    @includeWhen(isset($topicHeardRevivals), 'stats._topics_listener', ['topicPart' => 'main'])
                     </div>
+
+                    @if (isset($topicHeardRevivals))
+                    <div class="stats-tab-panel" data-stats-panel="first" style="display: none;">
+                    @include('stats._topics_listener', ['topicPart' => 'first'])
+                    </div>
+                    @endif
 
                     <div class="stats-tab-panel" data-stats-panel="data" style="display: none;">
                     <!-- Shows by Year Section -->

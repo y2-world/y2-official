@@ -17,7 +17,7 @@
                     @if ($hasAttended)
                     <div class="stamp-book-link-wrapper" style="margin: -18px 0 45px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
                         <a href="{{ route('mypage.stats.artist', 'user-' . $artist->id) }}" class="stamp-book-link">
-                            <i class="fas fa-ticket"></i> My Statistics
+                            <i class="fa-solid fa-chart-simple"></i> My Statistics
                         </a>
                     </div>
                     @endif

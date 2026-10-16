@@ -45,6 +45,7 @@
                     @if ($totalCount === 0)
                         <p class="stamp-empty">No songs registered in the database yet.</p>
                     @else
+                        @include('stats._stamp_view_tabs')
                         <div class="stamp-book {{ $canEditDeco ? 'is-owner' : '' }}">
                             {{-- 色で絞り込んだときに、その色のタイトルを出す --}}
                             <p class="stamp-book-filter-title" id="stampBookFilterTitle" hidden></p>
@@ -97,6 +98,6 @@
 @endsection
 
 @section('page-script')
-<script src="{{ asset('/js/stamp-book.js?v=20261014a') }}"></script>
+<script src="{{ asset('/js/stamp-book.js?v=20261016b') }}"></script>
 @include('stats._stamp_book_script')
 @endsection

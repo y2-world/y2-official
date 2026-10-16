@@ -18,7 +18,7 @@
                     @if (!empty($personalStatsLink))
                     <div class="stamp-book-link-wrapper" style="margin: -18px 0 45px; display: flex; justify-content: center;">
                         <a href="{{ $personalStatsLink['url'] }}" class="stamp-book-link">
-                            <i class="fas fa-ticket"></i> {{ $personalStatsLink['label'] }}
+                            <i class="fa-solid fa-chart-simple"></i> {{ $personalStatsLink['label'] }}
                         </a>
                     </div>
                     @endif

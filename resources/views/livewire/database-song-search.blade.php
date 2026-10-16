@@ -13,9 +13,10 @@
             console.error('Alpine.js watch error:', e);
         }
     },
-    selectSong(songId) {
-        if (songId) {
-            window.location.href = '/database/songs/' + songId;
+    selectSong(song) {
+        // 登録した曲は曲のページ、名前だけの曲はその曲を演奏したライブの一覧
+        if (song && song.url) {
+            window.location.href = song.url;
         }
     },
     navigateDown() {
@@ -30,7 +31,7 @@
     },
     selectCurrent() {
         if (this.songs && this.selectedIndex >= 0 && this.selectedIndex < this.songs.length) {
-            this.selectSong(this.songs[this.selectedIndex].id);
+            this.selectSong(this.songs[this.selectedIndex]);
         }
     }
 }" class="search-wrapper" style="position: relative; width: 100%;">
@@ -52,7 +53,7 @@
         style="position: absolute; top: 100%; left: 0; width: auto; min-width: 300px; background: white; border: 1px solid #ddd; border-radius: 4px; margin-top: 4px; max-height: 190px; overflow-y: auto; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
         <template x-for="(song, index) in (Array.isArray(songs) ? songs : [])" :key="song.id || index">
             <div
-                @click="selectSong(song.id)"
+                @click="selectSong(song)"
                 :class="{ 'bg-gray-100': index === selectedIndex }"
                 class="song-search-suggestion"
                 style="padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #eee; color: black; text-align: left;"
