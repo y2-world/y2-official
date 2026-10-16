@@ -2492,7 +2492,9 @@ h5.setlist-subtitle-heading {
 .hidden-row-top-songs,
 .hidden-row-songs,
 .hidden-row-attendances,
-.hidden-row-recent-shows {
+.hidden-row-recent-shows,
+.hidden-row-song-stats,
+.hidden-row-artist-song-stats {
     display: none;
 }
 
@@ -3838,6 +3840,20 @@ h5.setlist-subtitle-heading {
     transform: rotate(-14deg) scale(1.6);
     opacity: 0;
     box-shadow: 0 0 0 3px rgba(178, 59, 59, 0.15) inset;
+    /* インクのかすれ：丸い枠の細かい点だけ抜いて、下のマスの色を透かす（マスの色が変わっても合うように、色を重ねずに抜く）。
+       内側（文字のところ）は2枚目の塗りつぶしで抜かないので、文字はかすれない */
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cfilter id='k'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2.2 -0.25'/%3E%3C/filter%3E%3Crect width='48' height='48' filter='url(%23k)'/%3E%3C/svg%3E"), radial-gradient(circle closest-side, #000 calc(100% - 7px), transparent calc(100% - 6px));
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cfilter id='k'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2.2 -0.25'/%3E%3C/filter%3E%3Crect width='48' height='48' filter='url(%23k)'/%3E%3C/svg%3E"), radial-gradient(circle closest-side, #000 calc(100% - 7px), transparent calc(100% - 6px));
+    -webkit-mask-size: 48px 48px, 100% 100%;
+    mask-size: 48px 48px, 100% 100%;
+    -webkit-mask-repeat: repeat, no-repeat;
+    mask-repeat: repeat, no-repeat;
+}
+
+/* Hanko は紙の色の点を重ねてかすれさせているので、抜くのはやめる */
+.stamp-book.is-hanko .stamp-mark {
+    -webkit-mask-image: none;
+    mask-image: none;
 }
 
 /* ページを開いた時、済みスタンプを1つずつ順番に押していく演出（JS側でclassを付与） */
@@ -5474,6 +5490,9 @@ a.setlist-card:hover {
     pointer-events: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cfilter id='k'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0.99 0 0 0 0 0.98 0 0 0 0 0.95 0 0 0 -2.2 1.25'/%3E%3C/filter%3E%3Crect width='48' height='48' filter='url(%23k)'/%3E%3C/svg%3E");
     background-size: 48px 48px;
+    /* 点は丸い枠のところだけ。内側（文字のところ）には重ねないので、文字はかすれない */
+    -webkit-mask-image: radial-gradient(circle closest-side, transparent calc(100% - 11px), #000 calc(100% - 10px));
+    mask-image: radial-gradient(circle closest-side, transparent calc(100% - 11px), #000 calc(100% - 10px));
 }
 
 .stamp-book.is-hanko .stamp-mark-text {

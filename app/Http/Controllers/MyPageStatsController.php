@@ -23,7 +23,16 @@ class MyPageStatsController extends Controller
     // 対象は自分が出席記録を残しているアーティスト（公式・ユーザー登録の両方）のみ。
     public function index()
     {
-        $attendances = Auth::guard('external')->user()
+        $stampBookArtists = $this->stampBookArtists(Auth::guard('external')->user());
+
+        return view('mypage.stats.stamps_index', compact('stampBookArtists'));
+    }
+
+    // スタンプ帳があるアーティスト（[['ref' => 'official-1', 'name' => ...], ...]）。
+    // 対象は出席記録を残しているアーティスト（公式・ユーザー登録の両方）のみ。
+    private function stampBookArtists(ExternalUser $user)
+    {
+        $attendances = $user
             ->attendances()
             ->withSetlist()
             ->with(['dbSetlist.tour', 'userSetlist.concert'])
@@ -41,15 +50,14 @@ class MyPageStatsController extends Controller
         // 曲が登録されていないアーティストはスタンプ帳が作れないので出さない。
         // 公式・ユーザー登録をまとめて、初めてライブに行った順に並べる（My Statistics のスタンプのタブと同じ）
         $firstDates = \App\Models\ExternalUserAttendance::firstDatesByArtistRef($attendances);
-        $stampBookArtists = Artist::whereIn('id', $attendedOfficialArtistIds)->whereHas('songs')->get()
+
+        return Artist::whereIn('id', $attendedOfficialArtistIds)->whereHas('songs')->get()
             ->map(fn ($artist) => ['ref' => 'official-' . $artist->id, 'name' => $artist->name])
             ->concat(UserArtist::whereIn('id', $attendedUserArtistIds)
                 ->whereIn('id', \App\Models\UserSong::select('user_artist_id'))->get()
                 ->map(fn ($artist) => ['ref' => 'user-' . $artist->id, 'name' => $artist->name]))
             ->sortBy(fn ($artist) => $firstDates[$artist['ref']] ?? '9999-12-31')
             ->values();
-
-        return view('mypage.stats.stamps_index', compact('stampBookArtists'));
     }
 
     // アーティスト別の自分専用統計（/stats/artist/{id} のMy Page版）。
@@ -582,6 +590,12 @@ class MyPageStatsController extends Controller
         $decoColorsUrl = route('mypage.stats.stamps.colors', $artistRef);
         $decoMarkUrl = route('mypage.stats.stamps.mark', $artistRef);
 
+        // タブの「アーティスト」：この人のスタンプ帳があるアーティストに切り替える（ほかの人のスタンプ帳を見ているときは ?user= を付けたまま）
+        $userParam = $isOwner ? [] : ['user' => $externalUser->id];
+        $stampTabArtists = $this->stampBookArtists($externalUser)
+            ->map(fn ($a) => ['name' => $a['name'], 'url' => route('mypage.stats.stamps', array_merge(['artistId' => $a['ref']], $userParam)), 'current' => $a['ref'] === $artistRef])
+            ->all();
+
         return view('mypage.stats.stamps', compact(
             'artist',
             'artistRef',
@@ -597,7 +611,8 @@ class MyPageStatsController extends Controller
             'performedPercentage',
             'externalUser',
             'isOwner',
-            'stampFilters'
+            'stampFilters',
+            'stampTabArtists'
         ));
     }
 }

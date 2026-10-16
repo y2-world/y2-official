@@ -231,6 +231,21 @@ document.addEventListener('DOMContentLoaded', function () {
         showView('hanko', false);
     }
 
+    // タブの「アーティスト」：選んだアーティストのスタンプ帳を開く（Hanko を開いていたら、その先も Hanko で開く）
+    const artistSelect = document.getElementById('stampArtistSelect');
+    if (artistSelect) {
+        artistSelect.addEventListener('change', function () {
+            if (!artistSelect.value) {
+                return;
+            }
+            const url = new URL(artistSelect.value, window.location.href);
+            if (book.classList.contains('is-hanko')) {
+                url.searchParams.set('view', 'hanko');
+            }
+            window.location.href = url.toString();
+        });
+    }
+
     if (select) {
         select.addEventListener('change', function () { apply(true); syncUrl(); });
     }

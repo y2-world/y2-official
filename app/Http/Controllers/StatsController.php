@@ -1166,7 +1166,7 @@ class StatsController extends Controller
 
         $stamps = ($yukiId = $this->yukiUserId()) ? \App\Support\StampDeco::withColors($stamps, $yukiId, 'official-' . $artist->id) : $stamps;
 
-        return view('stats.stamps', array_merge($this->yukiStampDeco('official-' . $artist->id), compact(
+        return view('stats.stamps', array_merge($this->yukiStampDeco('official-' . $artist->id), $this->stampTabArtists($artist->id), compact(
             'artist',
             'stamps',
             'totalCount',
@@ -1183,6 +1183,26 @@ class StatsController extends Controller
     private function yukiUserId(): ?int
     {
         return \App\Models\ExternalUser::where('is_yuki', true)->value('id');
+    }
+
+    // スタンプ帳のタブの「アーティスト」：参加したアーティストのうち、スタンプ帳があるアーティスト（初めてライブに行った順）に切り替える
+    private function stampTabArtists($artistId): array
+    {
+        $stampTabArtists = collect($this->getPersonalArtistStats())
+            ->sortBy('first_date')
+            ->filter(function ($a) {
+                if (DbSong::where('artist_id', (int) $a['id'])->exists()) {
+                    return true;
+                }
+                $artist = Artist::find($a['id']);
+                $linked = $artist ? \App\Support\ArtistLink::userArtistFor($artist) : null;
+
+                return $linked && $linked->songs()->exists();
+            })
+            ->map(fn ($a) => ['name' => $a['name'], 'url' => route('stats.stamps', $a['id']), 'current' => (int) $a['id'] === (int) $artistId])
+            ->values()->all();
+
+        return compact('stampTabArtists');
     }
 
     private function yukiStampDeco(string $artistRef): array
@@ -1277,6 +1297,6 @@ class StatsController extends Controller
 
         $stamps = ($yukiId = $this->yukiUserId()) ? \App\Support\StampDeco::withColors($stamps, $yukiId, 'user-' . $userArtist->id) : $stamps;
 
-        return view('stats.stamps', array_merge($this->yukiStampDeco('user-' . $userArtist->id), compact('artist', 'stamps', 'totalCount', 'doneCount', 'percentage', 'performedCount', 'performedPercentage', 'stampFilters')));
+        return view('stats.stamps', array_merge($this->yukiStampDeco('user-' . $userArtist->id), $this->stampTabArtists($artist->id), compact('artist', 'stamps', 'totalCount', 'doneCount', 'percentage', 'performedCount', 'performedPercentage', 'stampFilters')));
     }
 }
