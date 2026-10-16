@@ -5521,6 +5521,83 @@ a.setlist-card:hover {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), inset 0 0 0 4px var(--stamp-book-tint);
 }
 
+/* テーマの金・銀・銅（#d4af37・#a8adb4・#b0703c）はキラキラさせる。保存するのは普通の色と同じ色コードなので、
+   その色コードが入っているもの（スタンプの style="--stamp-deco: …"、色の丸の data-color）を見て、金属の模様を重ねる */
+.stamp-slot[style*="#d4af37"], .stamp-deco-current[data-color="#d4af37"], .stamp-deco-swatch[data-color="#d4af37"], .stamp-deco-palette-swatch[data-color="#d4af37"] {
+    --stamp-metal: linear-gradient(135deg, #8a6b14 0%, #f7e08a 30%, #d4af37 50%, #fff3b0 70%, #9c7a1c 100%);
+    --stamp-metal-light: #fff3b0;
+    --stamp-metal-dark: #8a6b14;
+}
+.stamp-slot[style*="#a8adb4"], .stamp-deco-current[data-color="#a8adb4"], .stamp-deco-swatch[data-color="#a8adb4"], .stamp-deco-palette-swatch[data-color="#a8adb4"] {
+    --stamp-metal: linear-gradient(135deg, #6f747b 0%, #f2f4f6 30%, #a8adb4 50%, #ffffff 70%, #7b8087 100%);
+    --stamp-metal-light: #ffffff;
+    --stamp-metal-dark: #6f747b;
+}
+.stamp-slot[style*="#b0703c"], .stamp-deco-current[data-color="#b0703c"], .stamp-deco-swatch[data-color="#b0703c"], .stamp-deco-palette-swatch[data-color="#b0703c"] {
+    --stamp-metal: linear-gradient(135deg, #6e3e17 0%, #e9b48a 30%, #b0703c 50%, #f3c9a4 70%, #7a4520 100%);
+    --stamp-metal-light: #f3c9a4;
+    --stamp-metal-dark: #6e3e17;
+}
+
+/* 色を選ぶ丸も金属の模様に */
+.stamp-deco-palette-swatch[data-color="#d4af37"], .stamp-deco-palette-swatch[data-color="#a8adb4"], .stamp-deco-palette-swatch[data-color="#b0703c"],
+.stamp-deco-current[data-color="#d4af37"], .stamp-deco-swatch[data-color="#d4af37"], .stamp-deco-current[data-color="#a8adb4"], .stamp-deco-swatch[data-color="#a8adb4"], .stamp-deco-current[data-color="#b0703c"], .stamp-deco-swatch[data-color="#b0703c"] {
+    background: var(--stamp-metal) !important;
+}
+
+/* Stamp：枠は濃い・明るい・元の色の3段で縁取って金属の縁のように。マスの上を光がときどき流れる */
+.stamp-slot[style*="#d4af37"]:not([data-color-id=""]) .stamp-slot-frame,
+.stamp-slot[style*="#a8adb4"]:not([data-color-id=""]) .stamp-slot-frame,
+.stamp-slot[style*="#b0703c"]:not([data-color-id=""]) .stamp-slot-frame {
+    box-shadow: 0 0 0 1px var(--stamp-metal-light), 0 0 0 2px var(--stamp-deco), 0 0 0 3px var(--stamp-metal-dark), inset 0 0 0 1px var(--stamp-metal-light);
+}
+
+.stamp-slot[style*="#d4af37"]:not([data-color-id=""]) .stamp-slot-frame::before,
+.stamp-slot[style*="#a8adb4"]:not([data-color-id=""]) .stamp-slot-frame::before,
+.stamp-slot[style*="#b0703c"]:not([data-color-id=""]) .stamp-slot-frame::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -60%;
+    width: 50%;
+    z-index: 3;
+    pointer-events: none;
+    background: linear-gradient(105deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.75) 50%, rgba(255, 255, 255, 0) 100%);
+    transform: translateX(0);
+    animation: stampMetalShine 3.6s ease-in-out infinite;
+}
+
+@keyframes stampMetalShine {
+    0% { transform: translateX(0); }
+    45%, 100% { transform: translateX(440%); }
+}
+
+/* Hanko：行の左の帯を金属の模様に（光は流さない） */
+.stamp-book.is-hanko .stamp-slot[style*="#d4af37"]:not([data-color-id=""]) .stamp-slot-frame,
+.stamp-book.is-hanko .stamp-slot[style*="#a8adb4"]:not([data-color-id=""]) .stamp-slot-frame,
+.stamp-book.is-hanko .stamp-slot[style*="#b0703c"]:not([data-color-id=""]) .stamp-slot-frame {
+    box-shadow: none;
+}
+
+.stamp-book.is-hanko .stamp-slot[style*="#d4af37"]:not([data-color-id=""]) .stamp-slot-frame::before,
+.stamp-book.is-hanko .stamp-slot[style*="#a8adb4"]:not([data-color-id=""]) .stamp-slot-frame::before,
+.stamp-book.is-hanko .stamp-slot[style*="#b0703c"]:not([data-color-id=""]) .stamp-slot-frame::before {
+    left: 0;
+    width: 5px;
+    z-index: 1;
+    background: var(--stamp-metal);
+    background-size: 100% 60px;
+    animation: none;
+    transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stamp-slot-frame::before {
+        animation: none !important;
+    }
+}
+
 /* Hanko でタップしたとき：欄（罫線）は動かさず、はんこだけを押し直すように軽く沈ませる */
 .stamp-book.is-hanko .stamp-slot-frame.is-tapped {
     animation: none;

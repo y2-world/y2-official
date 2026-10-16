@@ -181,6 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const item = swatch.closest('.stamp-deco-item');
                 item.querySelector('[data-field="color"]').value = swatch.dataset.color;
                 item.querySelector('.stamp-deco-current').style.background = swatch.dataset.color;
+                item.querySelector('.stamp-deco-current').dataset.color = swatch.dataset.color;
                 item.querySelectorAll('.js-stamp-deco-swatch').forEach(function (other) {
                     other.classList.toggle('is-selected', other === swatch);
                 });
