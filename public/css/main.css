@@ -5480,12 +5480,11 @@ a.setlist-card:hover {
     font-family: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", serif;
 }
 
-/* 押した向き・濃さを行ごとに少しずつ変える（アニメーションの最後の向きを上書きしないよう、外側の余白と濃さで） */
-.stamp-book.is-hanko .stamp-slot:nth-of-type(5n+1) .stamp-mark { opacity: 0.95; margin-left: -2px; }
-.stamp-book.is-hanko .stamp-slot:nth-of-type(5n+2) .stamp-mark { opacity: 0.85; margin-top: 3px; }
-.stamp-book.is-hanko .stamp-slot:nth-of-type(5n+3) .stamp-mark { opacity: 0.9; margin-left: 2px; margin-top: -2px; }
-.stamp-book.is-hanko .stamp-slot:nth-of-type(5n+4) .stamp-mark { opacity: 0.8; }
-.stamp-book.is-hanko .stamp-slot:nth-of-type(5n) .stamp-mark { opacity: 0.92; margin-top: -3px; }
+/* 押した位置を行ごとに少しずつずらす（濃さ opacity は、押す前の「透明」を上書きしてしまうので変えない） */
+.stamp-book.is-hanko .stamp-slot:nth-of-type(5n+1) .stamp-mark { margin-left: -2px; }
+.stamp-book.is-hanko .stamp-slot:nth-of-type(5n+2) .stamp-mark { margin-top: 3px; }
+.stamp-book.is-hanko .stamp-slot:nth-of-type(5n+3) .stamp-mark { margin-left: 2px; margin-top: -2px; }
+.stamp-book.is-hanko .stamp-slot:nth-of-type(5n) .stamp-mark { margin-top: -3px; }
 
 .stamp-book.is-hanko .stamp-slot.is-fes-only .stamp-mark {
     border-color: #2f5f9e;
