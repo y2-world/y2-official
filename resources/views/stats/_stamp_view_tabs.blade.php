@@ -4,13 +4,3 @@
     <button type="button" class="stats-tab-btn is-active" data-stamp-view="stamps">Stamps</button>
     <button type="button" class="stats-tab-btn" data-stamp-view="hanko">Hanko</button>
 </div>
-{{-- Hanko のはんこの、朱肉のかすれ（輪郭を少し揺らして、ところどころ薄くする） --}}
-<svg width="0" height="0" style="position: absolute;" aria-hidden="true" focusable="false">
-    <filter id="hankoInk" x="-10%" y="-10%" width="120%" height="120%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="noise"/>
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.2" xChannelSelector="R" yChannelSelector="G" result="rough"/>
-        <feTurbulence type="fractalNoise" baseFrequency="0.35" numOctaves="1" seed="3" result="spots"/>
-        <feColorMatrix in="spots" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.9 1.25" result="mask"/>
-        <feComposite in="rough" in2="mask" operator="in"/>
-    </filter>
-</svg>

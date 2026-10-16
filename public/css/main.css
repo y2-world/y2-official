@@ -5462,8 +5462,21 @@ a.setlist-card:hover {
     color: #c8372b;
     background: radial-gradient(circle, rgba(200, 55, 43, 0.07), rgba(200, 55, 43, 0) 70%);
     box-shadow: 0 0 0 1.5px rgba(200, 55, 43, 0.25) inset, 0 0 1px rgba(200, 55, 43, 0.4);
-    filter: url(#hankoInk);
-    mix-blend-mode: multiply;
+    position: relative;
+    /* 動きは transform と opacity だけ（スマホでも滑らかに動くよう、別の層で描く） */
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+}
+
+/* 朱肉のかすれ：紙の色の細かい点をはんこの上に重ねる（フィルターは動くたびに描き直して重いので、模様の画像にする） */
+.stamp-book.is-hanko .stamp-mark::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cfilter id='k'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0.99 0 0 0 0 0.98 0 0 0 0 0.95 0 0 0 -2.2 1.25'/%3E%3C/filter%3E%3Crect width='48' height='48' filter='url(%23k)'/%3E%3C/svg%3E");
+    background-size: 48px 48px;
 }
 
 .stamp-book.is-hanko .stamp-mark-text {
