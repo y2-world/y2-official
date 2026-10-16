@@ -5530,3 +5530,12 @@ a.setlist-card:hover {
         opacity: 1;
     }
 }
+
+/* Hanko：押すときの大きなはんこが欄で切れないように、欄からはみ出して、上下の行より手前に描く */
+.stamp-book.is-hanko .stamp-slot-frame {
+    overflow: visible;
+}
+
+.stamp-book.is-hanko .stamp-mark {
+    z-index: 2;
+}
