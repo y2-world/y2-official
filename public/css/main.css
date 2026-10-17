@@ -5421,7 +5421,7 @@ a.setlist-card:hover {
     text-align: left;
 }
 
-/* Hanko の表の見出し（Hanko・Title）。色褪せた印刷のように、くすんだ色で少し薄く */
+/* Hanko の表の見出し（印・タイトル）。色褪せた印刷のように、くすんだ色で少し薄く */
 .stamp-hanko-head {
     display: none;
 }

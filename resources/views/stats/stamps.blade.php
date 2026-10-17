@@ -53,8 +53,8 @@
                                     <i class="fa-solid fa-palette"></i>
                                 </button>
                             @endif
-                            {{-- Hanko の表の見出し（Stamp のときは出さない） --}}
-                            <div class="stamp-hanko-head" aria-hidden="true"><span>Hanko</span><span>Title</span></div>
+                            {{-- Hanko の表の見出し「印」「タイトル」（Stamp のときは出さない） --}}
+                            <div class="stamp-hanko-head" aria-hidden="true"><span>印</span><span>タイトル</span></div>
                             @foreach ($stamps as $stamp)
                                 <div class="stamp-slot {{ $stamp['done'] ? 'is-stamped' : '' }} {{ $stamp['never_performed'] ? 'is-never-performed' : '' }} {{ $stamp['fes_only'] ? 'is-fes-only' : '' }} {{ !empty($stamp['hikigatari_only']) ? 'is-hikigatari-only' : '' }}"
                                     data-filter-keys="{{ implode(' ', $stamp['filter_keys'] ?? []) }}"
