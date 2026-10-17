@@ -15,12 +15,23 @@ class StampDeco
         return StampColor::where('external_user_id', $userId)->orderBy('sort_order')->orderBy('id')->get(['id', 'color', 'label']);
     }
 
-    // 各スタンプに color_id を足す
+    // 各スタンプに color_id と、選んだ曲名の表記 title_key を足す。title は選んだ表記に差し替え、元の曲名は base_title に残す
     public static function withColors(Collection $stamps, int $userId, string $artistRef): Collection
     {
-        $colorBySong = StampMark::where('external_user_id', $userId)->where('artist_ref', $artistRef)->pluck('stamp_color_id', 'song_id');
+        $marks = StampMark::where('external_user_id', $userId)->where('artist_ref', $artistRef)->get(['song_id', 'stamp_color_id', 'title_key'])->keyBy('song_id');
 
-        return $stamps->map(fn ($stamp) => $stamp + ['color_id' => $colorBySong[$stamp['song_id']] ?? null]);
+        return $stamps->map(function ($stamp) use ($marks) {
+            $mark = $marks[$stamp['song_id']] ?? null;
+            // 選んだ表記が今は無い（アルバムの表記が変わった等）ときは、曲名のまま
+            $titleKey = $mark && $mark->title_key && isset($stamp['track_titles'][$mark->title_key]) ? $mark->title_key : null;
+
+            return array_merge($stamp, [
+                'color_id' => $mark?->stamp_color_id,
+                'title_key' => $titleKey,
+                'base_title' => $stamp['title'],
+                'title' => $titleKey ? $stamp['track_titles'][$titleKey] : $stamp['title'],
+            ]);
+        });
     }
 
     // colors: [{id?, color, label}]。送られなかった色は消す（その色のスタンプは色なしに戻る）
@@ -33,21 +44,38 @@ class StampDeco
             $color->fill(['color' => strtolower($row['color']), 'label' => trim($row['label']), 'sort_order' => $i])->save();
             $keep[] = $color->id;
         }
-        StampColor::where('external_user_id', $userId)->whereNotIn('id', $keep)->delete();
+        $removed = StampColor::where('external_user_id', $userId)->whereNotIn('id', $keep)->pluck('id');
+        // 消した色のスタンプは色なしに戻す（曲名の表記を選んでいれば、それは残す）
+        StampMark::whereIn('stamp_color_id', $removed)->update(['stamp_color_id' => null]);
+        StampMark::where('external_user_id', $userId)->whereNull('stamp_color_id')->whereNull('title_key')->delete();
+        StampColor::whereIn('id', $removed)->delete();
     }
 
-    // color_id が空なら色なしにする。自分の色でなければ false
-    public static function saveMark(int $userId, string $artistRef, int $songId, ?int $colorId): bool
+    // $changes に入っているもの（color_id / title_key）だけ変える。空なら色なし・曲名のまま。
+    // 色も曲名も選んでいなければ消す。自分の色でなければ false
+    public static function saveMark(int $userId, string $artistRef, int $songId, array $changes): bool
     {
         $key = ['external_user_id' => $userId, 'artist_ref' => $artistRef, 'song_id' => $songId];
-        if (!$colorId) {
-            StampMark::where($key)->delete();
+        $values = [];
+        if (array_key_exists('color_id', $changes)) {
+            $colorId = $changes['color_id'] ?: null;
+            if ($colorId && !StampColor::where('external_user_id', $userId)->whereKey($colorId)->exists()) {
+                return false;
+            }
+            $values['stamp_color_id'] = $colorId;
+        }
+        if (array_key_exists('title_key', $changes)) {
+            $values['title_key'] = $changes['title_key'] ?: null;
+        }
+        $mark = StampMark::firstOrNew($key);
+        $mark->fill($values);
+        if (!$mark->stamp_color_id && !$mark->title_key) {
+            if ($mark->exists) {
+                $mark->delete();
+            }
             return true;
         }
-        if (!StampColor::where('external_user_id', $userId)->whereKey($colorId)->exists()) {
-            return false;
-        }
-        StampMark::updateOrCreate($key, ['stamp_color_id' => $colorId]);
+        $mark->save();
 
         return true;
     }
@@ -64,6 +92,6 @@ class StampDeco
 
     public static function markRules(): array
     {
-        return ['song_id' => ['required', 'integer'], 'color_id' => ['nullable', 'integer']];
+        return ['song_id' => ['required', 'integer'], 'color_id' => ['nullable', 'integer'], 'title_key' => ['nullable', 'string', 'regex:/^(single|album-[0-9]+)$/']];
     }
 }

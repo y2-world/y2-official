@@ -4258,6 +4258,24 @@ body.stamp-deco-open {
     background: #f5f6ff;
 }
 
+.stamp-deco-choices[hidden],
+.stamp-deco-pick-section[hidden],
+.stamp-deco-pick-label[hidden] {
+    display: none;
+}
+
+/* 長押しの画面で、バージョンとテーマを並べるときの見出し */
+.stamp-deco-pick-label {
+    margin: 16px 0 0;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+/* バージョンの選択肢とテーマの見出しの間は広めに空ける */
+.stamp-deco-pick-section + .stamp-deco-pick-label {
+    margin-top: 28px;
+}
+
 /* クリックしたときにブラウザが付けるフォーカスの枠（Mac ではアクセントカラーの色）は出さず、キーボードのときだけサイトの色の枠にする */
 .stamp-deco-modal button:focus:not(:focus-visible),
 .stamp-deco-modal input:focus:not(:focus-visible),
@@ -5292,6 +5310,13 @@ a.setlist-card:hover {
     bottom: 10px;
 }
 
+/* スマホは下の余白が狭く、名前が長くて折り返すと右下の編集ボタンに重なるので、ボタンの分だけ空ける */
+@media (max-width: 768px) {
+    .database-hero.database-hero--detail.has-hero-edit:not(.is-hero-editing) {
+        padding-bottom: 44px;
+    }
+}
+
 /* 「＋」の追加ボタン。マイページのトップ（セットリストを追加）と同じく、右寄せで文字の右に置く */
 .mypage-add-row {
     display: flex;
@@ -5375,8 +5400,11 @@ a.setlist-card:hover {
 
 .stamp-book.is-hanko .stamp-slot-title {
     grid-column: 2;
-    margin: 0;
-    padding: 12px 14px 0;
+    /* リンクは曲名の文字だけ（欄の余白は押せない）。余白は padding ではなく margin で取る */
+    justify-self: start;
+    width: auto;
+    margin: 12px 14px 0;
+    padding: 0;
     font-size: 0.95rem;
     text-align: left;
     color: #222;
@@ -5391,7 +5419,7 @@ a.setlist-card:hover {
 
 /* アーティスト表記が無い行は、曲名の上下を同じ余白に */
 .stamp-book.is-hanko .stamp-slot-title:last-child {
-    padding-bottom: 12px;
+    margin-bottom: 12px;
     grid-row: 1 / span 2;
 }
 
@@ -5427,11 +5455,11 @@ a.setlist-card:hover {
 
     .stamp-book.is-hanko .stamp-slot-title {
         font-size: 0.85rem;
-        padding: 10px 10px 0;
+        margin: 10px 10px 0;
     }
 
     .stamp-book.is-hanko .stamp-slot-title:last-child {
-        padding-bottom: 10px;
+        margin-bottom: 10px;
     }
 
     .stamp-book.is-hanko .stamp-slot-credit {
@@ -5636,4 +5664,16 @@ a.setlist-card:hover {
 .stamp-book.is-hanko .stamp-mark.is-stamp-in {
     transform: rotate(-14deg) scale(1);
     opacity: 1;
+}
+
+/* Manage My Artists のツアーの画面：「全セットリスト登録済」 */
+.manage-setlists-complete {
+    margin: 0 0 16px;
+    text-align: left;
+}
+
+.manage-setlists-complete small {
+    display: block;
+    color: #999;
+    font-size: 0.7rem;
 }

@@ -19,7 +19,9 @@ document.addEventListener('DOMContentLoaded', function () {
     slots.forEach(function (slot) {
         const titleEl = slot.querySelector('.stamp-slot-title');
         slot._titleEl = titleEl;
+        // _defaultTitle は長押しで選んだ表記（選んでいなければ曲名）、_baseTitle は元の曲名
         slot._defaultTitle = titleEl ? titleEl.textContent : '';
+        slot._baseTitle = slot.dataset.baseTitle || slot._defaultTitle;
         slot._trackTitles = slot.dataset.trackTitles ? JSON.parse(slot.dataset.trackTitles) : {};
         slot._trackOrders = slot.dataset.trackOrders ? JSON.parse(slot.dataset.trackOrders) : {};
     });
@@ -36,14 +38,16 @@ document.addEventListener('DOMContentLoaded', function () {
         return ordered;
     }
 
+    // シングル・アルバムで絞り込んだときはその盤の表記（無ければ元の曲名）、それ以外は長押しで選んだ表記
     function applyTitles(key) {
+        const discKey = key === 'single' || key.indexOf('album-') === 0;
         slots.forEach(function (slot) {
             if (slot._titleEl) {
-                const title = slot._trackTitles[key] || slot._defaultTitle;
+                const title = discKey ? (slot._trackTitles[key] || slot._baseTitle) : slot._defaultTitle;
                 slot._titleEl.textContent = title;
                 // 曲名と違う表記で出しているときは、楽曲ページもその表記で絞り込んだ状態で開く
                 const url = new URL(slot._titleEl.href, window.location.href);
-                if (title !== slot._defaultTitle) {
+                if (title !== slot._baseTitle) {
                     url.searchParams.set('title', title);
                 } else {
                     url.searchParams.delete('title');
@@ -245,6 +249,13 @@ document.addEventListener('DOMContentLoaded', function () {
             window.location.href = url.toString();
         });
     }
+
+    // 長押しで曲名の表記を選んだとき（_stamp_book_script から呼ぶ）
+    window.stampBookSetTitle = function (slot, titleKey) {
+        slot.dataset.titleKey = titleKey || '';
+        slot._defaultTitle = (titleKey && slot._trackTitles[titleKey]) || slot._baseTitle;
+        applyTitles(select ? select.value : '');
+    };
 
     if (select) {
         select.addEventListener('change', function () { apply(true); syncUrl(); });

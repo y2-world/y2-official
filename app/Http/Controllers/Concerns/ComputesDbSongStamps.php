@@ -35,11 +35,15 @@ trait ComputesDbSongStamps
     // ここに含まれない曲は「ライブでそもそも未演奏」として台紙自体をグレー表示する。
     // Yuki本人の記録（StatsController）・外部ユーザーの記録（MyPageStatsController）双方の
     // スタンプ帳で共通して使う、そのアーティスト単位の計算。
-    private function everPerformedDbSongIds(int $artistId): array
+    // ライブが1件も無い、またはどのライブのセトリも登録していないときは、未演奏かどうか判断できないので null
+    private function everPerformedDbSongIds(int $artistId): ?array
     {
         $songArtistIds = DbSong::pluck('artist_id', 'id');
         $tourIds = DbConcert::whereIn('artist_id', $this->crossoverTourArtistIds($artistId))->pluck('id');
         $tourSetlists = DbSetlist::whereIn('tour_id', $tourIds)->get();
+        if ($tourSetlists->isEmpty()) {
+            return null;
+        }
 
         $everPerformedDbSongIds = [];
         foreach ($tourSetlists as $setlist) {
@@ -58,11 +62,18 @@ trait ComputesDbSongStamps
     // として台紙自体をグレー表示する。公式側のeverPerformedDbSongIdsと同じ考え方だが、
     // 演奏記録の裏付けがYuki本人の公式記録ではなく、そのアーティストの作成者（または
     // 誰か）がmanage画面で自己申告したものである点が異なる。
-    private function everPerformedUserSongIds(int $userArtistId): array
+    // ツアーの画面で「全セットリスト登録済」に印が無い（登録の途中かもしれない）か、セトリが1件も無ければ、判断できないので null
+    private function everPerformedUserSongIds(int $userArtistId): ?array
     {
+        if (!\App\Models\UserArtist::whereKey($userArtistId)->value('setlists_complete')) {
+            return null;
+        }
         $songArtistIds = UserSong::where('user_artist_id', $userArtistId)->pluck('user_artist_id', 'id');
         $concertIds = UserConcert::where('user_artist_id', $userArtistId)->pluck('id');
         $setlists = UserSetlist::whereIn('user_concert_id', $concertIds)->get();
+        if ($setlists->isEmpty()) {
+            return null;
+        }
 
         $everPerformedUserSongIds = [];
         foreach ($setlists as $setlist) {

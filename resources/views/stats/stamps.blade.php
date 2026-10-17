@@ -56,6 +56,8 @@
                                     data-never-performed="{{ $stamp['never_performed'] ? 1 : 0 }}"
                                     data-song-id="{{ $stamp['song_id'] }}"
                                     data-color-id="{{ $stamp['color_id'] ?? '' }}"
+                                    data-base-title="{{ $stamp['base_title'] ?? $stamp['title'] }}"
+                                    data-title-key="{{ $stamp['title_key'] ?? '' }}"
                                     @if (!empty($stamp['color_id']) && ($deco = $stampColors->firstWhere('id', $stamp['color_id']))) style="--stamp-deco: {{ $deco->color }};" @endif
                                     @if (!empty($stamp['track_titles'])) data-track-titles="{{ json_encode($stamp['track_titles'], JSON_UNESCAPED_UNICODE) }}" @endif
                                     @if (!empty($stamp['track_orders'])) data-track-orders="{{ json_encode($stamp['track_orders']) }}" @endif>
@@ -88,6 +90,6 @@
 @endsection
 
 @section('page-script')
-<script src="{{ asset('/js/stamp-book.js?v=20261017') }}"></script>
+<script src="{{ asset('/js/stamp-book.js?v=20261017b') }}"></script>
 @include('stats._stamp_book_script')
 @endsection

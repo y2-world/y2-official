@@ -73,6 +73,13 @@
 
                 {{-- ツアーを追加するフォームを開いている間は、一覧を隠す --}}
                 <div id="concertList" class="select-card-list" @if ($errors->any()) hidden @endif>
+                    {{-- 全セットリスト登録済：セトリを全部登録したら印を付ける。登録の途中だと未演奏かどうか分からないので、印があるときだけスタンプ帳に未演奏の背景を出す --}}
+                    <form method="POST" action="{{ route('mypage.manage.artists.setlists_complete', $artist->id) }}" class="form-check manage-setlists-complete">
+                        @csrf
+                        <input type="hidden" name="setlists_complete" value="0">
+                        <input type="checkbox" class="form-check-input" id="setlists_complete" name="setlists_complete" value="1" @if ($artist->setlists_complete) checked @endif onchange="this.form.submit()">
+                        <label class="form-check-label" for="setlists_complete">全セットリスト登録済<small>未演奏の曲は、スタンプ帳の背景を斜線にします</small></label>
+                    </form>
                     @foreach ($concerts as $concert)
                         <div class="manage-artist-row">
                             <a href="{{ route('mypage.manage.setlists', [$artist->id, $concert->id]) }}" class="select-card">

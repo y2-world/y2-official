@@ -203,6 +203,7 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
             Route::get('artists/{artistId}/songs', [ManageController::class, 'songs'])->name('songs');
             Route::get('artists/{artistId}/concerts', [ManageController::class, 'concerts'])->name('concerts');
             Route::post('artists/{artistId}/concerts', [ManageController::class, 'storeConcert'])->name('concerts.store');
+            Route::post('artists/{artistId}/setlists-complete', [ManageController::class, 'updateSetlistsComplete'])->name('artists.setlists_complete');
             Route::get('artists/{artistId}/concerts/{concertId}/setlists', [ManageController::class, 'setlists'])->name('setlists');
             Route::post('artists/{artistId}/concerts/{concertId}/setlists', [ManageController::class, 'storeSetlist'])->name('setlists.store');
             // パターンの追加・編集は、パターンごとのページで行う

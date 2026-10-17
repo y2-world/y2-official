@@ -129,6 +129,17 @@ class ManageController extends Controller
         return view('mypage.manage.concerts', compact('artist', 'concerts'));
     }
 
+    // ツアーの画面の「全セットリスト登録済」。チェックしたアーティストだけ、スタンプ帳に未演奏の背景を出す
+    public function updateSetlistsComplete(Request $request, $artistId)
+    {
+        $artist = UserArtist::findOrFail($artistId);
+        abort_unless($artist->external_user_id === Auth::guard('external')->id(), 403);
+
+        $artist->update(['setlists_complete' => $request->boolean('setlists_complete')]);
+
+        return back();
+    }
+
     // ツアー・ライブ情報だけを登録する（参加記録やセットリストは無しでもよい）。
     // 「行ってはいないが情報としては知っているツアー」をデータベースに残したいケース向け。
     public function storeConcert(Request $request, $artistId)

@@ -480,7 +480,8 @@ class MyPageStatsController extends Controller
                 // ほかの人との曲のアーティスト表記（スタンプでは曲名のあとに灰色で出す）
                 'credit' => $song->credit,
                 'done' => isset($playedDbSongIds[$song->id]),
-                'never_performed' => !isset($everPerformedDbSongIds[$song->id]),
+                // セトリの記録が無くて判断できない（null）ときは、未演奏にしない
+                'never_performed' => $everPerformedDbSongIds !== null && !isset($everPerformedDbSongIds[$song->id]),
                 'fes_only' => isset($fesOnlyDbSongIds[$song->id]),
                 'hikigatari_only' => isset($hikigatariDbSongIds[$song->id]),
                 'filter_keys' => $this->stampFilterKeys($song->id, $stampFilters),
@@ -543,7 +544,7 @@ class MyPageStatsController extends Controller
                 'song_url' => $this->isOwner() ? route('mypage.attendances.index', ['song_id' => 'user-' . $song->id]) : null,
                 'title' => $song->title,
                 'done' => isset($playedUserSongIds[$song->id]),
-                'never_performed' => !isset($everPerformedUserSongIds[$song->id]),
+                'never_performed' => $everPerformedUserSongIds !== null && !isset($everPerformedUserSongIds[$song->id]),
                 'fes_only' => isset($fesOnlyUserSongIds[$song->id]),
                 'filter_keys' => $this->stampFilterKeys($song->id, $stampFilters),
                 'track_titles' => $this->stampTrackTitles($song->id, $stampFilters),
@@ -567,7 +568,7 @@ class MyPageStatsController extends Controller
     public function saveStampMark(Request $request, $artistId)
     {
         $data = $request->validate(\App\Support\StampDeco::markRules());
-        abort_unless(\App\Support\StampDeco::saveMark(Auth::guard('external')->id(), $artistId, (int) $data['song_id'], $data['color_id'] ?? null), 404);
+        abort_unless(\App\Support\StampDeco::saveMark(Auth::guard('external')->id(), $artistId, (int) $data['song_id'], \Illuminate\Support\Arr::only($data, ['color_id', 'title_key'])), 404);
 
         return response()->json(['ok' => true]);
     }

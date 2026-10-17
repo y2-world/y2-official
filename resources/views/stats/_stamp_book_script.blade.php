@@ -92,20 +92,67 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!pickModal || !slot) {
             return;
         }
-        // 色がまだ無いときは、色を作る画面を開く
-        if (!pickModal.querySelector('.js-stamp-deco-choice[data-color-id]:not([data-color-id=""])')) {
+        const hasThemes = !!pickModal.querySelector('.js-stamp-deco-choice[data-color-id]:not([data-color-id=""])');
+        const titleOptions = stampTitleOptions(slot);
+        // テーマがまだ無く、曲名も選べないときは、テーマを作る画面を開く
+        if (!hasThemes && titleOptions.length < 2) {
             openModal(editModal);
             return;
         }
         pickingSlot = slot;
-        const title = slot.querySelector('.stamp-slot-title');
-        document.getElementById('stampDecoPickTitle').textContent = title ? title.textContent : '';
+        document.getElementById('stampDecoPickTitle').textContent = slot._baseTitle || '';
+        // 曲名の選択肢（2つ以上あるときだけ）
+        const titleSection = document.getElementById('stampTitlePickSection');
+        const titleChoices = document.getElementById('stampTitleChoices');
+        titleChoices.innerHTML = '';
+        titleOptions.forEach(function (option) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'stamp-deco-choice js-stamp-title-choice';
+            button.dataset.titleKey = option.key;
+            button.classList.toggle('is-current', option.key === (slot.dataset.titleKey || ''));
+            button.textContent = option.title;
+            titleChoices.appendChild(button);
+        });
+        titleSection.hidden = titleOptions.length < 2;
+        // テーマは、曲名と並べるときだけ見出しを付ける。テーマが無いときは出さない
+        document.getElementById('stampThemePickLabel').hidden = titleOptions.length < 2 || !hasThemes;
+        document.getElementById('stampThemeChoices').hidden = !hasThemes;
         pickModal.querySelectorAll('.js-stamp-deco-choice').forEach(function (choice) {
             choice.classList.toggle('is-current', choice.dataset.colorId === slot.dataset.colorId);
         });
         openModal(pickModal);
     }
     window.openStampPicker = openStampPicker;
+
+    // バージョンの選択肢：元の曲名と、シングル・アルバムでの違う表記（同じ表記は1つにまとめる）
+    function stampTitleOptions(slot) {
+        const options = [{ key: '', title: slot._baseTitle || '' }];
+        Object.keys(slot._trackTitles || {}).forEach(function (key) {
+            const title = slot._trackTitles[key];
+            if (!title || options.some(function (o) { return o.title === title; })) {
+                return;
+            }
+            options.push({ key: key, title: title });
+        });
+        return options;
+    }
+
+    function saveStampMark(slot, changes) {
+        return fetch(@json($decoMarkUrl ?? ''), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            },
+            body: JSON.stringify(Object.assign({ song_id: Number(slot.dataset.songId) }, changes)),
+        }).then(function (res) {
+            if (!res.ok) {
+                throw new Error('save failed');
+            }
+        });
+    }
 
     [editModal, pickModal].forEach(function (modal) {
         if (!modal) {
@@ -199,6 +246,26 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (pickModal) {
+        // 曲名の表記を選んだとき
+        pickModal.addEventListener('click', function (e) {
+            const choice = e.target.closest('.js-stamp-title-choice');
+            if (!choice || !pickingSlot) {
+                return;
+            }
+            const slot = pickingSlot;
+            const titleKey = choice.dataset.titleKey;
+            const choices = Array.from(pickModal.querySelectorAll('.js-stamp-title-choice'));
+            const previous = choices.find(function (c) { return c.classList.contains('is-current'); });
+            choices.forEach(function (c) { c.classList.toggle('is-current', c === choice); });
+            const shownAt = Date.now();
+            saveStampMark(slot, { title_key: titleKey || null }).then(function () {
+                window.stampBookSetTitle(slot, titleKey);
+                setTimeout(function () { closeModal(pickModal); }, Math.max(0, 350 - (Date.now() - shownAt)));
+            }).catch(function () {
+                choices.forEach(function (c) { c.classList.toggle('is-current', c === previous); });
+                alert('保存できませんでした');
+            });
+        });
         pickModal.addEventListener('click', function (e) {
             const choice = e.target.closest('.js-stamp-deco-choice');
             if (!choice || !pickingSlot) {
@@ -211,18 +278,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const previous = choices.find(function (c) { return c.classList.contains('is-current'); });
             choices.forEach(function (c) { c.classList.toggle('is-current', c === choice); });
             const shownAt = Date.now();
-            fetch(@json($decoMarkUrl ?? ''), {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                },
-                body: JSON.stringify({ song_id: Number(slot.dataset.songId), color_id: colorId ? Number(colorId) : null }),
-            }).then(function (res) {
-                if (!res.ok) {
-                    throw new Error('save failed');
-                }
+            saveStampMark(slot, { color_id: colorId ? Number(colorId) : null }).then(function () {
                 slot.dataset.colorId = colorId;
                 if (colorId) {
                     slot.style.setProperty('--stamp-deco', choice.dataset.color);

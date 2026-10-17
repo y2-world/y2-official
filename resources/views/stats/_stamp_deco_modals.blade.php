@@ -59,7 +59,13 @@
         <div class="stamp-deco-dialog" role="dialog" aria-modal="true" aria-labelledby="stampDecoPickTitle">
             <button type="button" class="stamp-deco-close js-stamp-deco-close" aria-label="閉じる"><i class="fa-solid fa-xmark"></i></button>
             <h2 class="stamp-deco-heading" id="stampDecoPickTitle"></h2>
-            <div class="stamp-deco-choices">
+            {{-- 曲名の表記が複数ある曲（アルバムで表記が違う等）は、どの表記で出すかも選べる。選択肢は開くときに作る --}}
+            <div class="stamp-deco-pick-section" id="stampTitlePickSection" hidden>
+                <p class="stamp-deco-pick-label">バージョン</p>
+                <div class="stamp-deco-choices" id="stampTitleChoices"></div>
+            </div>
+            <p class="stamp-deco-pick-label" id="stampThemePickLabel" hidden>テーマ</p>
+            <div class="stamp-deco-choices" id="stampThemeChoices">
                 @foreach ($stampColors as $color)
                     <button type="button" class="stamp-deco-choice js-stamp-deco-choice" data-color-id="{{ $color->id }}" data-color="{{ $color->color }}" data-label="{{ $color->label }}">
                         <span class="stamp-deco-swatch" data-color="{{ $color->color }}" style="background: {{ $color->color }};"></span>{{ $color->label }}

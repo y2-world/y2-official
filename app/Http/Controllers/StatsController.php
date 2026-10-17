@@ -1147,7 +1147,8 @@ class StatsController extends Controller
                 // ほかの人との曲のアーティスト表記（スタンプでは曲名のあとに灰色で出す）
                 'credit' => $song->credit,
                 'done' => isset($playedDbSongIds[$song->id]),
-                'never_performed' => !isset($everPerformedDbSongIds[$song->id]),
+                // セトリの記録が無くて判断できない（null）ときは、未演奏にしない
+                'never_performed' => $everPerformedDbSongIds !== null && !isset($everPerformedDbSongIds[$song->id]),
                 'fes_only' => isset($fesOnlyDbSongIds[$song->id]),
                 'hikigatari_only' => !empty($hikigatariDbSongIds[$song->id]),
                 'filter_keys' => $this->stampFilterKeys($song->id, $stampFilters),
@@ -1280,7 +1281,7 @@ class StatsController extends Controller
                     'title' => $song->title,
                     'done' => $done,
                     // 聴いた曲は、ライブで演奏されたことがある
-                    'never_performed' => !$done && !isset($everPerformed[$song->id]),
+                    'never_performed' => !$done && $everPerformed !== null && !isset($everPerformed[$song->id]),
                     'fes_only' => isset($heardFes[$key]) && !isset($heardNormal[$key]),
                     'hikigatari_only' => false,
                     'filter_keys' => $this->stampFilterKeys($song->id, $stampFilters),
