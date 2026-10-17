@@ -4163,7 +4163,9 @@ body.stamp-deco-open {
 
 .stamp-deco-heading {
     font-size: 1rem;
-    margin: 0 28px 6px 0;
+    /* ×ボタンの分を左右どちらにも空けて、真ん中に置く */
+    margin: 0 28px 6px;
+    text-align: center;
     color: #333;
     word-break: break-word;
 }
