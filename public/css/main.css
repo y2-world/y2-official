@@ -5419,6 +5419,35 @@ a.setlist-card:hover {
     text-align: left;
 }
 
+/* Hanko の表の見出し（Hanko・Title）。色褪せた印刷のように、くすんだ色で少し薄く */
+.stamp-hanko-head {
+    display: none;
+}
+
+.stamp-book.is-hanko .stamp-hanko-head {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    border: 1px solid #b29f82;
+    margin-top: -1px;
+    color: #8a7a62;
+    font-family: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    opacity: 0.85;
+    text-shadow: 0 0 0.6px rgba(138, 122, 98, 0.6);
+    background: rgba(138, 122, 98, 0.06);
+}
+
+.stamp-book.is-hanko .stamp-hanko-head span {
+    padding: 5px 14px;
+    text-align: center;
+}
+
+.stamp-book.is-hanko .stamp-hanko-head span:first-child {
+    padding: 5px 0;
+    border-right: 1px solid #b29f82;
+}
+
 /* アーティスト表記が無い行は、曲名の上下を同じ余白に */
 .stamp-book.is-hanko .stamp-slot-title:last-child {
     margin-bottom: 12px;
@@ -5434,8 +5463,13 @@ a.setlist-card:hover {
         padding: 16px;
     }
 
-    .stamp-book.is-hanko .stamp-slot {
+    .stamp-book.is-hanko .stamp-slot,
+    .stamp-book.is-hanko .stamp-hanko-head {
         grid-template-columns: 48px 1fr;
+    }
+
+    .stamp-book.is-hanko .stamp-hanko-head span {
+        padding: 5px 10px;
     }
 
     .stamp-book.is-hanko .stamp-slot-frame,
@@ -5490,15 +5524,16 @@ a.setlist-card:hover {
         linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(236, 228, 210, 0.35));
 }
 
+/* 罫線は色褪せた茶色 */
 .stamp-book.is-hanko .stamp-slot {
-    border-color: #6f6758;
+    border-color: #b29f82;
 }
 
 .stamp-book.is-hanko .stamp-slot-frame,
 .stamp-book.is-hanko .stamp-slot.is-stamped .stamp-slot-frame,
 .stamp-book.is-hanko .stamp-slot.is-stamped.is-fes-only .stamp-slot-frame,
 .stamp-book.is-hanko .stamp-slot.is-stamped.is-hikigatari-only .stamp-slot-frame {
-    border-right-color: #6f6758;
+    border-right-color: #b29f82;
     box-shadow: none;
 }
 
