@@ -62,6 +62,25 @@ document.addEventListener('DOMContentLoaded', function () {
         stampObserver.observe(mark);
     });
 
+    // 絞り込みなどで出し直したときは、押す前に戻して、画面に入ったらもう一度押す
+    const stampBook = document.querySelector('.stamp-book');
+    if (stampBook) {
+        stampBook.addEventListener('stampbook:replay', function () {
+            document.querySelectorAll('.stamp-slot.is-stamped .stamp-mark').forEach(function (mark) {
+                stampObserver.unobserve(mark);
+                mark.classList.remove('is-stamp-in');
+            });
+            // 押す前の形に戻ったのを描いてから見張る（すぐ見張ると、戻らずに終わることがある）
+            requestAnimationFrame(function () {
+                requestAnimationFrame(function () {
+                    document.querySelectorAll('.stamp-slot.is-stamped .stamp-mark').forEach(function (mark) {
+                        stampObserver.observe(mark);
+                    });
+                });
+            });
+        });
+    }
+
     // ---- 枠の色とタイトル（編集できる人だけ） ----
     const editModal = document.getElementById('stampDecoEditModal');
     const pickModal = document.getElementById('stampDecoPickModal');

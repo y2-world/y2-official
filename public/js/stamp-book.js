@@ -138,6 +138,16 @@ document.addEventListener('DOMContentLoaded', function () {
         if (noMatchEl) {
             noMatchEl.hidden = visibleSlots.length > 0;
         }
+        if (animate) {
+            replayStamps();
+        }
+    }
+
+    // 絞り込み・「演奏曲のみ」・Stamp／Hanko を切り替えたときも、済みスタンプを押し直す（押す動きは _stamp_book_script）
+    function replayStamps() {
+        if (!reduceMotion) {
+            book.dispatchEvent(new CustomEvent('stampbook:replay'));
+        }
     }
 
     function apply(animate) {
@@ -218,6 +228,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!updateUrl) {
             return;
         }
+        replayStamps();
         try {
             const url = new URL(window.location.href);
             if (view === 'hanko') {
