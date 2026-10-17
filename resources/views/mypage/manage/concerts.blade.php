@@ -32,6 +32,13 @@
 
                 <div style="text-align: center;">
                     <div class="mypage-add-row" style="margin-bottom: 24px;">
+                        {{-- 全セットリスト登録済（「ツアーを追加」と同じ行の左）：セトリを全部登録したら印を付ける。登録の途中だと未演奏かどうか分からないので、印があるときだけスタンプ帳に未演奏の背景を出す --}}
+                        <form method="POST" action="{{ route('mypage.manage.artists.setlists_complete', $artist->id) }}" class="form-check manage-setlists-complete">
+                            @csrf
+                            <input type="hidden" name="setlists_complete" value="0">
+                            <input type="checkbox" class="form-check-input" id="setlists_complete" name="setlists_complete" value="1" @if ($artist->setlists_complete) checked @endif onchange="this.form.submit()">
+                            <label class="form-check-label" for="setlists_complete">全セットリスト登録済<small>未演奏の曲は背景を斜線にします</small></label>
+                        </form>
                         <span class="mypage-add-row-label">ツアーを追加</span>
                         <a href="#" id="newConcertToggle" class="mypage-add-button" title="ツアーを追加" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newConcertForm').hidden = false; document.getElementById('noConcertsMessage').hidden = true; document.getElementById('concertList').hidden = true; this.hidden = true;" @else hidden @endif>
                             <i class="fas fa-plus"></i>
@@ -73,13 +80,6 @@
 
                 {{-- ツアーを追加するフォームを開いている間は、一覧を隠す --}}
                 <div id="concertList" class="select-card-list" @if ($errors->any()) hidden @endif>
-                    {{-- 全セットリスト登録済：セトリを全部登録したら印を付ける。登録の途中だと未演奏かどうか分からないので、印があるときだけスタンプ帳に未演奏の背景を出す --}}
-                    <form method="POST" action="{{ route('mypage.manage.artists.setlists_complete', $artist->id) }}" class="form-check manage-setlists-complete">
-                        @csrf
-                        <input type="hidden" name="setlists_complete" value="0">
-                        <input type="checkbox" class="form-check-input" id="setlists_complete" name="setlists_complete" value="1" @if ($artist->setlists_complete) checked @endif onchange="this.form.submit()">
-                        <label class="form-check-label" for="setlists_complete">全セットリスト登録済<small>未演奏の曲は、スタンプ帳の背景を斜線にします</small></label>
-                    </form>
                     @foreach ($concerts as $concert)
                         <div class="manage-artist-row">
                             <a href="{{ route('mypage.manage.setlists', [$artist->id, $concert->id]) }}" class="select-card">

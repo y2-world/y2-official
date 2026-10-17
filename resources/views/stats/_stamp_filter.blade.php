@@ -23,7 +23,9 @@
         {{-- アルバムとの間に仕切り（見出し付きのグループ） --}}
         <optgroup label="Status">
             <option value="incompleted">Incompleted</option>
-            <option value="unperformed">Unperformed</option>
+            @if ($hasUnperformed ?? true)
+                <option value="unperformed">Unperformed</option>
+            @endif
         </optgroup>
     </select>
 </div>

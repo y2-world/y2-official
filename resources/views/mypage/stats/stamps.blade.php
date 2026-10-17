@@ -34,12 +34,16 @@
                         </div>
                         <div class="stamp-summary-percentage" id="stampSummaryPercentage">{{ $percentage }}% complete</div>
 
+                        {{-- 未演奏の曲が無い（セトリの記録が無くて判断できないときも）なら、Unperformed と「演奏曲のみ」は出さない --}}
+                        @php $hasUnperformed = $stamps->contains('never_performed', true); @endphp
                         @include('stats._stamp_filter')
 
+                        @if ($hasUnperformed)
                         <label class="unique-tour-label stamp-summary-toggle">
                             <input type="checkbox" id="stampPerformedOnlyCheckbox" class="unique-tour-checkbox">
                             <span class="unique-tour-text">演奏曲のみ</span>
                         </label>
+                        @endif
                     </div>
 
                     @if ($totalCount === 0)
@@ -100,6 +104,6 @@
 @endsection
 
 @section('page-script')
-<script src="{{ asset('/js/stamp-book.js?v=20261017b') }}"></script>
+<script src="{{ asset('/js/stamp-book.js?v=20261017c') }}"></script>
 @include('stats._stamp_book_script')
 @endsection

@@ -2956,7 +2956,9 @@ h5.setlist-subtitle-heading {
         font-size: 0.55rem !important;
         line-height: 1.3;
         letter-spacing: 0;
-        word-break: break-word;
+        /* 見出しは単語の途中で割らない（曲名が長くて列が細くなっても「ARTIST」が2行にならないように）。空白のところでは折り返す */
+        word-break: normal;
+        overflow-wrap: normal;
     }
 
     .stats-table thead th.rank-col {
@@ -5620,6 +5622,15 @@ a.setlist-card:hover {
     transform: none;
 }
 
+/* 選んだバージョンとは違う表記で出ているとき（その盤で絞り込んだとき）は、テーマの枠の色を付けない */
+.stamp-book .stamp-slot.is-other-version .stamp-slot-frame {
+    box-shadow: none !important;
+}
+
+.stamp-book .stamp-slot.is-other-version .stamp-slot-frame::before {
+    display: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .stamp-slot-frame::before {
         animation: none !important;
@@ -5666,14 +5677,33 @@ a.setlist-card:hover {
     opacity: 1;
 }
 
-/* Manage My Artists のツアーの画面：「全セットリスト登録済」 */
+/* Manage My Artists のツアーの画面：「全セットリスト登録済」（「ツアーを追加」と同じ行の左端） */
 .manage-setlists-complete {
-    margin: 0 0 16px;
+    margin: 0 auto 0 0;
+    min-width: 0;
     text-align: left;
+    /* 文字は「ツアーを追加」と同じ大きさ */
+    font-size: 0.85rem;
 }
 
+/* 左にチェックボックスがあっても「ツアーを追加」は1行のまま（縮むのはチェックボックスの説明のほう） */
+.manage-setlists-complete ~ .mypage-add-row-label,
+.manage-setlists-complete ~ .mypage-add-button {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.manage-setlists-complete .form-check-label {
+    display: block;
+    min-width: 0;
+}
+
+/* 説明文は1行。入りきらない細い画面では最後を「…」にする */
 .manage-setlists-complete small {
     display: block;
     color: #999;
     font-size: 0.7rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

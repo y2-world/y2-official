@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (slot._titleEl) {
                 const title = discKey ? (slot._trackTitles[key] || slot._baseTitle) : slot._defaultTitle;
                 slot._titleEl.textContent = title;
+                // テーマの枠の色は、長押しで選んだバージョン（選んでいなければ元の曲名）で出ているときだけ付ける
+                slot.classList.toggle('is-other-version', title !== slot._defaultTitle);
                 // 曲名と違う表記で出しているときは、楽曲ページもその表記で絞り込んだ状態で開く
                 const url = new URL(slot._titleEl.href, window.location.href);
                 if (title !== slot._baseTitle) {
