@@ -19,8 +19,11 @@
     @if ($album->date)
         <p class="database-subtitle">Release: {{ date('Y.m.d', strtotime($album->date)) }}</p>
     @endif
-@else
+@elseif ($single)
     <p class="database-subtitle">アルバム未収録</p>
+@else
+    {{-- シングルにもアルバムにも入っていない曲 --}}
+    <p class="database-subtitle">未発表楽曲</p>
 @endif
 @if ($dbSong->text)
     <p class="database-subtitle" style="margin-top: 8px;">{{ $dbSong->text }}</p>
