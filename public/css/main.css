@@ -5741,3 +5741,9 @@ a.setlist-card:hover {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/* Songs 一覧：別名義の曲のアーティスト（曲名の下に小さく） */
+.song-list-credit {
+    color: #999;
+    font-size: 0.75em;
+}
