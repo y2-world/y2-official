@@ -26,6 +26,10 @@
                     </div>
                 @endif
             </div>
+            {{-- Database の曲に結び付いていれば、Database の曲のページと同じ曲の情報を出す --}}
+            @if ($dbSong)
+                @include('db_songs._song_info', ['dbSong' => $dbSong])
+            @endif
 
             {{-- 虫眼鏡アイコン（SP表示のみ、見出しブロックの右下）：押すとフォームが開き、ボタン自体は隠れる --}}
             <button type="button" id="spSearchButtonSetlistSong" class="sp" onclick="document.getElementById('spSearchButtonSetlistSong').style.display='none'; document.getElementById('spSearchFormSetlistSong').style.display='block';" style="position: absolute; bottom: -14px; right: 8px; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">

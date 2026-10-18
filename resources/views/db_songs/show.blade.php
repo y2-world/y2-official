@@ -30,32 +30,7 @@
                 {{ $songs->title }}
             </h1>
             <h1 class="database-title pc" style="">{{ $songs->title }}</h1>
-            {{-- ほかの人との曲は、曲名の下にアーティスト表記（例：絢香 × コブクロ） --}}
-            @if ($songs->credit)
-                <p class="database-subtitle" style="margin-top: 0;">{{ $songs->credit }}</p>
-            @endif
-
-            @php
-                $single = $songs->singleFromTracklist;
-                $album = $songs->albumFromTracklist;
-            @endphp
-            @if ($single)
-                <p class="database-subtitle" style="font-weight: 400;"><strong>Single:</strong> <a href="{{ route('singles.show', $single->id) }}" style="color: white; text-decoration: underline;">{{ $single->title }}</a></p>
-                @if ($single->date)
-                    <p class="database-subtitle">Release: {{ date('Y.m.d', strtotime($single->date)) }}</p>
-                @endif
-            @endif
-            @if ($album)
-                <p class="database-subtitle" style="font-weight: 400;"><strong>Album:</strong> <a href="{{ route('albums.show', $album->id) }}" style="color: white; text-decoration: underline;">{{ $songs->albumDisplayTitleFromTracklist }}</a></p>
-                @if ($album->date)
-                    <p class="database-subtitle">Release: {{ date('Y.m.d', strtotime($album->date)) }}</p>
-                @endif
-            @else
-                <p class="database-subtitle">アルバム未収録</p>
-            @endif
-            @if ($songs->text)
-                <p class="database-subtitle" style="margin-top: 8px;">{{ $songs->text }}</p>
-            @endif
+            @include('db_songs._song_info', ['dbSong' => $songs])
 
             {{-- 検索フォーム（SP表示） --}}
              <div class="sp" id="spSearchFormSongs" style="margin-top: 10px; display: none;">

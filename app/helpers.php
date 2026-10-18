@@ -750,9 +750,10 @@ if (!function_exists('buildSetlistPatternSummary')) {
                 'title' => $title,
                 'song_id' => $songId,
                 'key' => $songId !== null ? 'id:' . $songId : 'title:' . $title,
-                // 曲にアーティスト表記（DbSong.credit）があり、セットリストの方で何も付いていなければ「曲名 / アーティスト」
-                'featuring' => trim((string) ($item['featuring'] ?? '')) ?: (string) ($songModel?->setlistCredit() ?? ''),
-                'featuring_type' => trim((string) ($item['featuring'] ?? '')) === '' && $songModel?->setlistCredit() ? 'artist' : ($item['featuring_type'] ?? 'guest'),
+                // 曲にアーティスト表記（DbSong.credit）があり、セットリストの方で何も付いていなければ「曲名 / アーティスト」。
+                // 「アーティスト表記なし」（featuring_type = none。コラボ曲を本人たちだけで歌ったときなど）なら出さない
+                'featuring' => trim((string) ($item['featuring'] ?? '')) ?: (($item['featuring_type'] ?? '') === 'none' ? '' : (string) ($songModel?->setlistCredit() ?? '')),
+                'featuring_type' => trim((string) ($item['featuring'] ?? '')) === '' && ($item['featuring_type'] ?? '') !== 'none' && $songModel?->setlistCredit() ? 'artist' : ((($item['featuring_type'] ?? 'guest') === 'none') ? 'guest' : ($item['featuring_type'] ?? 'guest')),
                 'medley' => !empty($item['medley']),
                 // メドレーのタイトル（メドレーの1曲目に移してある。App\Support\Medley::liftTitles）
                 'medley_title' => trim((string) ($item['medley_title'] ?? '')) ?: null,

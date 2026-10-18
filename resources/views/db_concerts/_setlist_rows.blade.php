@@ -125,8 +125,9 @@
 
                                                 if ($songModel) {
                                                     $title = !empty($alternativeTitle) ? $alternativeTitle : $songModel->title;
-                                                    // 曲にアーティスト表記があり、このセットリストで何も付いていなければ「曲名 / アーティスト」
-                                                    if ($featuring === '' && $songModel->setlistCredit()) {
+                                                    // 曲にアーティスト表記があり、このセットリストで何も付いていなければ「曲名 / アーティスト」。
+                                                    // 「アーティスト表記なし」（コラボ曲を本人たちだけで歌ったときなど）なら出さない
+                                                    if ($featuring === '' && $featuringType !== 'none' && $songModel->setlistCredit()) {
                                                         $featuring = $songModel->setlistCredit();
                                                         $featuringDisplay = '/ ' . $featuring;
                                                     }

@@ -135,6 +135,7 @@ class SlSongController extends Controller
 
         return view('sl_songs.show', compact(
             'song',
+            'dbSong',
             'setlists',
             'suggestions',
             'previous',

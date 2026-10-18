@@ -31,6 +31,14 @@ class DbSetlistResource extends Resource
         return [$artistId];
     }
 
+    // 曲の選択肢の表示。アーティスト欄（credit）がある曲は「曲名 - アーティスト」にする（コラボ曲だと分かるように。SlSetlist の選択肢と同じ書き方）
+    protected static function songOptionLabel(\App\Models\DbSong $song): string
+    {
+        $credit = trim((string) $song->credit);
+
+        return $credit === '' ? $song->title : $song->title . ' - ' . e($credit);
+    }
+
     protected static ?string $navigationLabel = 'セットリスト';
 
     protected static ?string $modelLabel = 'セットリスト';
@@ -154,7 +162,7 @@ class DbSetlistResource extends Resource
                                         \App\Models\DbSong::when(
                                             $get('../../_artist_id'),
                                             fn($q, $id) => $q->whereIn('artist_id', static::songArtistIds($id))
-                                        )->pluck('title', 'id')->all()
+                                        )->get(['id', 'title', 'credit'])->mapWithKeys(fn($song) => [$song->id => static::songOptionLabel($song)])->all()
                                     ))
                                     ->searchable()
                                     ->native(false)
@@ -172,7 +180,8 @@ class DbSetlistResource extends Resource
                                             $get('../../_artist_id'),
                                             fn($q, $id) => $q->whereIn('artist_id', static::songArtistIds($id))
                                         )->whereRaw('LOWER(title) LIKE LOWER(?)', ["%{$search}%"])
-                                            ->pluck('title', 'id')
+                                            ->get(['id', 'title', 'credit'])
+                                            ->mapWithKeys(fn($song) => [$song->id => static::songOptionLabel($song)])
                                             ->all();
 
                                         return array_slice(\App\Support\JapaneseNameSorter::sortOptions($options), 0, 50, true);
@@ -180,7 +189,7 @@ class DbSetlistResource extends Resource
                                     ->getOptionLabelUsing(function ($value) {
                                         if (is_numeric($value)) {
                                             $song = \App\Models\DbSong::find($value);
-                                            return $song ? $song->title : $value;
+                                            return $song ? static::songOptionLabel($song) : $value;
                                         }
                                         return $value;
                                     })
@@ -231,6 +240,8 @@ class DbSetlistResource extends Resource
                                             ->options([
                                                 'guest' => '共演者（feat.表記のまま表示）',
                                                 'artist' => '別名義アーティスト（「 / 」区切りで表示）',
+                                                // コラボ曲を本人たちだけで歌ったときなど。曲のアーティスト欄（credit）を出さない
+                                                'none' => 'アーティスト表記なし（曲のアーティスト欄を出さない）',
                                             ])
                                             ->default('guest')
                                             ->inline(),
@@ -293,7 +304,7 @@ class DbSetlistResource extends Resource
                                         \App\Models\DbSong::when(
                                             $get('../../_artist_id'),
                                             fn($q, $id) => $q->whereIn('artist_id', static::songArtistIds($id))
-                                        )->pluck('title', 'id')->all()
+                                        )->get(['id', 'title', 'credit'])->mapWithKeys(fn($song) => [$song->id => static::songOptionLabel($song)])->all()
                                     ))
                                     ->searchable()
                                     ->native(false)
@@ -311,7 +322,8 @@ class DbSetlistResource extends Resource
                                             $get('../../_artist_id'),
                                             fn($q, $id) => $q->whereIn('artist_id', static::songArtistIds($id))
                                         )->whereRaw('LOWER(title) LIKE LOWER(?)', ["%{$search}%"])
-                                            ->pluck('title', 'id')
+                                            ->get(['id', 'title', 'credit'])
+                                            ->mapWithKeys(fn($song) => [$song->id => static::songOptionLabel($song)])
                                             ->all();
 
                                         return array_slice(\App\Support\JapaneseNameSorter::sortOptions($options), 0, 50, true);
@@ -319,7 +331,7 @@ class DbSetlistResource extends Resource
                                     ->getOptionLabelUsing(function ($value) {
                                         if (is_numeric($value)) {
                                             $song = \App\Models\DbSong::find($value);
-                                            return $song ? $song->title : $value;
+                                            return $song ? static::songOptionLabel($song) : $value;
                                         }
                                         return $value;
                                     })
@@ -380,6 +392,8 @@ class DbSetlistResource extends Resource
                                             ->options([
                                                 'guest' => '共演者（feat.表記のまま表示）',
                                                 'artist' => '別名義アーティスト（「 / 」区切りで表示）',
+                                                // コラボ曲を本人たちだけで歌ったときなど。曲のアーティスト欄（credit）を出さない
+                                                'none' => 'アーティスト表記なし（曲のアーティスト欄を出さない）',
                                             ])
                                             ->default('guest')
                                             ->inline(),
