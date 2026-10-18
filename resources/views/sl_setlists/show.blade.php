@@ -111,8 +111,8 @@
                                 $featuring = ' <span style="color:#999;font-size:0.75em;">/ ' . $data['featuring'] . '</span>';
                             } elseif (!empty($data['featuring'])) {
                                 $featuring = ' <span style="color:#999;font-size:0.75em;">' . $data['featuring'] . '</span>';
-                            } elseif ($featuringType !== 'none' && ($credit = ($isNumericId ? $song : ($setlistSong ?? null))?->setlistCredit())) {
-                                // 曲にアーティスト表記があれば「曲名 / アーティスト」（Database のセトリと同じ）。「アーティスト表記なし」なら出さない
+                            } elseif ($featuringType === 'credit' && ($credit = ($isNumericId ? $song : ($setlistSong ?? null))?->setlistCredit())) {
+                                // 「アーティスト表記あり」の行だけ、曲のアーティスト表記で「曲名 / アーティスト」（Database のセトリと同じ）
                                 $featuring = ' <span style="color:#999;font-size:0.75em;">/ ' . htmlspecialchars($credit, ENT_COMPAT, 'UTF-8') . '</span>';
                             } else {
                                 $featuring = '';
@@ -210,8 +210,8 @@
                                 $featuring = ' <span style="color:#999;font-size:0.75em;">/ ' . $data['featuring'] . '</span>';
                             } elseif (!empty($data['featuring'])) {
                                 $featuring = ' <span style="color:#999;font-size:0.75em;">' . $data['featuring'] . '</span>';
-                            } elseif ($featuringType !== 'none' && ($credit = ($isNumericId ? $song : ($setlistSong ?? null))?->setlistCredit())) {
-                                // 曲にアーティスト表記があれば「曲名 / アーティスト」（Database のセトリと同じ）。「アーティスト表記なし」なら出さない
+                            } elseif ($featuringType === 'credit' && ($credit = ($isNumericId ? $song : ($setlistSong ?? null))?->setlistCredit())) {
+                                // 「アーティスト表記あり」の行だけ、曲のアーティスト表記で「曲名 / アーティスト」（Database のセトリと同じ）
                                 $featuring = ' <span style="color:#999;font-size:0.75em;">/ ' . htmlspecialchars($credit, ENT_COMPAT, 'UTF-8') . '</span>';
                             } else {
                                 $featuring = '';
@@ -324,7 +324,7 @@
                                         if (!empty($song['alternative_title']) && $url !== '#') { $url .= '?' . http_build_query(['title' => $song['alternative_title']]); }
                                         $annotation = $parts['annotation'];
                                         $songFeaturingType = $song['featuring_type'] ?? 'guest';
-                                        $songCredit = empty($song['featuring']) && $songFeaturingType !== 'none' ? $sm?->setlistCredit() : null;
+                                        $songCredit = empty($song['featuring']) && $songFeaturingType === 'credit' ? $sm?->setlistCredit() : null;
                                         $feat = !empty($song['featuring'])
                                             ? ' <span style="color:#999;font-size:0.75em;">' . ($songFeaturingType === 'artist' ? '/ ' : '') . htmlspecialchars($song['featuring'], ENT_COMPAT, 'UTF-8') . '</span>'
                                             : ($songCredit ? ' <span style="color:#999;font-size:0.75em;">/ ' . htmlspecialchars($songCredit, ENT_COMPAT, 'UTF-8') . '</span>' : '');

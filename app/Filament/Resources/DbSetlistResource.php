@@ -240,8 +240,8 @@ class DbSetlistResource extends Resource
                                             ->options([
                                                 'guest' => '共演者（feat.表記のまま表示）',
                                                 'artist' => '別名義アーティスト（「 / 」区切りで表示）',
-                                                // コラボ曲を本人たちだけで歌ったときなど。曲のアーティスト欄（credit）を出さない
-                                                'none' => 'アーティスト表記なし（曲のアーティスト欄を出さない）',
+                                                // 共演したときだけ、曲のアーティスト欄（credit。例：絢香 × コブクロ）を「曲名 / アーティスト」で出す（ふだんは出さない）
+                                                'credit' => 'アーティスト表記あり',
                                             ])
                                             ->default('guest')
                                             ->inline(),
@@ -392,8 +392,8 @@ class DbSetlistResource extends Resource
                                             ->options([
                                                 'guest' => '共演者（feat.表記のまま表示）',
                                                 'artist' => '別名義アーティスト（「 / 」区切りで表示）',
-                                                // コラボ曲を本人たちだけで歌ったときなど。曲のアーティスト欄（credit）を出さない
-                                                'none' => 'アーティスト表記なし（曲のアーティスト欄を出さない）',
+                                                // 共演したときだけ、曲のアーティスト欄（credit。例：絢香 × コブクロ）を「曲名 / アーティスト」で出す（ふだんは出さない）
+                                                'credit' => 'アーティスト表記あり',
                                             ])
                                             ->default('guest')
                                             ->inline(),

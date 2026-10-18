@@ -166,8 +166,8 @@ class ImportArtistSetlists extends Command
             'medley' => (bool) ($item['medley'] ?? false),
             'daily_note' => null,
             'featuring' => $item['featuring'] ?? null,
-            // 「アーティスト表記なし」（none）は共演者が空でも残す
-            'featuring_type' => !empty($item['featuring']) ? ($item['featuring_type'] ?? 'guest') : ((($item['featuring_type'] ?? null) === 'none') ? 'none' : null),
+            // 「アーティスト表記あり」（credit）は共演者が空でも残す
+            'featuring_type' => !empty($item['featuring']) ? ($item['featuring_type'] ?? 'guest') : ((($item['featuring_type'] ?? null) === 'credit') ? 'credit' : null),
             'alternative_title' => $item['alternative_title'] ?? null,
         ];
         // タイトルのあるメドレー（2曲目に持つ。管理画面と同じ）
