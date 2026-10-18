@@ -61,7 +61,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="new_tour_date2" class="form-label">終了日（任意・単発の場合は空欄）</label>
-                                <input type="date" class="form-control" id="new_tour_date2" name="date2" value="{{ old('date2') }}">
+                                <input type="date" class="form-control" id="new_tour_date2" name="date2" data-date-start="#new_tour_date1" value="{{ old('date2') }}">
                             </div>
                             <div class="mb-3">
                                 <label for="new_tour_schedule" class="form-label">SCHEDULE</label>

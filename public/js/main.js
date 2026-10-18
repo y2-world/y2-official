@@ -162,3 +162,32 @@
 //         });
 //     }
 // });
+
+// ツアーの終了日（data-date-start に開始日の欄）：空のまま開いたら、開始日の月のカレンダーを出す。
+// ブラウザの日付の欄は空だと今日の月を出すので、開く間だけ開始日を入れておき、何も選ばずに閉じたら空に戻す
+document.querySelectorAll('input[type="date"][data-date-start]').forEach(function (end) {
+    const start = document.querySelector(end.dataset.dateStart);
+    if (!start) {
+        return;
+    }
+    let prefilled = false;
+    const prefill = function () {
+        if (!end.value && start.value) {
+            end.value = start.value;
+            prefilled = true;
+        }
+    };
+    end.addEventListener('pointerdown', prefill);
+    end.addEventListener('focus', prefill);
+    end.addEventListener('change', function () { prefilled = false; });
+    end.addEventListener('blur', function () {
+        if (prefilled && end.value === start.value) {
+            end.value = '';
+        }
+        prefilled = false;
+    });
+    // 開始日より前の日は選べないようにする
+    const syncMin = function () { end.min = start.value || ''; };
+    start.addEventListener('change', syncMin);
+    syncMin();
+});
