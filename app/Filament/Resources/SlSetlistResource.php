@@ -198,6 +198,8 @@ class SlSetlistResource extends Resource
                                             ->options([
                                                 'guest' => '共演者（feat.表記のまま表示）',
                                                 'artist' => '別名義アーティスト（「 / 」区切りで表示）',
+                                                // コラボ曲を本人たちだけで歌ったときなど。曲のアーティスト欄（credit）を出さない
+                                                'none' => 'アーティスト表記なし（曲のアーティスト欄を出さない）',
                                             ])
                                             ->default('guest')
                                             ->inline(),
@@ -317,6 +319,8 @@ class SlSetlistResource extends Resource
                                             ->options([
                                                 'guest' => '共演者（feat.表記のまま表示）',
                                                 'artist' => '別名義アーティスト（「 / 」区切りで表示）',
+                                                // コラボ曲を本人たちだけで歌ったときなど。曲のアーティスト欄（credit）を出さない
+                                                'none' => 'アーティスト表記なし（曲のアーティスト欄を出さない）',
                                             ])
                                             ->default('guest')
                                             ->inline(),
@@ -542,6 +546,8 @@ class SlSetlistResource extends Resource
                                                 ->options([
                                                     'guest' => '共演者（feat.表記のまま表示）',
                                                     'artist' => '別名義アーティスト（「 / 」区切りで表示）',
+                                                    // コラボ曲を本人たちだけで歌ったときなど。曲のアーティスト欄（credit）を出さない
+                                                    'none' => 'アーティスト表記なし（曲のアーティスト欄を出さない）',
                                                 ])
                                                 ->default('guest')
                                                 ->inline()
@@ -757,6 +763,8 @@ class SlSetlistResource extends Resource
                                                 ->options([
                                                     'guest' => '共演者（feat.表記のまま表示）',
                                                     'artist' => '別名義アーティスト（「 / 」区切りで表示）',
+                                                    // コラボ曲を本人たちだけで歌ったときなど。曲のアーティスト欄（credit）を出さない
+                                                    'none' => 'アーティスト表記なし（曲のアーティスト欄を出さない）',
                                                 ])
                                                 ->default('guest')
                                                 ->inline()

@@ -130,6 +130,12 @@ class SlSong extends Model
         return $this->belongsTo(Artist::class);
     }
 
+    // セットリストで「曲名 / アーティスト」と出すアーティスト（結び付いた DbSong のアーティスト欄。嵐のメンバーのソロ等は出さない）
+    public function setlistCredit(): ?string
+    {
+        return $this->dbSong?->setlistCredit();
+    }
+
     public function dbSong()
     {
         return $this->belongsTo(DbSong::class);
