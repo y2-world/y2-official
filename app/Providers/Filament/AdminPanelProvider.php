@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Resources\DbSetlistResource\Pages\CreateDbSetlist;
 use App\Filament\Resources\DbSetlistResource\Pages\EditDbSetlist;
+use App\Filament\Resources\DbSongResource\Pages\ManageArtistSongs;
 use App\Filament\Resources\SlSetlistResource\Pages\CreateSlSetlist;
 use App\Filament\Resources\SlSetlistResource\Pages\EditSlSetlist;
 use Filament\Http\Middleware\Authenticate;
@@ -56,6 +57,11 @@ class AdminPanelProvider extends PanelProvider
                     CreateDbSetlist::class,
                     EditDbSetlist::class,
                 ],
+            )
+            ->renderHook(
+                PanelsRenderHook::BODY_END,
+                fn (): string => view('filament.hooks.reorder-handle-only')->render(),
+                scopes: [ManageArtistSongs::class],
             )
             // 複数選択の入力欄は幅をプレースホルダーの文字数×半角1文字分にするため、日本語だと途中で切れる。
             // プレースホルダーが出ている間は欄の幅いっぱいにする
