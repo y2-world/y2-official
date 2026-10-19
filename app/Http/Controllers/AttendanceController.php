@@ -77,6 +77,7 @@ class AttendanceController extends Controller
         $initialTitle = null;
         // 曲で絞り込んでいるときの表記ごとの絞り込み用（曲で絞り込んでいなければ空のまま）
         $tourTitles = [];
+        $partialPatterns = [];
         $songNumberMine = null;
         $previousSongMine = null;
         $nextSongMine = null;
@@ -131,6 +132,8 @@ class AttendanceController extends Controller
                 foreach ($tourSetlists as $setlist) {
                     $tourTitles[$tourKey($setlist)] = array_values(array_unique(array_merge($tourTitles[$tourKey($setlist)] ?? [], $titlesIn($setlist))));
                 }
+                // ツアーの全パターンではやっていない曲は、やったパターン（段を全部やっていれば段のタイトル）をツアー名の下に出す
+                $partialPatterns = \App\Support\PartialPatterns::of(collect($tourSetlists));
 
                 if ($songKind === 'official') {
                     $tours = $tourSetlists->pluck('tour')->filter()->unique('id')->values();
@@ -208,7 +211,7 @@ class AttendanceController extends Controller
             'songNumberMine', 'previousSongMine', 'nextSongMine',
             'songNumberPerformances', 'previousSongPerformances', 'nextSongPerformances',
             'filterArtist', 'years', 'year', 'venue', 'targetUser', 'tours', 'secondTab', 'initialTitle',
-            'performanceTitles', 'tourTitles', 'attendanceTitles'
+            'performanceTitles', 'tourTitles', 'attendanceTitles', 'partialPatterns'
         ));
     }
 

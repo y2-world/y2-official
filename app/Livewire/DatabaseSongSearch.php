@@ -25,27 +25,16 @@ class DatabaseSongSearch extends Component
             ->when(!$this->artistId, fn($q) => $q->whereHas('artist', fn($a) => $a->where('visible', 1))->with('artist'));
     }
 
-    // 候補：登録した曲と、セットリストに名前だけで入っている曲（会場と同じように、登録していない曲も探せる）。
-    // 名前だけの曲は、その曲を演奏したライブの一覧（database.text_song）へ
-    private function toSuggestions($songs, string $prefix = ''): array
+    // 候補：登録した曲だけ（セットリストに名前だけで入っている曲は出さない）
+    private function toSuggestions($songs): array
     {
-        $rows = $songs->map(fn($song) => ['id' => $song->id, 'title' => $song->title, 'artist' => $this->artistId ? null : $song->artist?->name,
+        // アーティスト名の欄：曲のアーティスト欄（例：絢香 × コブクロ、嵐のメンバーのソロなら 大野智）があれば、アーティスト名の代わりにそれを出す
+        //（アーティストを決めた検索では、アーティスト欄がある曲だけ出す）
+        $rows = $songs->map(fn($song) => (object) ['id' => $song->id, 'title' => $song->title,
+            'artist' => trim((string) $song->credit) ?: ($this->artistId ? null : $song->artist?->name),
             'url' => '/database/songs/' . $song->id]);
-        $registered = $songs->map(fn($song) => $song->artist_id . "\0" . mb_strtolower($song->title))->flip();
-        $artistNames = \App\Models\Artist::pluck('name', 'id');
-        foreach (\App\Support\TextSongs::all($this->artistId) as $text) {
-            if ($prefix !== '' && !str_starts_with(mb_strtolower($text['title']), mb_strtolower($prefix))) {
-                continue;
-            }
-            if (isset($registered[$text['artist_id'] . "\0" . mb_strtolower($text['title'])])) {
-                continue;
-            }
-            $rows->push(['id' => 'text:' . $text['artist_id'] . ':' . $text['title'], 'title' => $text['title'],
-                'artist' => $this->artistId ? null : ($artistNames[$text['artist_id']] ?? null),
-                'url' => route('database.text_song', ['artistId' => $text['artist_id'], 'title' => $text['title']])]);
-        }
 
-        return \App\Support\JapaneseNameSorter::sortBy($rows->map(fn ($row) => (object) $row), 'title')
+        return \App\Support\JapaneseNameSorter::sortBy($rows, 'title')
             ->take(10)
             ->map(fn ($row) => (array) $row)
             ->values()
@@ -70,7 +59,7 @@ class DatabaseSongSearch extends Component
             ->whereRaw('LOWER(title) LIKE LOWER(?)', [$escaped . '%'])
             ->get();
 
-        $this->songs = $this->toSuggestions($songs, $this->search);
+        $this->songs = $this->toSuggestions($songs);
     }
 
     public function selectSong($songId)

@@ -208,41 +208,7 @@
             </div>
 
             <div id="live-performances-panel" style="{{ $secondTab === 'performances' ? 'display: block;' : 'display: none;' }}">
-                @if ($tours->isEmpty())
-                    <p style="color: #718096; text-align: center;">演奏記録がありません。</p>
-                @else
-                    <table class="table table-striped count">
-                        <thead>
-                            <tr>
-                                <th class="mobile">#</th>
-                                <th class="mobile">開催日</th>
-                                <th class="mobile">タイトル</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($tours as $tour)
-                                <tr data-titles="{{ json_encode($tourTitles[$tour->id] ?? [], JSON_UNESCAPED_UNICODE) }}">
-                                    <td></td>
-                                    @if (isset($tour->date1) && isset($tour->date2))
-                                        <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }} -
-                                            {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
-                                    @elseif(isset($tour->date1) && !isset($tour->date2))
-                                        <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
-                                    @else
-                                        <td class="td_date"></td>
-                                    @endif
-                                    <td class="td_title">
-                                        @if ($songKind === 'official')
-                                            <a href="{{ route('live.show', $tour->id) }}">{{ $tour->title }}</a>
-                                        @else
-                                            <a href="{{ route('mypage.user_concerts.show', $tour->id) }}">{{ $tour->title }}</a>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                @endif
+                @include('songs._performance_tours', ['tourUrl' => fn ($tour) => $songKind === 'official' ? route('live.show', $tour->id) : route('mypage.user_concerts.show', $tour->id)])
             </div>
 
             <div id="second-tab-panel" style="{{ $secondTab === 'mine' ? 'display: block;' : 'display: none;' }}">

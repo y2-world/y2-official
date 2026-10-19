@@ -133,7 +133,11 @@ class SlSongController extends Controller
             })
             ->toArray();
 
+        // ツアーの全パターンではやっていない曲は、やったパターン（段を全部やっていれば段のタイトル）をツアー名の下に出す
+        $partialPatterns = \App\Support\PartialPatterns::of(collect($performedTourSetlists));
+
         return view('sl_songs.show', compact(
+            'partialPatterns',
             'song',
             'dbSong',
             'setlists',

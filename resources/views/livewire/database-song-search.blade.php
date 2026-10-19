@@ -59,7 +59,8 @@
                 style="padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #eee; color: black; text-align: left;"
                 @mouseenter="selectedIndex = index">
                 <span x-text="song.title"></span>
-                {{-- Database のトップでは、同じ曲名がほかのアーティストにもあるのでアーティスト名も出す --}}
+                {{-- Database のトップでは、同じ曲名がほかのアーティストにもあるのでアーティスト名も出す。
+                     曲のアーティスト欄がある曲（例：絢香 × コブクロ）は、どの検索でもその名前を出す --}}
                 <span x-show="song.artist" x-text="song.artist" style="color: #999; font-size: 0.8em; margin-left: 6px;"></span>
             </div>
         </template>

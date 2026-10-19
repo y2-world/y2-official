@@ -169,6 +169,9 @@ class DbSongController extends Controller
             $secondTabNext = $nextId ? DbSong::find($nextId) : null;
         }
 
+        // ツアーの全パターンではやっていない曲は、やったパターン（段を全部やっていれば段のタイトル）をツアー名の下に出す
+        $partialPatterns = \App\Support\PartialPatterns::of($tourSetlists);
+
         // 表記ごとの絞り込み用：各行（ツアー／参加記録）がどの表記で演奏されたか。
         // 表記が2つ以上ある曲だけ「All / 表記1 / 表記2」を出す（並びは古い公演で使われた順）
         $tourTitles = [];
@@ -239,6 +242,7 @@ class DbSongController extends Controller
 
         return view('db_songs.show', compact(
             'tourTitles',
+            'partialPatterns',
             'secondTabTitles',
             'isHikigatariArtist',
             'hikigatariTourIds',

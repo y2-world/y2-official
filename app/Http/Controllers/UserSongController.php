@@ -85,6 +85,8 @@ class UserSongController extends Controller
         foreach ($tourSetlists->sortBy(fn (UserSetlist $setlist) => [(string) ($setlist->concert->date1 ?? ''), (int) $setlist->order_no]) as $setlist) {
             $tourTitles[$setlist->user_concert_id] = array_values(array_unique(array_merge($tourTitles[$setlist->user_concert_id] ?? [], $titlesIn($setlist))));
         }
+        // ツアーの全パターンではやっていない曲は、やったパターンの名前をツアー名の下に出す
+        $partialPatterns = \App\Support\PartialPatterns::of(collect($tourSetlists));
         $secondTabTitles = [];
         $myAttendances = Auth::guard('external')->user()->attendances()
             ->whereIn('user_setlist_id', $tourSetlists->pluck('id'))->with('userSetlist')->get();
@@ -98,7 +100,7 @@ class UserSongController extends Controller
 
         return view('mypage.user_songs.show', compact(
             'song', 'tours', 'previous', 'next', 'songNumber', 'secondTab', 'secondTabSetlists',
-            'songNumberMine', 'previousMine', 'nextMine', 'tourTitles', 'secondTabTitles', 'performanceTitles', 'initialTitle'
+            'songNumberMine', 'previousMine', 'nextMine', 'tourTitles', 'secondTabTitles', 'performanceTitles', 'initialTitle', 'partialPatterns'
         ));
     }
 }

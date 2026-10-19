@@ -86,35 +86,7 @@
                 @include('songs._double_encore_toggle')
                 @if ($hasLivePerformancesTab)
                     <div id="live-performances-panel" style="display: {{ $initialTab === 'performances' ? 'block' : 'none' }};">
-                        @if ($performanceTours->isEmpty())
-                            <p style="color: #718096; text-align: center;">演奏記録がありません。</p>
-                        @else
-                            <table class="table table-striped count fixed-cols">
-                                <thead>
-                                    <tr>
-                                        <th class="mobile col-no">#</th>
-                                        <th class="mobile col-date-range">開催日</th>
-                                        <th class="mobile">タイトル</th>
-                                        @if ($isHikigatariArtist)<th class="mobile col-icon" title="弾き語り（DOUBLE ENCORE）"><i class="fa-solid fa-guitar"></i></th>@endif
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($performanceTours as $tour)
-                                        <tr data-titles="{{ json_encode($tourTitles[$tour->id] ?? [], JSON_UNESCAPED_UNICODE) }}" @if ($isHikigatariArtist && isset($hikigatariTourIds[$tour->id]) && !isset($normalTourIds[$tour->id])) data-double-encore-only="1" @endif>
-                                            <td></td>
-                                            @if (isset($tour->date1) && isset($tour->date2))
-                                                <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }} -
-                                                    {{ date('Y.m.d', strtotime($tour->date2)) }}</td>
-                                            @elseif(isset($tour->date1) && !isset($tour->date2))
-                                                <td class="td_date">{{ date('Y.m.d', strtotime($tour->date1)) }}</td>
-                                            @endif
-                                            <td class="td_title"><a href="{{ route('live.show', ['id' => $tour->id, 'from' => 'song-' . $song->db_song_id]) }}">{{ $tour->title }}</a></td>
-                                            @if ($isHikigatariArtist)@include('songs._hikigatari_cell', ['hikigatari' => isset($hikigatariTourIds[$tour->id]), 'normal' => isset($normalTourIds[$tour->id])])@endif
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        @endif
+                        @include('songs._performance_tours', ['tours' => $performanceTours, 'tourUrl' => fn ($tour) => route('live.show', ['id' => $tour->id, 'from' => 'song-' . $song->db_song_id])])
                     </div>
                 @endif
 
