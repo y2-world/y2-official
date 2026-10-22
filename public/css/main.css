@@ -1044,6 +1044,26 @@ th {
     font-size: 13px;
 }
 
+/* SCHEDULE：日付と会場の2列（partials/_schedule） */
+.schedule-table {
+    border-collapse: collapse;
+}
+.schedule-table td {
+    padding: 1px 0;
+    vertical-align: top;
+}
+.schedule-table td.schedule-date {
+    white-space: nowrap;
+    padding-right: 14px;
+    font-variant-numeric: tabular-nums;
+}
+.schedule-table td.schedule-year {
+    font-weight: bold;
+}
+.schedule-table tr.schedule-gap td {
+    height: 1em;
+}
+
 /* Typeaheadのドロップダウンのスタイル */
 .tt-menu {
     background-color: white;

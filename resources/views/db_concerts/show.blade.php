@@ -214,7 +214,7 @@
                             <hr>
                         @endif
                         <h5>SCHEDULE</h5>
-                        {!! nl2br(e($tours->schedule)) !!}
+                        @include('partials._schedule', ['schedule' => $tours->schedule])
                     @endif
                     @if (!is_null($tours->text))
                         <hr>
