@@ -35,6 +35,40 @@ class SlSetlistResource extends Resource
         return filled($artistId) && DbConcert::where('artist_id', $artistId)->exists();
     }
 
+    // ツアーのスケジュールの公演（「2006.02.05 Zepp Osaka (1部)」）。キーは「日付|会場|備考」。
+    // 日付・会場は parseScheduleEntries（マイページと同じ読み方）で、行の終わりのかっこ書き（「(1部)」）は備考にする。
+    // 年の見出しや年またぎを同じように読むため、1行ずつ足しながら読み、増えた公演をその行のものとする
+    private static function scheduleOptions($concertId): array
+    {
+        $concert = $concertId ? DbConcert::find($concertId) : null;
+        if (!$concert || blank($concert->schedule)) return [];
+        $options = [];
+        $lines = [];
+        $count = 0;
+        foreach (preg_split('/\r\n|\r|\n/', $concert->schedule) as $line) {
+            $lines[] = $line;
+            $entries = (clone $concert)->forceFill(['schedule' => implode("\n", $lines)])->parseScheduleEntries();
+            $note = preg_match('/[（(]\s*([^（()）]+?)\s*[）)]\s*$/u', $line, $m) ? $m[1] : '';
+            foreach (array_slice($entries, $count) as $entry) {
+                $options[$entry['date'] . '|' . $entry['venue'] . '|' . $note] = \Illuminate\Support\Carbon::parse($entry['date'])->format('Y.m.d') . ' ' . $entry['venue'] . ($note !== '' ? " ({$note})" : '');
+            }
+            $count = count($entries);
+        }
+        return $options;
+    }
+
+    // フォームの公演日（「2026-03-14」や、保存済みの日時「2026-03-13T15:00:00.000000Z」）を、日本時間の日付「2026-03-14」にする
+    private static function dateOf($value): string
+    {
+        return \Illuminate\Support\Carbon::parse($value)->setTimezone(config('app.timezone'))->toDateString();
+    }
+
+    // スケジュールから公演を選ぶか（紐付けたツアーにスケジュールがあれば選ぶ。そのときは公演日・会場・備考の欄を出さない）
+    private static function usesSchedule(Forms\Get $get): bool
+    {
+        return !$get('fes') && count(self::scheduleOptions($get('db_concert_id'))) > 0;
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -85,7 +119,7 @@ class SlSetlistResource extends Resource
                                 if (blank($state)) return;
                                 $tours = DbConcert::where('artist_id', $get('artist_id'))->where('title', $state)->get();
                                 if ($tours->count() > 1 && filled($get('date'))) {
-                                    $date = \Illuminate\Support\Carbon::parse($get('date'))->toDateString();
+                                    $date = self::dateOf($get('date'));
                                     $tours = $tours->filter(fn ($t) => (string) $t->date1 <= $date && $date <= (string) ($t->date2 ?: $t->date1));
                                 }
                                 if ($tours->count() === 1) $set('db_concert_id', $tours->first()->id);
@@ -100,19 +134,49 @@ class SlSetlistResource extends Resource
                             ->hidden(fn (Forms\Get $get) => self::artistHasTours($get('artist_id')))
                             ->columnSpanFull(),
 
+                        // 紐付けたツアーにスケジュールがあれば、マイページと同じように公演を選んで公演日・会場・備考を入れる（その3つの欄は出さない）
+                        Forms\Components\Select::make('_schedule_pick')
+                            ->label('スケジュールから選ぶ')
+                            ->options(fn (Forms\Get $get) => self::scheduleOptions($get('db_concert_id')))
+                            ->visible(fn (Forms\Get $get) => self::usesSchedule($get))
+                            ->required()
+                            ->searchable()
+                            ->native(false)
+                            ->dehydrated(false)
+                            ->live()
+                            // 開いたセットリストの公演日・会場・備考がスケジュールの公演と同じなら、その公演を選んだ状態にする
+                            ->afterStateHydrated(function (Forms\Get $get, Forms\Set $set) {
+                                if (blank($get('date'))) return;
+                                $key = self::dateOf($get('date')) . '|' . $get('venue') . '|' . $get('note');
+                                if (array_key_exists($key, self::scheduleOptions($get('db_concert_id')))) $set('_schedule_pick', $key);
+                            })
+                            ->afterStateUpdated(function (?string $state, Forms\Set $set) {
+                                if (blank($state)) return;
+                                [$date, $venue, $note] = explode('|', $state, 3) + [2 => ''];
+                                $set('date', $date);
+                                $set('venue', $venue);
+                                $set('note', $note !== '' ? $note : null);
+                            })
+                            ->columnSpanFull(),
+
                         Forms\Components\DatePicker::make('date')
                             ->label('公演日')
                             ->required()
                             ->native(false)
-                            ->displayFormat('Y.m.d'),
+                            ->displayFormat('Y.m.d')
+                            ->hidden(fn (Forms\Get $get) => self::usesSchedule($get))
+                            ->dehydratedWhenHidden(),
 
                         Forms\Components\Select::make('venue')
                             ->label('会場')
                             ->required()
+                            ->hidden(fn (Forms\Get $get) => self::usesSchedule($get))
+                            ->dehydratedWhenHidden()
                             ->searchable()
                             ->native(false)
-                            ->options(function () {
-                                $venues = collect();
+                            ->options(function (Forms\Get $get) {
+                                // スケジュールから選んだ会場のように、まだどこにも無い会場も出す
+                                $venues = collect(filled($get('venue')) ? [$get('venue')] : []);
 
                                 // Setlistから会場を取得
                                 $setlistVenues = \App\Models\SlSetlist::query()
@@ -145,6 +209,14 @@ class SlSetlistResource extends Resource
                                 return $data['venue'];
                             }),
 
+                        // 同じ日の 1部・2部、昼公演・夜公演など。スケジュールから選ぶと入る
+                        Forms\Components\TextInput::make('note')
+                            ->label('備考')
+                            ->maxLength(255)
+                            ->hidden(fn (Forms\Get $get) => self::usesSchedule($get))
+                            ->dehydratedWhenHidden()
+                            ->columnSpanFull(),
+
                         Forms\Components\Select::make('db_concert_id')
                             ->label('database側のツアーとの紐付け')
                             ->options(function (Forms\Get $get) {
@@ -156,6 +228,7 @@ class SlSetlistResource extends Resource
                             ->preload()
                             ->native(false)
                             ->nullable()
+                            ->live()
                             ->hidden(fn (Forms\Get $get) => (bool) $get('fes'))
                             ->columnSpanFull(),
 

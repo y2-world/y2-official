@@ -18,7 +18,7 @@
             {{-- Database のライブと結び付いているときは、ツアー名から Database のライブページへ --}}
             <h1 class="database-title" style="">@if ($setlists->db_concert_id)<a href="{{ route('live.show', $setlists->db_concert_id) }}" style="color: inherit; text-decoration: none;">{{ $setlists->title }}</a>@else{{ $setlists->title }}@endif</h1>
             <p class="database-subtitle" style="">
-                {{ date('Y.m.d', strtotime($setlists->date)) }}<br>
+                {{ date('Y.m.d', strtotime($setlists->date)) }}@if (filled($setlists->note)) {{ $setlists->note }}@endif<br>
                 <a href="{{ url('/venue?keyword=' . urlencode($setlists->venue)) }}" style="color: white; text-decoration: none;">
                     {{ $setlists->venue }}
                 </a>

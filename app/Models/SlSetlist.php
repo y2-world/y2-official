@@ -28,6 +28,7 @@ class SlSetlist extends Model
         'date',
         'year',
         'venue',
+        'note',
         'setlist',
         'encore',
         'fes',
