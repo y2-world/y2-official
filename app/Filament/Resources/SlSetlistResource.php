@@ -64,9 +64,34 @@ class SlSetlistResource extends Resource
     }
 
     // スケジュールから公演を選ぶか（紐付けたツアーにスケジュールがあれば選ぶ。そのときは公演日・会場・備考の欄を出さない）
+    // ただし公演日がもう入っていて、その日がスケジュールに無いとき（今あるセットリスト）は、今までどおり欄に手で入れる
     private static function usesSchedule(Forms\Get $get): bool
     {
-        return !$get('fes') && count(self::scheduleOptions($get('db_concert_id'))) > 0;
+        $options = $get('fes') ? [] : self::scheduleOptions($get('db_concert_id'));
+        if (!$options) return false;
+        if (filled($get('_schedule_pick')) || blank($get('date'))) return true;
+        return self::sameDayKeys($options, self::dateOf($get('date'))) !== [];
+    }
+
+    // スケジュールの公演のうち、その日のもの
+    private static function sameDayKeys(array $options, string $date): array
+    {
+        return array_values(array_filter(array_keys($options), fn ($k) => str_starts_with($k, $date . '|')));
+    }
+
+    // 今あるセットリストに合う公演。公演日・会場・備考が同じもの → 同じ日が1公演だけならそれ → 同じ日で備考が同じもの → 同じ日で会場が同じものが1つ。
+    // 決まらなければ null（同じ日の 1部・2部 で備考が無いときなど）
+    private static function matchScheduleKey(array $options, string $date, ?string $venue, ?string $note): ?string
+    {
+        $exact = "{$date}|{$venue}|{$note}";
+        if (array_key_exists($exact, $options)) return $exact;
+        $day = self::sameDayKeys($options, $date);
+        if (count($day) === 1) return $day[0];
+        foreach ([fn ($k) => filled($note) && str_ends_with($k, '|' . $note), fn ($k) => explode('|', $k)[1] === $venue] as $test) {
+            $hits = array_values(array_filter($day, $test));
+            if (count($hits) === 1) return $hits[0];
+        }
+        return null;
     }
 
     public static function form(Form $form): Form
@@ -144,12 +169,16 @@ class SlSetlistResource extends Resource
                             ->native(false)
                             ->dehydrated(false)
                             ->live()
-                            // 開いたセットリストの公演日・会場・備考がスケジュールの公演と同じなら、その公演を選んだ状態にする
+                            // 開いたセットリストに合う公演を選んだ状態にする（選んだ状態で開いても、保存されている公演日・会場・備考は変えない）
                             ->afterStateHydrated(function (Forms\Get $get, Forms\Set $set) {
                                 if (blank($get('date'))) return;
-                                $key = self::dateOf($get('date')) . '|' . $get('venue') . '|' . $get('note');
-                                if (array_key_exists($key, self::scheduleOptions($get('db_concert_id')))) $set('_schedule_pick', $key);
+                                $key = self::matchScheduleKey(self::scheduleOptions($get('db_concert_id')), self::dateOf($get('date')), $get('venue'), $get('note'));
+                                if ($key !== null) $set('_schedule_pick', $key);
                             })
+                            // 決まらなかったとき（同じ日の昼・夜など）は、今入っている公演日と会場を出しておく
+                            ->helperText(fn (Forms\Get $get) => blank($get('_schedule_pick')) && filled($get('date'))
+                                ? '今の公演日・会場：' . \Illuminate\Support\Carbon::parse(self::dateOf($get('date')))->format('Y.m.d') . ' ' . $get('venue') . (filled($get('note')) ? "（{$get('note')}）" : '')
+                                : null)
                             ->afterStateUpdated(function (?string $state, Forms\Set $set) {
                                 if (blank($state)) return;
                                 [$date, $venue, $note] = explode('|', $state, 3) + [2 => ''];
