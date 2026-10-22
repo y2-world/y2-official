@@ -49,12 +49,32 @@ class SlSetlistResource extends Resource
                                     ->required()
                                     ->maxLength(255),
                             ])
-                            ->createOptionUsing(fn (array $data) => \App\Models\Artist::create(['name' => $data['name']])->id),
+                            ->createOptionUsing(fn (array $data) => \App\Models\Artist::create(['name' => $data['name']])->id)
+                            ->live(),
 
+                        // database にそのアーティストのツアーがあれば、ツアー名を候補から選べる（自由に書くこともできる）
                         Forms\Components\TextInput::make('title')
                             ->label('タイトル')
                             ->required()
                             ->maxLength(255)
+                            ->datalist(function (Forms\Get $get) {
+                                $artistId = $get('artist_id');
+                                if (!$artistId) return [];
+                                return DbConcert::where('artist_id', $artistId)->orderByDesc('date1')->pluck('title')->unique()->values()->all();
+                            })
+                            // ツアー名と同じなら「database側のツアーとの紐付け」もそのツアーにする。
+                            // 同じ名前のツアーが複数あるときは、公演日が期間に入るツアー（決まらなければ選ばない）
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (?string $state, Forms\Get $get, Forms\Set $set) {
+                                $artistId = $get('artist_id');
+                                if (!$artistId || blank($state)) return;
+                                $tours = DbConcert::where('artist_id', $artistId)->where('title', trim($state))->get();
+                                if ($tours->count() > 1 && filled($get('date'))) {
+                                    $date = \Illuminate\Support\Carbon::parse($get('date'))->toDateString();
+                                    $tours = $tours->filter(fn ($t) => (string) $t->date1 <= $date && $date <= (string) ($t->date2 ?: $t->date1));
+                                }
+                                if ($tours->count() === 1) $set('db_concert_id', $tours->first()->id);
+                            })
                             ->columnSpanFull(),
 
                         Forms\Components\DatePicker::make('date')
