@@ -29,6 +29,12 @@ class SlSetlistResource extends Resource
 
     protected static ?int $navigationSort = 10;
 
+    // database にそのアーティストのツアーがあるか（タイトルを選ぶ欄にするか）
+    private static function artistHasTours($artistId): bool
+    {
+        return filled($artistId) && DbConcert::where('artist_id', $artistId)->exists();
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -52,29 +58,46 @@ class SlSetlistResource extends Resource
                             ->createOptionUsing(fn (array $data) => \App\Models\Artist::create(['name' => $data['name']])->id)
                             ->live(),
 
-                        // database にそのアーティストのツアーがあれば、ツアー名を候補から選べる（自由に書くこともできる）
-                        Forms\Components\TextInput::make('title')
+                        // database にそのアーティストのツアーがあれば、タイトルはツアー名から選ぶ（無い名前は＋から書く）。
+                        // ツアーが1件も無ければ普通の入力欄。どちらも同じ title に入る
+                        Forms\Components\Select::make('title')
                             ->label('タイトル')
                             ->required()
-                            ->maxLength(255)
-                            ->datalist(function (Forms\Get $get) {
-                                $artistId = $get('artist_id');
-                                if (!$artistId) return [];
-                                return DbConcert::where('artist_id', $artistId)->orderByDesc('date1')->pluck('title')->unique()->values()->all();
+                            ->searchable()
+                            ->native(false)
+                            ->options(function (Forms\Get $get) {
+                                $titles = DbConcert::where('artist_id', $get('artist_id'))->orderByDesc('date1')->pluck('title');
+                                // ツアー名に無いタイトルのセットリストを開いたときも、今のタイトルを出す
+                                if (filled($get('title'))) $titles->prepend($get('title'));
+                                return $titles->unique()->mapWithKeys(fn ($t) => [$t => $t]);
                             })
-                            // ツアー名と同じなら「database側のツアーとの紐付け」もそのツアーにする。
+                            ->createOptionForm([
+                                Forms\Components\TextInput::make('title')
+                                    ->label('新しいタイトル')
+                                    ->required()
+                                    ->maxLength(255),
+                            ])
+                            ->createOptionUsing(fn (array $data): string => $data['title'])
+                            // ツアー名を選んだら「database側のツアーとの紐付け」もそのツアーにする。
                             // 同じ名前のツアーが複数あるときは、公演日が期間に入るツアー（決まらなければ選ばない）
-                            ->live(onBlur: true)
+                            ->live()
                             ->afterStateUpdated(function (?string $state, Forms\Get $get, Forms\Set $set) {
-                                $artistId = $get('artist_id');
-                                if (!$artistId || blank($state)) return;
-                                $tours = DbConcert::where('artist_id', $artistId)->where('title', trim($state))->get();
+                                if (blank($state)) return;
+                                $tours = DbConcert::where('artist_id', $get('artist_id'))->where('title', $state)->get();
                                 if ($tours->count() > 1 && filled($get('date'))) {
                                     $date = \Illuminate\Support\Carbon::parse($get('date'))->toDateString();
                                     $tours = $tours->filter(fn ($t) => (string) $t->date1 <= $date && $date <= (string) ($t->date2 ?: $t->date1));
                                 }
                                 if ($tours->count() === 1) $set('db_concert_id', $tours->first()->id);
                             })
+                            ->visible(fn (Forms\Get $get) => self::artistHasTours($get('artist_id')))
+                            ->columnSpanFull(),
+
+                        Forms\Components\TextInput::make('title')
+                            ->label('タイトル')
+                            ->required()
+                            ->maxLength(255)
+                            ->hidden(fn (Forms\Get $get) => self::artistHasTours($get('artist_id')))
                             ->columnSpanFull(),
 
                         Forms\Components\DatePicker::make('date')
