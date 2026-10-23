@@ -97,11 +97,14 @@ class DbConcertController extends Controller
             ->groupBy('row')
             ->map(fn ($rows) => $rows->pluck('title')->unique()->values());
 
+        // 曲目は同じで順番だけ違う row は、全公演がその順番ではないので、Summary に使ったパターンを見出しにする（row => パターン）
+        $summaryPickedPatterns = [];
+
         // row（同時に見比べる列同士）ごとに、パターンが2つ以上ある場合にSummaryを作る。
         $setlistSummaries = $tourSetlists
             ->groupBy(fn ($m) => $m->row ?? 1)
             ->sortKeys()
-            ->map(function ($rowSetlists) use ($songs, $tours) {
+            ->map(function ($rowSetlists, $rowNum) use ($songs, $tours, &$summaryPickedPatterns) {
                 if ($rowSetlists->count() < 2) {
                     return null;
                 }
@@ -146,6 +149,9 @@ class DbConcertController extends Controller
                 // 全パターンが同じ曲順・曲目の場合は、同じ行を再マージせず、
                 // 指定公演についてはorder_noが最後のパターンをそのままSummaryに使う。
                 $finalPattern = $rowSetlists->sortBy('order_no')->last();
+                if ($onlyOrderDiffers) {
+                    $summaryPickedPatterns[$rowNum] = $finalPattern;
+                }
                 return buildSetlistPatternSummary(collect([$finalPattern]), $songs);
             })
             ->filter();
@@ -187,6 +193,6 @@ class DbConcertController extends Controller
             $tab = null;
         }
 
-        return view('db_concerts.show', compact('songs', 'previous', 'next', 'summaryMode', 'tours', 'tourSetlists', 'artist', 'setlistSummaries', 'summaryRows', 'from', 'tab', 'summaryRowTitles'));
+        return view('db_concerts.show', compact('songs', 'previous', 'next', 'summaryMode', 'tours', 'tourSetlists', 'artist', 'setlistSummaries', 'summaryRows', 'from', 'tab', 'summaryRowTitles', 'summaryPickedPatterns'));
     }
 }

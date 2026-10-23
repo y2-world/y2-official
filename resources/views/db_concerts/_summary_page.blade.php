@@ -16,7 +16,26 @@
                                     @php
                                         $rowTitleList = $summaryRowTitles[$rowNum] ?? collect();
                                     @endphp
-                                    @if ($rowTitleList->count() === 1 && $summaryRows->count() > 1)
+                                    @php
+                                        $pickedPattern = ($summaryPickedPatterns ?? [])[$rowNum] ?? null;
+                                        // 選んだパターンに日付・会場の名前が無ければ、そのパターンの段のタイトル
+                                        $pickedLabels = $pickedPattern
+                                            ? collect(renderSubtitleWithGreyedVenues($pickedPattern->subtitle ?? '')['lines'])->filter(fn ($line) => trim(strip_tags($line)) !== '')->values()
+                                            : collect();
+                                        if ($pickedPattern && $pickedLabels->isEmpty()) {
+                                            $pickedRowTitle = \App\Models\DbSetlistRow::where('tour_id', $pickedPattern->tour_id)->where('row', $pickedPattern->row)->where('order_no', $pickedPattern->order_no)->value('title');
+                                            if (filled($pickedRowTitle)) $pickedLabels = collect([e($pickedRowTitle)]);
+                                        }
+                                    @endphp
+                                    @if ($pickedLabels->isNotEmpty())
+                                        {{-- 曲目は同じで順番だけ違う row は、全公演がその順番ではないので、Summary に使ったパターンを見出しにする --}}
+                                        <div class="setlist-subtitle-area">
+                                            <h5 class="setlist-subtitle-heading setlist-subtitle-wrap setlist-subtitle-collapsible{{ $pickedLabels->count() === 1 ? ' setlist-summary-single-pattern-label' : '' }}"
+                                                onclick="this.classList.toggle('is-expanded')">
+                                                {!! $pickedLabels->map(fn ($line) => '<span class="setlist-summary-pattern-label">' . $line . '</span>')->implode(' ') !!}<span class="setlist-subtitle-toggle" aria-hidden="true"><i class="fa-solid fa-angle-down"></i><i class="fa-solid fa-angle-up"></i></span>
+                                            </h5>
+                                        </div>
+                                    @elseif ($rowTitleList->count() === 1 && $summaryRows->count() > 1)
                                         {{-- 表示するrowが複数ある場合は、rowごとのグループ名を見出しにする。 --}}
                                         <div class="setlist-subtitle-area">
                                             <h5 class="setlist-subtitle-heading">{{ $rowTitleList->first() }}</h5>
