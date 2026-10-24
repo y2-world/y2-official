@@ -7,7 +7,7 @@
 
 @section('content')
     <div class="database-hero database-hero--detail">
-        <div class="container">
+        <div class="container" style="position: relative;">
             @if (!$setlists->fes && $setlists->artist)
                 <p class="database-subtitle" style="">
                     <a href="{{ url('/setlists/artists', $setlists->artist_id) }}" class="header-link">
@@ -23,6 +23,31 @@
                     {{ $setlists->venue }}
                 </a>
             </p>
+
+            {{-- 曲の検索（セットリストの一覧・曲のページと同じ）。虫眼鏡アイコン（SP表示のみ、見出しブロックの右下）：押すとフォームが開き、ボタン自体は隠れる --}}
+            <button type="button" id="spSearchButtonSetlist" class="sp" onclick="document.getElementById('spSearchButtonSetlist').style.display='none'; document.getElementById('spSearchFormSetlist').style.display='block';" style="position: absolute; bottom: -14px; right: 8px; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                <i class="fa-solid fa-magnifying-glass" style="font-size: 14px;"></i>
+            </button>
+
+            {{-- 検索フォーム（SP表示） --}}
+            <div class="sp" id="spSearchFormSetlist" style="margin-top: 10px; display: none;">
+                <div>
+                    @livewire('song-search')
+                    {{-- 閉じるボタン --}}
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button type="button" onclick="document.getElementById('spSearchFormSetlist').style.display='none'; document.getElementById('spSearchButtonSetlist').style.display='flex';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;">
+                            <i class="fa-solid fa-xmark" style="font-size: 16px;"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {{-- 検索フォーム（PC表示のみ） --}}
+            <div class="database-search pc song-search-top-right">
+                <div>
+                    @livewire('song-search')
+                </div>
+            </div>
         </div>
     </div>
 
