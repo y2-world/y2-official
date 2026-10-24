@@ -25,12 +25,13 @@
             @if ($secondTabSongNumber)
                 <p class="database-subtitle song-number-second" style="{{ $initialTab !== 'performances' ? '' : 'display: none;' }}"># {{ $secondTabSongNumber }}</p>
             @endif
-            <h1 class="database-title sp" style="margin-bottom: 4px; cursor: pointer;"
-                onclick="document.getElementById('spSearchFormSongs').style.display='block'; document.querySelector('.database-title.sp').style.display='none';">
-                {{ $songs->title }}
-            </h1>
-            <h1 class="database-title pc" style="">{{ $songs->title }}</h1>
+            <h1 class="database-title" style="">{{ $songs->title }}</h1>
             @include('db_songs._song_info', ['dbSong' => $songs])
+
+            {{-- 虫眼鏡アイコン（SP表示のみ、見出しブロックの右下）：押すとフォームが開き、ボタン自体は隠れる（セットリストの曲のページと同じ） --}}
+            <button type="button" id="spSearchButtonSongs" class="sp" onclick="document.getElementById('spSearchButtonSongs').style.display='none'; document.getElementById('spSearchFormSongs').style.display='block';" style="position: absolute; bottom: -14px; right: 8px; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                <i class="fa-solid fa-magnifying-glass" style="font-size: 14px;"></i>
+            </button>
 
             {{-- 検索フォーム（SP表示） --}}
              <div class="sp" id="spSearchFormSongs" style="margin-top: 10px; display: none;">
@@ -38,7 +39,7 @@
                     @livewire('database-song-search', ['artistId' => $songs->artist_id])
                     {{-- 閉じるボタン --}}
                     <div style="text-align: center; margin-top: 15px;">
-                        <button type="button" onclick="document.getElementById('spSearchFormSongs').style.display='none'; document.querySelector('.database-title.sp').style.display='block';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;">
+                        <button type="button" onclick="document.getElementById('spSearchFormSongs').style.display='none'; document.getElementById('spSearchButtonSongs').style.display='flex';" style="background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); color: white; padding: 8px; border-radius: 50%; cursor: pointer; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;">
                             <i class="fa-solid fa-xmark" style="font-size: 16px;"></i>
                         </button>
                     </div>
