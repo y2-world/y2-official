@@ -15,7 +15,7 @@
                         // アーティスト名は常に自分の参加記録一覧（フィルタ済み）へのリンクにする。
                         $artistLink = route('mypage.attendances.index', ['artist_id' => ($isOfficial ? 'official-' : 'user-') . $artist->id]);
                     @endphp
-                    <a href="{{ $artistLink }}" style="color: white; text-decoration: none;">
+                    <a href="{{ $artistLink }}" class="header-link">
                         {{ $artist->name }}
                     </a>
                 @endif
@@ -24,7 +24,7 @@
                 // ツアー名からライブのページへ（公式は Database、ユーザー登録はそのライブのページ）
                 $tourLink = $tour ? ($isOfficial ? route('live.show', $tour->id) : route('mypage.user_concerts.show', $tour->id)) : null;
             @endphp
-            <h1 class="database-title" style="">@if ($tourLink)<a href="{{ $tourLink }}" style="color: inherit; text-decoration: none;">{{ $tour->title }}</a>@else{{ $tour->title ?? '' }}@endif</h1>
+            <h1 class="database-title" style="">@if ($tourLink)<a href="{{ $tourLink }}" class="header-link">{{ $tour->title }}</a>@else{{ $tour->title ?? '' }}@endif</h1>
             <p class="database-subtitle" id="attendanceDisplay" style="@if ($errors->any()) display: none; @endif">
                 @if ($attendance->attended_date)
                     {{ $attendance->attended_date->format('Y.m.d') }}

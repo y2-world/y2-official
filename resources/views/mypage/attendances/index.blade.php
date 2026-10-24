@@ -114,7 +114,7 @@
                                     ? ($filterArtist->visible && (\App\Models\DbConcert::where('artist_id', $filterArtist->id)->exists() || \App\Models\DbSong::where('artist_id', $filterArtist->id)->exists()) ? route('database.artist', $filterArtist->id) : null)
                                     : route('mypage.user_artists.show', $filterArtist->id);
                             @endphp
-                            <h1 class="database-title" style="white-space: nowrap;">@if ($filterArtistLink)<a href="{{ $filterArtistLink }}" style="color: inherit; text-decoration: none;">{{ $filterArtist->name }}</a>@else{{ $filterArtist->name }}@endif</h1>
+                            <h1 class="database-title" style="white-space: nowrap;">@if ($filterArtistLink)<a href="{{ $filterArtistLink }}" class="header-link">{{ $filterArtist->name }}</a>@else{{ $filterArtist->name }}@endif</h1>
                             <p class="database-subtitle" style="margin: 4px 0 0;">{{ $viewerLabel }}</p>
                         @elseif ($year)
                             <h1 class="database-title" style="white-space: nowrap;">{{ $year }}</h1>

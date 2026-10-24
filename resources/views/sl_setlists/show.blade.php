@@ -300,7 +300,7 @@
                                     echo '<div class="fes-block">';
                                     if ($blockArtistName) {
                                         if ($blockArtistId) {
-                                            echo '<p class="fes-block-artist"><a href="' . url('/setlists/artists', $blockArtistId) . '" style="color:inherit;text-decoration:none;">' . htmlspecialchars($blockArtistName, ENT_COMPAT, 'UTF-8') . '</a></p>';
+                                            echo '<p class="fes-block-artist"><a href="' . url('/setlists/artists', $blockArtistId) . '" class="plain-link">' . htmlspecialchars($blockArtistName, ENT_COMPAT, 'UTF-8') . '</a></p>';
                                         } else {
                                             echo '<p class="fes-block-artist">' . htmlspecialchars($blockArtistName, ENT_COMPAT, 'UTF-8') . '</p>';
                                         }

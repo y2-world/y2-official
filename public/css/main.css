@@ -1601,14 +1601,29 @@ h2 {
     color: inherit;
 }
 
-/* 見出しの中のリンク（セットリストのアーティスト名・ツアー名・会場）。リンクだと分かるよう、ホバーで色を変える */
+/* 見出しの中のリンク（アーティスト名・ツアー名・会場など）と、文字の色のままのリンク。リンクだと分かるよう、ホバーで色を変える */
 a.header-link {
     color: white;
     text-decoration: none;
+}
+a.plain-link {
+    color: inherit;
+    text-decoration: none;
+}
+a.header-link,
+a.plain-link,
+.database-subtitle a,
+.database-title a {
     transition: color 0.15s;
 }
 a.header-link:hover,
-a.header-link:focus-visible {
+a.header-link:focus-visible,
+a.plain-link:hover,
+a.plain-link:focus-visible,
+.database-subtitle a:hover,
+.database-subtitle a:focus-visible,
+.database-title a:hover,
+.database-title a:focus-visible {
     color: #9a9a9a;
 }
 
@@ -2856,14 +2871,17 @@ h5.setlist-subtitle-heading {
     line-height: 1.4;
 }
 
-/* Stats Links - No color or underline change */
+/* Stats Links - 下線なし、文字の色のまま */
 .stats-link {
     color: inherit;
     text-decoration: none;
+    transition: color 0.15s;
 }
 
-.stats-link:hover {
-    color: inherit;
+/* 下線は付けないが、リンクだと分かるよう、ホバーで色を変える（ほかの文字の色のままのリンクと同じ） */
+.stats-link:hover,
+.stats-link:focus-visible {
+    color: #9a9a9a;
     text-decoration: none;
 }
 
