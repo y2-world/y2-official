@@ -59,7 +59,7 @@
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                         <a href="{{ route('database.live', $artist->id) }}?type=4" class="database-link">
-                            <span><i class="fa-solid fa-microphone" style="margin-right: 10px;"></i>Solo</span>
+                            <span><i class="fa-solid fa-user" style="margin-right: 10px;"></i>Solo</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                         @endif
