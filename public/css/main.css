@@ -1601,6 +1601,17 @@ h2 {
     color: inherit;
 }
 
+/* 見出しの中のリンク（セットリストのアーティスト名・ツアー名・会場）。リンクだと分かるよう、ホバーで色を変える */
+a.header-link {
+    color: white;
+    text-decoration: none;
+    transition: color 0.15s;
+}
+a.header-link:hover,
+a.header-link:focus-visible {
+    color: #9a9a9a;
+}
+
 @media (max-width: 768px) {
     .database-title {
         font-size: 1.5rem;

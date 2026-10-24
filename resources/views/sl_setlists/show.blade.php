@@ -10,16 +10,16 @@
         <div class="container">
             @if (!$setlists->fes && $setlists->artist)
                 <p class="database-subtitle" style="">
-                    <a href="{{ url('/setlists/artists', $setlists->artist_id) }}" style="color: white; text-decoration: none;">
+                    <a href="{{ url('/setlists/artists', $setlists->artist_id) }}" class="header-link">
                         {{ $setlists->artist->name }}
                     </a>
                 </p>
             @endif
             {{-- Database のライブと結び付いているときは、ツアー名から Database のライブページへ --}}
-            <h1 class="database-title" style="">@if ($setlists->db_concert_id)<a href="{{ route('live.show', $setlists->db_concert_id) }}" style="color: inherit; text-decoration: none;">{{ $setlists->title }}</a>@else{{ $setlists->title }}@endif</h1>
+            <h1 class="database-title" style="">@if ($setlists->db_concert_id)<a href="{{ route('live.show', $setlists->db_concert_id) }}" class="header-link">{{ $setlists->title }}</a>@else{{ $setlists->title }}@endif</h1>
             <p class="database-subtitle" style="">
                 {{ date('Y.m.d', strtotime($setlists->date)) }}@if (filled($setlists->note)) {{ $setlists->note }}@endif<br>
-                <a href="{{ url('/venue?keyword=' . urlencode($setlists->venue)) }}" style="color: white; text-decoration: none;">
+                <a href="{{ url('/venue?keyword=' . urlencode($setlists->venue)) }}" class="header-link">
                     {{ $setlists->venue }}
                 </a>
             </p>
