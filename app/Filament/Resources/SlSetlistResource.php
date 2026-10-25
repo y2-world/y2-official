@@ -1600,6 +1600,13 @@ class SlSetlistResource extends Resource
     // DbSong由来の候補は"db-{id}"というキーにしてSlSong.idとの衝突を避ける。
     protected static function songOptionsWithUnlinkedDbSongs(): array
     {
+        $request = request();
+        $cacheKey = 'sl_setlist_song_options_with_unlinked_db_songs';
+
+        if ($request->attributes->has($cacheKey)) {
+            return $request->attributes->get($cacheKey);
+        }
+
         $slSongs = SlSong::query()
             ->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id')
             ->select('sl_songs.id', 'sl_songs.title', 'artists.name as artist_name')
@@ -1626,7 +1633,10 @@ class SlSetlistResource extends Resource
         $options = $slSongs->mapWithKeys(fn($song) => [(string) $song->id => $buildLabel($song)])->all();
         $options += $unlinkedDbSongs->mapWithKeys(fn($song) => ['db-' . $song->id => $buildLabel($song)])->all();
 
-        return \App\Support\JapaneseNameSorter::sortOptions($options);
+        $options = \App\Support\JapaneseNameSorter::sortOptions($options);
+        $request->attributes->set($cacheKey, $options);
+
+        return $options;
     }
 
     // 曲名セレクトで選択された値を保存用に解決する。"db-{id}"形式（＝DbSong由来の

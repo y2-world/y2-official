@@ -158,9 +158,7 @@ class DbSetlistResource extends Resource
                 Forms\Components\Repeater::make('songs')->hiddenLabel()->extraAttributes(['class' => 'setlist-encore-songs'])->schema([
                     Forms\Components\Hidden::make('_uuid')->default(fn() => (string) \Illuminate\Support\Str::uuid()),
                     Forms\Components\Select::make('song')->label('曲名')->required()
-                        ->options(fn(Forms\Get $get) => \App\Support\JapaneseNameSorter::sortOptions(
-                            static::songQuery($get('../../../../_artist_id'))->get()->mapWithKeys(fn($song) => [$song->id => static::songOptionLabel($song)])->all()
-                        ))
+                        ->options(fn(Forms\Get $get) => static::songOptions($get('../../../../_artist_id')))
                         ->searchable()->native(false)->allowHtml()->live()
                         ->afterStateUpdated(fn($state, Forms\Set $set) => $set('alternative_title', null))
                         ->getOptionLabelUsing(function ($value) {
@@ -246,6 +244,25 @@ class DbSetlistResource extends Resource
     protected static function songQuery($artistId)
     {
         return AdminData::query('song')->when($artistId, fn ($q, $id) => $q->ofArtists(static::songArtistIds($id)));
+    }
+
+    // 同じアーティストの候補一覧は、フォーム内の全曲欄で共有する。
+    protected static function songOptions($artistId): array
+    {
+        $artistIds = $artistId ? static::songArtistIds($artistId) : [];
+        $cacheKey = 'db_setlist_song_options:' . AdminData::table('song') . ':' . implode(',', $artistIds);
+        $request = request();
+
+        if (!$request->attributes->has($cacheKey)) {
+            $options = static::songQuery($artistId)
+                ->get()
+                ->mapWithKeys(fn ($song) => [$song->id => static::songOptionLabel($song)])
+                ->all();
+
+            $request->attributes->set($cacheKey, \App\Support\JapaneseNameSorter::sortOptions($options));
+        }
+
+        return $request->attributes->get($cacheKey);
     }
 
     public static function form(Form $form): Form
@@ -385,9 +402,7 @@ class DbSetlistResource extends Resource
                                 // 曲名（横いっぱい）
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
-                                    ->options(fn(Get $get) => \App\Support\JapaneseNameSorter::sortOptions(
-                                        static::songQuery($get('../../_artist_id'))->get()->mapWithKeys(fn($song) => [$song->id => static::songOptionLabel($song)])->all()
-                                    ))
+                                    ->options(fn(Get $get) => static::songOptions($get('../../_artist_id')))
                                     ->searchable()
                                     ->native(false)
                                     ->required()
