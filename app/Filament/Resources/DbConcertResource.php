@@ -212,13 +212,12 @@ class DbConcertResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('date1', 'desc');
+            ->defaultSort('updated_at', 'desc');
     }
 
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
-        return AdminData::query('concert')
-            ->orderBy('id', 'desc');
+        return AdminData::query('concert');
     }
 
     public static function getRelations(): array

@@ -112,6 +112,6 @@ class ManageArtistConcerts extends ListRecords
                     ->url(fn ($record) => \App\Filament\Resources\DbSetlistResource::getUrl('manage-tour', ['tourId' => $record->id])),
                 Tables\Actions\DeleteAction::make(),
             ])
-            ->defaultSort('date1', 'desc');
+            ->defaultSort('updated_at', 'desc');
     }
 }
