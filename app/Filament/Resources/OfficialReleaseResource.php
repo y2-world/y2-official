@@ -41,10 +41,7 @@ class OfficialReleaseResource extends Resource
                 Forms\Components\TextInput::make('subtitle')
                     ->label('サブタイトル')
                     ->maxLength(191),
-                Forms\Components\DatePicker::make('date')
-                    ->label('発売日')
-                    ->native(false)
-                    ->displayFormat('Y.m.d'),
+                \App\Filament\Forms\TypedDate::make('date', '発売日'),
                 Forms\Components\Toggle::make('type')
                     ->label('アルバム')
                     ->onColor('success')

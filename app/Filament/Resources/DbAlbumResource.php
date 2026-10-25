@@ -55,11 +55,8 @@ class DbAlbumResource extends Resource
                 Forms\Components\TextInput::make('album_id')
                     ->label('アルバムID')
                     ->numeric(),
-                Forms\Components\DatePicker::make('date')
-                    ->label('発売日')
-                    ->required()
-                    ->native(false)
-                    ->displayFormat('Y.m.d'),
+                \App\Filament\Forms\TypedDate::make('date', '発売日')
+                    ->required(),
                 Forms\Components\TextInput::make('title')
                     ->label('タイトル')
                     ->required()

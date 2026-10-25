@@ -92,16 +92,10 @@ class DbConcertResource extends Resource
                             ->live()
                             ->columnSpanFull(),
 
-                        Forms\Components\DatePicker::make('date1')
-                            ->label('開始日')
-                            ->required()
-                            ->native(false)
-                            ->displayFormat('Y.m.d'),
+                        \App\Filament\Forms\TypedDate::make('date1', '開始日')
+                            ->required(),
 
-                        Forms\Components\DatePicker::make('date2')
-                            ->label('終了日')
-                            ->native(false)
-                            ->displayFormat('Y.m.d'),
+                        \App\Filament\Forms\TypedDate::make('date2', '終了日'),
 
                         Forms\Components\Select::make('venue')
                             ->label('会場')

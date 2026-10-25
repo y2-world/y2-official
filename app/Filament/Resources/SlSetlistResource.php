@@ -63,7 +63,7 @@ class SlSetlistResource extends Resource
     // フォームの公演日（「2026-03-14」や、保存済みの日時「2026-03-13T15:00:00.000000Z」）を、日本時間の日付「2026-03-14」にする
     private static function dateOf($value): string
     {
-        return \Illuminate\Support\Carbon::parse($value)->setTimezone(config('app.timezone'))->toDateString();
+        return \App\Filament\Forms\TypedDate::parse($value) ?? '';
     }
 
     // スケジュールから公演を選ぶか（紐付けたツアーにスケジュールがあれば選ぶ。そのときは公演日・会場・備考の欄を出さない）
@@ -185,17 +185,14 @@ class SlSetlistResource extends Resource
                             ->afterStateUpdated(function (?string $state, Forms\Set $set) {
                                 if (blank($state)) return;
                                 [$date, $venue, $note] = explode('|', $state, 3) + [2 => ''];
-                                $set('date', $date);
+                                $set('date', \App\Filament\Forms\TypedDate::display($date));
                                 $set('venue', $venue);
                                 $set('note', $note !== '' ? $note : null);
                             })
                             ->columnSpanFull(),
 
-                        Forms\Components\DatePicker::make('date')
-                            ->label('公演日')
+                        \App\Filament\Forms\TypedDate::make('date', '公演日')
                             ->required()
-                            ->native(false)
-                            ->displayFormat('Y.m.d')
                             ->hidden(fn (Forms\Get $get) => self::usesSchedule($get))
                             ->dehydratedWhenHidden(),
 
@@ -1078,16 +1075,10 @@ class SlSetlistResource extends Resource
                             ->default(0)
                             ->required(),
 
-                        Forms\Components\DatePicker::make('date1')
-                            ->label('開始日')
-                            ->required()
-                            ->native(false)
-                            ->displayFormat('Y.m.d'),
+                        \App\Filament\Forms\TypedDate::make('date1', '開始日')
+                            ->required(),
 
-                        Forms\Components\DatePicker::make('date2')
-                            ->label('終了日')
-                            ->native(false)
-                            ->displayFormat('Y.m.d'),
+                        \App\Filament\Forms\TypedDate::make('date2', '終了日'),
 
                         Forms\Components\TextInput::make('venue')
                             ->label('会場')

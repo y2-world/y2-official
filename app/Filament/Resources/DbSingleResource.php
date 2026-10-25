@@ -56,11 +56,8 @@ class DbSingleResource extends Resource
                     ->label('シングルID')
                     ->numeric(),
 
-                Forms\Components\DatePicker::make('date')
-                    ->label('発売日')
-                    ->required()
-                    ->native(false)
-                    ->displayFormat('Y.m.d'),
+                \App\Filament\Forms\TypedDate::make('date', '発売日')
+                    ->required(),
 
                 Forms\Components\TextInput::make('title')
                     ->label('タイトル')

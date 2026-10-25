@@ -63,6 +63,11 @@ class AdminPanelProvider extends PanelProvider
                 fn (): string => view('filament.hooks.reorder-handle-only')->render(),
                 scopes: [ManageArtistSongs::class],
             )
+            // 日付の欄を、押すとカレンダーが出て数字でも打てるようにする（DbConcertResource の dateInput）
+            ->renderHook(
+                PanelsRenderHook::BODY_END,
+                fn (): string => view('filament.hooks.typed-date-picker')->render(),
+            )
             // 複数選択の入力欄は幅をプレースホルダーの文字数×半角1文字分にするため、日本語だと途中で切れる。
             // プレースホルダーが出ている間は欄の幅いっぱいにする
             ->renderHook(
