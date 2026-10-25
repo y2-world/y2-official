@@ -27,6 +27,7 @@ class EditDbSetlist extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
+        $data = DbSetlistResource::mergeEncoreFormData($data);
         $this->pendingRowTitle = $data['row_title'] ?? null;
         unset($data['row_title']);
 
@@ -35,6 +36,11 @@ class EditDbSetlist extends EditRecord
         $this->previousOrderNo = $this->record->order_no;
 
         return $data;
+    }
+
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        return DbSetlistResource::splitEncoreForFormData($data);
     }
 
     protected function afterSave(): void

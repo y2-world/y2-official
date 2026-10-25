@@ -66,6 +66,291 @@ class SlSetlistResource extends Resource
         return \App\Filament\Forms\TypedDate::parse($value) ?? '';
     }
 
+    private static function syncBulkLiveSongs($state, string $target, string $generatedState, $artistId, Forms\Get $get, Forms\Set $set): void
+    {
+        $chunks = is_array($state) ? $state : [$state];
+        $titles = [];
+        $blockStarts = [];
+        foreach ($chunks as $chunkIndex => $chunk) {
+            $chunkTitles = array_values(array_filter(array_map(
+                fn ($line) => trim(preg_replace('/^\\s*(?:\\d+\\s*[.)．、]\\s*|[-*・]\\s*)/u', '', trim($line))),
+                preg_split('/\\R/u', (string) $chunk) ?: []
+            ), fn ($title) => $title !== ''));
+            if ($chunkTitles && $chunkIndex > 0) $blockStarts[] = count($titles);
+            $titles = array_merge($titles, $chunkTitles);
+        }
+
+        $generatedUuids = (array) $get('data.' . $generatedState, true);
+        $currentItems = array_values((array) $get('data.' . $target, true));
+        $generatedItems = array_values(array_filter($currentItems, fn ($item) => in_array($item['_uuid'] ?? null, $generatedUuids, true)));
+        $baseItems = array_values(array_filter($currentItems, function ($item) use ($generatedUuids) {
+            return !in_array($item['_uuid'] ?? null, $generatedUuids, true)
+                && (filled($item['song'] ?? null) || filled($item['alternative_title'] ?? null) || filled($item['featuring'] ?? null) || filled($item['medley_title'] ?? null) || !empty($item['encore_block_start']));
+        }));
+
+        $preservedByTitle = [];
+        foreach ($generatedItems as $item) {
+            $songValue = $item['song'] ?? null;
+            $song = is_numeric($songValue) ? SlSong::find($songValue) : null;
+            $title = $song?->title ?? (string) ($item['song'] ?? '');
+            $preservedByTitle[$title][] = $item;
+        }
+
+        $newItems = [];
+        foreach ($titles as $index => $title) {
+            if (!empty($preservedByTitle[$title])) {
+                $item = array_shift($preservedByTitle[$title]);
+            } else {
+                $songId = SlSong::query()
+                    ->where('artist_id', $artistId)
+                    ->whereRaw('LOWER(TRIM(title)) = LOWER(?)', [trim($title)])
+                    ->orderBy('id')
+                    ->value('id');
+
+                $item = [
+                    '_uuid' => (string) \Illuminate\Support\Str::uuid(),
+                    'song' => $songId ? (string) $songId : $title,
+                ];
+            }
+
+            if (in_array($index, $blockStarts, true)) {
+                $item['encore_block_start'] = true;
+            } else {
+                unset($item['encore_block_start']);
+            }
+            $newItems[] = $item;
+        }
+
+        $set('data.' . $target, array_merge($baseItems, $newItems), true);
+        $set('data.' . $generatedState, array_column($newItems, '_uuid'), true);
+    }
+
+    private static function syncBulkLiveSetlist($state, Forms\Get $get, Forms\Set $set): void
+    {
+        $sections = preg_split('/\\R[ \\t]*\\R/u', trim((string) $state)) ?: [];
+        $artistId = $get('data.artist_id', true);
+        static::syncBulkLiveSongs(array_slice($sections, 0, 1), 'setlist', '_bulk_setlist_uuids', $artistId, $get, $set);
+        $set('data._bulk_encore_items', \App\Support\EncoreFormGroups::toItems((array) $get('data._encore_groups', true)), true);
+        static::syncBulkLiveSongs(array_slice($sections, 1), '_bulk_encore_items', '_bulk_encore_uuids', $artistId, $get, $set);
+        $set('data._encore_groups', \App\Support\EncoreFormGroups::fromItems((array) $get('data._bulk_encore_items', true)), true);
+    }
+
+    public static function mergeEncoreFromForm(array $data): array
+    {
+        $data['encore'] = \App\Support\EncoreFormGroups::toItems((array) ($data['_encore_groups'] ?? []));
+        unset($data['_encore_groups'], $data['_bulk_encore_items'], $data['_bulk_encore_uuids'], $data['_separate_encore_2']);
+        return $data;
+    }
+
+    private static function encoreGroupsField(): Forms\Components\Repeater
+    {
+        return Forms\Components\Repeater::make('_encore_groups')
+            ->label('アンコール')
+            ->schema([
+                Forms\Components\Hidden::make('_uuid')->default(fn() => (string) \Illuminate\Support\Str::uuid()),
+                Forms\Components\Repeater::make('songs')
+                    ->label('曲')
+                    ->schema([
+                        Forms\Components\Hidden::make('_uuid')->default(fn() => (string) \Illuminate\Support\Str::uuid()),
+                        Forms\Components\Select::make('song')
+                            ->label('曲名')->required()
+                            ->options(fn() => static::songOptionsWithUnlinkedDbSongs())
+                            ->searchable()->native(false)->live()
+                            ->afterStateUpdated(function ($state, $set) {
+                                $set('song', static::resolveSongOptionValue($state));
+                                $set('alternative_title', null);
+                            })
+                            ->createOptionForm([Forms\Components\TextInput::make('title')->label('新しい曲名')->required()->maxLength(255)])
+                            ->createOptionUsing(function (array $data, Forms\Get $get): int {
+                                return SlSong::firstOrCreate(['title' => $data['title'], 'artist_id' => $get('../../../../artist_id')])->id;
+                            })
+                            ->columnSpanFull(),
+                        Forms\Components\Section::make('詳細設定')->schema([
+                            Forms\Components\Grid::make(2)->schema([
+                                Forms\Components\Toggle::make('medley')->label('メドレー (2曲目以降)')->default(false)->live(),
+                                Forms\Components\TextInput::make('medley_title')->label('メドレーのタイトル')
+                                    ->visible(fn(Forms\Get $get) => (bool) $get('medley'))->maxLength(255),
+                            ]),
+                            Forms\Components\Radio::make('featuring_type')->label('表示形式')->options([
+                                'guest' => '共演者（feat.表記のまま表示）',
+                                'artist' => '別名義アーティスト（「 / 」区切りで表示）',
+                                'credit' => 'アーティスト表記あり',
+                            ])->default('guest')->inline(),
+                            Forms\Components\TextInput::make('featuring')->label('共演者・アーティスト')->placeholder('例: ゲスト名')->maxLength(255),
+                            Forms\Components\TextInput::make('alternative_title')->label('別表記')->placeholder('例: I\'LL BE')->maxLength(255),
+                        ])->collapsible()->collapsed()->columnSpanFull(),
+                    ])
+                    ->defaultItems(0)->live()->reorderable()
+                    ->itemLabel(function (array $state, $component, Forms\Get $get): ?string {
+                        $allItems = (array) $get('data.setlist', true);
+                        foreach ((array) $get('data._encore_groups', true) as $group) {
+                            $allItems = array_merge($allItems, (array) ($group['songs'] ?? []));
+                        }
+                        $number = 0;
+                        foreach ($allItems as $item) {
+                            $skipped = !empty($item['medley']);
+                            if (($item['_uuid'] ?? null) === ($state['_uuid'] ?? null)) return $skipped ? '' : (string) ($number + 1);
+                            if (!$skipped) $number++;
+                        }
+                        return null;
+                    })
+                    ->addActionLabel('曲を追加')->columnSpanFull(),
+            ])
+            ->defaultItems(1)->live()->reorderable()
+            ->itemLabel(function (array $state, $component): ?string {
+                $position = 0;
+                $groups = (array) $component->getState();
+                if (count($groups) <= 1) return 'アンコール';
+                foreach ($groups as $group) {
+                    $position++;
+                    if (($group['_uuid'] ?? null) === ($state['_uuid'] ?? null)) return 'アンコール' . $position;
+                }
+                return null;
+            })
+            ->addActionLabel('アンコールを追加')
+            ->columnSpanFull();
+    }
+
+    private static function parseBulkFestivalInput(string $text): array
+    {
+        $sections = ['setlist' => [], 'encore' => []];
+        $encoreIndex = null;
+        $artistId = null;
+        $songs = [];
+        $blankLines = 0;
+        $flush = function () use (&$sections, &$encoreIndex, &$artistId, &$songs): void {
+            if ($artistId && $songs) {
+                $block = ['artist' => $artistId, 'songs' => $songs];
+                if ($encoreIndex === null) {
+                    $sections['setlist'][] = $block;
+                } else {
+                    $sections['encore'][$encoreIndex][] = $block;
+                }
+            }
+            $songs = [];
+        };
+
+        foreach (preg_split('/\\R/u', $text) ?: [] as $line) {
+            $line = trim($line);
+            if ($line === '') {
+                $blankLines++;
+                continue;
+            }
+
+            if ($blankLines >= 2) {
+                $flush();
+                $encoreIndex = $encoreIndex === null ? 0 : $encoreIndex + 1;
+                $sections['encore'][$encoreIndex] ??= [];
+                $artistId = null;
+            }
+            $blankLines = 0;
+
+            if (preg_match('/^ENCORE(?:\\s+(\\d+))?$/iu', $line, $match)) {
+                $flush();
+                $encoreIndex = max(0, (int) ($match[1] ?? 1) - 1);
+                $sections['encore'][$encoreIndex] ??= [];
+                $artistId = null;
+                continue;
+            }
+
+            $isArtistHeading = preg_match('/^#\\s*(.+)$/u', $line, $match) === 1;
+            $artistName = $isArtistHeading ? trim($match[1]) : $line;
+            $matchedArtistId = \App\Models\Artist::query()
+                ->whereRaw('LOWER(TRIM(name)) = LOWER(?)', [$artistName])
+                ->value('id');
+            if ($matchedArtistId || $isArtistHeading) {
+                $flush();
+                $artistId = $matchedArtistId ?: null;
+                continue;
+            }
+
+            if (!$artistId) continue;
+            $title = trim(preg_replace('/^\\s*(?:\\d+\\s*[.)．、]\\s*|[-*・]\\s*)/u', '', $line));
+            if ($title === '') continue;
+
+            $songId = SlSong::query()
+                ->where('artist_id', $artistId)
+                ->whereRaw('LOWER(TRIM(title)) = LOWER(?)', [$title])
+                ->orderBy('id')
+                ->value('id');
+            $songs[] = [
+                '_uuid' => (string) \Illuminate\Support\Str::uuid(),
+                'song' => $songId ? (string) $songId : $title,
+            ];
+        }
+        $flush();
+
+        ksort($sections['encore']);
+        return $sections;
+    }
+
+    private static function syncBulkFestivalSongs(array $chunks, string $target, string $generatedState, Forms\Get $get, Forms\Set $set): void
+    {
+        $parsedBlocks = [];
+        $blockStarts = [];
+        foreach ($chunks as $chunkIndex => $chunk) {
+            $chunkBlocks = $chunk;
+            if ($chunkBlocks && $chunkIndex > 0) $blockStarts[] = count($parsedBlocks);
+            $parsedBlocks = array_merge($parsedBlocks, $chunkBlocks);
+        }
+
+        $generatedUuids = (array) $get($generatedState);
+        $items = array_values((array) $get($target));
+        $generatedItems = array_values(array_filter($items, fn ($item) => in_array($item['_uuid'] ?? null, $generatedUuids, true)));
+        $baseItems = array_values(array_filter($items, fn ($item) => !in_array($item['_uuid'] ?? null, $generatedUuids, true)));
+
+        $blocksByArtist = [];
+        foreach ($generatedItems as $item) {
+            $blocksByArtist[(string) ($item['artist'] ?? '')][] = $item;
+        }
+
+        $newBlocks = [];
+        foreach ($parsedBlocks as $index => $parsed) {
+            $artistKey = (string) $parsed['artist'];
+            $block = !empty($blocksByArtist[$artistKey])
+                ? array_shift($blocksByArtist[$artistKey])
+                : ['_uuid' => (string) \Illuminate\Support\Str::uuid(), 'type' => 'block', 'artist' => $parsed['artist']];
+
+            $preservedSongs = [];
+            foreach ((array) ($block['songs'] ?? []) as $songItem) {
+                $songValue = $songItem['song'] ?? null;
+                $song = is_numeric($songValue) ? SlSong::find($songValue) : null;
+                $songTitle = $song?->title ?? (string) $songValue;
+                $preservedSongs[$songTitle][] = $songItem;
+            }
+
+            $songs = [];
+            foreach ($parsed['songs'] as $songItem) {
+                $songValue = $songItem['song'];
+                $song = is_numeric($songValue) ? SlSong::find($songValue) : null;
+                $songTitle = $song?->title ?? (string) $songValue;
+                $songs[] = !empty($preservedSongs[$songTitle])
+                    ? array_shift($preservedSongs[$songTitle])
+                    : $songItem;
+            }
+
+            $block['type'] = 'block';
+            $block['artist'] = $parsed['artist'];
+            $block['songs'] = $songs;
+            if (in_array($index, $blockStarts, true)) {
+                $block['encore_block_start'] = true;
+            } else {
+                unset($block['encore_block_start']);
+            }
+            $newBlocks[] = $block;
+        }
+
+        $set($target, array_merge($baseItems, $newBlocks));
+        $set($generatedState, array_column($newBlocks, '_uuid'));
+    }
+
+    private static function syncBulkFestivalSetlist($state, Forms\Get $get, Forms\Set $set): void
+    {
+        $sections = static::parseBulkFestivalInput((string) $state);
+        static::syncBulkFestivalSongs([$sections['setlist']], 'fes_setlist', '_bulk_fes_setlist_uuids', $get, $set);
+        static::syncBulkFestivalSongs($sections['encore'], 'fes_encore', '_bulk_fes_encore_uuids', $get, $set);
+    }
+
     // スケジュールから公演を選ぶか（紐付けたツアーにスケジュールがあれば選ぶ。そのときは公演日・会場・備考の欄を出さない）
     // ただし公演日がもう入っていて、その日がスケジュールに無いとき（今あるセットリスト）は、今までどおり欄に手で入れる
     private static function usesSchedule(Forms\Get $get): bool
@@ -278,6 +563,10 @@ class SlSetlistResource extends Resource
                 // 単独ライブの場合のセットリスト
                 Forms\Components\Section::make('セットリスト（単独ライブ）')
                     ->schema([
+                        Forms\Components\Tabs::make('single_setlist_input_mode')
+                            ->tabs([
+                                Forms\Components\Tabs\Tab::make('通常入力')
+                                    ->schema([
                         Forms\Components\Repeater::make('setlist')
                             ->live(debounce: 0)
                             ->label('本編')
@@ -395,137 +684,28 @@ class SlSetlistResource extends Resource
                             ->addActionLabel('曲を追加')
                             ->columnSpanFull(),
 
-                        Forms\Components\Repeater::make('encore')
-                            ->label('アンコール')
-                            ->schema([
-                                Forms\Components\Hidden::make('_uuid')
-                                    ->default(fn() => \Illuminate\Support\Str::uuid()->toString()),
+                        static::encoreGroupsField(),
 
-                                // 🎵 曲名セレクト
-                                // 候補にはSlSong（既存のセットリスト楽曲）に加え、DbSongのうちまだ
-                                // どのSlSongとも紐付いていないもの（セットリスト楽曲としては未登録）も
-                                // 出す。候補に無ければ今まで通りcreateOptionFormから新規作成する。
-                                Forms\Components\Select::make('song')
-                                    ->label('曲名')
-                                    ->required()
-                                    ->options(fn() => static::songOptionsWithUnlinkedDbSongs())
-                                    ->searchable()
-                                    ->native(false)
-                                    ->live()
-                                    ->afterStateUpdated(function ($state, $set) {
-                                        $set('song', static::resolveSongOptionValue($state));
-                                        // 曲を差し替えたのに別表記（前の曲用のライブバージョン名等）が
-                                        // 残ってしまい、差し替え後の曲と噛み合わない表記のまま表示され続ける
-                                        // 事故を防ぐため、曲を変更したタイミングで別表記はクリアする
-                                        $set('alternative_title', null);
-                                    })
-                                    ->createOptionForm([
-                                        Forms\Components\TextInput::make('title')
-                                            ->label('新しい曲名')
-                                            ->required()
-                                            ->maxLength(255),
-                                    ])
-                                    ->createOptionUsing(function (array $data, Forms\Get $get): int {
-                                        $artistId = $get('../../artist_id');
-
-                                        $song = \App\Models\SlSong::firstOrCreate(
-                                            [
-                                                'title' => $data['title'],
-                                                'artist_id' => $artistId,
-                                            ],
-                                            []
-                                        );
-
-                                        return $song->id;
-                                    })
-                                    ->columnSpanFull(),
-
-                                // 🎛️ 詳細設定（折りたたみ）
-                                Forms\Components\Section::make('詳細設定')
+                                    ]),
+                                Forms\Components\Tabs\Tab::make('一括入力')
                                     ->schema([
-                                        Forms\Components\Grid::make(2)
-                                            ->schema([
-                                                // ダブルアンコールなど、アンコールを複数回に分けるときに、次のアンコールの最初の曲に付ける
-                                                Forms\Components\Toggle::make('encore_block_start')
-                                                    ->label('ここから次のアンコール（ENCORE 2 など）')
-                                                    ->default(false),
-                                                Forms\Components\Toggle::make('medley')
-                                                    ->label('メドレー (2曲目以降)')
-                                                    ->default(false)
-                                                    ->live(),
-                                                // メドレーにチェックしたときだけ出す（タイトルのあるメドレーは少ない）。メドレーのどの曲に入れても、メドレーの曲の上にタイトルの行を出し、曲番はその行に付ける
-                                                Forms\Components\TextInput::make('medley_title')
-                                                    ->label('メドレーのタイトル')
-                                                    ->visible(fn (Forms\Get $get) => (bool) $get('medley'))
-                                                    ->maxLength(255),
-                                            ]),
-                                        Forms\Components\Radio::make('featuring_type')
-                                            ->label('表示形式')
-                                            ->options([
-                                                'guest' => '共演者（feat.表記のまま表示）',
-                                                'artist' => '別名義アーティスト（「 / 」区切りで表示）',
-                                                // 共演したときだけ、曲のアーティスト欄（credit。例：絢香 × コブクロ）を「曲名 / アーティスト」で出す（ふだんは出さない）
-                                                'credit' => 'アーティスト表記あり',
-                                            ])
-                                            ->default('guest')
-                                            ->inline(),
-                                        Forms\Components\TextInput::make('featuring')
-                                            ->label('共演者・アーティスト')
-                                            ->placeholder('例: ゲスト名')
-                                            ->maxLength(255),
-                                        Forms\Components\TextInput::make('alternative_title')
-                                            ->label('別表記')
-                                            ->placeholder('例: I\'LL BE')
-                                            ->maxLength(255),
-                                    ])
-                                    ->collapsible() // ← 折りたたみ可能
-                                    ->collapsed()   // ← 初期は閉じる
-                                    ->columnSpanFull(),
-                            ])
-                            ->columns(1)
-                            ->defaultItems(0)
-                            ->live()
-                            ->reorderable()
-                            ->itemLabel(function (array $state, $component, Forms\Get $get): ?string {
-                                // 本編セットリストから曲数を取得
-                                $setlistItems = $get('setlist') ?? [];
-                                $setlistCount = 0;
-                                foreach ($setlistItems as $item) {
-                                    if (empty($item['medley'])) {
-                                        $setlistCount++;
-                                    }
-                                }
-
-                                $items = $component->getState();
-                                if (!is_array($items)) return (string)($setlistCount + 1);
-
-                                $currentUuid = $state['_uuid'] ?? null;
-                                if (!$currentUuid) return '?';
-
-                                $number = $setlistCount;
-                                foreach ($items as $item) {
-                                    $isMedley = !empty($item['medley']);
-                                    $uuid = $item['_uuid'] ?? null;
-
-                                    if ($uuid === $currentUuid) {
-                                        if ($isMedley) {
-                                            return '';
-                                        } else {
-                                            $number++;
-                                            return (string)$number;
-                                        }
-                                    }
-
-                                    if (!$isMedley) {
-                                        $number++;
-                                    }
-                                }
-
-                                return (string)($setlistCount + 1);
-                            })
-                            ->addActionLabel('曲を追加')
-                            ->columnSpanFull(),
-
+                                        Forms\Components\Textarea::make('_bulk_live_input')
+                                            ->label('本編・アンコール')
+                                            ->rows(30)
+                                            ->placeholder("曲名を1行ずつ入力\n\n")
+                                            ->helperText('本編とアンコールの間に空行を1行入れてください。')
+                                            ->dehydrated(false)
+                                            ->columnSpanFull(),
+                                        Forms\Components\Hidden::make('_bulk_setlist_uuids')->default([])->dehydrated(false),
+                                        Forms\Components\Hidden::make('_bulk_encore_uuids')->default([])->dehydrated(false),
+                                        Forms\Components\Hidden::make('_bulk_encore_items')->default([])->dehydrated(false),
+                                        Forms\Components\Actions::make([
+                                            Forms\Components\Actions\Action::make('applyBulkLiveSetlist')
+                                                ->label('通常入力に反映')
+                                                ->action(fn (Forms\Get $get, Forms\Set $set) => static::syncBulkLiveSetlist($get('_bulk_live_input'), $get, $set)),
+                                        ])->columnSpanFull(),
+                                    ]),
+                            ]),
                     ])
                     ->hidden(fn(Forms\Get $get) => (bool)$get('fes'))
                     ->columnSpanFull(),
@@ -533,6 +713,10 @@ class SlSetlistResource extends Resource
                 // フェスの場合のセットリスト
                 Forms\Components\Section::make('セットリスト（フェス）')
                     ->schema([
+                        Forms\Components\Tabs::make('festival_setlist_input_mode')
+                            ->tabs([
+                                Forms\Components\Tabs\Tab::make('通常入力')
+                                    ->schema([
                         Forms\Components\Repeater::make('fes_setlist')
                             ->label('本編')
                             ->schema([
@@ -758,6 +942,7 @@ class SlSetlistResource extends Resource
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')
                                     ->default(fn() => \Illuminate\Support\Str::uuid()->toString()),
+                                Forms\Components\Hidden::make('encore_block_start')->default(false),
                                 Forms\Components\Select::make('type')
                                     ->label('種別')
                                     ->options([
@@ -768,7 +953,6 @@ class SlSetlistResource extends Resource
                                     ->live()
                                     ->required()
                                     ->columnSpanFull(),
-
                                 Forms\Components\Select::make('artist')
                                     ->label('アーティスト')
                                     ->options(fn() => \App\Models\Artist::orderBy('id')->pluck('name', 'id')->all())
@@ -951,8 +1135,21 @@ class SlSetlistResource extends Resource
                             ->itemLabel(function (array $state, $component): ?string {
                                 $type = $state['type'] ?? 'song';
                                 if ($type === 'block') {
-                                    $artistName = \App\Models\Artist::find($state['artist'] ?? null)?->name ?? 'ブロック';
-                                    return $artistName;
+                                    $artistName = \App\Models\Artist::find($state['artist'] ?? null)?->name;
+                                    $items = array_values((array) $component->getState());
+                                    $encoreCount = 1;
+                                    foreach (array_slice($items, 1) as $item) {
+                                        if (!empty($item['encore_block_start'])) $encoreCount++;
+                                    }
+
+                                    $encoreNumber = 1;
+                                    foreach ($items as $index => $item) {
+                                        if ($index > 0 && !empty($item['encore_block_start'])) $encoreNumber++;
+                                        if (($item['_uuid'] ?? null) === ($state['_uuid'] ?? null)) break;
+                                    }
+
+                                    return 'アンコール' . ($encoreCount > 1 ? $encoreNumber : '')
+                                        . ($artistName ? ' · ' . $artistName : '');
                                 }
                                 $items = $component->getState();
                                 if (!is_array($items)) return '1';
@@ -967,8 +1164,41 @@ class SlSetlistResource extends Resource
                                 }
                                 return (string)$number;
                             })
-                            ->addActionLabel('追加')
+                            ->addActionLabel('曲・アーティストを追加')
                             ->columnSpanFull(),
+                        Forms\Components\Actions::make([
+                            Forms\Components\Actions\Action::make('addFestivalEncore')
+                                ->label('アンコールを追加')
+                                ->action(function (Forms\Get $get, Forms\Set $set): void {
+                                    $items = (array) $get('fes_encore');
+                                    $uuid = (string) \Illuminate\Support\Str::uuid();
+                                    $items[$uuid] = [
+                                        '_uuid' => $uuid,
+                                        'type' => 'block',
+                                        'encore_block_start' => true,
+                                    ];
+                                    $set('fes_encore', $items);
+                                }),
+                        ])->columnSpanFull(),
+                                    ]),
+                                Forms\Components\Tabs\Tab::make('一括入力')
+                                    ->schema([
+                                        Forms\Components\Textarea::make('_bulk_fes_input')
+                                            ->label('本編・アンコール')
+                                            ->rows(30)
+                                            ->placeholder("# アーティスト名\n曲名\n\n# 別のアーティスト\n曲名\n\n\n# アンコールのアーティスト\nアンコール曲名")
+                                            ->helperText('アーティスト間は空行1行、本編とアンコールの間は空行2行にしてください。登録済みのアーティスト名を「# アーティスト名」の形式で入力してください。')
+                                            ->dehydrated(false)
+                                            ->columnSpanFull(),
+                                        Forms\Components\Hidden::make('_bulk_fes_setlist_uuids')->default([])->dehydrated(false),
+                                        Forms\Components\Hidden::make('_bulk_fes_encore_uuids')->default([])->dehydrated(false),
+                                        Forms\Components\Actions::make([
+                                            Forms\Components\Actions\Action::make('applyBulkFestivalSetlist')
+                                                ->label('通常入力に反映')
+                                                ->action(fn (Forms\Get $get, Forms\Set $set) => static::syncBulkFestivalSetlist($get('_bulk_fes_input'), $get, $set)),
+                                        ])->columnSpanFull(),
+                                    ]),
+                            ]),
                     ])
                     ->hidden(fn(Forms\Get $get) => !(bool)$get('fes'))
                     ->columnSpanFull(),

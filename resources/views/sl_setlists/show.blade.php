@@ -425,10 +425,12 @@
                     @php renderFesMixed($setlists->fes_setlist, $artistIdToName, $setlists->title); @endphp
 
                     @if (!empty($setlists->fes_encore))
-                        <div style="margin: 0;">
-                            <span style="color: #999; font-weight: 400; font-size: 0.9rem; letter-spacing: 2px;">ENCORE</span>
-                        </div>
-                        @php renderFesMixed($setlists->fes_encore, $artistIdToName, $setlists->title); @endphp
+                        @foreach (array_slice(\App\Support\EncoreBlocks::sections([], (array) $setlists->fes_encore, $setlists->artist_id), 1) as $encoreSection)
+                            <div style="margin: 0;">
+                                <span style="color: #999; font-weight: 400; font-size: 0.9rem; letter-spacing: 2px;">{{ $encoreSection['label'] }}</span>
+                            </div>
+                            @php renderFesMixed($encoreSection['items'], $artistIdToName, $setlists->title); @endphp
+                        @endforeach
                     @endif
 
                 @endif {{-- fes_type混合 終わり --}}

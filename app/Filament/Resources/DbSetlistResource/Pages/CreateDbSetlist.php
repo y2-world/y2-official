@@ -17,6 +17,7 @@ class CreateDbSetlist extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
+        $data = DbSetlistResource::mergeEncoreFormData($data);
         $this->pendingRowTitle = $data['row_title'] ?? null;
         unset($data['row_title']);
 

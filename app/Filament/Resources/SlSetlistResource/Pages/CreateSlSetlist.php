@@ -13,6 +13,11 @@ class CreateSlSetlist extends CreateRecord
 
     protected static string $resource = SlSetlistResource::class;
 
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        return SlSetlistResource::mergeEncoreFromForm($data);
+    }
+
     protected function afterCreate(): void
     {
         $this->clearDraftAutosave();
