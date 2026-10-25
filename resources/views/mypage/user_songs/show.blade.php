@@ -74,7 +74,7 @@
         </div>
 
         <div id="live-performances-panel" style="display: {{ $secondTab === 'performances' ? 'block' : 'none' }};">
-            @include('songs._performance_tours', ['tourUrl' => fn ($tour) => route('mypage.user_concerts.show', $tour->id)])
+            @include('songs._performance_tours', ['tourUrl' => fn ($tour) => route('mypage.user_concerts.show', ['id' => $tour->id, 'from' => 'song-' . $song->id])])
         </div>
 
         <div id="second-tab-panel" style="display: {{ $secondTab === 'mine' ? 'block' : 'none' }};">
@@ -100,7 +100,7 @@
                                 @else
                                     <td class="td_date"></td>
                                 @endif
-                                <td class="td_title"><a href="{{ route('mypage.user_concerts.show', $tour->id) }}">{{ $tour->title }}</a></td>
+                                <td class="td_title"><a href="{{ route('mypage.user_concerts.show', ['id' => $tour->id, 'from' => 'song-' . $song->id]) }}">{{ $tour->title }}</a></td>
                             </tr>
                         @endforeach
                     </tbody>

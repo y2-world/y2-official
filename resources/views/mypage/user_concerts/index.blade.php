@@ -45,7 +45,7 @@
                                 {{ date('Y.m.d', strtotime($tour->date1)) }}
                             @endif
                         </td>
-                        <td><a href="{{ route('mypage.user_concerts.show', $tour->id) }}">{{ $tour->title }}</a></td>
+                        <td><a href="{{ route('mypage.user_concerts.show', array_filter(['id' => $tour->id, 'from' => $type ? 'type-' . $type : null])) }}">{{ $tour->title }}</a></td>
                     </tr>
                 @empty
                     <tr>

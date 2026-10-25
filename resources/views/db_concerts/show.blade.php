@@ -17,6 +17,23 @@
             : $normalPrevNextQuery;
         $standardViewQuery = '?view=standard' . (!empty($from) ? '&from=' . urlencode($from) : '');
 
+        // このページはマイページのライブのページ（UserConcertController）でも使う。リンク先などは渡されたものを使い、無ければ公式のもの
+        $liveUrl ??= fn ($id) => route('live.show', $id);
+        $artistUrl ??= route('database.artist', $artist->id);
+        $breadcrumbs ??= [
+            ['label' => 'Database', 'url' => '/database'],
+            ['label' => $artist->name, 'url' => route('database.artist', $artist->id)],
+            ['label' => 'Live', 'url' => route('database.live', $artist->id)],
+            ['label' => $tours->title],
+        ];
+        // 曲のリンク（Summary）。$songLinkResolver はセットリスト（_setlist_rows）の曲のリンク
+        $songUrl ??= fn ($songId, $title = null) => $songUrl($songId, $title);
+        $songLinkResolver ??= null;
+        // アンコールの見出し（福山の DOUBLE ENCORE など）を決めるアーティスト。マイページのアーティストは公式の決まりを使わない
+        $encoreArtistId ??= $tours->artist_id ?? null;
+        // 曲のページから来たときに目立たせる曲のページの頭
+        $songPathPrefix ??= '/database/songs/';
+
         // 関数の重複定義を防ぐためにチェック
         if (!function_exists('getTotalOlCount')) {
             function getTotalOlCount($tourSetlists)
@@ -49,15 +66,10 @@
 
     <div class="database-hero database-hero--detail">
         <div class="container" style="position: relative;">
-            @include('database._breadcrumb', ['breadcrumbs' => [
-            ['label' => 'Database', 'url' => '/database'],
-            ['label' => $artist->name, 'url' => route('database.artist', $artist->id)],
-            ['label' => 'Live', 'url' => route('database.live', $artist->id)],
-            ['label' => $tours->title],
-        ]])
+            @include('database._breadcrumb', ['breadcrumbs' => $breadcrumbs])
             @if ((int) $tours->type !== 4)
                 <p class="database-subtitle" style="">
-                    <a href="{{ route('database.artist', $artist->id) }}">{{ $artist->name }}</a>
+                    <a href="{{ $artistUrl }}">{{ $artist->name }}</a>
                 </p>
             @endif
             <h1 class="database-title" style="">{{ $tours->title }}</h1>
@@ -102,7 +114,7 @@
              通常のセットリスト自体も非表示のまま埋め込んでおき、アイコンから
              引き続きパターンジャンプ・Summarize呼び出しを使えるようにする。 --}}
         <div class="setlist" style="display: none;">
-            @include('db_concerts._setlist_rows', ['tourSetlists' => $tourSetlists, 'songs' => $songs])
+            @include('db_concerts._setlist_rows', ['tourSetlists' => $tourSetlists, 'songs' => $songs, 'songLinkResolver' => $songLinkResolver])
         </div>
         @include('db_concerts._summary_page')
     @else
@@ -111,7 +123,7 @@
             <div class="row justify-content-center">
                 <div class="{{ $colClass }}">
                     <div class="setlist" style="width: 100%;">
-                        @include('db_concerts._setlist_rows', ['tourSetlists' => $tourSetlists, 'songs' => $songs])
+                        @include('db_concerts._setlist_rows', ['tourSetlists' => $tourSetlists, 'songs' => $songs, 'songLinkResolver' => $songLinkResolver])
                     </div>
                 </div>
             </div>
@@ -142,7 +154,7 @@
                                             @if ($rowEncoreBlock !== $currentEncoreBlock)
                                                 @php $currentEncoreBlock = $rowEncoreBlock; @endphp
                                                 <div style="margin: 20px 0 10px;">
-                                                    <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">{{ \App\Support\EncoreBlocks::label($rowEncoreBlock, $encoreBlockCount, $tours->artist_id ?? null) }}</span>
+                                                    <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">{{ \App\Support\EncoreBlocks::label($rowEncoreBlock, $encoreBlockCount, $encoreArtistId) }}</span>
                                                 </div>
                                             @endif
                                         @endif
@@ -182,7 +194,7 @@
                                                         <strong>
                                                     @endif
                                                     @if ($variant['song_id'])
-                                                        {!! $medleyOpen !!}<a href="{{ \App\Models\DbSong::showUrl($variant['song_id'], $variant['title']) }}">{{ $variant['title'] }}</a>{!! $medleyClose !!}
+                                                        {!! $medleyOpen !!}<a href="{{ $songUrl($variant['song_id'], $variant['title']) }}">{{ $variant['title'] }}</a>{!! $medleyClose !!}
                                                     @else
                                                         {!! $medleyOpen !!}{{ $variant['title'] }}{!! $medleyClose !!}
                                                     @endif
@@ -224,7 +236,7 @@
                 {{-- 前後リンク --}}
                 <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
                     @if (isset($previous))
-                        <a href="{{ route('live.show', $previous->id) }}{{ $previousQuery }}" rel="prev"
+                        <a href="{{ $liveUrl($previous->id) }}{{ $previousQuery }}" rel="prev"
                            style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
                             <i class="fa-solid fa-arrow-left" style="margin-right: 8px;"></i>
                             Previous
@@ -233,7 +245,7 @@
                         <div></div>
                     @endif
                     @if (isset($next))
-                        <a href="{{ route('live.show', $next->id) }}{{ $nextQuery }}" rel="next"
+                        <a href="{{ $liveUrl($next->id) }}{{ $nextQuery }}" rel="next"
                            style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
                             Next
                             <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
@@ -496,7 +508,7 @@ document.addEventListener('DOMContentLoaded', function () {
         @endif
         patternSelect.addEventListener('change', function () {
             if (patternSelect.value === '__summary_page__') {
-                window.location.href = '{{ route('live.show', $tours->id) }}?tab=summary{{ !empty($from) ? '&from=' . urlencode($from) : '' }}';
+                window.location.href = '{{ $liveUrl($tours->id) }}?tab=summary{{ !empty($from) ? '&from=' . urlencode($from) : '' }}';
                 return;
             }
             if (patternSelect.value.indexOf('__summary_') === 0) {
@@ -511,7 +523,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // 埋め込んでいるだけなので、その場でスクロールしても意味が無い。
                 // 通常表示に切り替え、選択したパターンの位置へ移動する。
                 if (wrap && wrap.id) {
-                    var standardViewUrl = '{{ route('live.show', $tours->id) }}{{ $standardViewQuery }}';
+                    var standardViewUrl = '{{ $liveUrl($tours->id) }}{{ $standardViewQuery }}';
                     window.location.href = standardViewUrl + '&pattern=' + encodeURIComponent(wrap.id);
                 }
                 return;
@@ -520,7 +532,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // 選択したパターンの位置へスクロールする通常表示に遷移する。
                 if (isMobileSummaryView) {
                     if (wrap && wrap.id) {
-                        window.location.href = '{{ route('live.show', $tours->id) }}{{ $standardViewQuery }}&pattern=' + encodeURIComponent(wrap.id);
+                        window.location.href = '{{ $liveUrl($tours->id) }}{{ $standardViewQuery }}&pattern=' + encodeURIComponent(wrap.id);
                     }
                     return;
                 }
@@ -641,7 +653,7 @@ function closeSetlistSummary() {
 }
 </script>
 {{-- 曲のページから来たとき（from=song-{曲ID}）、その曲名を黄色で目立たせる --}}
-@include('partials._song_highlight', ['highlightPaths' => preg_match('/^song-(\d+)$/', (string) $from, $fromSongMatch) ? ['/database/songs/' . $fromSongMatch[1]] : []])
+@include('partials._song_highlight', ['highlightPaths' => preg_match('/^song-(\d+)$/', (string) $from, $fromSongMatch) ? [$songPathPrefix . $fromSongMatch[1]] : []])
 @endsection
 
 @endsection

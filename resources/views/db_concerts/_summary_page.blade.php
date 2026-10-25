@@ -23,7 +23,7 @@
                                             ? collect(renderSubtitleWithGreyedVenues($pickedPattern->subtitle ?? '')['lines'])->filter(fn ($line) => trim(strip_tags($line)) !== '')->values()
                                             : collect();
                                         if ($pickedPattern && $pickedLabels->isEmpty()) {
-                                            $pickedRowTitle = \App\Models\DbSetlistRow::where('tour_id', $pickedPattern->tour_id)->where('row', $pickedPattern->row)->where('order_no', $pickedPattern->order_no)->value('title');
+                                            $pickedRowTitle = ($pickedPattern instanceof \App\Models\DbSetlist ? \App\Models\DbSetlistRow::where('tour_id', $pickedPattern->tour_id) : \App\Models\UserSetlistRow::where('user_concert_id', $pickedPattern->user_concert_id))->where('row', $pickedPattern->row)->where('order_no', $pickedPattern->order_no)->value('title');
                                             if (filled($pickedRowTitle)) $pickedLabels = collect([e($pickedRowTitle)]);
                                         }
                                     @endphp
@@ -93,7 +93,7 @@
                                                         @if ($rowEncoreBlock !== $currentEncoreBlock)
                                                             @php $currentEncoreBlock = $rowEncoreBlock; @endphp
                                                             <div style="margin: 20px 0 10px;">
-                                                                <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">{{ \App\Support\EncoreBlocks::label($rowEncoreBlock, $encoreBlockCount, $tours->artist_id ?? null) }}</span>
+                                                                <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">{{ \App\Support\EncoreBlocks::label($rowEncoreBlock, $encoreBlockCount, $encoreArtistId ?? ($tours->artist_id ?? null)) }}</span>
                                                             </div>
                                                         @endif
                                                     @endif
@@ -142,7 +142,7 @@
                                                                     <strong>
                                                                 @endif
                                                                 @if ($variant['song_id'])
-                                                                    {!! $medleyOpen !!}<a href="{{ \App\Models\DbSong::showUrl($variant['song_id'], $variant['title']) }}">{{ $variant['title'] }}</a>{!! $medleyClose !!}
+                                                                    {!! $medleyOpen !!}<a href="{{ ($songUrl ?? fn ($id, $t = null) => \App\Models\DbSong::showUrl($id, $t))($variant['song_id'], $variant['title']) }}">{{ $variant['title'] }}</a>{!! $medleyClose !!}
                                                                 @else
                                                                     {!! $medleyOpen !!}{{ $variant['title'] }}{!! $medleyClose !!}
                                                                 @endif
