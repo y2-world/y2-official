@@ -46,6 +46,7 @@ class UserArtist extends Model
     {
         $externalUserId ??= \Illuminate\Support\Facades\Auth::guard('external')->id();
 
-        return (int) $this->visible === 1 || ($externalUserId && (int) $this->external_user_id === (int) $externalUserId);
+        // $this->visible は Eloquent のプロパティ（toArray に出す項目の一覧）なので、公開の値は getAttribute で読む
+        return (int) $this->getAttribute('visible') === 1 || ($externalUserId && (int) $this->external_user_id === (int) $externalUserId);
     }
 }
