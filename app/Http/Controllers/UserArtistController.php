@@ -53,8 +53,20 @@ class UserArtistController extends Controller
     public function show(int $artistId)
     {
         $artist = UserArtist::visibleTo()->withCount(['concerts', 'songs'])->findOrFail($artistId);
+        $bios = \App\Support\Biography::years('user', $artist->id);
 
-        return view('mypage.user_artists.show', compact('artist'));
+        return view('mypage.user_artists.show', compact('artist', 'bios'));
+    }
+
+    // Biography の年のページ（公式の Database の Biography と同じ。シングル・アルバム・ツアーから作る）
+    public function biography(int $artistId, int $year)
+    {
+        $artist = UserArtist::visibleTo()->findOrFail($artistId);
+        $bios = \App\Support\Biography::years('user', $artist->id);
+        abort_unless($bios->contains('year', $year), 404);
+        ['songs' => $songs, 'tours' => $tours] = \App\Support\Biography::year('user', $artist->id, $year);
+
+        return view('mypage.user_artists.biography', compact('artist', 'bios', 'year', 'songs', 'tours'));
     }
 
     public function stats(int $artistId)

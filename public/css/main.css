@@ -4561,6 +4561,23 @@ body.stamp-deco-open {
 /* アーティスト一覧：select-cardのリンクに削除ボタンを併置する行。
    間隔は親.select-card-listのgapに任せる（ここでmargin-bottomを足すと二重になる）。 */
 
+/* Manage My Artists の一覧：行の右の「公開」チェック */
+.manage-artist-visible {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0 4px 0 8px;
+    font-size: 0.8rem;
+    color: #666;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.manage-artist-visible .form-check-input {
+    margin: 0;
+}
+
 .manage-artist-delete {
     flex: 0 0 auto;
     background: none;

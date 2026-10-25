@@ -147,6 +147,7 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
         Route::get('artists/{artistId}/live', [UserConcertController::class, 'index'])->name('user_artists.live');
         Route::get('artists/{artistId}/songs', [UserSongController::class, 'index'])->name('user_artists.songs');
         Route::get('artists/{artistId}/stats', [UserArtistController::class, 'stats'])->name('user_artists.stats');
+        Route::get('artists/{artistId}/biography/{year}', [UserArtistController::class, 'biography'])->name('user_artists.biography.year')->whereNumber(['artistId', 'year']);
         Route::get('live/{id}', [UserConcertController::class, 'show'])->name('user_concerts.show');
         Route::get('songs/{id}', [UserSongController::class, 'show'])->name('user_songs.show');
         // ユーザーのアーティストのシングル・アルバム
@@ -204,6 +205,7 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
             Route::get('artists/{artistId}/concerts', [ManageController::class, 'concerts'])->name('concerts');
             Route::post('artists/{artistId}/concerts', [ManageController::class, 'storeConcert'])->name('concerts.store');
             Route::post('artists/{artistId}/setlists-complete', [ManageController::class, 'updateSetlistsComplete'])->name('artists.setlists_complete');
+            Route::post('artists/{artistId}/visible', [ManageController::class, 'updateVisible'])->name('artists.visible');
             Route::get('artists/{artistId}/concerts/{concertId}/setlists', [ManageController::class, 'setlists'])->name('setlists');
             Route::post('artists/{artistId}/concerts/{concertId}/setlists', [ManageController::class, 'storeSetlist'])->name('setlists.store');
             // パターンの追加・編集は、パターンごとのページで行う

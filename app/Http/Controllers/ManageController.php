@@ -130,6 +130,21 @@ class ManageController extends Controller
     }
 
     // ツアーの画面の「全セットリスト登録済」。チェックしたアーティストだけ、スタンプ帳に未演奏の背景を出す
+    // 公開（公式のアーティストと同じ）。外すと、作った本人にしか見せない
+    public function updateVisible(Request $request, $artistId)
+    {
+        $artist = UserArtist::findOrFail($artistId);
+        abort_unless($artist->external_user_id === Auth::guard('external')->id(), 403);
+
+        $artist->update(['visible' => $request->boolean('visible') ? 1 : 0]);
+
+        if ($request->wantsJson()) {
+            return response()->json(['message' => $artist->visible ? '公開しました。' : '非公開にしました。']);
+        }
+
+        return back();
+    }
+
     public function updateSetlistsComplete(Request $request, $artistId)
     {
         $artist = UserArtist::findOrFail($artistId);

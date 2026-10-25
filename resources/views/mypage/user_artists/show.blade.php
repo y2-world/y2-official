@@ -2,8 +2,7 @@
 @section('title', 'Yuki Official - ' . $artist->name . ' Database')
 @section('og_title', $artist->name . ' Database - Yuki Official')
 
-{{-- ユーザーが登録したアーティストのトップ。Databaseのアーティストのトップ（database/artist）と同じ形・同じ文言で、
-     年ごとのページ（Biography）は無いので、Live と Discography だけ --}}
+{{-- ユーザーが登録したアーティストのトップ。Databaseのアーティストのトップ（database/artist）と同じ形・同じ文言（Live・Discography・Biography） --}}
 @section('content')
     <div class="database-hero database-hero--nav">
         <div class="container" style="position: relative;">
@@ -86,6 +85,26 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Biography Card（公式の Database と同じ） -->
+            @if ($bios->isNotEmpty())
+                <div class="col-lg-4 mb-4">
+                    <div class="database-card">
+                        <div class="card-icon">
+                            <i class="fa-solid fa-book"></i>
+                        </div>
+                        <h3 class="card-title">Biography</h3>
+                        <p class="card-description">年代ごとの歴史を探索</p>
+                        <div class="card-links card-links-grid">
+                            @foreach ($bios as $bio)
+                                <a href="{{ route('mypage.user_artists.biography.year', [$artist->id, $bio->year]) }}" class="database-link-year">
+                                    {{ $bio->year }}
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
 
         <div style="text-align: center; margin-top: 1rem;">

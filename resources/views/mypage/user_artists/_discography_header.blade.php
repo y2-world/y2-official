@@ -15,7 +15,10 @@
         <select class="year-select" name="select" onChange="location.href=value;">
             <option value="" disabled selected>Live</option>
             <option value="{{ route('mypage.user_artists.live', $artist->id) }}">All</option>
+            <option value="{{ route('mypage.user_artists.live', [$artist->id, 'type' => 6]) }}">Tours</option>
+            <option value="{{ route('mypage.user_artists.live', [$artist->id, 'type' => 2]) }}">Events</option>
             <option value="{{ route('mypage.user_artists.stats', $artist->id) }}">Stats</option>
         </select>
+        @include('mypage.user_artists._years_select')
     </div>
 </div>
