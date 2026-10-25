@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Actions\Action;
-use App\Models\Post;
+use App\Support\AdminData;
 
 class ArtistResource extends Resource
 {
@@ -32,18 +32,36 @@ class ArtistResource extends Resource
 
     protected static ?string $modelLabel = 'アーティスト';
 
+    // 管理者は公式のアーティスト、マイページの人は自分のアーティスト（AdminData）
+    public static function getModel(): string
+    {
+        return AdminData::model('artist');
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return AdminData::query('artist');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('name')->label('アーティスト名'),
+                TextInput::make('name')->label('アーティスト名')->required(),
                 Toggle::make('visible')
                     ->label('公開')
                     ->onColor('success')
                     ->offColor('gray')
-                    ->default(1)
+                    // 新しく作るとき：公式のアーティストは公開、マイページのアーティストはオフ（マイページで作るときと同じ）
+                    ->default(fn () => AdminData::isMember() ? 0 : 1)
                     ->formatStateUsing(fn ($state) => $state == 1)
                     ->dehydrateStateUsing(fn ($state) => $state ? 1 : 0),
+                // 全セットリスト登録済：印があるときだけスタンプ帳に未演奏の背景を出す（マイページの Manage My Artists と同じ）
+                Toggle::make('setlists_complete')
+                    ->label('全セットリスト登録済')
+                    ->helperText('スタンプ画面で未演奏の曲は背景を斜線にします')
+                    ->onColor('success')
+                    ->offColor('gray'),
             ]);
     }
 
@@ -61,9 +79,15 @@ class ArtistResource extends Resource
                     ->updateStateUsing(function ($record, $state) {
                         $record->update(['visible' => $state ? 1 : 0]); // ONを1、OFFを0として保存
                         return $state;
-                    })
+                    }),
+                Tables\Columns\ToggleColumn::make('setlists_complete')
+                    ->label('全セットリスト登録済')
+                    ->onColor('success')
+                    ->offColor('gray'),
             ])
             ->filters([
+                Tables\Filters\TernaryFilter::make('setlists_complete')
+                    ->label('全セットリスト登録済'),
                 Tables\Filters\TernaryFilter::make('visible')
                     ->label('公開状態')
                     ->placeholder('すべて')
@@ -78,7 +102,7 @@ class ArtistResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make() // ここでDeleteアイコンを追加
                     ->requiresConfirmation() // 確認ダイアログを表示
-                    ->action(fn(Artist $record) => $record->delete())
+                    ->action(fn($record) => $record->delete())
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -14,6 +14,12 @@ class Artist extends Model
         'kana',
         'romaji',
         'visible',
+        // 全セットリスト登録済（マイページの user_artists と同じ）。印があるときだけスタンプ帳に未演奏の背景を出す
+        'setlists_complete',
+    ];
+
+    protected $casts = [
+        'setlists_complete' => 'boolean',
     ];
 
 

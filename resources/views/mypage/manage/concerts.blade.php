@@ -37,7 +37,7 @@
                             @csrf
                             <input type="hidden" name="setlists_complete" value="0">
                             <input type="checkbox" class="form-check-input" id="setlists_complete" name="setlists_complete" value="1" @if ($artist->setlists_complete) checked @endif onchange="this.form.submit()">
-                            <label class="form-check-label" for="setlists_complete">全セットリスト登録済<small>未演奏の曲は背景を斜線にします</small></label>
+                            <label class="form-check-label" for="setlists_complete">全セットリスト登録済<small>スタンプ画面で未演奏の曲は背景を斜線にします</small></label>
                         </form>
                         <span class="mypage-add-row-label">ツアーを追加</span>
                         <a href="#" id="newConcertToggle" class="mypage-add-button" title="ツアーを追加" @if(!$errors->any()) onclick="event.preventDefault(); document.getElementById('newConcertForm').hidden = false; document.getElementById('noConcertsMessage').hidden = true; document.getElementById('concertList').hidden = true; this.hidden = true;" @else hidden @endif>

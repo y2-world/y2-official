@@ -35,9 +35,12 @@ trait ComputesDbSongStamps
     // ここに含まれない曲は「ライブでそもそも未演奏」として台紙自体をグレー表示する。
     // Yuki本人の記録（StatsController）・外部ユーザーの記録（MyPageStatsController）双方の
     // スタンプ帳で共通して使う、そのアーティスト単位の計算。
-    // ライブが1件も無い、またはどのライブのセトリも登録していないときは、未演奏かどうか判断できないので null
+    // 「全セットリスト登録済」に印が無い（登録の途中かもしれない）、ライブが1件も無い、またはどのライブのセトリも登録していないときは、未演奏かどうか判断できないので null
     private function everPerformedDbSongIds(int $artistId): ?array
     {
+        if (!\App\Models\Artist::whereKey($artistId)->value('setlists_complete')) {
+            return null;
+        }
         $songArtistIds = DbSong::pluck('artist_id', 'id');
         $tourIds = DbConcert::whereIn('artist_id', $this->crossoverTourArtistIds($artistId))->pluck('id');
         $tourSetlists = DbSetlist::whereIn('tour_id', $tourIds)->get();
