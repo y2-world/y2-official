@@ -75,6 +75,7 @@ class AdminPanelProvider extends PanelProvider
                 fn (): string => '<style>
                     .choices__inner .choices__input--cloned:placeholder-shown{min-width:100%!important}
                     @media(max-width:640px){
+                        .setlist-input-frame .p-6{padding:1rem!important}
                         .setlist-input-tabs{width:100%;min-width:0}
                         .setlist-input-tabs .fi-tabs{max-width:100%;overflow-x:auto;flex-wrap:nowrap}
                         .setlist-encore-groups .fi-fo-repeater-item-header{padding:.5rem .75rem!important;gap:.5rem!important}

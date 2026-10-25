@@ -155,7 +155,7 @@ class DbSetlistResource extends Resource
             ->extraAttributes(['class' => 'setlist-encore-groups'])
             ->schema([
                 Forms\Components\Hidden::make('_uuid')->default(fn() => (string) \Illuminate\Support\Str::uuid()),
-                Forms\Components\Repeater::make('songs')->label('曲')->extraAttributes(['class' => 'setlist-encore-songs'])->schema([
+                Forms\Components\Repeater::make('songs')->hiddenLabel()->extraAttributes(['class' => 'setlist-encore-songs'])->schema([
                     Forms\Components\Hidden::make('_uuid')->default(fn() => (string) \Illuminate\Support\Str::uuid()),
                     Forms\Components\Select::make('song')->label('曲名')->required()
                         ->options(fn(Forms\Get $get) => \App\Support\JapaneseNameSorter::sortOptions(
@@ -202,7 +202,7 @@ class DbSetlistResource extends Resource
             ->itemLabel(function (array $state, $component): ?string {
                 $position = 0;
                 $groups = (array) $component->getState();
-                if (count($groups) <= 1) return 'アンコール';
+                if (count($groups) <= 1) return null;
                 foreach ($groups as $group) {
                     $position++;
                     if (($group['_uuid'] ?? null) === ($state['_uuid'] ?? null)) return 'アンコール' . $position;
@@ -373,6 +373,7 @@ class DbSetlistResource extends Resource
                         Forms\Components\Tabs\Tab::make('通常入力')
                             ->schema([
                 Forms\Components\Section::make('セットリスト')
+                    ->extraAttributes(['class' => 'setlist-input-frame'])
                     ->schema([
                         Forms\Components\Repeater::make('setlist')
                             ->live(debounce: 0)

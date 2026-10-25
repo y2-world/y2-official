@@ -150,7 +150,7 @@ class SlSetlistResource extends Resource
             ->schema([
                 Forms\Components\Hidden::make('_uuid')->default(fn() => (string) \Illuminate\Support\Str::uuid()),
                 Forms\Components\Repeater::make('songs')
-                    ->label('曲')
+                    ->hiddenLabel()
                     ->extraAttributes(['class' => 'setlist-encore-songs'])
                     ->schema([
                         Forms\Components\Hidden::make('_uuid')->default(fn() => (string) \Illuminate\Support\Str::uuid()),
@@ -202,7 +202,7 @@ class SlSetlistResource extends Resource
             ->itemLabel(function (array $state, $component): ?string {
                 $position = 0;
                 $groups = (array) $component->getState();
-                if (count($groups) <= 1) return 'アンコール';
+                if (count($groups) <= 1) return null;
                 foreach ($groups as $group) {
                     $position++;
                     if (($group['_uuid'] ?? null) === ($state['_uuid'] ?? null)) return 'アンコール' . $position;
@@ -564,6 +564,7 @@ class SlSetlistResource extends Resource
 
                 // 単独ライブの場合のセットリスト
                 Forms\Components\Section::make('セットリスト（単独ライブ）')
+                    ->extraAttributes(['class' => 'setlist-input-frame'])
                     ->schema([
                         Forms\Components\Tabs::make('single_setlist_input_mode')
                             ->contained(false)
@@ -716,6 +717,7 @@ class SlSetlistResource extends Resource
 
                 // フェスの場合のセットリスト
                 Forms\Components\Section::make('セットリスト（フェス）')
+                    ->extraAttributes(['class' => 'setlist-input-frame'])
                     ->schema([
                         Forms\Components\Tabs::make('festival_setlist_input_mode')
                             ->contained(false)
