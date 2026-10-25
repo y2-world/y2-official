@@ -146,10 +146,12 @@ class SlSetlistResource extends Resource
     {
         return Forms\Components\Repeater::make('_encore_groups')
             ->label('アンコール')
+            ->extraAttributes(['class' => 'setlist-encore-groups'])
             ->schema([
                 Forms\Components\Hidden::make('_uuid')->default(fn() => (string) \Illuminate\Support\Str::uuid()),
                 Forms\Components\Repeater::make('songs')
                     ->label('曲')
+                    ->extraAttributes(['class' => 'setlist-encore-songs'])
                     ->schema([
                         Forms\Components\Hidden::make('_uuid')->default(fn() => (string) \Illuminate\Support\Str::uuid()),
                         Forms\Components\Select::make('song')
@@ -564,6 +566,8 @@ class SlSetlistResource extends Resource
                 Forms\Components\Section::make('セットリスト（単独ライブ）')
                     ->schema([
                         Forms\Components\Tabs::make('single_setlist_input_mode')
+                            ->contained(false)
+                            ->extraAttributes(['class' => 'setlist-input-tabs'])
                             ->tabs([
                                 Forms\Components\Tabs\Tab::make('通常入力')
                                     ->schema([
@@ -714,6 +718,8 @@ class SlSetlistResource extends Resource
                 Forms\Components\Section::make('セットリスト（フェス）')
                     ->schema([
                         Forms\Components\Tabs::make('festival_setlist_input_mode')
+                            ->contained(false)
+                            ->extraAttributes(['class' => 'setlist-input-tabs'])
                             ->tabs([
                                 Forms\Components\Tabs\Tab::make('通常入力')
                                     ->schema([

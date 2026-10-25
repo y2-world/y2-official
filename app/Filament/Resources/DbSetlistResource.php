@@ -152,9 +152,10 @@ class DbSetlistResource extends Resource
     {
         return Forms\Components\Repeater::make('_encore_groups')
             ->label('アンコール')
+            ->extraAttributes(['class' => 'setlist-encore-groups'])
             ->schema([
                 Forms\Components\Hidden::make('_uuid')->default(fn() => (string) \Illuminate\Support\Str::uuid()),
-                Forms\Components\Repeater::make('songs')->label('曲')->schema([
+                Forms\Components\Repeater::make('songs')->label('曲')->extraAttributes(['class' => 'setlist-encore-songs'])->schema([
                     Forms\Components\Hidden::make('_uuid')->default(fn() => (string) \Illuminate\Support\Str::uuid()),
                     Forms\Components\Select::make('song')->label('曲名')->required()
                         ->options(fn(Forms\Get $get) => \App\Support\JapaneseNameSorter::sortOptions(
@@ -366,6 +367,8 @@ class DbSetlistResource extends Resource
                     ->columns(2),
 
                 Forms\Components\Tabs::make('setlist_input_mode')
+                    ->contained(false)
+                    ->extraAttributes(['class' => 'setlist-input-tabs'])
                     ->tabs([
                         Forms\Components\Tabs\Tab::make('通常入力')
                             ->schema([

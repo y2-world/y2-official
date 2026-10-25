@@ -72,7 +72,18 @@ class AdminPanelProvider extends PanelProvider
             // プレースホルダーが出ている間は欄の幅いっぱいにする
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
-                fn (): string => '<style>.choices__inner .choices__input--cloned:placeholder-shown{min-width:100%!important}</style>',
+                fn (): string => '<style>
+                    .choices__inner .choices__input--cloned:placeholder-shown{min-width:100%!important}
+                    @media(max-width:640px){
+                        .setlist-input-tabs{width:100%;min-width:0}
+                        .setlist-input-tabs .fi-tabs{max-width:100%;overflow-x:auto;flex-wrap:nowrap}
+                        .setlist-encore-groups .fi-fo-repeater-item-header{padding:.5rem .75rem!important;gap:.5rem!important}
+                        .setlist-encore-groups .fi-fo-repeater-item-content{padding:.5rem!important}
+                        .setlist-encore-groups .setlist-encore-songs .fi-fo-repeater-item-header{padding:.375rem .5rem!important}
+                        .setlist-encore-groups .setlist-encore-songs .fi-fo-repeater-item-content{padding:.375rem!important}
+                        .setlist-encore-groups .fi-fo-field-wrp{min-width:0}
+                    }
+                </style>',
             )
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
