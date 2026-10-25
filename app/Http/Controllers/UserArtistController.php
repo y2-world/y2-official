@@ -15,7 +15,7 @@ class UserArtistController extends Controller
     public function index()
     {
         $artists = JapaneseNameSorter::sortBy(
-            UserArtist::withCount(['concerts', 'songs'])->get()
+            UserArtist::visibleTo()->withCount(['concerts', 'songs'])->get()
         );
 
         // 公式の Database のアーティスト（公開していて、曲かライブがあるもの）も、マイページで作られたアーティストと混ぜて名前順に並べる。
@@ -52,14 +52,14 @@ class UserArtistController extends Controller
     // アーティストのトップ（Databaseのアーティストのトップ database/artist と同じ形）。Live・Discography への入口
     public function show(int $artistId)
     {
-        $artist = UserArtist::withCount(['concerts', 'songs'])->findOrFail($artistId);
+        $artist = UserArtist::visibleTo()->withCount(['concerts', 'songs'])->findOrFail($artistId);
 
         return view('mypage.user_artists.show', compact('artist'));
     }
 
     public function stats(int $artistId)
     {
-        $artist = UserArtist::with(['songs', 'concerts.setlists'])->findOrFail($artistId);
+        $artist = UserArtist::visibleTo()->with(['songs', 'concerts.setlists'])->findOrFail($artistId);
         $songTitles = $artist->songs->keyBy('id')->map(fn ($song) => $song->title);
         $songCounts = [];
         $encoreCounts = [];

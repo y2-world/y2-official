@@ -27,7 +27,7 @@
                 @forelse ($songs as $index => $song)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td><a href="{{ route('mypage.user_songs.show', $song->id) }}">{{ $song->title }}</a></td>
+                        <td><a href="{{ route('mypage.user_songs.show', $song->id) }}">{{ $song->title }}</a>@if (filled($song->credit))<br><span class="song-list-credit">{{ $song->credit }}</span>@endif</td>
                         {{-- 収録シングル・アルバム（公式の曲の一覧と同じく、両方あれば先に出た方） --}}
                         @php
                             $single = $singlesBySong[$song->id] ?? null;

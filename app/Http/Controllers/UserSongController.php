@@ -18,7 +18,7 @@ class UserSongController extends Controller
     // アルバム分けは無く、曲名一覧から個別の詳細ページへ遷移できるだけのシンプルな構成。
     public function index($artistId)
     {
-        $artist = UserArtist::findOrFail($artistId);
+        $artist = UserArtist::visibleTo()->findOrFail($artistId);
         $songs = UserSong::where('user_artist_id', $artistId)->orderBy('sort_order')->get();
 
         // 曲ごとの収録シングル・アルバム（公式の曲の一覧と同じく、それぞれ発売日がいちばん早いもの）。まとめて1回で読む
@@ -33,6 +33,17 @@ class UserSongController extends Controller
         };
         $singlesBySong = $firstDiscBySong(\App\Models\UserSingle::class);
         $albumsBySong = $firstDiscBySong(\App\Models\UserAlbum::class);
+        // 管理画面で収録シングル・アルバムを手動指定した曲は、それを優先する（曲のページと同じ）
+        $singlesById = \App\Models\UserSingle::where('user_artist_id', $artistId)->get()->keyBy('id');
+        $albumsById = \App\Models\UserAlbum::where('user_artist_id', $artistId)->get()->keyBy('id');
+        foreach ($songs as $song) {
+            if ($song->single_id && isset($singlesById[$song->single_id])) {
+                $singlesBySong[$song->id] = $singlesById[$song->single_id];
+            }
+            if ($song->album_id && isset($albumsById[$song->album_id])) {
+                $albumsBySong[$song->id] = $albumsById[$song->album_id];
+            }
+        }
 
         return view('mypage.user_songs.index', compact('artist', 'songs', 'singlesBySong', 'albumsBySong'));
     }
@@ -40,6 +51,7 @@ class UserSongController extends Controller
     public function show(Request $request, $id)
     {
         $song = UserSong::findOrFail($id);
+        abort_unless($song->artist?->isVisibleTo(), 404);
         $tourSetlists = $song->performedTourSetlists();
         $tours = $tourSetlists->pluck('concert')->filter()->unique('id')->values();
 

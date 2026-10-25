@@ -54,6 +54,7 @@
                         <input type="hidden" name="tour_date2" value="{{ $tourDate2 }}">
                         <input type="hidden" name="tour_schedule" value="{{ $tourSchedule }}">
                         <input type="hidden" name="is_fes" value="{{ $isFes ? 1 : 0 }}">
+                        <input type="hidden" name="tour_type" value="{{ $tourType ?? ($isFes ? 2 : 0) }}">
                     @endif
                     {{-- 曲名と別表記（曲名が空ならカバーなど）を組で引き継ぐ --}}
                     @foreach ($setlist as $row)

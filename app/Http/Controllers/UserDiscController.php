@@ -13,7 +13,7 @@ class UserDiscController extends Controller
 {
     public function index($artistId, string $kind)
     {
-        $artist = UserArtist::findOrFail($artistId);
+        $artist = UserArtist::visibleTo()->findOrFail($artistId);
         $model = $kind === 'albums' ? UserAlbum::class : UserSingle::class;
         $discs = $model::where('user_artist_id', $artist->id)->orderBy('date')->orderBy('id')->get();
         $isOwner = $artist->external_user_id === auth('external')->id();
@@ -25,6 +25,7 @@ class UserDiscController extends Controller
     public function show($id, string $kind)
     {
         $disc = ($kind === 'albums' ? UserAlbum::class : UserSingle::class)::with('artist')->findOrFail($id);
+        abort_unless($disc->artist?->isVisibleTo(), 404);
         $artist = $disc->artist;
         $songs = UserSong::whereIn('id', collect($disc->tracklist ?? [])->pluck('id'))->get()->keyBy('id');
         // ディスクごとに分ける（ディスク番号が無ければ1枚）

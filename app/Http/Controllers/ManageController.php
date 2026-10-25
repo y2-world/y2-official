@@ -166,7 +166,7 @@ class ManageController extends Controller
             'external_user_id' => $userId,
             'user_artist_id' => $artist->id,
             'title' => $data['title'],
-            'type' => $request->boolean('is_fes') ? 2 : 1,
+            'type' => UserConcert::typeFromRequest($request),
             'date1' => $data['date1'],
             'date2' => $data['date2'] ?? null,
             'schedule' => filled($data['schedule'] ?? null) ? trim($data['schedule']) : null,

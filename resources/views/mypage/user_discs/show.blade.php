@@ -14,15 +14,23 @@
                 <a href="{{ route('mypage.user_artists.show', $artist->id) }}">{{ $artist->name }}</a>
             </p>
             <p class="database-subtitle">
-                {{-- 公式と同じ「1st Single」「2nd Album」「1st Mini Album」。番号は発売日の順で自動 --}}
+                {{-- 公式と同じ「1st Single」「2nd Album」「1st Mini Album」「EP」「Digital Exclusive Single」。
+                     番号は管理画面で入れた番号、無ければ発売日の順で自動 --}}
+                @php $discNumber = $number; @endphp
                 @if ($kind === 'singles')
-                    {{ $disc->ep ? 'EP' : trim(($number ? ordinal($number) : '') . ' Single') }}
+                    @if ($disc->ep)
+                        EP
+                    @elseif ($disc->download)
+                        Digital Exclusive Single
+                    @else
+                        {{ trim(($discNumber ? ordinal($discNumber) : '') . ' Single') }}
+                    @endif
                 @elseif ($disc->best)
                     Best Album
                 @elseif ($disc->special)
                     {{-- 企画盤は種類を出さない --}}
                 @else
-                    {{ trim(($number ? ordinal($number) : '') . ($disc->mini ? ' Mini Album' : ' Album')) }}
+                    {{ trim(($discNumber ? ordinal($discNumber) : '') . ($disc->mini ? ' Mini Album' : ' Album')) }}
                 @endif
             </p>
             <h1 class="database-title">{{ $disc->title }}</h1>

@@ -16,14 +16,13 @@ class UserConcertController extends Controller
 {
     public function index($artistId)
     {
-        $artist = UserArtist::findOrFail($artistId);
+        $artist = UserArtist::visibleTo()->findOrFail($artistId);
 
-        // 公式の Database のライブ一覧と同じく、?type=1 でツアー（単独）、?type=2 でイベント（フェス・複数アーティスト出演）だけにする。
-        // マイページのツアーの type は、登録のときの「フェス・複数アーティスト出演イベント」のチェックで 2、ほかは 1
+        // 公式の Database のライブ一覧と同じ ?type=（1 Live = ツアーと単発ライブ、6 Tours、5 単発ライブ、2 Events）。種類の意味も公式と同じ
         $type = request()->input('type');
+        $types = DbConcertController::listTypes($type);
         $tours = UserConcert::where('user_artist_id', $artistId)
-            ->when($type === '1', fn ($q) => $q->where('type', '!=', 2))
-            ->when($type === '2', fn ($q) => $q->where('type', 2))
+            ->when($types, fn ($q) => $q->whereIn('type', $types))
             ->orderByDesc('date1')
             ->orderByDesc('id')
             ->get();
@@ -37,6 +36,7 @@ class UserConcertController extends Controller
     {
         $tour = UserConcert::findOrFail($id);
         $artist = $tour->artist;
+        abort_unless($artist?->isVisibleTo(), 404);
         $songs = UserSong::where('user_artist_id', $tour->user_artist_id)->orderBy('sort_order', 'asc')->get();
         $tourSetlists = UserSetlist::where('user_concert_id', $id)->orderBy('row', 'asc')->orderBy('order_no', 'asc')->get();
 

@@ -45,8 +45,12 @@
                             <span><i class="fa-solid fa-list" style="margin-right: 10px;"></i>All</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
-                        {{-- 公式の Database のアーティストのページと同じく、ツアー（単独）とイベント（フェス）に分けて見る --}}
+                        {{-- 公式の Database のアーティストのページと同じく、Live（ツアーと単発ライブ）・Tours・Events に分けて見る --}}
                         <a href="{{ route('mypage.user_artists.live', [$artist->id, 'type' => 1]) }}" class="database-link">
+                            <span><i class="fa-solid fa-ticket" style="margin-right: 10px;"></i>Live</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <a href="{{ route('mypage.user_artists.live', [$artist->id, 'type' => 6]) }}" class="database-link">
                             <span><i class="fa-solid fa-route" style="margin-right: 10px;"></i>Tours</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>

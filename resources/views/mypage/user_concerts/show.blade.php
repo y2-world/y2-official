@@ -26,6 +26,10 @@
                 @elseif ($tour->date1)
                     {{ date('Y.m.d', strtotime($tour->date1)) }}
                 @endif
+                {{-- 会場（公式のライブのページと同じく日付の下） --}}
+                @if (filled($tour->venue))
+                    <br>{{ $tour->venue }}
+                @endif
             </p>
 
             @if ($totalOlCount >= 2)
@@ -65,6 +69,13 @@
                         @endif
                         <h5>SCHEDULE</h5>
                         @include('partials._schedule', ['schedule' => $tour->schedule])
+                    </div>
+                @endif
+                {{-- 説明（公式のライブのページと同じく SCHEDULE の下） --}}
+                @if (filled($tour->text))
+                    <div class="schedule-text">
+                        <hr>
+                        {!! nl2br(e($tour->text)) !!}
                     </div>
                 @endif
             </div>

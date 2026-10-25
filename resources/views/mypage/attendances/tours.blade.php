@@ -49,12 +49,7 @@
                                 <label for="new_tour_title" class="form-label">ツアー名</label>
                                 <input type="text" class="form-control" id="new_tour_title" name="title" value="{{ old('title') }}" required>
                             </div>
-                            <div class="form-check mb-3">
-                                <input type="checkbox" class="form-check-input" id="new_tour_is_fes" name="is_fes" value="1" @if(old('is_fes')) checked @endif>
-                                <label class="form-check-label" for="new_tour_is_fes">
-                                    フェス・複数アーティスト出演イベント
-                                </label>
-                            </div>
+                            @include('mypage._concert_type_radio', ['selected' => old('tour_type', 0), 'idPrefix' => 'new_tour'])
                             <div class="mb-3">
                                 <label for="new_tour_date1" class="form-label">開始日（任意）</label>
                                 <input type="date" class="form-control" id="new_tour_date1" name="date1" value="{{ old('date1') }}">

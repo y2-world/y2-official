@@ -13,13 +13,13 @@
         $setlistsByRow = $tourSetlists->groupBy(fn($m) => $m->row ?? 1)->sortKeys();
         // (row, order_no) => title のマップ。同じrow内で複数のグループタイトルを
         // order_no単位で持てるようにし、そのorder_no以降を新しいグループとして扱う。
-        // グループタイトルはDbSetlist（公式データ）のみ対応。UserSetlistにはtour_id列自体がない。
-        $groupTitlesByRowAndOrderNo = $tourSetlists->first() instanceof \App\Models\DbSetlist
+        // 公式のパターンは db_setlist_rows、マイページのパターンは user_setlist_rows（同じ作り）
+        $groupTitlesByRowAndOrderNo = ($tourSetlists->first() instanceof \App\Models\DbSetlist
             ? \App\Models\DbSetlistRow::where('tour_id', $tourSetlists->first()->tour_id)
+            : \App\Models\UserSetlistRow::where('user_concert_id', $tourSetlists->first()->user_concert_id))
                 ->get()
                 ->groupBy('row')
-                ->map(fn($rows) => $rows->pluck('title', 'order_no'))
-            : collect();
+                ->map(fn($rows) => $rows->pluck('title', 'order_no'));
         // アンコールの見出し（福山雅治は ENCORE / DOUBLE ENCORE）を決めるためのアーティスト。UserSetlistには無い
         $encoreArtistId = $tourSetlists->first() instanceof \App\Models\DbSetlist
             ? \App\Models\DbConcert::whereKey($tourSetlists->first()->tour_id)->value('artist_id')

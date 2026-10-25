@@ -47,6 +47,7 @@
                         <input type="hidden" name="tour_date2" value="{{ $tourDate2 }}">
                         <input type="hidden" name="tour_schedule" value="{{ $tourSchedule }}">
                         <input type="hidden" name="is_fes" value="{{ $isFes ? 1 : 0 }}">
+                        <input type="hidden" name="tour_type" value="{{ $tourType ?? ($isFes ? 2 : 0) }}">
                     @endif
 
                     <h5 style="font-size: 0.9rem; color: #999; letter-spacing: 1px;">本編</h5>

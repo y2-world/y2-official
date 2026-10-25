@@ -14,7 +14,8 @@ class DbConcertController extends Controller
     private const SUMMARY_WITHOUT_DIFFERENCES_TOUR_IDS = [47, 218, 220];
 
     // 一覧の絞り込み（?type=）→ そこに出すライブの type。1 = Live（ツアーと単発ライブ）、6 = Tours、5 = 単発ライブ、2〜4 はそのまま
-    private static function listTypes($type): ?array
+    // マイページのライブ一覧（UserConcertController）でも同じ ?type= を使う
+    public static function listTypes($type): ?array
     {
         return match ((string) $type) {
             '1' => [0, 1],

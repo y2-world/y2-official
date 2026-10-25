@@ -20,6 +20,10 @@
                 <p class="database-subtitle song-number-mine" style="{{ $secondTab === 'mine' ? '' : 'display: none;' }}"># {{ $songNumberMine }}</p>
             @endif
             <h1 class="database-title">{{ $song->title }}</h1>
+            {{-- ほかの人との曲は、曲名の下にアーティスト表記（公式の曲のページと同じ） --}}
+            @if ($song->credit)
+                <p class="database-subtitle" style="margin-top: 0;">{{ $song->credit }}</p>
+            @endif
             {{-- 入っているシングル・アルバム（公式の曲のページと同じ） --}}
             @php
                 $single = $song->singleFromTracklist;
@@ -39,6 +43,9 @@
             @elseif (\App\Models\UserAlbum::where('user_artist_id', $song->user_artist_id)->exists())
                 {{-- アルバムを1枚も登録していないアーティストでは出さない --}}
                 <p class="database-subtitle">アルバム未収録</p>
+            @endif
+            @if ($song->text)
+                <p class="database-subtitle" style="margin-top: 8px;">{{ $song->text }}</p>
             @endif
         </div>
     </div>

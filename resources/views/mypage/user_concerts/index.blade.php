@@ -9,12 +9,14 @@
                 ['label' => $artist->name],
             ]])
             <h1 class="database-title" style="text-align: center;">Live</h1>
-            <p class="database-subtitle" style="text-align: center;">{{ $artist->name }} — {{ $type === '1' ? 'ツアー・単独ライブ' : ($type === '2' ? 'イベント・フェス' : 'すべてのツアー・ライブ情報') }}</p>
-            {{-- 公式の Database のライブ一覧と同じ、All / Tours / Events の切り替え --}}
+            <p class="database-subtitle" style="text-align: center;">{{ $artist->name }} — {{ ['1' => 'ツアー・単発ライブ', '6' => 'ツアー', '5' => '単発ライブ', '2' => 'イベント・フェス'][$type] ?? 'すべてのツアー・ライブ情報' }}</p>
+            {{-- 公式の Database のライブ一覧と同じ、All / Live / Tours / 単発ライブ / Events の切り替え --}}
             <div style="display: flex; justify-content: center; margin-top: 12px;">
                 <select class="year-select" onchange="location.href=this.value;">
                     <option value="{{ route('mypage.user_artists.live', $artist->id) }}" @if (!$type) selected @endif>All</option>
-                    <option value="{{ route('mypage.user_artists.live', [$artist->id, 'type' => 1]) }}" @if ($type === '1') selected @endif>Tours</option>
+                    <option value="{{ route('mypage.user_artists.live', [$artist->id, 'type' => 1]) }}" @if ($type === '1') selected @endif>Live</option>
+                    <option value="{{ route('mypage.user_artists.live', [$artist->id, 'type' => 6]) }}" @if ($type === '6') selected @endif>Tours</option>
+                    <option value="{{ route('mypage.user_artists.live', [$artist->id, 'type' => 5]) }}" @if ($type === '5') selected @endif>単発ライブ</option>
                     <option value="{{ route('mypage.user_artists.live', [$artist->id, 'type' => 2]) }}" @if ($type === '2') selected @endif>Events</option>
                 </select>
             </div>
