@@ -102,15 +102,15 @@ class DbAlbumResource extends Resource
                     ])
                     ->defaultItems(1)
                     ->columnSpanFull()
-                    ->live()
                     ->reorderable()
-                    ->itemLabel(function (array $state, $component): string {
-                        $items = array_values($component->getState() ?? []);
+                    ->live()
+                    ->itemLabel(function (array $state, string $uuid, $component): string {
+                        $items = $component->getState() ?? [];
                         $discTrackCount = [];
                         $globalTrack = 0;
                         $currentDisc = null;
 
-                        foreach ($items as $item) {
+                        foreach ($items as $itemUuid => $item) {
                             // ディスク番号（空なら前の値を引き継ぐ）
                             if (!empty($item['disc'])) {
                                 $currentDisc = $item['disc'];
@@ -119,7 +119,7 @@ class DbAlbumResource extends Resource
                             // ディスクが設定されていない → 通常の曲番
                             if (empty($currentDisc)) {
                                 $globalTrack++;
-                                if ($item === $state) {
+                                if ($itemUuid === $uuid) {
                                     return (string)$globalTrack;
                                 }
                                 continue;
@@ -133,12 +133,12 @@ class DbAlbumResource extends Resource
                             }
 
                             // 現在行が対象なら返す
-                            if ($item === $state) {
+                            if ($itemUuid === $uuid) {
                                 return "{$currentDisc} - {$discTrackCount[$currentDisc]}";
                             }
                         }
 
-                        return '1';
+                        return (string) (count($items) ?: 1);
                     }),
                 Forms\Components\Textarea::make('text')
                     ->label('テキスト')

@@ -1034,10 +1034,14 @@ th {
 @media (max-width: 991px) {
     .table.fixed-cols .col-no { width: 4em; }
 }
-/* モバイルでは開催日の列を日付が1行で入るだけの幅にして、アーティスト/タイトルとの間を詰める */
+/* モバイルでは開催日の列を日付が1行で入るだけの幅にして、アーティスト/タイトルとの間を詰める。
+   DOUBLE ENCORE のギター列は、アイコンだけの列でも十分に見えるように狭めて余白を節約する。 */
 @media (max-width: 576px) {
     .table.fixed-cols .col-date { width: 9em; }
     .table.fixed-cols .col-date-range { width: 14.5em; }
+    .table.fixed-cols .col-icon { width: 2.8em; }
+    .table.fixed-cols th.col-icon,
+    .table.fixed-cols td.col-icon { padding-left: 0.25rem; padding-right: 0.25rem; }
 }
 
 .schedule-text {

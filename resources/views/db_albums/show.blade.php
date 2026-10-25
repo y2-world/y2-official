@@ -51,11 +51,16 @@
                 style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); padding: 30px; max-width: 560px; margin: 0 auto;">
                 @php
                     $previousDisc = null;
+                    $trackNumber = 0;
                 @endphp
 
                 @foreach ($albums->tracklist as $data)
                     @php
                         $currentDisc = $data['disc'] ?? null;
+                        if ($currentDisc !== $previousDisc) {
+                            $trackNumber = 0;
+                        }
+                        $trackNumber++;
                     @endphp
 
                     {{-- ディスク番号が変わった場合は ol をリセット --}}
@@ -66,12 +71,14 @@
                         <div style="font-weight: 400; color: #2d3748; margin-top: 15px; margin-bottom: 5px;">
                             {{ $currentDisc }}
                         </div>
-                        <ol style="margin: 0; padding-left: 25px; font-size: 15px; line-height: 2;">
+                        <ol style="margin: 0; padding: 0; list-style: none; font-size: 15px; line-height: 2;">
                         @elseif($loop->first)
-                            <ol style="margin: 0; padding-left: 25px; font-size: 15px; line-height: 2;">
+                            <ol style="margin: 0; padding: 0; list-style: none; font-size: 15px; line-height: 2;">
                     @endif
 
-                    <li>
+                    <li style="display: flex; gap: 12px; list-style: none;">
+                        <span style="flex: 0 0 3em; text-align: right; color: #888;">{{ $trackNumber }}.</span>
+                        <span>
                         @if (isset($data['id']))
                             <a href="{{ \App\Models\DbSong::showUrl($data['id'], $data['exception'] ?? null) }}"
                                 style="color: #667eea; text-decoration: none; font-weight: 500; transition: color 0.3s ease;">
@@ -80,6 +87,7 @@
                         @else
                             <span style="color: #718096;">{{ $data['exception'] }}</span>
                         @endif
+                        </span>
                     </li>
 
                     @php $previousDisc = $currentDisc; @endphp

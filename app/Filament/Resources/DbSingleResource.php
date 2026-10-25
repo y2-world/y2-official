@@ -100,15 +100,13 @@ class DbSingleResource extends Resource
                     ->columns(1) // 曲名→詳細設定（縦並び）
                     ->defaultItems(1)
                     ->reorderable()
+                    ->live()
                     ->columnSpanFull()
-                    ->itemLabel(function (array $state, $component): string {
-                        $items = array_values($component->getState() ?? []);
-                        foreach ($items as $i => $item) {
-                            if ($item === $state) {
-                                return (string) ($i + 1);
-                            }
-                        }
-                        return (string) (count($items) ?: 1);
+                    ->itemLabel(function (array $state, string $uuid, $component): string {
+                        $keys = array_keys($component->getState() ?? []);
+                        $position = array_search($uuid, $keys, true);
+
+                        return (string) (($position === false ? count($keys) : $position) + 1);
                     }),
 
                 // コメント（収録曲の後に移動）

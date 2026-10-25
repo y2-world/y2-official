@@ -79,6 +79,13 @@ class DbSetlistResource extends Resource
                             ->searchable()
                             ->native(false)
                             ->live()
+                            ->afterStateUpdated(function ($state, Forms\Set $set, Forms\Get $get) {
+                                // アーティストを切り替えたら、今のツアー選択とスケジュール候補をクリアする。
+                                // さもないと、以前選んでいた別アーティストの tour_id が残り、
+                                // 例のように同名・近いタイトルのツアーが並ぶケースで「選んだのに変わらない」状態になる。
+                                $set('tour_id', null);
+                                $set('_schedule_pick', []);
+                            })
                             ->afterStateHydrated(function ($state, $set, $record) {
                                 if ($record && $record->tour) {
                                     $set('_artist_id', $record->tour->artist_id);
@@ -92,6 +99,7 @@ class DbSetlistResource extends Resource
                                 $get('_artist_id'),
                                 fn($q, $artistId) => $q->ofArtist($artistId)
                             )->orderBy('date1', 'asc')->pluck('title', 'id'))
+                            ->live()
                             // 読み書きしてよいツアーだけ
                             ->in(fn () => AdminData::query('concert')->pluck('id')->map(fn ($id) => (string) $id)->all())
                             ->searchable()

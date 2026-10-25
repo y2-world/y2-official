@@ -97,6 +97,22 @@ class DbConcert extends Model
                 continue;
             }
 
+            // "4月24日(土)〜4月25日(日) 愛知・日本ガイシホール" / "4月24日(土) - 4月25日(日)" 形式
+            if (preg_match('/^(\d{1,2})月(\d{1,2})日\s*(?:\([^)]*\))?\s*(?:〜|～|-)\s*(\d{1,2})日\s*(?:\([^)]*\))?\s*(.+)$/u', $line, $m)) {
+                $month = (int)$m[1];
+                $advanceYearIfMonthWrapped($month);
+                $venue = trim(preg_replace('/[（(][^）)]*[）)]\s*$/u', '', $m[4]));
+                $startDay = (int)$m[2];
+                $endDay = (int)$m[3];
+                foreach (range($startDay, $endDay) as $day) {
+                    $date = $this->buildDate($currentYear, $month, (int)$day);
+                    if ($date && $venue !== '') {
+                        $entries[] = ['date' => $date, 'venue' => $venue];
+                    }
+                }
+                continue;
+            }
+
             // "4月24日(土) 愛知・日本ガイシホール (公演中止)" 形式
             if (preg_match('/^(\d{1,2})月(\d{1,2})日\s*(?:\([^)]*\))?\s*(.+)$/u', $line, $m)) {
                 $advanceYearIfMonthWrapped((int)$m[1]);
