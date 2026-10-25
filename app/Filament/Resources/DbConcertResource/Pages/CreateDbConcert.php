@@ -10,6 +10,15 @@ class CreateDbConcert extends CreateRecord
 {
     protected static string $resource = DbConcertResource::class;
 
+    public bool $continueToSetlist = false;
+
+    public function mount(): void
+    {
+        $this->continueToSetlist = request()->boolean('continue_to_setlist');
+
+        parent::mount();
+    }
+
     // マイページの人が作るツアーは、その人のもの
     protected function mutateFormDataBeforeCreate(array $data): array
     {
@@ -27,5 +36,14 @@ class CreateDbConcert extends CreateRecord
         if ($another && $artistId) {
             $this->form->fill(['artist_id' => $artistId]);
         }
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        if ($this->continueToSetlist && $this->record) {
+            return DbConcertResource::getUrl('edit', ['record' => $this->record->getKey()]);
+        }
+
+        return parent::getRedirectUrl();
     }
 }

@@ -244,6 +244,8 @@ class DbSetlistResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('_artist_id')
                             ->label('アーティスト')
+                            ->default(fn () => request()->query('artist_id')
+                                ?? AdminData::query('concert')->find(request()->query('tour_id'))?->artist_id)
                             ->options(fn() => AdminData::artistOptions())
                             ->searchable()
                             ->native(false)
@@ -264,6 +266,7 @@ class DbSetlistResource extends Resource
 
                         Forms\Components\Select::make('tour_id')
                             ->label('ツアー')
+                            ->default(fn () => request()->query('tour_id'))
                             ->options(fn(Get $get) => AdminData::query('concert')->when(
                                 $get('_artist_id'),
                                 fn($q, $artistId) => $q->ofArtist($artistId)
@@ -273,6 +276,12 @@ class DbSetlistResource extends Resource
                             ->in(fn () => AdminData::query('concert')->pluck('id')->map(fn ($id) => (string) $id)->all())
                             ->searchable()
                             ->native(false)
+                            ->afterStateUpdated(function ($state, Forms\Set $set, Get $get): void {
+                                if (!$state || filled($get('order_no'))) return;
+
+                                $row = (int) ($get('row') ?: 1);
+                                $set('order_no', (int) AdminData::query('setlist')->ofTour($state)->where('row', $row)->max('order_no') + 1);
+                            })
                             ->required(),
 
                         Forms\Components\TextInput::make('row')
@@ -285,6 +294,9 @@ class DbSetlistResource extends Resource
                         Forms\Components\TextInput::make('order_no')
                             ->label('パターン番号')
                             ->numeric()
+                            ->default(fn (Get $get) => $get('tour_id')
+                                ? (int) AdminData::query('setlist')->ofTour($get('tour_id'))->where('row', (int) ($get('row') ?: 1))->max('order_no') + 1
+                                : null)
                             ->required()
                             ->rules(fn(Get $get, $record) => [
                                 Rule::unique(AdminData::table('setlist'), 'order_no')
@@ -594,6 +606,7 @@ class DbSetlistResource extends Resource
     {
         return [
             'index' => Pages\ListDbSetlists::route('/'),
+            'manage-tour' => Pages\ManageTourSetlists::route('/tour/{tourId}'),
             'create' => Pages\CreateDbSetlist::route('/create'),
             'edit' => Pages\EditDbSetlist::route('/{record}/edit'),
         ];

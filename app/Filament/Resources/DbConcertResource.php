@@ -51,6 +51,7 @@ class DbConcertResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('artist_id')
                             ->label('アーティスト')
+                            ->default(fn () => request()->query('artist_id'))
                             ->options(fn() => AdminData::artistOptions())
                             // 選択肢（読み書きしてよいアーティスト）にあるものだけ
                             ->in(fn () => array_keys(AdminData::artistOptions()))
@@ -230,7 +231,9 @@ class DbConcertResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDbConcerts::route('/'),
+            'index' => Pages\ManageArtistConcerts::route('/manage'),
+            'manage-artist' => Pages\ManageArtistConcerts::route('/manage/{artistId}'),
+            'all' => Pages\ListDbConcerts::route('/'),
             'create' => Pages\CreateDbConcert::route('/create'),
             'edit' => Pages\EditDbConcert::route('/{record}/edit'),
         ];
