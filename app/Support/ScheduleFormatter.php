@@ -5,7 +5,8 @@ namespace App\Support;
 use Carbon\Carbon;
 
 // ツアーの SCHEDULE を「10月8日 (水) 会場」の形にそろえる。
-// 「05.03(金・祝)」「2012/3/31(土)」「03/28」「8.10」「4.28,29,5.1,2」などの書き方を読み、1日ずつの行にする。
+// 「05.03(金・祝)」「2012/3/31(土)」「03/28」「8.10」「4.28,29,5.1,2」「3.7・8」「2.28～3.4」（期間は毎日）などの書き方を読み、1日ずつの行にする。
+// 日付だけの行のすぐ次に会場だけの行があれば、その会場の日付として1行にする。
 // 年は、行の中の年 → 年の見出し → ツアーの期間（date1〜date2）に入る年 → 月が戻ったら次の年、の順で決める。
 // 曜日は日付から計算する（元の「祝」は残す）。会場のあとの「(福岡県)」のような県名は外す。
 // 年をまたぐツアーだけ、年ごとに「2026年」の見出しを付ける。読めない行はそのまま残し、warnings に入れる
@@ -31,8 +32,9 @@ class ScheduleFormatter
         $rows = [];
         $warnings = [];
 
-        foreach (preg_split('/\r\n|\r|\n/', $schedule) as $line) {
-            $line = trim(str_replace("\u{3000}", ' ', $line));
+        $lines = array_map(fn ($l) => trim(str_replace("\u{3000}", ' ', $l)), preg_split('/\r\n|\r|\n/', $schedule));
+        for ($li = 0; $li < count($lines); $li++) {
+            $line = $lines[$li];
             if ($line === '') {
                 continue;
             }
@@ -51,7 +53,39 @@ class ScheduleFormatter
                 continue;
             }
 
-            [$lineYear, $dates, $givenWeekdays, $holiday, $venue] = $parsed;
+            [$lineYear, $dates, $givenWeekdays, $holiday, $venue, $isRange] = $parsed;
+            // 日付だけの行：次の行が会場だけ（日付でも年の見出しでもない）なら、その会場
+            $next = $lines[$li + 1] ?? '';
+            if ($venue === '' && $next !== '' && !self::parseLine($next) && !preg_match('/^[［\[（(＜<]?\s*\d{4}\s*年?\s*[］\]）)＞>]?$/u', $next)) {
+                $venue = trim(preg_replace('/\s*[（(]\s*' . self::PREFECTURE . '\s*[）)]$/u', '', $next));
+                $line .= ' ' . $next;
+                $li++;
+            }
+            // 期間（「2.28～3.4」）は、始まりの日から終わりの日まで毎日
+            if ($isRange) {
+                [[$m1, $d1], [$m2, $d2]] = $dates;
+                $year = $lineYear ?: ($headerYear ?: (self::yearInPeriod($m1, $d1, $start, $end)
+                    ?? ($contextYear !== null && $prevMonth !== null && $m1 < $prevMonth ? $contextYear + 1 : $contextYear)));
+                if (!$year || !checkdate($m1, $d1, $year)) {
+                    $warnings[] = ($year ? 'ない日付: ' : '年が分からない行: ') . $line;
+                    $rows[] = ['raw' => $line];
+                    continue;
+                }
+                $from = Carbon::create($year, $m1, $d1);
+                $endYear = ($m2 < $m1 || ($m2 === $m1 && $d2 < $d1)) ? $year + 1 : $year;
+                if (!checkdate($m2, $d2, $endYear) || abs(Carbon::create($endYear, $m2, $d2)->diffInDays($from)) > 62) {
+                    $warnings[] = 'ない期間: ' . $line;
+                    $rows[] = ['raw' => $line];
+                    continue;
+                }
+                $to = Carbon::create($endYear, $m2, $d2);
+                for ($d = $from->copy(); $d->lte($to); $d->addDay()) {
+                    $rows[] = ['year' => $d->year, 'text' => "{$d->month}月{$d->day}日 (" . self::WEEKDAYS[$d->dayOfWeek] . ')' . ($venue !== '' ? " {$venue}" : '')];
+                }
+                $contextYear = $to->year;
+                $prevMonth = $to->month;
+                continue;
+            }
             $lineRows = [];
             foreach ($dates as $i => [$month, $day]) {
                 if ($lineYear) {
@@ -126,7 +160,7 @@ class ScheduleFormatter
         return count($hits) === 1 ? $hits[0] : null;
     }
 
-    // [年|null, [[月, 日]...], [元の曜日...], 祝があるか, 会場]
+    // [年|null, [[月, 日]...], [元の曜日...], 祝があるか, 会場, 期間か（期間なら日付は [始まり, 終わり]）]
     private static function parseLine(string $line): ?array
     {
         $rest = $line;
@@ -147,8 +181,21 @@ class ScheduleFormatter
         }
         $dates = [[$month, $day]];
 
-        // 続きの日（「,19」「,5.1」。「2.15.16」のような打ち間違いの「.」も区切りとして読む）
-        while (preg_match('/^\s*(?:[,，、]|\.(?=\d{1,2}(?:\s|$)))\s*/u', $rest, $sep)) {
+        // 期間（「2.28～3.4」「2.28(水)～3.4(日)」「5.1～5」）。終わりの日のあとの曜日は読み飛ばす（毎日の曜日は日付から出す）
+        if (preg_match('/^\s*(?:[（(][^)）]*[)）])?\s*[～〜~\-－―–]\s*(?=\d)/u', $rest, $sep)) {
+            $after = substr($rest, strlen($sep[0]));
+            $last = self::takeDate($after, false, $month);
+            if ($last && $last[0] >= 1 && $last[0] <= 12) {
+                $rest = preg_replace('/^\s*[（(][^)）]*[)）]/u', '', $after);
+                $venue = self::cleanVenue($rest);
+
+                return [$year, [[$month, $day], $last], [], false, $venue, true];
+            }
+        }
+
+        // 続きの日（「,19」「,5.1」「・8」。「2.15.16」のような打ち間違いの「.」も区切りとして読む）
+        // 一度整えたあとの「3月7日 (水) ・8」のように、曜日のかっこのあとに続きの日があるものも読む
+        while (preg_match('/^\s*(?:(?:[（(][^)）]*[)）]\s*)?[,，、・･](?=\s*\d)|\.(?=\d{1,2}(?:\s|$)))\s*/u', $rest, $sep)) {
             $after = substr($rest, strlen($sep[0]));
             $next = self::takeDate($after, false, $month);
             if (!$next) {
@@ -168,14 +215,18 @@ class ScheduleFormatter
             $rest = substr($rest, strlen($m[0]));
         }
 
+        return [$year, $dates, $weekdays, $holiday, self::cleanVenue($rest), false];
+    }
+
+    // 会場名。日付のすぐあとの注記（「12月3日(中止) SEOUL-AX」）は会場名のうしろへ。最後の「(福岡県)」のような県名は外す
+    private static function cleanVenue(string $rest): string
+    {
         $venue = trim($rest);
-        // 日付のすぐあとの注記（「12月3日(中止) SEOUL-AX」）は会場名のうしろへ
         if (preg_match('/^([（(][^)）]*[)）])\s*(.+)$/u', $venue, $m)) {
             $venue = trim($m[2]) . ' ' . $m[1];
         }
-        $venue = trim(preg_replace('/\s*[（(]\s*' . self::PREFECTURE . '\s*[）)]$/u', '', $venue));
 
-        return [$year, $dates, $weekdays, $holiday, $venue];
+        return trim(preg_replace('/\s*[（(]\s*' . self::PREFECTURE . '\s*[）)]$/u', '', $venue));
     }
 
     // 文字列の先頭から「月.日」（$needMonth が false なら「日」だけでも可）を読み、読んだぶんを $text から取る
