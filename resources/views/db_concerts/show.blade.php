@@ -27,7 +27,7 @@
             ['label' => $tours->title],
         ];
         // 曲のリンク（Summary）。$songLinkResolver はセットリスト（_setlist_rows）の曲のリンク
-        $songUrl ??= fn ($songId, $title = null) => $songUrl($songId, $title);
+        $songUrl ??= fn ($songId, $title = null) => \App\Models\DbSong::showUrl($songId, $title);
         $songLinkResolver ??= null;
         // アンコールの見出し（福山の DOUBLE ENCORE など）を決めるアーティスト。マイページのアーティストは公式の決まりを使わない
         $encoreArtistId ??= $tours->artist_id ?? null;
