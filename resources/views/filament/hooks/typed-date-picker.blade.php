@@ -17,6 +17,8 @@
             el._typedDate = flatpickr(el, {
                 locale: flatpickr.l10ns.ja,
                 allowInput: true,
+                // スマホでもこのカレンダーを使う（スマホ標準の日付の欄に入れ替えると、管理画面の欄に日付が入らないため）
+                disableMobile: true,
                 dateFormat: 'Y.m.d',
                 parseDate: (text) => parse(text),
                 // 開くたびに欄の今の日付を読み直す（Filament は、この部品を付けたあとで欄に保存済みの日付を入れるため）。その日のカレンダーを出す
