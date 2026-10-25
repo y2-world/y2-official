@@ -27,9 +27,10 @@
                         <input type="checkbox" id="timelineExcludePlanned" class="unique-tour-checkbox">
                         <span class="unique-tour-text">参加予定を除く</span>
                     </label>
-                    {{-- 参加記録（セットリスト）の追加。投稿のすぐ上の右端に置く --}}
-                    <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-button" title="参加記録を追加" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%);">
-                        <i class="fas fa-plus"></i>
+                    {{-- 参加記録（セットリスト）の追加。投稿のすぐ上の右端に「参加記録を追加 ＋」 --}}
+                    <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-row timeline-add-row" title="参加記録を追加">
+                        <span class="mypage-add-row-label">参加記録を追加</span>
+                        <span class="mypage-add-button"><i class="fas fa-plus"></i></span>
                     </a>
                 </div>
                 <div id="timelineList">
@@ -69,8 +70,9 @@
                                      公演日以降は、本人には代わりにセットリストを追加する「＋」を出す --}}
                                 @if ($attendance->is_planned)
                                     @if ($isOwner && $attendance->can_add_setlist)
-                                        <span class="mypage-add-button timeline-planned-add" title="セットリストを追加" data-nav-url="{{ route('mypage.attendances.add_setlist', $attendance) }}">
-                                            <i class="fas fa-plus"></i>
+                                        <span class="mypage-add-row timeline-planned-add" title="セットリストを追加" data-nav-url="{{ route('mypage.attendances.add_setlist', $attendance) }}">
+                                            <span class="mypage-add-row-label">セットリストを追加</span>
+                                            <span class="mypage-add-button"><i class="fas fa-plus"></i></span>
                                         </span>
                                     @else
                                         <span class="timeline-planned-badge">参加予定</span>
@@ -167,6 +169,8 @@
         border-radius: 50%;
         object-fit: cover;
         flex-shrink: 0;
+        /* サイト全体の画像の影（img の box-shadow）は付けない */
+        box-shadow: none;
     }
     .timeline-card-avatar--placeholder {
         background: #ede7f6;
@@ -203,19 +207,37 @@
         font-size: 0.7rem;
         white-space: nowrap;
     }
-    /* 公演日以降の参加予定（本人）：バッジの代わりに右上に出すセットリスト追加の「＋」 */
+    /* いちばん上の「参加記録を追加 ＋」（右端） */
+    .timeline-add-row {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        text-decoration: none;
+    }
+    /* 公演日以降の参加予定（本人）：バッジの代わりに右上に出す「セットリストを追加 ＋」 */
     .timeline-planned-add {
         position: absolute;
         top: 12px;
         right: 12px;
+        gap: 6px;
+        cursor: pointer;
+    }
+    .timeline-planned-add .mypage-add-row-label {
+        font-size: 0.75rem;
+    }
+    .timeline-planned-add .mypage-add-button {
         width: 30px;
         height: 30px;
         font-size: 0.8rem;
-        cursor: pointer;
     }
     /* バッジと重なるのはいちばん上のユーザー名の行だけなので、その行だけバッジの手前で折り返す */
     .timeline-card.is-planned .timeline-card-user {
         max-width: calc(100% - 72px);
+    }
+    /* 「セットリストを追加 ＋」は幅があるので、その分だけ手前で折り返す */
+    .timeline-card.is-planned:has(.timeline-planned-add) .timeline-card-user {
+        max-width: calc(100% - 150px);
     }
     </style>
 
