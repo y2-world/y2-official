@@ -9,24 +9,70 @@ class UserSong extends Model
 {
     protected $fillable = [
         'user_artist_id',
+        // 管理画面（公式の DbSong と同じ画面）で使う別名。中身は user_artist_id
+        'artist_id',
         'title',
         'sort_order',
+        // 公式のテーブルと同じ項目（管理画面で同じ画面を使うため）
+        'album_id',
+        'single_id',
+        'year',
+        'text',
+        'credit',
     ];
+
+    // 管理画面で公式の DbSong と同じ名前で扱えるようにする別名（artist_id = user_artist_id）
+    // 管理画面の編集画面は、モデルの中身（toArray）をフォームに入れるので、別名も入るようにする
+    protected $appends = ['artist_id'];
+
+    public const ADMIN_COLUMNS = ['artist_id' => 'user_artist_id'];
+
+    public function getArtistIdAttribute()
+    {
+        return $this->attributes['user_artist_id'] ?? null;
+    }
+
+    public function setArtistIdAttribute($value): void
+    {
+        $this->attributes['user_artist_id'] = $value;
+    }
+
+    public function scopeOfArtists($query, array $artistIds)
+    {
+        return $query->whereIn('user_artist_id', $artistIds);
+    }
 
     public function artist()
     {
         return $this->belongsTo(UserArtist::class, 'user_artist_id');
     }
 
-    // この曲が入っているシングル・アルバムのうち、発売日がいちばん早いもの（公式の DbSong の singleFromTracklist / albumFromTracklist と同じ）
+    // セットリストで「アーティスト表記あり」の行に出す表記（公式の DbSong::setlistCredit と同じ）
+    public function setlistCredit(): ?string
+    {
+        $credit = trim((string) $this->credit);
+
+        return $credit === '' ? null : $credit;
+    }
+
+    // この曲が入っているシングル・アルバムのうち、発売日がいちばん早いもの（公式の DbSong の singleFromTracklist / albumFromTracklist と同じ）。
+    // 管理画面で手動指定されていれば、それを優先する
     public function getSingleFromTracklistAttribute()
     {
+        if ($this->single_id && ($manual = UserSingle::where('user_artist_id', $this->user_artist_id)->find($this->single_id))) {
+            return $manual;
+        }
+
         return $this->firstDiscContaining(UserSingle::class);
     }
 
     // アルバムは初出のオリジナルアルバム（ベスト盤・企画盤ではないもの）を基準にする。オリジナルアルバムに入っていない曲だけ、ベスト盤・企画盤のいちばん早いもの
     public function getAlbumFromTracklistAttribute()
     {
+        if ($this->album_id && ($manual = UserAlbum::where('user_artist_id', $this->user_artist_id)->find($this->album_id))) {
+            return $manual;
+        }
+
         return $this->firstDiscContaining(UserAlbum::class, fn ($q) => $q->where('best', false)->where('special', false))
             ?? $this->firstDiscContaining(UserAlbum::class);
     }

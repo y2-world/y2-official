@@ -6,6 +6,8 @@ use App\Filament\Resources\DbSongResource\Pages;
 use App\Filament\Resources\DbSongResource\RelationManagers;
 use App\Models\DbSong;
 use App\Models\DbAlbum;
+use App\Support\AdminData;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -29,13 +31,20 @@ class DbSongResource extends Resource
 
     protected static ?string $modelLabel = '楽曲';
 
+    // 管理者は公式の曲、マイページの人は自分のアーティストの曲（AdminData）
+    public static function getModel(): string
+    {
+        return AdminData::model('song');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('artist_id')
                     ->label('アーティスト')
-                    ->options(fn() => \App\Models\Artist::where('visible', 1)->orderBy('id')->pluck('name', 'id')->all())
+                    ->options(fn() => AdminData::artistOptions())
+                    ->in(fn () => array_keys(AdminData::artistOptions()))
                     ->required()
                     ->native(false)
                     ->searchable()
@@ -66,7 +75,7 @@ class DbSongResource extends Resource
                         if (!$artistId) {
                             return [];
                         }
-                        return DbAlbum::where('artist_id', $artistId)->orderBy('date')->pluck('title', 'id')->all();
+                        return AdminData::query('album')->ofArtist($artistId)->orderBy('date')->pluck('title', 'id')->all();
                     })
                     ->searchable()
                     ->preload()
@@ -81,7 +90,7 @@ class DbSongResource extends Resource
                         if (!$artistId) {
                             return [];
                         }
-                        return \App\Models\DbSingle::where('artist_id', $artistId)->orderBy('date')->pluck('title', 'id')->all();
+                        return AdminData::query('single')->ofArtist($artistId)->orderBy('date')->pluck('title', 'id')->all();
                     })
                     ->searchable()
                     ->preload()
@@ -95,6 +104,8 @@ class DbSongResource extends Resource
                 // HasMany + multiple()に対応していないため、素のフィールドとして持たせ、
                 // Pages側のmutateFormDataBeforeSave/afterCreateでsl_song_idキーを取り出して同期する。
                 Forms\Components\Select::make('sl_song_id')
+                    // Yuki's Setlists の曲との紐付けは公式の曲だけ
+                    ->visible(fn () => AdminData::supports('slSong'))
                     ->label('セットリスト楽曲との紐付け')
                     ->helperText('この楽曲に対応するセットリスト楽曲。タイトル一致で自動的にも紐付きます')
                     ->options(function (Get $get) {
@@ -110,7 +121,10 @@ class DbSongResource extends Resource
                     // まるごとLivewireのdataにdata_setするため、default()の分岐（$hydratedDefaultStateがnullの
                     // 場合のみ使われる）を通らず、モデル属性に無いsl_song_idは常にnullのまま復元されない。
                     // afterStateHydratedは常に呼ばれるフックなので、ここで確実に現在の紐付けを反映する。
-                    ->afterStateHydrated(function (Forms\Components\Select $component, ?DbSong $record) {
+                    ->afterStateHydrated(function (Forms\Components\Select $component, ?Model $record) {
+                        if (!AdminData::supports('slSong')) {
+                            return;
+                        }
                         $component->state($record?->slSongs->first()?->id);
                     })
                     ->dehydrated()
@@ -128,8 +142,8 @@ class DbSongResource extends Resource
                 Forms\Components\Placeholder::make('extra_sl_songs_warning')
                     ->label('')
                     ->columnSpanFull()
-                    ->visible(fn (?DbSong $record) => $record && $record->slSongs->count() > 1)
-                    ->content(function (?DbSong $record) {
+                    ->visible(fn (?Model $record) => AdminData::supports('slSong') && $record && $record->slSongs->count() > 1)
+                    ->content(function (?Model $record) {
                         if (!$record) {
                             return '';
                         }
@@ -146,15 +160,15 @@ class DbSongResource extends Resource
                 Forms\Components\Repeater::make('extra_sl_songs')
                     ->label('その他の紐付き（要解除）')
                     ->columnSpanFull()
-                    ->visible(fn (?DbSong $record) => $record && $record->slSongs->count() > 1)
+                    ->visible(fn (?Model $record) => AdminData::supports('slSong') && $record && $record->slSongs->count() > 1)
                     ->schema([
                         Forms\Components\Hidden::make('id'),
                         Forms\Components\TextInput::make('title')
                             ->label('セットリスト楽曲')
                             ->disabled(),
                     ])
-                    ->afterStateHydrated(function (Forms\Components\Repeater $component, ?DbSong $record) {
-                        if (!$record) {
+                    ->afterStateHydrated(function (Forms\Components\Repeater $component, ?Model $record) {
+                        if (!$record || !AdminData::supports('slSong')) {
                             return;
                         }
                         $component->state(
@@ -188,10 +202,11 @@ class DbSongResource extends Resource
                     ->label('タイトル')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('sl_songs_linked')
+                    ->visible(fn () => AdminData::supports('slSong'))
                     ->label('セットリスト楽曲紐付け')
-                    ->icon(fn (DbSong $record) => $record->slSongs->isNotEmpty() ? 'heroicon-o-check-circle' : null)
+                    ->icon(fn ($record) => $record->slSongs->isNotEmpty() ? 'heroicon-o-check-circle' : null)
                     ->color('success')
-                    ->getStateUsing(fn (DbSong $record) => $record->slSongs->isNotEmpty()),
+                    ->getStateUsing(fn ($record) => $record->slSongs->isNotEmpty()),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('Y.m.d H:i')
                     ->sortable()
@@ -204,9 +219,12 @@ class DbSongResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('artist_id')
                     ->label('アーティスト')
-                    ->options(fn() => \App\Models\Artist::where('visible', 1)->orderBy('id')->pluck('name', 'id')->all())
+                    ->options(fn() => AdminData::artistOptions())
+                    // マイページのテーブルは項目名が違うので、どちらのモデルにもある ofArtists で絞る
+                    ->query(fn ($query, array $data) => filled($data['value']) ? $query->ofArtists([$data['value']]) : $query)
                     ->searchable(),
                 Tables\Filters\TernaryFilter::make('sl_songs_linked')
+                    ->visible(fn () => AdminData::supports('slSong'))
                     ->label('セットリスト楽曲紐付け状態')
                     ->nullable()
                     ->trueLabel('紐付け済み')
@@ -219,7 +237,7 @@ class DbSongResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
-                    ->before(fn ($action, DbSong $record) => static::blockDeleteIfUsed($action, $record)),
+                    ->before(fn ($action, $record) => static::blockDeleteIfUsed($action, $record)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -231,8 +249,12 @@ class DbSongResource extends Resource
     }
 
     // 使われている曲は消さない（消すとアルバム・シングル・セットリストに番号だけが残り、画面に数字で出るため）
-    public static function blockDeleteIfUsed($action, DbSong $record): void
+    public static function blockDeleteIfUsed($action, Model $record): void
     {
+        // 使われ方の調べ（SongUsage）は公式の曲のテーブルを見る。マイページの曲は、マイページと同じく調べずに消す
+        if (AdminData::isMember()) {
+            return;
+        }
         $usages = \App\Support\SongUsage::forDbSong($record->id);
         if ($usages) {
             \Filament\Notifications\Notification::make()->danger()->title('削除できません')
@@ -243,7 +265,10 @@ class DbSongResource extends Resource
 
     public static function blockBulkDeleteIfUsed($action, \Illuminate\Support\Collection $records): void
     {
-        $messages = $records->map(fn (DbSong $r) => ($u = \App\Support\SongUsage::forDbSong($r->id)) ? \App\Support\SongUsage::message($r->title, $u) : null)->filter();
+        if (AdminData::isMember()) {
+            return;
+        }
+        $messages = $records->map(fn ($r) => ($u = \App\Support\SongUsage::forDbSong($r->id)) ? \App\Support\SongUsage::message($r->title, $u) : null)->filter();
         if ($messages->isNotEmpty()) {
             \Filament\Notifications\Notification::make()->danger()->title('削除できません（何も削除していません）')
                 ->body($messages->implode("\n\n"))->persistent()->send();
@@ -260,7 +285,9 @@ class DbSongResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with('slSongs');
+        $query = AdminData::query('song');
+
+        return AdminData::supports('slSong') ? $query->with('slSongs') : $query;
     }
 
     public static function getPages(): array

@@ -43,7 +43,7 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->id('admin')
             ->path('admin')
-            ->login()
+            ->login(\App\Filament\Pages\Auth\Login::class)
             ->brandName('Yuki Official')
             ->colors([
                 'primary' => Color::Amber,

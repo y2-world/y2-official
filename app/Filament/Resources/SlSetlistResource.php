@@ -17,6 +17,9 @@ use Filament\Tables\Table;
 
 class SlSetlistResource extends Resource
 {
+    // 管理者だけの画面
+    use \App\Filament\Concerns\AdminOnly;
+
     protected static ?string $model = SlSetlist::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-musical-note';

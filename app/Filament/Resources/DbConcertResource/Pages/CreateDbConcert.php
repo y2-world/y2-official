@@ -10,6 +10,12 @@ class CreateDbConcert extends CreateRecord
 {
     protected static string $resource = DbConcertResource::class;
 
+    // マイページの人が作るツアーは、その人のもの
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        return $data + \App\Support\AdminData::ownerAttributes('concert');
+    }
+
     // 「保存して次を作成」の直後だけ、続けて同じアーティストのツアーを登録しやすいようartist_idを引き継ぐ。
     // 一覧から改めて新規作成を開いた場合はここを通らないため、通常通り未選択に戻る。
     public function create(bool $another = false): void

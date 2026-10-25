@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\DbSongResource\Pages;
 
 use App\Filament\Resources\DbSongResource;
-use App\Models\Artist;
+use App\Support\AdminData;
 use Filament\Actions;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -20,13 +20,15 @@ class ManageArtistSongs extends ListRecords
     public function mount(): void
     {
         $this->artistId = (int) request()->route('artistId');
+        // 読み書きしてよいアーティストだけ（マイページの人は自分のアーティスト）
+        abort_unless(AdminData::query('artist')->whereKey($this->artistId)->exists(), 404);
 
         parent::mount();
     }
 
     public function getTitle(): string
     {
-        return (Artist::find($this->artistId)?->name ?? '') . ' 楽曲管理';
+        return (AdminData::query('artist')->find($this->artistId)?->name ?? '') . ' 楽曲管理';
     }
 
     protected function getHeaderActions(): array
@@ -47,6 +49,8 @@ class ManageArtistSongs extends ListRecords
                         ->label('説明')
                         ->rows(5),
                     Forms\Components\Select::make('sl_song_id')
+                        // Yuki's Setlists の曲との紐付けは公式の曲だけ
+                        ->visible(fn () => AdminData::supports('slSong'))
                         ->label('セットリスト楽曲との紐付け')
                         ->helperText('この楽曲に対応するセットリスト楽曲。タイトル一致で自動的にも紐付きます')
                         ->options(fn () => \App\Support\JapaneseNameSorter::sortOptions(
@@ -61,14 +65,15 @@ class ManageArtistSongs extends ListRecords
                 ->action(function (array $data, array $arguments, Form $form, Actions\Action $action) {
                     $slSongId = $data['sl_song_id'] ?? null;
 
-                    $record = \App\Models\DbSong::create([
+                    $model = AdminData::model('song');
+                    $record = $model::create([
                         'title' => $data['title'],
                         'text' => $data['text'] ?? null,
                         'artist_id' => $this->artistId,
-                        'sort_order' => (\App\Models\DbSong::where('artist_id', $this->artistId)->max('sort_order') ?? -1) + 1,
+                        'sort_order' => (AdminData::query('song')->ofArtists([$this->artistId])->max('sort_order') ?? -1) + 1,
                     ]);
 
-                    if ($slSongId) {
+                    if ($slSongId && AdminData::supports('slSong')) {
                         \App\Models\SlSong::where('id', $slSongId)->update(['db_song_id' => $record->id]);
                     }
 
@@ -93,12 +98,13 @@ class ManageArtistSongs extends ListRecords
     public function table(Table $table): Table
     {
         return DbSongResource::table($table)
-            ->query(DbSongResource::getEloquentQuery()->where('artist_id', $this->artistId))
+            ->query(DbSongResource::getEloquentQuery()->ofArtists([$this->artistId]))
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->label('タイトル')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('sl_songs_linked')
+                    ->visible(fn () => AdminData::supports('slSong'))
                     ->label('セットリスト楽曲紐付け')
                     ->icon(fn ($record) => $record->slSongs->isNotEmpty() ? 'heroicon-o-check-circle' : null)
                     ->color('success')

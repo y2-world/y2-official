@@ -18,6 +18,9 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ExternalUserResource extends Resource
 {
+    // 管理者だけの画面
+    use \App\Filament\Concerns\AdminOnly;
+
     protected static ?string $model = ExternalUser::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';

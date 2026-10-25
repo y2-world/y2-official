@@ -9,11 +9,16 @@ class UserAlbum extends Model
 {
     protected $fillable = [
         'user_artist_id',
+        // 管理画面（公式と同じ画面）で使う別名。中身は user_artist_id
+        'artist_id',
         'external_user_id',
         'title',
         'date',
         'mini', 'best', 'special',
         'tracklist',
+        // 公式のテーブルと同じ項目（管理画面で同じ画面を使うため）
+        'album_id',
+        'text',
     ];
 
     protected $casts = [
@@ -27,6 +32,27 @@ class UserAlbum extends Model
     public function artist()
     {
         return $this->belongsTo(UserArtist::class, 'user_artist_id');
+    }
+
+    // 管理画面で公式と同じ名前で扱えるようにする別名（artist_id = user_artist_id）
+    // 管理画面の編集画面は、モデルの中身（toArray）をフォームに入れるので、別名も入るようにする
+    protected $appends = ['artist_id'];
+
+    public const ADMIN_COLUMNS = ['artist_id' => 'user_artist_id'];
+
+    public function getArtistIdAttribute()
+    {
+        return $this->attributes['user_artist_id'] ?? null;
+    }
+
+    public function setArtistIdAttribute($value): void
+    {
+        $this->attributes['user_artist_id'] = $value;
+    }
+
+    public function scopeOfArtist($query, $artistId)
+    {
+        return $query->where('user_artist_id', $artistId);
     }
 
     // 収録曲の UserSong（tracklist の並び順）
@@ -51,7 +77,8 @@ class UserAlbum extends Model
                 continue;
             }
             $counts[$kind] = ($counts[$kind] ?? 0) + 1;
-            $numbers[$disc->id] = $counts[$kind];
+            // 管理画面で番号を入れていれば、その番号（公式の album_id と同じ）
+            $numbers[$disc->id] = filled($disc->album_id) ? (int) $disc->album_id : $counts[$kind];
         }
         return $numbers;
     }

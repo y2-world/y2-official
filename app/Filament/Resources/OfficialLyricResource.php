@@ -15,6 +15,9 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class OfficialLyricResource extends Resource
 {
+    // 管理者だけの画面
+    use \App\Filament\Concerns\AdminOnly;
+
     protected static ?string $model = OfficialLyric::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';

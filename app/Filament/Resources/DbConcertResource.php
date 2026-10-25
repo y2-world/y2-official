@@ -12,6 +12,7 @@ use Filament\Tables\Table;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Textarea;
+use App\Support\AdminData;
 
 class DbConcertResource extends Resource
 {
@@ -30,6 +31,18 @@ class DbConcertResource extends Resource
     // 「ap bank fes」「ソロ」タイプはMr.Children専用の選択肢
     private const MR_CHILDREN_ARTIST_ID = 2;
 
+    // 公式の Mr.Children か（マイページのアーティストの id とは別物なので、公式のテーブルのときだけ）
+    private static function isMrChildren($artistId): bool
+    {
+        return !AdminData::isMember() && (int) $artistId === self::MR_CHILDREN_ARTIST_ID;
+    }
+
+    // 管理者は公式のツアー、マイページの人は自分のツアー（AdminData）
+    public static function getModel(): string
+    {
+        return AdminData::model('concert');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -38,7 +51,9 @@ class DbConcertResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('artist_id')
                             ->label('アーティスト')
-                            ->options(fn() => \App\Models\Artist::where('visible', 1)->orderBy('id')->pluck('name', 'id')->all())
+                            ->options(fn() => AdminData::artistOptions())
+                            // 選択肢（読み書きしてよいアーティスト）にあるものだけ
+                            ->in(fn () => array_keys(AdminData::artistOptions()))
                             ->required()
                             ->native(false)
                             ->searchable()
@@ -46,7 +61,7 @@ class DbConcertResource extends Resource
                             ->afterStateUpdated(function ($state, Forms\Set $set, Forms\Get $get) {
                                 // 「ap bank fes」「ソロ」はMr.Children専用の選択肢のため、
                                 // Mr.Children以外に切り替えた際は選択済みならリセットする
-                                if ((int) $state !== self::MR_CHILDREN_ARTIST_ID && in_array((int) $get('type'), [3, 4], true)) {
+                                if (!self::isMrChildren($state) && in_array((int) $get('type'), [3, 4], true)) {
                                     $set('type', 0);
                                 }
                             })
@@ -59,7 +74,7 @@ class DbConcertResource extends Resource
 
                         Radio::make('type')
                             ->label('タイプ')
-                            ->options(fn(Forms\Get $get) => (int) $get('artist_id') === self::MR_CHILDREN_ARTIST_ID
+                            ->options(fn(Forms\Get $get) => self::isMrChildren($get('artist_id'))
                                 ? [
                                     0 => 'ツアー',
                                     1 => '単発ライブ',
@@ -92,18 +107,19 @@ class DbConcertResource extends Resource
                             ->label('会場')
                             ->searchable()
                             ->native(false)
-                            ->options(function () {
-                                $venues = collect();
+                            ->options(function (Forms\Get $get) {
+                                // 今の会場（まだどこにも無い会場でも出す）
+                                $venues = collect(filled($get('venue')) ? [$get('venue')] : []);
 
-                                // Setlistから会場を取得
-                                $setlistVenues = \App\Models\SlSetlist::query()
+                                // Setlistから会場を取得（Yuki's Setlists は公式だけ）
+                                $setlistVenues = AdminData::supports('slSong') ? \App\Models\SlSetlist::query()
                                     ->whereNotNull('venue')
                                     ->where('venue', '!=', '')
                                     ->distinct()
-                                    ->pluck('venue');
+                                    ->pluck('venue') : collect();
 
-                                // Tourから会場を取得
-                                $tourVenues = \App\Models\DbConcert::query()
+                                // Tourから会場を取得（マイページの人は自分のツアー）
+                                $tourVenues = AdminData::query('concert')
                                     ->whereNotNull('venue')
                                     ->where('venue', '!=', '')
                                     ->distinct()
@@ -183,17 +199,14 @@ class DbConcertResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('artist_id')
                     ->label('アーティスト')
-                    ->options(fn() => \App\Models\Artist::where('visible', 1)->orderBy('id')->pluck('name', 'id')->all())
+                    ->options(fn() => AdminData::artistOptions())
+                    // マイページのテーブルは項目名が違うので、どちらのモデルにもある ofArtist で絞る
+                    ->query(fn ($query, array $data) => filled($data['value']) ? $query->ofArtist($data['value']) : $query)
                     ->searchable(),
                 Tables\Filters\SelectFilter::make('type')
                     ->label('タイプ')
-                    ->options([
-                        0 => 'ツアー',
-                        1 => '単発ライブ',
-                        2 => 'イベント',
-                        3 => 'ap bank fes',
-                        4 => 'ソロ',
-                    ]),
+                    // ap bank fes・ソロは公式の Mr.Children だけのタイプなので、マイページの人には出さない
+                    ->options(fn () => [0 => 'ツアー', 1 => '単発ライブ', 2 => 'イベント'] + (AdminData::isMember() ? [] : [3 => 'ap bank fes', 4 => 'ソロ'])),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -209,7 +222,7 @@ class DbConcertResource extends Resource
 
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
-        return parent::getEloquentQuery()
+        return AdminData::query('concert')
             ->orderBy('id', 'desc');
     }
 

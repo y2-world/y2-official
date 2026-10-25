@@ -13,6 +13,8 @@ class UserSetlist extends Model
 
     protected $fillable = [
         'user_concert_id',
+        // 管理画面（公式の DbSetlist と同じ画面）で使う別名。中身は user_concert_id
+        'tour_id',
         'external_user_id',
         'order_no',
         'row',
@@ -24,6 +26,32 @@ class UserSetlist extends Model
     public function concert()
     {
         return $this->belongsTo(UserConcert::class, 'user_concert_id');
+    }
+
+    // 管理画面で公式の DbSetlist と同じ名前で扱えるようにする別名（tour_id = user_concert_id、tour = concert）
+    // 管理画面の編集画面は、モデルの中身（toArray）をフォームに入れるので、別名も入るようにする
+    protected $appends = ['tour_id'];
+
+    public const ADMIN_COLUMNS = ['tour_id' => 'user_concert_id'];
+
+    public function tour()
+    {
+        return $this->belongsTo(UserConcert::class, 'user_concert_id');
+    }
+
+    public function getTourIdAttribute()
+    {
+        return $this->attributes['user_concert_id'] ?? null;
+    }
+
+    public function setTourIdAttribute($value): void
+    {
+        $this->attributes['user_concert_id'] = $value;
+    }
+
+    public function scopeOfTour($query, $tourId)
+    {
+        return $query->where('user_concert_id', $tourId);
     }
 
     public function createdByExternalUser()

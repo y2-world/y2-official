@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class DbSingle extends Model
 {
+    // 管理画面（AdminData）で、マイページのモデルと同じ書き方で絞り込むためのスコープ
+    public function scopeOfArtist($query, $artistId)
+    {
+        return $query->where('artist_id', $artistId);
+    }
+
     protected $table = 'db_singles';
 
     protected $fillable = [

@@ -40,6 +40,13 @@ class EditDbSong extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
+        // Yuki's Setlists の曲との紐付けは公式の曲だけ（マイページの曲には無い）
+        if (!\App\Support\AdminData::supports('slSong')) {
+            unset($data['sl_song_id'], $data['extra_sl_songs']);
+
+            return $data;
+        }
+
         $this->originalSlSongId = $this->record->slSongs()->value('id');
 
         if (array_key_exists('extra_sl_songs', $data)) {
@@ -133,6 +140,10 @@ class EditDbSong extends EditRecord
     // 紐付け先がoriginalSlSongIdのまま変化していなければ、明示的に解除する。
     protected function afterSave(): void
     {
+        if (!\App\Support\AdminData::supports('slSong')) {
+            return;
+        }
+
         if ($this->slSongIdToSync !== false && $this->slSongIdToSync !== $this->originalSlSongId) {
             if ($this->slSongIdToSync === null) {
                 // originalSlSongIdが今もこのDbSongに紐付いたままなら、自動照合は何も変えられなかった

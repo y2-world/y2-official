@@ -118,6 +118,12 @@ class DbSong extends Model
         });
     }
 
+    // 管理画面（AdminData）で、マイページの UserSong と同じ書き方で絞り込むためのスコープ
+    public function scopeOfArtists($query, array $artistIds)
+    {
+        return $query->whereIn('artist_id', $artistIds);
+    }
+
     public function artist()
     {
         return $this->belongsTo(Artist::class);

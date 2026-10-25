@@ -6,6 +6,7 @@ use App\Filament\Resources\DbAlbumResource\Pages;
 use App\Filament\Resources\DbAlbumResource\RelationManagers;
 use App\Models\DbAlbum;
 use App\Models\DbSong;
+use App\Support\AdminData;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -28,13 +29,26 @@ class DbAlbumResource extends Resource
 
     protected static ?string $modelLabel = 'アルバム';
 
+    // 管理者は公式のアルバム、マイページの人は自分のアルバム（AdminData）
+    public static function getModel(): string
+    {
+        return AdminData::model('album');
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return AdminData::query('album');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('artist_id')
                     ->label('アーティスト')
-                    ->options(fn() => \App\Models\Artist::where('visible', 1)->orderBy('id')->pluck('name', 'id')->all())
+                    ->options(fn() => AdminData::artistOptions())
+                    // 選択肢（読み書きしてよいアーティスト）にあるものだけ
+                    ->in(fn () => array_keys(AdminData::artistOptions()))
                     ->required()
                     ->native(false)
                     ->searchable(),
@@ -69,7 +83,7 @@ class DbAlbumResource extends Resource
                         // 曲名（メイン）
                         Forms\Components\Select::make('id')
                             ->label('曲名')
-                            ->options(fn(Forms\Get $get) => \App\Models\DbSong::where('artist_id', $get('../../artist_id'))->pluck('title', 'id'))
+                            ->options(fn(Forms\Get $get) => AdminData::query('song')->ofArtists([$get('../../artist_id')])->orderBy('sort_order')->pluck('title', 'id'))
                             ->searchable()
                             ->native(false)
                             ->columnSpanFull(),
@@ -179,7 +193,9 @@ class DbAlbumResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('artist_id')
                     ->label('アーティスト')
-                    ->options(fn() => \App\Models\Artist::where('visible', 1)->orderBy('id')->pluck('name', 'id')->all())
+                    ->options(fn() => AdminData::artistOptions())
+                    // マイページのテーブルは項目名が違うので、どちらのモデルにもある ofArtist で絞る
+                    ->query(fn ($query, array $data) => filled($data['value']) ? $query->ofArtist($data['value']) : $query)
                     ->searchable(),
                 Tables\Filters\TernaryFilter::make('best')
                     ->label('ベストアルバム')

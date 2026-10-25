@@ -33,6 +33,12 @@ class DbConcert extends Model
         // setlist1~6 は削除済み。tour_setlistsテーブルで管理
     ];
 
+    // 管理画面（AdminData）で、マイページの UserConcert と同じ書き方で絞り込むためのスコープ
+    public function scopeOfArtist($query, $artistId)
+    {
+        return $query->where('artist_id', $artistId);
+    }
+
     public function artist()
     {
         return $this->belongsTo(Artist::class);

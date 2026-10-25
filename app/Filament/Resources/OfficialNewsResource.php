@@ -21,6 +21,9 @@ use Filament\Forms\Components\DateTimePicker;
 
 class OfficialNewsResource extends Resource
 {
+    // 管理者だけの画面
+    use \App\Filament\Concerns\AdminOnly;
+
     protected static ?string $model = OfficialNews::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';

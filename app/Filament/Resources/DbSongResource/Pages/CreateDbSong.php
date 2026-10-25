@@ -31,6 +31,10 @@ class CreateDbSong extends CreateRecord
     {
         $this->slSongIdToSync = $data['sl_song_id'] ?? null;
         unset($data['sl_song_id']);
+        // 並び順が無ければ、そのアーティストの最後（公式の曲は DbSong が自分で付けるが、マイページの曲は付けないため）
+        if (!isset($data['sort_order']) && filled($data['artist_id'] ?? null)) {
+            $data['sort_order'] = (\App\Support\AdminData::query('song')->ofArtists([$data['artist_id']])->max('sort_order') ?? -1) + 1;
+        }
 
         return $data;
     }
@@ -39,7 +43,7 @@ class CreateDbSong extends CreateRecord
     // 選択されたものだけにdb_song_idをセットすれば足りる（nullリセットは不要＝事故の余地がない）。
     protected function afterCreate(): void
     {
-        if ($this->slSongIdToSync) {
+        if ($this->slSongIdToSync && \App\Support\AdminData::supports('slSong')) {
             \App\Models\SlSong::where('id', $this->slSongIdToSync)->update(['db_song_id' => $this->record->id]);
         }
     }

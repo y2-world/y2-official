@@ -11,6 +11,8 @@ use Filament\Resources\Resource;
 use Illuminate\Validation\Rule;
 use Filament\Tables;
 use Filament\Tables\Table;
+use App\Support\AdminData;
+use Illuminate\Database\Eloquent\Model;
 
 class DbSetlistResource extends Resource
 {
@@ -24,7 +26,8 @@ class DbSetlistResource extends Resource
 
     protected static function songArtistIds($artistId): array
     {
-        if ((int) $artistId === self::BZ_ARTIST_ID) {
+        // 公式の B'z のときだけ（マイページのアーティストの id とは別物）
+        if (!AdminData::isMember() && (int) $artistId === self::BZ_ARTIST_ID) {
             return [self::BZ_ARTIST_ID, self::INABA_ARTIST_ID];
         }
 
@@ -32,7 +35,7 @@ class DbSetlistResource extends Resource
     }
 
     // 曲の選択肢の表示。アーティスト欄（credit）がある曲は「曲名 - アーティスト」にする（コラボ曲だと分かるように。SlSetlist の選択肢と同じ書き方）
-    protected static function songOptionLabel(\App\Models\DbSong $song): string
+    protected static function songOptionLabel(Model $song): string
     {
         $credit = trim((string) $song->credit);
 
@@ -47,6 +50,23 @@ class DbSetlistResource extends Resource
 
     protected static ?int $navigationSort = 21;
 
+    // 管理者は公式のセットリスト、マイページの人は自分のセットリスト（AdminData）
+    public static function getModel(): string
+    {
+        return AdminData::model('setlist');
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return AdminData::query('setlist');
+    }
+
+    // そのアーティストの曲（セットリストの曲の選択肢）
+    protected static function songQuery($artistId)
+    {
+        return AdminData::query('song')->when($artistId, fn ($q, $id) => $q->ofArtists(static::songArtistIds($id)));
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -55,7 +75,7 @@ class DbSetlistResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('_artist_id')
                             ->label('アーティスト')
-                            ->options(fn() => \App\Models\Artist::where('visible', 1)->orderBy('id')->pluck('name', 'id')->all())
+                            ->options(fn() => AdminData::artistOptions())
                             ->searchable()
                             ->native(false)
                             ->live()
@@ -68,10 +88,12 @@ class DbSetlistResource extends Resource
 
                         Forms\Components\Select::make('tour_id')
                             ->label('ツアー')
-                            ->options(fn(Get $get) => \App\Models\DbConcert::when(
+                            ->options(fn(Get $get) => AdminData::query('concert')->when(
                                 $get('_artist_id'),
-                                fn($q, $artistId) => $q->where('artist_id', $artistId)
+                                fn($q, $artistId) => $q->ofArtist($artistId)
                             )->orderBy('date1', 'asc')->pluck('title', 'id'))
+                            // 読み書きしてよいツアーだけ
+                            ->in(fn () => AdminData::query('concert')->pluck('id')->map(fn ($id) => (string) $id)->all())
                             ->searchable()
                             ->native(false)
                             ->required(),
@@ -88,8 +110,8 @@ class DbSetlistResource extends Resource
                             ->numeric()
                             ->required()
                             ->rules(fn(Get $get, $record) => [
-                                Rule::unique('db_setlists', 'order_no')
-                                    ->where('tour_id', $get('tour_id'))
+                                Rule::unique(AdminData::table('setlist'), 'order_no')
+                                    ->where(AdminData::column('setlist', 'tour_id'), $get('tour_id'))
                                     ->where('row', $get('row') ?? 1)
                                     ->ignore($record?->id),
                             ])
@@ -106,10 +128,7 @@ class DbSetlistResource extends Resource
                                 if (!$record) {
                                     return;
                                 }
-                                $title = \App\Models\DbSetlistRow::where('tour_id', $record->tour_id)
-                                    ->where('row', $record->row)
-                                    ->where('order_no', $record->order_no)
-                                    ->value('title');
+                                $title = AdminData::rowTitle($record->tour_id, $record->row, $record->order_no);
                                 $set('row_title', $title ?? '');
                             }),
 
@@ -159,10 +178,7 @@ class DbSetlistResource extends Resource
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
                                     ->options(fn(Get $get) => \App\Support\JapaneseNameSorter::sortOptions(
-                                        \App\Models\DbSong::when(
-                                            $get('../../_artist_id'),
-                                            fn($q, $id) => $q->whereIn('artist_id', static::songArtistIds($id))
-                                        )->get(['id', 'title', 'credit'])->mapWithKeys(fn($song) => [$song->id => static::songOptionLabel($song)])->all()
+                                        static::songQuery($get('../../_artist_id'))->get()->mapWithKeys(fn($song) => [$song->id => static::songOptionLabel($song)])->all()
                                     ))
                                     ->searchable()
                                     ->native(false)
@@ -176,11 +192,9 @@ class DbSetlistResource extends Resource
                                         $set('alternative_title', null);
                                     })
                                     ->getSearchResultsUsing(function (string $search, Get $get) {
-                                        $options = \App\Models\DbSong::when(
-                                            $get('../../_artist_id'),
-                                            fn($q, $id) => $q->whereIn('artist_id', static::songArtistIds($id))
-                                        )->whereRaw('LOWER(title) LIKE LOWER(?)', ["%{$search}%"])
-                                            ->get(['id', 'title', 'credit'])
+                                        $options = static::songQuery($get('../../_artist_id'))
+                                            ->whereRaw('LOWER(title) LIKE LOWER(?)', ["%{$search}%"])
+                                            ->get()
                                             ->mapWithKeys(fn($song) => [$song->id => static::songOptionLabel($song)])
                                             ->all();
 
@@ -188,7 +202,7 @@ class DbSetlistResource extends Resource
                                     })
                                     ->getOptionLabelUsing(function ($value) {
                                         if (is_numeric($value)) {
-                                            $song = \App\Models\DbSong::find($value);
+                                            $song = AdminData::query('song')->find($value);
                                             return $song ? static::songOptionLabel($song) : $value;
                                         }
                                         return $value;
@@ -301,10 +315,7 @@ class DbSetlistResource extends Resource
                                 Forms\Components\Select::make('song')
                                     ->label('曲名')
                                     ->options(fn(Get $get) => \App\Support\JapaneseNameSorter::sortOptions(
-                                        \App\Models\DbSong::when(
-                                            $get('../../_artist_id'),
-                                            fn($q, $id) => $q->whereIn('artist_id', static::songArtistIds($id))
-                                        )->get(['id', 'title', 'credit'])->mapWithKeys(fn($song) => [$song->id => static::songOptionLabel($song)])->all()
+                                        static::songQuery($get('../../_artist_id'))->get()->mapWithKeys(fn($song) => [$song->id => static::songOptionLabel($song)])->all()
                                     ))
                                     ->searchable()
                                     ->native(false)
@@ -318,11 +329,9 @@ class DbSetlistResource extends Resource
                                         $set('alternative_title', null);
                                     })
                                     ->getSearchResultsUsing(function (string $search, Get $get) {
-                                        $options = \App\Models\DbSong::when(
-                                            $get('../../_artist_id'),
-                                            fn($q, $id) => $q->whereIn('artist_id', static::songArtistIds($id))
-                                        )->whereRaw('LOWER(title) LIKE LOWER(?)', ["%{$search}%"])
-                                            ->get(['id', 'title', 'credit'])
+                                        $options = static::songQuery($get('../../_artist_id'))
+                                            ->whereRaw('LOWER(title) LIKE LOWER(?)', ["%{$search}%"])
+                                            ->get()
                                             ->mapWithKeys(fn($song) => [$song->id => static::songOptionLabel($song)])
                                             ->all();
 
@@ -330,7 +339,7 @@ class DbSetlistResource extends Resource
                                     })
                                     ->getOptionLabelUsing(function ($value) {
                                         if (is_numeric($value)) {
-                                            $song = \App\Models\DbSong::find($value);
+                                            $song = AdminData::query('song')->find($value);
                                             return $song ? static::songOptionLabel($song) : $value;
                                         }
                                         return $value;
@@ -492,15 +501,17 @@ class DbSetlistResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('artist')
                     ->label('アーティスト')
-                    ->options(fn() => \App\Models\Artist::where('visible', 1)->orderBy('id')->pluck('name', 'id')->all())
+                    ->options(fn() => AdminData::artistOptions())
                     ->query(fn($query, array $data) =>
                         $data['value']
-                            ? $query->whereHas('tour', fn($q) => $q->where('artist_id', $data['value']))
+                            ? $query->whereHas('tour', fn($q) => $q->ofArtist($data['value']))
                             : $query
                     )
                     ->searchable(),
                 Tables\Filters\SelectFilter::make('tour')
-                    ->relationship('tour', 'title')
+                    // 選択肢は読み書きしてよいツアーだけ（マイページの人は自分のツアー）
+                    ->options(fn () => AdminData::query('concert')->orderBy('date1', 'desc')->pluck('title', 'id')->all())
+                    ->query(fn ($query, array $data) => filled($data['value']) ? $query->ofTour($data['value']) : $query)
                     ->label('ツアー')
                     ->searchable()
                     // 文字を入れなくても、開いたときに候補を出す
@@ -510,7 +521,7 @@ class DbSetlistResource extends Resource
                 Tables\Actions\ReplicateAction::make()
                     ->modalHidden()
                     ->beforeReplicaSaved(function ($replica) {
-                        $maxOrderNo = (int) \App\Models\DbSetlist::where('tour_id', $replica->tour_id)
+                        $maxOrderNo = (int) AdminData::query('setlist')->ofTour($replica->tour_id)
                             ->where('row', $replica->row)
                             ->max('order_no');
                         $replica->order_no = $maxOrderNo + 1;
@@ -551,7 +562,7 @@ class DbSetlistResource extends Resource
     // 同じ地名が2日以上あれば日付順に「仙台1」「仙台2」、単発のライブは日付だけ
     public static function scheduleOptions($tourId): array
     {
-        $concert = $tourId ? \App\Models\DbConcert::find($tourId) : null;
+        $concert = $tourId ? AdminData::query('concert')->find($tourId) : null;
         $dates = [];
         foreach (preg_split('/\r\n|\r|\n/', (string) $concert?->schedule) as $line) {
             // 日付は「8.31,9.1」「1.28,29,31,2.1」のように、月が途中で変わりながら並ぶことがある

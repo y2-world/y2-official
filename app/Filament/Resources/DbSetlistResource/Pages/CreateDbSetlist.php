@@ -4,7 +4,6 @@ namespace App\Filament\Resources\DbSetlistResource\Pages;
 
 use App\Filament\Concerns\HasDraftAutosave;
 use App\Filament\Resources\DbSetlistResource;
-use App\Models\DbSetlistRow;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
@@ -21,7 +20,8 @@ class CreateDbSetlist extends CreateRecord
         $this->pendingRowTitle = $data['row_title'] ?? null;
         unset($data['row_title']);
 
-        return $data;
+        // マイページの人が作るセットリストは、その人のもの
+        return $data + \App\Support\AdminData::ownerAttributes('setlist');
     }
 
     // 「保存して次を作成」の直後だけ、続けて同じアーティストのセットリストを登録しやすいよう
@@ -42,19 +42,6 @@ class CreateDbSetlist extends CreateRecord
     {
         $this->clearDraftAutosave();
 
-        $tourId = $this->record->tour_id;
-        $row = $this->record->row;
-        $orderNo = $this->record->order_no;
-        $title = trim((string) $this->pendingRowTitle);
-
-        if ($title === '') {
-            DbSetlistRow::where('tour_id', $tourId)->where('row', $row)->where('order_no', $orderNo)->delete();
-            return;
-        }
-
-        DbSetlistRow::updateOrCreate(
-            ['tour_id' => $tourId, 'row' => $row, 'order_no' => $orderNo],
-            ['title' => $title]
-        );
+        \App\Support\AdminData::setRowTitle($this->record->tour_id, $this->record->row, $this->record->order_no, $this->pendingRowTitle);
     }
 }

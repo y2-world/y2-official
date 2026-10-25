@@ -22,6 +22,12 @@ class DbSetlist extends Model
         'encore',
     ];
 
+    // 管理画面（AdminData）で、マイページの UserSetlist と同じ書き方で絞り込むためのスコープ
+    public function scopeOfTour($query, $tourId)
+    {
+        return $query->where('tour_id', $tourId);
+    }
+
     public function tour()
     {
         return $this->belongsTo(DbConcert::class, 'tour_id', 'id');
