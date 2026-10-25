@@ -61,7 +61,7 @@
                             <div class="mb-3">
                                 <label for="new_tour_schedule" class="form-label">SCHEDULE</label>
                                 {{-- 公式のツアーと同じ書き方。参加日をこの公演から選べるようになる --}}
-                                <textarea class="form-control" id="new_tour_schedule" name="schedule" rows="5" placeholder="2026/10/8(水) 日本武道館&#10;2026/10/9(木) 日本武道館">{{ old('schedule') }}</textarea>
+                                <textarea class="form-control schedule-input" id="new_tour_schedule" name="schedule" rows="5" placeholder="2026/10/8(水) 日本武道館&#10;2026/10/9(木) 日本武道館">{{ old('schedule') }}</textarea>
                             </div>
                             <button type="submit" class="btn btn-outline-dark w-100">追加</button>
                             <div style="text-align: center; margin-top: 8px;">

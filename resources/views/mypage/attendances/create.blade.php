@@ -30,28 +30,6 @@
                     <p data-hide-while-adding @if ($errors->any()) hidden @endif>選択できるアーティストがまだありません。</p>
                 @endif
 
-                <div style="text-align: center;">
-                    <div class="mypage-add-row" style="margin-bottom: 24px;">
-                        <span class="mypage-add-row-label">アーティストを追加</span>
-                        <a href="#" id="newArtistToggle" class="mypage-add-button" title="その他のアーティストを追加" @if(!$errors->any()) onclick="event.preventDefault(); setNewArtistFormOpen(true);" @else hidden @endif>
-                            <i class="fas fa-plus"></i>
-                        </a>
-                    </div>
-                    <form id="newArtistForm" method="POST" action="{{ route('mypage.attendances.artists.new') }}" @if(!$errors->any()) hidden @endif class="new-item-form @unless($errors->any()) new-item-form--via-toggle @endunless">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="new_artist_name" class="form-label">アーティスト名</label>
-                            <input type="text" class="form-control" id="new_artist_name" name="name" value="{{ old('name') }}" required>
-                        </div>
-                        <button type="submit" class="btn btn-outline-dark w-100">追加</button>
-                        <div style="text-align: center; margin-top: 8px;">
-                            <button type="button" onclick="setNewArtistFormOpen(false);" style="background: none; border: none; color: #999; cursor: pointer; padding: 20px;" title="閉じる">
-                                <span class="close-x-thin" style="font-size: 30px;"></span>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
                 {{-- 公式のアーティストと自分で追加したアーティストを分けずに、1つの一覧に名前順で並べる --}}
                 @php
                     $allArtists = \App\Support\JapaneseNameSorter::sortBy(
@@ -78,12 +56,4 @@
             </div>
         </div>
     </div>
-    <script>
-    // 追加のフォームを開いている間は、一覧（data-hide-while-adding を付けたもの）を隠す
-    function setNewArtistFormOpen(open) {
-        document.getElementById('newArtistForm').hidden = !open;
-        document.getElementById('newArtistToggle').hidden = open;
-        document.querySelectorAll('[data-hide-while-adding]').forEach((el) => { el.hidden = open; });
-    }
-    </script>
 @endsection

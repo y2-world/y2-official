@@ -1044,6 +1044,11 @@ th {
     font-size: 13px;
 }
 
+/* SCHEDULE の入力欄：例の文字（placeholder）は、入れた文字と見分けがつくよう薄く */
+.schedule-input::placeholder {
+    color: #c4c4c4;
+}
+
 /* SCHEDULE：日付と会場の2列（partials/_schedule） */
 .schedule-table {
     border-collapse: collapse;
