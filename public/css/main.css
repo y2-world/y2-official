@@ -4564,6 +4564,9 @@ body.stamp-deco-open {
 /* Manage My Artists の一覧：行の右の「公開」チェック */
 .manage-artist-visible {
     flex: 0 0 auto;
+    background: none;
+    border: none;
+    padding: 4px;
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -4576,6 +4579,8 @@ body.stamp-deco-open {
 
 .manage-artist-visible .form-check-input {
     margin: 0;
+    /* チェック自体は押せない（外側のボタンで切り替える） */
+    pointer-events: none;
 }
 
 .manage-artist-delete {

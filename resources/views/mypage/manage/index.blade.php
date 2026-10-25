@@ -64,10 +64,11 @@
                                         <span class="select-card-meta">{{ $artist->songs_count }}曲 / {{ $artist->concerts_count }}ツアー</span>
                                     </span>
                                     {{-- 公開（公式のアーティストと同じ）。外すと自分以外には見せない。押すとその場で保存 --}}
-                                    <label class="manage-artist-visible" title="外すと、自分以外には見せません">
-                                        <input type="checkbox" class="form-check-input" data-visible-url="{{ route('mypage.manage.artists.visible', $artist->id) }}" @if ((int) $artist->visible === 1) checked @endif>
+                                    {{-- 行のリンクの中なので、チェック自体は押せないようにし、外側のボタンで切り替える（チェックを直接押すと、リンクを止めたときにブラウザがチェックを元に戻すため） --}}
+                                    <button type="button" class="manage-artist-visible" title="外すと、自分以外には見せません" data-visible-url="{{ route('mypage.manage.artists.visible', $artist->id) }}">
+                                        <input type="checkbox" class="form-check-input" tabindex="-1" aria-hidden="true" @if ((int) $artist->visible === 1) checked @endif>
                                         公開
-                                    </label>
+                                    </button>
                                     <button type="button" class="manage-artist-delete" data-delete-url="{{ route('mypage.manage.artists.destroy', $artist->id) }}" data-confirm="このアーティストを削除すると、含まれるツアー・セットリスト・曲もすべて削除されます。よろしいですか？" title="削除">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
@@ -105,23 +106,24 @@
     });
     </script>
     <script>
-    // 公開のチェック：行のリンクの中にあるので、リンクへ飛ばないよう押したときの動きを止め、チェックを自分で切り替えてその場で保存する
-    document.querySelectorAll('.manage-artist-visible').forEach((label) => {
-        const box = label.querySelector('input');
-        label.addEventListener('click', (e) => {
+    // 公開のチェック：行のリンクへ飛ばずに、チェックを切り替えてその場で保存する
+    document.querySelectorAll('.manage-artist-visible').forEach((btn) => {
+        const box = btn.querySelector('input');
+        btn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            box.checked = !box.checked;
+            const next = !box.checked;
+            box.checked = next;
             const body = new FormData();
-            body.append('visible', box.checked ? '1' : '0');
-            fetch(box.dataset.visibleUrl, {
+            body.append('visible', next ? '1' : '0');
+            fetch(btn.dataset.visibleUrl, {
                 method: 'POST',
                 headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
                 body,
             })
                 .then((res) => { if (!res.ok) throw new Error(); return res.json(); })
                 .then((data) => showAppToast(data.message))
-                .catch(() => { box.checked = !box.checked; });
+                .catch(() => { box.checked = !next; });
         });
     });
     </script>
