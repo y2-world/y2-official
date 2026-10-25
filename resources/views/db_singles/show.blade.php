@@ -44,19 +44,17 @@
     <div class="container database-year-content">
         @if(isset($singles->tracklist))
         <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); padding: 30px; max-width: 560px; margin: 0 auto;">
-            <ol style="margin: 0; padding: 0; list-style: none; font-size: 15px; line-height: 2;">
+            <ol style="margin: 0; padding-left: 25px; font-size: 15px; line-height: 2;">
               @foreach ($singles->tracklist as $data)
-                <li style="display: flex; gap: 12px;"><span style="flex: 0 0 2em; text-align: right; color: #888;">{{ $loop->iteration }}.</span><span>
                 @if(isset($data['id']))
                   @if(isset($data['exception']))
-                  <a href="{{ \App\Models\DbSong::showUrl($data['id'], $data['exception']) }}" style="color: #667eea; text-decoration: none; font-weight: 500; transition: color 0.3s ease;">{{ $data['exception']}}</a>
+                  <li><a href="{{ \App\Models\DbSong::showUrl($data['id'], $data['exception']) }}" style="color: #667eea; text-decoration: none; font-weight: 500; transition: color 0.3s ease;">{{ $data['exception']}}</a></li>
                   @else
-                  <a href="{{ url('/database/songs', $data['id']) }}" style="color: #667eea; text-decoration: none; font-weight: 500; transition: color 0.3s ease;">{{ $songs[$data['id']]->title ?? '' }}</a>
+                  <li><a href="{{ url('/database/songs', $data['id']) }}" style="color: #667eea; text-decoration: none; font-weight: 500; transition: color 0.3s ease;">{{ $songs[$data['id']]->title ?? '' }}</a></li>
                   @endif
                 @else
-                  <span style="color: #718096;">{{ $data['exception'] }}</span>
+                  <li style="color: #718096;">{{ $data['exception'] }}</li>
                 @endif
-                </span></li>
               @endforeach
             </ol>
         </div>
