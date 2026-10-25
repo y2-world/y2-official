@@ -230,6 +230,17 @@ class DbSetlistResource extends Resource
         return AdminData::query('setlist');
     }
 
+    public static function tourManagementUrl($tourId): string
+    {
+        $setlists = AdminData::query('setlist')->ofTour($tourId)->limit(2)->get(['id']);
+
+        if ($setlists->count() === 1) {
+            return static::getUrl('edit', ['record' => $setlists->first()->id]);
+        }
+
+        return static::getUrl('manage-tour', ['tourId' => $tourId]);
+    }
+
     // そのアーティストの曲（セットリストの曲の選択肢）
     protected static function songQuery($artistId)
     {

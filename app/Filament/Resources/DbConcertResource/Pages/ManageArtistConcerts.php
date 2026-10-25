@@ -109,7 +109,7 @@ class ManageArtistConcerts extends ListRecords
                     ->label('セットリストを管理')
                     ->icon('heroicon-o-queue-list')
                     ->button()
-                    ->url(fn ($record) => \App\Filament\Resources\DbSetlistResource::getUrl('manage-tour', ['tourId' => $record->id])),
+                    ->url(fn ($record) => \App\Filament\Resources\DbSetlistResource::tourManagementUrl($record->id)),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->defaultSort('updated_at', 'desc');

@@ -17,7 +17,7 @@ class EditDbConcert extends EditRecord
             Actions\Action::make('manageSetlistPatterns')
                 ->label('セットリストを管理')
                 ->icon('heroicon-o-queue-list')
-                ->url(fn () => DbSetlistResource::getUrl('manage-tour', ['tourId' => $this->record->getKey()])),
+                ->url(fn () => DbSetlistResource::tourManagementUrl($this->record->getKey())),
             Actions\Action::make('addSetlistPattern')
                 ->label('セットリストパターンを追加')
                 ->icon('heroicon-o-plus')
