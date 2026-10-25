@@ -196,42 +196,8 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
         Route::post('stats/artist/{artistId}/stamps/colors', [MyPageStatsController::class, 'saveStampColors'])->name('stats.stamps.colors')->where('artistId', '(official|user)-[0-9]+');
         Route::post('stats/artist/{artistId}/stamps/mark', [MyPageStatsController::class, 'saveStampMark'])->name('stats.stamps.mark')->where('artistId', '(official|user)-[0-9]+');
 
-        Route::prefix('manage')->name('manage.')->group(function () {
-            Route::get('/', [ManageController::class, 'index'])->name('index');
-            Route::post('artists', [ManageController::class, 'storeArtist'])->name('artists.store');
-            Route::get('artists/{artistId}', [ManageController::class, 'artist'])->name('artist');
-            Route::post('artists/{artistId}/edit', [ManageController::class, 'updateArtist'])->name('artists.update');
-            Route::get('artists/{artistId}/songs', [ManageController::class, 'songs'])->name('songs');
-            Route::get('artists/{artistId}/concerts', [ManageController::class, 'concerts'])->name('concerts');
-            Route::post('artists/{artistId}/concerts', [ManageController::class, 'storeConcert'])->name('concerts.store');
-            Route::post('artists/{artistId}/setlists-complete', [ManageController::class, 'updateSetlistsComplete'])->name('artists.setlists_complete');
-            Route::post('artists/{artistId}/visible', [ManageController::class, 'updateVisible'])->name('artists.visible');
-            Route::get('artists/{artistId}/concerts/{concertId}/setlists', [ManageController::class, 'setlists'])->name('setlists');
-            Route::post('artists/{artistId}/concerts/{concertId}/setlists', [ManageController::class, 'storeSetlist'])->name('setlists.store');
-            // パターンの追加・編集は、パターンごとのページで行う
-            Route::get('artists/{artistId}/concerts/{concertId}/setlists/create', [ManageController::class, 'createSetlist'])->name('setlists.create');
-            Route::get('artists/{artistId}/concerts/{concertId}/setlists/{setlistId}/edit', [ManageController::class, 'editSetlist'])->name('setlists.edit');
-            Route::post('artists/{artistId}/concerts/{concertId}/edit', [ManageController::class, 'updateConcert'])->name('concerts.update');
-            Route::post('artists/{artistId}/concerts/{concertId}/setlists/{setlistId}/edit', [ManageController::class, 'updateSetlist'])->name('setlists.update');
-            Route::post('artists/{artistId}/concerts/{concertId}/setlists/reorder', [ManageController::class, 'reorderSetlists'])->name('setlists.reorder');
-            Route::post('artists/{artistId}/concerts/{concertId}/setlists/{setlistId}/duplicate', [ManageController::class, 'duplicateSetlist'])->name('setlists.duplicate');
-            Route::post('artists/{artistId}/songs', [ManageController::class, 'storeSong'])->name('songs.store');
-            Route::post('artists/{artistId}/songs/reorder', [ManageController::class, 'reorderSongs'])->name('songs.reorder');
-            Route::post('artists/{artistId}/songs/{songId}/edit', [ManageController::class, 'updateSong'])->name('songs.update');
-            // スワイプ削除はfetch()のPOSTで叩くため、DELETEに加えてPOSTでも受け付ける
-            Route::match(['post', 'delete'], 'artists/{artistId}/songs/{songId}', [ManageController::class, 'destroySong'])->name('songs.destroy');
-            Route::match(['post', 'delete'], 'artists/{artistId}', [ManageController::class, 'destroyArtist'])->name('artists.destroy');
-            Route::match(['post', 'delete'], 'artists/{artistId}/concerts/{concertId}', [ManageController::class, 'destroyConcert'])->name('concerts.destroy');
-            Route::match(['post', 'delete'], 'artists/{artistId}/concerts/{concertId}/setlists/{setlistId}', [ManageController::class, 'destroySetlist'])->name('setlists.destroy');
-
-            // シングル・アルバム（{kind} は single / album）
-            Route::get('artists/{artistId}/discs/{kind}', [\App\Http\Controllers\ManageDiscController::class, 'index'])->name('discs')->where('kind', 'single|album');
-            Route::get('artists/{artistId}/discs/create', [\App\Http\Controllers\ManageDiscController::class, 'create'])->name('discs.create');
-            Route::post('artists/{artistId}/discs', [\App\Http\Controllers\ManageDiscController::class, 'store'])->name('discs.store');
-            Route::get('artists/{artistId}/discs/{kind}/{discId}/edit', [\App\Http\Controllers\ManageDiscController::class, 'edit'])->name('discs.edit')->where('kind', 'single|album');
-            Route::post('artists/{artistId}/discs/{kind}/{discId}/edit', [\App\Http\Controllers\ManageDiscController::class, 'update'])->name('discs.update')->where('kind', 'single|album');
-            Route::match(['post', 'delete'], 'artists/{artistId}/discs/{kind}/{discId}', [\App\Http\Controllers\ManageDiscController::class, 'destroy'])->name('discs.destroy')->where('kind', 'single|album');
-        });
+        // Manage My Artists & Setlists（/mypage/manage）は一旦廃止（2026-10-25）。マイページのデータは管理画面（/admin）で直す。
+        // ManageController・ManageDiscController と mypage/manage の画面は残してある
 
         Route::get('settings', [ExternalAuthController::class, 'showSettings'])->name('settings');
         Route::put('settings/profile', [ExternalAuthController::class, 'updateProfile'])->name('settings.profile');

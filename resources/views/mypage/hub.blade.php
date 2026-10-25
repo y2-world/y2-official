@@ -52,13 +52,6 @@
                             <i class="fa-solid fa-chevron-right select-card-arrow"></i>
                         </a>
 
-                        <a href="{{ route('mypage.manage.index') }}" class="select-card">
-                            <span class="select-card-body">
-                                <span class="select-card-title"><i class="fa-solid fa-pen-to-square" style="margin-right: 10px;"></i> Manage My Artists & Setlists</span>
-                            </span>
-                            <i class="fa-solid fa-chevron-right select-card-arrow"></i>
-                        </a>
-
                         <a href="{{ route('mypage.settings') }}" class="select-card">
                             <span class="select-card-body">
                                 <span class="select-card-title"><i class="fa-solid fa-gear" style="margin-right: 10px;"></i> Settings</span>

@@ -37,10 +37,6 @@
             @if ($disc->date)
                 <p class="database-subtitle">Release: {{ $disc->date->format('Y.m.d') }}</p>
             @endif
-            {{-- 本人には、ほかのページと同じく右下に「編集」 --}}
-            @if ($isOwner)
-                <a href="{{ route('mypage.manage.discs.edit', [$artist->id, $kind === 'albums' ? 'album' : 'single', $disc->id]) }}" class="hero-edit-btn">編集</a>
-            @endif
         </div>
     </div>
 
