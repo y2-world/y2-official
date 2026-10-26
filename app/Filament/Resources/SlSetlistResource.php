@@ -700,15 +700,12 @@ class SlSetlistResource extends Resource
                                             ->placeholder("曲名を1行ずつ入力\n\n")
                                             ->helperText('本編とアンコールの間に空行を1行入れてください。')
                                             ->dehydrated(false)
+                                            ->live(debounce: 500)
+                                            ->afterStateUpdated(fn ($state, Forms\Get $get, Forms\Set $set) => static::syncBulkLiveSetlist($state, $get, $set))
                                             ->columnSpanFull(),
                                         Forms\Components\Hidden::make('_bulk_setlist_uuids')->default([])->dehydrated(false),
                                         Forms\Components\Hidden::make('_bulk_encore_uuids')->default([])->dehydrated(false),
                                         Forms\Components\Hidden::make('_bulk_encore_items')->default([])->dehydrated(false),
-                                        Forms\Components\Actions::make([
-                                            Forms\Components\Actions\Action::make('applyBulkLiveSetlist')
-                                                ->label('通常入力に反映')
-                                                ->action(fn (Forms\Get $get, Forms\Set $set) => static::syncBulkLiveSetlist($get('_bulk_live_input'), $get, $set)),
-                                        ])->columnSpanFull(),
                                     ]),
                             ]),
                     ])
@@ -1197,14 +1194,11 @@ class SlSetlistResource extends Resource
                                             ->placeholder("# アーティスト名\n曲名\n\n# 別のアーティスト\n曲名\n\n\n# アンコールのアーティスト\nアンコール曲名")
                                             ->helperText('アーティスト間は空行1行、本編とアンコールの間は空行2行にしてください。登録済みのアーティスト名を「# アーティスト名」の形式で入力してください。')
                                             ->dehydrated(false)
+                                            ->live(debounce: 500)
+                                            ->afterStateUpdated(fn ($state, Forms\Get $get, Forms\Set $set) => static::syncBulkFestivalSetlist($state, $get, $set))
                                             ->columnSpanFull(),
                                         Forms\Components\Hidden::make('_bulk_fes_setlist_uuids')->default([])->dehydrated(false),
                                         Forms\Components\Hidden::make('_bulk_fes_encore_uuids')->default([])->dehydrated(false),
-                                        Forms\Components\Actions::make([
-                                            Forms\Components\Actions\Action::make('applyBulkFestivalSetlist')
-                                                ->label('通常入力に反映')
-                                                ->action(fn (Forms\Get $get, Forms\Set $set) => static::syncBulkFestivalSetlist($get('_bulk_fes_input'), $get, $set)),
-                                        ])->columnSpanFull(),
                                     ]),
                             ]),
                     ])
