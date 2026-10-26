@@ -414,15 +414,6 @@ class DbSetlistResource extends Resource
                                         // 事故を防ぐため、曲を変更したタイミングで別表記はクリアする
                                         $set('alternative_title', null);
                                     })
-                                    ->getSearchResultsUsing(function (string $search, Get $get) {
-                                        $options = static::songQuery($get('../../_artist_id'))
-                                            ->whereRaw('LOWER(title) LIKE LOWER(?)', ["%{$search}%"])
-                                            ->get()
-                                            ->mapWithKeys(fn($song) => [$song->id => static::songOptionLabel($song)])
-                                            ->all();
-
-                                        return array_slice(\App\Support\JapaneseNameSorter::sortOptions($options), 0, 50, true);
-                                    })
                                     ->getOptionLabelUsing(function ($value) {
                                         if (is_numeric($value)) {
                                             $song = AdminData::query('song')->find($value);
