@@ -14,6 +14,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
 
 class SlSetlistResource extends Resource
 {
@@ -90,27 +91,20 @@ class SlSetlistResource extends Resource
 
         $preservedByTitle = [];
         foreach ($generatedItems as $item) {
-            $songValue = $item['song'] ?? null;
-            $song = is_numeric($songValue) ? SlSong::find($songValue) : null;
-            $title = $song?->title ?? (string) ($item['song'] ?? '');
+            // 打った表記（別表記に入れたもの）があればそれ、無ければ曲名で、同じ行かを見分ける
+            $title = filled($item['alternative_title'] ?? null) ? (string) $item['alternative_title'] : static::bulkSongTitle($item['song'] ?? null);
             $preservedByTitle[$title][] = $item;
         }
 
         $newItems = [];
+        $added = (array) $get('data._bulk_added_uuids', true);
         foreach ($titles as $index => $title) {
             if (!empty($preservedByTitle[$title])) {
                 $item = array_shift($preservedByTitle[$title]);
             } else {
-                $songId = SlSong::query()
-                    ->where('artist_id', $artistId)
-                    ->whereRaw('LOWER(TRIM(title)) = LOWER(?)', [trim($title)])
-                    ->orderBy('id')
-                    ->value('id');
-
-                $item = [
-                    '_uuid' => (string) \Illuminate\Support\Str::uuid(),
-                    'song' => $songId ? (string) $songId : $title,
-                ];
+                // 一括入力で新しく入った行（確認のダイアログと新しい曲の登録は、この行だけを見る）
+                $item = static::bulkItem($title, $artistId);
+                $added[] = $item['_uuid'];
             }
 
             if (in_array($index, $blockStarts, true)) {
@@ -123,6 +117,7 @@ class SlSetlistResource extends Resource
 
         $set('data.' . $target, array_merge($baseItems, $newItems), true);
         $set('data.' . $generatedState, array_column($newItems, '_uuid'), true);
+        $set('data._bulk_added_uuids', array_values(array_unique($added)), true);
     }
 
     private static function syncBulkLiveSetlist($state, Forms\Get $get, Forms\Set $set): void
@@ -135,16 +130,378 @@ class SlSetlistResource extends Resource
         $set('data._encore_groups', \App\Support\EncoreFormGroups::fromItems((array) $get('data._bulk_encore_items', true)), true);
     }
 
+    // 一括入力の1行を、セットリストの1曲にする
+    private static function bulkItem(string $title, ?int $artistId): array
+    {
+        $item = ['_uuid' => (string) \Illuminate\Support\Str::uuid(), 'song' => static::bulkSongValue($title, $artistId)];
+        // 打った表記が合った曲の名前と違い、今までのセットリストでその曲に登録した別表記と同じときだけ、別表記に入れる。
+        // 知らない書き方（大文字・小文字だけ違う打ち間違いなど）はオリジナルの曲名のまま
+        if ($item['song'] !== $title && static::bulkSongTitle($item['song']) !== $title && static::isKnownAlternativeTitle($item['song'], $title, $artistId)) {
+            $item['alternative_title'] = $title;
+        }
+
+        return $item;
+    }
+
+    private static function bulkSongValue(string $title, ?int $artistId): string
+    {
+        $songId = SlSong::query()
+            ->where('artist_id', $artistId)
+            ->whereRaw('LOWER(TRIM(title)) = LOWER(?)', [trim($title)])
+            ->orderBy('id')
+            ->value('id');
+        if ($songId) return (string) $songId;
+
+        $dbSongId = DbSong::query()
+            ->whereDoesntHave('slSongs')
+            ->where('artist_id', $artistId)
+            ->whereRaw('LOWER(TRIM(title)) = LOWER(?)', [trim($title)])
+            ->orderBy('id')
+            ->value('id');
+
+        if ($dbSongId) return 'db-' . $dbSongId;
+
+        // 曲の名前で合わなければ、今までのセットリストで使った別表記（「Unti-Unti」→「Anti-Anti」など）で探す。
+        // Yuki's Setlists の曲の別表記 → データベースの曲の別表記（その曲の Yuki's Setlists の曲があればそれ、無ければ db-…）の順
+        return static::songValueByAlternativeTitle($title, $artistId) ?? $title;
+    }
+
+    // その曲（Yuki's Setlists の曲の id か db-…）に、今までのセットリストで登録した別表記か（書いたとおりに同じか）
+    private static function isKnownAlternativeTitle(string $songValue, string $title, ?int $artistId): bool
+    {
+        $maps = static::alternativeTitleMaps($artistId);
+        if (!$maps) return false;
+        if (preg_match('/^db-(\d+)$/', $songValue, $m)) {
+            return isset($maps['db']["\0exact"][$m[1]][$title]);
+        }
+        if (isset($maps['sl']["\0exact"][$songValue][$title])) return true;
+        $dbSongId = SlSong::whereKey($songValue)->value('db_song_id');
+
+        return $dbSongId && isset($maps['db']["\0exact"][(string) $dbSongId][$title]);
+    }
+
+    // 今までのセットリストで、その別表記が付いていた曲。別々の曲に同じ別表記があれば決められないので null
+    private static function songValueByAlternativeTitle(string $title, ?int $artistId): ?string
+    {
+        $maps = static::alternativeTitleMaps($artistId);
+        if (!$maps) return null;
+        $key = mb_strtolower(trim($title));
+        $sl = array_keys($maps['sl'][$key] ?? []);
+        if (count($sl) === 1) return (string) $sl[0];
+        if (count($sl) > 1) return null;
+        $db = array_keys($maps['db'][$key] ?? []);
+        if (count($db) !== 1) return null;
+        $slSong = $maps['dbSongs'][(string) $db[0]]?->slSongs->first();
+
+        return $slSong ? (string) $slSong->id : 'db-' . $db[0];
+    }
+
+    // 今までのセットリスト（Yuki's Setlists と、データベース）の別表記。小文字にした別表記 => 曲、"\0exact" に 曲 => 別表記（書いたとおり）
+    private static function alternativeTitleMaps(?int $artistId): array
+    {
+        static $maps = [];
+        if (!$artistId) return [];
+        if (!isset($maps[$artistId])) {
+            $collect = function ($setlists, $isSong) {
+                $map = [];
+                foreach ($setlists as $setlist) {
+                    foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $item) {
+                        $alt = trim((string) ($item['alternative_title'] ?? ''));
+                        $song = (string) ($item['song'] ?? '');
+                        if ($alt !== '' && $isSong($song)) {
+                            $map[mb_strtolower($alt)][$song] = true;
+                            $map["\0exact"][$song][$alt] = true;
+                        }
+                    }
+                }
+                return $map;
+            };
+            $slSongIds = SlSong::where('artist_id', $artistId)->pluck('id')->map(fn ($id) => (string) $id)->flip();
+            $dbSongs = DbSong::where('artist_id', $artistId)->with('slSongs')->get()->keyBy(fn ($s) => (string) $s->id);
+            $maps[$artistId] = [
+                'sl' => $collect(SlSetlist::where('artist_id', $artistId)->where('fes', 0)->get(), fn ($song) => isset($slSongIds[$song])),
+                'db' => $collect(\App\Models\DbSetlist::whereIn('tour_id', DbConcert::where('artist_id', $artistId)->select('id'))->get(), fn ($song) => isset($dbSongs[$song])),
+                'dbSongs' => $dbSongs,
+            ];
+        }
+
+        return $maps[$artistId];
+    }
+
+    // 確認の一覧に出す曲名。別表記で入れる曲は「I'LL BE（オリジナル「I'll be」）」
+    private static function bulkSongLabel(array $item): string
+    {
+        $original = static::bulkSongTitle($item['song'] ?? '');
+        $alt = trim((string) ($item['alternative_title'] ?? ''));
+
+        return $alt !== '' && $alt !== $original ? $alt . '（オリジナル「' . $original . '」）' : $original;
+    }
+
+    private static function bulkSongTitle($value): string
+    {
+        if (is_numeric($value)) {
+            return (string) (SlSong::find($value)?->title ?? $value);
+        }
+        if (preg_match('/^db-(\d+)$/', (string) $value, $match)) {
+            return (string) (DbSong::find($match[1])?->title ?? $value);
+        }
+
+        return (string) $value;
+    }
+
+    // 一括入力で新しく入った行があるか（手動入力で直しただけ・一括入力の欄を開いたときのままなら、使っていない扱い）
+    public static function usedBulkInput(array $data): bool
+    {
+        return !empty($data['_bulk_added_uuids']) || !empty($data['_bulk_fes_added_uuids']);
+    }
+
+    // 一括入力で入った行を、今のアーティストの曲で照らし合わせ直す。
+    // すでにそのアーティストの曲につながっている行はそのまま。ほかのアーティストの曲・つながっていない行は、打った表記で照らし合わせ直す
+    public static function rematchBulkSongs(Forms\Get $get, Forms\Set $set): void
+    {
+        $artistId = (int) $get('data.artist_id', true);
+        $added = array_fill_keys((array) $get('data._bulk_added_uuids', true), true);
+        if (!$artistId || !$added) return;
+        $rematch = function (array $item) use ($added, $artistId): array {
+            $song = (string) ($item['song'] ?? '');
+            if (!isset($added[$item['_uuid'] ?? '']) || $song === '') return $item;
+            $owner = match (true) {
+                is_numeric($song) => SlSong::whereKey((int) $song)->value('artist_id'),
+                (bool) preg_match('/^db-(\d+)$/', $song, $m) => DbSong::whereKey((int) $m[1])->value('artist_id'),
+                default => null,
+            };
+            if ($owner !== null && (int) $owner === $artistId) return $item;
+            $new = static::bulkItem(static::bulkLineTitle($item), $artistId);
+            $item['song'] = $new['song'];
+            $item['alternative_title'] = $new['alternative_title'] ?? null;
+
+            return $item;
+        };
+        $set('data.setlist', array_map($rematch, (array) $get('data.setlist', true)), true);
+        $encore = array_map($rematch, \App\Support\EncoreFormGroups::toItems((array) $get('data._encore_groups', true)));
+        $set('data._encore_groups', \App\Support\EncoreFormGroups::fromItems($encore), true);
+        static::refreshBulkLiveFromManual($get, $set);
+    }
+
+    // 手動入力の今の曲で、一括入力の欄を作り直す（一括入力で新しく入った行の印はそのまま）
+    public static function refreshBulkLiveFromManual(Forms\Get $get, Forms\Set $set): void
+    {
+        $setlist = array_values((array) $get('data.setlist', true));
+        $encore = \App\Support\EncoreFormGroups::toItems((array) $get('data._encore_groups', true));
+        $set('data._bulk_live_input', static::bulkLiveTextFromItems($setlist, $encore), true);
+        $set('data._bulk_setlist_uuids', array_column($setlist, '_uuid'), true);
+        $set('data._bulk_encore_items', $encore, true);
+        $set('data._bulk_encore_uuids', array_column($encore, '_uuid'), true);
+    }
+
+    public static function refreshBulkFesFromManual(Forms\Get $get, Forms\Set $set): void
+    {
+        $setlist = array_values((array) $get('data.fes_setlist', true));
+        $encore = array_values((array) $get('data.fes_encore', true));
+        $blockUuids = fn ($items) => array_column(array_filter($items, fn ($b) => ($b['type'] ?? 'block') === 'block'), '_uuid');
+        $set('data._bulk_fes_input', static::bulkFesTextFromBlocks($setlist, $encore), true);
+        $set('data._bulk_fes_setlist_uuids', $blockUuids($setlist), true);
+        $set('data._bulk_fes_encore_uuids', $blockUuids($encore), true);
+    }
+
+    // 登録済みの曲を、一括入力の書き方にする（1行1曲。本編とアンコール・アンコールの区切りは空行）。表記は別表記があればそれ
+    public static function bulkLiveTextFromItems(array $setlist, array $encore): string
+    {
+        $blocks = [array_map(fn ($item) => static::bulkLineTitle($item), array_values($setlist))];
+        foreach (array_values($encore) as $i => $item) {
+            if ($i === 0 || !empty($item['encore_block_start'])) {
+                $blocks[] = [];
+            }
+            $blocks[count($blocks) - 1][] = static::bulkLineTitle($item);
+        }
+
+        return implode("\n\n", array_map(fn ($lines) => implode("\n", array_filter($lines, fn ($l) => $l !== '')), $blocks));
+    }
+
+    // フェスの登録済みの曲を、一括入力の書き方にする（「# アーティスト名」のあとに曲。アーティストの間は空行1行、本編とアンコールの間は空行2行）
+    public static function bulkFesTextFromBlocks(array $setlist, array $encore): string
+    {
+        $artistNames = \App\Models\Artist::whereIn('id', collect(array_merge($setlist, $encore))->pluck('artist')->filter()->unique())->pluck('name', 'id');
+        $blockText = fn ($block) => implode("\n", array_merge(
+            ['# ' . ($artistNames[$block['artist'] ?? null] ?? '')],
+            array_values(array_filter(array_map(fn ($item) => static::bulkLineTitle($item), (array) ($block['songs'] ?? [])), fn ($l) => $l !== ''))
+        ));
+        $isBlock = fn ($b) => !empty($b['artist']) && ($b['type'] ?? 'block') === 'block';
+        $sections = [array_map($blockText, array_values(array_filter($setlist, $isBlock)))];
+        foreach (array_values(array_filter($encore, $isBlock)) as $i => $block) {
+            if ($i === 0 || !empty($block['encore_block_start'])) {
+                $sections[] = [];
+            }
+            $sections[count($sections) - 1][] = $blockText($block);
+        }
+
+        return implode("\n\n\n", array_map(fn ($blocks) => implode("\n\n", $blocks), array_filter($sections)));
+    }
+
+    private static function bulkLineTitle(array $item): string
+    {
+        $alt = trim((string) ($item['alternative_title'] ?? ''));
+
+        return $alt !== '' ? $alt : trim(static::bulkSongTitle($item['song'] ?? ''));
+    }
+
+    public static function hasUnmatchedBulkSongs(array $data): bool
+    {
+        return static::unmatchedBulkSongs($data) !== [];
+    }
+
+    public static function shouldConfirmUnmatchedBulkSongs(array $data): bool
+    {
+        return static::usedBulkInput($data) && static::hasUnmatchedBulkSongs($data);
+    }
+
+    public static function unmatchedBulkSongsModalDescription(array $data): HtmlString
+    {
+        return new HtmlString(
+            '以下の楽曲が合致しませんでした。<br>'
+            . implode('<br>', array_map('e', static::unmatchedBulkSongs($data)))
+            . '<br>新たに楽曲を登録します。よろしいですか？'
+        );
+    }
+
+    public static function unmatchedBulkSongs(array $data): array
+    {
+        $unmatched = [];
+        $number = 0;
+
+        if (!empty($data['fes'])) {
+            // 一括入力で新しく入った曲（フェスは曲ごと）
+            $added = array_fill_keys((array) ($data['_bulk_fes_added_uuids'] ?? []), true);
+            foreach (['fes_setlist', 'fes_encore'] as $field) {
+                foreach ((array) ($data[$field] ?? []) as $block) {
+                    foreach ((array) ($block['songs'] ?? []) as $item) {
+                        $fromBulk = isset($added[$item['_uuid'] ?? '']);
+                        if (empty($item['medley'])) $number++;
+                        $song = trim((string) ($item['song'] ?? ''));
+                        // Yuki's Setlists の曲に無いもの（データベースの曲とだけ合ったもの「db-…」も、登録で新しく作る）は確認に出す
+                        if ($fromBulk && $song !== '' && !is_numeric($song)) {
+                            $unmatched[] = $number . '. ' . static::bulkSongLabel($item);
+                        }
+                    }
+                }
+            }
+
+            return $unmatched;
+        }
+
+        // 一括入力で新しく入った行
+        $generated = array_fill_keys((array) ($data['_bulk_added_uuids'] ?? []), true);
+        $items = array_merge(
+            array_values((array) ($data['setlist'] ?? [])),
+            \App\Support\EncoreFormGroups::toItems((array) ($data['_encore_groups'] ?? [])),
+        );
+        foreach ($items as $item) {
+            if (empty($item['medley'])) $number++;
+            $song = trim((string) ($item['song'] ?? ''));
+            // Yuki's Setlists の曲に無いもの（データベースの曲とだけ合ったもの「db-…」も、登録で新しく作る）は確認に出す
+            if (isset($generated[$item['_uuid'] ?? '']) && $song !== '' && !is_numeric($song)) {
+                $unmatched[] = $number . '. ' . static::bulkSongLabel($item);
+            }
+        }
+
+        return $unmatched;
+    }
+
+    public static function applyBulkRegistration(array $data, array $rawState): array
+    {
+        foreach ([
+            '_bulk_setlist_uuids', '_bulk_encore_uuids',
+            '_bulk_fes_setlist_uuids', '_bulk_fes_encore_uuids',
+            '_bulk_added_uuids', '_bulk_fes_added_uuids',
+        ] as $key) {
+            $data[$key] = $rawState[$key] ?? [];
+        }
+
+        return static::mergeEncoreFromForm(static::registerBulkSongs($data));
+    }
+
+    public static function registerBulkSongs(array $data): array
+    {
+        if (!empty($data['fes'])) {
+            // 一括入力で新しく入った曲だけ、新しい曲として登録する（手動で入れた曲は今までどおり）
+            $added = array_fill_keys((array) ($data['_bulk_fes_added_uuids'] ?? []), true);
+            foreach (['fes_setlist', 'fes_encore'] as $field) {
+                foreach ((array) ($data[$field] ?? []) as $blockIndex => $block) {
+                    foreach ((array) ($block['songs'] ?? []) as $songIndex => $item) {
+                        if (!isset($added[$item['_uuid'] ?? ''])) continue;
+                        $data[$field][$blockIndex]['songs'][$songIndex]['song'] = static::registerSongValue(
+                            (string) ($item['song'] ?? ''),
+                            $block['artist'] ?? null,
+                        );
+                    }
+                }
+            }
+
+            return $data;
+        }
+
+        // 一括入力で新しく入った行だけ、新しい曲として登録する（手動で入れた曲は今までどおり）
+        $generated = array_fill_keys((array) ($data['_bulk_added_uuids'] ?? []), true);
+        $encoreItems = \App\Support\EncoreFormGroups::toItems((array) ($data['_encore_groups'] ?? []));
+        $registerItem = function (array $item) use ($generated, $data): array {
+            if (!isset($generated[$item['_uuid'] ?? ''])) return $item;
+            $item['song'] = static::registerSongValue((string) ($item['song'] ?? ''), $data['artist_id'] ?? null);
+
+            return $item;
+        };
+        $data['setlist'] = array_map($registerItem, (array) ($data['setlist'] ?? []));
+        $encoreItems = array_map($registerItem, $encoreItems);
+        $data['_encore_groups'] = \App\Support\EncoreFormGroups::fromItems($encoreItems);
+
+        return $data;
+    }
+
+    private static function registerSongValue(string $value, $artistId): string
+    {
+        if (preg_match('/^db-\d+$/', $value)) {
+            return static::resolveSongOptionValue($value) ?? $value;
+        }
+        if ($value === '' || is_numeric($value)) {
+            return $value;
+        }
+
+        $existingSong = SlSong::query()
+            ->where('artist_id', $artistId)
+            ->whereRaw('LOWER(TRIM(title)) = LOWER(?)', [trim($value)])
+            ->first();
+        if ($existingSong) {
+            return (string) $existingSong->id;
+        }
+        if (!$artistId) {
+            return $value;
+        }
+
+        return (string) SlSong::create([
+            'title' => trim($value),
+            'artist_id' => $artistId,
+        ])->id;
+    }
+
     public static function mergeEncoreFromForm(array $data): array
     {
         $data['encore'] = \App\Support\EncoreFormGroups::toItems((array) ($data['_encore_groups'] ?? []));
-        unset($data['_encore_groups'], $data['_bulk_encore_items'], $data['_bulk_encore_uuids'], $data['_separate_encore_2']);
+        unset(
+            $data['_encore_groups'],
+            $data['_bulk_encore_items'],
+            $data['_bulk_encore_uuids'],
+            $data['_bulk_setlist_uuids'],
+            $data['_bulk_fes_setlist_uuids'],
+            $data['_bulk_fes_encore_uuids'],
+            $data['_separate_encore_2'],
+        );
         return $data;
     }
 
     private static function encoreGroupsField(): Forms\Components\Repeater
     {
         return Forms\Components\Repeater::make('_encore_groups')
+            // 手動入力で直したら、一括入力の欄もその場で同じ中身にする（refreshBulkLiveFromManual）
+            ->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => static::refreshBulkLiveFromManual($get, $set))
             ->label('アンコール')
             ->extraAttributes(['class' => 'setlist-encore-groups'])
             ->schema([
@@ -270,15 +627,7 @@ class SlSetlistResource extends Resource
             $title = trim(preg_replace('/^\\s*(?:\\d+\\s*[.)．、]\\s*|[-*・]\\s*)/u', '', $line));
             if ($title === '') continue;
 
-            $songId = SlSong::query()
-                ->where('artist_id', $artistId)
-                ->whereRaw('LOWER(TRIM(title)) = LOWER(?)', [$title])
-                ->orderBy('id')
-                ->value('id');
-            $songs[] = [
-                '_uuid' => (string) \Illuminate\Support\Str::uuid(),
-                'song' => $songId ? (string) $songId : $title,
-            ];
+            $songs[] = static::bulkItem($title, $artistId);
         }
         $flush();
 
@@ -307,6 +656,7 @@ class SlSetlistResource extends Resource
         }
 
         $newBlocks = [];
+        $addedSongs = (array) $get('_bulk_fes_added_uuids');
         foreach ($parsedBlocks as $index => $parsed) {
             $artistKey = (string) $parsed['artist'];
             $block = !empty($blocksByArtist[$artistKey])
@@ -315,20 +665,20 @@ class SlSetlistResource extends Resource
 
             $preservedSongs = [];
             foreach ((array) ($block['songs'] ?? []) as $songItem) {
-                $songValue = $songItem['song'] ?? null;
-                $song = is_numeric($songValue) ? SlSong::find($songValue) : null;
-                $songTitle = $song?->title ?? (string) $songValue;
+                $songTitle = static::bulkLineTitle($songItem);
                 $preservedSongs[$songTitle][] = $songItem;
             }
 
             $songs = [];
             foreach ($parsed['songs'] as $songItem) {
-                $songValue = $songItem['song'];
-                $song = is_numeric($songValue) ? SlSong::find($songValue) : null;
-                $songTitle = $song?->title ?? (string) $songValue;
-                $songs[] = !empty($preservedSongs[$songTitle])
-                    ? array_shift($preservedSongs[$songTitle])
-                    : $songItem;
+                $songTitle = static::bulkLineTitle($songItem);
+                if (!empty($preservedSongs[$songTitle])) {
+                    $songs[] = array_shift($preservedSongs[$songTitle]);
+                } else {
+                    // 一括入力で新しく入った曲（確認のダイアログと新しい曲の登録は、この曲だけを見る）
+                    $songs[] = $songItem;
+                    $addedSongs[] = $songItem['_uuid'];
+                }
             }
 
             $block['type'] = 'block';
@@ -344,6 +694,7 @@ class SlSetlistResource extends Resource
 
         $set($target, array_merge($baseItems, $newBlocks));
         $set($generatedState, array_column($newBlocks, '_uuid'));
+        $set('_bulk_fes_added_uuids', array_values(array_unique($addedSongs)));
     }
 
     private static function syncBulkFestivalSetlist($state, Forms\Get $get, Forms\Set $set): void
@@ -405,7 +756,11 @@ class SlSetlistResource extends Resource
                                     ->maxLength(255),
                             ])
                             ->createOptionUsing(fn (array $data) => \App\Models\Artist::create(['name' => $data['name']])->id)
-                            ->live(),
+                            // 単独ライブのときは必須（曲をアーティストの曲と照らし合わせるため）。フェスは行ごとにアーティストを決める
+                            ->required(fn (Forms\Get $get) => !$get('fes'))
+                            ->live()
+                            // 一括入力のあとでアーティストを選んだ・変えたときは、一括入力で入った曲をそのアーティストで照らし合わせ直す
+                            ->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => static::rematchBulkSongs($get, $set)),
 
                         // database にそのアーティストのツアーがあれば、タイトルはツアー名から選ぶ（無い名前は＋から書く）。
                         // ツアーが1件も無ければ普通の入力欄。どちらも同じ title に入る
@@ -574,6 +929,8 @@ class SlSetlistResource extends Resource
                                     ->schema([
                         Forms\Components\Repeater::make('setlist')
                             ->live(debounce: 0)
+                            // 手動入力で直したら、一括入力の欄もその場で同じ中身にする（refreshBulkLiveFromManual）
+                            ->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => static::refreshBulkLiveFromManual($get, $set))
                             ->label('本編')
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')
@@ -704,6 +1061,8 @@ class SlSetlistResource extends Resource
                                             ->afterStateUpdated(fn ($state, Forms\Get $get, Forms\Set $set) => static::syncBulkLiveSetlist($state, $get, $set))
                                             ->columnSpanFull(),
                                         Forms\Components\Hidden::make('_bulk_setlist_uuids')->default([])->dehydrated(false),
+                                        // 一括入力で新しく入った行（確認のダイアログと新しい曲の登録は、この行だけを見る）
+                                        Forms\Components\Hidden::make('_bulk_added_uuids')->default([])->dehydrated(false),
                                         Forms\Components\Hidden::make('_bulk_encore_uuids')->default([])->dehydrated(false),
                                         Forms\Components\Hidden::make('_bulk_encore_items')->default([])->dehydrated(false),
                                     ]),
@@ -723,6 +1082,8 @@ class SlSetlistResource extends Resource
                                 Forms\Components\Tabs\Tab::make('通常入力')
                                     ->schema([
                         Forms\Components\Repeater::make('fes_setlist')
+                            // 手動入力で直したら、一括入力の欄もその場で同じ中身にする（refreshBulkFesFromManual）
+                            ->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => static::refreshBulkFesFromManual($get, $set))
                             ->label('本編')
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')
@@ -943,6 +1304,8 @@ class SlSetlistResource extends Resource
                             ->columnSpanFull(),
 
                         Forms\Components\Repeater::make('fes_encore')
+                            // 手動入力で直したら、一括入力の欄もその場で同じ中身にする（refreshBulkFesFromManual）
+                            ->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => static::refreshBulkFesFromManual($get, $set))
                             ->label('アンコール')
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')
@@ -1198,6 +1561,7 @@ class SlSetlistResource extends Resource
                                             ->afterStateUpdated(fn ($state, Forms\Get $get, Forms\Set $set) => static::syncBulkFestivalSetlist($state, $get, $set))
                                             ->columnSpanFull(),
                                         Forms\Components\Hidden::make('_bulk_fes_setlist_uuids')->default([])->dehydrated(false),
+                                        Forms\Components\Hidden::make('_bulk_fes_added_uuids')->default([])->dehydrated(false),
                                         Forms\Components\Hidden::make('_bulk_fes_encore_uuids')->default([])->dehydrated(false),
                                     ]),
                             ]),

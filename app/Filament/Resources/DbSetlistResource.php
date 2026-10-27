@@ -13,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use App\Support\AdminData;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\HtmlString;
 
 class DbSetlistResource extends Resource
 {
@@ -20,18 +21,10 @@ class DbSetlistResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-queue-list';
 
-    // B'zのセットリストでは、稲葉浩志のソロ曲も選択肢に含める
-    private const BZ_ARTIST_ID = 3;
-    private const INABA_ARTIST_ID = 39;
-
+    // ソロプロジェクトとバンドは、お互いの曲も選択肢に含める（アーティストの編集画面の「ソロプロジェクト」）
     protected static function songArtistIds($artistId): array
     {
-        // 公式の B'z のときだけ（マイページのアーティストの id とは別物）
-        if (!AdminData::isMember() && (int) $artistId === self::BZ_ARTIST_ID) {
-            return [self::BZ_ARTIST_ID, self::INABA_ARTIST_ID];
-        }
-
-        return [$artistId];
+        return \App\Models\Artist::soloProjectArtistIds(AdminData::query('artist'), $artistId);
     }
 
     // 曲の選択肢の表示。アーティスト欄（credit）がある曲は「曲名 - アーティスト」にする（コラボ曲だと分かるように。SlSetlist の選択肢と同じ書き方）
@@ -52,8 +45,163 @@ class DbSetlistResource extends Resource
             ->whereRaw('LOWER(TRIM(title)) = LOWER(?)', [trim($title)])
             ->limit(2)
             ->pluck('id');
+        if ($matches->count() === 1) {
+            return (int) $matches->first();
+        }
 
-        return $matches->count() === 1 ? (int) $matches->first() : $title;
+        // 曲の名前で合わなければ、今までのセットリストで使った別表記（「Unti-Unti」→「Anti-Anti」など）で探す
+        return $matches->isEmpty() ? (static::songIdByAlternativeTitle($title, $artistId) ?? $title) : $title;
+    }
+
+    // 今までのセットリストで、その別表記が付いていた曲。別々の曲に同じ別表記があれば決められないので null
+    protected static function songIdByAlternativeTitle(string $title, $artistId): ?int
+    {
+        $ids = array_keys(static::alternativeTitleMaps($artistId)['lower'][mb_strtolower(trim($title))] ?? []);
+
+        return count($ids) === 1 ? (int) $ids[0] : null;
+    }
+
+    // 今までのセットリストの別表記。lower：小文字にした別表記 => 曲、exact：曲 => 別表記（書いたとおり）
+    protected static function alternativeTitleMaps($artistId): array
+    {
+        static $maps = [];
+        $key = (AdminData::memberId() ?? 0) . '|' . $artistId;
+        if (!isset($maps[$key])) {
+            $songIds = static::songQuery($artistId)->pluck('id')->map(fn ($id) => (string) $id)->flip();
+            $tourIds = AdminData::query('concert')->whereIn(AdminData::column('concert', 'artist_id'), static::songArtistIds($artistId))->pluck('id');
+            $lower = [];
+            $exact = [];
+            foreach (AdminData::query('setlist')->whereIn(AdminData::column('setlist', 'tour_id'), $tourIds)->get() as $setlist) {
+                foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $item) {
+                    $alt = trim((string) ($item['alternative_title'] ?? ''));
+                    $song = (string) ($item['song'] ?? '');
+                    if ($alt !== '' && isset($songIds[$song])) {
+                        $lower[mb_strtolower($alt)][$song] = true;
+                        $exact[$song][$alt] = true;
+                    }
+                }
+            }
+            $maps[$key] = compact('lower', 'exact');
+        }
+
+        return $maps[$key];
+    }
+
+    // 一括入力の1行を、セットリストの1曲にする。打った表記が合った曲の名前と違い、今までのセットリストでその曲に登録した別表記と同じなら
+    // （「I'LL BE」→「I'll be」など）、打った表記を別表記に入れる。知らない書き方（大文字・小文字だけ違う打ち間違いなど）はオリジナルの曲名のまま
+    protected static function bulkItem(string $title, $artistId): array
+    {
+        $item = ['_uuid' => (string) \Illuminate\Support\Str::uuid(), 'song' => static::bulkSongValue($title, $artistId)];
+        if (is_int($item['song'])
+            && static::songQuery($artistId)->whereKey($item['song'])->value('title') !== $title
+            && isset(static::alternativeTitleMaps($artistId)['exact'][(string) $item['song']][$title])) {
+            $item['alternative_title'] = $title;
+        }
+
+        return $item;
+    }
+
+    // 一括入力で新しく入った行があるか（手動入力で直しただけ・一括入力の欄を開いたときのままなら、使っていない扱い）
+    public static function usedBulkInput(array $data): bool
+    {
+        return !empty($data['_bulk_added_uuids']);
+    }
+
+    // 一括入力で入った行を、今のアーティストの曲で照らし合わせ直す。
+    // すでにそのアーティストの曲につながっている行はそのまま。ほかのアーティストの曲・つながっていない行は、打った表記で照らし合わせ直す
+    public static function rematchBulkSongs(Forms\Get $get, Forms\Set $set): void
+    {
+        $artistId = $get('data._artist_id', true);
+        $added = array_fill_keys((array) $get('data._bulk_added_uuids', true), true);
+        if (!$artistId || !$added) return;
+        $rematch = function (array $item) use ($added, $artistId): array {
+            $song = (string) ($item['song'] ?? '');
+            if (!isset($added[$item['_uuid'] ?? '']) || $song === '') return $item;
+            if (is_numeric($song) && static::songQuery($artistId)->whereKey((int) $song)->exists()) return $item;
+            $alt = trim((string) ($item['alternative_title'] ?? ''));
+            $title = $alt !== '' ? $alt : (is_numeric($song) ? (string) AdminData::query('song')->whereKey((int) $song)->value('title') : trim($song));
+            $new = static::bulkItem($title, $artistId);
+            $item['song'] = $new['song'];
+            $item['alternative_title'] = $new['alternative_title'] ?? null;
+
+            return $item;
+        };
+        $set('data.setlist', array_map($rematch, (array) $get('data.setlist', true)), true);
+        $encore = array_map($rematch, \App\Support\EncoreFormGroups::toItems((array) $get('data._encore_groups', true)));
+        $set('data._encore_groups', \App\Support\EncoreFormGroups::fromItems($encore), true);
+        static::refreshBulkFromManual($get, $set);
+    }
+
+    // 手動入力の今の曲で、一括入力の欄を作り直す（一括入力で新しく入った行の印はそのまま）
+    public static function refreshBulkFromManual(Forms\Get $get, Forms\Set $set): void
+    {
+        $setlist = array_values((array) $get('data.setlist', true));
+        $encore = \App\Support\EncoreFormGroups::toItems((array) $get('data._encore_groups', true));
+        $text = static::bulkTextFromItems($setlist, $encore);
+        $set('data._bulk_input', $text, true);
+        $set('data._bulk_setlist_uuids', array_column($setlist, '_uuid'), true);
+        $set('data._bulk_encore_items', $encore, true);
+        $set('data._bulk_encore_uuids', array_column($encore, '_uuid'), true);
+    }
+
+    // 登録済みの曲を、一括入力の書き方（1行1曲、本編とアンコール・アンコールの区切りは空行）にする。表記は別表記があればそれ
+    public static function bulkTextFromItems(array $setlist, array $encore): string
+    {
+        $ids = collect(array_merge($setlist, $encore))->pluck('song')->filter(fn ($v) => is_numeric($v))->unique()->all();
+        $titles = AdminData::query('song')->whereIn('id', $ids)->pluck('title', 'id');
+        $line = fn ($item) => trim((string) ($item['alternative_title'] ?? '')) !== ''
+            ? trim((string) $item['alternative_title'])
+            : (is_numeric($item['song'] ?? null) ? (string) ($titles[(int) $item['song']] ?? $item['song']) : trim((string) ($item['song'] ?? '')));
+        $blocks = [array_map($line, array_values($setlist))];
+        foreach (array_values($encore) as $i => $item) {
+            if ($i === 0 || !empty($item['encore_block_start'])) {
+                $blocks[] = [];
+            }
+            $blocks[count($blocks) - 1][] = $line($item);
+        }
+
+        return implode("\n\n", array_map(fn ($lines) => implode("\n", array_filter($lines, fn ($l) => $l !== '')), $blocks));
+    }
+
+    public static function hasUnmatchedBulkSongs(array $data): bool
+    {
+        return static::unmatchedBulkSongs($data) !== [];
+    }
+
+    public static function shouldConfirmUnmatchedBulkSongs(array $data): bool
+    {
+        return static::usedBulkInput($data) && static::hasUnmatchedBulkSongs($data);
+    }
+
+    public static function unmatchedBulkSongsModalDescription(array $data): HtmlString
+    {
+        return new HtmlString(
+            '以下の楽曲が合致しませんでした。<br>'
+            . implode('<br>', array_map('e', static::unmatchedBulkSongs($data)))
+            . '<br>既存の楽曲にリンクせずに登録します。よろしいですか？'
+        );
+    }
+
+    // 一括入力で新しく入った行のうち、曲にリンクしなかったもの
+    public static function unmatchedBulkSongs(array $data): array
+    {
+        $generated = array_fill_keys((array) ($data['_bulk_added_uuids'] ?? []), true);
+        $items = array_merge(
+            array_values((array) ($data['setlist'] ?? [])),
+            \App\Support\EncoreFormGroups::toItems((array) ($data['_encore_groups'] ?? [])),
+        );
+        $unmatched = [];
+        $number = 0;
+        foreach ($items as $item) {
+            $skipped = !empty($item['is_daily']) || !empty($item['medley']);
+            if (!$skipped) $number++;
+            $song = trim((string) ($item['song'] ?? ''));
+            if (isset($generated[$item['_uuid'] ?? '']) && $song !== '' && !is_numeric($song)) {
+                $unmatched[] = $number . '. ' . $song;
+            }
+        }
+
+        return $unmatched;
     }
 
     protected static function syncBulkSongs($state, string $target, string $generatedState, $artistId, Forms\Get $get, Forms\Set $set): void
@@ -97,17 +245,23 @@ class DbSetlistResource extends Resource
         $preservedByTitle = [];
         foreach ($generatedItems as $item) {
             $songValue = $item['song'] ?? '';
-            $title = is_numeric($songValue)
+            // 打った表記（別表記に入れたもの）があればそれ、無ければ曲名で、同じ行かを見分ける
+            $title = filled($item['alternative_title'] ?? null) ? (string) $item['alternative_title'] : (is_numeric($songValue)
                 ? (string) (static::songQuery($artistId)->whereKey($songValue)->value('title') ?? $songValue)
-                : (string) $songValue;
+                : (string) $songValue);
             $preservedByTitle[$title][] = $item;
         }
 
         $newItems = [];
+        $added = (array) $get('data._bulk_added_uuids', true);
         foreach ($titles as $index => $title) {
-            $item = !empty($preservedByTitle[$title])
-                ? array_shift($preservedByTitle[$title])
-                : ['_uuid' => (string) \Illuminate\Support\Str::uuid(), 'song' => static::bulkSongValue($title, $artistId)];
+            if (!empty($preservedByTitle[$title])) {
+                $item = array_shift($preservedByTitle[$title]);
+            } else {
+                // 一括入力で新しく入った行（確認のダイアログはこの行だけを見る）
+                $item = static::bulkItem($title, $artistId);
+                $added[] = $item['_uuid'];
+            }
             if (in_array($index, $blockStarts, true)) {
                 $item['encore_block_start'] = true;
             } else {
@@ -118,6 +272,7 @@ class DbSetlistResource extends Resource
 
         $set('data.' . $target, array_merge($baseItems, $newItems), true);
         $set('data.' . $generatedState, array_column($newItems, '_uuid'), true);
+        $set('data._bulk_added_uuids', array_values(array_unique($added)), true);
     }
 
     protected static function syncBulkSetlist($state, Forms\Get $get, Forms\Set $set): void
@@ -137,6 +292,8 @@ class DbSetlistResource extends Resource
         $data['_bulk_encore_items'] = $items;
         $data['_bulk_encore_uuids'] = array_column($items, '_uuid');
         $data['_bulk_setlist_uuids'] = array_column((array) ($data['setlist'] ?? []), '_uuid');
+        // 登録済みの曲を、一括入力にも入れておく
+        $data['_bulk_input'] = static::bulkTextFromItems((array) ($data['setlist'] ?? []), $items);
         unset($data['encore']);
         return $data;
     }
@@ -151,6 +308,8 @@ class DbSetlistResource extends Resource
     protected static function encoreGroupsField(): Forms\Components\Repeater
     {
         return Forms\Components\Repeater::make('_encore_groups')
+            // 手動入力で直したら、一括入力の欄もその場で同じ中身にする（refreshBulkFromManual）
+            ->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => static::refreshBulkFromManual($get, $set))
             ->label('アンコール')
             ->extraAttributes(['class' => 'setlist-encore-groups'])
             ->schema([
@@ -285,6 +444,8 @@ class DbSetlistResource extends Resource
                                 // 例のように同名・近いタイトルのツアーが並ぶケースで「選んだのに変わらない」状態になる。
                                 $set('tour_id', null);
                                 $set('_schedule_pick', []);
+                                // 一括入力のあとでアーティストを選んだ・変えたときは、一括入力で入った曲をそのアーティストで照らし合わせ直す
+                                static::rematchBulkSongs($get, $set);
                             })
                             ->afterStateHydrated(function ($state, $set, $record) {
                                 if ($record && $record->tour) {
@@ -394,6 +555,8 @@ class DbSetlistResource extends Resource
                     ->schema([
                         Forms\Components\Repeater::make('setlist')
                             ->live(debounce: 0)
+                            // 手動入力で直したら、一括入力の欄もその場で同じ中身にする（refreshBulkFromManual）
+                            ->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => static::refreshBulkFromManual($get, $set))
                             ->label('本編')
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')
@@ -535,6 +698,8 @@ class DbSetlistResource extends Resource
                                     ->afterStateUpdated(fn ($state, Forms\Get $get, Forms\Set $set) => static::syncBulkSetlist($state, $get, $set))
                                     ->columnSpanFull(),
                                 Forms\Components\Hidden::make('_bulk_setlist_uuids')->default([])->dehydrated(false),
+                                // 一括入力で新しく入った行（確認のダイアログはこの行だけを見る）
+                                Forms\Components\Hidden::make('_bulk_added_uuids')->default([])->dehydrated(false),
                                 Forms\Components\Hidden::make('_bulk_encore_uuids')->default([])->dehydrated(false),
                                 Forms\Components\Hidden::make('_bulk_encore_items')->default([])->dehydrated(false),
                             ]),

@@ -120,15 +120,53 @@ class SlSetlist extends Model
         }
 
         return array_map(function ($item) use ($artistId) {
-            if (isset($item['song']) && $item['song'] !== '' && !SlSong::whereKey($item['song'])->exists()) {
-                $song = SlSong::firstOrCreate([
-                    'title' => (string) $item['song'],
-                    'artist_id' => $artistId,
-                ]);
-                $item['song'] = $song->id;
+            if (isset($item['song']) && $item['song'] !== '') {
+                $item['song'] = static::resolveSongValue($item['song'], $artistId);
             }
             return $item;
         }, $items);
+    }
+
+    private static function resolveSongValue($value, ?int $artistId): string|int
+    {
+        $stringValue = trim((string) $value);
+
+        if ($stringValue === '') {
+            return $value;
+        }
+
+        if (preg_match('/^db-(\d+)$/', $stringValue, $match)) {
+            $dbSong = DbSong::find($match[1]);
+            if ($dbSong) {
+                $song = SlSong::firstOrCreate(
+                    ['title' => $dbSong->title, 'artist_id' => $dbSong->artist_id],
+                    ['db_song_id' => $dbSong->id],
+                );
+                if (!$song->db_song_id) {
+                    $song->update(['db_song_id' => $dbSong->id]);
+                }
+
+                return $song->id;
+            }
+
+            return $stringValue;
+        }
+
+        if (is_numeric($stringValue)) {
+            $numericId = (int) $stringValue;
+            if (SlSong::whereKey($numericId)->exists()) {
+                return $numericId;
+            }
+
+            return $stringValue;
+        }
+
+        $existingSong = SlSong::query()
+            ->where('artist_id', $artistId)
+            ->whereRaw('LOWER(TRIM(title)) = LOWER(?)', [$stringValue])
+            ->first();
+
+        return $existingSong ? $existingSong->id : $stringValue;
     }
 
     // fes_setlist/fes_encore用: 通常のinterleaved形式と、アーティストごとにまとめた
@@ -144,12 +182,8 @@ class SlSetlist extends Model
             }
 
             $songArtistId = isset($item['artist']) ? (int) $item['artist'] : null;
-            if ($songArtistId && isset($item['song']) && $item['song'] !== '' && !SlSong::whereKey($item['song'])->exists()) {
-                $song = SlSong::firstOrCreate([
-                    'title' => (string) $item['song'],
-                    'artist_id' => $songArtistId,
-                ]);
-                $item['song'] = $song->id;
+            if ($songArtistId && isset($item['song']) && $item['song'] !== '') {
+                $item['song'] = static::resolveSongValue($item['song'], $songArtistId);
             }
             return $item;
         }, $items);

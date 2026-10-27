@@ -12,6 +12,8 @@ class UserArtist extends Model
         'setlists_complete',
         // 公式のテーブルと同じ項目（管理画面で同じ画面を使うため）
         'visible',
+        // ソロプロジェクトのときのバンド（公式と同じ）
+        'band_artist_id',
     ];
 
     protected $casts = [

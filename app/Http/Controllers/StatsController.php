@@ -521,9 +521,11 @@ class StatsController extends Controller
         }
         $uniqueSongsInTours = count($uniqueSongIds);
 
+        // 平均曲数は、そのアーティストのツアーのセットリストだけで数える（組になっているソロプロジェクト・バンドのツアーは入れない）
+        $ownSetlists = $tourSetlists->whereIn('tour_id', $tourIds->all());
         $totalSongCount = 0;
-        $setlistCount = $tourSetlists->count();
-        foreach ($tourSetlists as $setlist) {
+        $setlistCount = $ownSetlists->count();
+        foreach ($ownSetlists as $setlist) {
             // メドレーは1曲、日替わりの候補は1か所につき1曲として数える
             $totalSongCount += countActualSongs($setlist->setlist ?? []) + countActualSongs($setlist->encore ?? []);
         }

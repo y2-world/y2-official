@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Actions\Action;
 use App\Support\AdminData;
+use Illuminate\Database\Eloquent\Model;
 
 class ArtistResource extends Resource
 {
@@ -62,6 +63,28 @@ class ArtistResource extends Resource
                     ->helperText('スタンプ画面で未演奏の曲は背景を斜線にします')
                     ->onColor('success')
                     ->offColor('gray'),
+                // ソロプロジェクト：印を付けるとバンドを選べる。データベースのセットリストで、お互いの曲を選べる
+                Forms\Components\Checkbox::make('_solo_project')
+                    ->label('ソロプロジェクト')
+                    ->columnSpanFull()
+                    ->dehydrated(false)
+                    ->live()
+                    ->afterStateHydrated(fn (Forms\Components\Checkbox $component, ?Model $record) => $component->state(filled($record?->band_artist_id)))
+                    ->afterStateUpdated(fn ($state, Forms\Set $set) => $state ? null : $set('band_artist_id', null)),
+                Forms\Components\Select::make('band_artist_id')
+                    ->label('アーティスト名')
+                    ->columnStart(1)
+                    ->options(fn (?Model $record) => AdminData::query('artist')
+                        ->when($record, fn ($q) => $q->whereKeyNot($record->getKey()))
+                        ->whereNull('band_artist_id')
+                        ->orderBy('name')
+                        ->pluck('name', 'id'))
+                    ->searchable()
+                    ->native(false)
+                    ->required(fn (Forms\Get $get) => (bool) $get('_solo_project'))
+                    ->hidden(fn (Forms\Get $get) => !$get('_solo_project'))
+                    // 印を外したときもバンドを空にして保存する
+                    ->dehydratedWhenHidden(),
             ]);
     }
 

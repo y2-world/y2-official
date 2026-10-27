@@ -4,7 +4,7 @@ namespace App\Filament\Resources\DbSetlistResource\Pages;
 
 use App\Filament\Concerns\HasDraftAutosave;
 use App\Filament\Resources\DbSetlistResource;
-use Filament\Actions;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateDbSetlist extends CreateRecord
@@ -33,6 +33,29 @@ class CreateDbSetlist extends CreateRecord
 
         // マイページの人が作るセットリストは、その人のもの
         return $data + \App\Support\AdminData::ownerAttributes('setlist');
+    }
+
+    protected function getCreateFormAction(): Action
+    {
+        // 登録ボタンはふつう「フォームを送る」ボタン（submit）で、それだと確認のダイアログが出ずにすぐ登録される。
+        // 押したら処理を呼ぶボタン（action）にして、合致しない曲があるときだけダイアログを出す
+        return $this->configureUnmatchedBulkConfirmation(parent::getCreateFormAction()->submit(null)->action(fn () => $this->create()));
+    }
+
+    protected function getCreateAnotherFormAction(): Action
+    {
+        return $this->configureUnmatchedBulkConfirmation(parent::getCreateAnotherFormAction()->action(fn () => $this->createAnother()));
+    }
+
+    private function configureUnmatchedBulkConfirmation(Action $action): Action
+    {
+        return $action
+            ->requiresConfirmation(fn (): bool => DbSetlistResource::shouldConfirmUnmatchedBulkSongs($this->form->getRawState()))
+            // 見出し・文を設定するとダイアログ付きのボタンになるので、合致しない曲が無いときはダイアログを出さずにそのまま登録する
+            ->modalHidden(fn (): bool => !DbSetlistResource::shouldConfirmUnmatchedBulkSongs($this->form->getRawState()))
+            ->modalHeading('未一致の楽曲があります')
+            ->modalDescription(fn () => DbSetlistResource::unmatchedBulkSongsModalDescription($this->form->getRawState()))
+            ->modalSubmitActionLabel('この内容で登録');
     }
 
     // 「保存して次を作成」の直後だけ、続けて同じツアー・段のパターンを登録しやすいよう

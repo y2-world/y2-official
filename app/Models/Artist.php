@@ -16,12 +16,35 @@ class Artist extends Model
         'visible',
         // 全セットリスト登録済（マイページの user_artists と同じ）。印があるときだけスタンプ帳に未演奏の背景を出す
         'setlists_complete',
+        // ソロプロジェクトのときのバンド。データベースのセットリストでお互いの曲を選べる
+        'band_artist_id',
     ];
 
     protected $casts = [
         'setlists_complete' => 'boolean',
     ];
 
+
+    // ソロプロジェクトとバンドの組（自分・自分のバンド・自分をバンドにしているソロプロジェクト）。
+    // データベースのセットリストの曲の選択肢・集計に使う
+    public static function songArtistIds($artistId): array
+    {
+        return static::soloProjectArtistIds(static::query(), $artistId);
+    }
+
+    public static function soloProjectArtistIds($query, $artistId): array
+    {
+        if (!$artistId) return [];
+        $band = (clone $query)->whereKey($artistId)->value('band_artist_id');
+        $solos = (clone $query)->where('band_artist_id', $artistId)->pluck('id');
+
+        return collect([$artistId, $band])->merge($solos)->filter()->map(fn ($id) => (int) $id)->unique()->values()->all();
+    }
+
+    public function band()
+    {
+        return $this->belongsTo(static::class, 'band_artist_id');
+    }
 
     public function setlists()
     {

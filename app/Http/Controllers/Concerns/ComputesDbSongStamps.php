@@ -15,20 +15,13 @@ use App\Models\UserSong;
 
 trait ComputesDbSongStamps
 {
-    // B'zのセットリストには稲葉浩志のソロ曲が含まれることがあるため（DbSetlistResource参照）、
-    // 稲葉浩志の集計時はB'zのツアーのセットリストも走査対象に含める。
-    // 曲自体の帰属（db_songs.artist_id）で最終的に絞り込むので、B'z側の集計に
-    // 稲葉浩志の曲が混ざったり、その逆が起きたりはしない。
-    private const BZ_ARTIST_ID = 3;
-    private const INABA_ARTIST_ID = 39;
-
+    // ソロプロジェクトとバンドのセットリストには、お互いの曲が含まれることがあるため（DbSetlistResource参照）、
+    // 集計時は組になっているアーティストのツアーのセットリストも走査対象に含める。
+    // 曲自体の帰属（db_songs.artist_id）で最終的に絞り込むので、バンド側の集計に
+    // ソロプロジェクトの曲が混ざったり、その逆が起きたりはしない。
     private function crossoverTourArtistIds(int $artistId): array
     {
-        if ($artistId === self::INABA_ARTIST_ID) {
-            return [self::INABA_ARTIST_ID, self::BZ_ARTIST_ID];
-        }
-
-        return [$artistId];
+        return \App\Models\Artist::songArtistIds($artistId);
     }
 
     // 公式ツアー記録（db_setlists）上、一度でも演奏された曲IDを集める。
