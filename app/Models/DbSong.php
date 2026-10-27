@@ -22,26 +22,12 @@ class DbSong extends Model
         'single_id',
     ];
 
-    // グループのメンバー（アーティストID => 名前）。メンバーのソロ・ユニット曲は、アーティスト欄に名前を入れても
-    // 曲のページにだけ出し、セットリスト・Summary には出さない（嵐：ソロ曲は楽曲のアーティストに入れるだけ）
-    private const MEMBERS = [
-        20 => ['相葉雅紀', '二宮和也', '大野智', '櫻井翔', '松本潤', 'Satoshi Ohno'],
-    ];
-
-    // セットリスト・Summary で「曲名 / アーティスト」と出すアーティスト。メンバーのソロ・ユニット曲は出さない
+    // セットリスト・Summary で「曲名 / アーティスト」と出すアーティスト（行が「アーティスト表記あり」のときだけ使われる）
     public function setlistCredit(): ?string
     {
         $credit = trim((string) $this->credit);
-        if ($credit === '') {
-            return null;
-        }
-        foreach (self::MEMBERS[$this->artist_id] ?? [] as $member) {
-            if (str_contains($credit, $member)) {
-                return null;
-            }
-        }
 
-        return $credit;
+        return $credit === '' ? null : $credit;
     }
 
     protected static function booted()

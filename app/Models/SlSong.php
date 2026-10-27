@@ -132,13 +132,13 @@ class SlSong extends Model
         return $this->belongsTo(Artist::class);
     }
 
-    // セットリストで「曲名 / アーティスト」と出すアーティスト。この曲のアーティスト表記名があればそれ、
-    // なければ結び付いた DbSong のアーティスト欄（嵐のメンバーのソロ等は出さない）
+    // セットリストで「曲名 / アーティスト」と出すアーティスト（行が「アーティスト表記あり」のときだけ使われる）。
+    // 結び付いた DbSong のアーティスト欄があればそちらを優先し、なければこの曲のアーティスト表記名
     public function setlistCredit(): ?string
     {
         $credit = trim((string) $this->credit);
 
-        return $credit !== '' ? $credit : $this->dbSong?->setlistCredit();
+        return $this->dbSong?->setlistCredit() ?? ($credit === '' ? null : $credit);
     }
 
     public function dbSong()
