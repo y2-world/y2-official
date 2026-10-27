@@ -308,7 +308,7 @@ class DbSetlistResource extends Resource
             $newItems[] = $item;
         }
 
-        $set('data.' . $target, array_merge($baseItems, $newItems), true);
+        $set('data.' . $target, \App\Support\RepeaterKeys::byUuid(array_merge($baseItems, $newItems)), true);
         $set('data.' . $generatedState, array_column($newItems, '_uuid'), true);
         $set('data._bulk_added_uuids', array_values(array_unique($added)), true);
     }

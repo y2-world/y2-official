@@ -115,7 +115,7 @@ class SlSetlistResource extends Resource
             $newItems[] = $item;
         }
 
-        $set('data.' . $target, array_merge($baseItems, $newItems), true);
+        $set('data.' . $target, \App\Support\RepeaterKeys::byUuid(array_merge($baseItems, $newItems)), true);
         $set('data.' . $generatedState, array_column($newItems, '_uuid'), true);
         $set('data._bulk_added_uuids', array_values(array_unique($added)), true);
     }
@@ -787,7 +787,7 @@ class SlSetlistResource extends Resource
             $newBlocks[] = $block;
         }
 
-        $set($target, array_merge($baseItems, $newBlocks));
+        $set($target, \App\Support\RepeaterKeys::byUuid(array_merge($baseItems, $newBlocks), 'songs'));
         $set($generatedState, array_column($newBlocks, '_uuid'));
         $set('_bulk_fes_added_uuids', array_values(array_unique($addedSongs)));
     }

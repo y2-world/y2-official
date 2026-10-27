@@ -11,10 +11,10 @@ class EncoreFormGroups
         $groups = [];
 
         if (!$items) {
-            return [[
+            return RepeaterKeys::byUuid([[
                 '_uuid' => (string) Str::uuid(),
                 'songs' => [],
-            ]];
+            ]]);
         }
 
         foreach (array_values($items) as $index => $item) {
@@ -28,7 +28,8 @@ class EncoreFormGroups
             $groups[array_key_last($groups)]['songs'][] = $item;
         }
 
-        return $groups;
+        // 行を UUID のキーにする（RepeaterKeys）
+        return RepeaterKeys::byUuid($groups, 'songs');
     }
 
     public static function toItems(array $groups): array
