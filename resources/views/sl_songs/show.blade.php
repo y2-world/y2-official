@@ -26,6 +26,11 @@
                     </div>
                 @endif
             </div>
+            {{-- この曲のアーティスト表記名（グループのメンバーのソロ曲など）。アーティスト名の下に出す（Database の曲のページと同じ）。
+                 Database の曲の表記と同じときは、下の曲の情報に出るので1回だけ --}}
+            @if (filled($song->credit) && $song->credit !== $dbSong?->credit)
+                <p class="database-subtitle" style="margin-top: 0;">{{ $song->credit }}</p>
+            @endif
             {{-- Database の曲に結び付いていれば、Database の曲のページと同じ曲の情報を出す --}}
             @if ($dbSong)
                 @include('db_songs._song_info', ['dbSong' => $dbSong])

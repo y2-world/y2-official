@@ -17,6 +17,8 @@ class SlSong extends Model
         'title',
         'artist_id',
         'db_song_id',
+        // アーティスト表記名（データベース楽曲と同じ。グループのメンバーのソロ曲など）
+        'credit',
     ];
 
     protected static function booted()
@@ -130,10 +132,13 @@ class SlSong extends Model
         return $this->belongsTo(Artist::class);
     }
 
-    // セットリストで「曲名 / アーティスト」と出すアーティスト（結び付いた DbSong のアーティスト欄。嵐のメンバーのソロ等は出さない）
+    // セットリストで「曲名 / アーティスト」と出すアーティスト。この曲のアーティスト表記名があればそれ、
+    // なければ結び付いた DbSong のアーティスト欄（嵐のメンバーのソロ等は出さない）
     public function setlistCredit(): ?string
     {
-        return $this->dbSong?->setlistCredit();
+        $credit = trim((string) $this->credit);
+
+        return $credit !== '' ? $credit : $this->dbSong?->setlistCredit();
     }
 
     public function dbSong()

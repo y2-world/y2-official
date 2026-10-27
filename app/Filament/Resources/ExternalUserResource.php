@@ -25,7 +25,7 @@ class ExternalUserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
-    protected static ?string $navigationGroup = 'Setlists';
+    protected static ?string $navigationGroup = 'General';
 
     protected static ?string $navigationLabel = '外部ユーザー';
 

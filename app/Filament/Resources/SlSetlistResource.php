@@ -29,7 +29,7 @@ class SlSetlistResource extends Resource
 
     protected static ?string $modelLabel = 'セットリスト';
 
-    protected static ?string $navigationGroup = 'Setlists';
+    protected static ?string $navigationGroup = "Yuki's Setlists";
 
     protected static ?int $navigationSort = 10;
 
@@ -228,13 +228,13 @@ class SlSetlistResource extends Resource
         return $maps[$artistId];
     }
 
-    // 確認の一覧に出す曲名。別表記で入れる曲は「I'LL BE（オリジナル「I'll be」）」
+    // 確認の一覧に出す曲名。別表記で入れる曲は「I'LL BE（I'll be）」
     private static function bulkSongLabel(array $item): string
     {
         $original = static::bulkSongTitle($item['song'] ?? '');
         $alt = trim((string) ($item['alternative_title'] ?? ''));
 
-        return $alt !== '' && $alt !== $original ? $alt . '（オリジナル「' . $original . '」）' : $original;
+        return $alt !== '' && $alt !== $original ? $alt . '（' . $original . '）' : $original;
     }
 
     private static function bulkSongTitle($value): string
@@ -321,9 +321,9 @@ class SlSetlistResource extends Resource
     // フェスの登録済みの曲を、一括入力の書き方にする（「# アーティスト名」のあとに曲。アーティストの間は空行1行、本編とアンコールの間は空行2行）
     public static function bulkFesTextFromBlocks(array $setlist, array $encore): string
     {
-        $artistNames = \App\Models\Artist::whereIn('id', collect(array_merge($setlist, $encore))->pluck('artist')->filter()->unique())->pluck('name', 'id');
+        $artistNames = \App\Models\Artist::whereIn('id', collect(array_merge($setlist, $encore))->pluck('artist')->filter(fn ($id) => is_numeric($id))->unique())->pluck('name', 'id');
         $blockText = fn ($block) => implode("\n", array_merge(
-            ['# ' . ($artistNames[$block['artist'] ?? null] ?? '')],
+            ['# ' . (static::newArtistName($block['artist'] ?? null) ?? $artistNames[$block['artist'] ?? null] ?? '')],
             array_values(array_filter(array_map(fn ($item) => static::bulkLineTitle($item), (array) ($block['songs'] ?? [])), fn ($l) => $l !== ''))
         ));
         $isBlock = fn ($b) => !empty($b['artist']) && ($b['type'] ?? 'block') === 'block';
@@ -343,6 +343,59 @@ class SlSetlistResource extends Resource
         $alt = trim((string) ($item['alternative_title'] ?? ''));
 
         return $alt !== '' ? $alt : trim(static::bulkSongTitle($item['song'] ?? ''));
+    }
+
+    // 「通常入力に反映」を押したとき、反映したら新しく入る行のうち、Yuki's Setlists の曲に無いもの（ダイアログに出す）。
+    // フォームの今の入力を写したもの（FormStatePreview）の上で反映してみるので、本物のフォームは変えない
+    public static function unmatchedOnApply(array $data, bool $fes): array
+    {
+        $preview = new \App\Support\FormStatePreview($data);
+        $addedKey = $fes ? '_bulk_fes_added_uuids' : '_bulk_added_uuids';
+        $before = (array) ($data[$addedKey] ?? []);
+        $fes
+            ? static::syncBulkFestivalSetlist($data['_bulk_fes_input'] ?? '', $preview->get(), $preview->set())
+            : static::syncBulkLiveSetlist($data['_bulk_live_input'] ?? '', $preview->get(), $preview->set());
+        $after = $preview->data();
+        // 前に反映して確かめた行は出さない（今回新しく入る行だけ）
+        $after[$addedKey] = array_values(array_diff((array) ($after[$addedKey] ?? []), $before));
+        $after['fes'] = $fes ? 1 : 0;
+
+        return static::unmatchedBulkSongs($after);
+    }
+
+    // 「通常入力に反映」のボタン。合致しない曲があるときだけ、反映する前にダイアログで確かめる
+    private static function bulkApplyAction(string $name, bool $fes): Forms\Components\Actions\Action
+    {
+        $unmatched = fn ($livewire) => static::unmatchedOnApply($livewire->form->getRawState(), $fes);
+        // フェスで、まだ登録されていないアーティスト
+        $newArtists = fn ($livewire) => $fes ? static::newArtistsOnApply($livewire->form->getRawState()) : [];
+        $needsConfirm = fn ($livewire) => $unmatched($livewire) !== [] || $newArtists($livewire) !== [];
+
+        return Forms\Components\Actions\Action::make($name)
+            ->label('通常入力に反映')
+            ->requiresConfirmation($needsConfirm)
+            // 見出し・文を設定するとダイアログ付きのボタンになるので、合致しない曲が無いときはダイアログを出さずにそのまま反映する
+            ->modalHidden(fn ($livewire) => !$needsConfirm($livewire))
+            ->modalHeading(fn ($livewire) => $unmatched($livewire) === [] ? '未登録のアーティストがあります' : '未登録の楽曲があります')
+            ->modalDescription(function ($livewire) use ($unmatched, $newArtists) {
+                $parts = [];
+                if ($artists = $newArtists($livewire)) {
+                    $parts[] = '以下のアーティストが登録されていません。<br>' . implode('<br>', array_map('e', $artists)) . '<br>新たにアーティストを登録します。';
+                }
+                if ($songs = $unmatched($livewire)) {
+                    $parts[] = '以下の楽曲が合致しませんでした。<br>' . implode('<br>', array_map('e', $songs)) . '<br>新たに楽曲を登録します。';
+                }
+
+                return new HtmlString(implode('<br><br>', $parts) . 'よろしいですか？');
+            })
+            ->modalSubmitActionLabel('反映する')
+            ->action(function (Forms\Get $get, Forms\Set $set, $livewire) use ($fes) {
+                $fes
+                    ? static::syncBulkFestivalSetlist($get('_bulk_fes_input'), $get, $set)
+                    : static::syncBulkLiveSetlist($get('_bulk_live_input'), $get, $set);
+                // 反映したら通常入力のタブを開く（タブの extraAlpineAttributes）
+                $livewire->dispatch('setlist-bulk-applied');
+            });
     }
 
     public static function hasUnmatchedBulkSongs(array $data): bool
@@ -427,6 +480,13 @@ class SlSetlistResource extends Resource
             $added = array_fill_keys((array) ($data['_bulk_fes_added_uuids'] ?? []), true);
             foreach (['fes_setlist', 'fes_encore'] as $field) {
                 foreach ((array) ($data[$field] ?? []) as $blockIndex => $block) {
+                    // 一括入力で入れた、まだ登録されていないアーティストは、ここで作る（同じ名前があればそれを使う）
+                    $name = static::newArtistName($block['artist'] ?? null);
+                    if ($name !== null) {
+                        $block['artist'] = (string) (\App\Models\Artist::query()->whereRaw('LOWER(TRIM(name)) = LOWER(?)', [$name])->value('id')
+                            ?? \App\Models\Artist::create(['name' => $name])->id);
+                        $data[$field][$blockIndex]['artist'] = $block['artist'];
+                    }
                     foreach ((array) ($block['songs'] ?? []) as $songIndex => $item) {
                         if (!isset($added[$item['_uuid'] ?? ''])) continue;
                         $data[$field][$blockIndex]['songs'][$songIndex]['song'] = static::registerSongValue(
@@ -454,6 +514,37 @@ class SlSetlistResource extends Resource
         $data['_encore_groups'] = \App\Support\EncoreFormGroups::fromItems($encoreItems);
 
         return $data;
+    }
+
+    // 「new:名前」（まだ登録されていないアーティスト）なら名前、それ以外は null
+    public static function newArtistName($value): ?string
+    {
+        return is_string($value) && str_starts_with($value, static::NEW_ARTIST_PREFIX)
+            ? trim(substr($value, strlen(static::NEW_ARTIST_PREFIX)))
+            : null;
+    }
+
+    // ステージのアーティスト名（まだ登録されていないアーティスト「new:名前」は名前）
+    public static function blockArtistName($value): ?string
+    {
+        return static::newArtistName($value) ?? (is_numeric($value) ? \App\Models\Artist::find((int) $value)?->name : null);
+    }
+
+    // 反映したら新しく登録することになるアーティスト（フェスの一括入力）
+    public static function newArtistsOnApply(array $data): array
+    {
+        $preview = new \App\Support\FormStatePreview($data);
+        static::syncBulkFestivalSetlist($data['_bulk_fes_input'] ?? '', $preview->get(), $preview->set());
+        $after = $preview->data();
+        $names = [];
+        foreach (['fes_setlist', 'fes_encore'] as $field) {
+            foreach ((array) ($after[$field] ?? []) as $block) {
+                $name = static::newArtistName($block['artist'] ?? null);
+                if ($name !== null) $names[$name] = true;
+            }
+        }
+
+        return array_keys($names);
     }
 
     private static function registerSongValue(string $value, $artistId): string
@@ -570,6 +661,9 @@ class SlSetlistResource extends Resource
             ->columnSpanFull();
     }
 
+    // フェスの一括入力で、まだ登録されていないアーティスト（登録するときに作る）
+    public const NEW_ARTIST_PREFIX = 'new:';
+
     private static function parseBulkFestivalInput(string $text): array
     {
         $sections = ['setlist' => [], 'encore' => []];
@@ -619,7 +713,8 @@ class SlSetlistResource extends Resource
                 ->value('id');
             if ($matchedArtistId || $isArtistHeading) {
                 $flush();
-                $artistId = $matchedArtistId ?: null;
+                // 登録されていないアーティスト名（「# 名前」）は、「new:名前」にしておき、登録するときにアーティストを作る（registerBulkSongs）
+                $artistId = $matchedArtistId ?: ($artistName !== '' ? static::NEW_ARTIST_PREFIX . $artistName : null);
                 continue;
             }
 
@@ -627,7 +722,7 @@ class SlSetlistResource extends Resource
             $title = trim(preg_replace('/^\\s*(?:\\d+\\s*[.)．、]\\s*|[-*・]\\s*)/u', '', $line));
             if ($title === '') continue;
 
-            $songs[] = static::bulkItem($title, $artistId);
+            $songs[] = static::bulkItem($title, is_numeric($artistId) ? (int) $artistId : null);
         }
         $flush();
 
@@ -924,6 +1019,8 @@ class SlSetlistResource extends Resource
                         Forms\Components\Tabs::make('single_setlist_input_mode')
                             ->contained(false)
                             ->extraAttributes(['class' => 'setlist-input-tabs'])
+                            // 一括入力の「通常入力に反映」が終わったら、通常入力のタブ（最初のタブ）を開く
+                            ->extraAlpineAttributes(['x-on:setlist-bulk-applied.window' => 'tab = getTabs()[0]'])
                             ->tabs([
                                 Forms\Components\Tabs\Tab::make('通常入力')
                                     ->schema([
@@ -1057,9 +1154,11 @@ class SlSetlistResource extends Resource
                                             ->placeholder("曲名を1行ずつ入力\n\n")
                                             ->helperText('本編とアンコールの間に空行を1行入れてください。')
                                             ->dehydrated(false)
-                                            ->live(debounce: 500)
-                                            ->afterStateUpdated(fn ($state, Forms\Get $get, Forms\Set $set) => static::syncBulkLiveSetlist($state, $get, $set))
                                             ->columnSpanFull(),
+                                        // 打つたびに反映すると、曲の行を全部作り直すので入力が止まる。ボタンを押したときだけ反映する
+                                        Forms\Components\Actions::make([
+                                            static::bulkApplyAction('applyBulkLiveSetlist', false),
+                                        ])->columnSpanFull(),
                                         Forms\Components\Hidden::make('_bulk_setlist_uuids')->default([])->dehydrated(false),
                                         // 一括入力で新しく入った行（確認のダイアログと新しい曲の登録は、この行だけを見る）
                                         Forms\Components\Hidden::make('_bulk_added_uuids')->default([])->dehydrated(false),
@@ -1078,6 +1177,8 @@ class SlSetlistResource extends Resource
                         Forms\Components\Tabs::make('festival_setlist_input_mode')
                             ->contained(false)
                             ->extraAttributes(['class' => 'setlist-input-tabs'])
+                            // 一括入力の「通常入力に反映」が終わったら、通常入力のタブ（最初のタブ）を開く
+                            ->extraAlpineAttributes(['x-on:setlist-bulk-applied.window' => 'tab = getTabs()[0]'])
                             ->tabs([
                                 Forms\Components\Tabs\Tab::make('通常入力')
                                     ->schema([
@@ -1102,11 +1203,13 @@ class SlSetlistResource extends Resource
                                 // artist は song/block 共通キー
                                 Forms\Components\Select::make('artist')
                                     ->label('アーティスト')
-                                    ->options(fn() => \App\Models\Artist::orderBy('id')->pluck('name', 'id')->all())
+                                    ->options(fn($state) => \App\Models\Artist::orderBy('id')->pluck('name', 'id')->all()
+                                        // 一括入力で入れた、まだ登録されていないアーティスト（登録するときに作る）
+                                        + (static::newArtistName($state) !== null ? [$state => static::newArtistName($state) . '（新規）'] : []))
                                     ->searchable()
                                     ->native(false)
                                     ->nullable()
-                                    ->afterStateHydrated(fn(Forms\Components\Select $component, $state) => $component->state($state !== null ? (int)$state : null))
+                                    ->afterStateHydrated(fn(Forms\Components\Select $component, $state) => $component->state(is_numeric($state) ? (int)$state : $state))
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('name')
                                             ->label('アーティスト名')
@@ -1284,7 +1387,7 @@ class SlSetlistResource extends Resource
                             ->itemLabel(function (array $state, $component): ?string {
                                 $type = $state['type'] ?? 'song';
                                 if ($type === 'block') {
-                                    $artistName = \App\Models\Artist::find($state['artist'] ?? null)?->name ?? 'ブロック';
+                                    $artistName = static::blockArtistName($state['artist'] ?? null) ?? 'ブロック';
                                     return $artistName;
                                 }
                                 $items = $component->getState();
@@ -1323,11 +1426,13 @@ class SlSetlistResource extends Resource
                                     ->columnSpanFull(),
                                 Forms\Components\Select::make('artist')
                                     ->label('アーティスト')
-                                    ->options(fn() => \App\Models\Artist::orderBy('id')->pluck('name', 'id')->all())
+                                    ->options(fn($state) => \App\Models\Artist::orderBy('id')->pluck('name', 'id')->all()
+                                        // 一括入力で入れた、まだ登録されていないアーティスト（登録するときに作る）
+                                        + (static::newArtistName($state) !== null ? [$state => static::newArtistName($state) . '（新規）'] : []))
                                     ->searchable()
                                     ->native(false)
                                     ->nullable()
-                                    ->afterStateHydrated(fn(Forms\Components\Select $component, $state) => $component->state($state !== null ? (int)$state : null))
+                                    ->afterStateHydrated(fn(Forms\Components\Select $component, $state) => $component->state(is_numeric($state) ? (int)$state : $state))
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('name')
                                             ->label('アーティスト名')
@@ -1503,7 +1608,7 @@ class SlSetlistResource extends Resource
                             ->itemLabel(function (array $state, $component): ?string {
                                 $type = $state['type'] ?? 'song';
                                 if ($type === 'block') {
-                                    $artistName = \App\Models\Artist::find($state['artist'] ?? null)?->name;
+                                    $artistName = static::blockArtistName($state['artist'] ?? null);
                                     $items = array_values((array) $component->getState());
                                     $encoreCount = 1;
                                     foreach (array_slice($items, 1) as $item) {
@@ -1557,9 +1662,11 @@ class SlSetlistResource extends Resource
                                             ->placeholder("# アーティスト名\n曲名\n\n# 別のアーティスト\n曲名\n\n\n# アンコールのアーティスト\nアンコール曲名")
                                             ->helperText('アーティスト間は空行1行、本編とアンコールの間は空行2行にしてください。登録済みのアーティスト名を「# アーティスト名」の形式で入力してください。')
                                             ->dehydrated(false)
-                                            ->live(debounce: 500)
-                                            ->afterStateUpdated(fn ($state, Forms\Get $get, Forms\Set $set) => static::syncBulkFestivalSetlist($state, $get, $set))
                                             ->columnSpanFull(),
+                                        // 打つたびに反映すると、曲の行を全部作り直すので入力が止まる。ボタンを押したときだけ反映する
+                                        Forms\Components\Actions::make([
+                                            static::bulkApplyAction('applyBulkFestivalSetlist', true),
+                                        ])->columnSpanFull(),
                                         Forms\Components\Hidden::make('_bulk_fes_setlist_uuids')->default([])->dehydrated(false),
                                         Forms\Components\Hidden::make('_bulk_fes_added_uuids')->default([])->dehydrated(false),
                                         Forms\Components\Hidden::make('_bulk_fes_encore_uuids')->default([])->dehydrated(false),

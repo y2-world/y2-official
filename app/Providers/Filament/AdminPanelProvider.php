@@ -63,6 +63,10 @@ class AdminPanelProvider extends PanelProvider
                 fn (): string => view('filament.hooks.reorder-handle-only')->render(),
                 scopes: [ManageArtistSongs::class],
             )
+            ->renderHook(
+                PanelsRenderHook::BODY_END,
+                fn (): string => view('filament.hooks.draft-autosave-clear')->render(),
+            )
             // 日付の欄を、押すとカレンダーが出て数字でも打てるようにする（DbConcertResource の dateInput）
             ->renderHook(
                 PanelsRenderHook::BODY_END,
@@ -86,6 +90,8 @@ class AdminPanelProvider extends PanelProvider
                     }
                 </style>',
             )
+            // メニューの並び。アーティスト・外部ユーザーは Yuki's Setlists と Database の両方で使うので General
+            ->navigationGroups(['General', "Yuki's Setlists", 'Database', 'Official', 'Admin'])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([

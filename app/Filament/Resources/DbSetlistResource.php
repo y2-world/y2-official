@@ -182,6 +182,44 @@ class DbSetlistResource extends Resource
         );
     }
 
+    // 「通常入力に反映」を押したとき、反映したら新しく入る行のうち、曲にリンクしないもの（ダイアログに出す）。
+    // フォームの今の入力を写したもの（FormStatePreview）の上で反映してみるので、本物のフォームは変えない
+    public static function unmatchedOnApply(array $data): array
+    {
+        $preview = new \App\Support\FormStatePreview($data);
+        $before = (array) ($data['_bulk_added_uuids'] ?? []);
+        static::syncBulkSetlist($data['_bulk_input'] ?? '', $preview->get(), $preview->set());
+        $after = $preview->data();
+        // 前に反映して確かめた行は出さない（今回新しく入る行だけ）
+        $after['_bulk_added_uuids'] = array_values(array_diff((array) ($after['_bulk_added_uuids'] ?? []), $before));
+
+        return static::unmatchedBulkSongs($after);
+    }
+
+    // 「通常入力に反映」のボタン。合致しない曲があるときだけ、反映する前にダイアログで確かめる
+    protected static function bulkApplyAction(): Forms\Components\Actions\Action
+    {
+        $unmatched = fn ($livewire) => static::unmatchedOnApply($livewire->form->getRawState());
+
+        return Forms\Components\Actions\Action::make('applyBulkSetlist')
+            ->label('通常入力に反映')
+            ->requiresConfirmation(fn ($livewire) => $unmatched($livewire) !== [])
+            // 見出し・文を設定するとダイアログ付きのボタンになるので、合致しない曲が無いときはダイアログを出さずにそのまま反映する
+            ->modalHidden(fn ($livewire) => $unmatched($livewire) === [])
+            ->modalHeading('未一致の楽曲があります')
+            ->modalDescription(fn ($livewire) => new HtmlString(
+                '以下の楽曲が合致しませんでした。<br>'
+                . implode('<br>', array_map('e', $unmatched($livewire)))
+                . '<br>既存の楽曲にリンクせずに登録します。よろしいですか？'
+            ))
+            ->modalSubmitActionLabel('反映する')
+            ->action(function (Forms\Get $get, Forms\Set $set, $livewire) {
+                static::syncBulkSetlist($get('_bulk_input'), $get, $set);
+                // 反映したら通常入力のタブを開く（タブの extraAlpineAttributes）
+                $livewire->dispatch('setlist-bulk-applied');
+            });
+    }
+
     // 一括入力で新しく入った行のうち、曲にリンクしなかったもの
     public static function unmatchedBulkSongs(array $data): array
     {
@@ -547,6 +585,8 @@ class DbSetlistResource extends Resource
                 Forms\Components\Tabs::make('setlist_input_mode')
                     ->contained(false)
                     ->extraAttributes(['class' => 'setlist-input-tabs'])
+                    // 一括入力の「通常入力に反映」が終わったら、通常入力のタブ（最初のタブ）を開く
+                    ->extraAlpineAttributes(['x-on:setlist-bulk-applied.window' => 'tab = getTabs()[0]'])
                     ->tabs([
                         Forms\Components\Tabs\Tab::make('通常入力')
                             ->schema([
@@ -694,9 +734,11 @@ class DbSetlistResource extends Resource
                                     ->placeholder("曲名を1行ずつ入力\n\n")
                                     ->helperText('本編とアンコールの間に空行を1行入れてください。')
                                     ->dehydrated(false)
-                                    ->live(debounce: 500)
-                                    ->afterStateUpdated(fn ($state, Forms\Get $get, Forms\Set $set) => static::syncBulkSetlist($state, $get, $set))
                                     ->columnSpanFull(),
+                                // 打つたびに反映すると、曲の行を全部作り直すので入力が止まる。ボタンを押したときだけ反映する
+                                Forms\Components\Actions::make([
+                                    static::bulkApplyAction(),
+                                ])->columnSpanFull(),
                                 Forms\Components\Hidden::make('_bulk_setlist_uuids')->default([])->dehydrated(false),
                                 // 一括入力で新しく入った行（確認のダイアログはこの行だけを見る）
                                 Forms\Components\Hidden::make('_bulk_added_uuids')->default([])->dehydrated(false),

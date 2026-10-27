@@ -379,6 +379,8 @@ function initTimelineCard(card) {
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 <!-- ページごとのスクリプト -->
+{{-- 見出しの右上の検索窓がタイトルに重なるときは、虫眼鏡アイコンに切り替える --}}
+<script src="{{ asset('/js/search-collapse.js?time=' . filemtime(public_path('js/search-collapse.js'))) }}"></script>
 @yield('page-script')
 
 <!-- Typeahead.js -->

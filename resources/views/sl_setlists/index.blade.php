@@ -27,11 +27,15 @@
                     </select>
                     <select class="year-select" name="select" onChange="location.href=value;">
                         <option value="" disabled selected>Artists</option>
-                        @if($artists->isNotEmpty())
-                            @foreach ($artists as $artist)
-                                <option value="{{ url('/setlists/artists', $artist->id) }}">{{ $artist->name }}</option>
-                            @endforeach
-                        @endif
+                        @foreach ($artistGroups as $groupLabel => $groupArtists)
+                            @if ($groupArtists->isNotEmpty())
+                                <optgroup label="{{ $groupLabel }}">
+                                    @foreach ($groupArtists as $artist)
+                                        <option value="{{ url('/setlists/artists', $artist->id) }}">{{ $artist->name }}</option>
+                                    @endforeach
+                                </optgroup>
+                            @endif
+                        @endforeach
                     </select>
                     <select class="year-select" name="select" onChange="location.href=value;">
                         <option value="" disabled selected>Years</option>

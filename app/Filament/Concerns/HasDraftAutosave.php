@@ -17,5 +17,13 @@ trait HasDraftAutosave
     protected function clearDraftAutosave(): void
     {
         $this->dispatch('draft-autosave-clear');
+        // 登録・保存のあとはすぐ別の画面に移るので、上の合図が届かないことがある。
+        // 次に開いた画面で、この画面の下書きを消す（filament/hooks/draft-autosave-clear）
+        session()->flash('draft_autosave_clear', parse_url(static::getUrl(static::getUrlParameters($this)), PHP_URL_PATH));
+    }
+
+    private static function getUrlParameters($page): array
+    {
+        return method_exists($page, 'getRecord') && $page->getRecord() ? ['record' => $page->getRecord()] : [];
     }
 }

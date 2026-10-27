@@ -6,13 +6,20 @@ document.addEventListener('alpine:init', () => {
         key: 'filament-draft:' + config.draftKey,
         debounceTimer: null,
         draft: null,
+        // 開いたときの入力内容。これと同じ（何も入力していない・入力を元に戻した）なら下書きにしない
+        initial: null,
 
         init() {
             // この機能はあくまで入力保全の補助であり、何らかの理由で失敗しても
             // Filament本来の保存・画面操作を絶対に妨げてはならないため、
             // セットアップ全体を try/catch で囲む。
             try {
+                this.initial = JSON.stringify(this.$wire.data);
                 this.draft = this.loadDraft();
+                // 開いたときと同じ中身の下書きは、知らせずに消す
+                if (this.draft && JSON.stringify(this.draft.data) === this.initial) {
+                    this.clearDraft();
+                }
 
                 if (this.draft) {
                     // 通知トースターで知らせる（画面上部の固定バナーはスクロールで見逃されるため、
@@ -96,6 +103,10 @@ document.addEventListener('alpine:init', () => {
 
         saveDraft() {
             try {
+                if (JSON.stringify(this.$wire.data) === this.initial) {
+                    localStorage.removeItem(this.key);
+                    return;
+                }
                 const payload = {
                     data: this.$wire.data,
                     savedAt: Date.now(),

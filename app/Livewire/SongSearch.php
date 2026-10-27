@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Models\SlSong;
 
@@ -27,18 +28,21 @@ class SongSearch extends Component
         if ($this->artistId) {
             $query->where('sl_songs.artist_id', $this->artistId);
 
+            // アーティスト表記（グループのメンバーのソロ曲など）がある曲だけ、その表記を出す（Database の曲の検索と同じ）
             $songs = $query->get([
                 'sl_songs.id as id',
                 'sl_songs.title as title',
+                DB::raw("NULLIF(TRIM(sl_songs.credit), '') as artist"),
             ]);
         } else {
             // アーティストIDが指定されていない場合は全楽曲をアーティスト名付きで表示
             $query->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id');
 
+            // アーティスト表記があれば、アーティスト名の代わりにそれを出す（Database の曲の検索と同じ）
             $songs = $query->get([
                 'sl_songs.id as id',
                 'sl_songs.title as title',
-                'artists.name as artist',
+                DB::raw("COALESCE(NULLIF(TRIM(sl_songs.credit), ''), artists.name) as artist"),
             ]);
         }
 
@@ -64,18 +68,21 @@ class SongSearch extends Component
         if ($this->artistId) {
             $query->where('sl_songs.artist_id', $this->artistId);
 
+            // アーティスト表記（グループのメンバーのソロ曲など）がある曲だけ、その表記を出す（Database の曲の検索と同じ）
             $songs = $query->get([
                 'sl_songs.id as id',
                 'sl_songs.title as title',
+                DB::raw("NULLIF(TRIM(sl_songs.credit), '') as artist"),
             ]);
         } else {
             // アーティストIDが指定されていない場合は全楽曲をアーティスト名付きで表示
             $query->leftJoin('artists', 'artists.id', '=', 'sl_songs.artist_id');
 
+            // アーティスト表記があれば、アーティスト名の代わりにそれを出す（Database の曲の検索と同じ）
             $songs = $query->get([
                 'sl_songs.id as id',
                 'sl_songs.title as title',
-                'artists.name as artist',
+                DB::raw("COALESCE(NULLIF(TRIM(sl_songs.credit), ''), artists.name) as artist"),
             ]);
         }
 

@@ -82,7 +82,9 @@ class ArtistController extends Controller
         }
 
         // アーティスト一覧と年のデータを取得
-        $artists = Artist::orderBy('id', 'asc')->where('visible', 1)->get();
+        // アーティスト選択は Live（単独ライブで見た）/ Fes（フェスでだけ見た）に分ける
+        $artistGroups = \App\Support\SetlistArtistGroups::groups();
+        $artists = $artistGroups['Live']->merge($artistGroups['Fes']);
 
         // 指定されたアーティストのセットリストを取得
         // 統計の Shows by Year・Top Venues から来たときは、その年・その会場だけに絞り込む（?year= / ?venue=）
@@ -149,6 +151,7 @@ class ArtistController extends Controller
             'setlists' => $setlists,
             'artist' => $artist,
             'artists' => $artists,
+            'artistGroups' => $artistGroups,
             'years' => $years,
             'suggestions' => $suggestions
         ]);

@@ -24,7 +24,7 @@ class SlSongResource extends Resource
 
     protected static ?string $modelLabel = 'セットリスト楽曲';
 
-    protected static ?string $navigationGroup = 'Setlists';
+    protected static ?string $navigationGroup = "Yuki's Setlists";
 
     protected static ?int $navigationSort = 11;
 
@@ -37,14 +37,22 @@ class SlSongResource extends Resource
                     ->required()
                     ->maxLength(255),
 
+                // 公開していないアーティスト（フェスで見ただけなど）の曲もあるので、全アーティストから選ぶ
                 Forms\Components\Select::make('artist_id')
                     ->label('アーティスト')
-                    ->relationship('artist', 'name', fn($query) => $query->where('visible', 1)->orderBy('id'))
+                    ->relationship('artist', 'name', fn($query) => $query->orderBy('id'))
                     ->searchable()
                     ->preload()
                     ->native(false)
                     ->live()
                     ->nullable(),
+
+                // 曲名にアーティストを入れずに済むように（データベース楽曲と同じ）。グループのメンバーのソロ曲など。
+                // アーティストにはしないので、アーティストの候補には出ない。セットリストでは「アーティスト表記あり」の行だけ「曲名 / アーティスト」
+                Forms\Components\TextInput::make('credit')
+                    ->label('アーティスト表記名')
+                    ->placeholder('例：藤ヶ谷太輔')
+                    ->maxLength(255),
 
                 Forms\Components\Select::make('db_song_id')
                     ->label('database楽曲との紐付け')

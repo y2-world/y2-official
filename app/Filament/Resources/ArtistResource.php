@@ -25,7 +25,7 @@ class ArtistResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Setlists';
+    protected static ?string $navigationGroup = 'General';
 
     protected static ?int $navigationSort = 12;
 
@@ -51,6 +51,8 @@ class ArtistResource extends Resource
                 TextInput::make('name')->label('アーティスト名')->required(),
                 Toggle::make('visible')
                     ->label('公開')
+                    // 公式のアーティストの「公開」は、Yuki's Setlists のアーティストの選択欄に出すかどうか（Live / Fes は セットリストから決まる）
+                    ->helperText(fn () => AdminData::isMember() ? null : "Yuki's Setlists のアーティストの選択欄に出します（Live / Fes には関係ありません）")
                     ->onColor('success')
                     ->offColor('gray')
                     // 新しく作るとき：公式のアーティストは公開、マイページのアーティストはオフ（マイページで作るときと同じ）
@@ -93,7 +95,7 @@ class ArtistResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')->label('ID'),
-                TextColumn::make('name')->label('アーティスト'),
+                TextColumn::make('name')->label('アーティスト')->searchable(),
                 Tables\Columns\ToggleColumn::make('visible')
                     ->label('公開')
                     ->onColor('success')

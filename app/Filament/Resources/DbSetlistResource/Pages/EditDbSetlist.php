@@ -38,21 +38,6 @@ class EditDbSetlist extends EditRecord
         return $data;
     }
 
-    protected function getSaveFormAction(): \Filament\Actions\Action
-    {
-        // 登録ボタンはふつう「フォームを送る」ボタン（submit）で、それだと確認のダイアログが出ずにすぐ登録される。
-        // 押したら処理を呼ぶボタン（action）にして、合致しない曲があるときだけダイアログを出す
-        return parent::getSaveFormAction()
-            ->submit(null)
-            ->action(fn () => $this->save())
-            ->requiresConfirmation(fn (): bool => DbSetlistResource::shouldConfirmUnmatchedBulkSongs($this->form->getRawState()))
-            // 見出し・文を設定するとダイアログ付きのボタンになるので、合致しない曲が無いときはダイアログを出さずにそのまま登録する
-            ->modalHidden(fn (): bool => !DbSetlistResource::shouldConfirmUnmatchedBulkSongs($this->form->getRawState()))
-            ->modalHeading('未一致の楽曲があります')
-            ->modalDescription(fn () => DbSetlistResource::unmatchedBulkSongsModalDescription($this->form->getRawState()))
-            ->modalSubmitActionLabel('この内容で保存');
-    }
-
     protected function mutateFormDataBeforeFill(array $data): array
     {
         return DbSetlistResource::splitEncoreForFormData($data);

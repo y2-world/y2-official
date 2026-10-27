@@ -33,8 +33,15 @@
                     <select class="year-select" name="select" onChange="location.href=value;">
                         {{-- All Artists：年を選んでいればその年のすべて、選んでいなければすべてのセットリストへ --}}
                         <option value="{{ $filterYear ? url('/setlists/years', $filterYear) : url('/setlists') }}">All Artists</option>
-                        @foreach ($artists as $artistItem)
-                            <option value="{{ url('/setlists/artists', $artistItem->id) }}{{ $filterYear && in_array($artistItem->id, $artistIdsInFilterYear) ? '?year=' . $filterYear : '' }}" {{ $artistItem->id == $artist->id ? 'selected' : '' }}>{{ $artistItem->name }}</option>
+                        {{-- Live（単独ライブで見た）/ Fes（フェスでだけ見た）に分ける --}}
+                        @foreach ($artistGroups as $groupLabel => $groupArtists)
+                            @if ($groupArtists->isNotEmpty())
+                                <optgroup label="{{ $groupLabel }}">
+                                    @foreach ($groupArtists as $artistItem)
+                                        <option value="{{ url('/setlists/artists', $artistItem->id) }}{{ $filterYear && in_array($artistItem->id, $artistIdsInFilterYear) ? '?year=' . $filterYear : '' }}" {{ $artistItem->id == $artist->id ? 'selected' : '' }}>{{ $artistItem->name }}</option>
+                                    @endforeach
+                                </optgroup>
+                            @endif
                         @endforeach
                     </select>
                     {{-- 年はこのアーティストのセットリストがある年だけ。選ぶとこのアーティストのその年に絞り込む --}}
