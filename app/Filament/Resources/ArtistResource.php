@@ -111,6 +111,14 @@ class ArtistResource extends Resource
                     ->offColor('gray'),
             ])
             ->filters([
+                // Yuki's Setlists の Live（単独ライブのセットリストがある）/ Fes（フェスにだけ出ている）。公式のアーティストだけ
+                Tables\Filters\SelectFilter::make('setlist_group')
+                    ->label('Live / Fes')
+                    ->options(['Live' => 'Live', 'Fes' => 'Fes'])
+                    ->visible(fn () => !AdminData::isMember())
+                    ->query(fn ($query, array $data) => filled($data['value'] ?? null)
+                        ? $query->whereIn('id', \App\Support\SetlistArtistGroups::ids()[$data['value']] ?? [])
+                        : $query),
                 Tables\Filters\TernaryFilter::make('setlists_complete')
                     ->label('全セットリスト登録済'),
                 Tables\Filters\TernaryFilter::make('visible')
