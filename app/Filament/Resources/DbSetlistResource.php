@@ -346,8 +346,6 @@ class DbSetlistResource extends Resource
     protected static function encoreGroupsField(): Forms\Components\Repeater
     {
         return Forms\Components\Repeater::make('_encore_groups')
-            // 手動入力で直したら、一括入力の欄もその場で同じ中身にする（refreshBulkFromManual）
-            ->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => static::refreshBulkFromManual($get, $set))
             ->label('アンコール')
             ->extraAttributes(['class' => 'setlist-encore-groups'])
             ->schema([
@@ -595,8 +593,6 @@ class DbSetlistResource extends Resource
                     ->schema([
                         Forms\Components\Repeater::make('setlist')
                             ->live(debounce: 0)
-                            // 手動入力で直したら、一括入力の欄もその場で同じ中身にする（refreshBulkFromManual）
-                            ->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => static::refreshBulkFromManual($get, $set))
                             ->label('本編')
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')

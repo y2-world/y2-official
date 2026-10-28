@@ -294,16 +294,6 @@ class SlSetlistResource extends Resource
         $set('data._bulk_encore_uuids', array_column($encore, '_uuid'), true);
     }
 
-    public static function refreshBulkFesFromManual(Forms\Get $get, Forms\Set $set): void
-    {
-        $setlist = array_values((array) $get('data.fes_setlist', true));
-        $encore = array_values((array) $get('data.fes_encore', true));
-        $blockUuids = fn ($items) => array_column(array_filter($items, fn ($b) => ($b['type'] ?? 'block') === 'block'), '_uuid');
-        $set('data._bulk_fes_input', static::bulkFesTextFromBlocks($setlist, $encore), true);
-        $set('data._bulk_fes_setlist_uuids', $blockUuids($setlist), true);
-        $set('data._bulk_fes_encore_uuids', $blockUuids($encore), true);
-    }
-
     // 登録済みの曲を、一括入力の書き方にする（1行1曲。本編とアンコール・アンコールの区切りは空行）。表記は別表記があればそれ
     public static function bulkLiveTextFromItems(array $setlist, array $encore): string
     {
@@ -591,8 +581,6 @@ class SlSetlistResource extends Resource
     private static function encoreGroupsField(): Forms\Components\Repeater
     {
         return Forms\Components\Repeater::make('_encore_groups')
-            // 手動入力で直したら、一括入力の欄もその場で同じ中身にする（refreshBulkLiveFromManual）
-            ->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => static::refreshBulkLiveFromManual($get, $set))
             ->label('アンコール')
             ->extraAttributes(['class' => 'setlist-encore-groups'])
             ->schema([
@@ -1026,8 +1014,6 @@ class SlSetlistResource extends Resource
                                     ->schema([
                         Forms\Components\Repeater::make('setlist')
                             ->live(debounce: 0)
-                            // 手動入力で直したら、一括入力の欄もその場で同じ中身にする（refreshBulkLiveFromManual）
-                            ->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => static::refreshBulkLiveFromManual($get, $set))
                             ->label('本編')
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')
@@ -1183,8 +1169,6 @@ class SlSetlistResource extends Resource
                                 Forms\Components\Tabs\Tab::make('通常入力')
                                     ->schema([
                         Forms\Components\Repeater::make('fes_setlist')
-                            // 手動入力で直したら、一括入力の欄もその場で同じ中身にする（refreshBulkFesFromManual）
-                            ->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => static::refreshBulkFesFromManual($get, $set))
                             ->label('本編')
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')
@@ -1407,8 +1391,6 @@ class SlSetlistResource extends Resource
                             ->columnSpanFull(),
 
                         Forms\Components\Repeater::make('fes_encore')
-                            // 手動入力で直したら、一括入力の欄もその場で同じ中身にする（refreshBulkFesFromManual）
-                            ->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => static::refreshBulkFesFromManual($get, $set))
                             ->label('アンコール')
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')
