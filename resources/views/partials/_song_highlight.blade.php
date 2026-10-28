@@ -65,7 +65,8 @@
             // スマホは、曲がもう画面に見えているときは動かさない（見えていないときだけ動かす）
             if (isMobile && isOnScreen(first)) return;
             var row = first.closest('.setlist-row');
-            var wrap = first.closest('.setlist-pattern-wrap') || first;
+            // パターンの枠（Summary では日付ごとの列の枠）。無いときは曲名に合わせる
+            var wrap = first.closest('.setlist-pattern-wrap, .live-column-wrap') || first;
             // 横：スマホは1画面に1パターン（幅は画面の8割）なので、真ん中に合わせると両隣が少しずつ見えて中途半端になる。
             // 1つ目のパターンを開いたときと同じく、パターンの左端（外側の余白ぶん）を画面の左にそろえる。PC はパターンを段の真ん中に。
             // 横と縦を同時になめらかに動かすと片方が止まることがあるので、横はすぐに動かす
