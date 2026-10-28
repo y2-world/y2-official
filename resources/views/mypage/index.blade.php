@@ -85,11 +85,12 @@
                         </div>
                     </div>
 
-                    {{-- 全体のstatsと同じく、タブで分ける：Songs（曲）／Setlists（参加記録・アーティスト・会場・時期）／Stamps（スタンプ帳）／Artists（アーティスト別のstatsへ移動） --}}
+                    {{-- 全体のstatsと同じく、タブで分ける：Songs（曲）／Data（参加記録・アーティスト・時期）／Stamps（スタンプ帳）／Map（会場・都道府県）／Artists（アーティスト別のstatsへ移動） --}}
                     <div class="stats-tab-bar">
                         <button type="button" class="stats-tab-btn is-active" data-stats-tab="songs">Songs</button>
                         <button type="button" class="stats-tab-btn" data-stats-tab="data">Data</button>
                         <button type="button" class="stats-tab-btn" data-stats-tab="stamps">Stamps</button>
+                        <button type="button" class="stats-tab-btn" data-stats-tab="map">Map</button>
                         {{-- Artists：選んだアーティストのstatsに移動する --}}
                         @if (count($artistStats))
                         <select class="stats-tab-btn stats-tab-select" onchange="if (this.value) location.href = this.value;">
@@ -242,6 +243,51 @@
                         </div>
                     </div>
 
+                    <!-- Shows by Year Section -->
+                    <div class="stats-section visible">
+                        <h2 class="section-title">
+                            <i class="fas fa-calendar-alt"></i> Shows by Year
+    <span class="section-title-desc">参加したライブが多かった年</span></h2>
+                        <div class="stats-table-container">
+                            <table class="stats-table has-bar-indicator">
+                                <thead>
+                                    <tr>
+                                        <th>Year</th>
+                                        <th class="count-col">Shows</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($yearStats as $yearStat)
+                                        <tr>
+                                            <td class="year-col">{!! $link($isOwner ? route('mypage.attendances.index', ['year' => $yearStat->year]) : null, $yearStat->year) !!}</td>
+                                            <td class="count-col">
+                                                <div class="year-bar-container">
+                                                    <div class="year-bar-wrapper">
+                                                        <div class="year-bar" style="width: {{ ($yearStat->count / $yearStats->max('count')) * 100 }}%"></div>
+                                                    </div>
+                                                    <span class="year-count">{{ $yearStat->count }}</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="2">まだ参加したライブが記録されていません。</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    </div>
+
+                    {{-- Map：会場と都道府県のランキング。地図のページへのリンク --}}
+                    <div class="stats-tab-panel" data-stats-panel="map" style="display: none;">
+                        {{-- 地図のページへのリンク（いちばん上） --}}
+                        <a href="{{ ($isOwner ? route('mypage.stats.map') : route('mypage.users.stats.map', ['user' => $statsUser])) }}" class="venue-map-banner">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                            <span>Venue Map<small>行った会場の都道府県の日本地図</small></span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
                     <!-- Top Venues Section -->
                     <div class="stats-section visible">
                         <h2 class="section-title">
@@ -293,41 +339,7 @@
                         </div>
                     </div>
 
-                    <!-- Shows by Year Section -->
-                    <div class="stats-section visible">
-                        <h2 class="section-title">
-                            <i class="fas fa-calendar-alt"></i> Shows by Year
-    <span class="section-title-desc">参加したライブが多かった年</span></h2>
-                        <div class="stats-table-container">
-                            <table class="stats-table has-bar-indicator">
-                                <thead>
-                                    <tr>
-                                        <th>Year</th>
-                                        <th class="count-col">Shows</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($yearStats as $yearStat)
-                                        <tr>
-                                            <td class="year-col">{!! $link($isOwner ? route('mypage.attendances.index', ['year' => $yearStat->year]) : null, $yearStat->year) !!}</td>
-                                            <td class="count-col">
-                                                <div class="year-bar-container">
-                                                    <div class="year-bar-wrapper">
-                                                        <div class="year-bar" style="width: {{ ($yearStat->count / $yearStats->max('count')) * 100 }}%"></div>
-                                                    </div>
-                                                    <span class="year-count">{{ $yearStat->count }}</span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="2">まだ参加したライブが記録されていません。</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    @include('stats._prefecture_ranking', ['prefectureStats' => $prefectureStats, 'mapUrl' => ($isOwner ? route('mypage.stats.map') : route('mypage.users.stats.map', ['user' => $statsUser]))])
                     </div>
 
                     <div class="stats-tab-panel" data-stats-panel="stamps" style="display: none;">

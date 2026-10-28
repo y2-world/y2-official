@@ -71,6 +71,8 @@ class StatsController extends Controller
         $songStatsUnique = $this->getPersonalSongStats(true); // 同名ツアーを1回カウント
         $artistStats = $this->getPersonalArtistStats();
         $venueStats = $this->getPersonalVenueStats();
+        // Map のタブ：都道府県ランキング
+        $prefectureStats = \App\Support\VenueMap::build($this->personalVenueCounts())['prefectures'];
         $yearStats = $this->getPersonalYearStats();
         $monthStats = $this->getPersonalMonthStats();
 
@@ -142,6 +144,7 @@ class StatsController extends Controller
             'songStatsUnique',
             'artistStats',
             'venueStats',
+            'prefectureStats',
             'yearStats',
             'monthStats',
             'artistIdsWithDbSongs',
@@ -370,6 +373,28 @@ class StatsController extends Controller
         }
 
         return collect($artistStats);
+    }
+
+    // 参加したライブの会場ごとの回数（[会場 => 回数]。会場の前後の空白は除く）
+    private function personalVenueCounts(): \Illuminate\Support\Collection
+    {
+        return SlSetlist::where('date', '<=', now()->toDateString())
+            ->whereNotNull('venue')->where('venue', '!=', '')
+            ->pluck('venue')
+            ->map(fn ($venue) => trim($venue))
+            ->filter()
+            ->countBy();
+    }
+
+    // Map：行った会場の都道府県を、行った回数で染めた日本地図。都道府県を押すと会場の一覧が出る
+    public function map()
+    {
+        return view('stats.map', [
+            'map' => \App\Support\VenueMap::build($this->personalVenueCounts()),
+            'shapes' => \App\Support\VenueMap::shapes(),
+            'title' => "Yuki's Venue Map",
+            'venueUrl' => fn ($venue) => url('/venue') . '?keyword=' . urlencode($venue),
+        ]);
     }
 
     private function getPersonalVenueStats()

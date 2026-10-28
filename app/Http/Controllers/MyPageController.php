@@ -18,6 +18,38 @@ class MyPageController extends Controller
         return $this->render(Auth::guard('external')->user());
     }
 
+    // Map：行った会場の都道府県を、行った回数で染めた日本地図（本人）
+    public function map()
+    {
+        return $this->renderMap(Auth::guard('external')->user());
+    }
+
+    // Map（他ユーザーのプロフィールから）
+    public function showMap(ExternalUser $user)
+    {
+        return $this->renderMap($user);
+    }
+
+    private function renderMap(ExternalUser $user)
+    {
+        $isOwner = (int) optional(Auth::guard('external')->user())->id === (int) $user->id;
+        $attendances = $user->attendances()->withSetlist()->get(['id', 'venue']);
+
+        return view('stats.map', [
+            'map' => \App\Support\VenueMap::build(static::venueCounts($attendances)),
+            'shapes' => \App\Support\VenueMap::shapes(),
+            'title' => ($isOwner ? 'My' : $user->name . "'s") . ' Venue Map',
+            // 会場の参加記録の一覧は本人だけが開ける
+            'venueUrl' => $isOwner ? fn ($venue) => route('mypage.attendances.index', ['venue' => $venue]) : null,
+        ]);
+    }
+
+    // 参加記録の会場ごとの回数（[会場 => 回数]。会場の前後の空白は除く）
+    private static function venueCounts($attendances): \Illuminate\Support\Collection
+    {
+        return $attendances->pluck('venue')->map(fn ($venue) => trim((string) $venue))->filter()->countBy();
+    }
+
     // 他ユーザーのプロフィール（Timelineのユーザー名クリック経由）。
     // ログインしてプロフィールを見た人には、アバター・自己紹介の下に My Statistics をすべて出す
     public function show(ExternalUser $user)
@@ -267,6 +299,8 @@ class MyPageController extends Controller
             ->sortByDesc('count')
             ->take(10)
             ->values();
+        // Map のタブ：都道府県ランキング
+        $prefectureStats = \App\Support\VenueMap::build(static::venueCounts($attendances))['prefectures'];
 
         $yearStats = $attendances
             ->filter(fn ($a) => $a->attended_date)
@@ -295,6 +329,6 @@ class MyPageController extends Controller
          'topicWelcomeBack' => $topicWelcomeBack, 'topicRecentFirst' => $topicRecentFirst, 'topicRecentFirstAll' => $topicRecentFirstAll]
             = \App\Support\ArtistTopics::combined($heardByArtist);
 
-        return view('mypage.index', compact('attendances', 'overallStats', 'topSongs', 'topSongsUnique', 'artistStats', 'tabArtistStats', 'artistSongStats', 'stampBookArtists', 'venueStats', 'yearStats', 'topicHeardRevivals', 'topicFirstHeard', 'topicWelcomeBack', 'topicRecentFirst', 'topicRecentFirstAll', 'isOwner', 'asProfile', 'statsUser'));
+        return view('mypage.index', compact('attendances', 'overallStats', 'topSongs', 'topSongsUnique', 'artistStats', 'tabArtistStats', 'artistSongStats', 'stampBookArtists', 'venueStats', 'prefectureStats', 'yearStats', 'topicHeardRevivals', 'topicFirstHeard', 'topicWelcomeBack', 'topicRecentFirst', 'topicRecentFirstAll', 'isOwner', 'asProfile', 'statsUser'));
     }
 }

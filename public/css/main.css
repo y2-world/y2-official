@@ -2591,6 +2591,45 @@ h5.setlist-subtitle-heading {
 }
 
 /* Statistics Sections */
+/* Statistics の Map のタブのいちばん上：地図のページへのリンク */
+.venue-map-banner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: white;
+    border-radius: 20px;
+    padding: 18px 24px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    color: #333;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.venue-map-banner:hover {
+    color: #333;
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.14);
+}
+.venue-map-banner > i:first-child {
+    font-size: 1.6rem;
+    color: #667eea;
+}
+.venue-map-banner span {
+    flex: 1;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+.venue-map-banner small {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: normal;
+    color: #888;
+}
+.venue-map-banner > i:last-child {
+    color: #aaa;
+}
+
 .stats-section {
     background: white;
     border-radius: 20px;

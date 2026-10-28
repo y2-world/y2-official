@@ -53,11 +53,12 @@
                         </div>
                     </div>
 
-                    {{-- 集計をタブで分ける：Songs（曲）／Data（アーティスト・会場・時期）／Stamps（スタンプ帳）／Artists（アーティスト別のstatsへ移動） --}}
+                    {{-- 集計をタブで分ける：Songs（曲）／Data（アーティスト・時期）／Stamps（スタンプ帳）／Map（会場・都道府県）／Artists（アーティスト別のstatsへ移動） --}}
                     <div class="stats-tab-bar">
                         <button type="button" class="stats-tab-btn is-active" data-stats-tab="songs">Songs</button>
                         <button type="button" class="stats-tab-btn" data-stats-tab="data">Data</button>
                         <button type="button" class="stats-tab-btn" data-stats-tab="stamps">Stamps</button>
+                        <button type="button" class="stats-tab-btn" data-stats-tab="map">Map</button>
                         {{-- Artists：選んだアーティストのstatsに移動する --}}
                         @if (count($artistStats))
                         <select class="stats-tab-btn stats-tab-select" onchange="if (this.value) location.href = this.value;">
@@ -199,57 +200,6 @@
                         </div>
                     </div>
 
-                    <!-- Top Venues Section -->
-                    <div class="stats-section visible">
-                        <h2 class="section-title">
-                            <i class="fas fa-map-marker-alt"></i> Top Venues
-    <span class="section-title-desc">よく行った会場</span></h2>
-                        <div class="stats-table-container">
-                            <table class="stats-table">
-                                <thead>
-                                    <tr>
-                                        <th class="rank-col">Rank</th>
-                                        <th>Venue</th>
-                                        <th class="count-col">Visits</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($venueStats as $index => $venue)
-                                    @php
-                                        $showRank = $index === 0 || $venueStats[$index - 1]->count !== $venue->count;
-                                        $actualRank = $index + 1;
-                                    @endphp
-                                    <tr>
-                                        <td class="rank-col">
-                                            @if($showRank)
-                                                @if($index === 0)
-                                                    <span class="rank-badge gold">🏆</span>
-                                                @elseif($index === 1)
-                                                    <span class="rank-badge silver">🥈</span>
-                                                @elseif($index === 2)
-                                                    <span class="rank-badge bronze">🥉</span>
-                                                @else
-                                                    <span class="rank-number">{{ $actualRank }}</span>
-                                                @endif
-                                            @endif
-                                        </td>
-                                        <td class="venue-name">
-                                            <a href="{{ url('/venue') }}?keyword={{ urlencode($venue->venue) }}" class="stats-link">{{ $venue->venue }}</a>
-                                        </td>
-                                        <td class="count-col">
-                                            <span class="count-badge">{{ $venue->count }}</span>
-                                        </td>
-                                    </tr>
-                                    @empty
-                                    <tr>
-                                        <td colspan="3">まだ参加したライブが記録されていません。</td>
-                                    </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
                     <!-- Shows by Year Section -->
                     <div class="stats-section visible">
                         <h2 class="section-title">
@@ -321,6 +271,68 @@
                             </table>
                         </div>
                     </div>
+                    </div>
+
+                    {{-- Map：会場と都道府県のランキング。地図のページへのリンク --}}
+                    <div class="stats-tab-panel" data-stats-panel="map" style="display: none;">
+                        {{-- 地図のページへのリンク（いちばん上） --}}
+                        <a href="{{ route('stats.map') }}" class="venue-map-banner">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                            <span>Venue Map<small>行った会場の都道府県の日本地図</small></span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+                    <!-- Top Venues Section -->
+                    <div class="stats-section visible">
+                        <h2 class="section-title">
+                            <i class="fas fa-map-marker-alt"></i> Top Venues
+    <span class="section-title-desc">よく行った会場</span></h2>
+                        <div class="stats-table-container">
+                            <table class="stats-table">
+                                <thead>
+                                    <tr>
+                                        <th class="rank-col">Rank</th>
+                                        <th>Venue</th>
+                                        <th class="count-col">Visits</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($venueStats as $index => $venue)
+                                    @php
+                                        $showRank = $index === 0 || $venueStats[$index - 1]->count !== $venue->count;
+                                        $actualRank = $index + 1;
+                                    @endphp
+                                    <tr>
+                                        <td class="rank-col">
+                                            @if($showRank)
+                                                @if($index === 0)
+                                                    <span class="rank-badge gold">🏆</span>
+                                                @elseif($index === 1)
+                                                    <span class="rank-badge silver">🥈</span>
+                                                @elseif($index === 2)
+                                                    <span class="rank-badge bronze">🥉</span>
+                                                @else
+                                                    <span class="rank-number">{{ $actualRank }}</span>
+                                                @endif
+                                            @endif
+                                        </td>
+                                        <td class="venue-name">
+                                            <a href="{{ url('/venue') }}?keyword={{ urlencode($venue->venue) }}" class="stats-link">{{ $venue->venue }}</a>
+                                        </td>
+                                        <td class="count-col">
+                                            <span class="count-badge">{{ $venue->count }}</span>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="3">まだ参加したライブが記録されていません。</td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    @include('stats._prefecture_ranking', ['prefectureStats' => $prefectureStats, 'mapUrl' => route('stats.map')])
                     </div>
 
                     <div class="stats-tab-panel" data-stats-panel="stamps" style="display: none;">

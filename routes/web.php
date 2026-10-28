@@ -121,6 +121,7 @@ Route::get('/lyrics/{id}', [LyricController::class, 'show'])->name('lyric.show')
 
 // Statistics routes
 Route::get('/stats', [App\Http\Controllers\StatsController::class, 'index'])->name('stats.index');
+Route::get('/stats/map', [App\Http\Controllers\StatsController::class, 'map'])->name('stats.map');
 Route::get('/stats/artist/{id}', [App\Http\Controllers\StatsController::class, 'getArtistTopSongs'])->name('stats.artist');
 Route::get('/stats/artist/{id}/stamps', [App\Http\Controllers\StatsController::class, 'getStampBook'])->name('stats.stamps');
 
@@ -139,6 +140,8 @@ Route::prefix('mypage')->name('mypage.')->group(function () {
         Route::get('/', [MyPageHubController::class, 'index'])->name('index');
         Route::get('stats', [MyPageController::class, 'index'])->name('stats');
         Route::get('users/{user}/stats', [MyPageController::class, 'show'])->name('users.stats');
+        Route::get('stats/map', [MyPageController::class, 'map'])->name('stats.map');
+        Route::get('users/{user}/stats/map', [MyPageController::class, 'showMap'])->name('users.stats.map');
 
         // ユーザー登録アーティストの「データベース」的な閲覧ページ（公式のdatabase.live/live.show相当）。
         // 誰が登録したかに関わらず全ツアーが並ぶ、認可制限のない一覧・詳細。
