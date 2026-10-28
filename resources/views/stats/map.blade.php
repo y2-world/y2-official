@@ -133,6 +133,8 @@
     .venue-map-page { padding-top: 16px !important; }
     /* ふつうの Statistics は「画面の高さ以上」なので、ヘッダーの分だけ長くなる。地図のページはヘッダーを除いた高さにする */
     .venue-map-wrapper { padding-bottom: 16px; min-height: calc(100vh - 56px); }
+    /* スマホで地図・ボタンを続けてタップしたときに、ページが拡大されないようにする（スクロールはそのまま） */
+    .venue-map-wrapper, .venue-map-wrapper button { touch-action: manipulation; }
     .venue-map-layout { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "map" "panel" "foot"; gap: 16px; margin-top: 8px; }
     .venue-map-foot { grid-area: foot; }
     .venue-map-head { grid-area: head; }
@@ -153,7 +155,10 @@
     @media (max-width: 991.98px) {
         .venue-map-page { padding-top: 0 !important; }
         .venue-map-layout { position: relative; grid-template-areas: "map" "panel" "foot"; margin-top: 0; gap: 12px; }
-        .venue-map-head { position: absolute; top: 4px; left: 0; z-index: 4; pointer-events: none; text-align: left; }
+        /* 見出しは地図と同じ場所に重ねる（地図と一緒に動く） */
+        .venue-map-head { grid-area: map; align-self: start; justify-self: start; position: relative; z-index: 4; margin-top: 4px; pointer-events: none; text-align: left; }
+        /* 都道府県を選ぶ前は、地図と色の見本を画面の上下の真ん中に置く */
+        .venue-map-layout:not(.has-selection) { min-height: calc(100vh - 56px - 36px); align-content: center; }
         .venue-map-head .venue-map-title, .venue-map-head .venue-map-subtitle { text-align: left; }
         .venue-map-title { font-size: 1.15rem; margin-bottom: 2px; }
         .venue-map-subtitle { font-size: 0.8rem; }
@@ -228,11 +233,31 @@
         var pref = data[code];
         if (!pref) return;
         document.querySelectorAll('.venue-map-pref, .venue-map-overseas').forEach(function (el) { el.classList.toggle('is-selected', (el.dataset.pref || el.dataset.prefLink) === code); });
+        var layout = document.querySelector('.venue-map-layout');
+        var first = !layout.classList.contains('has-selection');
+        var figure = document.querySelector('.venue-map-figure');
+        var before = figure.getBoundingClientRect().top;
         document.getElementById('venueMapPanel').style.display = '';
+        layout.classList.add('has-selection');
+        // スマホ：はじめて選んだときは、真ん中にあった地図をゆっくり上へ動かし、カードはふわっと出す
+        if (first && window.innerWidth < 992) {
+            var dy = before - figure.getBoundingClientRect().top;
+            var parts = layout.querySelectorAll('.venue-map-head, .venue-map-figure, .venue-map-panel, .venue-map-foot');
+            parts.forEach(function (el) { el.style.transition = 'none'; el.style.transform = 'translateY(' + dy + 'px)'; });
+            var panel = document.getElementById('venueMapPanel');
+            panel.style.opacity = '0';
+            layout.getBoundingClientRect();
+            parts.forEach(function (el) {
+                el.style.transition = 'transform 0.6s ease, opacity 0.6s ease';
+                el.style.transform = '';
+            });
+            panel.style.opacity = '';
+            setTimeout(function () { parts.forEach(function (el) { el.style.transition = ''; }); }, 650);
+        }
         title.textContent = pref.name;
         var count = document.createElement('small');
         count.className = 'venue-map-count';
-        count.textContent = pref.count + '回　' + pref.venueCount + '会場';
+        count.textContent = pref.count + '回 ' + pref.venueCount + '会場';
         title.appendChild(count);
         document.querySelector('#venueMapPanel .stats-table-container').scrollTop = 0;
         rows.innerHTML = pref.venues.map(function (v) {
