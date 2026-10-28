@@ -43,7 +43,9 @@
                             <p class="stats-subtitle venue-map-subtitle"><strong class="venue-map-total">{{ count($prefectures) - count($overseas) }}<span> / 47</span></strong> 都道府県@if ($overseas)<small class="venue-map-count">海外 {{ count($overseas) }}か国</small>@endif</p>
                         </div>
                         <div class="venue-map-figure">
+                            <div class="venue-map-canvas">
                             <svg viewBox="{{ implode(' ', $shapes['viewBox']) }}" role="img" aria-label="日本地図" class="venue-map-svg">
+                                <g id="venueMapShapes">
                                 <path d="{{ $shapes['divider'] }}" fill="none" stroke="#c8c8d0" stroke-width="0.8"/>
                                 @foreach ($shapes['paths'] as $code => $d)
                                     @php $p = $prefectures[$code] ?? null; @endphp
@@ -53,7 +55,15 @@
                                         <title>{{ \App\Models\VenuePrefecture::NAMES[$code] }}{{ $p ? ' ' . $p['count'] . '回' : '' }}</title>
                                     </path>
                                 @endforeach
+                                </g>
                             </svg>
+                            {{-- スマホ：地図の拡大・縮小（拡大中は指でなぞって動かせる。2本指でも拡大・縮小できる） --}}
+                            <div class="venue-map-zoom">
+                                <button type="button" data-zoom="in" aria-label="拡大"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+                                <button type="button" data-zoom="out" aria-label="縮小"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+                                <button type="button" data-zoom="reset" aria-label="元に戻す" hidden><i class="fa-solid fa-expand"></i></button>
+                            </div>
+                            </div>
                             {{-- 海外は地図に無いので、押したときだけ右の一覧に国と会場を出す --}}
                             @if ($overseas)
                                 <button type="button" class="venue-map-overseas" data-pref-link="overseas">
@@ -119,7 +129,8 @@
     .venue-map-layout { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "map" "panel"; gap: 16px; margin-top: 8px; }
     .venue-map-head { grid-area: head; }
     .venue-map-figure { grid-area: map; position: relative; min-width: 0; }
-    .venue-map-panel { grid-area: panel; min-width: 0; margin: 0 !important; padding: 16px !important; }
+    /* 会場の一覧のカード：高さは決まった大きさにして、会場が多いときはカードの中でスクロール（スマホも PC も） */
+    .venue-map-panel { grid-area: panel; min-width: 0; margin: 0 !important; padding: 16px !important; height: 324px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
     .venue-map-title { font-size: 1.6rem; margin-bottom: 4px; }
     /* 行った都道府県の数を目立たせる */
     .venue-map-total { font-size: 2em; font-weight: 700; color: #fff; line-height: 1; margin-right: 4px; }
@@ -157,6 +168,14 @@
     .venue-map-legend i { display: inline-block; width: 14px; height: 14px; border-radius: 3px; margin-right: 4px; vertical-align: -2px; }
     .venue-map-overseas { display: block; margin: 8px auto 0; background: #fff; border: 1px solid #d5d8ef; border-radius: 999px; padding: 4px 12px; font-size: 0.8rem; color: #555; cursor: pointer; }
     .venue-map-overseas:hover, .venue-map-overseas.is-selected { border-color: #667eea; color: #667eea; }
+    .venue-map-svg { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+    .venue-map-canvas { position: relative; }
+    /* 拡大のボタンは、北海道の下（東北の右の海の上）に縦に並べる */
+    .venue-map-zoom { position: absolute; right: 3%; top: 38%; display: flex; flex-direction: column; gap: 8px; z-index: 5; }
+    .venue-map-zoom button { width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.5); background: rgba(255, 255, 255, 0.2); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    .venue-map-zoom button[hidden] { display: none; }
+    /* PC は地図が大きいので、拡大のボタンは出さない */
+    @media (min-width: 992px) { .venue-map-zoom { display: none; } }
     .venue-map-count { font-size: 0.6em; margin-left: 0.5em; opacity: 0.85; }
     /* 一覧は詰めて出す（Statistics の表より行を細く） */
     .venue-map-panel .section-title { font-size: 1.3rem; margin-bottom: 12px; padding-bottom: 8px; }
@@ -196,6 +215,87 @@
     document.querySelectorAll('[data-pref-link]').forEach(function (el) {
         el.addEventListener('click', function (e) { e.preventDefault(); show(el.dataset.prefLink); });
     });
+
+    // スマホ：地図の拡大・縮小。拡大中は指でなぞって動かし、2本指で広げる・つまむでも拡大・縮小する。
+    // 地図を動かしただけのときは、都道府県を押したことにしない
+    var svg = document.querySelector('.venue-map-svg');
+    var base = svg.viewBox.baseVal;
+    var B = { x: base.x, y: base.y, w: base.width, h: base.height };
+    var view = { s: 1, cx: B.x + B.w / 2, cy: B.y + B.h / 2 };
+    var MAX = 6, STEP = 1.6;
+    var resetBtn = document.querySelector('[data-zoom="reset"]');
+
+    function apply() {
+        view.s = Math.min(MAX, Math.max(1, view.s));
+        var w = B.w / view.s, h = B.h / view.s;
+        view.cx = Math.min(B.x + B.w - w / 2, Math.max(B.x + w / 2, view.cx));
+        view.cy = Math.min(B.y + B.h - h / 2, Math.max(B.y + h / 2, view.cy));
+        svg.setAttribute('viewBox', (view.cx - w / 2) + ' ' + (view.cy - h / 2) + ' ' + w + ' ' + h);
+        // 拡大していないときは、地図の上でもページをスクロールできるようにする
+        svg.style.touchAction = view.s > 1 ? 'none' : 'pan-y';
+        resetBtn.hidden = view.s <= 1;
+    }
+    function toSvg(x, y) {
+        var pt = svg.createSVGPoint(); pt.x = x; pt.y = y;
+        return pt.matrixTransform(svg.getScreenCTM().inverse());
+    }
+    // 画面の (x, y) の地点を動かさずに、倍率を factor 倍にする
+    function zoomAt(factor, x, y) {
+        var before = toSvg(x, y);
+        var s = Math.min(MAX, Math.max(1, view.s * factor));
+        var k = view.s / s;
+        view.cx = before.x + (view.cx - before.x) * k;
+        view.cy = before.y + (view.cy - before.y) * k;
+        view.s = s;
+        apply();
+    }
+    document.querySelectorAll('[data-zoom]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var r = svg.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+            if (btn.dataset.zoom === 'in') zoomAt(STEP, x, y);
+            else if (btn.dataset.zoom === 'out') zoomAt(1 / STEP, x, y);
+            else { view.s = 1; apply(); }
+        });
+    });
+
+    var drag = null, pinch = null, moved = false;
+    svg.addEventListener('touchstart', function (e) {
+        moved = false;
+        if (e.touches.length === 2) {
+            var a = e.touches[0], b = e.touches[1];
+            pinch = { d: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY) };
+            drag = null;
+        } else if (e.touches.length === 1 && view.s > 1) {
+            drag = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }
+    }, { passive: true });
+    svg.addEventListener('touchmove', function (e) {
+        if (pinch && e.touches.length === 2) {
+            e.preventDefault();
+            var a = e.touches[0], b = e.touches[1];
+            var d = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+            zoomAt(d / pinch.d, (a.clientX + b.clientX) / 2, (a.clientY + b.clientY) / 2);
+            pinch.d = d; moved = true;
+        } else if (drag && e.touches.length === 1) {
+            e.preventDefault();
+            var t = e.touches[0];
+            var scale = (B.w / view.s) / svg.getBoundingClientRect().width;
+            view.cx -= (t.clientX - drag.x) * scale;
+            view.cy -= (t.clientY - drag.y) * scale;
+            if (Math.hypot(t.clientX - drag.x, t.clientY - drag.y) > 2) moved = true;
+            drag = { x: t.clientX, y: t.clientY };
+            apply();
+        }
+    }, { passive: false });
+    svg.addEventListener('touchend', function (e) {
+        if (e.touches.length < 2) pinch = null;
+        if (e.touches.length === 0) drag = null;
+    });
+    // 動かしたあとのタップは、都道府県を選ばない
+    svg.addEventListener('click', function (e) {
+        if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; }
+    }, true);
+    apply();
 
     // ランキングから来たとき（?pref=13）は、その都道府県を開いておく
     var initial = @json($selected);
