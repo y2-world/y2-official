@@ -15,6 +15,7 @@
     $panelData = collect($prefectures)->map(fn ($p) => [
         'name' => $p['name'],
         'count' => $p['count'],
+        'venueCount' => count($p['venues']),
         'venues' => array_map(fn ($v) => ['html' => $venueLink($v['venue']), 'count' => $v['count']], $p['venues']),
     ])->all();
     // 海外：国ごとに「国の名前」の見出しを付けて、会場を並べる
@@ -23,12 +24,15 @@
         $panelData['overseas'] = [
             'name' => '海外',
             'count' => array_sum(array_column($overseasList, 'count')),
+            'venueCount' => array_sum(array_map(fn ($c) => count($c['venues']), $overseasList)),
             'venues' => collect($overseasList)->flatMap(fn ($c) => array_map(
                 fn ($v) => ['html' => e($c['name']) . '：' . $venueLink($v['venue']), 'count' => $v['count']], $c['venues']
             ))->values()->all(),
         ];
     }
     $levels = \App\Support\VenueMap::LEVELS;
+    // 行った会場の数（都道府県が未設定の会場も入れる）
+    $totalVenues = array_sum(array_map(fn ($p) => count($p['venues']), $prefectures)) + count($map['unassigned']);
 @endphp
 <div class="stats-wrapper venue-map-wrapper">
     <div class="container">
@@ -40,7 +44,7 @@
                     <div class="venue-map-layout">
                         <div class="venue-map-head">
                             <h1 class="stats-title venue-map-title">{{ $title }}</h1>
-                            <p class="stats-subtitle venue-map-subtitle"><strong class="venue-map-total">{{ count($prefectures) - count($overseas) }}<span> / 47</span></strong> 都道府県@if ($overseas)<small class="venue-map-count">海外 {{ count($overseas) }}か国</small>@endif</p>
+                            <p class="stats-subtitle venue-map-subtitle"><strong class="venue-map-total">{{ count($prefectures) - count($overseas) }}<span> / 47</span></strong> 都道府県<span class="venue-map-extra">@if ($overseas)<small class="venue-map-count">海外 {{ count($overseas) }}か国</small>@endif<small class="venue-map-count">{{ $totalVenues }}会場</small></span></p>
                         </div>
                         <div class="venue-map-figure">
                             <div class="venue-map-canvas">
@@ -63,20 +67,13 @@
                                 <button type="button" data-zoom="out" aria-label="縮小"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
                                 <button type="button" data-zoom="reset" aria-label="元に戻す" hidden><i class="fa-solid fa-expand"></i></button>
                             </div>
+                                {{-- 海外は地図に無いので、押したときだけ一覧に国と会場を出す --}}
+                                @if ($overseas)
+                                    <button type="button" class="venue-map-overseas" data-pref-link="overseas">
+                                        <i class="fa-solid fa-earth-americas"></i> 海外<small class="venue-map-count">{{ count($overseas) }}か国</small>
+                                    </button>
+                                @endif
                             </div>
-                            {{-- 海外は地図に無いので、押したときだけ右の一覧に国と会場を出す --}}
-                            @if ($overseas)
-                                <button type="button" class="venue-map-overseas" data-pref-link="overseas">
-                                    <i class="fa-solid fa-earth-americas"></i> 海外<small class="venue-map-count">{{ count($overseas) }}か国</small>
-                                </button>
-                            @endif
-                            <div class="venue-map-legend">
-                                <span><i style="background: {{ $levelColors[0] }}"></i>0</span>
-                                @foreach ($levels as $i => $min)
-                                    <span><i style="background: {{ $levelColors[$i + 1] }}"></i>{{ $min }}{{ isset($levels[$i + 1]) ? ($levels[$i + 1] - 1 > $min ? '〜' . ($levels[$i + 1] - 1) : '') : '〜' }}回</span>
-                                @endforeach
-                            </div>
-                            <p class="venue-map-credit">地図：国土地理院「地球地図日本」をもとにした jpn-atlas（BSD-3-Clause, © 2018 Dan Henri）を加工して作成</p>
                         </div>
 
                         {{-- 会場の一覧のカード：都道府県を押したときに出す --}}
@@ -94,6 +91,16 @@
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                        {{-- 色の見本と地図の出典（カードの下。カードが出ていなくても見せる） --}}
+                        <div class="venue-map-foot">
+                            <div class="venue-map-legend">
+                                <span><i style="background: {{ $levelColors[0] }}"></i>0</span>
+                                @foreach ($levels as $i => $min)
+                                    <span><i style="background: {{ $levelColors[$i + 1] }}"></i>{{ $min }}{{ isset($levels[$i + 1]) ? ($levels[$i + 1] - 1 > $min ? '〜' . ($levels[$i + 1] - 1) : '') : '〜' }}回</span>
+                                @endforeach
+                            </div>
+                            <p class="venue-map-credit">地図：国土地理院「地球地図日本」をもとにした jpn-atlas（BSD-3-Clause, © 2018 Dan Henri）を加工して作成</p>
                         </div>
                     </div>
 
@@ -126,11 +133,36 @@
     .venue-map-page { padding-top: 16px !important; }
     /* ふつうの Statistics は「画面の高さ以上」なので、ヘッダーの分だけ長くなる。地図のページはヘッダーを除いた高さにする */
     .venue-map-wrapper { padding-bottom: 16px; min-height: calc(100vh - 56px); }
-    .venue-map-layout { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "map" "panel"; gap: 16px; margin-top: 8px; }
+    .venue-map-layout { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "map" "panel" "foot"; gap: 16px; margin-top: 8px; }
+    .venue-map-foot { grid-area: foot; }
     .venue-map-head { grid-area: head; }
     .venue-map-figure { grid-area: map; position: relative; min-width: 0; }
     /* 会場の一覧のカード：高さは決まった大きさにして、会場が多いときはカードの中でスクロール（スマホも PC も） */
-    .venue-map-panel { grid-area: panel; min-width: 0; margin: 0 !important; padding: 16px !important; height: 324px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .venue-map-panel { grid-area: panel; min-width: 0; margin: 0 !important; padding: 16px !important; height: 324px; }
+    /* カードの中でスクロールするのは表だけ。見出しはスクロールの外、表の見出しはスクロールの中で上に止める */
+    #venueMapPanel:not([style*="none"]) { display: flex; flex-direction: column; }
+    /* カードの見出しは下の紫の線なし */
+    .venue-map-panel .section-title { flex: none; margin-bottom: 8px !important; border-bottom: none; padding-bottom: 0; }
+    .venue-map-panel .stats-table-container { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    /* 表の overflow: hidden（角を丸めるため）があると止まらないので外し、角は見出しのセルで丸める */
+    .venue-map-panel .stats-table { overflow: visible; }
+    .venue-map-panel .stats-table thead th { position: sticky; top: 0; z-index: 1; background: #6f72dc; }
+    .venue-map-panel .stats-table thead th:first-child { border-top-left-radius: 15px; }
+    .venue-map-panel .stats-table thead th:last-child { border-top-right-radius: 15px; }
+    /* スマホ：見出しは地図の左上（日本海の上）に重ね、地図は画面のぎりぎり上まで上げる。地図とカードが一緒に見えるように */
+    @media (max-width: 991.98px) {
+        .venue-map-page { padding-top: 0 !important; }
+        .venue-map-layout { position: relative; grid-template-areas: "map" "panel" "foot"; margin-top: 0; gap: 12px; }
+        .venue-map-head { position: absolute; top: 4px; left: 0; z-index: 4; pointer-events: none; text-align: left; }
+        .venue-map-head .venue-map-title, .venue-map-head .venue-map-subtitle { text-align: left; }
+        .venue-map-title { font-size: 1.15rem; margin-bottom: 2px; }
+        .venue-map-subtitle { font-size: 0.8rem; }
+        .venue-map-layout.is-zoomed .venue-map-head { display: none; }
+        /* 「海外 1か国　78会場」は2行目に */
+        .venue-map-extra { display: block; margin-top: 2px; }
+        .venue-map-extra .venue-map-count { font-size: 0.75rem; }
+        .venue-map-extra .venue-map-count:first-child { margin-left: 0; }
+    }
     .venue-map-title { font-size: 1.6rem; margin-bottom: 4px; }
     /* 行った都道府県の数を目立たせる */
     .venue-map-total { font-size: 2em; font-weight: 700; color: #fff; line-height: 1; margin-right: 4px; }
@@ -143,8 +175,8 @@
         .venue-map-layout {
             grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
             /* 右の列：見出しとカードをひとまとまりにして、上下の真ん中に置く */
-            grid-template-rows: 1fr auto auto 1fr;
-            grid-template-areas: "map ." "map head" "map panel" "map .";
+            grid-template-rows: 1fr auto auto auto 1fr;
+            grid-template-areas: "map ." "map head" "map panel" "map foot" "map .";
             row-gap: 0;
             column-gap: 32px;
             /* 画面の高さ − ヘッダー(56) − 上の余白(16) − 下の余白(16) − ゆとり(8) */
@@ -154,11 +186,11 @@
         .venue-map-title { font-size: 2.2rem; }
         .venue-map-title, .venue-map-subtitle { text-align: left; }
         .venue-map-figure { display: flex; flex-direction: column; justify-content: center; height: 100%; }
-        .venue-map-svg { height: auto; max-height: calc(100% - 64px); width: auto; max-width: 100%; margin: 0 auto; }
+        .venue-map-svg { height: auto; max-height: calc(100% - 40px); width: auto; max-width: 100%; margin: 0 auto; }
+        .venue-map-foot { margin-top: 12px; }
+        .venue-map-foot .venue-map-legend, .venue-map-foot .venue-map-credit { justify-content: flex-start; text-align: left; }
         /* カードの大きさは、どの都道府県を選んでも同じ（会場5件ぐらいの高さ。多いときは中でスクロール） */
-        .venue-map-panel { overflow-y: auto; padding: 24px !important; margin-top: 16px !important; height: 324px; }
-        /* PC は地図の左下（海の上）に重ねる */
-        .venue-map-overseas { position: absolute; left: 0; bottom: 64px; margin: 0; }
+        .venue-map-panel { padding: 24px !important; margin-top: 16px !important; height: 324px; }
     }
     .venue-map-pref { stroke: #fff; stroke-width: 0.6; stroke-linejoin: round; }
     .venue-map-pref.is-visited { cursor: pointer; }
@@ -166,7 +198,8 @@
     .venue-map-pref.is-selected { stroke: #ffb703; stroke-width: 1; }
     .venue-map-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; justify-content: center; margin-top: 8px; font-size: 0.8rem; color: #fff; }
     .venue-map-legend i { display: inline-block; width: 14px; height: 14px; border-radius: 3px; margin-right: 4px; vertical-align: -2px; }
-    .venue-map-overseas { display: block; margin: 8px auto 0; background: #fff; border: 1px solid #d5d8ef; border-radius: 999px; padding: 4px 12px; font-size: 0.8rem; color: #555; cursor: pointer; }
+    /* 海外のボタンは、地図の左下（九州の下の海の上）に重ねる */
+    .venue-map-overseas { position: absolute; left: 0; bottom: 2%; z-index: 5; background: #fff; border: 1px solid #d5d8ef; border-radius: 999px; padding: 4px 12px; font-size: 0.8rem; color: #555; cursor: pointer; }
     .venue-map-overseas:hover, .venue-map-overseas.is-selected { border-color: #667eea; color: #667eea; }
     .venue-map-svg { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
     .venue-map-canvas { position: relative; }
@@ -182,7 +215,7 @@
     .venue-map-panel .stats-table th { padding: 8px 12px; font-size: 0.7rem; }
     .venue-map-panel .stats-table td { padding: 6px 12px; font-size: 0.75rem; }
     .venue-map-panel .count-badge { min-width: 0; padding: 1px 9px; font-size: 0.72rem; }
-    .venue-map-credit { margin: 8px 0 0; font-size: 0.65rem; color: rgba(255, 255, 255, 0.7); text-align: center; }
+    .venue-map-credit { margin: 6px 0 0; font-size: 0.55rem; color: rgba(255, 255, 255, 0.7); text-align: center; }
 </style>
 
 <script>
@@ -199,8 +232,9 @@
         title.textContent = pref.name;
         var count = document.createElement('small');
         count.className = 'venue-map-count';
-        count.textContent = pref.count + '回';
+        count.textContent = pref.count + '回　' + pref.venueCount + '会場';
         title.appendChild(count);
+        document.querySelector('#venueMapPanel .stats-table-container').scrollTop = 0;
         rows.innerHTML = pref.venues.map(function (v) {
             return '<tr><td class="venue-name">' + v.html + '</td><td class="count-col"><span class="count-badge">' + v.count + '</span></td></tr>';
         }).join('');
@@ -234,6 +268,8 @@
         // 拡大していないときは、地図の上でもページをスクロールできるようにする
         svg.style.touchAction = view.s > 1 ? 'none' : 'pan-y';
         resetBtn.hidden = view.s <= 1;
+        // 拡大中は、地図に重ねた見出し（スマホ）を隠す
+        document.querySelector('.venue-map-layout').classList.toggle('is-zoomed', view.s > 1);
     }
     function toSvg(x, y) {
         var pt = svg.createSVGPoint(); pt.x = x; pt.y = y;

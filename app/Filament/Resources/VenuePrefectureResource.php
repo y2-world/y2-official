@@ -40,8 +40,7 @@ class VenuePrefectureResource extends Resource
                     ->options(VenuePrefecture::NAMES)
                     ->placeholder('未設定'),
                 Tables\Columns\TextInputColumn::make('country')
-                    ->label('国（海外のとき）')
-                    ->placeholder('例：アメリカ')
+                    ->label('国')
                     ->disabled(fn (VenuePrefecture $record) => $record->prefecture !== VenuePrefecture::OVERSEAS),
             ])
             ->filters([
@@ -56,7 +55,8 @@ class VenuePrefectureResource extends Resource
                     ),
                 Tables\Filters\SelectFilter::make('prefecture')->label('都道府県で絞り込む')->options(VenuePrefecture::NAMES),
             ])
-            ->defaultSort('venue')
+            // 登録した順の新しい順
+            ->defaultSort('id', 'desc')
             ->paginated([25, 50, 100, 'all']);
     }
 
