@@ -134,10 +134,12 @@
     /* ふつうの Statistics は「画面の高さ以上」なので、ヘッダーの分だけ長くなる。地図のページはヘッダーを除いた高さにする */
     /* 紫の背景は、いちばん広いときの画面の高さまで（iPhone でアドレスバーが引っ込んでも下まで紫） */
     .venue-map-wrapper { padding-bottom: 16px; min-height: calc(100vh - 56px); }
-    /* 紫のグラデーションは、ページのいちばん外側（html）に付けて、画面の下の端まで1枚でつなげる。
-       高さは画面のいちばん広いとき以上（iPhone でアドレスバーが引っ込んでも下まで）。body と紫の枠は透明 */
-    html { min-height: 100vh; background: #764ba2 linear-gradient(135deg, #667eea 0%, #764ba2 100%) no-repeat; background-size: 100% 100%; }
+    /* 紫のグラデーションは、画面に貼りつく1枚の背景にする。ページの長さやスクロールに関係なく、見えている画面全体がいつも同じグラデーション
+       （高さは画面のいちばん広いとき。iPhone でアドレスバーが引っ込んでも下まで）。下に引っぱったときだけ見える所は、グラデーションの下の端の色 */
+    html { background: #764ba2; }
     body, .venue-map-wrapper { background: transparent !important; }
+    body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 100vh; height: 100lvh; z-index: -1;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); pointer-events: none; }
     /* スマホで地図・ボタンを続けてタップしたときに、ページが拡大されないようにする（スクロールはそのまま） */
     .venue-map-wrapper, .venue-map-wrapper button { touch-action: manipulation; }
     .venue-map-layout { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "map" "panel" "foot"; gap: 16px; margin-top: 8px; }
