@@ -134,6 +134,11 @@
     /* 紫の背景（グラデーション）は紫の枠に付ける。高さはヘッダーを除いた 100vh（ふつうの Statistics の「画面の高さ以上」だとヘッダーの分だけ長くなる）。
        iPhone の 100vh はアドレスバーの裏まで含むので、裏まで紫になる。dvh（見えている高さ）にすると、アドレスバーの手前で切れて下が紫でなくなる */
     .venue-map-wrapper { padding-bottom: 16px; min-height: calc(100vh - 56px); }
+    /* iPhone・iPad の Safari は 100vh が画面のいちばん下（ホームバーの所）まで届かず、そこにページの地の白が見えるので、
+       紫の枠を 100px 長くして画面の下の端まで届かせる（グラデーションは枠に付いたまま、下まで1枚で続く） */
+    @supports (-webkit-touch-callout: none) {
+        .venue-map-wrapper { min-height: calc(100vh - 56px + 100px); }
+    }
     /* スマホで地図・ボタンを続けてタップしたときに、ページが拡大されないようにする（スクロールはそのまま） */
     .venue-map-wrapper, .venue-map-wrapper button { touch-action: manipulation; }
     .venue-map-layout { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "map" "panel" "foot"; gap: 16px; margin-top: 8px; }
