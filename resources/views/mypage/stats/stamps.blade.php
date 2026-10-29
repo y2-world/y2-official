@@ -4,7 +4,7 @@
 @section('og_title', $artist->name . ' Stamp Book - Yuki Official')
 
 @section('content')
-<div class="stats-wrapper">
+<div class="stats-wrapper stats-wrapper--to-bottom">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-10">

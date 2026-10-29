@@ -229,7 +229,15 @@ document.addEventListener('DOMContentLoaded', function () {
         rows.addEventListener('click', function (e) {
             const remove = e.target.closest('.js-stamp-deco-remove');
             if (remove) {
-                remove.closest('.stamp-deco-item').remove();
+                const item = remove.closest('.stamp-deco-item');
+                // 保存してあるテーマ・名前を入れたテーマは、消す前に確かめる（保存すると、そのテーマを付けたスタンプの枠の色も外れる）。
+                // 追加したばかりの空の行は、そのまま消す
+                const saved = (item.querySelector('[data-field="id"]') || {}).value;
+                const label = item.querySelector('[data-field="label"]').value.trim();
+                if ((saved || label) && !window.confirm((label ? '「' + label + '」を' : '') + '削除しますか？')) {
+                    return;
+                }
+                item.remove();
                 return;
             }
             // 色の丸をクリックしたらパレットを出す（もう一度で閉じる）

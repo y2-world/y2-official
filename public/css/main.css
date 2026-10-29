@@ -2443,6 +2443,14 @@ h5.setlist-subtitle-heading {
     padding-bottom: 50px;
 }
 
+/* iPhone・iPad の Safari は、いちばん下までスクロールしたときに、アドレスバーの裏（ホームバーの所）に紫の枠の外の白い地が見える。
+   紫の枠の下を 100px 伸ばして、画面の下の端までグラデーションを届かせる（スタンプ帳など） */
+@supports (-webkit-touch-callout: none) {
+    .stats-wrapper--to-bottom {
+        padding-bottom: 150px;
+    }
+}
+
 .stats-wrapper .element.js-fadein {
     padding-top: 95px;
 }
@@ -4282,8 +4290,9 @@ body.stamp-deco-open {
 
 .stamp-deco-heading {
     font-size: 1rem;
-    /* ×ボタンの分を左右どちらにも空けて、真ん中に置く */
-    margin: 0 28px 6px;
+    /* ×ボタンの分を左右どちらにも空けて、真ん中に置く（×は右から 12〜30px。内側の余白 22px があるので 18px で重ならない。
+       28px だとスマホで「テーマのタイトルとスタンプの枠の色」が1行に入らず改行される） */
+    margin: 0 18px 6px;
     text-align: center;
     color: #333;
     word-break: break-word;
