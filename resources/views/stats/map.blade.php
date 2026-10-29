@@ -245,24 +245,27 @@
         document.querySelectorAll('.venue-map-pref, .venue-map-overseas').forEach(function (el) { el.classList.toggle('is-selected', (el.dataset.pref || el.dataset.prefLink) === code); });
         var layout = document.querySelector('.venue-map-layout');
         var first = !layout.classList.contains('has-selection');
-        var figure = document.querySelector('.venue-map-figure');
-        var before = figure.getBoundingClientRect().top;
-        document.getElementById('venueMapPanel').style.display = '';
+        var panel = document.getElementById('venueMapPanel');
+        // はじめて選んだときは、カードが出て動く部品（スマホは地図と見出し、PC は右の列の見出しと色の見本）を、
+        // 元の位置から 0.6 秒かけてゆっくり動かし、カードはふわっと出す
+        var parts = Array.prototype.slice.call(layout.querySelectorAll('.venue-map-head, .venue-map-figure, .venue-map-foot'));
+        var before = parts.map(function (el) { return el.getBoundingClientRect().top; });
+        panel.style.display = '';
         layout.classList.add('has-selection');
-        // スマホ：はじめて選んだときは、真ん中にあった地図をゆっくり上へ動かし、カードはふわっと出す
-        if (first && window.innerWidth < 992) {
-            var dy = before - figure.getBoundingClientRect().top;
-            var parts = layout.querySelectorAll('.venue-map-head, .venue-map-figure, .venue-map-panel, .venue-map-foot');
-            parts.forEach(function (el) { el.style.transition = 'none'; el.style.transform = 'translateY(' + dy + 'px)'; });
-            var panel = document.getElementById('venueMapPanel');
+        if (first) {
+            var moves = parts.map(function (el, i) { return [el, before[i] - el.getBoundingClientRect().top]; });
+            // カードは、スマホでは地図と一緒に、PC では見出しと一緒に動かす
+            var with_ = layout.querySelector(window.innerWidth < 992 ? '.venue-map-figure' : '.venue-map-head');
+            moves.push([panel, moves.filter(function (m) { return m[0] === with_; })[0][1]]);
+            moves.forEach(function (m) { m[0].style.transition = 'none'; m[0].style.transform = 'translateY(' + m[1] + 'px)'; });
             panel.style.opacity = '0';
             layout.getBoundingClientRect();
-            parts.forEach(function (el) {
-                el.style.transition = 'transform 0.6s ease, opacity 0.6s ease';
-                el.style.transform = '';
+            moves.forEach(function (m) {
+                m[0].style.transition = 'transform 0.6s ease, opacity 0.6s ease';
+                m[0].style.transform = '';
             });
             panel.style.opacity = '';
-            setTimeout(function () { parts.forEach(function (el) { el.style.transition = ''; }); }, 650);
+            setTimeout(function () { moves.forEach(function (m) { m[0].style.transition = ''; }); }, 650);
         }
         title.textContent = pref.name;
         var count = document.createElement('small');
