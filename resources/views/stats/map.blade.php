@@ -230,7 +230,7 @@
     .venue-map-count { font-size: 0.6em; margin-left: 0.5em; opacity: 0.85; }
     /* 一覧は詰めて出す（Statistics の表より行を細く） */
     .venue-map-panel .section-title { font-size: 1.3rem; margin-bottom: 12px; padding-bottom: 8px; }
-    .venue-map-panel .stats-table th { padding: 8px 12px; font-size: 0.7rem; }
+    .venue-map-panel .stats-table th { padding: 8px 12px; font-size: 0.62rem; }
     .venue-map-panel .stats-table td { padding: 6px 12px; font-size: 0.75rem; }
     .venue-map-panel .count-badge { min-width: 0; padding: 1px 9px; font-size: 0.72rem; }
     .venue-map-credit { margin: 6px 0 0; font-size: 0.55rem; color: rgba(255, 255, 255, 0.7); text-align: center; }

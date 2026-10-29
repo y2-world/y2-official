@@ -2687,7 +2687,8 @@ h5.setlist-subtitle-heading {
     text-align: left;
     font-weight: 400;
     text-transform: uppercase;
-    font-size: 0.85rem;
+    /* 英字の大文字は中身の日本語より大きく見えるので、中身より小さめにする */
+    font-size: 0.75rem;
     letter-spacing: 0.5px;
 }
 
@@ -3071,7 +3072,7 @@ h5.setlist-subtitle-heading {
 
     .stats-table thead th {
         padding: 12px 6px !important;
-        font-size: 0.55rem !important;
+        font-size: 0.5rem !important;
         line-height: 1.3;
         letter-spacing: 0;
         /* 見出しは単語の途中で割らない（曲名が長くて列が細くなっても「ARTIST」が2行にならないように）。空白のところでは折り返す */
