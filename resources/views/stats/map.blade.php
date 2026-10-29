@@ -158,6 +158,9 @@
     .venue-map-panel .stats-table { overflow: visible; }
     .venue-map-panel .stats-table thead th { position: sticky; top: 0; z-index: 1; background: #6f72dc; }
     .venue-map-panel .stats-table thead th:first-child { border-top-left-radius: 15px; }
+    /* 海外のときだけ出す Country の見出しを隠しているときは、そのとなりの Venue の角を丸める */
+    #venueMapCountryHead[style*="none"] + th { border-top-left-radius: 15px; padding-left: 24px !important; }
+    @media (max-width: 768px) { #venueMapCountryHead[style*="none"] + th { padding-left: 12px !important; } }
     .venue-map-panel .stats-table thead th:last-child { border-top-right-radius: 15px; }
     /* スマホ：見出しは地図の左上（日本海の上）に重ね、地図は画面のぎりぎり上まで上げる。地図とカードが一緒に見えるように */
     @media (max-width: 991.98px) {

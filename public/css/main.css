@@ -2725,6 +2725,27 @@ h5.setlist-subtitle-heading {
     color: #333;
 }
 
+/* 角が丸い（15px）表で、左端と右端の列の文字が丸みに寄りすぎないように、外側の余白を広げる。
+   順位・回数の列の余白（.rank-col / .count-col の !important）より強くする。スマホは列が狭いので小さめ */
+.stats-table thead th:first-child,
+.stats-table tbody td:first-child {
+    padding-left: 24px !important;
+}
+.stats-table thead th:last-child,
+.stats-table tbody td:last-child {
+    padding-right: 24px !important;
+}
+@media (max-width: 768px) {
+    .stats-table thead th:first-child,
+    .stats-table tbody td:first-child {
+        padding-left: 12px !important;
+    }
+    .stats-table thead th:last-child,
+    .stats-table tbody td:last-child {
+        padding-right: 12px !important;
+    }
+}
+
 .rank-col {
     width: 80px;
     text-align: center;
