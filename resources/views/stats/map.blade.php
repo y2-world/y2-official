@@ -26,7 +26,7 @@
             'count' => array_sum(array_column($overseasList, 'count')),
             'venueCount' => array_sum(array_map(fn ($c) => count($c['venues']), $overseasList)),
             'venues' => collect($overseasList)->flatMap(fn ($c) => array_map(
-                fn ($v) => ['html' => e($c['name']) . '：' . $venueLink($v['venue']), 'count' => $v['count']], $c['venues']
+                fn ($v) => ['country' => $c['name'], 'html' => $venueLink($v['venue']), 'count' => $v['count']], $c['venues']
             ))->values()->all(),
         ];
     }
@@ -83,6 +83,8 @@
                                 <table class="stats-table">
                                     <thead>
                                         <tr>
+                                            {{-- 海外のときだけ国の列を出す --}}
+                                            <th id="venueMapCountryHead" style="display: none;">Country</th>
                                             <th>Venue</th>
                                             <th class="count-col">Visits</th>
                                         </tr>
@@ -268,8 +270,12 @@
         count.textContent = pref.count + '回 ' + pref.venueCount + '会場';
         title.appendChild(count);
         document.querySelector('#venueMapPanel .stats-table-container').scrollTop = 0;
+        var hasCountry = pref.venues.some(function (v) { return v.country; });
+        document.getElementById('venueMapCountryHead').style.display = hasCountry ? '' : 'none';
         rows.innerHTML = pref.venues.map(function (v) {
-            return '<tr><td class="venue-name">' + v.html + '</td><td class="count-col"><span class="count-badge">' + v.count + '</span></td></tr>';
+            var country = document.createElement('td');
+            country.textContent = v.country || '';
+            return '<tr>' + (hasCountry ? country.outerHTML : '') + '<td class="venue-name">' + v.html + '</td><td class="count-col"><span class="count-badge">' + v.count + '</span></td></tr>';
         }).join('');
         var url = new URL(window.location.href);
         url.searchParams.set('pref', code);
