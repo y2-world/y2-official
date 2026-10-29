@@ -134,11 +134,10 @@
     /* ふつうの Statistics は「画面の高さ以上」なので、ヘッダーの分だけ長くなる。地図のページはヘッダーを除いた高さにする */
     /* 紫の背景は、いちばん広いときの画面の高さまで（iPhone でアドレスバーが引っ込んでも下まで紫） */
     .venue-map-wrapper { padding-bottom: 16px; min-height: calc(100vh - 56px); }
-    /* 紫のグラデーションはページ全体に付けて、上から下まで1枚でつなげる（紫の枠は透明）。
-       下に引っぱったときに見えるページの外側は、グラデーションの下の端と同じ色 */
-    html { background-color: #764ba2; }
-    body { min-height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-    .venue-map-wrapper { background: transparent; }
+    /* 紫のグラデーションは、ページのいちばん外側（html）に付けて、画面の下の端まで1枚でつなげる。
+       高さは画面のいちばん広いとき以上（iPhone でアドレスバーが引っ込んでも下まで）。body と紫の枠は透明 */
+    html { min-height: 100vh; background: #764ba2 linear-gradient(135deg, #667eea 0%, #764ba2 100%) no-repeat; background-size: 100% 100%; }
+    body, .venue-map-wrapper { background: transparent !important; }
     /* スマホで地図・ボタンを続けてタップしたときに、ページが拡大されないようにする（スクロールはそのまま） */
     .venue-map-wrapper, .venue-map-wrapper button { touch-action: manipulation; }
     .venue-map-layout { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "map" "panel" "foot"; gap: 16px; margin-top: 8px; }
