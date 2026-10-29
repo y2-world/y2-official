@@ -132,7 +132,8 @@
 <style>
     .venue-map-page { padding-top: 16px !important; }
     /* ふつうの Statistics は「画面の高さ以上」なので、ヘッダーの分だけ長くなる。地図のページはヘッダーを除いた高さにする */
-    .venue-map-wrapper { padding-bottom: 16px; min-height: calc(100vh - 56px); }
+    /* iPhone の Safari の 100vh はアドレスバーなどを含む高さなので、見えている高さ（dvh）を使う（使えないブラウザは vh） */
+    .venue-map-wrapper { padding-bottom: 16px; min-height: calc(100vh - 56px); min-height: calc(100dvh - 56px); }
     /* スマホで地図・ボタンを続けてタップしたときに、ページが拡大されないようにする（スクロールはそのまま） */
     .venue-map-wrapper, .venue-map-wrapper button { touch-action: manipulation; }
     .venue-map-layout { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "map" "panel" "foot"; gap: 16px; margin-top: 8px; }
@@ -158,7 +159,7 @@
         /* 見出しは地図と同じ場所に重ねる（地図と一緒に動く） */
         .venue-map-head { grid-area: map; align-self: start; justify-self: start; position: relative; z-index: 4; margin-top: 4px; pointer-events: none; text-align: left; }
         /* 都道府県を選ぶ前は、地図と色の見本を画面の上下の真ん中に置く */
-        .venue-map-layout:not(.has-selection) { min-height: calc(100vh - 56px - 36px); align-content: center; }
+        .venue-map-layout:not(.has-selection) { min-height: calc(100vh - 56px - 36px); min-height: calc(100dvh - 56px - 36px); align-content: center; }
         .venue-map-head .venue-map-title, .venue-map-head .venue-map-subtitle { text-align: left; }
         .venue-map-title { font-size: 1.15rem; margin-bottom: 2px; }
         .venue-map-subtitle { font-size: 0.8rem; }
@@ -186,6 +187,7 @@
             column-gap: 32px;
             /* 画面の高さ − ヘッダー(56) − 上の余白(16) − 下の余白(16) − ゆとり(8) */
             height: calc(100vh - 56px - 16px - 16px - 8px);
+            height: calc(100dvh - 56px - 16px - 16px - 8px);
         }
         .venue-map-head { text-align: left; }
         .venue-map-title { font-size: 2.2rem; }
