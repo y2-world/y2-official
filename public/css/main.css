@@ -2443,14 +2443,6 @@ h5.setlist-subtitle-heading {
     padding-bottom: 50px;
 }
 
-/* iPhone・iPad の Safari は、いちばん下までスクロールしたときに、アドレスバーの裏（ホームバーの所）に紫の枠の外の白い地が見える。
-   紫の枠の下を 100px 伸ばして、画面の下の端までグラデーションを届かせる（スタンプ帳など） */
-@supports (-webkit-touch-callout: none) {
-    .stats-wrapper--to-bottom {
-        padding-bottom: 150px;
-    }
-}
-
 .stats-wrapper .element.js-fadein {
     padding-top: 95px;
 }
