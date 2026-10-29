@@ -131,17 +131,9 @@
 
 <style>
     .venue-map-page { padding-top: 16px !important; }
-    /* ふつうの Statistics は「画面の高さ以上」なので、ヘッダーの分だけ長くなる。地図のページはヘッダーを除いた高さにする */
-    /* 紫の背景は、いちばん広いときの画面の高さまで（iPhone でアドレスバーが引っ込んでも下まで紫） */
+    /* 紫の背景（グラデーション）は紫の枠に付ける。高さはヘッダーを除いた 100vh（ふつうの Statistics の「画面の高さ以上」だとヘッダーの分だけ長くなる）。
+       iPhone の 100vh はアドレスバーの裏まで含むので、裏まで紫になる。dvh（見えている高さ）にすると、アドレスバーの手前で切れて下が紫でなくなる */
     .venue-map-wrapper { padding-bottom: 16px; min-height: calc(100vh - 56px); }
-    /* 紫のグラデーションは、画面に貼りつく1枚の背景にする。ページの長さやスクロールに関係なく、見えている画面全体がいつも同じグラデーション
-       （高さは画面のいちばん広いとき。iPhone でアドレスバーが引っ込んでも下まで）。下に引っぱったときだけ見える所は、グラデーションの下の端の色 */
-    html { background: #764ba2; }
-    body, .venue-map-wrapper { background: transparent !important; }
-    /* iOS の Safari は、下に浮いているアドレスバーの裏をページの背景色（単色）で塗る。斜めのグラデーションのままだと下の端の色が左右で違い、
-       そこに境目が出るので、下の方を少しずつ背景色に溶け込ませて、下の端を左右とも同じ色にする。背景は画面の下の外まで伸ばす */
-    body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; bottom: -120px; z-index: -1; pointer-events: none;
-        background: linear-gradient(to bottom, rgba(118, 75, 162, 0) 65%, #764ba2 100%), linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
     /* スマホで地図・ボタンを続けてタップしたときに、ページが拡大されないようにする（スクロールはそのまま） */
     .venue-map-wrapper, .venue-map-wrapper button { touch-action: manipulation; }
     .venue-map-layout { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "map" "panel" "foot"; gap: 16px; margin-top: 8px; }
