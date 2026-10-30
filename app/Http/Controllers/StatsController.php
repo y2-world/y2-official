@@ -50,6 +50,27 @@ class StatsController extends Controller
         return $flattened;
     }
 
+    private array $crossoverCache = [];
+
+    // 組になっているアーティスト（ソロプロジェクトと、そのグループ）のライブか。
+    // Yuki's Stats では、そのライブで聴いた自分の曲も「聴いた曲」に数える（Database の stats と同じ考え方）。参加公演数には入れない
+    private function isCrossoverLive($setlist, int $artistId): bool
+    {
+        $this->crossoverCache[$artistId] ??= [
+            'artists' => array_flip(array_diff(Artist::songArtistIds($artistId), [$artistId])),
+            'songs' => SlSong::where('artist_id', $artistId)->pluck('id')->flip()->all(),
+        ];
+
+        return $setlist->artist_id && isset($this->crossoverCache[$artistId]['artists'][(int) $setlist->artist_id]);
+    }
+
+    // そのライブの曲のうち、そのアーティストの曲（SlSong）だけ。isCrossoverLive の後に使う
+    private function ownSongsIn(array $items, int $artistId): array
+    {
+        return array_values(array_filter($items, fn ($songData) => is_numeric($songData['song'] ?? null)
+            && isset($this->crossoverCache[$artistId]['songs'][(int) $songData['song']])));
+    }
+
     public function index(Request $request)
     {
         $tab = $request->get('tab', 'database');
@@ -783,6 +804,10 @@ class StatsController extends Controller
                     $setlist->encore ?? []
                 );
             }
+            // 組になっているアーティストのライブは、そのアーティストの曲のみ抽出
+            elseif ($this->isCrossoverLive($setlist, (int) $artistId)) {
+                $allSongs = $this->ownSongsIn(array_merge($setlist->setlist ?? [], $setlist->encore ?? []), (int) $artistId);
+            }
             // フェスの場合は、そのアーティストの曲のみ抽出
             elseif ($setlist->fes == 1) {
                 $fesSongs = $this->flattenFesSongs(array_merge($setlist->fes_setlist ?? [], $setlist->fes_encore ?? []));
@@ -826,6 +851,8 @@ class StatsController extends Controller
                     $setlist->setlist ?? [],
                     $setlist->encore ?? []
                 );
+            } elseif ($this->isCrossoverLive($setlist, (int) $artistId)) {
+                $allSongs = $this->ownSongsIn(array_merge($setlist->setlist ?? [], $setlist->encore ?? []), (int) $artistId);
             }
 
             // フェスの場合は、そのアーティストの曲のみ抽出
@@ -970,6 +997,8 @@ class StatsController extends Controller
             $items = [];
             if ($setlist->artist_id == $artistId) {
                 $items = array_merge($setlist->setlist ?? [], $setlist->encore ?? []);
+            } elseif ($this->isCrossoverLive($setlist, (int) $artistId)) {
+                $items = $this->ownSongsIn(array_merge($setlist->setlist ?? [], $setlist->encore ?? []), (int) $artistId);
             } elseif ($setlist->fes == 1) {
                 $items = array_filter($this->flattenFesSongs(array_merge($setlist->fes_setlist ?? [], $setlist->fes_encore ?? [])),
                     fn ($songData) => isset($songData['artist']) && (string) $songData['artist'] === (string) $artistId);
@@ -1056,6 +1085,8 @@ class StatsController extends Controller
                 $songs = $doubleEncore === 'only'
                     ? \App\Support\EncoreBlocks::doubleEncore($encore)
                     : array_merge($setlist->setlist ?? [], \App\Support\EncoreBlocks::withoutDoubleEncore($encore));
+            } elseif ($this->isCrossoverLive($setlist, $artistId)) {
+                $songs = $doubleEncore === 'only' ? [] : $this->ownSongsIn(array_merge($setlist->setlist ?? [], $setlist->encore ?? []), $artistId);
             } elseif ($setlist->fes == 1 && $doubleEncore !== 'only') {
                 foreach ($this->flattenFesSongs(array_merge($setlist->fes_setlist ?? [], $setlist->fes_encore ?? [])) as $songData) {
                     if (isset($songData['artist']) && (string) $songData['artist'] === (string) $artistId) {

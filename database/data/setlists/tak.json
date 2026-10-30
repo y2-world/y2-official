@@ -1,0 +1,6617 @@
+{
+ "artist_id": 149,
+ "new_songs": [],
+ "review_notes": [],
+ "setlists": [
+  {
+   "date1": "2002-03-10",
+   "tour_title": "松本孝弘 live 2002 “華” -tour from the news-",
+   "mode": "new",
+   "source": "LiveFans",
+   "patterns": [
+    {
+     "row": 1,
+     "order_no": 1,
+     "subtitle": "3.10 大阪",
+     "livefans_event_ids": [
+      821298
+     ],
+     "order_from_event_id": 821298,
+     "setlist": [
+      {
+       "title": "恋歌",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2835,
+       "song_title": "恋歌"
+      },
+      {
+       "title": "朱～朝焼け～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2839,
+       "song_title": "朱～朝焼け～"
+      },
+      {
+       "title": "街",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2837,
+       "song_title": "街"
+      },
+      {
+       "title": "Little Wing",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Jimi Hendrix",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "FIGHTING BULL",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2830,
+       "song_title": "FIGHTING BULL"
+      },
+      {
+       "title": "“99”",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2803,
+       "song_title": "“99”"
+      },
+      {
+       "title": "御堂筋BLUE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2838,
+       "song_title": "御堂筋BLUE"
+      },
+      {
+       "title": "Romeo & Juliet",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Nino Rota",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "DRAGON FROM THE WEST",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2831,
+       "song_title": "DRAGON FROM THE WEST"
+      },
+      {
+       "title": "Believin' You",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2828,
+       "song_title": "Believin' You"
+      },
+      {
+       "title": "hallelujah",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2840,
+       "song_title": "hallelujah"
+      },
+      {
+       "title": "ENGAGED",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2841,
+       "song_title": "ENGAGED"
+      },
+      {
+       "title": "2011",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2843,
+       "song_title": "2011"
+      },
+      {
+       "title": "You Know....",
+       "alternative_title": null,
+       "medley": true,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2842,
+       "song_title": "You Know...."
+      },
+      {
+       "title": "Trinity",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2834,
+       "song_title": "Trinity"
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      }
+     ],
+     "encore": [
+      {
+       "title": "SACRED FIELD",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2829,
+       "song_title": "SACRED FIELD"
+      },
+      {
+       "title": "LIFE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2811,
+       "song_title": "LIFE"
+      },
+      {
+       "title": "Love Ya",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2809,
+       "song_title": "Love Ya"
+      },
+      {
+       "title": "#1090 千夢一夜",
+       "alternative_title": "#1090 千夢一夜",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 2,
+     "subtitle": "3.12 東京",
+     "livefans_event_ids": [
+      821300
+     ],
+     "order_from_event_id": 821300,
+     "setlist": [
+      {
+       "title": "恋歌",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2835,
+       "song_title": "恋歌"
+      },
+      {
+       "title": "DRAGON FROM THE WEST",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2831,
+       "song_title": "DRAGON FROM THE WEST"
+      },
+      {
+       "title": "街",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2837,
+       "song_title": "街"
+      },
+      {
+       "title": "ENGAGED",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2841,
+       "song_title": "ENGAGED"
+      },
+      {
+       "title": "SACRED FIELD",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2829,
+       "song_title": "SACRED FIELD"
+      },
+      {
+       "title": "You Know....",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2842,
+       "song_title": "You Know...."
+      },
+      {
+       "title": "2011",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2843,
+       "song_title": "2011"
+      },
+      {
+       "title": "hallelujah",
+       "alternative_title": null,
+       "medley": true,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2840,
+       "song_title": "hallelujah"
+      },
+      {
+       "title": "“99”",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2803,
+       "song_title": "“99”"
+      },
+      {
+       "title": "朱～朝焼け～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2839,
+       "song_title": "朱～朝焼け～"
+      },
+      {
+       "title": "Trinity",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2834,
+       "song_title": "Trinity"
+      },
+      {
+       "title": "Romeo & Juliet",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Nino Rota",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Little Wing",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Jimi Hendrix",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "THE CHANGING",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2817,
+       "song_title": "THE CHANGING"
+      },
+      {
+       "title": "two of us",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2823,
+       "song_title": "two of us"
+      },
+      {
+       "title": "LOVE PHANTOM",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null,
+       "bz_song": "LOVE PHANTOM"
+      },
+      {
+       "title": "愛のままにわがままに 僕は君だけを傷つけない",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null,
+       "bz_song": "愛のままにわがままに 僕は君だけを傷つけない"
+      },
+      {
+       "title": "御堂筋BLUE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2838,
+       "song_title": "御堂筋BLUE"
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      }
+     ],
+     "encore": [
+      {
+       "title": "GO FURTHER",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2822,
+       "song_title": "GO FURTHER"
+      },
+      {
+       "title": "Riverside Blues",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2833,
+       "song_title": "Riverside Blues"
+      },
+      {
+       "title": "#1090 千夢一夜",
+       "alternative_title": "#1090 千夢一夜",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ]
+    }
+   ],
+   "subtitle_updates": []
+  },
+  {
+   "date1": "2004-07-17",
+   "tour_title": "Collaboration 2004 松本孝弘「華」with 東京都交響楽団",
+   "mode": "new",
+   "source": "LiveFans",
+   "patterns": [
+    {
+     "row": 1,
+     "order_no": 1,
+     "subtitle": null,
+     "livefans_event_ids": [
+      507538,
+      507539,
+      507540
+     ],
+     "order_from_event_id": 507538,
+     "setlist": [
+      {
+       "title": "パリのアメリカ人",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "愛のままにわがままに 僕は君だけを傷つけない",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null,
+       "bz_song": "愛のままにわがままに 僕は君だけを傷つけない"
+      },
+      {
+       "title": "SACRED FIELD",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2829,
+       "song_title": "SACRED FIELD"
+      },
+      {
+       "title": "RED SUN",
+       "alternative_title": null,
+       "medley": true,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2858,
+       "song_title": "RED SUN"
+      },
+      {
+       "title": "GO FURTHER",
+       "alternative_title": null,
+       "medley": true,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2822,
+       "song_title": "GO FURTHER"
+      },
+      {
+       "title": "BLUE",
+       "alternative_title": "BLUE",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2838,
+       "song_title": "御堂筋BLUE"
+      },
+      {
+       "title": "恋歌",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2835,
+       "song_title": "恋歌"
+      },
+      {
+       "title": "Theme from ULTRAMAN",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2860,
+       "song_title": "Theme from ULTRAMAN"
+      },
+      {
+       "title": "BLACK JACK",
+       "alternative_title": "BLACK JACK",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2859,
+       "song_title": "THE THEME OF B.J."
+      },
+      {
+       "title": "#1090",
+       "alternative_title": "#1090",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "String of My Soul",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null,
+       "bz_song": "Strings of My Soul"
+      },
+      {
+       "title": "LOVE PHANTOM",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null,
+       "bz_song": "LOVE PHANTOM"
+      }
+     ],
+     "encore": []
+    }
+   ],
+   "subtitle_updates": []
+  },
+  {
+   "date1": "2004-07-30",
+   "tour_title": "TMG LIVE 2004 -Dodge The Bullet-",
+   "mode": "new",
+   "source": "LiveFans",
+   "patterns": [
+    {
+     "row": 1,
+     "order_no": 1,
+     "subtitle": null,
+     "livefans_event_ids": [
+      131628
+     ],
+     "order_from_event_id": 131628,
+     "setlist": [
+      {
+       "title": "Everything Passes Away",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2846,
+       "song_title": "Everything Passes Away"
+      },
+      {
+       "title": "I wish you were here",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2849,
+       "song_title": "I wish you were here"
+      },
+      {
+       "title": "Signs of Life",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2851,
+       "song_title": "Signs of Life"
+      },
+      {
+       "title": "TRAPPED",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2845,
+       "song_title": "TRAPPED"
+      },
+      {
+       "title": "I Know You by Heart",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2848,
+       "song_title": "I Know You by Heart"
+      },
+      {
+       "title": "TRAIN, TRAIN",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2855,
+       "song_title": "TRAIN, TRAIN"
+      },
+      {
+       "title": "RED, WHITE AND BULLET BLUES",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2852,
+       "song_title": "RED, WHITE AND BULLET BLUES"
+      },
+      {
+       "title": "BLUE",
+       "alternative_title": "BLUE",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2838,
+       "song_title": "御堂筋BLUE"
+      },
+      {
+       "title": "Two of a Kind",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2856,
+       "song_title": "Two of a Kind"
+      },
+      {
+       "title": "WONDERLAND",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2854,
+       "song_title": "WONDERLAND"
+      },
+      {
+       "title": "THE GREATEST SHOW ON EARTH",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2850,
+       "song_title": "THE GREATEST SHOW ON EARTH"
+      },
+      {
+       "title": "KINGS FOR A DAY",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2847,
+       "song_title": "KINGS FOR A DAY"
+      },
+      {
+       "title": "NEVER GOOD-BYE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2857,
+       "song_title": "NEVER GOOD-BYE"
+      }
+     ],
+     "encore": [
+      {
+       "title": "(You Can Still) Rock In America",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Night Ranger",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "TO BE WITH YOU",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "MR.BIG",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "OH JAPAN ～OUR TIME IS NOW～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2844,
+       "song_title": "OH JAPAN ～OUR TIME IS NOW～"
+      }
+     ]
+    }
+   ],
+   "subtitle_updates": []
+  },
+  {
+   "date1": "2004-08-07",
+   "tour_title": "SUMMER SONIC 2004",
+   "mode": "new",
+   "source": "LiveFans",
+   "patterns": [
+    {
+     "row": 1,
+     "order_no": 1,
+     "subtitle": null,
+     "livefans_event_ids": [
+      15978,
+      16014
+     ],
+     "order_from_event_id": 15978,
+     "setlist": [
+      {
+       "title": "Everything Passes Away",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2846,
+       "song_title": "Everything Passes Away"
+      },
+      {
+       "title": "I wish you were here",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2849,
+       "song_title": "I wish you were here"
+      },
+      {
+       "title": "Signs of Life",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2851,
+       "song_title": "Signs of Life"
+      },
+      {
+       "title": "TRAPPED",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2845,
+       "song_title": "TRAPPED"
+      },
+      {
+       "title": "I Know You by Heart",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2848,
+       "song_title": "I Know You by Heart"
+      },
+      {
+       "title": "RED, WHITE AND BULLET BLUES",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2852,
+       "song_title": "RED, WHITE AND BULLET BLUES"
+      },
+      {
+       "title": "WONDERLAND",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2854,
+       "song_title": "WONDERLAND"
+      },
+      {
+       "title": "THE GREATEST SHOW ON EARTH",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2850,
+       "song_title": "THE GREATEST SHOW ON EARTH"
+      },
+      {
+       "title": "KINGS FOR A DAY",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2847,
+       "song_title": "KINGS FOR A DAY"
+      },
+      {
+       "title": "NEVER GOOD-BYE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2857,
+       "song_title": "NEVER GOOD-BYE"
+      },
+      {
+       "title": "OH JAPAN ～OUR TIME IS NOW～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2844,
+       "song_title": "OH JAPAN ～OUR TIME IS NOW～"
+      }
+     ],
+     "encore": []
+    }
+   ],
+   "subtitle_updates": []
+  },
+  {
+   "date1": "2005-09-23",
+   "tour_title": "第12回青山学院大学同窓祭 松本孝弘ライブコンサート",
+   "mode": "new",
+   "source": "setlist.fm / DVD",
+   "patterns": [
+    {
+     "row": 1,
+     "order_no": 1,
+     "subtitle": null,
+     "livefans_event_ids": [],
+     "order_from_event_id": null,
+     "setlist": [
+      {
+       "title": "愛のままにわがままに 僕は君だけを傷つけない",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null,
+       "bz_song": "愛のままにわがままに 僕は君だけを傷つけない"
+      },
+      {
+       "title": "SACRED FIELD",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2829,
+       "song_title": "SACRED FIELD"
+      },
+      {
+       "title": "恋歌",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2835,
+       "song_title": "恋歌"
+      },
+      {
+       "title": "#1090",
+       "alternative_title": "#1090",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      },
+      {
+       "title": "BLUE",
+       "alternative_title": "BLUE",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2838,
+       "song_title": "御堂筋BLUE"
+      },
+      {
+       "title": "街",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2837,
+       "song_title": "街"
+      },
+      {
+       "title": "My Favorite Things",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "The Godfather Waltz",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "Strings of My Soul",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null,
+       "bz_song": "Strings of My Soul"
+      },
+      {
+       "title": "LOVE PHANTOM",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null,
+       "bz_song": "LOVE PHANTOM"
+      }
+     ],
+     "encore": []
+    }
+   ],
+   "subtitle_updates": []
+  },
+  {
+   "date1": "2010-06-12",
+   "tour_title": "Larry Carlton & Tak Matsumoto LIVE 2010 “TAKE YOUR PICK”",
+   "mode": "new",
+   "source": "setlist.fm / DVD",
+   "patterns": [
+    {
+     "row": 1,
+     "order_no": 1,
+     "subtitle": null,
+     "livefans_event_ids": [],
+     "order_from_event_id": null,
+     "setlist": [
+      {
+       "title": "Nite Crawler 2010",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2862,
+       "song_title": "Nite Crawler 2010"
+      },
+      {
+       "title": "Islands of Japan",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2864,
+       "song_title": "Islands of Japan"
+      },
+      {
+       "title": "THE WAY WE WERE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2863,
+       "song_title": "THE WAY WE WERE"
+      },
+      {
+       "title": "Tokyo Night",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2866,
+       "song_title": "Tokyo Night"
+      },
+      {
+       "title": "East West Stroll",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2868,
+       "song_title": "East West Stroll"
+      },
+      {
+       "title": "Easy Mystery",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2869,
+       "song_title": "Easy Mystery"
+      },
+      {
+       "title": "hotalu",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2867,
+       "song_title": "hotalu"
+      },
+      {
+       "title": "ao",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2870,
+       "song_title": "ao"
+      },
+      {
+       "title": "Take Your Pick",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2871,
+       "song_title": "Take Your Pick"
+      },
+      {
+       "title": "Neon Blue",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2865,
+       "song_title": "Neon Blue"
+      },
+      {
+       "title": "A girl from China",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2872,
+       "song_title": "A girl from China"
+      },
+      {
+       "title": "JAZZY BULLETS",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2861,
+       "song_title": "JAZZY BULLETS"
+      },
+      {
+       "title": "Room 335",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Larry Carlton",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "#1090",
+       "alternative_title": "#1090",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ],
+     "encore": []
+    }
+   ],
+   "subtitle_updates": []
+  },
+  {
+   "date1": "2014-05-10",
+   "tour_title": "Tak Matsumoto LIVE 2014 -New Horizon-",
+   "mode": "new",
+   "source": "LiveFans",
+   "patterns": [
+    {
+     "row": 1,
+     "order_no": 1,
+     "subtitle": "5.10 横浜1 1部",
+     "livefans_event_ids": [
+      241834
+     ],
+     "order_from_event_id": 241834,
+     "setlist": [
+      {
+       "title": "New Horizon",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2875,
+       "song_title": "New Horizon"
+      },
+      {
+       "title": "Take 5",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "The Dave Brubeck Quartet",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "BLUE",
+       "alternative_title": "BLUE",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2838,
+       "song_title": "御堂筋BLUE"
+      },
+      {
+       "title": "THE WAY WE WERE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2863,
+       "song_title": "THE WAY WE WERE"
+      },
+      {
+       "title": "Tokyo Night",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2866,
+       "song_title": "Tokyo Night"
+      },
+      {
+       "title": "Shattered Glass",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2880,
+       "song_title": "Shattered Glass"
+      },
+      {
+       "title": "BLACK JACK",
+       "alternative_title": "BLACK JACK",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2859,
+       "song_title": "THE THEME OF B.J."
+      },
+      {
+       "title": "That’s Cool",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2879,
+       "song_title": "That’s Cool"
+      },
+      {
+       "title": "月のあかり",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "桑名正博",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Reason to be...",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2881,
+       "song_title": "Reason to be..."
+      },
+      {
+       "title": "GO FURTHER",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2822,
+       "song_title": "GO FURTHER"
+      },
+      {
+       "title": "#1090 千夢一夜",
+       "alternative_title": "#1090 千夢一夜",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ],
+     "encore": [
+      {
+       "title": "Rodeo Blues",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2877,
+       "song_title": "Rodeo Blues"
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 2,
+     "subtitle": "5.10 横浜1 2部 5.11 横浜2 2部 5.30 名古屋1 2部",
+     "livefans_event_ids": [
+      241837,
+      241840,
+      241846
+     ],
+     "order_from_event_id": 241837,
+     "setlist": [
+      {
+       "title": "New Horizon",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2875,
+       "song_title": "New Horizon"
+      },
+      {
+       "title": "Take 5",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "The Dave Brubeck Quartet",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "BLUE",
+       "alternative_title": "BLUE",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2838,
+       "song_title": "御堂筋BLUE"
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "Tokyo Night",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2866,
+       "song_title": "Tokyo Night"
+      },
+      {
+       "title": "Shattered Glass",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2880,
+       "song_title": "Shattered Glass"
+      },
+      {
+       "title": "BLACK JACK",
+       "alternative_title": "BLACK JACK",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2859,
+       "song_title": "THE THEME OF B.J."
+      },
+      {
+       "title": "Island of peace",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2878,
+       "song_title": "Island of peace"
+      },
+      {
+       "title": "That’s Cool",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2879,
+       "song_title": "That’s Cool"
+      },
+      {
+       "title": "月のあかり",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "桑名正博",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Reason to be...",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2881,
+       "song_title": "Reason to be..."
+      },
+      {
+       "title": "GO FURTHER",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2822,
+       "song_title": "GO FURTHER"
+      },
+      {
+       "title": "#1090 千夢一夜",
+       "alternative_title": "#1090 千夢一夜",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ],
+     "encore": [
+      {
+       "title": "The Moment",
+       "alternative_title": "The Moment",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2818,
+       "song_title": "ONE FOR THE ROAD"
+      },
+      {
+       "title": "Rodeo Blues",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2877,
+       "song_title": "Rodeo Blues"
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 3,
+     "subtitle": "5.11 横浜2 1部",
+     "livefans_event_ids": [
+      241839
+     ],
+     "order_from_event_id": 241839,
+     "setlist": [
+      {
+       "title": "New Horizon",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2875,
+       "song_title": "New Horizon"
+      },
+      {
+       "title": "Take 5",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "The Dave Brubeck Quartet",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "BLUE",
+       "alternative_title": "BLUE",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2838,
+       "song_title": "御堂筋BLUE"
+      },
+      {
+       "title": "THE WAY WE WERE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2863,
+       "song_title": "THE WAY WE WERE"
+      },
+      {
+       "title": "Tokyo Night",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2866,
+       "song_title": "Tokyo Night"
+      },
+      {
+       "title": "Shattered Glass",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2880,
+       "song_title": "Shattered Glass"
+      },
+      {
+       "title": "学生街の喫茶店",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "ガロ",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Island of peace",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2878,
+       "song_title": "Island of peace"
+      },
+      {
+       "title": "That’s Cool",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2879,
+       "song_title": "That’s Cool"
+      },
+      {
+       "title": "月のあかり",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "桑名正博",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Reason to be...",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2881,
+       "song_title": "Reason to be..."
+      },
+      {
+       "title": "GO FURTHER",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2822,
+       "song_title": "GO FURTHER"
+      },
+      {
+       "title": "#1090 千夢一夜",
+       "alternative_title": "#1090 千夢一夜",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ],
+     "encore": [
+      {
+       "title": "Rodeo Blues",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2877,
+       "song_title": "Rodeo Blues"
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 4,
+     "subtitle": "5.15 福岡 5.18 大阪2",
+     "livefans_event_ids": [
+      240912,
+      237339
+     ],
+     "order_from_event_id": 240912,
+     "setlist": [
+      {
+       "title": "New Horizon",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2875,
+       "song_title": "New Horizon"
+      },
+      {
+       "title": "Take 5",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "The Dave Brubeck Quartet",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "BLUE",
+       "alternative_title": "BLUE",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2838,
+       "song_title": "御堂筋BLUE"
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "THE WAY WE WERE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2863,
+       "song_title": "THE WAY WE WERE"
+      },
+      {
+       "title": "Shattered Glass",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2880,
+       "song_title": "Shattered Glass"
+      },
+      {
+       "title": "BLACK JACK",
+       "alternative_title": "BLACK JACK",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2859,
+       "song_title": "THE THEME OF B.J."
+      },
+      {
+       "title": "Island of peace",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2878,
+       "song_title": "Island of peace"
+      },
+      {
+       "title": "That’s Cool",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2879,
+       "song_title": "That’s Cool"
+      },
+      {
+       "title": "月のあかり",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "桑名正博",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Reason to be...",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2881,
+       "song_title": "Reason to be..."
+      },
+      {
+       "title": "Rain",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2882,
+       "song_title": "Rain"
+      },
+      {
+       "title": "GO FURTHER",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2822,
+       "song_title": "GO FURTHER"
+      },
+      {
+       "title": "#1090 千夢一夜",
+       "alternative_title": "#1090 千夢一夜",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ],
+     "encore": [
+      {
+       "title": "The Moment",
+       "alternative_title": "The Moment",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2818,
+       "song_title": "ONE FOR THE ROAD"
+      },
+      {
+       "title": "Rodeo Blues",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2877,
+       "song_title": "Rodeo Blues"
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 5,
+     "subtitle": "5.17 大阪1",
+     "livefans_event_ids": [
+      237338
+     ],
+     "order_from_event_id": 237338,
+     "setlist": [
+      {
+       "title": "New Horizon",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2875,
+       "song_title": "New Horizon"
+      },
+      {
+       "title": "Take 5",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "The Dave Brubeck Quartet",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "BLUE",
+       "alternative_title": "BLUE",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2838,
+       "song_title": "御堂筋BLUE"
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "THE WAY WE WERE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2863,
+       "song_title": "THE WAY WE WERE"
+      },
+      {
+       "title": "Shattered Glass",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2880,
+       "song_title": "Shattered Glass"
+      },
+      {
+       "title": "学生街の喫茶店",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "ガロ",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Island of peace",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2878,
+       "song_title": "Island of peace"
+      },
+      {
+       "title": "That’s Cool",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2879,
+       "song_title": "That’s Cool"
+      },
+      {
+       "title": "月のあかり",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "桑名正博",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Reason to be...",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2881,
+       "song_title": "Reason to be..."
+      },
+      {
+       "title": "Rain",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2882,
+       "song_title": "Rain"
+      },
+      {
+       "title": "GO FURTHER",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2822,
+       "song_title": "GO FURTHER"
+      },
+      {
+       "title": "#1090 千夢一夜",
+       "alternative_title": "#1090 千夢一夜",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ],
+     "encore": [
+      {
+       "title": "The Moment",
+       "alternative_title": "The Moment",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2818,
+       "song_title": "ONE FOR THE ROAD"
+      },
+      {
+       "title": "Rodeo Blues",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2877,
+       "song_title": "Rodeo Blues"
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 6,
+     "subtitle": "5.23 仙台 5.30 名古屋1 1部 5.31 名古屋2 1部 5.31 名古屋2 2部 6.1 名古屋3 1部 6.1 名古屋3 2部 6.8 東京1 1部 6.8 東京1 2部",
+     "livefans_event_ids": [
+      241843,
+      241845,
+      241847,
+      241848,
+      241849,
+      241850,
+      241852,
+      241853
+     ],
+     "order_from_event_id": 241843,
+     "setlist": [
+      {
+       "title": "New Horizon",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2875,
+       "song_title": "New Horizon"
+      },
+      {
+       "title": "Take 5",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "The Dave Brubeck Quartet",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "BLUE",
+       "alternative_title": "BLUE",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2838,
+       "song_title": "御堂筋BLUE"
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "THE WAY WE WERE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2863,
+       "song_title": "THE WAY WE WERE"
+      },
+      {
+       "title": "Tokyo Night",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2866,
+       "song_title": "Tokyo Night"
+      },
+      {
+       "title": "Shattered Glass",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2880,
+       "song_title": "Shattered Glass"
+      },
+      {
+       "title": "BLACK JACK",
+       "alternative_title": "BLACK JACK",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2859,
+       "song_title": "THE THEME OF B.J."
+      },
+      {
+       "title": "Island of peace",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2878,
+       "song_title": "Island of peace"
+      },
+      {
+       "title": "That’s Cool",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2879,
+       "song_title": "That’s Cool"
+      },
+      {
+       "title": "月のあかり",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "桑名正博",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Reason to be...",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2881,
+       "song_title": "Reason to be..."
+      },
+      {
+       "title": "Rain",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2882,
+       "song_title": "Rain"
+      },
+      {
+       "title": "GO FURTHER",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2822,
+       "song_title": "GO FURTHER"
+      },
+      {
+       "title": "#1090 千夢一夜",
+       "alternative_title": "#1090 千夢一夜",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ],
+     "encore": [
+      {
+       "title": "The Moment",
+       "alternative_title": "The Moment",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2818,
+       "song_title": "ONE FOR THE ROAD"
+      },
+      {
+       "title": "Rodeo Blues",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2877,
+       "song_title": "Rodeo Blues"
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 7,
+     "subtitle": "5.25 札幌",
+     "livefans_event_ids": [
+      240742
+     ],
+     "order_from_event_id": 240742,
+     "setlist": [
+      {
+       "title": "New Horizon",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2875,
+       "song_title": "New Horizon"
+      },
+      {
+       "title": "Take 5",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "The Dave Brubeck Quartet",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "BLUE",
+       "alternative_title": "BLUE",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2838,
+       "song_title": "御堂筋BLUE"
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "THE WAY WE WERE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2863,
+       "song_title": "THE WAY WE WERE"
+      },
+      {
+       "title": "Tokyo Night",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2866,
+       "song_title": "Tokyo Night"
+      },
+      {
+       "title": "Shattered Glass",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2880,
+       "song_title": "Shattered Glass"
+      },
+      {
+       "title": "学生街の喫茶店",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "ガロ",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Island of peace",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2878,
+       "song_title": "Island of peace"
+      },
+      {
+       "title": "That’s Cool",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2879,
+       "song_title": "That’s Cool"
+      },
+      {
+       "title": "月のあかり",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "桑名正博",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Reason to be...",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2881,
+       "song_title": "Reason to be..."
+      },
+      {
+       "title": "Rain",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2882,
+       "song_title": "Rain"
+      },
+      {
+       "title": "GO FURTHER",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2822,
+       "song_title": "GO FURTHER"
+      },
+      {
+       "title": "#1090 千夢一夜",
+       "alternative_title": "#1090 千夢一夜",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ],
+     "encore": [
+      {
+       "title": "The Moment",
+       "alternative_title": "The Moment",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2818,
+       "song_title": "ONE FOR THE ROAD"
+      },
+      {
+       "title": "Rodeo Blues",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2877,
+       "song_title": "Rodeo Blues"
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 8,
+     "subtitle": "6.9 東京2 1部 6.9 東京2 2部 6.11 東京3 1部 6.12 東京4 1部 6.14 東京5 1部 6.15 東京6 1部",
+     "livefans_event_ids": [
+      241854,
+      241855,
+      241856,
+      241858,
+      241860,
+      241863
+     ],
+     "order_from_event_id": 241854,
+     "setlist": [
+      {
+       "title": "New Horizon",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2875,
+       "song_title": "New Horizon"
+      },
+      {
+       "title": "Take 5",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "The Dave Brubeck Quartet",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "BLUE",
+       "alternative_title": "BLUE",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2838,
+       "song_title": "御堂筋BLUE"
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "THE WAY WE WERE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2863,
+       "song_title": "THE WAY WE WERE"
+      },
+      {
+       "title": "Tokyo Night",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2866,
+       "song_title": "Tokyo Night"
+      },
+      {
+       "title": "Shattered Glass",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2880,
+       "song_title": "Shattered Glass"
+      },
+      {
+       "title": "BLACK JACK",
+       "alternative_title": "BLACK JACK",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2859,
+       "song_title": "THE THEME OF B.J."
+      },
+      {
+       "title": "Island of peace",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2878,
+       "song_title": "Island of peace"
+      },
+      {
+       "title": "That’s Cool",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2879,
+       "song_title": "That’s Cool"
+      },
+      {
+       "title": "月のあかり",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "桑名正博",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Reason to be...",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2881,
+       "song_title": "Reason to be..."
+      },
+      {
+       "title": "GO FURTHER",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2822,
+       "song_title": "GO FURTHER"
+      },
+      {
+       "title": "#1090 千夢一夜",
+       "alternative_title": "#1090 千夢一夜",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ],
+     "encore": [
+      {
+       "title": "The Moment",
+       "alternative_title": "The Moment",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2818,
+       "song_title": "ONE FOR THE ROAD"
+      },
+      {
+       "title": "Rodeo Blues",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2877,
+       "song_title": "Rodeo Blues"
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 9,
+     "subtitle": "6.11 東京3 2部 6.12 東京4 2部 6.14 東京5 2部 6.15 東京6 2部",
+     "livefans_event_ids": [
+      241857,
+      241859,
+      241861,
+      241864
+     ],
+     "order_from_event_id": 241857,
+     "setlist": [
+      {
+       "title": "New Horizon",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2875,
+       "song_title": "New Horizon"
+      },
+      {
+       "title": "Take 5",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "The Dave Brubeck Quartet",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "BLUE",
+       "alternative_title": "BLUE",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2838,
+       "song_title": "御堂筋BLUE"
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "THE WAY WE WERE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2863,
+       "song_title": "THE WAY WE WERE"
+      },
+      {
+       "title": "Tokyo Night",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2866,
+       "song_title": "Tokyo Night"
+      },
+      {
+       "title": "Shattered Glass",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2880,
+       "song_title": "Shattered Glass"
+      },
+      {
+       "title": "学生街の喫茶店",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "ガロ",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Island of peace",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2878,
+       "song_title": "Island of peace"
+      },
+      {
+       "title": "That’s Cool",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2879,
+       "song_title": "That’s Cool"
+      },
+      {
+       "title": "月のあかり",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "桑名正博",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Reason to be...",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2881,
+       "song_title": "Reason to be..."
+      },
+      {
+       "title": "GO FURTHER",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2822,
+       "song_title": "GO FURTHER"
+      },
+      {
+       "title": "#1090 千夢一夜",
+       "alternative_title": "#1090 千夢一夜",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ],
+     "encore": [
+      {
+       "title": "The Moment",
+       "alternative_title": "The Moment",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2818,
+       "song_title": "ONE FOR THE ROAD"
+      },
+      {
+       "title": "Rodeo Blues",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2877,
+       "song_title": "Rodeo Blues"
+      }
+     ]
+    }
+   ],
+   "subtitle_updates": []
+  },
+  {
+   "date1": "2016-04-16",
+   "tour_title": "Tak Matsumoto Tour 2016 -The Voyage-",
+   "mode": "new",
+   "source": "LiveFans",
+   "patterns": [
+    {
+     "row": 1,
+     "order_no": 1,
+     "subtitle": "4.16 名古屋 4.19 福岡 4.24 大阪",
+     "livefans_event_ids": [
+      569926,
+      569927,
+      569928
+     ],
+     "order_from_event_id": 569926,
+     "setlist": [
+      {
+       "title": "Dream Drive",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2892,
+       "song_title": "Dream Drive"
+      },
+      {
+       "title": "enigma",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2883,
+       "song_title": "enigma"
+      },
+      {
+       "title": "Vermillion Palace",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2884,
+       "song_title": "Vermillion Palace"
+      },
+      {
+       "title": "Step to Heaven",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2885,
+       "song_title": "Step to Heaven"
+      },
+      {
+       "title": "恋歌",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2835,
+       "song_title": "恋歌"
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "Theme from Fist of the North Star ～The Road of Lords～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2897,
+       "song_title": "Theme from Fist of the North Star ～The Road of Lords～"
+      },
+      {
+       "title": "Theme from ULTRAMAN",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2860,
+       "song_title": "Theme from ULTRAMAN"
+      },
+      {
+       "title": "THE THEME OF B.J.",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2859,
+       "song_title": "THE THEME OF B.J."
+      },
+      {
+       "title": "THE WINGS",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2874,
+       "song_title": "THE WINGS"
+      },
+      {
+       "title": "“99”",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2803,
+       "song_title": "“99”"
+      },
+      {
+       "title": "Wanna Go Home",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2812,
+       "song_title": "Wanna Go Home"
+      },
+      {
+       "title": "Hopes",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2890,
+       "song_title": "Hopes"
+      },
+      {
+       "title": "Under The Sun",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2891,
+       "song_title": "Under The Sun"
+      },
+      {
+       "title": "Drifting",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2888,
+       "song_title": "Drifting"
+      },
+      {
+       "title": "The Voyage",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2889,
+       "song_title": "The Voyage"
+      },
+      {
+       "title": "Mystic Journey",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2895,
+       "song_title": "Mystic Journey"
+      },
+      {
+       "title": "Ups and Downs",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2886,
+       "song_title": "Ups and Downs"
+      },
+      {
+       "title": "enigma ～epilogue～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2896,
+       "song_title": "enigma ～epilogue～"
+      }
+     ],
+     "encore": [
+      {
+       "title": "RED SUN",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2858,
+       "song_title": "RED SUN"
+      },
+      {
+       "title": "SACRED FIELD",
+       "alternative_title": null,
+       "medley": true,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2829,
+       "song_title": "SACRED FIELD"
+      },
+      {
+       "title": "GO FURTHER",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2822,
+       "song_title": "GO FURTHER"
+      },
+      {
+       "title": "#1090 ～Million Dreams～",
+       "alternative_title": "#1090 ～Million Dreams～",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 2,
+     "subtitle": "4.27 札幌",
+     "livefans_event_ids": [
+      569929
+     ],
+     "order_from_event_id": 569929,
+     "setlist": [
+      {
+       "title": "Dream Drive",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2892,
+       "song_title": "Dream Drive"
+      },
+      {
+       "title": "enigma",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2883,
+       "song_title": "enigma"
+      },
+      {
+       "title": "Vermillion Palace",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2884,
+       "song_title": "Vermillion Palace"
+      },
+      {
+       "title": "Step to Heaven",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2885,
+       "song_title": "Step to Heaven"
+      },
+      {
+       "title": "恋歌",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2835,
+       "song_title": "恋歌"
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "Theme from Fist of the North Star ～The Road of Lords～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2897,
+       "song_title": "Theme from Fist of the North Star ～The Road of Lords～"
+      },
+      {
+       "title": "Theme from ULTRAMAN",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2860,
+       "song_title": "Theme from ULTRAMAN"
+      },
+      {
+       "title": "THE THEME OF B.J.",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2859,
+       "song_title": "THE THEME OF B.J."
+      },
+      {
+       "title": "THE WINGS",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2874,
+       "song_title": "THE WINGS"
+      },
+      {
+       "title": "“99”",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2803,
+       "song_title": "“99”"
+      },
+      {
+       "title": "Wanna Go Home",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2812,
+       "song_title": "Wanna Go Home"
+      },
+      {
+       "title": "Hopes",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2890,
+       "song_title": "Hopes"
+      },
+      {
+       "title": "Under The Sun",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2891,
+       "song_title": "Under The Sun"
+      },
+      {
+       "title": "Drifting",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2888,
+       "song_title": "Drifting"
+      },
+      {
+       "title": "The Voyage",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2889,
+       "song_title": "The Voyage"
+      },
+      {
+       "title": "Mystic Journey",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2895,
+       "song_title": "Mystic Journey"
+      },
+      {
+       "title": "Ups and Downs",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2886,
+       "song_title": "Ups and Downs"
+      },
+      {
+       "title": "enigma ～epilogue～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2896,
+       "song_title": "enigma ～epilogue～"
+      },
+      {
+       "title": "RED SUN",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2858,
+       "song_title": "RED SUN"
+      },
+      {
+       "title": "SACRED FIELD",
+       "alternative_title": null,
+       "medley": true,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2829,
+       "song_title": "SACRED FIELD"
+      },
+      {
+       "title": "GO FURTHER",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2822,
+       "song_title": "GO FURTHER"
+      },
+      {
+       "title": "#1090 ～Million Dreams～",
+       "alternative_title": "#1090 ～Million Dreams～",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ],
+     "encore": []
+    },
+    {
+     "row": 1,
+     "order_no": 3,
+     "subtitle": "5.7 武道館",
+     "livefans_event_ids": [
+      569930
+     ],
+     "order_from_event_id": 569930,
+     "setlist": [
+      {
+       "title": "Dream Drive",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2892,
+       "song_title": "Dream Drive"
+      },
+      {
+       "title": "enigma",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2883,
+       "song_title": "enigma"
+      },
+      {
+       "title": "Vermillion Palace",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2884,
+       "song_title": "Vermillion Palace"
+      },
+      {
+       "title": "Step to Heaven",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2885,
+       "song_title": "Step to Heaven"
+      },
+      {
+       "title": "恋歌",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2835,
+       "song_title": "恋歌"
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "Theme from Fist of the North Star ～The Road of Lords～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2897,
+       "song_title": "Theme from Fist of the North Star ～The Road of Lords～"
+      },
+      {
+       "title": "Theme from ULTRAMAN",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2860,
+       "song_title": "Theme from ULTRAMAN"
+      },
+      {
+       "title": "THE THEME OF B.J.",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2859,
+       "song_title": "THE THEME OF B.J."
+      },
+      {
+       "title": "THE WINGS",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2874,
+       "song_title": "THE WINGS"
+      },
+      {
+       "title": "“99”",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2803,
+       "song_title": "“99”"
+      },
+      {
+       "title": "Wanna Go Home",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2812,
+       "song_title": "Wanna Go Home"
+      },
+      {
+       "title": "Hopes",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2890,
+       "song_title": "Hopes"
+      },
+      {
+       "title": "Under The Sun",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2891,
+       "song_title": "Under The Sun"
+      },
+      {
+       "title": "Drifting",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2888,
+       "song_title": "Drifting"
+      },
+      {
+       "title": "The Voyage",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2889,
+       "song_title": "The Voyage"
+      },
+      {
+       "title": "Mystic Journey",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2895,
+       "song_title": "Mystic Journey"
+      },
+      {
+       "title": "Ups and Downs",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2886,
+       "song_title": "Ups and Downs"
+      },
+      {
+       "title": "enigma ～epilogue～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2896,
+       "song_title": "enigma ～epilogue～"
+      },
+      {
+       "title": "RED SUN",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2858,
+       "song_title": "RED SUN"
+      },
+      {
+       "title": "SACRED FIELD",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2829,
+       "song_title": "SACRED FIELD"
+      },
+      {
+       "title": "GO FURTHER",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2822,
+       "song_title": "GO FURTHER"
+      },
+      {
+       "title": "#1090 ～Million Dreams～",
+       "alternative_title": "#1090 ～Million Dreams～",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ],
+     "encore": []
+    }
+   ],
+   "subtitle_updates": []
+  },
+  {
+   "date1": "2016-05-02",
+   "tour_title": "Tak Matsumoto “Special Live”",
+   "mode": "new",
+   "source": "LiveFans",
+   "patterns": [
+    {
+     "row": 1,
+     "order_no": 1,
+     "subtitle": null,
+     "livefans_event_ids": [
+      624363
+     ],
+     "order_from_event_id": 624363,
+     "setlist": [
+      {
+       "title": "Dream Drive",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2892,
+       "song_title": "Dream Drive"
+      },
+      {
+       "title": "enigma",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2883,
+       "song_title": "enigma"
+      },
+      {
+       "title": "Vermillion Palace",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2884,
+       "song_title": "Vermillion Palace"
+      },
+      {
+       "title": "Step to Heaven",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2885,
+       "song_title": "Step to Heaven"
+      },
+      {
+       "title": "恋歌",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2835,
+       "song_title": "恋歌"
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "Theme from Fist of the North Star ～The Road of Lords～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2897,
+       "song_title": "Theme from Fist of the North Star ～The Road of Lords～"
+      },
+      {
+       "title": "Theme from ULTRAMAN",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2860,
+       "song_title": "Theme from ULTRAMAN"
+      },
+      {
+       "title": "THE THEME OF B.J.",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2859,
+       "song_title": "THE THEME OF B.J."
+      },
+      {
+       "title": "THE WINGS",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2874,
+       "song_title": "THE WINGS"
+      },
+      {
+       "title": "“99”",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2803,
+       "song_title": "“99”"
+      },
+      {
+       "title": "Wanna Go Home",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2812,
+       "song_title": "Wanna Go Home"
+      },
+      {
+       "title": "Hopes",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2890,
+       "song_title": "Hopes"
+      },
+      {
+       "title": "Under The Sun",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2891,
+       "song_title": "Under The Sun"
+      },
+      {
+       "title": "Drifting",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2888,
+       "song_title": "Drifting"
+      },
+      {
+       "title": "The Voyage",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2889,
+       "song_title": "The Voyage"
+      },
+      {
+       "title": "Mystic Journey",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2895,
+       "song_title": "Mystic Journey"
+      },
+      {
+       "title": "Ups and Downs",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2886,
+       "song_title": "Ups and Downs"
+      },
+      {
+       "title": "enigma ～epilogue～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2896,
+       "song_title": "enigma ～epilogue～"
+      },
+      {
+       "title": "RED SUN",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2858,
+       "song_title": "RED SUN"
+      },
+      {
+       "title": "SACRED FIELD",
+       "alternative_title": null,
+       "medley": true,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2829,
+       "song_title": "SACRED FIELD"
+      },
+      {
+       "title": "GO FURTHER",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2822,
+       "song_title": "GO FURTHER"
+      },
+      {
+       "title": "#1090 ～Million Dreams～",
+       "alternative_title": "#1090 ～Million Dreams～",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ],
+     "encore": []
+    }
+   ],
+   "subtitle_updates": []
+  },
+  {
+   "date1": "2017-02-25",
+   "tour_title": "Tak Matsumoto & Daniel Ho Live! 2017 -Electric Island, Acoustic Sea-",
+   "mode": "new",
+   "source": "LiveFans",
+   "patterns": [
+    {
+     "row": 1,
+     "order_no": 1,
+     "subtitle": "2.25 東京1 1部 2.26 東京2 1部 2.28 名古屋1 1部 3.10 東京3 1部 3.11 東京4 1部 3.12 東京5 1部 3.19 ホノルル 1部",
+     "livefans_event_ids": [
+      713768,
+      713770,
+      713772
+     ],
+     "order_from_event_id": 713768,
+     "setlist": [
+      {
+       "title": "Soaring on Dreams",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2898,
+       "song_title": "Soaring on Dreams"
+      },
+      {
+       "title": "Infinite Escapade",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2901,
+       "song_title": "Infinite Escapade"
+      },
+      {
+       "title": "Magokoro (True Heart)",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2900,
+       "song_title": "Magokoro (True Heart)"
+      },
+      {
+       "title": "Adrenaline UP!",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2904,
+       "song_title": "Adrenaline UP!"
+      },
+      {
+       "title": "Sunny Tuesday",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2902,
+       "song_title": "Sunny Tuesday"
+      },
+      {
+       "title": "Omotesando",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2905,
+       "song_title": "Omotesando"
+      },
+      {
+       "title": "Island of peace",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2878,
+       "song_title": "Island of peace"
+      },
+      {
+       "title": "Pineapple Mango",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Daniel Ho",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Faithfully",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Journey",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Wander Blues",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2903,
+       "song_title": "Wander Blues"
+      }
+     ],
+     "encore": [
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "Fujiyama Highway",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2899,
+       "song_title": "Fujiyama Highway"
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 2,
+     "subtitle": "2.25 東京1 2部 2.26 東京2 2部 2.28 名古屋1 2部 3.1 名古屋2 2部 3.2 名古屋3 2部 3.4 大阪1 2部 3.5 大阪2 2部 3.6 大阪3 2部 3.10 東京3 2部 3.11 東京4 2部 3.12 東京5 2部 3.19 ホノルル 2部",
+     "livefans_event_ids": [
+      713769,
+      713771,
+      713773,
+      713775,
+      713777,
+      713779,
+      713781,
+      713783
+     ],
+     "order_from_event_id": 713769,
+     "setlist": [
+      {
+       "title": "Soaring on Dreams",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2898,
+       "song_title": "Soaring on Dreams"
+      },
+      {
+       "title": "Infinite Escapade",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2901,
+       "song_title": "Infinite Escapade"
+      },
+      {
+       "title": "Magokoro (True Heart)",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2900,
+       "song_title": "Magokoro (True Heart)"
+      },
+      {
+       "title": "Adrenaline UP!",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2904,
+       "song_title": "Adrenaline UP!"
+      },
+      {
+       "title": "Rain",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2882,
+       "song_title": "Rain"
+      },
+      {
+       "title": "Sunny Tuesday",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2902,
+       "song_title": "Sunny Tuesday"
+      },
+      {
+       "title": "Omotesando",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2905,
+       "song_title": "Omotesando"
+      },
+      {
+       "title": "Island of peace",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2878,
+       "song_title": "Island of peace"
+      },
+      {
+       "title": "Pineapple Mango",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Daniel Ho",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Faithfully",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Journey",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Wander Blues",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2903,
+       "song_title": "Wander Blues"
+      }
+     ],
+     "encore": [
+      {
+       "title": "Lia",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2906,
+       "song_title": "Lia"
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "Fujiyama Highway",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2899,
+       "song_title": "Fujiyama Highway"
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 3,
+     "subtitle": "3.1 名古屋2 1部 3.2 名古屋3 1部 3.4 大阪1 1部 3.5 大阪2 1部 3.6 大阪3 1部",
+     "livefans_event_ids": [
+      713774,
+      713776,
+      713778,
+      713780,
+      713782
+     ],
+     "order_from_event_id": 713774,
+     "setlist": [
+      {
+       "title": "Soaring on Dreams",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2898,
+       "song_title": "Soaring on Dreams"
+      },
+      {
+       "title": "Infinite Escapade",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2901,
+       "song_title": "Infinite Escapade"
+      },
+      {
+       "title": "Magokoro (True Heart)",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2900,
+       "song_title": "Magokoro (True Heart)"
+      },
+      {
+       "title": "Adrenaline UP!",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2904,
+       "song_title": "Adrenaline UP!"
+      },
+      {
+       "title": "Sunny Tuesday",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2902,
+       "song_title": "Sunny Tuesday"
+      },
+      {
+       "title": "Omotesando",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2905,
+       "song_title": "Omotesando"
+      },
+      {
+       "title": "Island of peace",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2878,
+       "song_title": "Island of peace"
+      },
+      {
+       "title": "Pineapple Mango",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Daniel Ho",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Fujiyama Highway",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2899,
+       "song_title": "Fujiyama Highway"
+      },
+      {
+       "title": "Wander Blues",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2903,
+       "song_title": "Wander Blues"
+      }
+     ],
+     "encore": [
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "Fujiyama Highway",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2899,
+       "song_title": "Fujiyama Highway"
+      }
+     ]
+    }
+   ],
+   "subtitle_updates": []
+  },
+  {
+   "date1": "2018-09-24",
+   "tour_title": "METAL WEEKEND 第4弾",
+   "mode": "new",
+   "source": "LiveFans",
+   "patterns": [
+    {
+     "row": 1,
+     "order_no": 1,
+     "subtitle": null,
+     "livefans_event_ids": [
+      1005620
+     ],
+     "order_from_event_id": 1005620,
+     "setlist": [
+      {
+       "title": "Soul on Fire",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "I'm Still Alive",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Go for Broke",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "乾杯",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "長渕剛",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Until I See the Light",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Rise to Glory",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Massive Tornado",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Rain",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Crazy Night",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "with 松本孝弘",
+       "featuring_type": "guest",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Let It Go",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "This Lonely Heart",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "DREAMER AND SCREAMER",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "EARTH ARK(宇宙船地球号)",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Burn",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Deep Purple",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Ghetto Machine",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Black Widow",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Crazy Doctor",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "with 稲葉浩志",
+       "featuring_type": "guest",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "In The Mirror",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "S.D.I.",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      }
+     ],
+     "encore": [
+      {
+       "title": "Loudness",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      }
+     ]
+    }
+   ],
+   "subtitle_updates": []
+  },
+  {
+   "date1": "2024-05-11",
+   "tour_title": "Tak Matsumoto Tour 2024 -Here Comes the Bluesman-",
+   "mode": "new",
+   "source": "LiveFans",
+   "patterns": [
+    {
+     "row": 1,
+     "order_no": 1,
+     "subtitle": "5.11 東京1 1部 5.12 東京2 1部 5.22 大阪1 1部",
+     "livefans_event_ids": [
+      1617586,
+      1617589,
+      1617596
+     ],
+     "order_from_event_id": 1617586,
+     "setlist": [
+      {
+       "title": "EPIC MATCH ～ the match everyone wanted ～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2920,
+       "song_title": "EPIC MATCH ～ the match everyone wanted ～"
+      },
+      {
+       "title": "Here Comes the Taxman",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2909,
+       "song_title": "Here Comes the Taxman"
+      },
+      {
+       "title": "BATTLEBOX",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2921,
+       "song_title": "BATTLEBOX"
+      },
+      {
+       "title": "Wanna Go Home",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2812,
+       "song_title": "Wanna Go Home"
+      },
+      {
+       "title": "Long Distance Call",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2813,
+       "song_title": "Long Distance Call"
+      },
+      {
+       "title": "Island of peace",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2878,
+       "song_title": "Island of peace"
+      },
+      {
+       "title": "花火",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2915,
+       "song_title": "花火"
+      },
+      {
+       "title": "Waltz in Blue",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2914,
+       "song_title": "Waltz in Blue"
+      },
+      {
+       "title": "GLORIOUS 70",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2922,
+       "song_title": "GLORIOUS 70"
+      },
+      {
+       "title": "BOOGIE WOOGIE AZB 10",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2907,
+       "song_title": "BOOGIE WOOGIE AZB 10"
+      }
+     ],
+     "encore": [
+      {
+       "title": "#1090 千夢一夜",
+       "alternative_title": "#1090 千夢一夜",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 2,
+     "subtitle": "5.11 東京1 2部 5.12 東京2 2部 5.15 東京3 2部",
+     "livefans_event_ids": [
+      1617587,
+      1617590,
+      1617593
+     ],
+     "order_from_event_id": 1617587,
+     "setlist": [
+      {
+       "title": "EPIC MATCH ～ the match everyone wanted ～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2920,
+       "song_title": "EPIC MATCH ～ the match everyone wanted ～"
+      },
+      {
+       "title": "Rainy Monday Blues ~ 茨の道",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2911,
+       "song_title": "Rainy Monday Blues ~ 茨の道"
+      },
+      {
+       "title": "BATTLEBOX",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2921,
+       "song_title": "BATTLEBOX"
+      },
+      {
+       "title": "Tokyo Night",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2866,
+       "song_title": "Tokyo Night"
+      },
+      {
+       "title": "THE WINGS",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2874,
+       "song_title": "THE WINGS"
+      },
+      {
+       "title": "俺たちの勲章テーマ",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "トランザム",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "Waltz in Blue",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2914,
+       "song_title": "Waltz in Blue"
+      },
+      {
+       "title": "GLORIOUS 70",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2922,
+       "song_title": "GLORIOUS 70"
+      },
+      {
+       "title": "BOOGIE WOOGIE AZB 10",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2907,
+       "song_title": "BOOGIE WOOGIE AZB 10"
+      }
+     ],
+     "encore": [
+      {
+       "title": "港のヨーコ・ヨコハマ・ヨコスカ",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "ダウン・タウン・ブギウギ・バンド",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "#1090 千夢一夜",
+       "alternative_title": "#1090 千夢一夜",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 3,
+     "subtitle": "5.15 東京3 1部",
+     "livefans_event_ids": [
+      1617592
+     ],
+     "order_from_event_id": 1617592,
+     "setlist": [
+      {
+       "title": "EPIC MATCH ～ the match everyone wanted ～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2920,
+       "song_title": "EPIC MATCH ～ the match everyone wanted ～"
+      },
+      {
+       "title": "Here Comes the Taxman",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2909,
+       "song_title": "Here Comes the Taxman"
+      },
+      {
+       "title": "BATTLEBOX",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2921,
+       "song_title": "BATTLEBOX"
+      },
+      {
+       "title": "Wanna Go Home",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2812,
+       "song_title": "Wanna Go Home"
+      },
+      {
+       "title": "Long Distance Call",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2813,
+       "song_title": "Long Distance Call"
+      },
+      {
+       "title": "Island of peace",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2878,
+       "song_title": "Island of peace"
+      },
+      {
+       "title": "花火",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2915,
+       "song_title": "花火"
+      },
+      {
+       "title": "Waltz in Blue",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2914,
+       "song_title": "Waltz in Blue"
+      },
+      {
+       "title": "GLORIOUS 70",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2922,
+       "song_title": "GLORIOUS 70"
+      },
+      {
+       "title": "BOOGIE WOOGIE AZB 10",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2907,
+       "song_title": "BOOGIE WOOGIE AZB 10"
+      }
+     ],
+     "encore": [
+      {
+       "title": "傷だらけのローラ",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "with 新浜レオン",
+       "featuring_type": "guest",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "港のヨーコ・ヨコハマ・ヨコスカ",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "ダウン・タウン・ブギウギ・バンド",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 4,
+     "subtitle": "5.16 東京4 1部",
+     "livefans_event_ids": [
+      1617594
+     ],
+     "order_from_event_id": 1617594,
+     "setlist": [
+      {
+       "title": "EPIC MATCH ～ the match everyone wanted ～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2920,
+       "song_title": "EPIC MATCH ～ the match everyone wanted ～"
+      },
+      {
+       "title": "Here Comes the Taxman",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2909,
+       "song_title": "Here Comes the Taxman"
+      },
+      {
+       "title": "BATTLEBOX",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2921,
+       "song_title": "BATTLEBOX"
+      },
+      {
+       "title": "Wanna Go Home",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2812,
+       "song_title": "Wanna Go Home"
+      },
+      {
+       "title": "Long Distance Call",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2813,
+       "song_title": "Long Distance Call"
+      },
+      {
+       "title": "Island of peace",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2878,
+       "song_title": "Island of peace"
+      },
+      {
+       "title": "花火",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2915,
+       "song_title": "花火"
+      },
+      {
+       "title": "Waltz in Blue",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2914,
+       "song_title": "Waltz in Blue"
+      },
+      {
+       "title": "GLORIOUS 70",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2922,
+       "song_title": "GLORIOUS 70"
+      },
+      {
+       "title": "BOOGIE WOOGIE AZB 10",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2907,
+       "song_title": "BOOGIE WOOGIE AZB 10"
+      }
+     ],
+     "encore": [
+      {
+       "title": "ブルー・ライト・ヨコハマ",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "with 倉木麻衣",
+       "featuring_type": "guest",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "港のヨーコ・ヨコハマ・ヨコスカ",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "ダウン・タウン・ブギウギ・バンド",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 5,
+     "subtitle": "5.16 東京4 2部",
+     "livefans_event_ids": [
+      1617595
+     ],
+     "order_from_event_id": 1617595,
+     "setlist": [
+      {
+       "title": "EPIC MATCH ～ the match everyone wanted ～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2920,
+       "song_title": "EPIC MATCH ～ the match everyone wanted ～"
+      },
+      {
+       "title": "Rainy Monday Blues ~ 茨の道",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2911,
+       "song_title": "Rainy Monday Blues ~ 茨の道"
+      },
+      {
+       "title": "BATTLEBOX",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2921,
+       "song_title": "BATTLEBOX"
+      },
+      {
+       "title": "Tokyo Night",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2866,
+       "song_title": "Tokyo Night"
+      },
+      {
+       "title": "THE WINGS",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2874,
+       "song_title": "THE WINGS"
+      },
+      {
+       "title": "あゝ青春",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "トランザム",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "Waltz in Blue",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2914,
+       "song_title": "Waltz in Blue"
+      },
+      {
+       "title": "GLORIOUS 70",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2922,
+       "song_title": "GLORIOUS 70"
+      },
+      {
+       "title": "BOOGIE WOOGIE AZB 10",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2907,
+       "song_title": "BOOGIE WOOGIE AZB 10"
+      }
+     ],
+     "encore": [
+      {
+       "title": "ブルー・ライト・ヨコハマ",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "with 倉木麻衣",
+       "featuring_type": "guest",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "#1090 ～Million Dreams～",
+       "alternative_title": "#1090 ～Million Dreams～",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 6,
+     "subtitle": "5.22 大阪1 2部 5.23 大阪2 1部",
+     "livefans_event_ids": [
+      1617597,
+      1617598
+     ],
+     "order_from_event_id": 1617597,
+     "setlist": [
+      {
+       "title": "EPIC MATCH ～ the match everyone wanted ～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2920,
+       "song_title": "EPIC MATCH ～ the match everyone wanted ～"
+      },
+      {
+       "title": "Rainy Monday Blues ~ 茨の道",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2911,
+       "song_title": "Rainy Monday Blues ~ 茨の道"
+      },
+      {
+       "title": "BATTLEBOX",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2921,
+       "song_title": "BATTLEBOX"
+      },
+      {
+       "title": "Tokyo Night",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2866,
+       "song_title": "Tokyo Night"
+      },
+      {
+       "title": "THE WINGS",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2874,
+       "song_title": "THE WINGS"
+      },
+      {
+       "title": "あゝ青春",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "トランザム",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "Waltz in Blue",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2914,
+       "song_title": "Waltz in Blue"
+      },
+      {
+       "title": "GLORIOUS 70",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2922,
+       "song_title": "GLORIOUS 70"
+      },
+      {
+       "title": "BOOGIE WOOGIE AZB 10",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2907,
+       "song_title": "BOOGIE WOOGIE AZB 10"
+      }
+     ],
+     "encore": [
+      {
+       "title": "港のヨーコ・ヨコハマ・ヨコスカ",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "ダウン・タウン・ブギウギ・バンド",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "#1090 千夢一夜",
+       "alternative_title": "#1090 千夢一夜",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 7,
+     "subtitle": "5.23 大阪2 2部",
+     "livefans_event_ids": [
+      1617599
+     ],
+     "order_from_event_id": 1617599,
+     "setlist": [
+      {
+       "title": "EPIC MATCH ～ the match everyone wanted ～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2920,
+       "song_title": "EPIC MATCH ～ the match everyone wanted ～"
+      },
+      {
+       "title": "Rainy Monday Blues ~ 茨の道",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2911,
+       "song_title": "Rainy Monday Blues ~ 茨の道"
+      },
+      {
+       "title": "BATTLEBOX",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2921,
+       "song_title": "BATTLEBOX"
+      },
+      {
+       "title": "Tokyo Night",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2866,
+       "song_title": "Tokyo Night"
+      },
+      {
+       "title": "THE WINGS",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2874,
+       "song_title": "THE WINGS"
+      },
+      {
+       "title": "あゝ青春",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "トランザム",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "Waltz in Blue",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2914,
+       "song_title": "Waltz in Blue"
+      },
+      {
+       "title": "GLORIOUS 70",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2922,
+       "song_title": "GLORIOUS 70"
+      },
+      {
+       "title": "BOOGIE WOOGIE AZB 10",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2907,
+       "song_title": "BOOGIE WOOGIE AZB 10"
+      }
+     ],
+     "encore": [
+      {
+       "title": "港のヨーコ・ヨコハマ・ヨコスカ",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "ダウン・タウン・ブギウギ・バンド",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "#1090 ～Million Dreams～",
+       "alternative_title": "#1090 ～Million Dreams～",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 8,
+     "subtitle": "5.25 豊中1 5.26 豊中2",
+     "livefans_event_ids": [
+      1617600,
+      1617601
+     ],
+     "order_from_event_id": 1617600,
+     "setlist": [
+      {
+       "title": "EPIC MATCH ～ the match everyone wanted ～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2920,
+       "song_title": "EPIC MATCH ～ the match everyone wanted ～"
+      },
+      {
+       "title": "Here Comes the Taxman",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2909,
+       "song_title": "Here Comes the Taxman"
+      },
+      {
+       "title": "BATTLEBOX",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2921,
+       "song_title": "BATTLEBOX"
+      },
+      {
+       "title": "Wanna Go Home",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2812,
+       "song_title": "Wanna Go Home"
+      },
+      {
+       "title": "Long Distance Call",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2813,
+       "song_title": "Long Distance Call"
+      },
+      {
+       "title": "Island of peace",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2878,
+       "song_title": "Island of peace"
+      },
+      {
+       "title": "花火",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2915,
+       "song_title": "花火"
+      },
+      {
+       "title": "Tokyo Night",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2866,
+       "song_title": "Tokyo Night"
+      },
+      {
+       "title": "俺たちの勲章テーマ",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "トランザム",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Rain Sound",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Sensation",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Waltz in Blue",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2914,
+       "song_title": "Waltz in Blue"
+      },
+      {
+       "title": "華",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2836,
+       "song_title": "華"
+      },
+      {
+       "title": "THE WINGS",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2874,
+       "song_title": "THE WINGS"
+      },
+      {
+       "title": "Rainy Monday Blues ~ 茨の道",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2911,
+       "song_title": "Rainy Monday Blues ~ 茨の道"
+      },
+      {
+       "title": "Ups and Downs",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2886,
+       "song_title": "Ups and Downs"
+      },
+      {
+       "title": "GLORIOUS 70",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2922,
+       "song_title": "GLORIOUS 70"
+      },
+      {
+       "title": "BOOGIE WOOGIE AZB 10",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2907,
+       "song_title": "BOOGIE WOOGIE AZB 10"
+      }
+     ],
+     "encore": [
+      {
+       "title": "港のヨーコ・ヨコハマ・ヨコスカ",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "ダウン・タウン・ブギウギ・バンド",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "#1090 ～Million Dreams～",
+       "alternative_title": "#1090 ～Million Dreams～",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2810,
+       "song_title": "#1090 ～Thousand Dreams～"
+      }
+     ]
+    }
+   ],
+   "subtitle_updates": []
+  },
+  {
+   "date1": "2024-09-15",
+   "tour_title": "テレビ朝日ドリームフェスティバル2024",
+   "mode": "new",
+   "source": "LiveFans",
+   "patterns": [
+    {
+     "row": 1,
+     "order_no": 1,
+     "subtitle": null,
+     "livefans_event_ids": [
+      1685441
+     ],
+     "order_from_event_id": 1685441,
+     "setlist": [
+      {
+       "title": "THE STORY OF LOVE",
+       "alternative_title": "THE STORY OF LOVE",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2925,
+       "song_title": "THE STORY OF LOVE (feat. LiSA)"
+      },
+      {
+       "title": "ENDLESS SKY",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2929,
+       "song_title": "ENDLESS SKY"
+      },
+      {
+       "title": "THE GREAT DIVIDE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2932,
+       "song_title": "THE GREAT DIVIDE"
+      },
+      {
+       "title": "DARK ISLAND WOMAN",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2930,
+       "song_title": "DARK ISLAND WOMAN"
+      },
+      {
+       "title": "JUPITER AND MARS",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2927,
+       "song_title": "JUPITER AND MARS"
+      },
+      {
+       "title": "Everything Passes Away",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2846,
+       "song_title": "Everything Passes Away"
+      },
+      {
+       "title": "OH JAPAN ～OUR TIME IS NOW～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2844,
+       "song_title": "OH JAPAN ～OUR TIME IS NOW～"
+      },
+      {
+       "title": "CRASH DOWN LOVE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2923,
+       "song_title": "CRASH DOWN LOVE"
+      },
+      {
+       "title": "KINGS FOR A DAY",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2847,
+       "song_title": "KINGS FOR A DAY"
+      },
+      {
+       "title": "ETERNAL FLAMES",
+       "alternative_title": "ETERNAL FLAMES",
+       "medley": false,
+       "featuring": "with SU-METAL",
+       "featuring_type": "guest",
+       "song_id": 2924,
+       "song_title": "ETERNAL FLAMES (feat. BABYMETAL)"
+      },
+      {
+       "title": "DA DA DANCE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "BABYMETAL",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "GUITAR HERO",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2933,
+       "song_title": "GUITAR HERO"
+      }
+     ],
+     "encore": []
+    }
+   ],
+   "subtitle_updates": []
+  },
+  {
+   "date1": "2024-09-19",
+   "tour_title": "TMG LIVE 2024 -Still Dodging The Bullet-",
+   "mode": "new",
+   "source": "LiveFans",
+   "patterns": [
+    {
+     "row": 1,
+     "order_no": 1,
+     "subtitle": "9.19 名古屋1 9.20 名古屋2",
+     "livefans_event_ids": [
+      1666233,
+      1666234
+     ],
+     "order_from_event_id": 1666233,
+     "setlist": [
+      {
+       "title": "THE STORY OF LOVE",
+       "alternative_title": "THE STORY OF LOVE",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2925,
+       "song_title": "THE STORY OF LOVE (feat. LiSA)"
+      },
+      {
+       "title": "ENDLESS SKY",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2929,
+       "song_title": "ENDLESS SKY"
+      },
+      {
+       "title": "THE GREAT DIVIDE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2932,
+       "song_title": "THE GREAT DIVIDE"
+      },
+      {
+       "title": "DARK ISLAND WOMAN",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2930,
+       "song_title": "DARK ISLAND WOMAN"
+      },
+      {
+       "title": "FAITHFUL NOW",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2931,
+       "song_title": "FAITHFUL NOW"
+      },
+      {
+       "title": "JUPITER AND MARS",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2927,
+       "song_title": "JUPITER AND MARS"
+      },
+      {
+       "title": "Everything Passes Away",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2846,
+       "song_title": "Everything Passes Away"
+      },
+      {
+       "title": "OH JAPAN ～OUR TIME IS NOW～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2844,
+       "song_title": "OH JAPAN ～OUR TIME IS NOW～"
+      },
+      {
+       "title": "Waltz in Blue",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2914,
+       "song_title": "Waltz in Blue"
+      },
+      {
+       "title": "TO BE WITH YOU",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "MR.BIG",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "COLOR IN THE WORLD",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2926,
+       "song_title": "COLOR IN THE WORLD"
+      },
+      {
+       "title": "MY LIFE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2928,
+       "song_title": "MY LIFE"
+      },
+      {
+       "title": "CRASH DOWN LOVE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2923,
+       "song_title": "CRASH DOWN LOVE"
+      },
+      {
+       "title": "KINGS FOR A DAY",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2847,
+       "song_title": "KINGS FOR A DAY"
+      },
+      {
+       "title": "NEVER GOOD-BYE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2857,
+       "song_title": "NEVER GOOD-BYE"
+      },
+      {
+       "title": "ETERNAL FLAMES",
+       "alternative_title": "ETERNAL FLAMES",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2924,
+       "song_title": "ETERNAL FLAMES (feat. BABYMETAL)"
+      }
+     ],
+     "encore": [
+      {
+       "title": "(You Can Still) Rock In America",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Night Ranger",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "GUITAR HERO",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2933,
+       "song_title": "GUITAR HERO"
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 2,
+     "subtitle": "9.23 東京1 9.24 東京2 9.28 札幌 10.2 福岡 10.6 大阪1 10.7 大阪2",
+     "livefans_event_ids": [
+      1666235,
+      1666236,
+      1666237,
+      1666238,
+      1666239,
+      1666240
+     ],
+     "order_from_event_id": 1666235,
+     "setlist": [
+      {
+       "title": "THE STORY OF LOVE",
+       "alternative_title": "THE STORY OF LOVE",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2925,
+       "song_title": "THE STORY OF LOVE (feat. LiSA)"
+      },
+      {
+       "title": "ENDLESS SKY",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2929,
+       "song_title": "ENDLESS SKY"
+      },
+      {
+       "title": "THE GREAT DIVIDE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2932,
+       "song_title": "THE GREAT DIVIDE"
+      },
+      {
+       "title": "DARK ISLAND WOMAN",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2930,
+       "song_title": "DARK ISLAND WOMAN"
+      },
+      {
+       "title": "JUPITER AND MARS",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2927,
+       "song_title": "JUPITER AND MARS"
+      },
+      {
+       "title": "FAITHFUL NOW",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2931,
+       "song_title": "FAITHFUL NOW"
+      },
+      {
+       "title": "Everything Passes Away",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2846,
+       "song_title": "Everything Passes Away"
+      },
+      {
+       "title": "OH JAPAN ～OUR TIME IS NOW～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2844,
+       "song_title": "OH JAPAN ～OUR TIME IS NOW～"
+      },
+      {
+       "title": "Waltz in Blue",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2914,
+       "song_title": "Waltz in Blue"
+      },
+      {
+       "title": "TO BE WITH YOU",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "MR.BIG",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "COLOR IN THE WORLD",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2926,
+       "song_title": "COLOR IN THE WORLD"
+      },
+      {
+       "title": "MY LIFE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2928,
+       "song_title": "MY LIFE"
+      },
+      {
+       "title": "CRASH DOWN LOVE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2923,
+       "song_title": "CRASH DOWN LOVE"
+      },
+      {
+       "title": "KINGS FOR A DAY",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2847,
+       "song_title": "KINGS FOR A DAY"
+      },
+      {
+       "title": "NEVER GOOD-BYE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2857,
+       "song_title": "NEVER GOOD-BYE"
+      },
+      {
+       "title": "ETERNAL FLAMES",
+       "alternative_title": "ETERNAL FLAMES",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2924,
+       "song_title": "ETERNAL FLAMES (feat. BABYMETAL)"
+      }
+     ],
+     "encore": [
+      {
+       "title": "(You Can Still) Rock In America",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Night Ranger",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "GUITAR HERO",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2933,
+       "song_title": "GUITAR HERO"
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 3,
+     "subtitle": "10.12 東京3",
+     "livefans_event_ids": [
+      1666241
+     ],
+     "order_from_event_id": 1666241,
+     "setlist": [
+      {
+       "title": "THE STORY OF LOVE (feat. LiSA)",
+       "alternative_title": "THE STORY OF LOVE",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2925,
+       "song_title": "THE STORY OF LOVE (feat. LiSA)"
+      },
+      {
+       "title": "ENDLESS SKY",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2929,
+       "song_title": "ENDLESS SKY"
+      },
+      {
+       "title": "THE GREAT DIVIDE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2932,
+       "song_title": "THE GREAT DIVIDE"
+      },
+      {
+       "title": "DARK ISLAND WOMAN",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2930,
+       "song_title": "DARK ISLAND WOMAN"
+      },
+      {
+       "title": "JUPITER AND MARS",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2927,
+       "song_title": "JUPITER AND MARS"
+      },
+      {
+       "title": "FAITHFUL NOW",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2931,
+       "song_title": "FAITHFUL NOW"
+      },
+      {
+       "title": "Everything Passes Away",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2846,
+       "song_title": "Everything Passes Away"
+      },
+      {
+       "title": "OH JAPAN ～OUR TIME IS NOW～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2844,
+       "song_title": "OH JAPAN ～OUR TIME IS NOW～"
+      },
+      {
+       "title": "Waltz in Blue",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2914,
+       "song_title": "Waltz in Blue"
+      },
+      {
+       "title": "TO BE WITH YOU",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "MR.BIG",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "COLOR IN THE WORLD",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2926,
+       "song_title": "COLOR IN THE WORLD"
+      },
+      {
+       "title": "MY LIFE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2928,
+       "song_title": "MY LIFE"
+      },
+      {
+       "title": "CRASH DOWN LOVE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2923,
+       "song_title": "CRASH DOWN LOVE"
+      },
+      {
+       "title": "KINGS FOR A DAY",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2847,
+       "song_title": "KINGS FOR A DAY"
+      },
+      {
+       "title": "NEVER GOOD-BYE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2857,
+       "song_title": "NEVER GOOD-BYE"
+      },
+      {
+       "title": "DA DA DANCE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "BABYMETAL",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "ETERNAL FLAMES (feat. BABYMETAL)",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2924,
+       "song_title": "ETERNAL FLAMES (feat. BABYMETAL)"
+      }
+     ],
+     "encore": [
+      {
+       "title": "(You Can Still) Rock In America",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Night Ranger",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "GUITAR HERO",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2933,
+       "song_title": "GUITAR HERO"
+      }
+     ]
+    }
+   ],
+   "subtitle_updates": []
+  },
+  {
+   "date1": "2025-02-11",
+   "tour_title": "A Tribute to Jeff Beck by Char with HOTEI & Tak Matsumoto featuring The Jeff Beck Band -Rhonda Smith, Anika Nilles, Jimmy Hall & Gary Husband-",
+   "mode": "new",
+   "source": "LiveFans",
+   "patterns": [
+    {
+     "row": 1,
+     "order_no": 1,
+     "subtitle": null,
+     "livefans_event_ids": [
+      1740212
+     ],
+     "order_from_event_id": 1740212,
+     "setlist": [
+      {
+       "title": "Led Boots",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Beck's Bolero",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Rice Pudding",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Morning Dew",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Wild Thing",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Cause We've Ended As Lovers",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Too Much To Lose",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Superstition",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Jailhouse Rock",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Train Kept A-Rollin'",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "All Shook Up",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Little Wing",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Jimi Hendrix",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Hammerhead",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "People Get Ready",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Freeway Jam",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Blue Wind",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      }
+     ],
+     "encore": [
+      {
+       "title": "Jeff's Boogie",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Jeff Beck",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Going Down",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      }
+     ]
+    }
+   ],
+   "subtitle_updates": []
+  },
+  {
+   "date1": "2026-04-22",
+   "tour_title": "EXILE LIVE 2026 \"THE REASON\" ～PERFECT YEAR Special～",
+   "mode": "new",
+   "source": "LiveFans",
+   "patterns": [
+    {
+     "row": 1,
+     "order_no": 1,
+     "subtitle": null,
+     "livefans_event_ids": [
+      1916084
+     ],
+     "order_from_event_id": 1916084,
+     "setlist": [
+      {
+       "title": "Reason",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Choo Choo TRAIN",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "I Wish For You",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "PARTY ALL NIGHT",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "DANCE INTO FANTASY",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Heads or Tails",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "24WORLD",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "BE THE ONE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "ASOBO!",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "YEAH!! YEAH!! YEAH!!",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "SUPER FLY",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Mirror",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "15分",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Each Other's Way ～旅の途中～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Flower Song",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Lovers Again",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "ふたつの唇",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Ti Amo",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "響～HIBIKI～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "道",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Get go!",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "VICTORY",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Someday",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "BOW & ARROWS",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "WON'T BE LONG",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "ki・mi・ni・mu・chu",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "銀河鉄道999",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      }
+     ],
+     "encore": [
+      {
+       "title": "24Karats GOLD LEGACY",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "with 松本孝弘",
+       "featuring_type": "guest",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "24Karats Gold Diggers",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "24karats STAY GOLD",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "24karats TRIBE OF GOLD",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "24karats GOLD SOUL",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Smile",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "Rising Sun",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": null,
+       "song_title": null
+      }
+     ]
+    }
+   ],
+   "subtitle_updates": []
+  },
+  {
+   "date1": "2026-10-05",
+   "tour_title": "TMG LIVE 2026 “SAYONARA”",
+   "mode": "new",
+   "source": "LiveFans",
+   "patterns": [
+    {
+     "row": 1,
+     "order_no": 1,
+     "subtitle": "10.5 東京1 10.6 東京2 10.9 札幌",
+     "livefans_event_ids": [
+      1944920,
+      1944921,
+      2011453
+     ],
+     "order_from_event_id": 1944920,
+     "setlist": [
+      {
+       "title": "I CAN’T STAND SLEEPING ALONE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2936,
+       "song_title": "I CAN’T STAND SLEEPING ALONE"
+      },
+      {
+       "title": "LAST CHANCE (COME ON COME ON)",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2938,
+       "song_title": "LAST CHANCE (COME ON COME ON)"
+      },
+      {
+       "title": "CRASH DOWN LOVE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2923,
+       "song_title": "CRASH DOWN LOVE"
+      },
+      {
+       "title": "ENDLESS SKY",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2929,
+       "song_title": "ENDLESS SKY"
+      },
+      {
+       "title": "JUPITER AND MARS",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2927,
+       "song_title": "JUPITER AND MARS"
+      },
+      {
+       "title": "COLOR IN THE WORLD",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2926,
+       "song_title": "COLOR IN THE WORLD"
+      },
+      {
+       "title": "WHILE MY GUITAR GENTLY WEEPS",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "The Beatles",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "DOOM",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2939,
+       "song_title": "DOOM"
+      },
+      {
+       "title": "Wild World",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Cat Stevens",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "I DON’T SEE ME IN YOUR EYES",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2937,
+       "song_title": "I DON’T SEE ME IN YOUR EYES"
+      },
+      {
+       "title": "THE STORY OF LOVE",
+       "alternative_title": "THE STORY OF LOVE",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2925,
+       "song_title": "THE STORY OF LOVE (feat. LiSA)"
+      },
+      {
+       "title": "ETERNAL FLAMES",
+       "alternative_title": "ETERNAL FLAMES",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2924,
+       "song_title": "ETERNAL FLAMES (feat. BABYMETAL)"
+      },
+      {
+       "title": "GUITAR HERO",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2933,
+       "song_title": "GUITAR HERO"
+      },
+      {
+       "title": "(You Can Still) Rock In America",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Night Ranger",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "NEVER GOOD-BYE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2857,
+       "song_title": "NEVER GOOD-BYE"
+      },
+      {
+       "title": "Everything Passes Away",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2846,
+       "song_title": "Everything Passes Away"
+      }
+     ],
+     "encore": [
+      {
+       "title": "OH JAPAN ～OUR TIME IS NOW～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2844,
+       "song_title": "OH JAPAN ～OUR TIME IS NOW～"
+      },
+      {
+       "title": "SAYONARA",
+       "alternative_title": "SAYONARA",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2935,
+       "song_title": "SAYONARA (feat. Ado)"
+      }
+     ]
+    },
+    {
+     "row": 1,
+     "order_no": 2,
+     "subtitle": "10.13 大阪1 10.14 大阪2 10.17 福岡 10.20 名古屋1 10.21 名古屋2 10.23 東京3",
+     "livefans_event_ids": [
+      1944923,
+      1944924,
+      1944925,
+      1944926,
+      1944927,
+      2011804
+     ],
+     "order_from_event_id": 1944923,
+     "setlist": [
+      {
+       "title": "I CAN’T STAND SLEEPING ALONE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2936,
+       "song_title": "I CAN’T STAND SLEEPING ALONE"
+      },
+      {
+       "title": "LAST CHANCE (COME ON COME ON)",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2938,
+       "song_title": "LAST CHANCE (COME ON COME ON)"
+      },
+      {
+       "title": "CRASH DOWN LOVE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2923,
+       "song_title": "CRASH DOWN LOVE"
+      },
+      {
+       "title": "ENDLESS SKY",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2929,
+       "song_title": "ENDLESS SKY"
+      },
+      {
+       "title": "JUPITER AND MARS",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2927,
+       "song_title": "JUPITER AND MARS"
+      },
+      {
+       "title": "COLOR IN THE WORLD",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2926,
+       "song_title": "COLOR IN THE WORLD"
+      },
+      {
+       "title": "WHILE MY GUITAR GENTLY WEEPS",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "The Beatles",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "DOOM",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2939,
+       "song_title": "DOOM"
+      },
+      {
+       "title": "TO BE WITH YOU",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "MR.BIG",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "I DON’T SEE ME IN YOUR EYES",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2937,
+       "song_title": "I DON’T SEE ME IN YOUR EYES"
+      },
+      {
+       "title": "THE STORY OF LOVE",
+       "alternative_title": "THE STORY OF LOVE",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2925,
+       "song_title": "THE STORY OF LOVE (feat. LiSA)"
+      },
+      {
+       "title": "ETERNAL FLAMES",
+       "alternative_title": "ETERNAL FLAMES",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2924,
+       "song_title": "ETERNAL FLAMES (feat. BABYMETAL)"
+      },
+      {
+       "title": "GUITAR HERO",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2933,
+       "song_title": "GUITAR HERO"
+      },
+      {
+       "title": "(You Can Still) Rock In America",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": "Night Ranger",
+       "featuring_type": "artist",
+       "song_id": null,
+       "song_title": null
+      },
+      {
+       "title": "NEVER GOOD-BYE",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2857,
+       "song_title": "NEVER GOOD-BYE"
+      },
+      {
+       "title": "Everything Passes Away",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2846,
+       "song_title": "Everything Passes Away"
+      }
+     ],
+     "encore": [
+      {
+       "title": "OH JAPAN ～OUR TIME IS NOW～",
+       "alternative_title": null,
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2844,
+       "song_title": "OH JAPAN ～OUR TIME IS NOW～"
+      },
+      {
+       "title": "SAYONARA",
+       "alternative_title": "SAYONARA",
+       "medley": false,
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2935,
+       "song_title": "SAYONARA (feat. Ado)"
+      }
+     ]
+    }
+   ],
+   "subtitle_updates": []
+  }
+ ]
+}

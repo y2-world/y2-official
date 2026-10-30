@@ -1,0 +1,1858 @@
+{
+ "source": "bz-vermillion.com/discography と ja.wikipedia（2026-10-29）。storage/app/setlist-work/tak/build_tak.py が作る",
+ "artist": {
+  "name": "松本孝弘",
+  "band": "B'z"
+ },
+ "songs": [
+  {
+   "title": "Thousand Wave",
+   "credit": null
+  },
+  {
+   "title": "Touch Operation",
+   "credit": null
+  },
+  {
+   "title": "“99”",
+   "credit": null
+  },
+  {
+   "title": "So Long",
+   "credit": null
+  },
+  {
+   "title": "Play It So Loud",
+   "credit": null
+  },
+  {
+   "title": "Teaser",
+   "credit": null
+  },
+  {
+   "title": "No Way Out",
+   "credit": null
+  },
+  {
+   "title": "'88 ～ Love Story",
+   "credit": null
+  },
+  {
+   "title": "Love Ya",
+   "credit": null
+  },
+  {
+   "title": "#1090 ～Thousand Dreams～",
+   "credit": null
+  },
+  {
+   "title": "LIFE",
+   "credit": null
+  },
+  {
+   "title": "Wanna Go Home",
+   "credit": null
+  },
+  {
+   "title": "Long Distance Call",
+   "credit": null
+  },
+  {
+   "title": "Air Port",
+   "credit": null
+  },
+  {
+   "title": "Jammin' of The Guitar",
+   "credit": null
+  },
+  {
+   "title": "Speed",
+   "credit": null
+  },
+  {
+   "title": "あなたへ・・・",
+   "credit": null
+  },
+  {
+   "title": "いてもうたるで",
+   "credit": null
+  },
+  {
+   "title": "THE CHANGING",
+   "credit": null
+  },
+  {
+   "title": "ONE FOR THE ROAD",
+   "credit": null
+  },
+  {
+   "title": "Nothin' But The Blues",
+   "credit": null
+  },
+  {
+   "title": "HEAVEN",
+   "credit": null
+  },
+  {
+   "title": "SAKURA",
+   "credit": null
+  },
+  {
+   "title": "GO FURTHER",
+   "credit": null
+  },
+  {
+   "title": "two of us",
+   "credit": null
+  },
+  {
+   "title": "神様へ",
+   "credit": null
+  },
+  {
+   "title": "冬の灯",
+   "credit": null
+  },
+  {
+   "title": "愛～愛～愛～",
+   "credit": null
+  },
+  {
+   "title": "ゼロよりゼロから",
+   "credit": null
+  },
+  {
+   "title": "Believin' You",
+   "credit": null
+  },
+  {
+   "title": "SACRED FIELD",
+   "credit": null
+  },
+  {
+   "title": "FIGHTING BULL",
+   "credit": null
+  },
+  {
+   "title": "DRAGON FROM THE WEST",
+   "credit": null
+  },
+  {
+   "title": "NOTTEKE",
+   "credit": null
+  },
+  {
+   "title": "Riverside Blues",
+   "credit": null
+  },
+  {
+   "title": "Trinity",
+   "credit": null
+  },
+  {
+   "title": "恋歌",
+   "credit": null
+  },
+  {
+   "title": "華",
+   "credit": null
+  },
+  {
+   "title": "街",
+   "credit": null
+  },
+  {
+   "title": "御堂筋BLUE",
+   "credit": null
+  },
+  {
+   "title": "朱～朝焼け～",
+   "credit": null
+  },
+  {
+   "title": "hallelujah",
+   "credit": null
+  },
+  {
+   "title": "ENGAGED",
+   "credit": null
+  },
+  {
+   "title": "You Know....",
+   "credit": null
+  },
+  {
+   "title": "2011",
+   "credit": null
+  },
+  {
+   "title": "OH JAPAN ～OUR TIME IS NOW～",
+   "credit": "TMG"
+  },
+  {
+   "title": "TRAPPED",
+   "credit": "TMG"
+  },
+  {
+   "title": "Everything Passes Away",
+   "credit": "TMG"
+  },
+  {
+   "title": "KINGS FOR A DAY",
+   "credit": "TMG"
+  },
+  {
+   "title": "I Know You by Heart",
+   "credit": "TMG"
+  },
+  {
+   "title": "I wish you were here",
+   "credit": "TMG"
+  },
+  {
+   "title": "THE GREATEST SHOW ON EARTH",
+   "credit": "TMG"
+  },
+  {
+   "title": "Signs of Life",
+   "credit": "TMG"
+  },
+  {
+   "title": "RED, WHITE AND BULLET BLUES",
+   "credit": "TMG"
+  },
+  {
+   "title": "My Alibi",
+   "credit": "TMG"
+  },
+  {
+   "title": "WONDERLAND",
+   "credit": "TMG"
+  },
+  {
+   "title": "TRAIN, TRAIN",
+   "credit": "TMG"
+  },
+  {
+   "title": "Two of a Kind",
+   "credit": "TMG"
+  },
+  {
+   "title": "NEVER GOOD-BYE",
+   "credit": "TMG"
+  },
+  {
+   "title": "RED SUN",
+   "credit": null
+  },
+  {
+   "title": "THE THEME OF B.J.",
+   "credit": null
+  },
+  {
+   "title": "Theme from ULTRAMAN",
+   "credit": null
+  },
+  {
+   "title": "JAZZY BULLETS",
+   "credit": "Larry Carlton & Tak Matsumoto"
+  },
+  {
+   "title": "Nite Crawler 2010",
+   "credit": "Larry Carlton & Tak Matsumoto"
+  },
+  {
+   "title": "THE WAY WE WERE",
+   "credit": "Larry Carlton & Tak Matsumoto"
+  },
+  {
+   "title": "Islands of Japan",
+   "credit": "Larry Carlton & Tak Matsumoto"
+  },
+  {
+   "title": "Neon Blue",
+   "credit": "Larry Carlton & Tak Matsumoto"
+  },
+  {
+   "title": "Tokyo Night",
+   "credit": "Larry Carlton & Tak Matsumoto"
+  },
+  {
+   "title": "hotalu",
+   "credit": "Larry Carlton & Tak Matsumoto"
+  },
+  {
+   "title": "East West Stroll",
+   "credit": "Larry Carlton & Tak Matsumoto"
+  },
+  {
+   "title": "Easy Mystery",
+   "credit": "Larry Carlton & Tak Matsumoto"
+  },
+  {
+   "title": "ao",
+   "credit": "Larry Carlton & Tak Matsumoto"
+  },
+  {
+   "title": "Take Your Pick",
+   "credit": "Larry Carlton & Tak Matsumoto"
+  },
+  {
+   "title": "A girl from China",
+   "credit": "Larry Carlton & Tak Matsumoto"
+  },
+  {
+   "title": "Live Life",
+   "credit": null
+  },
+  {
+   "title": "THE WINGS",
+   "credit": null
+  },
+  {
+   "title": "New Horizon",
+   "credit": null
+  },
+  {
+   "title": "Feel like a woman tonite",
+   "credit": null
+  },
+  {
+   "title": "Rodeo Blues",
+   "credit": null
+  },
+  {
+   "title": "Island of peace",
+   "credit": null
+  },
+  {
+   "title": "That’s Cool",
+   "credit": null
+  },
+  {
+   "title": "Shattered Glass",
+   "credit": null
+  },
+  {
+   "title": "Reason to be...",
+   "credit": null
+  },
+  {
+   "title": "Rain",
+   "credit": null
+  },
+  {
+   "title": "enigma",
+   "credit": null
+  },
+  {
+   "title": "Vermillion Palace",
+   "credit": null
+  },
+  {
+   "title": "Step to Heaven",
+   "credit": null
+  },
+  {
+   "title": "Ups and Downs",
+   "credit": null
+  },
+  {
+   "title": "Rock The Rock",
+   "credit": null
+  },
+  {
+   "title": "Drifting",
+   "credit": null
+  },
+  {
+   "title": "The Voyage",
+   "credit": null
+  },
+  {
+   "title": "Hopes",
+   "credit": null
+  },
+  {
+   "title": "Under The Sun",
+   "credit": null
+  },
+  {
+   "title": "Dream Drive",
+   "credit": null
+  },
+  {
+   "title": "The Rock Show",
+   "credit": null
+  },
+  {
+   "title": "Roppongi Noise",
+   "credit": null
+  },
+  {
+   "title": "Mystic Journey",
+   "credit": null
+  },
+  {
+   "title": "enigma ～epilogue～",
+   "credit": null
+  },
+  {
+   "title": "Theme from Fist of the North Star ～The Road of Lords～",
+   "credit": null
+  },
+  {
+   "title": "Soaring on Dreams",
+   "credit": "Tak Matsumoto & Daniel Ho"
+  },
+  {
+   "title": "Fujiyama Highway",
+   "credit": "Tak Matsumoto & Daniel Ho"
+  },
+  {
+   "title": "Magokoro (True Heart)",
+   "credit": "Tak Matsumoto & Daniel Ho"
+  },
+  {
+   "title": "Infinite Escapade",
+   "credit": "Tak Matsumoto & Daniel Ho"
+  },
+  {
+   "title": "Sunny Tuesday",
+   "credit": "Tak Matsumoto & Daniel Ho"
+  },
+  {
+   "title": "Wander Blues",
+   "credit": "Tak Matsumoto & Daniel Ho"
+  },
+  {
+   "title": "Adrenaline UP!",
+   "credit": "Tak Matsumoto & Daniel Ho"
+  },
+  {
+   "title": "Omotesando",
+   "credit": "Tak Matsumoto & Daniel Ho"
+  },
+  {
+   "title": "Lia",
+   "credit": "Tak Matsumoto & Daniel Ho"
+  },
+  {
+   "title": "BOOGIE WOOGIE AZB 10",
+   "credit": null
+  },
+  {
+   "title": "Actually",
+   "credit": null
+  },
+  {
+   "title": "Here Comes the Taxman",
+   "credit": null
+  },
+  {
+   "title": "Be Funky !",
+   "credit": null
+  },
+  {
+   "title": "Rainy Monday Blues ~ 茨の道",
+   "credit": null
+  },
+  {
+   "title": "月光かりの如く",
+   "credit": null
+  },
+  {
+   "title": "漣 < sazanami >",
+   "credit": null
+  },
+  {
+   "title": "Waltz in Blue",
+   "credit": null
+  },
+  {
+   "title": "花火",
+   "credit": null
+  },
+  {
+   "title": "Asian root",
+   "credit": null
+  },
+  {
+   "title": "Good News",
+   "credit": null
+  },
+  {
+   "title": "Arby Garden",
+   "credit": null
+  },
+  {
+   "title": "Lovely",
+   "credit": null
+  },
+  {
+   "title": "EPIC MATCH ～ the match everyone wanted ～",
+   "credit": null
+  },
+  {
+   "title": "BATTLEBOX",
+   "credit": null
+  },
+  {
+   "title": "GLORIOUS 70",
+   "credit": null
+  },
+  {
+   "title": "CRASH DOWN LOVE",
+   "credit": "TMG"
+  },
+  {
+   "title": "ETERNAL FLAMES (feat. BABYMETAL)",
+   "credit": "TMG"
+  },
+  {
+   "title": "THE STORY OF LOVE (feat. LiSA)",
+   "credit": "TMG"
+  },
+  {
+   "title": "COLOR IN THE WORLD",
+   "credit": "TMG"
+  },
+  {
+   "title": "JUPITER AND MARS",
+   "credit": "TMG"
+  },
+  {
+   "title": "MY LIFE",
+   "credit": "TMG"
+  },
+  {
+   "title": "ENDLESS SKY",
+   "credit": "TMG"
+  },
+  {
+   "title": "DARK ISLAND WOMAN",
+   "credit": "TMG"
+  },
+  {
+   "title": "FAITHFUL NOW",
+   "credit": "TMG"
+  },
+  {
+   "title": "THE GREAT DIVIDE",
+   "credit": "TMG"
+  },
+  {
+   "title": "GUITAR HERO",
+   "credit": "TMG"
+  },
+  {
+   "title": "Tiger's Eye",
+   "credit": null
+  },
+  {
+   "title": "Tokyo Dream Park",
+   "credit": null
+  },
+  {
+   "title": "SAYONARA (feat. Ado)",
+   "credit": "TMG"
+  },
+  {
+   "title": "I CAN’T STAND SLEEPING ALONE",
+   "credit": "TMG"
+  },
+  {
+   "title": "I DON’T SEE ME IN YOUR EYES",
+   "credit": "TMG"
+  },
+  {
+   "title": "LAST CHANCE (COME ON COME ON)",
+   "credit": "TMG"
+  },
+  {
+   "title": "DOOM",
+   "credit": "TMG"
+  }
+ ],
+ "releases": [
+  {
+   "kind": "album",
+   "num": 1,
+   "date": "1988-05-21",
+   "title": "Thousand Wave",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Thousand Wave",
+     "link": "Thousand Wave"
+    },
+    {
+     "label": "Touch Operation",
+     "link": "Touch Operation"
+    },
+    {
+     "label": "SPAIN",
+     "link": null
+    },
+    {
+     "label": "“99”",
+     "link": "“99”"
+    },
+    {
+     "label": "So Long",
+     "link": "So Long"
+    },
+    {
+     "label": "Vampire Hunter “D”",
+     "link": null
+    },
+    {
+     "label": "Play It So Loud",
+     "link": "Play It So Loud"
+    },
+    {
+     "label": "Teaser",
+     "link": "Teaser"
+    },
+    {
+     "label": "Take Five",
+     "link": null
+    },
+    {
+     "label": "No Way Out",
+     "link": "No Way Out"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 1,
+   "date": "1991-09-25",
+   "title": "'88 ～ Love Story / Love Ya",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "'88 ～ Love Story",
+     "link": "'88 ～ Love Story"
+    },
+    {
+     "label": "Love Ya",
+     "link": "Love Ya"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 2,
+   "date": "1992-03-18",
+   "title": "#1090 ～Thousand Dreams～",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "#1090 ～Thousand Dreams～",
+     "link": "#1090 ～Thousand Dreams～"
+    },
+    {
+     "label": "LIFE",
+     "link": "LIFE"
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 2,
+   "date": "1992-04-22",
+   "title": "Wanna Go Home",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Wanna Go Home",
+     "link": "Wanna Go Home"
+    },
+    {
+     "label": "99",
+     "link": "“99”"
+    },
+    {
+     "label": "Long Distance Call",
+     "link": "Long Distance Call"
+    },
+    {
+     "label": "Love Ya <Interlude>",
+     "link": "Love Ya"
+    },
+    {
+     "label": "Air Port",
+     "link": "Air Port"
+    },
+    {
+     "label": "Life II",
+     "link": "LIFE"
+    },
+    {
+     "label": "'88 ～ Love Story",
+     "link": "'88 ～ Love Story"
+    },
+    {
+     "label": "Love Ya",
+     "link": "Love Ya"
+    },
+    {
+     "label": "#1090 ～Thousand Dreams～",
+     "link": "#1090 ～Thousand Dreams～"
+    },
+    {
+     "label": "Jammin' of The Guitar",
+     "link": "Jammin' of The Guitar"
+    },
+    {
+     "label": "Speed",
+     "link": "Speed"
+    },
+    {
+     "label": "Wanna Go Home <Reprise>",
+     "link": "Wanna Go Home"
+    }
+   ]
+  },
+  {
+   "kind": "special",
+   "num": null,
+   "date": "1996-05-15",
+   "title": "Rock'n Roll Standard Club",
+   "credit": "ROCK'N ROLL STANDARD CLUB BAND",
+   "tracks": [
+    {
+     "label": "I GOT THE FIRE",
+     "link": null
+    },
+    {
+     "label": "FOOL FOR YOUR LOVING",
+     "link": null
+    },
+    {
+     "label": "CAUSE WE'VE ENDED AS LOVERS",
+     "link": null
+    },
+    {
+     "label": "INTO THE ARENA",
+     "link": null
+    },
+    {
+     "label": "ROCK AND ROLL, HOOCHIE KOO",
+     "link": null
+    },
+    {
+     "label": "MOVE OVER",
+     "link": null
+    },
+    {
+     "label": "LIFE FOR THE TAKING",
+     "link": null
+    },
+    {
+     "label": "SUNSET",
+     "link": null
+    },
+    {
+     "label": "WISHING WELL",
+     "link": null
+    },
+    {
+     "label": "COMMUNICATION BREAKDOWN",
+     "link": null
+    },
+    {
+     "label": "MISTREATED",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "special",
+   "num": null,
+   "date": "1996-10-07",
+   "title": "Thousand Wave Plus",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Thousand Wave",
+     "link": "Thousand Wave"
+    },
+    {
+     "label": "Touch Operation",
+     "link": "Touch Operation"
+    },
+    {
+     "label": "SPAIN",
+     "link": null
+    },
+    {
+     "label": "“99”",
+     "link": "“99”"
+    },
+    {
+     "label": "So Long",
+     "link": "So Long"
+    },
+    {
+     "label": "Vampire Hunter “D”",
+     "link": null
+    },
+    {
+     "label": "Play It So Loud",
+     "link": "Play It So Loud"
+    },
+    {
+     "label": "Teaser",
+     "link": "Teaser"
+    },
+    {
+     "label": "Take Five",
+     "link": null
+    },
+    {
+     "label": "No Way Out",
+     "link": "No Way Out"
+    },
+    {
+     "label": "'88 ～ Love Story",
+     "link": "'88 ～ Love Story"
+    },
+    {
+     "label": "Love Ya",
+     "link": "Love Ya"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 3,
+   "date": "1999-03-25",
+   "title": "THE CHANGING",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "THE CHANGING",
+     "link": "THE CHANGING"
+    },
+    {
+     "label": "ONE FOR THE ROAD",
+     "link": "ONE FOR THE ROAD"
+    },
+    {
+     "label": "THE CHANGING ～Original TV style～",
+     "link": "THE CHANGING"
+    },
+    {
+     "label": "THE CHANGING ～Vocal & Guitar Less Version～",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 3,
+   "date": "1999-04-14",
+   "title": "KNOCKIN' “T” AROUND",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "THE CHANGING ～Electric Lady Mix～",
+     "link": "THE CHANGING"
+    },
+    {
+     "label": "Nothin' But The Blues",
+     "link": "Nothin' But The Blues"
+    },
+    {
+     "label": "HEAVEN",
+     "link": "HEAVEN"
+    },
+    {
+     "label": "SAKURA",
+     "link": "SAKURA"
+    },
+    {
+     "label": "GO FURTHER",
+     "link": "GO FURTHER"
+    },
+    {
+     "label": "two of us",
+     "link": "two of us"
+    },
+    {
+     "label": "神様へ",
+     "link": "神様へ"
+    },
+    {
+     "label": "冬の灯",
+     "link": "冬の灯"
+    },
+    {
+     "label": "愛～愛～愛～",
+     "link": "愛～愛～愛～"
+    },
+    {
+     "label": "ゼロよりゼロから",
+     "link": "ゼロよりゼロから"
+    },
+    {
+     "label": "Believin' You",
+     "link": "Believin' You"
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 4,
+   "date": "2002-02-27",
+   "title": "西辺来龍 DRAGON FROM THE WEST",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "SACRED FIELD",
+     "link": "SACRED FIELD"
+    },
+    {
+     "label": "FIGHTING BULL",
+     "link": "FIGHTING BULL"
+    },
+    {
+     "label": "DRAGON FROM THE WEST",
+     "link": "DRAGON FROM THE WEST"
+    },
+    {
+     "label": "NOTTEKE",
+     "link": "NOTTEKE"
+    },
+    {
+     "label": "Riverside Blues",
+     "link": "Riverside Blues"
+    },
+    {
+     "label": "Trinity",
+     "link": "Trinity"
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 5,
+   "date": "2002-02-27",
+   "title": "華",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "恋歌",
+     "link": "恋歌"
+    },
+    {
+     "label": "#1090［千夢一夜］",
+     "link": "#1090 ～Thousand Dreams～"
+    },
+    {
+     "label": "華",
+     "link": "華"
+    },
+    {
+     "label": "街",
+     "link": "街"
+    },
+    {
+     "label": "御堂筋BLUE",
+     "link": "御堂筋BLUE"
+    },
+    {
+     "label": "朱～朝焼け～",
+     "link": "朱～朝焼け～"
+    },
+    {
+     "label": "Little Wing",
+     "link": null
+    },
+    {
+     "label": "Romeo & Juliet",
+     "link": null
+    },
+    {
+     "label": "hallelujah",
+     "link": "hallelujah"
+    },
+    {
+     "label": "ENGAGED",
+     "link": "ENGAGED"
+    },
+    {
+     "label": "You Know....",
+     "link": "You Know...."
+    },
+    {
+     "label": "2011",
+     "link": "2011"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": null,
+   "date": "2003-08-27",
+   "title": "異邦人",
+   "credit": "Tak Matsumoto featuring ZARD",
+   "tracks": [
+    {
+     "label": "異邦人",
+     "link": null
+    },
+    {
+     "label": "雨の街を",
+     "link": null
+    },
+    {
+     "label": "異邦人 VOCAL LESS",
+     "link": null
+    },
+    {
+     "label": "雨の街を VOCAL LESS",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": null,
+   "date": "2003-10-08",
+   "title": "イミテイション・ゴールド",
+   "credit": "Tak Matsumoto featuring 倉木麻衣",
+   "tracks": [
+    {
+     "label": "イミテイション・ゴールド",
+     "link": null
+    },
+    {
+     "label": "私は風",
+     "link": null
+    },
+    {
+     "label": "イミテイション・ゴールド VOCAL LESS",
+     "link": null
+    },
+    {
+     "label": "私は風 VOCAL LESS",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 6,
+   "date": "2003-11-26",
+   "title": "THE HIT PARADE",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "勝手にしやがれ",
+     "link": null
+    },
+    {
+     "label": "異邦人",
+     "link": null
+    },
+    {
+     "label": "涙の太陽",
+     "link": null
+    },
+    {
+     "label": "その気にさせないで",
+     "link": null
+    },
+    {
+     "label": "イミテイション・ゴールド",
+     "link": null
+    },
+    {
+     "label": "港のヨーコ・ヨコハマ・ヨコスカ",
+     "link": null
+    },
+    {
+     "label": "雨の街を",
+     "link": null
+    },
+    {
+     "label": "Paper Doll",
+     "link": null
+    },
+    {
+     "label": "いちご白書をもう一度",
+     "link": null
+    },
+    {
+     "label": "Foggy Night",
+     "link": null
+    },
+    {
+     "label": "少女A",
+     "link": null
+    },
+    {
+     "label": "ビュン・ビュン",
+     "link": null
+    },
+    {
+     "label": "パープルタウン",
+     "link": null
+    },
+    {
+     "label": "時に愛は",
+     "link": null
+    },
+    {
+     "label": "SPINNING TOE - HOLD",
+     "link": null
+    },
+    {
+     "label": "一人 ～I Stand Alone～",
+     "link": null
+    },
+    {
+     "label": "私は風",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": null,
+   "date": "2004-03-31",
+   "title": "OH JAPAN ～OUR TIME IS NOW～",
+   "credit": "TMG",
+   "tracks": [
+    {
+     "label": "OH JAPAN ～OUR TIME IS NOW～",
+     "link": "OH JAPAN ～OUR TIME IS NOW～"
+    },
+    {
+     "label": "TRAPPED",
+     "link": "TRAPPED"
+    },
+    {
+     "label": "OH JAPAN ～OUR TIME IS NOW～ (KARAOKE)",
+     "link": null
+    },
+    {
+     "label": "TRAPPED (KARAOKE)",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "special",
+   "num": null,
+   "date": "2004-06-23",
+   "title": "TMG I",
+   "credit": "TMG",
+   "tracks": [
+    {
+     "label": "OH JAPAN ～OUR TIME IS NOW～",
+     "link": "OH JAPAN ～OUR TIME IS NOW～"
+    },
+    {
+     "label": "Everything Passes Away",
+     "link": "Everything Passes Away"
+    },
+    {
+     "label": "KINGS FOR A DAY",
+     "link": "KINGS FOR A DAY"
+    },
+    {
+     "label": "I Know You by Heart",
+     "link": "I Know You by Heart"
+    },
+    {
+     "label": "I wish you were here",
+     "link": "I wish you were here"
+    },
+    {
+     "label": "THE GREATEST SHOW ON EARTH",
+     "link": "THE GREATEST SHOW ON EARTH"
+    },
+    {
+     "label": "Signs of Life",
+     "link": "Signs of Life"
+    },
+    {
+     "label": "RED, WHITE AND BULLET BLUES",
+     "link": "RED, WHITE AND BULLET BLUES"
+    },
+    {
+     "label": "TRAPPED",
+     "link": "TRAPPED"
+    },
+    {
+     "label": "My Alibi",
+     "link": "My Alibi"
+    },
+    {
+     "label": "WONDERLAND",
+     "link": "WONDERLAND"
+    },
+    {
+     "label": "TRAIN, TRAIN",
+     "link": "TRAIN, TRAIN"
+    },
+    {
+     "label": "Two of a Kind",
+     "link": "Two of a Kind"
+    },
+    {
+     "label": "NEVER GOOD-BYE",
+     "link": "NEVER GOOD-BYE"
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 7,
+   "date": "2004-11-24",
+   "title": "House Of Strings",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "WHITE CHRISTMAS",
+     "link": null
+    },
+    {
+     "label": "いつかのメリークリスマス",
+     "link": "bz:344"
+    },
+    {
+     "label": "sasanqua 〜冬の陽",
+     "link": "bz:398"
+    },
+    {
+     "label": "恋歌",
+     "link": "恋歌"
+    },
+    {
+     "label": "#1090",
+     "link": "#1090 ～Thousand Dreams～"
+    },
+    {
+     "label": "華",
+     "link": "華"
+    },
+    {
+     "label": "愛のままにわがままに 僕は君だけを傷つけない",
+     "link": "bz:351"
+    },
+    {
+     "label": "BLUE",
+     "link": "御堂筋BLUE"
+    },
+    {
+     "label": "BLACK JACK",
+     "link": "THE THEME OF B.J."
+    },
+    {
+     "label": "SACRED FIELD～RED SUN～GO FURTHER",
+     "link": "SACRED FIELD"
+    },
+    {
+     "label": "Theme from ULTRAMAN",
+     "link": "Theme from ULTRAMAN"
+    },
+    {
+     "label": "Strings of My Soul",
+     "link": "bz:364"
+    },
+    {
+     "label": "LOVE PHANTOM",
+     "link": "bz:380"
+    },
+    {
+     "label": "HOLY NIGHT",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "special",
+   "num": null,
+   "date": "2010-06-02",
+   "title": "TAKE YOUR PICK",
+   "credit": "Larry Carlton & Tak Matsumoto",
+   "tracks": [
+    {
+     "label": "JAZZY BULLETS",
+     "link": "JAZZY BULLETS"
+    },
+    {
+     "label": "Nite Crawler 2010",
+     "link": "Nite Crawler 2010"
+    },
+    {
+     "label": "THE WAY WE WERE",
+     "link": "THE WAY WE WERE"
+    },
+    {
+     "label": "Islands of Japan",
+     "link": "Islands of Japan"
+    },
+    {
+     "label": "Neon Blue",
+     "link": "Neon Blue"
+    },
+    {
+     "label": "Tokyo Night",
+     "link": "Tokyo Night"
+    },
+    {
+     "label": "hotalu",
+     "link": "hotalu"
+    },
+    {
+     "label": "East West Stroll",
+     "link": "East West Stroll"
+    },
+    {
+     "label": "Easy Mystery",
+     "link": "Easy Mystery"
+    },
+    {
+     "label": "ao",
+     "link": "ao"
+    },
+    {
+     "label": "Take Your Pick",
+     "link": "Take Your Pick"
+    },
+    {
+     "label": "A girl from China",
+     "link": "A girl from China"
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 9,
+   "date": "2012-06-20",
+   "title": "Strings Of My Soul",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "#1090 千夢一夜",
+     "link": "#1090 ～Thousand Dreams～"
+    },
+    {
+     "label": "The Moment",
+     "link": "ONE FOR THE ROAD"
+    },
+    {
+     "label": "Live Life",
+     "link": "Live Life"
+    },
+    {
+     "label": "TRINITY",
+     "link": "Trinity"
+    },
+    {
+     "label": "BLUE",
+     "link": "御堂筋BLUE"
+    },
+    {
+     "label": "華",
+     "link": "華"
+    },
+    {
+     "label": "恋歌",
+     "link": "恋歌"
+    },
+    {
+     "label": "sasanqua 〜冬の陽",
+     "link": "bz:398"
+    },
+    {
+     "label": "THE WINGS",
+     "link": "THE WINGS"
+    },
+    {
+     "label": "SUKIYAKI featuring LARRY CARLTON",
+     "link": null
+    },
+    {
+     "label": "MY FAVORITE THINGS",
+     "link": null
+    },
+    {
+     "label": "Romeo & Juliet",
+     "link": null
+    },
+    {
+     "label": "99",
+     "link": "“99”"
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2013-01-16",
+   "title": "Live Life",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Live Life -Instrumental-",
+     "link": null
+    },
+    {
+     "label": "Live Life -Vocal-",
+     "link": "Live Life"
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 10,
+   "date": "2014-04-30",
+   "title": "New Horizon",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "New Horizon",
+     "link": "New Horizon"
+    },
+    {
+     "label": "Take 5",
+     "link": null
+    },
+    {
+     "label": "Feel like a woman tonite",
+     "link": "Feel like a woman tonite"
+    },
+    {
+     "label": "Rodeo Blues",
+     "link": "Rodeo Blues"
+    },
+    {
+     "label": "Island of peace",
+     "link": "Island of peace"
+    },
+    {
+     "label": "That’s Cool",
+     "link": "That’s Cool"
+    },
+    {
+     "label": "Shattered Glass",
+     "link": "Shattered Glass"
+    },
+    {
+     "label": "月のあかり",
+     "link": null
+    },
+    {
+     "label": "Reason to be...",
+     "link": "Reason to be..."
+    },
+    {
+     "label": "BLACK JACK",
+     "link": "THE THEME OF B.J."
+    },
+    {
+     "label": "学生街の喫茶店",
+     "link": null
+    },
+    {
+     "label": "Rain",
+     "link": "Rain"
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 11,
+   "date": "2016-04-06",
+   "title": "enigma",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "enigma",
+     "link": "enigma"
+    },
+    {
+     "label": "Vermillion Palace",
+     "link": "Vermillion Palace"
+    },
+    {
+     "label": "Step to Heaven",
+     "link": "Step to Heaven"
+    },
+    {
+     "label": "Ups and Downs",
+     "link": "Ups and Downs"
+    },
+    {
+     "label": "Rock The Rock",
+     "link": "Rock The Rock"
+    },
+    {
+     "label": "Drifting",
+     "link": "Drifting"
+    },
+    {
+     "label": "The Voyage",
+     "link": "The Voyage"
+    },
+    {
+     "label": "Hopes",
+     "link": "Hopes"
+    },
+    {
+     "label": "Under The Sun",
+     "link": "Under The Sun"
+    },
+    {
+     "label": "Dream Drive",
+     "link": "Dream Drive"
+    },
+    {
+     "label": "The Rock Show",
+     "link": "The Rock Show"
+    },
+    {
+     "label": "Roppongi Noise",
+     "link": "Roppongi Noise"
+    },
+    {
+     "label": "Mystic Journey",
+     "link": "Mystic Journey"
+    },
+    {
+     "label": "enigma ～epilogue～",
+     "link": "enigma ～epilogue～"
+    },
+    {
+     "label": "#1090 ～Million Dreams～",
+     "link": "#1090 ～Thousand Dreams～"
+    }
+   ]
+  },
+  {
+   "kind": "special",
+   "num": null,
+   "date": "2017-02-08",
+   "title": "Electric Island, Acoustic Sea",
+   "credit": "Tak Matsumoto & Daniel Ho",
+   "tracks": [
+    {
+     "label": "Soaring on Dreams",
+     "link": "Soaring on Dreams"
+    },
+    {
+     "label": "Fujiyama Highway",
+     "link": "Fujiyama Highway"
+    },
+    {
+     "label": "Magokoro (True Heart)",
+     "link": "Magokoro (True Heart)"
+    },
+    {
+     "label": "Infinite Escapade",
+     "link": "Infinite Escapade"
+    },
+    {
+     "label": "Faithfully",
+     "link": null
+    },
+    {
+     "label": "Sunny Tuesday",
+     "link": "Sunny Tuesday"
+    },
+    {
+     "label": "Wander Blues",
+     "link": "Wander Blues"
+    },
+    {
+     "label": "Adrenaline UP!",
+     "link": "Adrenaline UP!"
+    },
+    {
+     "label": "Omotesando",
+     "link": "Omotesando"
+    },
+    {
+     "label": "Island of peace",
+     "link": "Island of peace"
+    },
+    {
+     "label": "Rain",
+     "link": "Rain"
+    },
+    {
+     "label": "Lia",
+     "link": "Lia"
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 12,
+   "date": "2020-09-02",
+   "title": "Bluesman",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "BOOGIE WOOGIE AZB 10",
+     "link": "BOOGIE WOOGIE AZB 10"
+    },
+    {
+     "label": "Actually",
+     "link": "Actually"
+    },
+    {
+     "label": "Here Comes the Taxman",
+     "link": "Here Comes the Taxman"
+    },
+    {
+     "label": "Be Funky !",
+     "link": "Be Funky !"
+    },
+    {
+     "label": "Rainy Monday Blues ~ 茨の道",
+     "link": "Rainy Monday Blues ~ 茨の道"
+    },
+    {
+     "label": "月光かりの如く",
+     "link": "月光かりの如く"
+    },
+    {
+     "label": "漣 < sazanami >",
+     "link": "漣 < sazanami >"
+    },
+    {
+     "label": "Waltz in Blue",
+     "link": "Waltz in Blue"
+    },
+    {
+     "label": "花火",
+     "link": "花火"
+    },
+    {
+     "label": "Asian root",
+     "link": "Asian root"
+    },
+    {
+     "label": "Good News",
+     "link": "Good News"
+    },
+    {
+     "label": "Arby Garden",
+     "link": "Arby Garden"
+    },
+    {
+     "label": "Lovely",
+     "link": "Lovely"
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2023-07-26",
+   "title": "EPIC MATCH ～ the match everyone wanted ～",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "EPIC MATCH ～ the match everyone wanted ～",
+     "link": "EPIC MATCH ～ the match everyone wanted ～"
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2024-05-03",
+   "title": "BATTLEBOX",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "BATTLEBOX",
+     "link": "BATTLEBOX"
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2024-05-10",
+   "title": "GLORIOUS 70",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "GLORIOUS 70",
+     "link": "GLORIOUS 70"
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 13,
+   "date": "2024-08-28",
+   "title": "THE HIT PARADE II",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "六本木心中",
+     "link": null
+    },
+    {
+     "label": "木蘭の涙",
+     "link": null
+    },
+    {
+     "label": "落陽",
+     "link": null
+    },
+    {
+     "label": "銃爪",
+     "link": null
+    },
+    {
+     "label": "Yes-No",
+     "link": null
+    },
+    {
+     "label": "ブルーライト・ヨコハマ",
+     "link": null
+    },
+    {
+     "label": "白い冬",
+     "link": null
+    },
+    {
+     "label": "時の過ぎゆくままに",
+     "link": null
+    },
+    {
+     "label": "傷だらけのローラ",
+     "link": null
+    },
+    {
+     "label": "俺たちの勲章テーマ",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "special",
+   "num": null,
+   "date": "2024-09-18",
+   "title": "TMG II",
+   "credit": "TMG",
+   "tracks": [
+    {
+     "label": "CRASH DOWN LOVE",
+     "link": "CRASH DOWN LOVE"
+    },
+    {
+     "label": "ETERNAL FLAMES (feat. BABYMETAL)",
+     "link": "ETERNAL FLAMES (feat. BABYMETAL)"
+    },
+    {
+     "label": "THE STORY OF LOVE (feat. LiSA)",
+     "link": "THE STORY OF LOVE (feat. LiSA)"
+    },
+    {
+     "label": "COLOR IN THE WORLD",
+     "link": "COLOR IN THE WORLD"
+    },
+    {
+     "label": "JUPITER AND MARS",
+     "link": "JUPITER AND MARS"
+    },
+    {
+     "label": "MY LIFE",
+     "link": "MY LIFE"
+    },
+    {
+     "label": "ENDLESS SKY",
+     "link": "ENDLESS SKY"
+    },
+    {
+     "label": "DARK ISLAND WOMAN",
+     "link": "DARK ISLAND WOMAN"
+    },
+    {
+     "label": "FAITHFUL NOW",
+     "link": "FAITHFUL NOW"
+    },
+    {
+     "label": "THE GREAT DIVIDE",
+     "link": "THE GREAT DIVIDE"
+    },
+    {
+     "label": "GUITAR HERO",
+     "link": "GUITAR HERO"
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2025-04-09",
+   "title": "Tiger's Eye",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Tiger's Eye",
+     "link": "Tiger's Eye"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 4,
+   "date": "2025-10-08",
+   "title": "Tiger’s Eye",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Tiger’s Eye",
+     "link": "Tiger's Eye"
+    }
+   ]
+  },
+  {
+   "kind": "special",
+   "num": null,
+   "date": "2026-10-14",
+   "title": "TMG Ⅲ SAYONARA",
+   "credit": "TMG",
+   "tracks": [
+    {
+     "label": "SAYONARA (feat. Ado)",
+     "link": "SAYONARA (feat. Ado)"
+    },
+    {
+     "label": "I CAN’T STAND SLEEPING ALONE",
+     "link": "I CAN’T STAND SLEEPING ALONE"
+    },
+    {
+     "label": "I DON’T SEE ME IN YOUR EYES",
+     "link": "I DON’T SEE ME IN YOUR EYES"
+    },
+    {
+     "label": "LAST CHANCE (COME ON COME ON)",
+     "link": "LAST CHANCE (COME ON COME ON)"
+    },
+    {
+     "label": "WHILE MY GUITAR GENTLY WEEPS",
+     "link": null
+    },
+    {
+     "label": "DOOM",
+     "link": "DOOM"
+    }
+   ]
+  }
+ ]
+}

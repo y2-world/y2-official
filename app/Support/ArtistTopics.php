@@ -17,6 +17,8 @@ class ArtistTopics
 
     private array $songs;
     private array $tours;
+    // そのアーティスト自身のライブ（組になっているアーティストのライブを除く）
+    private array $ownTourIds;
     private array $setlistsByTour = [];
     // [曲ID => [ツアーID => true]]
     private array $toursBySong = [];
@@ -28,13 +30,17 @@ class ArtistTopics
         $tourModel = $userArtist ? \App\Models\UserConcert::class : DbConcert::class;
         $this->songs = $songModel::where($this->artistColumn(), $artistId)->pluck('title', 'id')->all();
         $today = now()->toDateString();
-        $this->tours = $tourModel::where($this->artistColumn(), $artistId)
+        // Database のアーティストは、組になっているアーティスト（ソロプロジェクトと、そのグループ）のライブで演奏した自分の曲も数える。
+        // ランキング（ComputesDbSongStamps::crossoverTourArtistIds）と同じ。曲は自分の曲（$this->songs）だけに絞る
+        $tourArtistIds = $userArtist ? [$artistId] : \App\Models\Artist::songArtistIds($artistId);
+        $this->tours = $tourModel::whereIn($this->artistColumn(), $tourArtistIds)
             ->whereNotNull('date1')
             ->whereDate('date1', '<=', $today)
             ->orderBy('date1')
-            ->get(['id', 'title', 'date1', 'date2'])
+            ->get(['id', 'title', 'date1', 'date2', $this->artistColumn()])
             ->keyBy('id')
             ->all();
+        $this->ownTourIds = array_keys(array_filter($this->tours, fn ($tour) => (int) $tour->{$this->artistColumn()} === $artistId));
         $setlists = $userArtist
             ? \App\Models\UserSetlist::whereIn('user_concert_id', array_keys($this->tours))->get()
             : DbSetlist::whereIn('tour_id', array_keys($this->tours))->get();
@@ -188,11 +194,12 @@ class ArtistTopics
         return $ids;
     }
 
-    // 本編ラスト曲：各パターンの本編（アンコール前）最後の曲を、演奏されたツアーの数で数える
+    // 本編ラスト曲：各パターンの本編（アンコール前）最後の曲を、演奏されたツアーの数で数える。
+    // 自分のライブだけ（組になっているアーティストのライブでは、本編の途中の曲が「自分の曲の中で最後」になってしまう）
     public function closingSongs(): array
     {
         $counts = [];
-        foreach ($this->setlistsByTour as $tourId => $setlists) {
+        foreach (array_intersect_key($this->setlistsByTour, array_flip($this->ownTourIds)) as $tourId => $setlists) {
             foreach ($setlists as $setlist) {
                 $main = array_values(array_filter($setlist->setlist ?? [], fn ($item) => $this->isSong($item) && empty($item['medley'])));
                 if ($main) {
