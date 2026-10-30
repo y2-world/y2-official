@@ -160,6 +160,8 @@ class UserArtistController extends Controller
         $topicDormant = $topics->dormant(1, false, 50);
         $topicDormantSingles = $topics->dormant(1, true, 50);
         $topicLateDebuts = $topics->lateDebuts();
+        // Performed Only Once は全曲（最初は10曲だけ見せて、残りは折りたたむ）
+        $topicOnlyOnce = $topics->performedOnlyOnce();
         $topicClosingSongs = array_slice($topics->closingSongs(), 0, 10);
 
         // タブの「Artists」：ほかのアーティストの stats に切り替える。
@@ -173,7 +175,7 @@ class UserArtistController extends Controller
 
         return view('mypage.user_artists.stats', compact(
             'tabArtists',
-            'topicRevivals', 'topicDormant', 'topicDormantSingles', 'topicLateDebuts', 'topicClosingSongs',
+            'topicRevivals', 'topicDormant', 'topicDormantSingles', 'topicLateDebuts', 'topicOnlyOnce', 'topicClosingSongs',
             'hasAttended',
             'artist', 'overallStats', 'songStats', 'encoreSongStats', 'openingSongStats', 'longestSetlists', 'yearStats'
         ));

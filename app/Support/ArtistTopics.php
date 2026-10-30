@@ -175,6 +175,21 @@ class ArtistTopics
         return array_slice($rows, 0, self::LIST_SIZE);
     }
 
+    // 1つのツアーでしか演奏されていない曲（同じライブシリーズは1つ。seriesKey）。演奏したツアーの新しい順（同じツアーなら曲名順）
+    public function performedOnlyOnce(): array
+    {
+        $rows = [];
+        foreach (array_keys($this->toursBySong) as $songId) {
+            $ids = $this->sortedTours($songId);
+            if ($this->seriesCount($ids) === 1) {
+                $rows[] = ['song_id' => $songId, 'title' => $this->songs[$songId], 'tour' => $this->tourInfo($ids[0])];
+            }
+        }
+        usort($rows, fn ($a, $b) => [$b['tour']['date'], $a['title']] <=> [$a['tour']['date'], $b['title']]);
+
+        return $rows;
+    }
+
     // シングルの表題曲（両A面は「A / B」の曲数ぶん先頭から、EPは全曲）。スタンプ帳のシングルの絞り込みと同じ考え方
     private function singleSongIds(): array
     {

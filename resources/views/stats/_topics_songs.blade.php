@@ -184,3 +184,40 @@
     </div>
 </div>
 @endif
+
+@php
+    $topicOnlyOnce ??= [];
+    // ツアーごとにまとめる（新しいツアーから。曲は曲名順）
+    $topicOnlyOnceTours = collect($topicOnlyOnce)->groupBy(fn ($row) => $row['tour']['id'])
+        ->map(fn ($rows) => ['tour' => $rows->first()['tour'], 'songs' => $rows->values()->all()])->values()->all();
+@endphp
+@if (count($topicOnlyOnceTours))
+{{-- ツアーごとに、そのツアーでしか演奏されていない曲を出す。最初は10ツアーだけ見せる（残りは Show More で開く） --}}
+<div class="stats-section visible">
+    <h2 class="section-title"><i class="fas fa-1"></i> Performed Only Once
+    <span class="section-title-desc">1つのツアーでしか演奏されていない曲（ツアー別）</span></h2>
+    <div class="stats-table-container">
+        <table class="stats-table topic-pc">
+            <thead><tr><th>Tour Title</th><th>Song Title</th><th class="count-col">Songs</th></tr></thead>
+            <tbody>
+                @foreach ($topicOnlyOnceTours as $index => $group)
+                <tr @if ($index >= 10) data-more="1" style="display: none;" @endif>
+                    <td>{!! $topicTourLine($group['tour']) !!}</td>
+                    <td class="song-title">{!! implode('<br>', array_map($topicSongLink, $group['songs'])) !!}</td>
+                    <td class="count-col"><span class="count-badge">{{ count($group['songs']) }}</span></td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        <table class="stats-table stats-table-stacked topic-sp">
+            {{-- スマホ：1段目にツアー、2段目以降に曲 --}}
+            <thead><tr><th>Tour Title</th><th class="count-col" rowspan="2">Songs</th></tr><tr><th>Song Title</th></tr></thead>
+            @foreach ($topicOnlyOnceTours as $index => $group)
+                @include('stats._stacked_row', ['rank' => null, 'song' => $topicTourWithYear($group['tour']), 'artist' => null, 'showArtist' => false,
+                    'lines' => array_map(fn ($row) => ['tour' => $topicSongLink($row)], $group['songs']), 'badge' => count($group['songs']), 'more' => $index >= 10])
+            @endforeach
+        </table>
+        @include('stats._show_more', ['count' => count($topicOnlyOnceTours)])
+    </div>
+</div>
+@endif
