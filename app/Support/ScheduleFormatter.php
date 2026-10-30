@@ -46,6 +46,12 @@ class ScheduleFormatter
                 continue;
             }
 
+            // 区切りの見出し（「<PART-2>」「【追加公演】」など、行全体がかっこで囲まれた行）。年の見出しと同じく、2つ目からは上を1行空ける
+            if (preg_match('/^(?:<[^<>]+>|＜[^＜＞]+＞|【[^【】]+】|［[^［］]+］|\[[^\[\]]+\]|〈[^〈〉]+〉|《[^《》]+》)$/u', $line)) {
+                $rows[] = ['heading' => $line];
+                continue;
+            }
+
             $parsed = self::parseLine($line);
             if (!$parsed) {
                 $rows[] = ['raw' => $line];
@@ -124,6 +130,13 @@ class ScheduleFormatter
         $out = [];
         $currentYear = null;
         foreach ($rows as $row) {
+            if (isset($row['heading'])) {
+                if ($out !== [] && end($out) !== '') {
+                    $out[] = '';
+                }
+                $out[] = $row['heading'];
+                continue;
+            }
             if (isset($row['raw'])) {
                 $out[] = $row['raw'];
                 continue;
