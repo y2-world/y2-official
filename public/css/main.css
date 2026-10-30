@@ -2120,6 +2120,15 @@ a.plain-link:focus-visible,
     border-radius: 50% !important;
     background: rgba(255, 255, 255, 0.2) !important;
     font-size: 14px;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+/* 上の背景・枠が !important なので、ホバーも !important で明るくする */
+.year-select.year-select-icon:hover,
+.year-select.year-select-icon:focus-visible {
+    background: rgba(255, 255, 255, 0.35) !important;
+    border-color: rgba(255, 255, 255, 0.7) !important;
+    transform: translateY(-1px);
 }
 
 .year-select option {

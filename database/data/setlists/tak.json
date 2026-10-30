@@ -49,10 +49,10 @@
        "title": "Little Wing",
        "alternative_title": null,
        "medley": false,
-       "featuring": "Jimi Hendrix",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2949,
+       "song_title": "Little Wing"
       },
       {
        "title": "FIGHTING BULL",
@@ -85,10 +85,10 @@
        "title": "Romeo & Juliet",
        "alternative_title": null,
        "medley": false,
-       "featuring": "Nino Rota",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2950,
+       "song_title": "Romeo & Juliet"
       },
       {
        "title": "DRAGON FROM THE WEST",
@@ -314,19 +314,19 @@
        "title": "Romeo & Juliet",
        "alternative_title": null,
        "medley": false,
-       "featuring": "Nino Rota",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2950,
+       "song_title": "Romeo & Juliet"
       },
       {
        "title": "Little Wing",
        "alternative_title": null,
        "medley": false,
-       "featuring": "Jimi Hendrix",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2949,
+       "song_title": "Little Wing"
       },
       {
        "title": "THE CHANGING",
@@ -917,13 +917,13 @@
        "song_title": "街"
       },
       {
-       "title": "My Favorite Things",
+       "title": "MY FAVORITE THINGS",
        "alternative_title": null,
        "medley": false,
        "featuring": null,
        "featuring_type": null,
-       "song_id": null,
-       "song_title": null
+       "song_id": 2954,
+       "song_title": "MY FAVORITE THINGS"
       },
       {
        "title": "The Godfather Waltz",
@@ -1140,12 +1140,12 @@
       },
       {
        "title": "Take 5",
-       "alternative_title": null,
+       "alternative_title": "Take 5",
        "medley": false,
-       "featuring": "The Dave Brubeck Quartet",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2948,
+       "song_title": "Take Five"
       },
       {
        "title": "BLUE",
@@ -1205,10 +1205,10 @@
        "title": "月のあかり",
        "alternative_title": null,
        "medley": false,
-       "featuring": "桑名正博",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2955,
+       "song_title": "月のあかり"
       },
       {
        "title": "Reason to be...",
@@ -1272,12 +1272,12 @@
       },
       {
        "title": "Take 5",
-       "alternative_title": null,
+       "alternative_title": "Take 5",
        "medley": false,
-       "featuring": "The Dave Brubeck Quartet",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2948,
+       "song_title": "Take Five"
       },
       {
        "title": "BLUE",
@@ -1346,10 +1346,10 @@
        "title": "月のあかり",
        "alternative_title": null,
        "medley": false,
-       "featuring": "桑名正博",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2955,
+       "song_title": "月のあかり"
       },
       {
        "title": "Reason to be...",
@@ -1420,12 +1420,12 @@
       },
       {
        "title": "Take 5",
-       "alternative_title": null,
+       "alternative_title": "Take 5",
        "medley": false,
-       "featuring": "The Dave Brubeck Quartet",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2948,
+       "song_title": "Take Five"
       },
       {
        "title": "BLUE",
@@ -1467,10 +1467,10 @@
        "title": "学生街の喫茶店",
        "alternative_title": null,
        "medley": false,
-       "featuring": "ガロ",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2956,
+       "song_title": "学生街の喫茶店"
       },
       {
        "title": "Island of peace",
@@ -1494,10 +1494,10 @@
        "title": "月のあかり",
        "alternative_title": null,
        "medley": false,
-       "featuring": "桑名正博",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2955,
+       "song_title": "月のあかり"
       },
       {
        "title": "Reason to be...",
@@ -1560,12 +1560,12 @@
       },
       {
        "title": "Take 5",
-       "alternative_title": null,
+       "alternative_title": "Take 5",
        "medley": false,
-       "featuring": "The Dave Brubeck Quartet",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2948,
+       "song_title": "Take Five"
       },
       {
        "title": "BLUE",
@@ -1634,10 +1634,10 @@
        "title": "月のあかり",
        "alternative_title": null,
        "medley": false,
-       "featuring": "桑名正博",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2955,
+       "song_title": "月のあかり"
       },
       {
        "title": "Reason to be...",
@@ -1717,12 +1717,12 @@
       },
       {
        "title": "Take 5",
-       "alternative_title": null,
+       "alternative_title": "Take 5",
        "medley": false,
-       "featuring": "The Dave Brubeck Quartet",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2948,
+       "song_title": "Take Five"
       },
       {
        "title": "BLUE",
@@ -1764,10 +1764,10 @@
        "title": "学生街の喫茶店",
        "alternative_title": null,
        "medley": false,
-       "featuring": "ガロ",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2956,
+       "song_title": "学生街の喫茶店"
       },
       {
        "title": "Island of peace",
@@ -1791,10 +1791,10 @@
        "title": "月のあかり",
        "alternative_title": null,
        "medley": false,
-       "featuring": "桑名正博",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2955,
+       "song_title": "月のあかり"
       },
       {
        "title": "Reason to be...",
@@ -1881,12 +1881,12 @@
       },
       {
        "title": "Take 5",
-       "alternative_title": null,
+       "alternative_title": "Take 5",
        "medley": false,
-       "featuring": "The Dave Brubeck Quartet",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2948,
+       "song_title": "Take Five"
       },
       {
        "title": "BLUE",
@@ -1964,10 +1964,10 @@
        "title": "月のあかり",
        "alternative_title": null,
        "medley": false,
-       "featuring": "桑名正博",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2955,
+       "song_title": "月のあかり"
       },
       {
        "title": "Reason to be...",
@@ -2047,12 +2047,12 @@
       },
       {
        "title": "Take 5",
-       "alternative_title": null,
+       "alternative_title": "Take 5",
        "medley": false,
-       "featuring": "The Dave Brubeck Quartet",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2948,
+       "song_title": "Take Five"
       },
       {
        "title": "BLUE",
@@ -2103,10 +2103,10 @@
        "title": "学生街の喫茶店",
        "alternative_title": null,
        "medley": false,
-       "featuring": "ガロ",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2956,
+       "song_title": "学生街の喫茶店"
       },
       {
        "title": "Island of peace",
@@ -2130,10 +2130,10 @@
        "title": "月のあかり",
        "alternative_title": null,
        "medley": false,
-       "featuring": "桑名正博",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2955,
+       "song_title": "月のあかり"
       },
       {
        "title": "Reason to be...",
@@ -2218,12 +2218,12 @@
       },
       {
        "title": "Take 5",
-       "alternative_title": null,
+       "alternative_title": "Take 5",
        "medley": false,
-       "featuring": "The Dave Brubeck Quartet",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2948,
+       "song_title": "Take Five"
       },
       {
        "title": "BLUE",
@@ -2301,10 +2301,10 @@
        "title": "月のあかり",
        "alternative_title": null,
        "medley": false,
-       "featuring": "桑名正博",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2955,
+       "song_title": "月のあかり"
       },
       {
        "title": "Reason to be...",
@@ -2378,12 +2378,12 @@
       },
       {
        "title": "Take 5",
-       "alternative_title": null,
+       "alternative_title": "Take 5",
        "medley": false,
-       "featuring": "The Dave Brubeck Quartet",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2948,
+       "song_title": "Take Five"
       },
       {
        "title": "BLUE",
@@ -2434,10 +2434,10 @@
        "title": "学生街の喫茶店",
        "alternative_title": null,
        "medley": false,
-       "featuring": "ガロ",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2956,
+       "song_title": "学生街の喫茶店"
       },
       {
        "title": "Island of peace",
@@ -2461,10 +2461,10 @@
        "title": "月のあかり",
        "alternative_title": null,
        "medley": false,
-       "featuring": "桑名正博",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2955,
+       "song_title": "月のあかり"
       },
       {
        "title": "Reason to be...",
@@ -3508,10 +3508,10 @@
        "title": "Faithfully",
        "alternative_title": null,
        "medley": false,
-       "featuring": "Journey",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2945,
+       "song_title": "Faithfully"
       },
       {
        "title": "Wander Blues",
@@ -3645,10 +3645,10 @@
        "title": "Faithfully",
        "alternative_title": null,
        "medley": false,
-       "featuring": "Journey",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2945,
+       "song_title": "Faithfully"
       },
       {
        "title": "Wander Blues",
@@ -5853,8 +5853,8 @@
        "title": "Little Wing",
        "alternative_title": null,
        "medley": false,
-       "featuring": "Jimi Hendrix",
-       "featuring_type": "artist",
+       "featuring": null,
+       "featuring_type": null,
        "song_id": null,
        "song_title": null
       },
@@ -6322,10 +6322,10 @@
        "title": "WHILE MY GUITAR GENTLY WEEPS",
        "alternative_title": null,
        "medley": false,
-       "featuring": "The Beatles",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2957,
+       "song_title": "WHILE MY GUITAR GENTLY WEEPS"
       },
       {
        "title": "DOOM",
@@ -6502,10 +6502,10 @@
        "title": "WHILE MY GUITAR GENTLY WEEPS",
        "alternative_title": null,
        "medley": false,
-       "featuring": "The Beatles",
-       "featuring_type": "artist",
-       "song_id": null,
-       "song_title": null
+       "featuring": null,
+       "featuring_type": null,
+       "song_id": 2957,
+       "song_title": "WHILE MY GUITAR GENTLY WEEPS"
       },
       {
        "title": "DOOM",

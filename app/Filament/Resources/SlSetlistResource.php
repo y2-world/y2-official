@@ -1733,7 +1733,7 @@ class SlSetlistResource extends Resource
                     ->color('gray')
                     ->visible(fn (SlSetlist $record) => !$record->fes && !$record->db_concert_id && (!empty($record->setlist) || !empty($record->encore)))
                     ->modalHeading('データベースにコピー')
-                    ->modalDescription('このセットリストを新しいツアー・ライブとしてデータベース（database側）にコピーします。曲目はSlSong側の紐付け（db_song_id）があればそれを使い、無ければ同名のDbSongを新規作成します。')
+                    ->modalDescription('このセットリストのツアー・ライブをデータベースに登録し、曲を入れたセットリストパターンの作成画面を開きます。曲は作成画面で保存したときに登録します。')
                     ->modalSubmitActionLabel('コピーする')
                     ->form(fn (SlSetlist $record) => [
                         Forms\Components\Select::make('artist_id')
@@ -1772,8 +1772,6 @@ class SlSetlistResource extends Resource
                         Forms\Components\Textarea::make('schedule')
                             ->label('スケジュール')
                             ->rows(6),
-
-                        ...static::featuredSongChoiceFields($record),
                     ])
                     ->fillForm(fn (SlSetlist $record) => [
                         'artist_id' => $record->artist_id,
@@ -1782,8 +1780,18 @@ class SlSetlistResource extends Resource
                         'date1' => $record->date,
                         'venue' => $record->venue,
                     ])
+                    // ここで登録するのはツアー・ライブだけ。曲とパターンは、「パターンを追加」と同じく作成画面で保存したときに登録する
+                    // （データベースの曲に合わない曲は、保存のときにダイアログで確かめる。CreateDbSetlist）
                     ->action(function (array $data, SlSetlist $record) {
-                        $dbSetlist = static::copySlSetlistToDatabase($record, $data);
+                        $tour = DbConcert::create([
+                            'artist_id' => $data['artist_id'],
+                            'title' => $data['title'],
+                            'type' => $data['type'],
+                            'date1' => $data['date1'],
+                            'date2' => $data['date2'] ?? null,
+                            'venue' => $data['venue'] ?? null,
+                            'schedule' => $data['schedule'] ?? null,
+                        ]);
 
                         // 同じツアー（artist_id + title）の他の公演日も含めて
                         // 「コピー済み」にする。同じツアーへ複数回行った場合でも
@@ -1796,46 +1804,43 @@ class SlSetlistResource extends Resource
                         SlSetlist::where('artist_id', $record->artist_id)
                             ->get(['id', 'title'])
                             ->filter(fn (SlSetlist $s) => static::normalizeTourTitle($s->title) === $normalizedTitle)
-                            ->each(fn (SlSetlist $s) => $s->update(['db_concert_id' => $dbSetlist->tour_id]));
+                            ->each(fn (SlSetlist $s) => $s->update(['db_concert_id' => $tour->id]));
+                        // 自分（タイトルを直してコピーしたときなど、上で見つからなかったとき）も、登録したツアーにつなぐ
+                        $record->update(['db_concert_id' => $tour->id]);
 
                         Notification::make()
                             ->success()
-                            ->title('データベースにコピーしました')
-                            ->body("「{$dbSetlist->tour->title}」として登録しました。")
+                            ->title('ツアー・ライブを登録しました')
+                            ->body("「{$tour->title}」を登録しました。セットリストを保存すると曲を登録します。")
                             ->send();
 
-                        return redirect(DbSetlistResource::getUrl('edit', ['record' => $dbSetlist]));
+                        return redirect(DbSetlistResource::getUrl('create', ['tour_id' => $tour->id, 'from_sl_setlist' => $record->id]));
                     }),
                 Tables\Actions\Action::make('addSetlistPattern')
                     ->label('パターンを追加')
                     ->icon('heroicon-o-plus-circle')
                     ->color('gray')
                     ->visible(fn (SlSetlist $record) => !$record->fes && $record->db_concert_id && (!empty($record->setlist) || !empty($record->encore)))
-                    ->modalHeading('セットリストパターンを追加')
-                    ->modalSubmitActionLabel('追加する')
-                    ->form(fn (SlSetlist $record) => static::featuredSongChoiceFields($record, $record->dbConcert))
-                    // カバー・共演曲など選ぶものが無いときは、確認画面を出さずにそのまま追加する
-                    ->modalHidden(fn (SlSetlist $record) => static::featuredUnlinkedSlSongsFor($record, $record->dbConcert)->isEmpty())
-                    ->action(function (array $data, SlSetlist $record) {
-                        $tour = $record->dbConcert;
-                        if (!$tour) {
-                            Notification::make()
-                                ->danger()
-                                ->title('紐付け先のツアーが見つかりません')
-                                ->send();
-                            return;
-                        }
-
-                        $dbSetlist = static::addSetlistPatternToDatabase($record, $tour, $data);
-
-                        Notification::make()
-                            ->success()
-                            ->title('セットリストパターンを追加しました')
-                            ->body("「{$tour->title}」にパターンを追加しました。")
-                            ->send();
-
-                        return redirect(DbSetlistResource::getUrl('edit', ['record' => $dbSetlist]));
-                    }),
+                    // 押しただけでは登録しない。曲を入れた状態でパターンの作成画面を開き、直してから保存したときにまとめて登録する
+                    // （データベースの曲に合わない曲は、保存のときにダイアログで確かめる。CreateDbSetlist）。
+                    // 同じ曲順のパターンがもうあれば、先にダイアログで知らせる
+                    ->requiresConfirmation(fn (SlSetlist $record) => static::duplicatePattern($record) !== null)
+                    ->modalHidden(fn (SlSetlist $record) => static::duplicatePattern($record) === null)
+                    ->modalHeading('セットリストが重複しています')
+                    // パターンが1つだけのツアーは、どのパターンか言わなくても分かるので名前を出さない
+                    ->modalDescription(fn (SlSetlist $record) => (DbSetlist::where('tour_id', $record->db_concert_id)->count() > 1
+                        ? '「' . static::patternLabel(static::duplicatePattern($record)) . '」と' : '') . 'セットリストが重複しています。それでも追加しますか？')
+                    ->modalSubmitActionLabel('それでも追加する')
+                    // 確認のダイアログは狭く、ボタンが3つ並ぶと「それでも追加する」が2行になるので広げる
+                    ->modalWidth(\Filament\Support\Enums\MaxWidth::Large)
+                    // 重複しているパターンに公演日を足したいときは、そのパターンの編集画面へ
+                    ->extraModalFooterActions(fn (SlSetlist $record) => ($pattern = static::duplicatePattern($record)) ? [
+                        Tables\Actions\Action::make('editDuplicatePattern')
+                            ->label('編集画面に移動')
+                            ->color('gray')
+                            ->url(DbSetlistResource::getUrl('edit', ['record' => $pattern])),
+                    ] : [])
+                    ->action(fn (SlSetlist $record) => redirect(DbSetlistResource::getUrl('create', ['tour_id' => $record->db_concert_id, 'from_sl_setlist' => $record->id]))),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -1869,177 +1874,39 @@ class SlSetlistResource extends Resource
         return SlSetlist::normalizeTourTitle($title);
     }
 
-    // SlSetlist（公開セトリ投稿）1件を、新しいDbConcert（database側のツアー・ライブ）+
-    // DbSetlist（セットリストパターン1つ）としてコピーする。
-    // アーティスト・タイトル・タイプ・日程・会場・スケジュールは確認モーダルで
-    // 編集された$dataの内容を使う（初期値はSlSetlistの値だが、その場で修正できる）。
-    // 曲目はSlSong.db_song_idの既存紐付けがあればそれを使い、無ければ同名のDbSongを
-    // firstOrCreateする（タイトル一致で自動的に他の箇所からも参照できる曲になる）。
-    // ただしfeaturing（カバー元・共演アーティスト）が付いた曲は、$data['db_song_choice_*']
-    // でユーザーが「登録する」を選んだものだけ新規DbSongを作り、選ばなかったものは
-    // song にタイトル文字列を入れる（曲詳細ページへのリンクを張らないプレーンテキスト表示）。
-    private static function copySlSetlistToDatabase(SlSetlist $record, array $data): DbSetlist
+    // パターンの名前（サブタイトル）。無ければ「パターン N」
+    private static function patternLabel(?DbSetlist $pattern): string
     {
-        $tour = DbConcert::create([
-            'artist_id' => $data['artist_id'],
-            'title' => $data['title'],
-            'type' => $data['type'],
-            'date1' => $data['date1'],
-            'date2' => $data['date2'] ?? null,
-            'venue' => $data['venue'] ?? null,
-            'schedule' => $data['schedule'] ?? null,
-        ]);
-
-        return static::createDbSetlistFromSlSetlist($record, $tour, $data['artist_id'], 1, static::skippedSlSongIdsFromFormData($data));
+        return filled($pattern?->subtitle) ? $pattern->subtitle : 'パターン ' . $pattern?->order_no;
     }
 
-    // 既存のDbConcert（コピー済みのツアー）に、別日程用の新しいDbSetlist（セットリスト
-    // パターン）を1つだけ追加する。ツアー自体（DbConcert）は作り直さない。
-    // order_noは既存パターンの最大値+1にして末尾に追加する。
-    private static function addSetlistPatternToDatabase(SlSetlist $record, DbConcert $tour, array $data = []): DbSetlist
-    {
-        $nextOrderNo = (DbSetlist::where('tour_id', $tour->id)->max('order_no') ?? 0) + 1;
+    // 「パターンを追加」で入れる曲（DbSetlistResource::formDataFromSlSetlist）と曲順がまったく同じ、ツアーの今のパターン。無ければ null。
+    // 本編とアンコールの曲（曲 ID か曲名の文字）とメドレーを比べる。1回のリクエストの中では覚えておく（ダイアログの見出し・文・ボタンで何度も呼ぶため）
+    private static array $duplicatePatterns = [];
 
-        return static::createDbSetlistFromSlSetlist($record, $tour, $tour->artist_id, $nextOrderNo, static::skippedSlSongIdsFromFormData($data));
+    private static function duplicatePattern(SlSetlist $record): ?DbSetlist
+    {
+        return array_key_exists($record->id, static::$duplicatePatterns)
+            ? static::$duplicatePatterns[$record->id]
+            : static::$duplicatePatterns[$record->id] = static::findDuplicatePattern($record);
     }
 
-    // featuring付きの曲について、フォームで「DbSongとして登録しない」が選ばれたSlSong.idの
-    // 一覧を取り出す。data_song_choice_{slSongId} は 'create'（新規登録する）/'skip'（しない）
-    // の2択で、'skip'が選ばれたものだけを返す。
-    private static function skippedSlSongIdsFromFormData(array $data): array
+    private static function findDuplicatePattern(SlSetlist $record): ?DbSetlist
     {
-        $skipped = [];
-        foreach ($data as $key => $value) {
-            if (str_starts_with($key, 'db_song_choice_') && $value === 'skip') {
-                $skipped[] = (int) substr($key, strlen('db_song_choice_'));
+        $tour = $record->dbConcert;
+        if (!$tour) {
+            return null;
+        }
+        $key = fn (array $items) => array_map(fn ($item) => [(string) ($item['song'] ?? ''), !empty($item['medley'])], array_values($items));
+        $data = DbSetlistResource::formDataFromSlSetlist($record, $tour->artist_id);
+        $mine = [$key((array) $data['setlist']), $key(\App\Support\EncoreFormGroups::toItems((array) $data['_encore_groups']))];
+        foreach (DbSetlist::where('tour_id', $tour->id)->orderBy('row')->orderBy('order_no')->get() as $pattern) {
+            if ([$key((array) $pattern->setlist), $key((array) $pattern->encore)] === $mine) {
+                return $pattern;
             }
         }
-        return $skipped;
-    }
 
-    // このSlSetlistの曲目のうち、featuring（共演者・カバー元アーティスト）が設定されて
-    // おり、かつまだDbSongと紐付いていない（db_song_idが未設定の）曲のSlSongをユニークに
-    // 返す。DbSongへの機械的な紐付け（タイトル一致）が別の曲を誤って指してしまう
-    // リスクがあるため、フォームで曲ごとに新規登録するかどうかを選ばせる対象になる。
-    // 既にdb_song_idがあるものは選択の余地なくその紐付けを使うので対象外。
-    // $tourを渡した場合、そのツアー内の既存DbSetlistで既に「登録しない」を選んで
-    // プレーンテキスト（song=タイトル文字列）のまま登録済みの曲は、一度判断済みとして
-    // 除外する（毎回同じ確認を繰り返させない）。
-    private static function featuredUnlinkedSlSongsFor(SlSetlist $record, ?DbConcert $tour = null)
-    {
-        $slSongIds = collect(array_merge($record->setlist ?? [], $record->encore ?? []))
-            ->filter(fn ($item) => !empty($item['featuring']))
-            ->pluck('song')
-            ->filter(fn ($v) => $v !== null && $v !== '')
-            ->unique();
-
-        $slSongs = SlSong::whereIn('id', $slSongIds)->whereNull('db_song_id')->get(['id', 'title']);
-
-        if ($tour) {
-            $alreadyPlainTextTitles = DbSetlist::where('tour_id', $tour->id)
-                ->get(['setlist', 'encore'])
-                ->flatMap(fn (DbSetlist $s) => array_merge($s->setlist ?? [], $s->encore ?? []))
-                ->pluck('song')
-                ->filter(fn ($v) => $v !== null && $v !== '' && !is_numeric($v))
-                ->unique();
-
-            $slSongs = $slSongs->reject(fn (SlSong $s) => $alreadyPlainTextTitles->contains($s->title));
-        }
-
-        return $slSongs;
-    }
-
-    // featuring付きで未紐付けの曲がある場合だけ、曲ごとに「DbSongとして新規登録する/
-    // しない（プレーンテキスト表示のまま）」を選ばせるRadioフィールドの配列を作る。
-    // 無ければ空配列を返し、呼び出し元のフォーム自体を実質的に素通りさせる。
-    private static function featuredSongChoiceFields(SlSetlist $record, ?DbConcert $tour = null): array
-    {
-        $slSongs = static::featuredUnlinkedSlSongsFor($record, $tour);
-        if ($slSongs->isEmpty()) {
-            return [];
-        }
-
-        $fields = [
-            Forms\Components\Placeholder::make('db_song_choice_heading')
-                ->label('')
-                ->content('以下の曲はカバー・共演等でfeaturingが設定されています。新しい曲としてデータベースに登録するか選んでください。'),
-        ];
-
-        foreach ($slSongs as $slSong) {
-            $fields[] = Forms\Components\Radio::make("db_song_choice_{$slSong->id}")
-                ->label($slSong->title)
-                ->options([
-                    'create' => 'データベースに新規登録する',
-                    'skip' => '登録しない（曲名のみのプレーンテキスト表示にする）',
-                ])
-                ->default('create')
-                ->required();
-        }
-
-        return $fields;
-    }
-
-    // SlSetlist（公開セトリ投稿）の曲目を、指定されたDbConcertに紐づく新しいDbSetlist
-    // として1件作成する共通処理。曲目の変換ロジック（SlSong→DbSong解決）は
-    // copySlSetlistToDatabase / addSetlistPatternToDatabase の両方から使う。
-    private static function createDbSetlistFromSlSetlist(SlSetlist $record, DbConcert $tour, int $artistId, int $orderNo, array $skipDbSongCreationSlSongIds = []): DbSetlist
-    {
-        $toDbSongItems = function (array $items) use ($artistId, $skipDbSongCreationSlSongIds) {
-            $result = [];
-            foreach ($items as $item) {
-                if (!isset($item['song']) || $item['song'] === '') {
-                    continue;
-                }
-
-                $slSong = SlSong::find($item['song']);
-                if (!$slSong) {
-                    continue;
-                }
-
-                $isFeatured = !empty($item['featuring']);
-                $skipDbSongCreation = $isFeatured && in_array($slSong->id, $skipDbSongCreationSlSongIds, true);
-
-                if ($slSong->db_song_id) {
-                    $dbSongId = $slSong->db_song_id;
-                } elseif ($skipDbSongCreation) {
-                    $dbSongId = null;
-                } elseif ($isFeatured) {
-                    // カバー曲・共演曲はタイトルが同名の別の曲（本人名義の同名曲等）と
-                    // 機械的に一致してしまうと誤紐付けの事故になるため、既存曲の再利用
-                    // （firstOrCreateのfirst部分）はせず必ず新規作成する。
-                    $dbSongId = DbSong::create(['artist_id' => $artistId, 'title' => $slSong->title])->id;
-                } else {
-                    $dbSong = DbSong::firstOrCreate(
-                        ['artist_id' => $artistId, 'title' => $slSong->title],
-                        []
-                    );
-                    $dbSongId = $dbSong->id;
-                }
-
-                $newItem = ['song' => $dbSongId !== null ? (string) $dbSongId : $slSong->title];
-                if (!empty($item['medley'])) {
-                    $newItem['medley'] = true;
-                }
-                if (!empty($item['featuring'])) {
-                    $newItem['featuring'] = $item['featuring'];
-                    $newItem['featuring_type'] = $item['featuring_type'] ?? 'guest';
-                }
-                if (!empty($item['alternative_title'])) {
-                    $newItem['alternative_title'] = $item['alternative_title'];
-                }
-
-                $result[] = $newItem;
-            }
-            return $result;
-        };
-
-        return DbSetlist::create([
-            'tour_id' => $tour->id,
-            'order_no' => $orderNo,
-            'row' => 1,
-            'setlist' => $toDbSongItems($record->setlist ?? []),
-            'encore' => $toDbSongItems($record->encore ?? []),
-        ]);
+        return null;
     }
 
     // 曲名セレクトの選択肢。SlSong（既存のセットリスト楽曲）に加え、DbSongのうち

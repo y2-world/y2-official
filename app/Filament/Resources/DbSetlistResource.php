@@ -220,8 +220,8 @@ class DbSetlistResource extends Resource
             });
     }
 
-    // 一括入力で新しく入った行のうち、曲にリンクしなかったもの
-    public static function unmatchedBulkSongs(array $data): array
+    // 一括入力で新しく入った行のうち、曲にリンクしなかったもの。$withoutFeaturing なら、共演者・アーティストを入れた行（曲名の文字のまま入れる）を除く
+    public static function unmatchedBulkSongs(array $data, bool $withoutFeaturing = false): array
     {
         $generated = array_fill_keys((array) ($data['_bulk_added_uuids'] ?? []), true);
         $items = array_merge(
@@ -234,7 +234,7 @@ class DbSetlistResource extends Resource
             $skipped = !empty($item['is_daily']) || !empty($item['medley']);
             if (!$skipped) $number++;
             $song = trim((string) ($item['song'] ?? ''));
-            if (isset($generated[$item['_uuid'] ?? '']) && $song !== '' && !is_numeric($song)) {
+            if (isset($generated[$item['_uuid'] ?? '']) && $song !== '' && !is_numeric($song) && (!$withoutFeaturing || blank($item['featuring'] ?? null))) {
                 $unmatched[] = $number . '. ' . $song;
             }
         }
@@ -321,6 +321,57 @@ class DbSetlistResource extends Resource
         $set('data._bulk_encore_items', \App\Support\EncoreFormGroups::toItems((array) $get('data._encore_groups', true)), true);
         static::syncBulkSongs(array_slice($sections, 1), '_bulk_encore_items', '_bulk_encore_uuids', $artistId, $get, $set);
         $set('data._encore_groups', \App\Support\EncoreFormGroups::fromItems((array) $get('data._bulk_encore_items', true)), true);
+    }
+
+    // Yuki's Setlists の「パターンを追加」：参加記録のセットリストを、パターンの作成画面の入力にする（まだ保存しない）。
+    // データベースの曲につながっている曲はその曲、つながっていない曲は一括入力と同じく曲名で照らし合わせる。
+    // 合わなかった曲は一括入力で入った行と同じ印（_bulk_added_uuids）を付け、保存のときのダイアログに出す
+    public static function formDataFromSlSetlist(\App\Models\SlSetlist $record, $artistId): array
+    {
+        $added = [];
+        $toItems = function (array $items) use ($artistId, &$added) {
+            $out = [];
+            foreach ($items as $sl) {
+                $slSong = is_numeric($sl['song'] ?? null) ? \App\Models\SlSong::find((int) $sl['song']) : null;
+                if (!$slSong) {
+                    continue;
+                }
+                $item = $slSong->db_song_id
+                    ? ['_uuid' => (string) \Illuminate\Support\Str::uuid(), 'song' => (string) $slSong->db_song_id]
+                    : static::bulkItem($slSong->title, $artistId);
+                $item['song'] = (string) $item['song'];
+                $item += ['is_daily' => false, 'medley' => !empty($sl['medley']), 'daily_note' => null,
+                    'featuring' => $sl['featuring'] ?? null, 'featuring_type' => !empty($sl['featuring']) ? ($sl['featuring_type'] ?? 'guest') : null,
+                    'alternative_title' => $sl['alternative_title'] ?? null];
+                if (!is_numeric($item['song'])) {
+                    $added[] = $item['_uuid'];
+                }
+                $out[] = $item;
+            }
+
+            return $out;
+        };
+        $data = static::splitEncoreForFormData(['setlist' => $toItems($record->setlist ?? []), 'encore' => $toItems($record->encore ?? [])]);
+        $data['setlist'] = \App\Support\RepeaterKeys::byUuid($data['setlist']);
+        $data['_bulk_added_uuids'] = $added;
+
+        return $data;
+    }
+
+    // 保存のときに新しい曲としてデータベースに登録する行（Yuki's Setlists の「パターンを追加」から開いたとき）。
+    // 合わなかった印の行のうち、文字のままのもの。カバー・共演の曲（featuring あり）は曲にせず、曲名の文字のまま入れる
+    public static function slSetlistSongsToCreate(array $data): array
+    {
+        $added = array_fill_keys((array) ($data['_bulk_added_uuids'] ?? []), true);
+        $titles = [];
+        foreach (array_merge(array_values((array) ($data['setlist'] ?? [])), \App\Support\EncoreFormGroups::toItems((array) ($data['_encore_groups'] ?? []))) as $item) {
+            $song = trim((string) ($item['song'] ?? ''));
+            if (isset($added[$item['_uuid'] ?? '']) && $song !== '' && !is_numeric($song) && empty($item['featuring'])) {
+                $titles[$song] = true;
+            }
+        }
+
+        return array_keys($titles);
     }
 
     public static function splitEncoreForFormData(array $data): array
@@ -816,7 +867,8 @@ class DbSetlistResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('updated_at', 'desc');
+            // 更新日時の新しい順。PostgreSQL は新しい順だと更新日時が空の行（古いデータ）をいちばん上に出すので、最後に回す
+            ->defaultSort(fn ($query) => $query->orderByRaw($query->getModel()->getTable() . '.updated_at desc nulls last'));
     }
 
     public static function getRelations(): array

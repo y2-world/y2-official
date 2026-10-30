@@ -212,7 +212,8 @@ class DbConcertResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('updated_at', 'desc');
+            // 更新日時の新しい順。PostgreSQL は新しい順だと更新日時が空の行（古いデータ）をいちばん上に出すので、最後に回す
+            ->defaultSort(fn ($query) => $query->orderByRaw($query->getModel()->getTable() . '.updated_at desc nulls last'));
     }
 
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder

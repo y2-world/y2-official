@@ -14,6 +14,10 @@
    "credit": null
   },
   {
+   "title": "SPAIN",
+   "credit": null
+  },
+  {
    "title": "“99”",
    "credit": null
   },
@@ -22,11 +26,19 @@
    "credit": null
   },
   {
+   "title": "Vampire Hunter “D”",
+   "credit": null
+  },
+  {
    "title": "Play It So Loud",
    "credit": null
   },
   {
    "title": "Teaser",
+   "credit": null
+  },
+  {
+   "title": "Take Five",
    "credit": null
   },
   {
@@ -170,6 +182,14 @@
    "credit": null
   },
   {
+   "title": "Little Wing",
+   "credit": null
+  },
+  {
+   "title": "Romeo & Juliet",
+   "credit": null
+  },
+  {
    "title": "hallelujah",
    "credit": null
   },
@@ -242,6 +262,10 @@
    "credit": "TMG"
   },
   {
+   "title": "WHITE CHRISTMAS",
+   "credit": null
+  },
+  {
    "title": "RED SUN",
    "credit": null
   },
@@ -251,6 +275,10 @@
   },
   {
    "title": "Theme from ULTRAMAN",
+   "credit": null
+  },
+  {
+   "title": "HOLY NIGHT",
    "credit": null
   },
   {
@@ -310,6 +338,14 @@
    "credit": null
   },
   {
+   "title": "SUKIYAKI",
+   "credit": null
+  },
+  {
+   "title": "MY FAVORITE THINGS",
+   "credit": null
+  },
+  {
    "title": "New Horizon",
    "credit": null
   },
@@ -334,7 +370,15 @@
    "credit": null
   },
   {
+   "title": "月のあかり",
+   "credit": null
+  },
+  {
    "title": "Reason to be...",
+   "credit": null
+  },
+  {
+   "title": "学生街の喫茶店",
    "credit": null
   },
   {
@@ -415,6 +459,10 @@
   },
   {
    "title": "Infinite Escapade",
+   "credit": "Tak Matsumoto & Daniel Ho"
+  },
+  {
+   "title": "Faithfully",
    "credit": "Tak Matsumoto & Daniel Ho"
   },
   {
@@ -570,6 +618,10 @@
    "credit": "TMG"
   },
   {
+   "title": "WHILE MY GUITAR GENTLY WEEPS",
+   "credit": "TMG"
+  },
+  {
    "title": "DOOM",
    "credit": "TMG"
   }
@@ -592,7 +644,7 @@
     },
     {
      "label": "SPAIN",
-     "link": null
+     "link": "SPAIN"
     },
     {
      "label": "“99”",
@@ -604,7 +656,7 @@
     },
     {
      "label": "Vampire Hunter “D”",
-     "link": null
+     "link": "Vampire Hunter “D”"
     },
     {
      "label": "Play It So Loud",
@@ -616,7 +668,7 @@
     },
     {
      "label": "Take Five",
-     "link": null
+     "link": "Take Five"
     },
     {
      "label": "No Way Out",
@@ -785,7 +837,7 @@
     },
     {
      "label": "SPAIN",
-     "link": null
+     "link": "SPAIN"
     },
     {
      "label": "“99”",
@@ -797,7 +849,7 @@
     },
     {
      "label": "Vampire Hunter “D”",
-     "link": null
+     "link": "Vampire Hunter “D”"
     },
     {
      "label": "Play It So Loud",
@@ -809,7 +861,7 @@
     },
     {
      "label": "Take Five",
-     "link": null
+     "link": "Take Five"
     },
     {
      "label": "No Way Out",
@@ -969,11 +1021,11 @@
     },
     {
      "label": "Little Wing",
-     "link": null
+     "link": "Little Wing"
     },
     {
      "label": "Romeo & Juliet",
-     "link": null
+     "link": "Romeo & Juliet"
     },
     {
      "label": "hallelujah",
@@ -1219,7 +1271,7 @@
    "tracks": [
     {
      "label": "WHITE CHRISTMAS",
-     "link": null
+     "link": "WHITE CHRISTMAS"
     },
     {
      "label": "いつかのメリークリスマス",
@@ -1271,7 +1323,7 @@
     },
     {
      "label": "HOLY NIGHT",
-     "link": null
+     "link": "HOLY NIGHT"
     }
    ]
   },
@@ -1377,15 +1429,15 @@
     },
     {
      "label": "SUKIYAKI featuring LARRY CARLTON",
-     "link": null
+     "link": "SUKIYAKI"
     },
     {
      "label": "MY FAVORITE THINGS",
-     "link": null
+     "link": "MY FAVORITE THINGS"
     },
     {
      "label": "Romeo & Juliet",
-     "link": null
+     "link": "Romeo & Juliet"
     },
     {
      "label": "99",
@@ -1423,7 +1475,7 @@
     },
     {
      "label": "Take 5",
-     "link": null
+     "link": "Take Five"
     },
     {
      "label": "Feel like a woman tonite",
@@ -1447,7 +1499,7 @@
     },
     {
      "label": "月のあかり",
-     "link": null
+     "link": "月のあかり"
     },
     {
      "label": "Reason to be...",
@@ -1459,7 +1511,7 @@
     },
     {
      "label": "学生街の喫茶店",
-     "link": null
+     "link": "学生街の喫茶店"
     },
     {
      "label": "Rain",
@@ -1561,7 +1613,7 @@
     },
     {
      "label": "Faithfully",
-     "link": null
+     "link": "Faithfully"
     },
     {
      "label": "Sunny Tuesday",
@@ -1846,7 +1898,7 @@
     },
     {
      "label": "WHILE MY GUITAR GENTLY WEEPS",
-     "link": null
+     "link": "WHILE MY GUITAR GENTLY WEEPS"
     },
     {
      "label": "DOOM",
