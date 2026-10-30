@@ -187,20 +187,37 @@
 
 @php
     $topicOnlyOnce ??= [];
-    // ツアーごとにまとめる（新しいツアーから。曲は曲名順）
-    $topicOnlyOnceTours = collect($topicOnlyOnce)->groupBy(fn ($row) => $row['tour']['id'])
+    $topicOnlyOnceTours ??= $topicOnlyOnce;
+    // ツアーごとにまとめる（新しいツアーから。曲はセットリストの順）。all：全部のライブで数えたもの / tours：種類が「ツアー」のライブだけで数えたもの
+    $onlyOnceGroups = fn ($rows) => collect($rows)->groupBy(fn ($row) => $row['tour']['id'])
         ->map(fn ($rows) => ['tour' => $rows->first()['tour'], 'songs' => $rows->values()->all()])->values()->all();
+    $onlyOnceLists = ['all' => $onlyOnceGroups($topicOnlyOnce), 'tours' => $onlyOnceGroups($topicOnlyOnceTours)];
+    // ツアーだけで数えても変わらない・0曲になるときは、チェックを出さない
+    $onlyOnceShowToggle = count($onlyOnceLists['tours']) && $onlyOnceLists['tours'] != $onlyOnceLists['all'];
 @endphp
-@if (count($topicOnlyOnceTours))
-{{-- ツアーごとに、そのツアーでしか演奏されていない曲を出す。最初は10ツアーだけ見せる（残りは Show More で開く） --}}
-<div class="stats-section visible">
-    <h2 class="section-title"><i class="fas fa-1"></i> Performed Only Once
-    <span class="section-title-desc">1つのツアーでしか演奏されていない曲（ツアー別）</span></h2>
+@if (count($onlyOnceLists['all']))
+{{-- ツアーごとに、そのツアーでしか演奏されていない曲を出す。最初は10ツアーだけ見せる（残りは Show More で開く）。
+     data-count-*：一覧ごとのツアー数（今見えている一覧が10ツアー以下なら Show More を隠す） --}}
+<div class="stats-section visible" id="topicOnlyOnceSection" data-count-all="{{ count($onlyOnceLists['all']) }}" data-count-tours="{{ count($onlyOnceLists['tours']) }}">
+    <div class="section-title-wrapper" style="flex-direction: column; align-items: center; gap: 10px;">
+        <h2 class="section-title" style="text-align: center;"><i class="fas fa-1"></i> Performed Only Once
+        <span class="section-title-desc">1つのツアーでしか演奏されていない曲（ツアー別）</span></h2>
+        {{-- 種類が「ツアー」のライブだけで数える（単発ライブ・イベントなどで演奏したことは数えない）。最初はオフ --}}
+        @if ($onlyOnceShowToggle)
+        <div class="unique-tour-toggle" style="margin-left: 0;">
+            <label class="unique-tour-label">
+                <input type="checkbox" class="unique-tour-checkbox" id="onlyOnceToursOnly">
+                <span class="unique-tour-text">ツアーのみ</span>
+            </label>
+        </div>
+        @endif
+    </div>
     <div class="stats-table-container">
         <table class="stats-table topic-pc">
             <thead><tr><th>Tour Title</th><th>Song Title</th><th class="count-col">Songs</th></tr></thead>
-            <tbody>
-                @foreach ($topicOnlyOnceTours as $index => $group)
+            @foreach ($onlyOnceLists as $kind => $groups)
+            <tbody data-only-once-kind="{{ $kind }}" @if ($kind !== 'all') style="display: none;" data-kind-hidden="1" @endif>
+                @foreach ($groups as $index => $group)
                 <tr @if ($index >= 10) data-more="1" style="display: none;" @endif>
                     {{-- ツアーが1列目の主役なので、ほかの表（$topicTourLine は 0.85em）より小さくせず、ふつうの大きさで出す --}}
                     <td>{!! $topicTourWithYear($group['tour']) !!}</td>
@@ -209,23 +226,54 @@
                 </tr>
                 @endforeach
             </tbody>
+            @endforeach
         </table>
         <table class="stats-table stats-table-stacked topic-sp">
             {{-- スマホ：1段目にツアー（ほかの表のツアー名と同じ小さい文字）、2段目に曲（曲名の文字で1行ずつ） --}}
             <thead><tr><th>Tour Title</th><th class="count-col" rowspan="2">Songs</th></tr><tr><th>Song Title</th></tr></thead>
-            @foreach ($topicOnlyOnceTours as $index => $group)
-            <tbody class="stacked-item" @if ($index >= 10) data-more="1" style="display: none;" @endif>
-                <tr>
-                    <td class="topic-tour">{!! $topicTourWithYear($group['tour']) !!}</td>
-                    <td class="count-col" rowspan="2"><span class="count-badge">{{ count($group['songs']) }}</span></td>
-                </tr>
-                <tr class="stacked-sub">
-                    <td class="song-title only-once-songs">{!! implode('<br>', array_map($topicSongLink, $group['songs'])) !!}</td>
-                </tr>
-            </tbody>
+            @foreach ($onlyOnceLists as $kind => $groups)
+                @foreach ($groups as $index => $group)
+                <tbody class="stacked-item" data-kind="only-once-{{ $kind }}" @if ($index >= 10) data-more="1" @endif @if ($kind !== 'all') data-kind-hidden="1" @endif @if ($index >= 10 || $kind !== 'all') style="display: none;" @endif>
+                    <tr>
+                        <td class="topic-tour">{!! $topicTourWithYear($group['tour']) !!}</td>
+                        <td class="count-col" rowspan="2"><span class="count-badge">{{ count($group['songs']) }}</span></td>
+                    </tr>
+                    <tr class="stacked-sub">
+                        <td class="song-title only-once-songs">{!! implode('<br>', array_map($topicSongLink, $group['songs'])) !!}</td>
+                    </tr>
+                </tbody>
+                @endforeach
             @endforeach
         </table>
-        @include('stats._show_more', ['count' => count($topicOnlyOnceTours)])
+        @include('stats._show_more', ['count' => max(count($onlyOnceLists['all']), count($onlyOnceLists['tours']))])
     </div>
 </div>
+<script>
+(function () {
+    var section = document.getElementById('topicOnlyOnceSection');
+    // Show More は、今見えている一覧が10ツアーより多いときだけ出す
+    var showMoreFor = function (shown) {
+        var more = section.querySelector('.show-more-container');
+        if (more) more.style.display = Number(section.dataset[shown === 'tours' ? 'countTours' : 'countAll']) > 10 ? '' : 'none';
+    };
+    showMoreFor('all');
+    document.getElementById('onlyOnceToursOnly')?.addEventListener('change', function (e) {
+        var shown = e.target.checked ? 'tours' : 'all';
+        showMoreFor(shown);
+        var expanded = !!section.querySelector('.show-more-btn.expanded');
+        // 切り替えた一覧だけを出す。Show More を開いていないときは、11ツアー目からは隠したまま
+        section.querySelectorAll('tbody[data-only-once-kind]').forEach(function (t) {
+            var on = t.dataset.onlyOnceKind === shown;
+            t.style.display = on ? '' : 'none';
+            on ? t.removeAttribute('data-kind-hidden') : t.setAttribute('data-kind-hidden', '1');
+            t.querySelectorAll('tr[data-more]').forEach(function (tr) { tr.style.display = on && expanded ? '' : 'none'; });
+        });
+        section.querySelectorAll('tbody[data-kind^="only-once-"]').forEach(function (t) {
+            var on = t.dataset.kind === 'only-once-' + shown;
+            on ? t.removeAttribute('data-kind-hidden') : t.setAttribute('data-kind-hidden', '1');
+            t.style.display = on && (expanded || !t.dataset.more) ? '' : 'none';
+        });
+    });
+})();
+</script>
 @endif

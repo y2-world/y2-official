@@ -496,6 +496,7 @@ class StatsController extends Controller
         $topicLateDebuts = $topics->lateDebuts();
         // Performed Only Once は全曲（最初は10曲だけ見せて、残りは折りたたむ）
         $topicOnlyOnce = $topics->performedOnlyOnce();
+        $topicOnlyOnceTours = $topics->performedOnlyOnce(true);
         $topicClosingSongs = array_slice($topics->closingSongs(), 0, 10);
         $encoreSongStatsNoDoubleEncore = $isHikigatariArtist ? $this->getDatabaseEncoreSongStats($artistId, $type, true) : [];
         $doubleEncoreSongStats = $isHikigatariArtist ? $this->getDatabaseDoubleEncoreSongStats($artistId, $type) : [];
@@ -541,7 +542,7 @@ class StatsController extends Controller
             'topicRevivals',
             'topicDormant',
             'topicDormantSingles',
-            'topicLateDebuts', 'topicOnlyOnce',
+            'topicLateDebuts', 'topicOnlyOnce', 'topicOnlyOnceTours',
             'topicClosingSongs',
             'openingSongStats',
             'longestSetlists',

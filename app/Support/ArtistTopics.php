@@ -37,7 +37,7 @@ class ArtistTopics
             ->whereNotNull('date1')
             ->whereDate('date1', '<=', $today)
             ->orderBy('date1')
-            ->get(['id', 'title', 'date1', 'date2', $this->artistColumn()])
+            ->get(['id', 'title', 'date1', 'date2', 'type', $this->artistColumn()])
             ->keyBy('id')
             ->all();
         $this->ownTourIds = array_keys(array_filter($this->tours, fn ($tour) => (int) $tour->{$this->artistColumn()} === $artistId));
@@ -197,11 +197,15 @@ class ArtistTopics
     // 1つのツアーでしか演奏されていない曲。演奏したツアーの新しい順（同じツアーならセットリストの順）。
     // 同じライブシリーズをタイトルでまとめる決まり（seriesKey）は使わない。タイトルが違う同じ時期のライブ（SHOWCASE・PREMIUM LIVE など）は
     // どのみちまとめられないので、ツアー1件ずつで数える（ユーザー、2026-10-30）
-    public function performedOnlyOnce(): array
+    // $toursOnly：種類が「ツアー」（type 0）のライブだけで数える（単発ライブ・イベントなどで演奏したことは数えない）
+    public function performedOnlyOnce(bool $toursOnly = false): array
     {
         $rows = [];
         foreach (array_keys($this->toursBySong) as $songId) {
             $ids = $this->sortedTours($songId);
+            if ($toursOnly) {
+                $ids = array_values(array_filter($ids, fn ($id) => (int) $this->tours[$id]->type === 0));
+            }
             if (count($ids) === 1) {
                 $rows[] = ['song_id' => $songId, 'title' => $this->songs[$songId], 'tour' => $this->tourInfo($ids[0])];
             }
