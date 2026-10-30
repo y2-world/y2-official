@@ -175,7 +175,26 @@ class ArtistTopics
         return array_slice($rows, 0, self::LIST_SIZE);
     }
 
-    // 1つのツアーでしか演奏されていない曲。演奏したツアーの新しい順（同じツアーなら曲名順）。
+    // そのツアーのセットリストで、曲が最初に出てくる位置（段・パターン番号の順にパターンを見て、本編・アンコールの通し番号）
+    private function setlistPositions(int $tourId): array
+    {
+        $setlists = $this->setlistsByTour[$tourId] ?? [];
+        usort($setlists, fn ($a, $b) => [(int) ($a->row ?? 1), (int) ($a->order_no ?? 0)] <=> [(int) ($b->row ?? 1), (int) ($b->order_no ?? 0)]);
+        $positions = [];
+        $n = 0;
+        foreach ($setlists as $setlist) {
+            foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $item) {
+                if ($this->isSong($item)) {
+                    $positions[(int) $item['song']] ??= $n;
+                }
+                $n++;
+            }
+        }
+
+        return $positions;
+    }
+
+    // 1つのツアーでしか演奏されていない曲。演奏したツアーの新しい順（同じツアーならセットリストの順）。
     // 同じライブシリーズをタイトルでまとめる決まり（seriesKey）は使わない。タイトルが違う同じ時期のライブ（SHOWCASE・PREMIUM LIVE など）は
     // どのみちまとめられないので、ツアー1件ずつで数える（ユーザー、2026-10-30）
     public function performedOnlyOnce(): array
@@ -187,7 +206,13 @@ class ArtistTopics
                 $rows[] = ['song_id' => $songId, 'title' => $this->songs[$songId], 'tour' => $this->tourInfo($ids[0])];
             }
         }
-        usort($rows, fn ($a, $b) => [$b['tour']['date'], $a['title']] <=> [$a['tour']['date'], $b['title']]);
+        $positions = [];
+        foreach ($rows as &$row) {
+            $positions[$row['tour']['id']] ??= $this->setlistPositions($row['tour']['id']);
+            $row['position'] = $positions[$row['tour']['id']][$row['song_id']] ?? PHP_INT_MAX;
+        }
+        unset($row);
+        usort($rows, fn ($a, $b) => [$b['tour']['date'], $b['tour']['id'], $a['position']] <=> [$a['tour']['date'], $a['tour']['id'], $b['position']]);
 
         return $rows;
     }
