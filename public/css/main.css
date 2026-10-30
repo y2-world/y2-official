@@ -5415,6 +5415,13 @@ a.setlist-card:hover {
     }
 }
 
+/* Performed Only Once（スマホ）：ツアーの下に並べる曲。曲名の文字のまま、1行ずつ少し間をあける */
+.stats-table-stacked tbody.stacked-item tr.stacked-sub td.only-once-songs {
+    color: inherit;
+    line-height: 1.8;
+    padding-top: 4px;
+}
+
 /* スマホの段組みの表で、バッジの代わりに右端に小さく出す文字（Recent First Listens の日付など） */
 .stats-table-stacked .stacked-right {
     white-space: nowrap;

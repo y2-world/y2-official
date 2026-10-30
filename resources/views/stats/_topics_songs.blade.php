@@ -210,11 +210,18 @@
             </tbody>
         </table>
         <table class="stats-table stats-table-stacked topic-sp">
-            {{-- スマホ：1段目にツアー、2段目以降に曲 --}}
+            {{-- スマホ：1段目にツアー（ほかの表のツアー名と同じ小さい文字）、2段目に曲（曲名の文字で1行ずつ） --}}
             <thead><tr><th>Tour Title</th><th class="count-col" rowspan="2">Songs</th></tr><tr><th>Song Title</th></tr></thead>
             @foreach ($topicOnlyOnceTours as $index => $group)
-                @include('stats._stacked_row', ['rank' => null, 'song' => $topicTourWithYear($group['tour']), 'artist' => null, 'showArtist' => false,
-                    'lines' => array_map(fn ($row) => ['tour' => $topicSongLink($row)], $group['songs']), 'badge' => count($group['songs']), 'more' => $index >= 10])
+            <tbody class="stacked-item" @if ($index >= 10) data-more="1" style="display: none;" @endif>
+                <tr>
+                    <td class="topic-tour">{!! $topicTourWithYear($group['tour']) !!}</td>
+                    <td class="count-col" rowspan="2"><span class="count-badge">{{ count($group['songs']) }}</span></td>
+                </tr>
+                <tr class="stacked-sub">
+                    <td class="song-title only-once-songs">{!! implode('<br>', array_map($topicSongLink, $group['songs'])) !!}</td>
+                </tr>
+            </tbody>
             @endforeach
         </table>
         @include('stats._show_more', ['count' => count($topicOnlyOnceTours)])
