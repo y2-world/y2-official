@@ -202,7 +202,8 @@
             <tbody>
                 @foreach ($topicOnlyOnceTours as $index => $group)
                 <tr @if ($index >= 10) data-more="1" style="display: none;" @endif>
-                    <td>{!! $topicTourLine($group['tour']) !!}</td>
+                    {{-- ツアーが1列目の主役なので、ほかの表（$topicTourLine は 0.85em）より小さくせず、ふつうの大きさで出す --}}
+                    <td>{!! $topicTourWithYear($group['tour']) !!}</td>
                     <td class="song-title">{!! implode('<br>', array_map($topicSongLink, $group['songs'])) !!}</td>
                     <td class="count-col"><span class="count-badge">{{ count($group['songs']) }}</span></td>
                 </tr>

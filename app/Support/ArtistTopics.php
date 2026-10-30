@@ -175,13 +175,15 @@ class ArtistTopics
         return array_slice($rows, 0, self::LIST_SIZE);
     }
 
-    // 1つのツアーでしか演奏されていない曲（同じライブシリーズは1つ。seriesKey）。演奏したツアーの新しい順（同じツアーなら曲名順）
+    // 1つのツアーでしか演奏されていない曲。演奏したツアーの新しい順（同じツアーなら曲名順）。
+    // 同じライブシリーズをタイトルでまとめる決まり（seriesKey）は使わない。タイトルが違う同じ時期のライブ（SHOWCASE・PREMIUM LIVE など）は
+    // どのみちまとめられないので、ツアー1件ずつで数える（ユーザー、2026-10-30）
     public function performedOnlyOnce(): array
     {
         $rows = [];
         foreach (array_keys($this->toursBySong) as $songId) {
             $ids = $this->sortedTours($songId);
-            if ($this->seriesCount($ids) === 1) {
+            if (count($ids) === 1) {
                 $rows[] = ['song_id' => $songId, 'title' => $this->songs[$songId], 'tour' => $this->tourInfo($ids[0])];
             }
         }
