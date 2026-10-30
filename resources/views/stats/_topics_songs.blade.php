@@ -1,5 +1,5 @@
 {{-- Databaseのstats「Songs」タブのトピックス（App\Support\ArtistTopics）。空いた期間は年数を小数で出す（1年半なら1.5）。
-     PC（.topic-pc）はツアー名を「1992 / ツアー名」の1行で、スマホ（.topic-sp）は崩れないよう1曲を2〜3段に分けて出す --}}
+     PC（.topic-pc）はツアー名を「1992 - ツアー名」の1行で、スマホ（.topic-sp）は崩れないよう1曲を2〜3段に分けて出す --}}
 @php
     // 他のランキングと同じ見た目の順位（同じ値が続くときは順位を出さない）
     $topicRank = function (array $list, int $index, string $key) {
@@ -15,11 +15,11 @@
     $topicSongLink = fn ($row) => '<a href="' . e($topicSongUrl($row['song_id'])) . '" class="stats-link">' . e($row['title']) . '</a>';
     $topicTourLink = fn ($tour) => '<a href="' . e($topicTourUrl($tour['id'])) . '" class="stats-link">' . e($tour['title']) . '</a>';
     $topicYear = fn ($date) => e(substr($date, 0, 4));
-    // PC：「1992 / ツアー名」の形で、ツアー名だけをリンクにする
-    $topicTourLine = fn ($tour) => '<span style="font-size: 0.85em;">' . $topicYear($tour['date']) . ' / ' . $topicTourLink($tour) . '</span>';
+    // PC：「1992 - ツアー名」の形で、ツアー名だけをリンクにする
+    $topicTourLine = fn ($tour) => '<span style="font-size: 0.85em;">' . $topicYear($tour['date']) . ' - ' . $topicTourLink($tour) . '</span>';
     $topicYears = fn ($row) => number_format($row['years'], 1) . '年';
-    // スマホ：「年 / ツアー名」（パソコンと同じ）
-    $topicTourWithYear = fn ($tour) => $topicYear($tour['date']) . ' / ' . $topicTourLink($tour);
+    // スマホ：「年 - ツアー名」（パソコンと同じ）
+    $topicTourWithYear = fn ($tour) => $topicYear($tour['date']) . ' - ' . $topicTourLink($tour);
 @endphp
 
 @if (count($topicRevivals))

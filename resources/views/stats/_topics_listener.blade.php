@@ -14,9 +14,9 @@
             ?? '<span class="rank-number">' . ($index + 1) . '</span>';
     };
     // PC：参加した公演を「2015 / タイトル」の形で（タイトルだけをリンクに）
-    $topicShowLink = fn ($date, $title, $url) => e(substr($date, 0, 4)) . ' / ' . ($url ? '<a href="' . e($url) . '" class="stats-link">' . e($title) . '</a>' : e($title));
+    $topicShowLink = fn ($date, $title, $url) => e(substr($date, 0, 4)) . ' - ' . ($url ? '<a href="' . e($url) . '" class="stats-link">' . e($title) . '</a>' : e($title));
     // スマホ：参加した公演のタイトル（リンク先があればリンクに）。Recent First Listens は日付を右端に出すのでこちら。
-    // Welcome Back・Long-Awaited Returns I Heard はスマホでも「年 / タイトル」（$topicShowLink）
+    // Welcome Back・Long-Awaited Returns I Heard はスマホでも「年 - タイトル」（$topicShowLink）
     $topicShowTitle = fn ($title, $url) => $url ? '<a href="' . e($url) . '" class="stats-link">' . e($title) . '</a>' : e($title);
     // 曲・ツアーのリンク先は $topicSongUrl / $topicTourUrl（ID => URL）で変えられる（マイページで作ったアーティストではマイページのページへ）。渡さなければ Database
     $topicSongUrl ??= fn ($id) => url('/database/songs/' . $id);
