@@ -25,6 +25,10 @@ class CreateDbSong extends CreateRecord
         if ($another && $artistId) {
             $this->form->fill(['artist_id' => $artistId]);
         }
+        // 続けて曲名を打てるよう、タイトルの欄にカーソルを置く（フォームを入れ直したあとの画面に置くため、少し待つ）
+        if ($another) {
+            $this->js("setTimeout(() => document.getElementById('data.title')?.focus(), 100)");
+        }
     }
 
     protected function mutateFormDataBeforeCreate(array $data): array
