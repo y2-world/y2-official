@@ -44,6 +44,7 @@ class ManageArtistSongs extends ListRecords
                     Forms\Components\TextInput::make('title')
                         ->label('タイトル')
                         ->required()
+                        ->autofocus()
                         ->maxLength(255),
                     Forms\Components\Textarea::make('text')
                         ->label('説明')
@@ -84,6 +85,8 @@ class ManageArtistSongs extends ListRecords
 
                     if ($arguments['another'] ?? false) {
                         $form->fill();
+                        // 続けて曲名を打てるよう、ダイアログのタイトルの欄にカーソルを置く（フォームを入れ直したあとに置くため、少し待つ）
+                        $this->js("setTimeout(() => document.querySelector('.fi-modal-window input[id$=\".title\"]')?.focus(), 100)");
                         $action->halt();
                     }
                 })
@@ -92,6 +95,44 @@ class ManageArtistSongs extends ListRecords
                     $action->makeModalSubmitAction('createAnother', arguments: ['another' => true])
                         ->label('保存して、続けて作成'),
                 ]),
+            // 曲名を1行に1曲ずつ書いて、まとめて登録する。並び順は書いた順に今の曲の後ろへ。
+            // 空の行は飛ばし、そのアーティストに同じ名前の曲があれば作らない（通知で知らせる）
+            Actions\Action::make('addSongsBulk')
+                ->label('楽曲を一括追加')
+                ->icon('heroicon-o-queue-list')
+                ->color('gray')
+                ->modalHeading('楽曲を一括追加')
+                ->form([
+                    Forms\Components\Textarea::make('titles')
+                        ->label('タイトル')
+                        ->helperText('1行に1曲ずつ入力してください。書いた順に、今の曲の後ろへ並びます。')
+                        ->rows(15)
+                        ->required()
+                        ->autofocus(),
+                ])
+                ->modalSubmitActionLabel('追加する')
+                ->action(function (array $data) {
+                    $titles = array_values(array_unique(array_filter(array_map('trim', preg_split('/\R/u', (string) $data['titles'])), fn ($t) => $t !== '')));
+                    $existing = AdminData::query('song')->ofArtists([$this->artistId])->pluck('title')->all();
+                    $model = AdminData::model('song');
+                    $sortOrder = (AdminData::query('song')->ofArtists([$this->artistId])->max('sort_order') ?? -1) + 1;
+                    $created = [];
+                    $skipped = [];
+                    foreach ($titles as $title) {
+                        if (in_array($title, $existing, true)) {
+                            $skipped[] = $title;
+                            continue;
+                        }
+                        $model::create(['title' => $title, 'artist_id' => $this->artistId, 'sort_order' => $sortOrder++]);
+                        $created[] = $title;
+                    }
+
+                    \Filament\Notifications\Notification::make()
+                        ->title(count($created) . ' 曲を追加しました')
+                        ->body($skipped ? '同じ名前の曲があるので追加しなかった曲：' . implode('、', $skipped) : null)
+                        ->success()
+                        ->send();
+                }),
         ];
     }
 
