@@ -1035,7 +1035,7 @@ class StatsController extends Controller
         // 初めてライブに行った順
         $tabArtists = collect($this->getPersonalArtistStats())
             ->sortBy('first_date')
-            ->map(fn ($a) => ['name' => $a['name'], 'url' => route('stats.artist', $a['id']), 'current' => (int) $a['id'] === (int) $artistId])
+            ->map(fn ($a) => ['id' => $a['id'], 'name' => $a['name'], 'url' => route('stats.artist', $a['id']), 'current' => (int) $a['id'] === (int) $artistId])
             ->values()->all();
 
         // 曲が登録されていないアーティストはスタンプ帳が作れないので、ボタンを出さない。

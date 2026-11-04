@@ -138,6 +138,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (noMatchEl) {
             noMatchEl.hidden = visibleSlots.length > 0;
         }
+        // Hanko の表の見出し（印・タイトル）は、絞り込んで1曲も無いときは出さない
+        const hankoHead = book.querySelector('.stamp-hanko-head');
+        if (hankoHead) {
+            hankoHead.hidden = visibleSlots.length === 0;
+        }
         if (animate) {
             replayStamps();
         }

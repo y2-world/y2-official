@@ -124,19 +124,24 @@
                                                                 $featuringDisplay = $featuring !== '' && $featuringType === 'artist'
                                                                     ? '/ ' . $featuring
                                                                     : $featuring;
-                                                                // タイトルのあるメドレーは「タイトル（曲 ~ 曲 ~ …）」にする。かっこは曲名とすき間なしでつなぐ
-                                                                $medleyOpen = !empty($variant['medley_title']) ? e($variant['medley_title']) . '（' : '';
-                                                                if ($medleyOpen !== '') { $inTitledMedley = true; }
-                                                                $medleyClose = !empty($inTitledMedley) && empty(($row['variants'][$loop->index + 1] ?? [])['medley']) ? '）' : '';
-                                                                if ($medleyClose !== '') { $inTitledMedley = false; }
+                                                                // セットリストの表示と同じ形にする。タイトルのあるメドレーは、タイトルの行の下に曲を「~」なしで1行ずつ。
+                                                                // タイトルのないメドレーは、2曲目から改行して「~」を付ける（メドレー以外の曲が来たら戻す）
+                                                                $medleyOpen = !empty($variant['medley_title']) ? e($variant['medley_title']) . '<br>' : '';
+                                                                if (empty($variant['medley'])) { $inTitledMedley = $medleyOpen !== ''; }
+                                                                $medleyClose = '';
                                                             @endphp
-                                                            {{-- メドレーの曲は改行せず「~」でつなぐ（セットリストの表示とは違い、Summary は改行しない） --}}
+                                                            {{-- 1曲ずつが inline-block の箱なので、メドレーの改行は箱の外に置く（箱の中の改行では行が折り返さない） --}}
+                                                            @if (!$loop->first && !empty($variant['medley']))<br>@endif
                                                             <span class="setlist-song-featuring">
                                                                 @if ($isExtraRow && $loop->first)
                                                                     <span class="setlist-extra-prefix">-&nbsp;</span>
                                                                 @endif
                                                                 @if (!$loop->first)
-                                                                    <span class="setlist-summary-variant-separator">@if (!empty($variant['medley']))~@else/@endif</span>
+                                                                    @if (!empty($variant['medley']))
+                                                                        @unless (!empty($inTitledMedley))<span class="setlist-summary-variant-separator">~</span>@endunless
+                                                                    @else
+                                                                        <span class="setlist-summary-variant-separator">/</span>
+                                                                    @endif
                                                                 @endif
                                                                 @if (!($variant['is_common'] ?? true))
                                                                     <strong>

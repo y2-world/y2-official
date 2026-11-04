@@ -63,9 +63,13 @@
                         @if (count($artistStats))
                         <select class="stats-tab-btn stats-tab-select" onchange="if (this.value) location.href = this.value;">
                             <option value="" selected>All</option>
-                            {{-- 初めてライブに行った順 --}}
-                            @foreach (collect($artistStats)->sortBy('first_date') as $tabArtist)
-                                <option value="{{ route('stats.artist', $tabArtist['id']) }}">{{ $tabArtist['name'] }}</option>
+                            {{-- Yuki's Setlists と同じく Live / Fes に分け、それぞれ初めてライブに行った順 --}}
+                            @foreach (\App\Support\SetlistArtistGroups::split(collect($artistStats)->sortBy('first_date')) as $groupLabel => $groupArtists)
+                                <optgroup label="{{ $groupLabel }}">
+                                    @foreach ($groupArtists as $tabArtist)
+                                        <option value="{{ route('stats.artist', $tabArtist['id']) }}">{{ $tabArtist['name'] }}</option>
+                                    @endforeach
+                                </optgroup>
                             @endforeach
                         </select>
                         @endif

@@ -5584,6 +5584,11 @@ a.setlist-card:hover {
     display: none;
 }
 
+/* 絞り込んで1曲も無いときは、見出しも出さない（stamp-book.js が hidden を付ける） */
+.stamp-book.is-hanko .stamp-hanko-head[hidden] {
+    display: none;
+}
+
 .stamp-book.is-hanko .stamp-hanko-head {
     display: grid;
     grid-template-columns: 60px 1fr;

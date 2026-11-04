@@ -44,6 +44,20 @@ class SetlistArtistGroups
         return $dates;
     }
 
+    // 並んだアーティスト（['id' => …] の配列か Artist）を、並びのまま Live / Fes に分ける（Yuki's Stats のアーティストの選択欄）。
+    // どちらにも無いもの（参加記録の無い曲だけのアーティストなど）は Live に入れる
+    public static function split(iterable $artists): array
+    {
+        $fes = array_flip(static::ids()['Fes']);
+        $groups = ['Live' => [], 'Fes' => []];
+        foreach ($artists as $artist) {
+            $id = (int) data_get($artist, 'id');
+            $groups[isset($fes[$id]) ? 'Fes' : 'Live'][] = $artist;
+        }
+
+        return array_filter($groups);
+    }
+
     // Live / Fes それぞれのアーティストの id（公開かどうかは見ない。管理画面のアーティストの絞り込みにも使う）
     public static function ids(): array
     {

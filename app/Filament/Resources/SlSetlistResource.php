@@ -133,37 +133,72 @@ class SlSetlistResource extends Resource
     // 一括入力の1行を、セットリストの1曲にする
     private static function bulkItem(string $title, ?int $artistId): array
     {
-        $item = ['_uuid' => (string) \Illuminate\Support\Str::uuid(), 'song' => static::bulkSongValue($title, $artistId)];
+        // 手で足した行と同じ項目を初めから入れておく。無いと、反映したあとにメドレーなどのスイッチを押しても値に結び付かず、
+        // 曲番が消えない・メドレーのタイトルの欄が出ない（2026-11-04）
+        $item = ['_uuid' => (string) \Illuminate\Support\Str::uuid(), 'song' => static::bulkSongValue($title, $artistId)] + ['medley' => false, 'medley_title' => null, 'featuring' => null, 'featuring_type' => 'guest', 'alternative_title' => null];
         // 打った表記が合った曲の名前と違い、今までのセットリストでその曲に登録した別表記と同じときだけ、別表記に入れる。
         // 知らない書き方（大文字・小文字だけ違う打ち間違いなど）はオリジナルの曲名のまま
         if ($item['song'] !== $title && static::bulkSongTitle($item['song']) !== $title && static::isKnownAlternativeTitle($item['song'], $title, $artistId)) {
             $item['alternative_title'] = $title;
         }
+        // 表記ゆれ（大文字・小文字、アポストロフィ、～〜など）だけ違う曲につないだ行は、反映する前のダイアログで知らせる。
+        // 前のセットリストで使った別表記と同じ（わざと書いた表記）なら知らせない
+        if ($item['song'] !== $title && empty($item['alternative_title'])) {
+            $songTitle = static::bulkSongTitle($item['song']);
+            if ($songTitle !== $title && $songTitle !== (string) $item['song']) {
+                static::$bulkLooseMatches[$item['_uuid']] = [$title, $songTitle, (string) $item['song']];
+            }
+        }
 
         return $item;
     }
 
+    // 表記ゆれだけ違う曲につないだ行（[行の _uuid => [入力した表記, つないだ曲の名前, つないだ曲（Yuki's Setlists の曲の id か db-…）]]）。bulkItem が足していく
+    private static array $bulkLooseMatches = [];
+
     private static function bulkSongValue(string $title, ?int $artistId): string
     {
-        $songId = SlSong::query()
-            ->where('artist_id', $artistId)
-            ->whereRaw('LOWER(TRIM(title)) = LOWER(?)', [trim($title)])
-            ->orderBy('id')
-            ->value('id');
-        if ($songId) return (string) $songId;
+        // 大文字・小文字・前後の空白の違い → アポストロフィの種類・～〜などの表記ゆれ、の順に照らし合わせる（SongMatcher）。
+        // Yuki's Setlists の曲 → まだ Yuki's Setlists の曲が無いデータベースの曲、の順
+        $songId = \App\Support\SongMatcher::match(static::bulkSlSongTitles($artistId), $title);
+        if ($songId !== null) return (string) $songId;
 
-        $dbSongId = DbSong::query()
-            ->whereDoesntHave('slSongs')
-            ->where('artist_id', $artistId)
-            ->whereRaw('LOWER(TRIM(title)) = LOWER(?)', [trim($title)])
-            ->orderBy('id')
-            ->value('id');
-
-        if ($dbSongId) return 'db-' . $dbSongId;
+        $dbSongId = \App\Support\SongMatcher::match(static::bulkUnlinkedDbSongTitles($artistId), $title);
+        if ($dbSongId !== null) return 'db-' . $dbSongId;
 
         // 曲の名前で合わなければ、今までのセットリストで使った別表記（「Unti-Unti」→「Anti-Anti」など）で探す。
         // Yuki's Setlists の曲の別表記 → データベースの曲の別表記（その曲の Yuki's Setlists の曲があればそれ、無ければ db-…）の順
         return static::songValueByAlternativeTitle($title, $artistId) ?? $title;
+    }
+
+    // 一括入力で照らし合わせる曲（[id => 曲名]）。1回のリクエストの中では覚えておく
+    private static function bulkSlSongTitles(?int $artistId): array
+    {
+        static $titles = [];
+
+        return $titles[(int) $artistId] ??= SlSong::where('artist_id', $artistId)->orderBy('id')->pluck('title', 'id')->all();
+    }
+
+    private static function bulkUnlinkedDbSongTitles(?int $artistId): array
+    {
+        static $titles = [];
+
+        return $titles[(int) $artistId] ??= DbSong::whereDoesntHave('slSongs')->where('artist_id', $artistId)->orderBy('id')->pluck('title', 'id')->all();
+    }
+
+    // 合わなかった曲に、似ている曲（Yuki's Setlists の曲とデータベースの曲）を候補として付ける（つなぎはしない）
+    private static function withCandidates(string $label, array $item, ?int $artistId): string
+    {
+        $song = trim((string) ($item['song'] ?? ''));
+        if (!$artistId || $song === '' || str_starts_with($song, 'db-')) {
+            return $label;
+        }
+        $candidates = \App\Support\SongMatcher::candidates(static::bulkSlSongTitles($artistId) + array_combine(
+            array_map(fn ($id) => 'db-' . $id, array_keys(static::bulkUnlinkedDbSongTitles($artistId))),
+            static::bulkUnlinkedDbSongTitles($artistId),
+        ), $song);
+
+        return $label . ($candidates ? '（候補：' . implode(' / ', $candidates) . '）' : '');
     }
 
     // その曲（Yuki's Setlists の曲の id か db-…）に、今までのセットリストで登録した別表記か（書いたとおりに同じか）
@@ -337,17 +372,128 @@ class SlSetlistResource extends Resource
 
     // 「通常入力に反映」を押したとき、反映したら新しく入る行のうち、Yuki's Setlists の曲に無いもの（ダイアログに出す）。
     // フォームの今の入力を写したもの（FormStatePreview）の上で反映してみるので、本物のフォームは変えない
+    // 反映する前のダイアログに出す行。フォームの今の入力を写したもの（FormStatePreview）の上で反映してみる（bulkCheckRows）。
+    // ダイアログの見出し・文・欄で何度も呼ぶので、同じ入力なら1回のリクエストの中では覚えておく
+    public static function checkRowsOnApply(array $data, bool $fes): array
+    {
+        static $cache = [];
+        $key = md5(serialize([$fes, $data]));
+        if (isset($cache[$key])) {
+            return $cache[$key];
+        }
+        static::$bulkLooseMatches = [];
+        $preview = new \App\Support\FormStatePreview($data);
+        $fes
+            ? static::syncBulkFestivalSetlist($data['_bulk_fes_input'] ?? '', $preview->get(), $preview->set())
+            : static::syncBulkLiveSetlist($data['_bulk_live_input'] ?? '', $preview->get(), $preview->set());
+
+        return $cache[$key] = static::bulkCheckRows($preview->data(), $fes);
+    }
+
+    // 反映したあとの入力から、確かめる行を曲順に出す（直前の反映で bulkItem が残した $bulkLooseMatches も使う）。
+    // Yuki's Setlists の曲につながらない行（候補は似ている曲）と、表記ゆれだけ違う曲につないだ行（候補はつないだ曲。初めからそれを選んでおく）。
+    // [no => 曲番, typed => 入力した表記（別表記があれば「別表記（曲名）」）, uuid => 行, candidates => [曲（id か db-…） => 曲名], linked => つないだ曲か null]
+    private static function bulkCheckRows(array $after, bool $fes): array
+    {
+        // [行, その行のアーティスト] を曲順に
+        $lines = [];
+        if ($fes) {
+            foreach (['fes_setlist', 'fes_encore'] as $field) {
+                foreach ((array) ($after[$field] ?? []) as $block) {
+                    foreach ((array) ($block['songs'] ?? []) as $item) {
+                        $lines[] = [$item, is_numeric($block['artist'] ?? null) ? (int) $block['artist'] : null];
+                    }
+                }
+            }
+            $added = array_fill_keys((array) ($after['_bulk_fes_added_uuids'] ?? []), true);
+        } else {
+            $artistId = is_numeric($after['artist_id'] ?? null) ? (int) $after['artist_id'] : null;
+            foreach (array_merge(array_values((array) ($after['setlist'] ?? [])), \App\Support\EncoreFormGroups::toItems((array) ($after['_encore_groups'] ?? []))) as $item) {
+                $lines[] = [$item, $artistId];
+            }
+            $added = array_fill_keys((array) ($after['_bulk_added_uuids'] ?? []), true);
+        }
+        $rows = [];
+        $number = 0;
+        foreach ($lines as [$item, $artistId]) {
+            if (empty($item['medley'])) $number++;
+            $uuid = $item['_uuid'] ?? '';
+            $song = trim((string) ($item['song'] ?? ''));
+            if (isset(static::$bulkLooseMatches[$uuid])) {
+                [$typed, $linkedTitle, $linked] = static::$bulkLooseMatches[$uuid];
+                $rows[] = ['no' => $number, 'typed' => $typed, 'uuid' => $uuid, 'candidates' => [$linked => $linkedTitle], 'linked' => $linked];
+            } elseif (isset($added[$uuid]) && $song !== '' && !is_numeric($song)) {
+                // データベースの曲とだけ合ったもの（db-…）は、Yuki's Setlists の曲として新しく登録する。候補は出さない
+                $candidates = str_starts_with($song, 'db-') || !$artistId ? [] : \App\Support\SongMatcher::candidates(static::bulkSlSongTitles($artistId) + array_combine(
+                    array_map(fn ($id) => 'db-' . $id, array_keys(static::bulkUnlinkedDbSongTitles($artistId))),
+                    static::bulkUnlinkedDbSongTitles($artistId),
+                ), $song);
+                $rows[] = ['no' => $number, 'typed' => static::bulkSongLabel($item), 'uuid' => $uuid, 'candidates' => $candidates, 'linked' => null, 'text' => $song];
+            }
+        }
+
+        return $rows;
+    }
+
+    // 候補が2つ以上ある曲は、候補から選ぶ欄にする。どれかを選ぶまで OK を押せない（候補が1つならその曲につなぐ）
+    private static function bulkCheckFields(array $rows): array
+    {
+        $fields = [];
+        foreach ($rows as $i => $row) {
+            if (count($row['candidates']) < 2) {
+                continue;
+            }
+            $fields[] = Forms\Components\Radio::make('choice_' . $i)
+                ->label($row['no'] . '. ' . $row['typed'])
+                ->options(array_combine(array_map('strval', array_keys($row['candidates'])), array_values($row['candidates'])))
+                ->required();
+        }
+
+        return DbSetlistResource::bulkCheckChoiceSection($fields);
+    }
+
+    // 候補のある行の曲を、反映した行に入れる。$choices：候補が2つ以上ある行で選んだ曲（[choice_行の順番 => 曲]）
+    private static function applyBulkChoices(array $rows, array $choices, bool $fes, Forms\Get $get, Forms\Set $set): void
+    {
+        $songs = [];
+        foreach ($rows as $i => $row) {
+            // 候補が1つならその曲、2つ以上なら選んだ曲（候補が無い行は文字のまま。保存のときに新しい曲になる）
+            if (count($row['candidates']) === 1) {
+                $songs[$row['uuid']] = (string) array_key_first($row['candidates']);
+            } elseif (count($row['candidates']) > 1 && array_key_exists('choice_' . $i, $choices)) {
+                $songs[$row['uuid']] = (string) $choices['choice_' . $i];
+            }
+        }
+        if ($songs === []) {
+            return;
+        }
+        $pick = function (array $item) use ($songs) {
+            if (isset($songs[$item['_uuid'] ?? ''])) {
+                $item['song'] = $songs[$item['_uuid']];
+            }
+
+            return $item;
+        };
+        if ($fes) {
+            foreach (['data.fes_setlist', 'data.fes_encore'] as $field) {
+                $set($field, array_map(fn ($block) => ['songs' => array_map($pick, (array) ($block['songs'] ?? []))] + (array) $block, (array) $get($field, true)), true);
+            }
+
+            return;
+        }
+        $set('data.setlist', array_map($pick, (array) $get('data.setlist', true)), true);
+        $set('data._encore_groups', array_map(fn ($group) => ['songs' => array_map($pick, (array) ($group['songs'] ?? []))] + (array) $group, (array) $get('data._encore_groups', true)), true);
+    }
+
     public static function unmatchedOnApply(array $data, bool $fes): array
     {
+        static::$bulkLooseMatches = [];
         $preview = new \App\Support\FormStatePreview($data);
-        $addedKey = $fes ? '_bulk_fes_added_uuids' : '_bulk_added_uuids';
-        $before = (array) ($data[$addedKey] ?? []);
         $fes
             ? static::syncBulkFestivalSetlist($data['_bulk_fes_input'] ?? '', $preview->get(), $preview->set())
             : static::syncBulkLiveSetlist($data['_bulk_live_input'] ?? '', $preview->get(), $preview->set());
         $after = $preview->data();
-        // 前に反映して確かめた行は出さない（今回新しく入る行だけ）
-        $after[$addedKey] = array_values(array_diff((array) ($after[$addedKey] ?? []), $before));
+        // 前に反映した行も、まだつながっていなければ毎回出す（間違えて反映したあと、反映し直したときも確かめられるように）
         $after['fes'] = $fes ? 1 : 0;
 
         return static::unmatchedBulkSongs($after);
@@ -356,33 +502,35 @@ class SlSetlistResource extends Resource
     // 「通常入力に反映」のボタン。合致しない曲があるときだけ、反映する前にダイアログで確かめる
     private static function bulkApplyAction(string $name, bool $fes): Forms\Components\Actions\Action
     {
-        $unmatched = fn ($livewire) => static::unmatchedOnApply($livewire->form->getRawState(), $fes);
+        // 確かめる行（合わない曲と、表記が完全には一致しないままつないだ曲）
+        // フォームの今の入力は、ページの data から読む（選ぶ欄を作るときはまだフォームができていないので、$livewire->form から読むとエラーになる）
+        $rows = fn ($livewire) => static::checkRowsOnApply((array) ($livewire->data ?? []), $fes);
         // フェスで、まだ登録されていないアーティスト
-        $newArtists = fn ($livewire) => $fes ? static::newArtistsOnApply($livewire->form->getRawState()) : [];
-        $needsConfirm = fn ($livewire) => $unmatched($livewire) !== [] || $newArtists($livewire) !== [];
+        $newArtists = fn ($livewire) => $fes ? static::newArtistsOnApply((array) ($livewire->data ?? [])) : [];
+        $needsConfirm = fn ($livewire) => $rows($livewire) !== [] || $newArtists($livewire) !== [];
 
         return Forms\Components\Actions\Action::make($name)
             ->label('通常入力に反映')
-            ->requiresConfirmation($needsConfirm)
-            // 見出し・文を設定するとダイアログ付きのボタンになるので、合致しない曲が無いときはダイアログを出さずにそのまま反映する
+            // 確かめるものが無いときはダイアログを出さずにそのまま反映する
             ->modalHidden(fn ($livewire) => !$needsConfirm($livewire))
-            ->modalHeading(fn ($livewire) => $unmatched($livewire) === [] ? '未登録のアーティストがあります' : '未登録の楽曲があります')
-            ->modalDescription(function ($livewire) use ($unmatched, $newArtists) {
-                $parts = [];
-                if ($artists = $newArtists($livewire)) {
-                    $parts[] = '以下のアーティストが登録されていません。<br>' . implode('<br>', array_map('e', $artists)) . '<br>新たにアーティストを登録します。';
-                }
-                if ($songs = $unmatched($livewire)) {
-                    $parts[] = '以下の楽曲が合致しませんでした。<br>' . implode('<br>', array_map('e', $songs)) . '<br>新たに楽曲を登録します。';
-                }
-
-                return new HtmlString(implode('<br><br>', $parts) . 'よろしいですか？');
-            })
-            ->modalSubmitActionLabel('反映する')
-            ->action(function (Forms\Get $get, Forms\Set $set, $livewire) use ($fes) {
+            ->modalHeading(fn ($livewire) => $rows($livewire) === [] ? '未登録のアーティストがあります' : '未登録の楽曲があります')
+            // 候補の数で区切りを分ける（DbSetlistResource::bulkCheckSections）。まだ登録されていないアーティストは最初に
+            ->modalDescription(fn ($livewire) => DbSetlistResource::bulkCheckSections(
+                $rows($livewire),
+                '新たに楽曲を登録します。',
+                ($artists = $newArtists($livewire)) ? ['以下のアーティストが登録されていません。新たにアーティストを登録します。<div style="font-weight: 400; margin-top: 8px;">' . implode('<br>', array_map('e', $artists)) . '</div>'] : [],
+            ))
+            ->form(fn ($livewire) => static::bulkCheckFields($rows($livewire)))
+            ->modalWidth(\Filament\Support\Enums\MaxWidth::Large)
+            ->modalCancelActionLabel('修正')
+            ->modalSubmitActionLabel('OK')
+            ->action(function (array $data, Forms\Get $get, Forms\Set $set, $livewire) use ($fes) {
+                static::$bulkLooseMatches = [];
                 $fes
                     ? static::syncBulkFestivalSetlist($get('_bulk_fes_input'), $get, $set)
                     : static::syncBulkLiveSetlist($get('_bulk_live_input'), $get, $set);
+                // 反映した行は、ダイアログで見せた行と同じ順に並ぶので、選んだ候補を順番で入れる
+                static::applyBulkChoices(static::bulkCheckRows((array) ($livewire->data ?? []), $fes), $data, $fes, $get, $set);
                 // 反映したら通常入力のタブを開く（タブの extraAlpineAttributes）
                 $livewire->dispatch('setlist-bulk-applied');
             });
@@ -423,7 +571,7 @@ class SlSetlistResource extends Resource
                         $song = trim((string) ($item['song'] ?? ''));
                         // Yuki's Setlists の曲に無いもの（データベースの曲とだけ合ったもの「db-…」も、登録で新しく作る）は確認に出す
                         if ($fromBulk && $song !== '' && !is_numeric($song)) {
-                            $unmatched[] = $number . '. ' . static::bulkSongLabel($item);
+                            $unmatched[] = $number . '. ' . static::withCandidates(static::bulkSongLabel($item), $item, is_numeric($block['artist'] ?? null) ? (int) $block['artist'] : null);
                         }
                     }
                 }
@@ -443,7 +591,7 @@ class SlSetlistResource extends Resource
             $song = trim((string) ($item['song'] ?? ''));
             // Yuki's Setlists の曲に無いもの（データベースの曲とだけ合ったもの「db-…」も、登録で新しく作る）は確認に出す
             if (isset($generated[$item['_uuid'] ?? '']) && $song !== '' && !is_numeric($song)) {
-                $unmatched[] = $number . '. ' . static::bulkSongLabel($item);
+                $unmatched[] = $number . '. ' . static::withCandidates(static::bulkSongLabel($item), $item, is_numeric($data['artist_id'] ?? null) ? (int) $data['artist_id'] : null);
             }
         }
 
@@ -596,7 +744,7 @@ class SlSetlistResource extends Resource
                             ->searchable()->native(false)->live()
                             ->afterStateUpdated(function ($state, $set) {
                                 $set('song', static::resolveSongOptionValue($state));
-                                $set('alternative_title', null);
+                                DbSetlistResource::clearSongDetails($set);
                             })
                             ->createOptionForm([Forms\Components\TextInput::make('title')->label('新しい曲名')->required()->maxLength(255)])
                             ->createOptionUsing(function (array $data, Forms\Get $get): int {
@@ -1034,7 +1182,7 @@ class SlSetlistResource extends Resource
                                         // 曲を差し替えたのに別表記（前の曲用のライブバージョン名等）が
                                         // 残ってしまい、差し替え後の曲と噛み合わない表記のまま表示され続ける
                                         // 事故を防ぐため、曲を変更したタイミングで別表記はクリアする
-                                        $set('alternative_title', null);
+                                        DbSetlistResource::clearSongDetails($set);
                                     })
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('title')
@@ -1219,7 +1367,7 @@ class SlSetlistResource extends Resource
                                         // 曲を差し替えたのに別表記（前の曲用のライブバージョン名等）が
                                         // 残ってしまい、差し替え後の曲と噛み合わない表記のまま表示され続ける
                                         // 事故を防ぐため、曲を変更したタイミングで別表記はクリアする
-                                        $set('alternative_title', null);
+                                        DbSetlistResource::clearSongDetails($set);
                                     })
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('title')
@@ -1286,7 +1434,7 @@ class SlSetlistResource extends Resource
                                         // 曲を差し替えたのに別表記（前の曲用のライブバージョン名等）が
                                         // 残ってしまい、差し替え後の曲と噛み合わない表記のまま表示され続ける
                                         // 事故を防ぐため、曲を変更したタイミングで別表記はクリアする
-                                        $set('alternative_title', null);
+                                        DbSetlistResource::clearSongDetails($set);
                                     })
                                             ->createOptionForm([
                                                 Forms\Components\TextInput::make('title')
@@ -1439,7 +1587,7 @@ class SlSetlistResource extends Resource
                                         // 曲を差し替えたのに別表記（前の曲用のライブバージョン名等）が
                                         // 残ってしまい、差し替え後の曲と噛み合わない表記のまま表示され続ける
                                         // 事故を防ぐため、曲を変更したタイミングで別表記はクリアする
-                                        $set('alternative_title', null);
+                                        DbSetlistResource::clearSongDetails($set);
                                     })
                                     ->createOptionForm([
                                         Forms\Components\TextInput::make('title')
@@ -1505,7 +1653,7 @@ class SlSetlistResource extends Resource
                                         // 曲を差し替えたのに別表記（前の曲用のライブバージョン名等）が
                                         // 残ってしまい、差し替え後の曲と噛み合わない表記のまま表示され続ける
                                         // 事故を防ぐため、曲を変更したタイミングで別表記はクリアする
-                                        $set('alternative_title', null);
+                                        DbSetlistResource::clearSongDetails($set);
                                     })
                                             ->createOptionForm([
                                                 Forms\Components\TextInput::make('title')
@@ -1782,7 +1930,20 @@ class SlSetlistResource extends Resource
                     ])
                     // ここで登録するのはツアー・ライブだけ。曲とパターンは、「パターンを追加」と同じく作成画面で保存したときに登録する
                     // （データベースの曲に合わない曲は、保存のときにダイアログで確かめる。CreateDbSetlist）
-                    ->action(function (array $data, SlSetlist $record) {
+                    ->action(function (array $data, SlSetlist $record, Tables\Actions\Action $action) {
+                        // 同じアーティストに同じ名前のツアー・ライブがもうあれば、作らずに知らせる（ダイアログは開いたまま。タイトルを直せる）
+                        $normalized = static::normalizeTourTitle($data['title']);
+                        $duplicate = DbConcert::where('artist_id', $data['artist_id'])->get(['id', 'title'])
+                            ->first(fn (DbConcert $c) => static::normalizeTourTitle($c->title) === $normalized);
+                        if ($duplicate) {
+                            Notification::make()
+                                ->danger()
+                                ->title('同じ名前のツアー・ライブがすでにあります')
+                                ->body("「{$duplicate->title}」はもうデータベースに登録されています。タイトルを確かめてください。")
+                                ->send();
+                            $action->halt();
+                        }
+
                         $tour = DbConcert::create([
                             'artist_id' => $data['artist_id'],
                             'title' => $data['title'],
