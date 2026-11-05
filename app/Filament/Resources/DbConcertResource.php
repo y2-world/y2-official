@@ -63,7 +63,7 @@ class DbConcertResource extends Resource
                                 // 「ap bank fes」「ソロ」はMr.Children専用の選択肢のため、
                                 // Mr.Children以外に切り替えた際は選択済みならリセットする
                                 if (!self::isMrChildren($state) && in_array((int) $get('type'), [3, 4], true)) {
-                                    $set('type', 0);
+                                    $set('type', null);
                                 }
                             })
                             ->columnSpanFull(),
@@ -88,7 +88,7 @@ class DbConcertResource extends Resource
                                     1 => '単発ライブ',
                                     2 => 'イベント',
                                 ])
-                            ->default(0)
+                            // 初めはどれも選ばない（選び忘れたまま「ツアー」で登録されないように）
                             ->required()
                             ->live()
                             ->columnSpanFull(),
@@ -96,7 +96,10 @@ class DbConcertResource extends Resource
                         \App\Filament\Forms\TypedDate::make('date1', '開始日')
                             ->required(),
 
-                        \App\Filament\Forms\TypedDate::make('date2', '終了日'),
+                        // ツアーは開始日と終了日の両方が要る
+                        \App\Filament\Forms\TypedDate::make('date2', '終了日')
+                            ->required(fn (Forms\Get $get) => (string) $get('type') === '0')
+                            ->validationMessages(['required' => 'ツアーは終了日も入れてください。']),
 
                         Forms\Components\Select::make('venue')
                             ->label('会場')
