@@ -159,7 +159,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const key = select ? select.value : '';
         // 並び順・曲名の表記の切り替えはアルバム／シングルのときだけ（Incompleted は元の並びのまま）
         const orderKey = key === 'incompleted' || key === 'unperformed' || key.indexOf('color:') === 0 ? '' : key;
-        const performedOnly = checkbox ? checkbox.checked : false;
+        // Unperformed（演奏されていない曲だけ）のときは「演奏曲のみ」は意味がないので出さず、効かせない（チェックはそのまま残す）
+        const toggleLabel = checkbox ? checkbox.closest('label') : null;
+        if (toggleLabel) {
+            toggleLabel.hidden = key === 'unperformed';
+        }
+        const performedOnly = checkbox && key !== 'unperformed' ? checkbox.checked : false;
         const visibleSlots = slots.filter(function (slot) { return matches(slot, key, performedOnly); });
         // 色で絞り込んだときは、スタンプ帳の枠をその色にする
         const option = select ? select.options[select.selectedIndex] : null;

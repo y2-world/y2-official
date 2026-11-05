@@ -98,7 +98,21 @@
                                 <ol class="live-column {{ $totalItems >= 20 ? 'live-column-two-col' : '' }}">
                                     {{-- アンコールは ENCORE / DOUBLE ENCORE … のブロックごとに見出しを挟む（番号は本編からの続き） --}}
                                     @foreach (\App\Support\EncoreBlocks::sections($setlist, $encore, $encoreArtistId) as $encoreSection)
-                                        @php $section = \App\Support\Medley::liftTitles($encoreSection['items']); @endphp
+                                        @php
+                                            $section = \App\Support\Medley::liftTitles($encoreSection['items']);
+                                            // 日替わりの候補は、前の曲と同じ行に「曲A / 曲B」と並べる（前の曲がメドレーの曲・タイトルのあるメドレーのときは、今までどおり次の行に「-」）
+                                            $grouped = [];
+                                            foreach ($section as $sectionItem) {
+                                                $last = count($grouped) - 1;
+                                                if (!empty($sectionItem['is_daily']) && empty($sectionItem['medley']) && $last >= 0
+                                                    && empty($grouped[$last]['medley']) && trim((string) ($grouped[$last]['medley_title'] ?? '')) === '') {
+                                                    $grouped[$last]['_daily_songs'][] = $sectionItem;
+                                                    continue;
+                                                }
+                                                $grouped[] = $sectionItem;
+                                            }
+                                            $section = $grouped;
+                                        @endphp
                                         @if ($encoreSection['label'] && count($section))
                                             <div style="margin: 20px 0 0 0;">
                                                 <span style="color: #999; font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">{{ $encoreSection['label'] }}</span>
@@ -170,6 +184,35 @@
                                                     @endif
                                                 </span>
                                                 <br>
+                                            @elseif (!empty($data['_daily_songs']))
+                                                {{-- 日替わりの候補のある曲：「曲A / 曲B / 曲C」と1行に並べる（太字は曲ごと） --}}
+                                                <li>
+                                                    @foreach (array_merge([$data], $data['_daily_songs']) as $partIndex => $part)
+                                                        @php
+                                                            $partSong = is_numeric($part['song'] ?? '') ? $songs->find($part['song']) : null;
+                                                            $partAlt = (string) ($part['alternative_title'] ?? '');
+                                                            $partTitle = $partAlt !== '' ? $partAlt : ($partSong ? $partSong->title : ($part['song'] ?? ''));
+                                                            $partLink = $partSong && !$noSongLinks ? ($songLinkResolver ? $songLinkResolver($partSong, $partAlt) : \App\Models\DbSong::showUrl($part['song'], $partAlt)) : null;
+                                                            $partUnique = $commonSongs !== null && !in_array($part['song'] ?? '', $commonSongs);
+                                                            $partFeaturing = (string) ($part['featuring'] ?? '');
+                                                            $partFeaturingType = $part['featuring_type'] ?? 'guest';
+                                                            $partFeaturingDisplay = $partFeaturing !== '' && $partFeaturingType === 'artist' ? '/ ' . $partFeaturing : $partFeaturing;
+                                                            if ($partSong && $partFeaturing === '' && $partFeaturingType === 'credit' && $partSong->setlistCredit()) {
+                                                                $partFeaturingDisplay = '/ ' . $partSong->setlistCredit();
+                                                            }
+                                                        @endphp
+                                                        @if ($partIndex > 0) / @endif<span class="setlist-song-featuring" @if($partUnique) style="font-weight:900;" @endif>
+                                                            @if ($partLink)
+                                                                <a href="{{ $partLink }}">{{ $partTitle }}</a>
+                                                            @else
+                                                                {{ $partTitle }}
+                                                            @endif
+                                                            @if($partFeaturingDisplay !== '')
+                                                                <span class="setlist-featuring">{{ $partFeaturingDisplay }}</span>
+                                                            @endif
+                                                        </span>
+                                                    @endforeach
+                                                </li>
                                             @else
                                                 <li @if($isUnique) style="font-weight:900;" @endif>
                                                     <span class="setlist-song-featuring">

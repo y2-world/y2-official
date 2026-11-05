@@ -3709,6 +3709,11 @@ h5.setlist-subtitle-heading {
     white-space: normal;
 }
 
+/* Unperformed を選んだときは「演奏曲のみ」を出さない（.unique-tour-label の display に負けないように） */
+.stamp-summary-toggle.unique-tour-label[hidden] {
+    display: none;
+}
+
 .stamp-summary {
     position: relative;
 }
