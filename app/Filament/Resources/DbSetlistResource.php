@@ -162,7 +162,7 @@ class DbSetlistResource extends Resource
         return \App\Support\SongMatcher::knownVersion($typed, array_merge(
             array_keys(static::albumVersionTitles($artistId)[$songId] ?? []),
             array_keys(static::alternativeTitleMaps($artistId)['exact'][$songId] ?? []),
-        ));
+        ), $songTitle);
     }
 
     // 一括入力の1行を、セットリストの1曲にする。打った表記が合った曲の名前と違い、今までのセットリストでその曲に登録した別表記と同じなら

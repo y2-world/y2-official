@@ -92,21 +92,27 @@ class SongMatcher
         $key = static::key($songTitle);
         $typedBase = static::key(static::base($typed));
 
-        return static::key($typed) !== $key && $typedBase !== '' && in_array($typedBase, [$key, static::key(static::base($songTitle))], true);
+        // 入力にバージョンの表記が無いもの（「轍」と「轍 -わだち-」）は、曲名を短く書いただけなのでバージョン違いではない
+        return static::key($typed) !== $key && static::key($typed) !== $typedBase && $typedBase !== ''
+            && in_array($typedBase, [$key, static::key(static::base($songTitle))], true);
     }
 
     // 書いてあるバージョンの表記（$known：アルバムの曲目・今までの別表記）のうち、入力した表記に当たるもの。
     // 表記ゆれを除いて同じもの → 部分一致（片方がもう片方を含む。「雨のち晴れ (Remix)」→「雨のち晴れ Remix Version」）の順。
-    // 部分一致が2つ以上あれば決めない
+    // 部分一致が2つ以上あれば決めない。曲名と表記ゆれだけ違う表記（「轍 -わだち-」の曲目の「轍-わだち-」）はバージョンではないので見ない
     /** @param string[] $known */
-    public static function knownVersion(string $typed, array $known): ?string
+    public static function knownVersion(string $typed, array $known, string $songTitle = ''): ?string
     {
         $wanted = static::key($typed);
         // 曲名だけの表記（「Ultra Soul」）は、どのバージョンにも含まれるので、部分一致とはみなさない
         $base = static::key(static::base($typed));
+        $songKey = static::key($songTitle);
         $prefix = [];
         foreach (array_unique(array_map('strval', $known)) as $title) {
             $key = static::key($title);
+            if ($key === $songKey) {
+                continue;
+            }
             if ($key === $wanted) {
                 return $title;
             }

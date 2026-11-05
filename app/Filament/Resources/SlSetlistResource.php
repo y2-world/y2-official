@@ -259,7 +259,7 @@ class SlSetlistResource extends Resource
             $dbSongId !== '' ? array_keys(DbSetlistResource::albumVersionTitles($artistId, true)[$dbSongId] ?? []) : [],
             array_keys($maps['sl']["\0exact"][$songValue] ?? []),
             $dbSongId !== '' ? array_keys($maps['db']["\0exact"][$dbSongId] ?? []) : [],
-        ));
+        ), $songTitle);
     }
 
     // 今までのセットリストで、その別表記が付いていた曲。別々の曲に同じ別表記があれば決められないので null
