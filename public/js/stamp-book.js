@@ -26,21 +26,49 @@ document.addEventListener('DOMContentLoaded', function () {
         slot._trackOrders = slot.dataset.trackOrders ? JSON.parse(slot.dataset.trackOrders) : {};
     });
 
-    // 並べ替え（右上のアイコンを押すと開くプルダウン）。聴いた順は ?sort=heard で URL に残す
+    // 並べ替え（右上のアイコンを押すと開くプルダウン）。''：Release Date（元の並び）、'heard'：First heard、'most-heard'：Most heard、
+    // 'last-heard'：Last heard、'most-performed'：Most Performed、'last-performed'：Last Performed。元の並び以外は ?sort=… で URL に残す
     const sortButton = document.getElementById('stampSortButton');
     const sortMenu = document.getElementById('stampSortMenu');
-    let heardOrder = false;
+    const sortModes = ['', 'heard', 'most-heard', 'last-heard', 'most-performed', 'last-performed'];
+    let sortMode = '';
 
-    // 聴いた順のときは初めて聴いた順（まだ聴いていない曲はうしろに元の並びで）、
-    // アルバム絞り込み時はそのアルバムの曲順、シングル絞り込み時は発売順、それ以外は元の並び順に並べ替える
+    // 小さい順（asc）・大きい順（desc）に比べる。値が無い曲（聴いていない・演奏されていない）はうしろ
+    function compareBy(read, desc) {
+        return function (a, b) {
+            const x = read(a);
+            const y = read(b);
+            if (x === y) return 0;
+            if (x === null) return 1;
+            if (y === null) return -1;
+            return (x < y ? -1 : 1) * (desc ? -1 : 1);
+        };
+    }
+    const sorters = {
+        // 初めて聴いた順
+        'heard': compareBy(function (s) { return s.dataset.heardOrder || null; }, false),
+        // 聴いた回数の多い順（同じ回数なら最後に聴いた日の新しい順）
+        'most-heard': function (a, b) {
+            const count = compareBy(function (s) { return Number(s.dataset.heardCount) || null; }, true)(a, b);
+            return count || compareBy(function (s) { return s.dataset.lastHeard || null; }, true)(a, b);
+        },
+        // 最後に聴いた日の新しい順
+        'last-heard': compareBy(function (s) { return s.dataset.lastHeard || null; }, true),
+        // アーティストがライブで演奏した回数（ツアーの数）の多い順（同じ回数なら最後に演奏した日の新しい順）
+        'most-performed': function (a, b) {
+            const count = compareBy(function (s) { return Number(s.dataset.performedCount) || null; }, true)(a, b);
+            return count || compareBy(function (s) { return s.dataset.performedLast || null; }, true)(a, b);
+        },
+        // アーティストが最後にライブで演奏した日の新しい順
+        'last-performed': compareBy(function (s) { return s.dataset.performedLast || null; }, true),
+    };
+
+    // 並べ替えを選んでいるときはその順（同じ値の曲は元の並びのまま）。
+    // 元の並びのときは、アルバム絞り込み時はそのアルバムの曲順、シングル絞り込み時は発売順、それ以外は元の並び順
     function orderedSlots(key) {
         const ordered = slots.slice();
-        if (heardOrder) {
-            ordered.sort(function (a, b) {
-                const x = a.dataset.heardOrder || '￿';
-                const y = b.dataset.heardOrder || '￿';
-                return x < y ? -1 : (x > y ? 1 : 0);
-            });
+        if (sorters[sortMode]) {
+            ordered.sort(sorters[sortMode]);
         } else if (key) {
             ordered.sort(function (a, b) {
                 return (a._trackOrders[key] || Infinity) - (b._trackOrders[key] || Infinity);
@@ -225,8 +253,8 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 url.searchParams.delete('performed');
             }
-            if (heardOrder) {
-                url.searchParams.set('sort', 'heard');
+            if (sortMode) {
+                url.searchParams.set('sort', sortMode);
             } else {
                 url.searchParams.delete('sort');
             }
@@ -303,15 +331,15 @@ document.addEventListener('DOMContentLoaded', function () {
         checkbox.addEventListener('change', function () { apply(true); syncUrl(); });
     }
 
-    function setHeardOrder(on) {
-        heardOrder = on;
+    function setSortMode(mode) {
+        sortMode = sortModes.includes(mode) ? mode : '';
         if (sortButton) {
             // 元の並び以外のときは、アイコンを色付きにする
-            sortButton.classList.toggle('is-active', on);
+            sortButton.classList.toggle('is-active', sortMode !== '');
         }
         if (sortMenu) {
             sortMenu.querySelectorAll('[data-stamp-sort]').forEach(function (item) {
-                item.setAttribute('aria-checked', (item.dataset.stampSort === 'heard') === on ? 'true' : 'false');
+                item.setAttribute('aria-checked', item.dataset.stampSort === sortMode ? 'true' : 'false');
             });
         }
     }
@@ -330,9 +358,8 @@ document.addEventListener('DOMContentLoaded', function () {
         sortMenu.querySelectorAll('[data-stamp-sort]').forEach(function (item) {
             item.addEventListener('click', function () {
                 openSortMenu(false);
-                const on = item.dataset.stampSort === 'heard';
-                if (on !== heardOrder) {
-                    setHeardOrder(on);
+                if (item.dataset.stampSort !== sortMode) {
+                    setSortMode(item.dataset.stampSort);
                     apply(true);
                     syncUrl();
                 }
@@ -350,7 +377,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-    setHeardOrder(params.get('sort') === 'heard');
+    setSortMode(params.get('sort') || '');
 
     // 戻る操作でブラウザがセレクト・チェックの状態を復元した場合も表示と集計を合わせる
     apply(false);

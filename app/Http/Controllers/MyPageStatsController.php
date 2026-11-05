@@ -461,7 +461,7 @@ class MyPageStatsController extends Controller
             }
         }
 
-        $firstHeard = $this->firstHeardOrder($externalUser, 'db_setlist_id', $setlists);
+        $heard = $this->heardStats($externalUser, 'db_setlist_id', $setlists);
         $playedDbSongIds = $playedDbSongIdsNormal + $playedDbSongIdsFes;
         $fesOnlyDbSongIds = array_diff_key($playedDbSongIdsFes, $playedDbSongIdsNormal);
         $hikigatariDbSongIds = (int) $artistId === \App\Support\EncoreBlocks::HIKIGATARI_ARTIST_ID
@@ -473,10 +473,12 @@ class MyPageStatsController extends Controller
         $stampFilters = $this->stampDiscographyFilters((int) $artistId);
 
         $dbSongs = DbSong::where('artist_id', $artistId)->orderBy('sort_order')->get();
-        $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds, $fesOnlyDbSongIds, $hikigatariDbSongIds, $stampFilters, $firstHeard) {
-            return [
+        $performed = $this->performedStats((int) $artistId);
+        $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds, $fesOnlyDbSongIds, $hikigatariDbSongIds, $stampFilters, $heard, $performed) {
+            return \App\Support\StampHeardOrder::attributes($heard[$song->id] ?? null) + [
                 'song_id' => $song->id,
-                'heard_order' => $firstHeard[$song->id] ?? null,
+                'performed_last' => $performed[$song->id]['performed_last'] ?? null,
+                'performed_count' => $performed[$song->id]['performed_count'] ?? 0,
                 'song_url' => $this->isOwner() ? route('mypage.attendances.index', ['song_id' => 'official-' . $song->id]) : url('/database/songs/' . $song->id),
                 'title' => $song->title,
                 // ほかの人との曲のアーティスト表記（スタンプでは曲名のあとに灰色で出す）
@@ -533,7 +535,7 @@ class MyPageStatsController extends Controller
             }
         }
 
-        $firstHeard = $this->firstHeardOrder($externalUser, 'user_setlist_id', $setlists);
+        $heard = $this->heardStats($externalUser, 'user_setlist_id', $setlists);
         $playedUserSongIds = $playedUserSongIdsNormal + $playedUserSongIdsFes;
         $fesOnlyUserSongIds = array_diff_key($playedUserSongIdsFes, $playedUserSongIdsNormal);
 
@@ -541,10 +543,12 @@ class MyPageStatsController extends Controller
         $stampFilters = $this->stampDiscographyFilters((int) $artistId, true);
 
         $userSongs = UserSong::where('user_artist_id', $artistId)->orderBy('sort_order')->get();
-        $stamps = $userSongs->map(function (UserSong $song) use ($playedUserSongIds, $everPerformedUserSongIds, $fesOnlyUserSongIds, $stampFilters, $firstHeard) {
-            return [
+        $performed = $this->performedStats((int) $artistId, true);
+        $stamps = $userSongs->map(function (UserSong $song) use ($playedUserSongIds, $everPerformedUserSongIds, $fesOnlyUserSongIds, $stampFilters, $heard, $performed) {
+            return \App\Support\StampHeardOrder::attributes($heard[$song->id] ?? null) + [
                 'song_id' => $song->id,
-                'heard_order' => $firstHeard[$song->id] ?? null,
+                'performed_last' => $performed[$song->id]['performed_last'] ?? null,
+                'performed_count' => $performed[$song->id]['performed_count'] ?? 0,
                 'song_url' => $this->isOwner() ? route('mypage.attendances.index', ['song_id' => 'user-' . $song->id]) : null,
                 'title' => $song->title,
                 'done' => isset($playedUserSongIds[$song->id]),
@@ -559,25 +563,23 @@ class MyPageStatsController extends Controller
         return $this->renderStampsView($artist, $stamps, $externalUser, $stampFilters, 'user-' . $artist->id);
     }
 
-    // 初めて聴いた順（スタンプの並び替え）。参加した日の順に、参加したセットリストの曲を見る。[曲の id => StampHeardOrder::key]（小さいほど先）
-    private function firstHeardOrder($externalUser, string $setlistColumn, $setlists): array
+    // 聴いた記録（スタンプの並べ替え：First heard・Most heard・Last heard）。参加記録ごとに、参加したセットリストの曲を見る。
+    // [曲の id => StampHeardOrder::add の記録]（回数は参加した公演の数）
+    private function heardStats($externalUser, string $setlistColumn, $setlists): array
     {
         $setlists = $setlists->keyBy('id');
-        $first = [];
+        $stats = [];
         $attendances = $externalUser->attendances()->whereIn($setlistColumn, $setlists->keys())->get(['id', $setlistColumn, 'attended_date']);
         foreach ($attendances as $attendance) {
             $setlist = $setlists[$attendance->$setlistColumn] ?? null;
             foreach (array_merge($setlist?->setlist ?? [], $setlist?->encore ?? []) as $position => $s) {
                 if (isset($s['song']) && is_numeric($s['song'])) {
-                    $key = \App\Support\StampHeardOrder::key($attendance->attended_date, $attendance->id, $position);
-                    if (!isset($first[(int) $s['song']]) || $key < $first[(int) $s['song']]) {
-                        $first[(int) $s['song']] = $key;
-                    }
+                    \App\Support\StampHeardOrder::add($stats, (int) $s['song'], $attendance->attended_date, $attendance->id, $position);
                 }
             }
         }
 
-        return $first;
+        return $stats;
     }
 
     // スタンプの枠の色とタイトルを保存する（本人だけ。全部のスタンプ帳で共通）

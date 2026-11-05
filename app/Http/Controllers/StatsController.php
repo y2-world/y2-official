@@ -1142,13 +1142,10 @@ class StatsController extends Controller
         // 台紙上でギター柄のスタンプにする。DOUBLE ENCORE以外（本編・1つ目のアンコール・フェス）で聴いたかも別に集める
         $playedSlSongIdsDoubleEncore = [];
         $playedSlSongIdsOutsideDoubleEncore = [];
-        // 初めて聴いた順（スタンプの並び替え）。[sl_song_id => 「公演日|セットリスト|曲順」]（小さいほど先）
-        $firstHeardSl = [];
-        $heard = function (int $slSongId, $setlist, int $position) use (&$firstHeardSl) {
-            $key = \App\Support\StampHeardOrder::key($setlist->date, $setlist->id, $position);
-            if (!isset($firstHeardSl[$slSongId]) || $key < $firstHeardSl[$slSongId]) {
-                $firstHeardSl[$slSongId] = $key;
-            }
+        // 聴いた記録（スタンプの並べ替え：First heard・Most heard・Last heard）。[sl_song_id => StampHeardOrder::add の記録]
+        $heardSl = [];
+        $heard = function (int $slSongId, $setlist, int $position) use (&$heardSl) {
+            \App\Support\StampHeardOrder::add($heardSl, $slSongId, $setlist->date, $setlist->id, $position);
         };
         foreach ($setlists as $setlist) {
             $encore = array_values((array) ($setlist->encore ?? []));
@@ -1183,10 +1180,10 @@ class StatsController extends Controller
         $playedDbSongIds = [];
         $fesOnlyDbSongIds = [];
         $hikigatariDbSongIds = [];
-        $firstHeardDb = [];
+        $heardDb = [];
         foreach ($slSongToDbSongId as $slSongId => $dbSongId) {
-            if (isset($firstHeardSl[$slSongId]) && (!isset($firstHeardDb[(int) $dbSongId]) || $firstHeardSl[$slSongId] < $firstHeardDb[(int) $dbSongId])) {
-                $firstHeardDb[(int) $dbSongId] = $firstHeardSl[$slSongId];
+            if (isset($heardSl[$slSongId])) {
+                \App\Support\StampHeardOrder::merge($heardDb, (int) $dbSongId, $heardSl[$slSongId]);
             }
             $playedNormal = isset($playedSlSongIdsNormal[$slSongId]);
             $playedFes = isset($playedSlSongIdsFes[$slSongId]);
@@ -1215,10 +1212,12 @@ class StatsController extends Controller
         $stampFilters = $this->stampDiscographyFilters((int)$artistId);
 
         $dbSongs = DbSong::where('artist_id', $artistId)->orderBy('sort_order')->get();
-        $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds, $fesOnlyDbSongIds, $hikigatariDbSongIds, $stampFilters, $firstHeardDb) {
-            return [
+        $performed = $this->performedStats((int) $artistId);
+        $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds, $fesOnlyDbSongIds, $hikigatariDbSongIds, $stampFilters, $heardDb, $performed) {
+            return \App\Support\StampHeardOrder::attributes($heardDb[$song->id] ?? null) + [
                 'song_id' => $song->id,
-                'heard_order' => $firstHeardDb[$song->id] ?? null,
+                'performed_last' => $performed[$song->id]['performed_last'] ?? null,
+                'performed_count' => $performed[$song->id]['performed_count'] ?? 0,
                 'title' => $song->title,
                 // ほかの人との曲のアーティスト表記（スタンプでは曲名のあとに灰色で出す）
                 'credit' => $song->credit,
@@ -1346,12 +1345,15 @@ class StatsController extends Controller
 
         $everPerformed = $this->everPerformedUserSongIds($userArtist->id);
         $stampFilters = $this->stampDiscographyFilters($userArtist->id, true);
+        $performed = $this->performedStats($userArtist->id, true);
         $stamps = \App\Models\UserSong::where('user_artist_id', $userArtist->id)->orderBy('sort_order')->get()
-            ->map(function ($song) use ($norm, $heardNormal, $heardFes, $everPerformed, $stampFilters) {
+            ->map(function ($song) use ($norm, $heardNormal, $heardFes, $everPerformed, $stampFilters, $performed) {
                 $key = $norm($song->title);
                 $done = isset($heardNormal[$key]) || isset($heardFes[$key]);
                 return [
                     'song_id' => $song->id,
+                    'performed_last' => $performed[$song->id]['performed_last'] ?? null,
+                    'performed_count' => $performed[$song->id]['performed_count'] ?? 0,
                     // マイページの曲のページを、2つ目のタブ（自分の参加記録）で開く
                     'song_url' => route('mypage.user_songs.show', ['id' => $song->id, 'tab' => 'mine']),
                     'title' => $song->title,

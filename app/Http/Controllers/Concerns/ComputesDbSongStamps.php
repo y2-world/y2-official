@@ -53,6 +53,48 @@ trait ComputesDbSongStamps
         return $everPerformedDbSongIds;
     }
 
+    // スタンプの並べ替え「Last Performed」「Most Performed」用。曲ごとに、アーティストが最後にライブで演奏した日と、演奏したライブの数
+    // （[曲の id => ['performed_last' => 「2026-10-31」, 'performed_count' => 12]]）。
+    // 日付はそのライブの終了日（無ければ開始日。まだ終わっていないツアーは今日）。回数はツアー・ライブの数（同じツアーの公演は1回）。
+    // これから始まるライブは数えない。$userArtist = true のときは、マイページで作ったアーティストのライブ（user_concerts / user_setlists）で見る
+    private function performedStats(int $artistId, bool $userArtist = false): array
+    {
+        $today = now()->toDateString();
+        $tours = $userArtist
+            ? UserConcert::where('user_artist_id', $artistId)
+            : DbConcert::whereIn('artist_id', $this->crossoverTourArtistIds($artistId));
+        $tourDates = $tours->whereNotNull('date1')->whereDate('date1', '<=', $today)->get(['id', 'date1', 'date2'])
+            ->mapWithKeys(fn ($tour) => [$tour->id => min(substr((string) ($tour->date2 ?: $tour->date1), 0, 10), $today)]);
+        $songIds = ($userArtist ? UserSong::where('user_artist_id', $artistId) : DbSong::where('artist_id', $artistId))->pluck('id')->flip();
+        $setlists = $userArtist
+            ? UserSetlist::whereIn('user_concert_id', $tourDates->keys())->get()
+            : DbSetlist::whereIn('tour_id', $tourDates->keys())->get();
+
+        $last = [];
+        $tours = [];
+        foreach ($setlists as $setlist) {
+            $tourId = $userArtist ? $setlist->user_concert_id : $setlist->tour_id;
+            $date = $tourDates[$tourId] ?? null;
+            foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
+                $songId = is_numeric($s['song'] ?? null) ? (int) $s['song'] : null;
+                if (!$date || $songId === null || !isset($songIds[$songId])) {
+                    continue;
+                }
+                $tours[$songId][$tourId] = true;
+                if (($last[$songId] ?? '') < $date) {
+                    $last[$songId] = $date;
+                }
+            }
+        }
+
+        $stats = [];
+        foreach ($last as $songId => $date) {
+            $stats[$songId] = ['performed_last' => $date, 'performed_count' => count($tours[$songId])];
+        }
+
+        return $stats;
+    }
+
     // ユーザー登録アーティストのmanage画面に登録された全ツアー記録（user_setlists）上、
     // 一度でも演奏された曲IDを集める。ここに含まれない曲は「ライブでそもそも未演奏」
     // として台紙自体をグレー表示する。公式側のeverPerformedDbSongIdsと同じ考え方だが、

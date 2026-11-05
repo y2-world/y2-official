@@ -47,14 +47,18 @@
                         <div class="stamp-book has-sort {{ $canEditDeco ? 'is-owner' : '' }}">
                             {{-- 絞り込んだときに、絞り込みの名前を出す --}}
                             <p class="stamp-book-filter-title" id="stampBookFilterTitle" hidden></p>
-                            {{-- 並べ替え：アイコンを押すとプルダウンが開く（Release Date：元の並び（発売順）／First heard：初めて聴いた日の順） --}}
+                            {{-- 並べ替え：アイコンを押すとプルダウンが開く（Release Date：元の並び（発売順）／First Heard：初めて聴いた日の順／Most Heard：聴いた回数の多い順／Last Heard：最後に聴いた日の新しい順／Most Performed：アーティストがライブで演奏した回数（ツアーの数）の多い順／Last Performed：アーティストが最後にライブで演奏した日の新しい順） --}}
                             <div class="stamp-sort">
                                 <button type="button" class="stamp-sort-button" id="stampSortButton" title="並べ替え" aria-label="並べ替え" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa-solid fa-arrow-down-wide-short"></i>
                                 </button>
                                 <div class="stamp-sort-menu" id="stampSortMenu" role="menu" hidden>
                                     <button type="button" role="menuitemradio" data-stamp-sort="" aria-checked="true">Release Date</button>
-                                    <button type="button" role="menuitemradio" data-stamp-sort="heard" aria-checked="false">First heard</button>
+                                    <button type="button" role="menuitemradio" data-stamp-sort="heard" aria-checked="false">First Heard</button>
+                                    <button type="button" role="menuitemradio" data-stamp-sort="most-heard" aria-checked="false">Most Heard</button>
+                                    <button type="button" role="menuitemradio" data-stamp-sort="last-heard" aria-checked="false">Last Heard</button>
+                                    <button type="button" role="menuitemradio" data-stamp-sort="most-performed" aria-checked="false">Most Performed</button>
+                                    <button type="button" role="menuitemradio" data-stamp-sort="last-performed" aria-checked="false">Last Performed</button>
                                 </div>
                             </div>
                             @if ($canEditDeco)
@@ -72,6 +76,10 @@
                                     data-never-performed="{{ $stamp['never_performed'] ? 1 : 0 }}"
                                     data-song-id="{{ $stamp['song_id'] }}"
                                     data-heard-order="{{ $stamp['heard_order'] ?? '' }}"
+                                    data-performed-last="{{ $stamp['performed_last'] ?? '' }}"
+                                    data-performed-count="{{ $stamp['performed_count'] ?? 0 }}"
+                                    data-last-heard="{{ $stamp['last_heard'] ?? '' }}"
+                                    data-heard-count="{{ $stamp['heard_count'] ?? 0 }}"
                                     data-color-id="{{ $stamp['color_id'] ?? '' }}"
                                     data-base-title="{{ $stamp['base_title'] ?? $stamp['title'] }}"
                                     data-title-key="{{ $stamp['title_key'] ?? '' }}"
@@ -107,6 +115,6 @@
 @endsection
 
 @section('page-script')
-<script src="{{ asset('/js/stamp-book.js?v=20261105') }}"></script>
+<script src="{{ asset('/js/stamp-book.js?v=20261105d') }}"></script>
 @include('stats._stamp_book_script')
 @endsection
