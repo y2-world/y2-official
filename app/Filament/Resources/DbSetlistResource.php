@@ -151,14 +151,10 @@ class DbSetlistResource extends Resource
         return $titles[$key];
     }
 
-    // 候補につないだ行の別表記に入れる表記。バージョン違い（SongMatcher::isVersionOf）で、アルバム・シングルの曲目か
-    // 今までのセットリストの別表記にあるときだけ、そこに書いてある表記（SongMatcher::knownVersion）。どこにも無い表記（「轍 (2019ver.)」）は null
+    // 候補につないだ行の別表記に入れる表記。アルバム・シングルの曲目か今までのセットリストの別表記にあるときだけ、
+    // そこに書いてある表記（SongMatcher::knownVersion）。どこにも無い表記（「轍 (2019ver.)」）は null
     protected static function knownVersionTitle(string $typed, string $songId, string $songTitle, $artistId): ?string
     {
-        if (!\App\Support\SongMatcher::isVersionOf($typed, $songTitle)) {
-            return null;
-        }
-
         return \App\Support\SongMatcher::knownVersion($typed, array_merge(
             array_keys(static::albumVersionTitles($artistId)[$songId] ?? []),
             array_keys(static::alternativeTitleMaps($artistId)['exact'][$songId] ?? []),

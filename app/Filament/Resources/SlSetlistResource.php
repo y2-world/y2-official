@@ -241,13 +241,10 @@ class SlSetlistResource extends Resource
         return $dbSongId && isset($maps['db']["\0exact"][(string) $dbSongId][$title]);
     }
 
-    // 候補につないだ行の別表記に入れる表記。バージョン違い（SongMatcher::isVersionOf）で、公式のアルバム・シングルの曲目か
-    // 今までのセットリストの別表記にあるときだけ、そこに書いてある表記（SongMatcher::knownVersion）。フェスの行（$artistId が無い）は、つないだ曲のアーティストで見る
+    // 候補につないだ行の別表記に入れる表記。公式のアルバム・シングルの曲目か今までのセットリストの別表記にあるときだけ、
+    // そこに書いてある表記（SongMatcher::knownVersion）。フェスの行（$artistId が無い）は、つないだ曲のアーティストで見る
     private static function knownVersionTitle(string $typed, string $songValue, string $songTitle, ?int $artistId): ?string
     {
-        if (!\App\Support\SongMatcher::isVersionOf($typed, $songTitle)) {
-            return null;
-        }
         $dbSongId = preg_match('/^db-(\d+)$/', $songValue, $m) ? $m[1] : (string) SlSong::whereKey($songValue)->value('db_song_id');
         $artistId ??= preg_match('/^db-(\d+)$/', $songValue) ? DbSong::whereKey($dbSongId)->value('artist_id') : SlSong::whereKey($songValue)->value('artist_id');
         if (!$artistId) {
