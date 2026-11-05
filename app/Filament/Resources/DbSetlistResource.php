@@ -875,13 +875,28 @@ class DbSetlistResource extends Resource
                             ->visible(fn (Get $get) => count(static::scheduleOptions($get('tour_id'))) > 0)
                             ->dehydrated(false)
                             ->live()
+                            // 開いたパターンのタイトルにもう入っている日は、選んだ状態にする（タイトルに出てくる順。地名を手で直した日も、日付で見る）
+                            ->afterStateHydrated(function (Get $get, $set) {
+                                $subtitle = (string) $get('subtitle');
+                                if (trim($subtitle) === '') {
+                                    return;
+                                }
+                                $picked = [];
+                                foreach (array_keys(static::scheduleOptions($get('tour_id'))) as $key) {
+                                    if (preg_match(static::scheduleTokenPattern((string) $key), $subtitle, $m, PREG_OFFSET_CAPTURE)) {
+                                        $picked[(string) $key] = $m[0][1];
+                                    }
+                                }
+                                asort($picked);
+                                $set('_schedule_pick', array_keys($picked));
+                            })
                             // 選んだ日は今のタイトルの後ろに足し、選択を外した日はタイトルから取る（手で書いた部分はそのまま）
                             ->afterStateUpdated(function ($state, $old, Get $get, $set) {
                                 $state = (array) $state;
                                 $old = (array) $old;
                                 $subtitle = (string) $get('subtitle');
                                 foreach (array_diff($old, $state) as $removed) {
-                                    $subtitle = preg_replace('/(^|\s)' . preg_quote($removed, '/') . '(?=\s|$)/u', '', $subtitle);
+                                    $subtitle = preg_replace(static::scheduleTokenPattern((string) $removed), '', $subtitle, 1);
                                 }
                                 foreach (array_diff($state, $old) as $added) {
                                     $subtitle = rtrim($subtitle) . ($subtitle !== '' && trim($subtitle) !== '' ? ' ' : '') . $added;
@@ -1162,6 +1177,14 @@ class DbSetlistResource extends Resource
     // ツアーのスケジュール（「2021/5/1(土) 会場」「06/13 会場」「7月13日 会場」「10.6,7 会場」など）を、
     // パターンのタイトルに使う選択肢にする。表示は「月.日 会場名」、選んだときに入る文字（キー）は「月.日 地名」。
     // 同じ地名が2日以上あれば日付順に「仙台1」「仙台2」、単発のライブは日付だけ
+    // タイトルの中で、スケジュールの1日（「7.17 大阪1」）に当たる部分。書いたとおりのもの、なければ同じ日付とそのあとの地名（手で「7.17 梅田」と直したもの）
+    protected static function scheduleTokenPattern(string $key): string
+    {
+        [$date] = explode(' ', $key, 2);
+
+        return '/(^|\s)(?:' . preg_quote($key, '/') . '|' . preg_quote($date, '/') . '(?:\s+(?!\d{1,2}\.\d)\S+)?)(?=\s|$)/u';
+    }
+
     public static function scheduleOptions($tourId): array
     {
         $concert = $tourId ? AdminData::query('concert')->find($tourId) : null;
