@@ -26,11 +26,22 @@ document.addEventListener('DOMContentLoaded', function () {
         slot._trackOrders = slot.dataset.trackOrders ? JSON.parse(slot.dataset.trackOrders) : {};
     });
 
-    // アルバム絞り込み時はそのアルバムの曲順、シングル絞り込み時は発売順、
-    // それ以外は元の並び順に並べ替える
+    // 並べ替え（右上のアイコンを押すと開くプルダウン）。聴いた順は ?sort=heard で URL に残す
+    const sortButton = document.getElementById('stampSortButton');
+    const sortMenu = document.getElementById('stampSortMenu');
+    let heardOrder = false;
+
+    // 聴いた順のときは初めて聴いた順（まだ聴いていない曲はうしろに元の並びで）、
+    // アルバム絞り込み時はそのアルバムの曲順、シングル絞り込み時は発売順、それ以外は元の並び順に並べ替える
     function orderedSlots(key) {
         const ordered = slots.slice();
-        if (key) {
+        if (heardOrder) {
+            ordered.sort(function (a, b) {
+                const x = a.dataset.heardOrder || '￿';
+                const y = b.dataset.heardOrder || '￿';
+                return x < y ? -1 : (x > y ? 1 : 0);
+            });
+        } else if (key) {
             ordered.sort(function (a, b) {
                 return (a._trackOrders[key] || Infinity) - (b._trackOrders[key] || Infinity);
             });
@@ -214,6 +225,11 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 url.searchParams.delete('performed');
             }
+            if (heardOrder) {
+                url.searchParams.set('sort', 'heard');
+            } else {
+                url.searchParams.delete('sort');
+            }
             history.replaceState(history.state, '', url.toString());
         } catch (e) {
             // URL を変えられなくても、絞り込み自体は動かす
@@ -286,6 +302,55 @@ document.addEventListener('DOMContentLoaded', function () {
     if (checkbox) {
         checkbox.addEventListener('change', function () { apply(true); syncUrl(); });
     }
+
+    function setHeardOrder(on) {
+        heardOrder = on;
+        if (sortButton) {
+            // 元の並び以外のときは、アイコンを色付きにする
+            sortButton.classList.toggle('is-active', on);
+        }
+        if (sortMenu) {
+            sortMenu.querySelectorAll('[data-stamp-sort]').forEach(function (item) {
+                item.setAttribute('aria-checked', (item.dataset.stampSort === 'heard') === on ? 'true' : 'false');
+            });
+        }
+    }
+    function openSortMenu(open) {
+        if (!sortMenu || !sortButton) {
+            return;
+        }
+        sortMenu.hidden = !open;
+        sortButton.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    if (sortButton && sortMenu) {
+        sortButton.addEventListener('click', function (e) {
+            e.stopPropagation();
+            openSortMenu(sortMenu.hidden);
+        });
+        sortMenu.querySelectorAll('[data-stamp-sort]').forEach(function (item) {
+            item.addEventListener('click', function () {
+                openSortMenu(false);
+                const on = item.dataset.stampSort === 'heard';
+                if (on !== heardOrder) {
+                    setHeardOrder(on);
+                    apply(true);
+                    syncUrl();
+                }
+            });
+        });
+        // プルダウンの外を押す・Esc で閉じる
+        document.addEventListener('click', function (e) {
+            if (!sortMenu.hidden && !sortMenu.contains(e.target)) {
+                openSortMenu(false);
+            }
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                openSortMenu(false);
+            }
+        });
+    }
+    setHeardOrder(params.get('sort') === 'heard');
 
     // 戻る操作でブラウザがセレクト・チェックの状態を復元した場合も表示と集計を合わせる
     apply(false);

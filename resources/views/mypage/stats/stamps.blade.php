@@ -50,9 +50,19 @@
                         <p class="stamp-empty">No songs registered in the database yet.</p>
                     @else
                         @include('stats._stamp_view_tabs')
-                        <div class="stamp-book {{ $canEditDeco ? 'is-owner' : '' }}">
+                        <div class="stamp-book has-sort {{ $canEditDeco ? 'is-owner' : '' }}">
                             {{-- 色で絞り込んだときに、その色のタイトルを出す --}}
                             <p class="stamp-book-filter-title" id="stampBookFilterTitle" hidden></p>
+                            {{-- 並べ替え：アイコンを押すとプルダウンが開く（Release Date：元の並び（発売順）／First heard：初めて聴いた日の順） --}}
+                            <div class="stamp-sort">
+                                <button type="button" class="stamp-sort-button" id="stampSortButton" title="並べ替え" aria-label="並べ替え" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa-solid fa-arrow-down-wide-short"></i>
+                                </button>
+                                <div class="stamp-sort-menu" id="stampSortMenu" role="menu" hidden>
+                                    <button type="button" role="menuitemradio" data-stamp-sort="" aria-checked="true">Release Date</button>
+                                    <button type="button" role="menuitemradio" data-stamp-sort="heard" aria-checked="false">First heard</button>
+                                </div>
+                            </div>
                             @if ($canEditDeco)
                                 {{-- 枠の色とタイトルの編集（全部のスタンプ帳で共通） --}}
                                 <button type="button" class="stamp-deco-edit-button" id="stampDecoEditButton" title="スタンプの枠の色とタイトルを編集" aria-label="スタンプの枠の色とタイトルを編集">
@@ -67,6 +77,7 @@
                                     data-done="{{ $stamp['done'] ? 1 : 0 }}"
                                     data-never-performed="{{ $stamp['never_performed'] ? 1 : 0 }}"
                                     data-song-id="{{ $stamp['song_id'] }}"
+                                    data-heard-order="{{ $stamp['heard_order'] ?? '' }}"
                                     data-color-id="{{ $stamp['color_id'] ?? '' }}"
                                     data-base-title="{{ $stamp['base_title'] ?? $stamp['title'] }}"
                                     data-title-key="{{ $stamp['title_key'] ?? '' }}"
@@ -106,6 +117,6 @@
 @endsection
 
 @section('page-script')
-<script src="{{ asset('/js/stamp-book.js?v=20261018') }}"></script>
+<script src="{{ asset('/js/stamp-book.js?v=20261105') }}"></script>
 @include('stats._stamp_book_script')
 @endsection

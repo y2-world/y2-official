@@ -1142,11 +1142,20 @@ class StatsController extends Controller
         // 台紙上でギター柄のスタンプにする。DOUBLE ENCORE以外（本編・1つ目のアンコール・フェス）で聴いたかも別に集める
         $playedSlSongIdsDoubleEncore = [];
         $playedSlSongIdsOutsideDoubleEncore = [];
+        // 初めて聴いた順（スタンプの並び替え）。[sl_song_id => 「公演日|セットリスト|曲順」]（小さいほど先）
+        $firstHeardSl = [];
+        $heard = function (int $slSongId, $setlist, int $position) use (&$firstHeardSl) {
+            $key = \App\Support\StampHeardOrder::key($setlist->date, $setlist->id, $position);
+            if (!isset($firstHeardSl[$slSongId]) || $key < $firstHeardSl[$slSongId]) {
+                $firstHeardSl[$slSongId] = $key;
+            }
+        };
         foreach ($setlists as $setlist) {
             $encore = array_values((array) ($setlist->encore ?? []));
             $encoreBlocks = \App\Support\EncoreBlocks::blockIndexes($encore);
             foreach (array_merge($setlist->setlist ?? [], $encore) as $position => $songData) {
                 if (isset($songData['song']) && is_numeric($songData['song'])) {
+                    $heard((int) $songData['song'], $setlist, $position);
                     $playedSlSongIdsNormal[(int)$songData['song']] = true;
                     $encoreIndex = $position - count($setlist->setlist ?? []);
                     if ($encoreIndex >= 0 && ($encoreBlocks[$encoreIndex] ?? 0) >= \App\Support\EncoreBlocks::DOUBLE_ENCORE) {
@@ -1158,8 +1167,9 @@ class StatsController extends Controller
             }
 
             $fesSongs = $this->flattenFesSongs(array_merge($setlist->fes_setlist ?? [], $setlist->fes_encore ?? []));
-            foreach ($fesSongs as $songData) {
+            foreach ($fesSongs as $position => $songData) {
                 if (isset($songData['song']) && is_numeric($songData['song'])) {
+                    $heard((int) $songData['song'], $setlist, $position);
                     $playedSlSongIdsFes[(int)$songData['song']] = true;
                     $playedSlSongIdsOutsideDoubleEncore[(int)$songData['song']] = true;
                 }
@@ -1173,7 +1183,11 @@ class StatsController extends Controller
         $playedDbSongIds = [];
         $fesOnlyDbSongIds = [];
         $hikigatariDbSongIds = [];
+        $firstHeardDb = [];
         foreach ($slSongToDbSongId as $slSongId => $dbSongId) {
+            if (isset($firstHeardSl[$slSongId]) && (!isset($firstHeardDb[(int) $dbSongId]) || $firstHeardSl[$slSongId] < $firstHeardDb[(int) $dbSongId])) {
+                $firstHeardDb[(int) $dbSongId] = $firstHeardSl[$slSongId];
+            }
             $playedNormal = isset($playedSlSongIdsNormal[$slSongId]);
             $playedFes = isset($playedSlSongIdsFes[$slSongId]);
             if ($playedNormal || $playedFes) {
@@ -1201,9 +1215,10 @@ class StatsController extends Controller
         $stampFilters = $this->stampDiscographyFilters((int)$artistId);
 
         $dbSongs = DbSong::where('artist_id', $artistId)->orderBy('sort_order')->get();
-        $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds, $fesOnlyDbSongIds, $hikigatariDbSongIds, $stampFilters) {
+        $stamps = $dbSongs->map(function (DbSong $song) use ($playedDbSongIds, $everPerformedDbSongIds, $fesOnlyDbSongIds, $hikigatariDbSongIds, $stampFilters, $firstHeardDb) {
             return [
                 'song_id' => $song->id,
+                'heard_order' => $firstHeardDb[$song->id] ?? null,
                 'title' => $song->title,
                 // ほかの人との曲のアーティスト表記（スタンプでは曲名のあとに灰色で出す）
                 'credit' => $song->credit,
