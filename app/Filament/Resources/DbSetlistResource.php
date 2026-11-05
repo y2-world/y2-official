@@ -60,7 +60,26 @@ class DbSetlistResource extends Resource
         // 同じ名前の曲が2つ以上あって決められないときは、文字のまま
         $sameName = array_filter($songs, fn ($song) => mb_strtolower(trim($song)) === mb_strtolower(trim($title)));
 
-        return $sameName === [] ? (static::songIdByAlternativeTitle($title, $artistId) ?? $title) : $title;
+        // 別表記でも合わなければ、アルバム・シングルの曲目に書いてあるバージョン（「ultra soul 2011」）で探す
+        return $sameName === [] ? (static::songIdByAlternativeTitle($title, $artistId) ?? static::songByAlbumVersion($title, $artistId)[0] ?? $title) : $title;
+    }
+
+    // アルバム・シングルの曲目に書いてあるバージョンの表記（表記ゆれを除いて同じ）の曲。[曲の id, 書いてある表記]。別々の曲に当たれば決められないので null
+    protected static function songByAlbumVersion(string $title, $artistId): ?array
+    {
+        $wanted = \App\Support\SongMatcher::key($title);
+        $songs = static::bulkSongTitles($artistId);
+        $hits = [];
+        foreach (static::albumVersionTitles($artistId) as $songId => $versions) {
+            foreach (array_keys($versions) as $version) {
+                if (isset($songs[$songId]) && \App\Support\SongMatcher::key($version) === $wanted) {
+                    $hits[$songId] = $version;
+                    break;
+                }
+            }
+        }
+
+        return count($hits) === 1 ? [(int) array_key_first($hits), reset($hits)] : null;
     }
 
     // 一括入力で照らし合わせる曲（[id => 曲名]）。1回のリクエストの中では覚えておく
@@ -106,6 +125,46 @@ class DbSetlistResource extends Resource
         return $maps[$key];
     }
 
+    // アルバム・シングルの曲目に書いてあるバージョンの表記（「ultra soul 2011」など）。[曲の id => [書いてある表記 => true]]。
+    // $official：公式の盤で見る（Yuki's Setlists から使うとき）。そうでなければ今の管理画面の盤（マイページの人なら自分の盤）
+    public static function albumVersionTitles($artistId, bool $official = false): array
+    {
+        static $titles = [];
+        $key = ($official ? 'official' : (AdminData::memberId() ?? 0)) . '|' . $artistId;
+        if (!isset($titles[$key])) {
+            $titles[$key] = [];
+            foreach (['album', 'single'] as $kind) {
+                $query = $official
+                    ? ($kind === 'album' ? \App\Models\DbAlbum::query() : \App\Models\DbSingle::query())->where('artist_id', $artistId)
+                    : AdminData::query($kind)->whereIn(AdminData::column($kind, 'artist_id'), static::songArtistIds($artistId));
+                foreach ($query->get() as $disc) {
+                    foreach ((array) $disc->tracklist as $track) {
+                        $exception = trim((string) ($track['exception'] ?? ''));
+                        if ($exception !== '' && !empty($track['id'])) {
+                            $titles[$key][(string) $track['id']][$exception] = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $titles[$key];
+    }
+
+    // 候補につないだ行の別表記に入れる表記。バージョン違い（SongMatcher::isVersionOf）で、アルバム・シングルの曲目か
+    // 今までのセットリストの別表記にあるときだけ、そこに書いてある表記（SongMatcher::knownVersion）。どこにも無い表記（「轍 (2019ver.)」）は null
+    protected static function knownVersionTitle(string $typed, string $songId, string $songTitle, $artistId): ?string
+    {
+        if (!\App\Support\SongMatcher::isVersionOf($typed, $songTitle)) {
+            return null;
+        }
+
+        return \App\Support\SongMatcher::knownVersion($typed, array_merge(
+            array_keys(static::albumVersionTitles($artistId)[$songId] ?? []),
+            array_keys(static::alternativeTitleMaps($artistId)['exact'][$songId] ?? []),
+        ));
+    }
+
     // 一括入力の1行を、セットリストの1曲にする。打った表記が合った曲の名前と違い、今までのセットリストでその曲に登録した別表記と同じなら
     // （「I'LL BE」→「I'll be」など）、打った表記を別表記に入れる。知らない書き方（大文字・小文字だけ違う打ち間違いなど）はオリジナルの曲名のまま
     protected static function bulkItem(string $title, $artistId): array
@@ -117,20 +176,23 @@ class DbSetlistResource extends Resource
             && static::songQuery($artistId)->whereKey($item['song'])->value('title') !== $title
             && isset(static::alternativeTitleMaps($artistId)['exact'][(string) $item['song']][$title])) {
             $item['alternative_title'] = $title;
+        } elseif (is_int($item['song']) && ($version = static::songByAlbumVersion($title, $artistId)) && $version[0] === $item['song']
+            && \App\Support\SongMatcher::key($version[1]) !== \App\Support\SongMatcher::key((string) (static::bulkSongTitles($artistId)[$item['song']] ?? ''))) {
+            // アルバム・シングルの曲目のバージョンでつないだ行は、曲目に書いてある表記を別表記に入れる
+            $item['alternative_title'] = $version[1];
         }
-        // 表記ゆれ（大文字・小文字、アポストロフィ、～〜など）だけ違う曲につないだ行は、反映する前のダイアログで知らせる。
-        // 前のセットリストで使った別表記と同じ（わざと書いた表記）なら知らせない
-        if (is_int($item['song']) && empty($item['alternative_title'])) {
+        // 表記ゆれ（大文字・小文字、アポストロフィ、～〜など）だけ違う曲・別表記（前のセットリストで使った表記）でつないだ行は、反映する前のダイアログで知らせる
+        if (is_int($item['song'])) {
             $songTitle = (string) (static::bulkSongTitles($artistId)[$item['song']] ?? '');
             if ($songTitle !== '' && $songTitle !== $title) {
-                static::$bulkLooseMatches[$item['_uuid']] = [$title, $songTitle, $item['song']];
+                static::$bulkLooseMatches[$item['_uuid']] = [$title, $songTitle, $item['song'], $item['alternative_title']];
             }
         }
 
         return $item;
     }
 
-    // 表記ゆれだけ違う曲につないだ行（[行の _uuid => [入力した表記, つないだ曲の名前, つないだ曲の id]]）。bulkItem が足していく
+    // 表記ゆれだけ違う曲・別表記でつないだ行（[行の _uuid => [入力した表記, つないだ曲の名前, つないだ曲の id, 別表記か null]]）。bulkItem が足していく
     protected static array $bulkLooseMatches = [];
 
     // 一括入力で新しく入った行があるか（手動入力で直しただけ・一括入力の欄を開いたときのままなら、使っていない扱い）
@@ -241,7 +303,8 @@ class DbSetlistResource extends Resource
 
     // 反映したあとの入力から、確かめる行を曲順に出す（直前の反映で bulkItem が残した $bulkLooseMatches も使う）。
     // 曲につながらない行（候補は似ている曲）と、表記ゆれだけ違う曲につないだ行（候補はつないだ曲。初めからそれを選んでおく）。
-    // [no => 曲番, typed => 入力した表記, uuid => 行, candidates => [曲の id => 曲名], linked => つないだ曲の id か null]
+    // [no => 曲番, typed => 入力した表記, uuid => 行, candidates => [曲の id => 曲名], linked => つないだ曲の id か null,
+    //  alts => [その候補につないだら別表記に入れる表記（knownVersionTitle）]]
     protected static function bulkCheckRows(array $after): array
     {
         $generated = array_fill_keys((array) ($after['_bulk_added_uuids'] ?? []), true);
@@ -252,11 +315,16 @@ class DbSetlistResource extends Resource
             $uuid = $item['_uuid'] ?? '';
             $song = trim((string) ($item['song'] ?? ''));
             if (isset(static::$bulkLooseMatches[$uuid])) {
-                [$typed, $linkedTitle, $linkedId] = static::$bulkLooseMatches[$uuid];
-                $rows[] = ['no' => $number, 'typed' => $typed, 'uuid' => $uuid, 'candidates' => [$linkedId => $linkedTitle], 'linked' => $linkedId];
+                [$typed, $linkedTitle, $linkedId, $alt] = static::$bulkLooseMatches[$uuid];
+                $rows[] = ['no' => $number, 'typed' => $typed, 'uuid' => $uuid, 'candidates' => [$linkedId => $linkedTitle], 'linked' => $linkedId, 'alts' => $alt !== null ? [$linkedId => $alt] : []];
             } elseif (isset($generated[$uuid]) && $song !== '' && !is_numeric($song)) {
                 $candidates = !empty($after['_artist_id']) ? \App\Support\SongMatcher::candidates(static::bulkSongTitles($after['_artist_id']), $song) : [];
-                $rows[] = ['no' => $number, 'typed' => $song, 'uuid' => $uuid, 'candidates' => $candidates, 'linked' => null];
+                $alts = [];
+                foreach ($candidates as $id => $title) {
+                    $alt = static::knownVersionTitle($song, (string) $id, $title, $after['_artist_id']);
+                    if ($alt !== null) $alts[$id] = $alt;
+                }
+                $rows[] = ['no' => $number, 'typed' => $song, 'uuid' => $uuid, 'candidates' => $candidates, 'linked' => null, 'alts' => $alts];
             }
         }
 
@@ -267,6 +335,7 @@ class DbSetlistResource extends Resource
     protected static function applyBulkChoices(array $rows, array $choices, Forms\Get $get, Forms\Set $set): void
     {
         $songs = [];
+        $alts = [];
         foreach ($rows as $i => $row) {
             // 候補が1つならその曲、2つ以上なら選んだ曲（候補が無い行は文字のまま）
             if (count($row['candidates']) === 1) {
@@ -274,13 +343,20 @@ class DbSetlistResource extends Resource
             } elseif (count($row['candidates']) > 1 && array_key_exists('choice_' . $i, $choices)) {
                 $songs[$row['uuid']] = (string) $choices['choice_' . $i];
             }
+            // アルバム・シングル・今までのセットリストにあるバージョン（「ultra soul 2011」→「ultra soul」）につないだ行は、入力した表記を別表記に入れる
+            if (isset($row['alts'][$songs[$row['uuid']] ?? ''])) {
+                $alts[$row['uuid']] = $row['alts'][$songs[$row['uuid']]];
+            }
         }
         if ($songs === []) {
             return;
         }
-        $pick = function (array $item) use ($songs) {
+        $pick = function (array $item) use ($songs, $alts) {
             if (isset($songs[$item['_uuid'] ?? ''])) {
                 $item['song'] = $songs[$item['_uuid']];
+                if (isset($alts[$item['_uuid']])) {
+                    $item['alternative_title'] = $alts[$item['_uuid']];
+                }
             }
 
             return $item;
@@ -305,12 +381,23 @@ class DbSetlistResource extends Resource
             . ($body !== '' ? '<div style="margin-top: 8px;">' . $body . '</div>' : '')
             . '</div>';
         $song = fn ($row) => '<div style="margin-top: 4px;">' . e($row['no'] . '. ' . $row['typed']) . '</div>';
-        $candidate = fn ($row) => '<div style="padding-left: 1.4em; font-size: .85em; opacity: .75;">候補 : ' . e(reset($row['candidates'])) . '</div>';
+        // 別表記（今までのセットリスト・アルバムの曲目）で一致してつないだ行は「ultra soul 2011 (ultra soul)」、それ以外は「候補 : …」
+        $candidate = fn ($row) => '<div style="padding-left: 1.4em; font-size: .85em; opacity: .75;">' . e(
+            ($row['linked'] ?? null) !== null && isset($row['alts'][$row['linked']])
+                ? $row['alts'][$row['linked']] . ' (' . reset($row['candidates']) . ')'
+                : '候補 : ' . static::candidateLabel($row, array_key_first($row['candidates']))
+        ) . '</div>';
         $none = array_filter($rows, fn ($row) => count($row['candidates']) === 0);
-        $one = array_filter($rows, fn ($row) => count($row['candidates']) === 1);
+        // 別表記で一致した行は、候補の行とは別の区切りに
+        $isAlt = fn ($row) => ($row['linked'] ?? null) !== null && isset($row['alts'][$row['linked']]);
+        $alt = array_filter($rows, $isAlt);
+        $one = array_filter($rows, fn ($row) => count($row['candidates']) === 1 && !$isAlt($row));
         $html = implode('', array_map(fn ($text) => $box($text, '', ''), $before));
         if ($none) {
             $html .= $box('以下の楽曲が合致しませんでした。', e($noCandidateNote), implode('', array_map($song, $none)));
+        }
+        if ($alt) {
+            $html .= $box('以下の楽曲にリンクします。', '', implode('', array_map(fn ($row) => $song($row) . $candidate($row), $alt)));
         }
         if ($one) {
             $html .= $box('以下の楽曲は候補の楽曲にリンクします。', '', implode('', array_map(fn ($row) => $song($row) . $candidate($row), $one)));
@@ -320,6 +407,25 @@ class DbSetlistResource extends Resource
         }
 
         return new HtmlString('<div style="text-align: left;">' . $html . '</div>');
+    }
+
+    // ダイアログに出す候補の名前。別表記に入れる候補は「ultra soul (別表記 : ultra soul 2011)」
+    public static function candidateLabel(array $row, $id): string
+    {
+        $title = (string) ($row['candidates'][$id] ?? '');
+
+        return isset($row['alts'][$id]) ? $title . ' (別表記 : ' . $row['alts'][$id] . ')' : $title;
+    }
+
+    // 候補が2つ以上ある曲の選ぶ欄（Yuki's Setlists も使う）
+    public static function candidateOptions(array $row): array
+    {
+        $options = [];
+        foreach (array_keys($row['candidates']) as $id) {
+            $options[(string) $id] = static::candidateLabel($row, $id);
+        }
+
+        return $options;
     }
 
     // 候補が2つ以上ある曲は、どれかを選ぶまで OK を押せない
@@ -332,7 +438,7 @@ class DbSetlistResource extends Resource
             }
             $fields[] = Forms\Components\Radio::make('choice_' . $i)
                 ->label($row['no'] . '. ' . $row['typed'])
-                ->options(array_combine(array_map('strval', array_keys($row['candidates'])), array_values($row['candidates'])))
+                ->options(static::candidateOptions($row))
                 ->required();
         }
 
@@ -345,6 +451,18 @@ class DbSetlistResource extends Resource
         return $fields === [] ? [] : [Forms\Components\Section::make('以下の楽曲は候補が複数あります。選択してください。')->schema($fields)->compact()];
     }
 
+    // ダイアログの見出し。どの曲にもつながらない行があるときだけ $noneHeading（「未一致の楽曲があります」）、候補・別表記でつなぐ行だけなら「楽曲を確認してください」
+    public static function bulkCheckHeading(array $rows, string $noneHeading): string
+    {
+        foreach ($rows as $row) {
+            if (count($row['candidates']) === 0) {
+                return $noneHeading;
+            }
+        }
+
+        return '楽曲を確認してください';
+    }
+
     // 「通常入力に反映」のボタン。合わない曲か、表記が完全には一致しないままつないだ曲があるときだけ、反映する前にダイアログで確かめる
     protected static function bulkApplyAction(): Forms\Components\Actions\Action
     {
@@ -354,7 +472,7 @@ class DbSetlistResource extends Resource
         return Forms\Components\Actions\Action::make('applyBulkSetlist')
             ->label('通常入力に反映')
             ->modalHidden(fn ($livewire) => $rows($livewire) === [])
-            ->modalHeading('未一致の楽曲があります')
+            ->modalHeading(fn ($livewire) => static::bulkCheckHeading($rows($livewire), '未一致の楽曲があります'))
             ->modalDescription(fn ($livewire) => static::bulkCheckDescription($rows($livewire)))
             ->form(fn ($livewire) => static::bulkCheckFields($rows($livewire)))
             ->modalWidth(\Filament\Support\Enums\MaxWidth::Large)

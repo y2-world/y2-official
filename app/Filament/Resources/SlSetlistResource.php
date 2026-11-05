@@ -140,20 +140,23 @@ class SlSetlistResource extends Resource
         // 知らない書き方（大文字・小文字だけ違う打ち間違いなど）はオリジナルの曲名のまま
         if ($item['song'] !== $title && static::bulkSongTitle($item['song']) !== $title && static::isKnownAlternativeTitle($item['song'], $title, $artistId)) {
             $item['alternative_title'] = $title;
+        } elseif ($item['song'] !== $title && ($version = static::songByAlbumVersion($title, $artistId)) && $version[0] === $item['song']
+            && \App\Support\SongMatcher::key($version[1]) !== \App\Support\SongMatcher::key(static::bulkSongTitle($item['song']))) {
+            // アルバム・シングルの曲目のバージョンでつないだ行は、曲目に書いてある表記を別表記に入れる
+            $item['alternative_title'] = $version[1];
         }
-        // 表記ゆれ（大文字・小文字、アポストロフィ、～〜など）だけ違う曲につないだ行は、反映する前のダイアログで知らせる。
-        // 前のセットリストで使った別表記と同じ（わざと書いた表記）なら知らせない
-        if ($item['song'] !== $title && empty($item['alternative_title'])) {
+        // 表記ゆれ（大文字・小文字、アポストロフィ、～〜など）だけ違う曲・別表記（前のセットリストで使った表記）でつないだ行は、反映する前のダイアログで知らせる
+        if ($item['song'] !== $title) {
             $songTitle = static::bulkSongTitle($item['song']);
             if ($songTitle !== $title && $songTitle !== (string) $item['song']) {
-                static::$bulkLooseMatches[$item['_uuid']] = [$title, $songTitle, (string) $item['song']];
+                static::$bulkLooseMatches[$item['_uuid']] = [$title, $songTitle, (string) $item['song'], $item['alternative_title']];
             }
         }
 
         return $item;
     }
 
-    // 表記ゆれだけ違う曲につないだ行（[行の _uuid => [入力した表記, つないだ曲の名前, つないだ曲（Yuki's Setlists の曲の id か db-…）]]）。bulkItem が足していく
+    // 表記ゆれだけ違う曲・別表記でつないだ行（[行の _uuid => [入力した表記, つないだ曲の名前, つないだ曲（Yuki's Setlists の曲の id か db-…）, 別表記か null]]）。bulkItem が足していく
     private static array $bulkLooseMatches = [];
 
     private static function bulkSongValue(string $title, ?int $artistId): string
@@ -168,7 +171,30 @@ class SlSetlistResource extends Resource
 
         // 曲の名前で合わなければ、今までのセットリストで使った別表記（「Unti-Unti」→「Anti-Anti」など）で探す。
         // Yuki's Setlists の曲の別表記 → データベースの曲の別表記（その曲の Yuki's Setlists の曲があればそれ、無ければ db-…）の順
-        return static::songValueByAlternativeTitle($title, $artistId) ?? $title;
+        // 別表記でも合わなければ、公式のアルバム・シングルの曲目に書いてあるバージョン（「ultra soul 2011」）で探す
+        return static::songValueByAlternativeTitle($title, $artistId) ?? static::songByAlbumVersion($title, $artistId)[0] ?? $title;
+    }
+
+    // 公式のアルバム・シングルの曲目に書いてあるバージョンの表記（表記ゆれを除いて同じ）の曲。
+    // [曲（その曲の Yuki's Setlists の曲があればその id、無ければ db-…）, 書いてある表記]。別々の曲に当たれば決められないので null
+    private static function songByAlbumVersion(string $title, ?int $artistId): ?array
+    {
+        if (!$artistId) return null;
+        $wanted = \App\Support\SongMatcher::key($title);
+        $hits = [];
+        foreach (DbSetlistResource::albumVersionTitles($artistId, true) as $dbSongId => $versions) {
+            foreach (array_keys($versions) as $version) {
+                if (\App\Support\SongMatcher::key($version) === $wanted) {
+                    $hits[$dbSongId] = $version;
+                    break;
+                }
+            }
+        }
+        if (count($hits) !== 1) return null;
+        $dbSongId = (string) array_key_first($hits);
+        $slSongId = SlSong::where('artist_id', $artistId)->where('db_song_id', $dbSongId)->orderBy('id')->value('id');
+
+        return [$slSongId ? (string) $slSongId : 'db-' . $dbSongId, reset($hits)];
     }
 
     // 一括入力で照らし合わせる曲（[id => 曲名]）。1回のリクエストの中では覚えておく
@@ -213,6 +239,27 @@ class SlSetlistResource extends Resource
         $dbSongId = SlSong::whereKey($songValue)->value('db_song_id');
 
         return $dbSongId && isset($maps['db']["\0exact"][(string) $dbSongId][$title]);
+    }
+
+    // 候補につないだ行の別表記に入れる表記。バージョン違い（SongMatcher::isVersionOf）で、公式のアルバム・シングルの曲目か
+    // 今までのセットリストの別表記にあるときだけ、そこに書いてある表記（SongMatcher::knownVersion）。フェスの行（$artistId が無い）は、つないだ曲のアーティストで見る
+    private static function knownVersionTitle(string $typed, string $songValue, string $songTitle, ?int $artistId): ?string
+    {
+        if (!\App\Support\SongMatcher::isVersionOf($typed, $songTitle)) {
+            return null;
+        }
+        $dbSongId = preg_match('/^db-(\d+)$/', $songValue, $m) ? $m[1] : (string) SlSong::whereKey($songValue)->value('db_song_id');
+        $artistId ??= preg_match('/^db-(\d+)$/', $songValue) ? DbSong::whereKey($dbSongId)->value('artist_id') : SlSong::whereKey($songValue)->value('artist_id');
+        if (!$artistId) {
+            return null;
+        }
+        $maps = static::alternativeTitleMaps((int) $artistId);
+
+        return \App\Support\SongMatcher::knownVersion($typed, array_merge(
+            $dbSongId !== '' ? array_keys(DbSetlistResource::albumVersionTitles($artistId, true)[$dbSongId] ?? []) : [],
+            array_keys($maps['sl']["\0exact"][$songValue] ?? []),
+            $dbSongId !== '' ? array_keys($maps['db']["\0exact"][$dbSongId] ?? []) : [],
+        ));
     }
 
     // 今までのセットリストで、その別表記が付いていた曲。別々の曲に同じ別表記があれば決められないので null
@@ -392,7 +439,8 @@ class SlSetlistResource extends Resource
 
     // 反映したあとの入力から、確かめる行を曲順に出す（直前の反映で bulkItem が残した $bulkLooseMatches も使う）。
     // Yuki's Setlists の曲につながらない行（候補は似ている曲）と、表記ゆれだけ違う曲につないだ行（候補はつないだ曲。初めからそれを選んでおく）。
-    // [no => 曲番, typed => 入力した表記（別表記があれば「別表記（曲名）」）, uuid => 行, candidates => [曲（id か db-…） => 曲名], linked => つないだ曲か null]
+    // [no => 曲番, typed => 入力した表記（別表記があれば「別表記（曲名）」）, uuid => 行, candidates => [曲（id か db-…） => 曲名], linked => つないだ曲か null,
+    //  alts => [その候補につないだら別表記に入れる表記（knownVersionTitle）]]
     private static function bulkCheckRows(array $after, bool $fes): array
     {
         // [行, その行のアーティスト] を曲順に
@@ -420,15 +468,20 @@ class SlSetlistResource extends Resource
             $uuid = $item['_uuid'] ?? '';
             $song = trim((string) ($item['song'] ?? ''));
             if (isset(static::$bulkLooseMatches[$uuid])) {
-                [$typed, $linkedTitle, $linked] = static::$bulkLooseMatches[$uuid];
-                $rows[] = ['no' => $number, 'typed' => $typed, 'uuid' => $uuid, 'candidates' => [$linked => $linkedTitle], 'linked' => $linked];
+                [$typed, $linkedTitle, $linked, $alt] = static::$bulkLooseMatches[$uuid];
+                $rows[] = ['no' => $number, 'typed' => $typed, 'uuid' => $uuid, 'candidates' => [$linked => $linkedTitle], 'linked' => $linked, 'alts' => $alt !== null ? [$linked => $alt] : []];
             } elseif (isset($added[$uuid]) && $song !== '' && !is_numeric($song)) {
                 // データベースの曲とだけ合ったもの（db-…）は、Yuki's Setlists の曲として新しく登録する。候補は出さない
                 $candidates = str_starts_with($song, 'db-') || !$artistId ? [] : \App\Support\SongMatcher::candidates(static::bulkSlSongTitles($artistId) + array_combine(
                     array_map(fn ($id) => 'db-' . $id, array_keys(static::bulkUnlinkedDbSongTitles($artistId))),
                     static::bulkUnlinkedDbSongTitles($artistId),
                 ), $song);
-                $rows[] = ['no' => $number, 'typed' => static::bulkSongLabel($item), 'uuid' => $uuid, 'candidates' => $candidates, 'linked' => null, 'text' => $song];
+                $alts = [];
+                foreach ($candidates as $value => $title) {
+                    $alt = static::knownVersionTitle($song, (string) $value, $title, $artistId);
+                    if ($alt !== null) $alts[$value] = $alt;
+                }
+                $rows[] = ['no' => $number, 'typed' => static::bulkSongLabel($item), 'uuid' => $uuid, 'candidates' => $candidates, 'linked' => null, 'text' => $song, 'alts' => $alts];
             }
         }
 
@@ -445,7 +498,7 @@ class SlSetlistResource extends Resource
             }
             $fields[] = Forms\Components\Radio::make('choice_' . $i)
                 ->label($row['no'] . '. ' . $row['typed'])
-                ->options(array_combine(array_map('strval', array_keys($row['candidates'])), array_values($row['candidates'])))
+                ->options(DbSetlistResource::candidateOptions($row))
                 ->required();
         }
 
@@ -456,6 +509,7 @@ class SlSetlistResource extends Resource
     private static function applyBulkChoices(array $rows, array $choices, bool $fes, Forms\Get $get, Forms\Set $set): void
     {
         $songs = [];
+        $alts = [];
         foreach ($rows as $i => $row) {
             // 候補が1つならその曲、2つ以上なら選んだ曲（候補が無い行は文字のまま。保存のときに新しい曲になる）
             if (count($row['candidates']) === 1) {
@@ -463,13 +517,20 @@ class SlSetlistResource extends Resource
             } elseif (count($row['candidates']) > 1 && array_key_exists('choice_' . $i, $choices)) {
                 $songs[$row['uuid']] = (string) $choices['choice_' . $i];
             }
+            // アルバム・シングル・今までのセットリストにあるバージョン（「ultra soul 2011」→「ultra soul」）につないだ行は、入力した表記を別表記に入れる
+            if (isset($row['alts'][$songs[$row['uuid']] ?? ''])) {
+                $alts[$row['uuid']] = $row['alts'][$songs[$row['uuid']]];
+            }
         }
         if ($songs === []) {
             return;
         }
-        $pick = function (array $item) use ($songs) {
+        $pick = function (array $item) use ($songs, $alts) {
             if (isset($songs[$item['_uuid'] ?? ''])) {
                 $item['song'] = $songs[$item['_uuid']];
+                if (isset($alts[$item['_uuid']])) {
+                    $item['alternative_title'] = $alts[$item['_uuid']];
+                }
             }
 
             return $item;
@@ -513,7 +574,12 @@ class SlSetlistResource extends Resource
             ->label('通常入力に反映')
             // 確かめるものが無いときはダイアログを出さずにそのまま反映する
             ->modalHidden(fn ($livewire) => !$needsConfirm($livewire))
-            ->modalHeading(fn ($livewire) => $rows($livewire) === [] ? '未登録のアーティストがあります' : '未登録の楽曲があります')
+            // 未登録の楽曲 → 未登録のアーティスト → 候補・別表記でつなぐ行だけ（「楽曲を確認してください」）の順
+            ->modalHeading(function ($livewire) use ($rows, $newArtists) {
+                $heading = DbSetlistResource::bulkCheckHeading($rows($livewire), '未登録の楽曲があります');
+
+                return $heading === '未登録の楽曲があります' || $newArtists($livewire) === [] ? $heading : '未登録のアーティストがあります';
+            })
             // 候補の数で区切りを分ける（DbSetlistResource::bulkCheckSections）。まだ登録されていないアーティストは最初に
             ->modalDescription(fn ($livewire) => DbSetlistResource::bulkCheckSections(
                 $rows($livewire),
