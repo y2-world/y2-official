@@ -311,8 +311,9 @@ function initTimelineCard(card) {
         });
         bodyInput.addEventListener('click', function (e) { e.stopPropagation(); });
         bodyInput.addEventListener('input', resizeBodyInput);
+        // Enter は改行（コメントは何行でも書ける）。保存はチェックのボタンか、⌘（Ctrl）＋ Enter
         bodyInput.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); commitEdit(); }
+            if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && !e.isComposing) { e.preventDefault(); commitEdit(); }
         });
     }
 
