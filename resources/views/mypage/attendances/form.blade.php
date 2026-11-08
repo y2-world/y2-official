@@ -14,8 +14,9 @@
             <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">セットリスト登録</p>
             <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">{{ $tour->artist->name }}</p>
             <h1 class="database-title" style="text-align: center;">{{ $tour->title }}</h1>
-            @if ($setlist?->subtitle)
-                <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">{{ $setlist->subtitle }}</p>
+            {{-- パターンの公演日（「5.30 大阪城ホール」）とタイトル --}}
+            @if ($setlist && \App\Support\PatternTitle::text($setlist) !== '')
+                <p class="database-subtitle" style="text-align: center; margin-bottom: 0;">{!! \App\Support\PatternTitle::textHtml($setlist) !!}</p>
             @endif
             <p class="database-subtitle" style="text-align: center;">{{ !empty($planned) ? '参加予定：参加日・会場を入力' : ($attachTarget ? '参加予定にセットリストを追加' : '参加日・会場を入力') }}</p>
         </div>
@@ -96,7 +97,7 @@
                                 <option value="" selected disabled>-- 選択してください --</option>
                                 @foreach ($scheduleOptions as $index => $option)
                                     <option value="{{ $index }}" data-date="{{ $option['date'] }}" data-venue="{{ $option['venue'] }}">
-                                        {{ \Carbon\Carbon::parse($option['date'])->format('Y.m.d') }} {{ $option['venue'] }}
+                                        {{ \Carbon\Carbon::parse($option['date'])->format('Y.m.d') }} {{ $option['venue'] }} {{ $option['part'] ?? '' }}
                                     </option>
                                 @endforeach
                             </select>

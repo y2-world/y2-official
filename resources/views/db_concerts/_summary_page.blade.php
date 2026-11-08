@@ -17,10 +17,12 @@
                                         $rowTitleList = $summaryRowTitles[$rowNum] ?? collect();
                                     @endphp
                                     @php
+                                        // パターンの見出しの行（HTML）。公演日（1日1行の小さいグレー）とタイトル（PatternTitle）
+                                        $patternLabelLines = fn ($pattern) => collect(\App\Support\PatternTitle::htmlLines($pattern));
                                         $pickedPattern = ($summaryPickedPatterns ?? [])[$rowNum] ?? null;
                                         // 選んだパターンに日付・会場の名前が無ければ、そのパターンの段のタイトル
                                         $pickedLabels = $pickedPattern
-                                            ? collect(renderSubtitleWithGreyedVenues($pickedPattern->subtitle ?? '')['lines'])->filter(fn ($line) => trim(strip_tags($line)) !== '')->values()
+                                            ? $patternLabelLines($pickedPattern)->filter(fn ($line) => trim(strip_tags($line)) !== '')->values()
                                             : collect();
                                         if ($pickedPattern && $pickedLabels->isEmpty()) {
                                             $pickedRowTitle = ($pickedPattern instanceof \App\Models\DbSetlist ? \App\Models\DbSetlistRow::where('tour_id', $pickedPattern->tour_id) : \App\Models\UserSetlistRow::where('user_concert_id', $pickedPattern->user_concert_id))->where('row', $pickedPattern->row)->where('order_no', $pickedPattern->order_no)->value('title');
@@ -59,7 +61,7 @@
                                             $rowPatternLabels = $tourSetlists
                                                 ->filter(fn ($m) => ($m->row ?? 1) == $rowNum)
                                                 ->sortBy('order_no')
-                                                ->flatMap(fn ($m) => renderSubtitleWithGreyedVenues($m->subtitle ?? '')['lines'])
+                                                ->flatMap(fn ($m) => $patternLabelLines($m))
                                                 ->filter(fn ($line) => trim(strip_tags($line)) !== '')
                                                 ->map(fn ($line) => '<span class="setlist-summary-pattern-label">' . $line . '</span>')
                                                 ->values();

@@ -26,10 +26,10 @@ document.addEventListener('DOMContentLoaded', function () {
         slot._trackOrders = slot.dataset.trackOrders ? JSON.parse(slot.dataset.trackOrders) : {};
     });
 
-    // 並べ替え（右上のアイコンを押すと開くプルダウン）。''：Release Date（元の並び）、'heard'：First heard、'most-heard'：Most heard、
+    // 並べ替え（右上のアイコンに重ねたブラウザ標準のセレクト）。''：Release Date（元の並び）、'heard'：First heard、'most-heard'：Most heard、
     // 'last-heard'：Last heard、'most-performed'：Most Performed、'last-performed'：Last Performed。元の並び以外は ?sort=… で URL に残す
     const sortButton = document.getElementById('stampSortButton');
-    const sortMenu = document.getElementById('stampSortMenu');
+    const sortSelect = document.getElementById('stampSortSelect');
     const sortModes = ['', 'heard', 'most-heard', 'last-heard', 'most-performed', 'last-performed'];
     let sortMode = '';
 
@@ -337,44 +337,15 @@ document.addEventListener('DOMContentLoaded', function () {
             // 元の並び以外のときは、アイコンを色付きにする
             sortButton.classList.toggle('is-active', sortMode !== '');
         }
-        if (sortMenu) {
-            sortMenu.querySelectorAll('[data-stamp-sort]').forEach(function (item) {
-                item.setAttribute('aria-checked', item.dataset.stampSort === sortMode ? 'true' : 'false');
-            });
+        if (sortSelect) {
+            sortSelect.value = sortMode;
         }
     }
-    function openSortMenu(open) {
-        if (!sortMenu || !sortButton) {
-            return;
-        }
-        sortMenu.hidden = !open;
-        sortButton.setAttribute('aria-expanded', open ? 'true' : 'false');
-    }
-    if (sortButton && sortMenu) {
-        sortButton.addEventListener('click', function (e) {
-            e.stopPropagation();
-            openSortMenu(sortMenu.hidden);
-        });
-        sortMenu.querySelectorAll('[data-stamp-sort]').forEach(function (item) {
-            item.addEventListener('click', function () {
-                openSortMenu(false);
-                if (item.dataset.stampSort !== sortMode) {
-                    setSortMode(item.dataset.stampSort);
-                    apply(true);
-                    syncUrl();
-                }
-            });
-        });
-        // プルダウンの外を押す・Esc で閉じる
-        document.addEventListener('click', function (e) {
-            if (!sortMenu.hidden && !sortMenu.contains(e.target)) {
-                openSortMenu(false);
-            }
-        });
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') {
-                openSortMenu(false);
-            }
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function () {
+            setSortMode(sortSelect.value);
+            apply(true);
+            syncUrl();
         });
     }
     setSortMode(params.get('sort') || '');

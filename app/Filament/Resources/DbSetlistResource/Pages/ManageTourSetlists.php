@@ -72,7 +72,8 @@ class ManageTourSetlists extends ListRecords
             ->columns([
                 Tables\Columns\TextColumn::make('row')->label('段')->sortable(),
                 Tables\Columns\TextColumn::make('order_no')->label('パターン')->sortable(),
-                Tables\Columns\TextColumn::make('subtitle')->label('サブタイトル')->searchable(),
+                // 公演日（「5.30 大阪城ホール」1公演1行）とタイトル。検索はタイトルの文字で
+                Tables\Columns\TextColumn::make('subtitle')->label('公演日・タイトル')->state(fn ($record) => \App\Support\PatternTitle::textHtml($record))->html()->wrap()->searchable(),
                 Tables\Columns\TextColumn::make('updated_at')->label('更新日')->dateTime('Y-m-d H:i')->sortable(),
             ])
             ->filters([])

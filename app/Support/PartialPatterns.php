@@ -12,7 +12,7 @@ use Illuminate\Support\Collection;
 //（段の区切りはセトリのページと同じ：DbSetlistRow の (row, order_no) からそのグループが始まる。マイページのアーティストのセトリには段のタイトルがない）
 class PartialPatterns
 {
-    // $played：その曲が入っているパターン（DbSetlist か UserSetlist）。返り値：ツアー id（UserSetlist は user_concert_id） => [名前, ...]
+    // $played：その曲が入っているパターン（DbSetlist か UserSetlist）。返り値：ツアー id（UserSetlist は user_concert_id） => [名前, ...]（1公演1つ。画面では1行ずつ出す）
     public static function of(Collection $played): array
     {
         if ($played->isEmpty()) {
@@ -22,7 +22,7 @@ class PartialPatterns
         $key = $isUser ? 'user_concert_id' : 'tour_id';
         $tourIds = $played->pluck($key)->unique();
         $patternsByTour = ($isUser ? UserSetlist::query() : DbSetlist::query())->whereIn($key, $tourIds)
-            ->get(['id', $key, 'order_no', 'row', 'subtitle'])->groupBy($key);
+            ->get(['id', $key, 'order_no', 'row', 'subtitle', 'schedule_dates'])->groupBy($key);
         $groupTitlesByTour = $isUser ? collect() : DbSetlistRow::whereIn('tour_id', $tourIds)->get()->groupBy('tour_id');
 
         $result = [];
@@ -32,7 +32,8 @@ class PartialPatterns
                 continue;
             }
             $playedIds = $playedInTour->pluck('id')->all();
-            $label = fn ($p) => trim(preg_replace('/\s+/u', ' ', strip_tags((string) $p->subtitle))) ?: 'パターン' . ($all->search(fn ($x) => $x->id === $p->id) + 1);
+            // 公演日（「5.30 大阪城ホール」1公演1行）とタイトル。どちらも無ければ「パターンN」
+            $label = fn ($p) => \App\Support\PatternTitle::textLines($p) ?: ['パターン' . ($all->search(fn ($x) => $x->id === $p->id) + 1)];
             $titles = ($groupTitlesByTour[$tourId] ?? collect())->groupBy('row')->map(fn ($rows) => $rows->pluck('title', 'order_no'));
             $names = [];
             foreach ($all->groupBy(fn ($p) => $p->row ?? 1) as $row => $rowPatterns) {
@@ -53,7 +54,7 @@ class PartialPatterns
                         $names[] = $g['title'];
                     } else {
                         foreach ($playedInGroup as $p) {
-                            $names[] = $label($p);
+                            array_push($names, ...$label($p));
                         }
                     }
                 }

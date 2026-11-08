@@ -2098,10 +2098,12 @@ class SlSetlistResource extends Resource
         return SlSetlist::normalizeTourTitle($title);
     }
 
-    // パターンの名前（サブタイトル）。無ければ「パターン N」
+    // パターンの名前（公演日「5.30 大阪城ホール」とタイトル）。無ければ「パターン N」
     private static function patternLabel(?DbSetlist $pattern): string
     {
-        return filled($pattern?->subtitle) ? $pattern->subtitle : 'パターン ' . $pattern?->order_no;
+        $text = $pattern ? \App\Support\PatternTitle::text($pattern) : '';
+
+        return $text !== '' ? $text : 'パターン ' . $pattern?->order_no;
     }
 
     // 「パターンを追加」で入れる曲（DbSetlistResource::formDataFromSlSetlist）と曲順がまったく同じ、ツアーの今のパターン。無ければ null。

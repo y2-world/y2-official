@@ -799,7 +799,7 @@ class DbSetlistResource extends Resource
                                 // さもないと、以前選んでいた別アーティストの tour_id が残り、
                                 // 例のように同名・近いタイトルのツアーが並ぶケースで「選んだのに変わらない」状態になる。
                                 $set('tour_id', null);
-                                $set('_schedule_pick', []);
+                                $set('schedule_dates', []);
                                 // 一括入力のあとでアーティストを選んだ・変えたときは、一括入力で入った曲をそのアーティストで照らし合わせ直す
                                 static::rematchBulkSongs($get, $set);
                             })
@@ -867,50 +867,29 @@ class DbSetlistResource extends Resource
                                 $set('row_title', $title ?? '');
                             }),
 
-                        // ツアーにスケジュールがあるときは、スケジュールから日付（と地名）を選んでタイトルに入れられる。入れた後も手で直せる
-                        Forms\Components\Select::make('_schedule_pick')
-                            ->label('スケジュールから選ぶ')
+                        // ツアーにスケジュールがあるときは、パターンの公演日をスケジュールから選ぶ（schedule_dates に保存）。
+                        // 画面ではスケジュールから「5.30 大阪城ホール」「4.6 大阪城ホール 1部」と出すので、タイトルに日付や会場を書く必要はない
+                        Forms\Components\Select::make('schedule_dates')
+                            ->label('公演日（スケジュールから選択）')
                             ->multiple()
-                            ->options(fn (Get $get) => static::scheduleOptions($get('tour_id')))
+                            ->searchable()
+                            ->options(fn (Get $get, $state) => static::scheduleOptions($get('tour_id'), (array) $state))
                             ->visible(fn (Get $get) => count(static::scheduleOptions($get('tour_id'))) > 0)
-                            ->dehydrated(false)
                             ->live()
-                            // 開いたパターンのタイトルにもう入っている日は、選んだ状態にする（タイトルに出てくる順。地名を手で直した日も、日付で見る）
-                            ->afterStateHydrated(function (Get $get, $set) {
-                                $subtitle = (string) $get('subtitle');
-                                if (trim($subtitle) === '') {
-                                    return;
-                                }
-                                $picked = [];
-                                foreach (array_keys(static::scheduleOptions($get('tour_id'))) as $key) {
-                                    if (preg_match(static::scheduleTokenPattern((string) $key), $subtitle, $m, PREG_OFFSET_CAPTURE)) {
-                                        $picked[(string) $key] = $m[0][1];
-                                    }
-                                }
-                                asort($picked);
-                                $set('_schedule_pick', array_keys($picked));
-                            })
-                            // 選んだ日は今のタイトルの後ろに足し、選択を外した日はタイトルから取る（手で書いた部分はそのまま）
-                            ->afterStateUpdated(function ($state, $old, Get $get, $set) {
-                                $state = (array) $state;
-                                $old = (array) $old;
-                                $subtitle = (string) $get('subtitle');
-                                foreach (array_diff($old, $state) as $removed) {
-                                    $subtitle = preg_replace(static::scheduleTokenPattern((string) $removed), '', $subtitle, 1);
-                                }
-                                foreach (array_diff($state, $old) as $added) {
-                                    $subtitle = rtrim($subtitle) . ($subtitle !== '' && trim($subtitle) !== '' ? ' ' : '') . $added;
-                                }
-                                $set('subtitle', trim($subtitle));
-                            })
-                            ->helperText('選んだ順に「7.17 大阪」のように日付と地名がタイトルの後ろに足されます（単発のライブは日付だけ）。地名が違うときは手で直してください。')
+                            // 選んだ順ではなく、スケジュールの順（日付順）で保存する
+                            ->dehydrateStateUsing(fn ($state, Get $get) => array_values(array_map(
+                                [\App\Support\PatternTitle::class, 'key'],
+                                \App\Support\PatternTitle::entries((array) $state, static::scheduleEntries($get('tour_id')))
+                            )) ?: null)
                             ->columnSpanFull(),
 
                         Forms\Components\Textarea::make('subtitle')
-                            ->label('タイトル（日付や説明）')
-                            ->helperText('例: 「7.17 大阪」のように入力すると、最初の空白より後ろ（地名など）が自動で小さいグレー文字になります。')
-                            // 日付と地名が並んで長くなるので、広めに取り、打った分だけ広がるようにする
-                            ->rows(4)
+                            ->label('タイトル')
+                            // スケジュールが無いツアーだけ、日付と地名をここに書く
+                            ->helperText(fn (Get $get) => count(static::scheduleOptions($get('tour_id'))) > 0
+                                ? null
+                                : 'このツアーにはスケジュールが無いので、「7.17 大阪」のように日付と地名をここに書きます（最初の空白より後ろが小さいグレー文字になります）。')
+                            ->rows(2)
                             ->autosize()
                             ->maxLength(500)
                             ->columnSpanFull(),
@@ -1104,8 +1083,11 @@ class DbSetlistResource extends Resource
                 Tables\Columns\TextColumn::make('order_no')
                     ->label('パターン')
                     ->sortable(),
+                // 公演日（「5.30 大阪城ホール」1公演1行）とタイトル。検索はタイトルの文字で
                 Tables\Columns\TextColumn::make('subtitle')
-                    ->label('サブタイトル')
+                    ->label('公演日・タイトル')
+                    ->state(fn ($record) => \App\Support\PatternTitle::textHtml($record))->html()
+                    ->wrap()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('作成日')
@@ -1141,6 +1123,7 @@ class DbSetlistResource extends Resource
                             ->max('order_no');
                         $replica->order_no = $maxOrderNo + 1;
                         $replica->subtitle = null;
+                        $replica->schedule_dates = null;
                     })
                     ->after(function ($replica) {
                         redirect(static::getUrl('edit', ['record' => $replica]));
@@ -1174,65 +1157,32 @@ class DbSetlistResource extends Resource
         ];
     }
 
-    // ツアーのスケジュール（「2021/5/1(土) 会場」「06/13 会場」「7月13日 会場」「10.6,7 会場」など）を、
-    // パターンのタイトルに使う選択肢にする。表示は「月.日 会場名」、選んだときに入る文字（キー）は「月.日 地名」。
-    // 同じ地名が2日以上あれば日付順に「仙台1」「仙台2」、単発のライブは日付だけ
-    // タイトルの中で、スケジュールの1日（「7.17 大阪1」）に当たる部分。書いたとおりのもの、なければ同じ日付とそのあとの地名（手で「7.17 梅田」と直したもの）
-    protected static function scheduleTokenPattern(string $key): string
-    {
-        [$date] = explode(' ', $key, 2);
-
-        return '/(^|\s)(?:' . preg_quote($key, '/') . '|' . preg_quote($date, '/') . '(?:\s+(?!\d{1,2}\.\d)\S+)?)(?=\s|$)/u';
-    }
-
-    public static function scheduleOptions($tourId): array
+    // ツアーのスケジュールの公演（parseScheduleEntries。同じ日に何回かあるときは「1部」「2部」も）
+    public static function scheduleEntries($tourId): array
     {
         $concert = $tourId ? AdminData::query('concert')->find($tourId) : null;
-        $dates = [];
-        foreach (preg_split('/\r\n|\r|\n/', (string) $concert?->schedule) as $line) {
-            // 日付は「8.31,9.1」「1.28,29,31,2.1」のように、月が途中で変わりながら並ぶことがある
-            $day = '\d{1,2}日?(?:\s*[(（][^)）]*[)）])?';
-            if (!preg_match('/^\s*(?:\d{4}\s*[\/.年]\s*)?(\d{1,2}\s*[\/.月]\s*' . $day . '(?:\s*[,，、・]\s*(?:\d{1,2}\s*[\/.月]\s*)?' . $day . ')*)\s*(.*)$/u', $line, $m)) {
-                continue;
-            }
-            // 会場名から、かっこ書き（延期・振替・県名などの注記）を外す
-            $venue = trim(preg_replace('/\s*[(（][^)）]*[)）]|【[^】]*】|《[^》]*》/u', '', $m[2]));
-            $month = null;
-            foreach (preg_split('/\s*[,，、・]\s*/u', preg_replace('/\s*[(（][^)）]*[)）]|日/u', '', $m[1])) as $item) {
-                if (preg_match('/^(\d{1,2})\s*[\/.月]\s*(\d{1,2})$/u', $item, $md)) {
-                    $month = (int) $md[1];
-                    $item = $md[2];
-                }
-                $dates[$month . '.' . (int) $item] = $venue;
-            }
+
+        return $concert ? $concert->parseScheduleEntries() : [];
+    }
+
+    // 公演日の選択肢。キーは保存する形（「2026-05-30」「2000-04-06 1部」）、表示は「5.30 大阪城ホール 1部」。
+    // 選んであるのにスケジュールに無い日（スケジュールを直した・「1部」がスケジュールに書かれていない日）も、消えないように選択肢に入れる
+    public static function scheduleOptions($tourId, array $selected = []): array
+    {
+        $schedule = static::scheduleEntries($tourId);
+        $options = [];
+        foreach ($schedule as $entry) {
+            $options[\App\Support\PatternTitle::key($entry)] ??= \App\Support\PatternTitle::label($entry);
+        }
+        foreach (\App\Support\PatternTitle::entries(array_diff($selected, array_keys($options)), $schedule) as $entry) {
+            $options[\App\Support\PatternTitle::key($entry)] = \App\Support\PatternTitle::label($entry) . '（スケジュールに無い）';
         }
 
-        // 同じ地名が続く日をひとまとまりにし、まとまりの中で1から番号を付ける（離れて同じ地名に戻ったら1から数え直す）
-        $runs = [];
-        foreach ($dates as $date => $venue) {
-            $place = static::venuePlace($venue);
-            $last = count($runs) - 1;
-            if ($last >= 0 && $runs[$last]['place'] === $place) {
-                $runs[$last]['dates'][$date] = $venue;
-            } else {
-                $runs[] = ['place' => $place, 'dates' => [$date => $venue]];
-            }
-        }
-        $options = [];
-        foreach ($runs as $run) {
-            $n = 0;
-            foreach ($run['dates'] as $date => $venue) {
-                $n++;
-                $key = (int) $concert->type === 1 || $run['place'] === ''
-                    ? $date
-                    : $date . ' ' . $run['place'] . (count($run['dates']) > 1 ? $n : '');
-                $options[$key] = $date . ($venue !== '' ? ' ' . $venue : '');
-            }
-        }
         return $options;
     }
 
-    // 会場名から、パターンタイトルに使う地名を決める。config/venue_places.php（これまでのタイトルから集めた対応）に
+    // 会場名から、パターンタイトルに使う地名を決める。前は「スケジュールから選ぶ」でタイトルに「7.17 大阪1」と入れるのに使っていた。
+    // 今は、前の形のタイトルを公演日（schedule_dates）に移すとき、日付のうしろの地名がその日の会場のものかを見るのに使う。config/venue_places.php（これまでのタイトルから集めた対応）に
     // あればそれ、無ければ会場名の頭の地名（「名古屋国際会議場」→名古屋）や「○○市」、分からなければ会場名のまま
     public static function venuePlace(string $venue): string
     {

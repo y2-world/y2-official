@@ -15,8 +15,8 @@
             <h1 class="database-title" style="text-align: center;">セットリストを編集</h1>
             <p class="database-subtitle" style="text-align: center;">
                 {{ $editTour->title ?? '-' }}
-                @if ($editSetlist?->subtitle)
-                    - {{ $editSetlist->subtitle }}
+                @if ($editSetlist && \App\Support\PatternTitle::text($editSetlist) !== '')
+                    <br>{!! \App\Support\PatternTitle::textHtml($editSetlist) !!}
                 @endif
             </p>
         </div>

@@ -74,7 +74,7 @@
                                 <option value="" selected disabled>-- 選択してください --</option>
                                 @foreach ($scheduleOptions as $index => $option)
                                     <option value="{{ $index }}" data-date="{{ $option['date'] }}" data-venue="{{ $option['venue'] }}">
-                                        {{ \Carbon\Carbon::parse($option['date'])->format('Y.m.d') }} {{ $option['venue'] }}
+                                        {{ \Carbon\Carbon::parse($option['date'])->format('Y.m.d') }} {{ $option['venue'] }} {{ $option['part'] ?? '' }}
                                     </option>
                                 @endforeach
                             </select>

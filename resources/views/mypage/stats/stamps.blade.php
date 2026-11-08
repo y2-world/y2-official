@@ -55,17 +55,16 @@
                             <p class="stamp-book-filter-title" id="stampBookFilterTitle" hidden></p>
                             {{-- 並べ替え：アイコンを押すとプルダウンが開く（Release Date：元の並び（発売順）／First Heard：初めて聴いた日の順／Most Heard：聴いた回数の多い順／Last Heard：最後に聴いた日の新しい順／Most Performed：アーティストがライブで演奏した回数（ツアーの数）の多い順／Last Performed：アーティストが最後にライブで演奏した日の新しい順） --}}
                             <div class="stamp-sort">
-                                <button type="button" class="stamp-sort-button" id="stampSortButton" title="並べ替え" aria-label="並べ替え" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa-solid fa-arrow-down-wide-short"></i>
-                                </button>
-                                <div class="stamp-sort-menu" id="stampSortMenu" role="menu" hidden>
-                                    <button type="button" role="menuitemradio" data-stamp-sort="" aria-checked="true">Release Date</button>
-                                    <button type="button" role="menuitemradio" data-stamp-sort="heard" aria-checked="false">First Heard</button>
-                                    <button type="button" role="menuitemradio" data-stamp-sort="most-heard" aria-checked="false">Most Heard</button>
-                                    <button type="button" role="menuitemradio" data-stamp-sort="last-heard" aria-checked="false">Last Heard</button>
-                                    <button type="button" role="menuitemradio" data-stamp-sort="most-performed" aria-checked="false">Most Performed</button>
-                                    <button type="button" role="menuitemradio" data-stamp-sort="last-performed" aria-checked="false">Last Performed</button>
-                                </div>
+                                {{-- 見た目はアイコン。上に透明なブラウザ標準のセレクトを重ね、押すと標準のプルダウンが開く --}}
+                                <span class="stamp-sort-button" id="stampSortButton" aria-hidden="true"><i class="fa-solid fa-arrow-down-wide-short"></i></span>
+                                <select class="stamp-sort-select" id="stampSortSelect" title="並べ替え" aria-label="並べ替え">
+                                    <option value="">Release Date</option>
+                                    <option value="heard">First Heard</option>
+                                    <option value="most-heard">Most Heard</option>
+                                    <option value="last-heard">Last Heard</option>
+                                    <option value="most-performed">Most Performed</option>
+                                    <option value="last-performed">Last Performed</option>
+                                </select>
                             </div>
                             @if ($canEditDeco)
                                 {{-- 枠の色とタイトルの編集（全部のスタンプ帳で共通） --}}
@@ -125,6 +124,6 @@
 @endsection
 
 @section('page-script')
-<script src="{{ asset('/js/stamp-book.js?v=20261105d') }}"></script>
+<script src="{{ asset('/js/stamp-book.js?v=20261108a') }}"></script>
 @include('stats._stamp_book_script')
 @endsection

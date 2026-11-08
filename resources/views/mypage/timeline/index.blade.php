@@ -15,27 +15,78 @@
                 @php
                     $myId = \Illuminate\Support\Facades\Auth::guard('external')->id();
                 @endphp
-                <div class="timeline-filter-row">
+                {{-- 1行目：左にプルダウン、右に「参加記録を追加 ＋」。2行目：左にチェック（スマホの幅でも重ならないように行を分ける）。
+                     timeline-filter-row はほかのページでは中央寄せのまま --}}
+                <div class="timeline-filter-row" style="justify-content: space-between; margin-bottom: 8px;">
                     <select class="timeline-user-select" onchange="if (this.value) window.location.href=this.value;">
-                        <option value="{{ route('mypage.timeline.index', ['user_id' => 'all']) }}" {{ $filterUser ? '' : 'selected' }}>すべての投稿</option>
-                        <option value="{{ route('mypage.timeline.index', ['user_id' => $myId]) }}" {{ $filterUser && $filterUser->id === $myId ? 'selected' : '' }}>自分の投稿</option>
+                        @php $isMine = $filterUser && $filterUser->id === $myId; @endphp
+                        <option value="{{ route('mypage.timeline.index', ['user_id' => 'all']) }}" {{ !$filterUser && !$commentsOnly ? 'selected' : '' }}>すべての投稿</option>
+                        <option value="{{ route('mypage.timeline.index', ['user_id' => $myId]) }}" {{ $isMine && !$commentsOnly ? 'selected' : '' }}>自分の投稿</option>
+                        <option value="{{ route('mypage.timeline.index', ['user_id' => 'all', 'show' => 'comments']) }}" {{ !$filterUser && $commentsOnly ? 'selected' : '' }}>すべてのコメント</option>
+                        <option value="{{ route('mypage.timeline.index', ['user_id' => $myId, 'show' => 'comments']) }}" {{ $isMine && $commentsOnly ? 'selected' : '' }}>自分のコメント</option>
                     </select>
-                </div>
-                {{-- 参加予定（セットリストをまだ選んでいない投稿）を隠す。選んだ状態はブラウザに覚えておく --}}
-                <div style="position: relative; display: flex; justify-content: center; align-items: center; min-height: 34px; margin: -22px 0 8px;">
-                    <label class="unique-tour-label" style="margin: 0;">
-                        <input type="checkbox" id="timelineExcludePlanned" class="unique-tour-checkbox">
-                        <span class="unique-tour-text">参加予定を除く</span>
-                    </label>
-                    {{-- 参加記録（セットリスト）の追加。投稿のすぐ上の右端に「参加記録を追加 ＋」 --}}
+                    {{-- 参加記録（セットリスト）の追加。プルダウンの行の右端に「参加記録を追加 ＋」 --}}
                     <a href="{{ route('mypage.attendances.create') }}" class="mypage-add-row timeline-add-row" title="参加記録を追加">
                         <span class="mypage-add-row-label">参加記録を追加</span>
                         <span class="mypage-add-button"><i class="fas fa-plus"></i></span>
                     </a>
                 </div>
+                {{-- 参加予定（セットリストをまだ選んでいない投稿）を隠す。選んだ状態はブラウザに覚えておく --}}
+                <div style="display: flex; justify-content: flex-start; align-items: center; margin: 0 0 12px;">
+                    @unless ($commentsOnly)
+                    {{-- 参加予定・コメントを隠すチェック。2つを横に並べる。コメントだけを出しているときは使わないので出さない --}}
+                    <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: flex-start;">
+                        <label class="unique-tour-label" style="margin: 0;">
+                            <input type="checkbox" id="timelineExcludePlanned" class="unique-tour-checkbox">
+                            <span class="unique-tour-text">参加予定を除く</span>
+                        </label>
+                        <label class="unique-tour-label" style="margin: 0;">
+                            <input type="checkbox" id="timelineExcludeComments" class="unique-tour-checkbox">
+                            <span class="unique-tour-text">コメントを除く</span>
+                        </label>
+                    </div>
+                    @endunless
+                </div>
                 <div id="timelineList">
-                    @foreach ($attendances as $attendance)
+                    @foreach ($items as $item)
+                        @if ($item['type'] === 'comment')
+                            {{-- コメント：書いた人・コメント・どの投稿へのコメントか。押すとその投稿を開く --}}
+                            @php
+                                $comment = $item['model'];
+                                $target = $comment->attendance;
+                                $targetTour = $target->attendedTour;
+                            @endphp
+                            <a href="{{ route('mypage.attendances.show', ['attendance' => $target, 'from' => 'timeline']) }}" class="timeline-card timeline-comment-card">
+                                <div class="timeline-card-meta">
+                                    <span class="timeline-card-user" data-nav-url="{{ route('mypage.users.stats', $comment->external_user_id) }}">
+                                        @if ($comment->externalUser?->avatar_url)
+                                            <img src="{{ $comment->externalUser->avatar_url }}" alt="" class="timeline-card-avatar">
+                                        @else
+                                            <span class="timeline-card-avatar timeline-card-avatar--placeholder"><i class="fa-solid fa-user"></i></span>
+                                        @endif{{ $comment->externalUser?->name ?: 'ゲスト' }}</span>
+                                    <span class="timeline-comment-card-label"><i class="fa-regular fa-comment"></i> {{ $target->externalUser?->name ?: 'ゲスト' }}さんの投稿にコメント</span>
+                                </div>
+                                <p class="timeline-comment-card-body">{{ $comment->body }}</p>
+                                <div class="timeline-comment-card-target">
+                                    @if ($targetTour?->artist)
+                                        <span class="timeline-card-artist">{{ $targetTour->artist->name }}</span>
+                                    @endif
+                                    <span class="timeline-comment-card-title">{{ $targetTour->title ?? '-' }}</span>
+                                    <span class="timeline-card-sub">
+                                        @if ($target->venue)
+                                            {{ $target->venue }} ・
+                                        @endif
+                                        {{ $target->attended_date?->format('Y.m.d') ?? '-' }}
+                                    </span>
+                                </div>
+                                <div class="timeline-card-footer" style="justify-content: flex-end;">
+                                    <span class="timeline-card-posted-at">{{ $comment->created_at->format('Y.m.d H:i') }}</span>
+                                </div>
+                            </a>
+                            @continue
+                        @endif
                         @php
+                            $attendance = $item['model'];
                             $tour = $attendance->attendedTour;
                             // アーティスト名は常に自分の参加記録一覧（フィルタ済み）へ遷移する。
                             $artistNavUrl = route('mypage.attendances.index', [
@@ -101,7 +152,7 @@
                     @endforeach
                 </div>
 
-                <p id="noAttendancesMessage" style="text-align: center; color: #999;" @if ($attendances->isNotEmpty()) hidden @endif>まだ参加したライブが記録されていません。</p>
+                <p id="noAttendancesMessage" style="text-align: center; color: #999;" @if ($items->isNotEmpty()) hidden @endif>まだ参加したライブが記録されていません。</p>
             </div>
         </div>
     </div>
@@ -149,6 +200,9 @@
         align-items: flex-start;
         gap: 2px;
         min-width: 0;
+        /* カードの幅いっぱいに取る。中身の幅で縮むと、右上のバッジ・「セットリストを追加 ＋」の分を引いたユーザー名の幅（下の max-width）が
+           ツアー名の短いカードで狭くなりすぎ、短い名前でも2行になる */
+        flex: 1 1 auto;
     }
     /* 画像と名前の高さをそろえる */
     .timeline-card-user {
@@ -194,6 +248,30 @@
         color: #999;
         font-size: 0.8rem;
     }
+    /* コメントのカード：コメントの本文を大きく、どの投稿へのコメントかを下に小さく */
+    .timeline-comment-card-label {
+        color: #999;
+        font-size: 0.75rem;
+    }
+    .timeline-comment-card-body {
+        margin: 8px 0 10px;
+        color: #333;
+        font-size: 0.85rem;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+    .timeline-comment-card-target {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+        padding-left: 10px;
+        border-left: 3px solid #ede7f6;
+    }
+    .timeline-comment-card-title {
+        color: #333;
+        font-size: 0.9rem;
+    }
     /* セットリストをまだ選んでいない参加予定の投稿のバッジ */
     /* 見出しの横に列を取るとタイトルの幅が狭くなるので、カードの右上に重ねて置く */
     .timeline-planned-badge {
@@ -208,11 +286,9 @@
         white-space: nowrap;
     }
     /* いちばん上の「参加記録を追加 ＋」（右端） */
+    /* プルダウンの行の右端の「参加記録を追加 ＋」 */
     .timeline-add-row {
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
+        flex-shrink: 0;
         text-decoration: none;
     }
     /* 公演日以降の参加予定（本人）：バッジの代わりに右上に出す「セットリストを追加 ＋」 */
@@ -242,17 +318,23 @@
     </style>
 
     <script>
+    // 「参加予定を除く」「コメントを除く」：チェックした種類のカードを隠す。チェックの状態はブラウザに覚えておく
     (function () {
-        var box = document.getElementById('timelineExcludePlanned');
-        if (!box) return;
-        var apply = function () {
-            document.querySelectorAll('.timeline-card.is-planned').forEach(function (card) { card.style.display = box.checked ? 'none' : ''; });
-        };
-        try { box.checked = localStorage.getItem('timelineExcludePlanned') === '1'; } catch (e) {}
-        apply();
-        box.addEventListener('change', function () {
-            try { localStorage.setItem('timelineExcludePlanned', box.checked ? '1' : '0'); } catch (e) {}
+        [
+            { id: 'timelineExcludePlanned', selector: '.timeline-card.is-planned' },
+            { id: 'timelineExcludeComments', selector: '.timeline-card.timeline-comment-card' },
+        ].forEach(function (filter) {
+            var box = document.getElementById(filter.id);
+            if (!box) return;
+            var apply = function () {
+                document.querySelectorAll(filter.selector).forEach(function (card) { card.style.display = box.checked ? 'none' : ''; });
+            };
+            try { box.checked = localStorage.getItem(filter.id) === '1'; } catch (e) {}
             apply();
+            box.addEventListener('change', function () {
+                try { localStorage.setItem(filter.id, box.checked ? '1' : '0'); } catch (e) {}
+                apply();
+            });
         });
     })();
     </script>
@@ -262,7 +344,15 @@
     // そちらは@yield('content')より後にレンダリングされるため、ここでの即時実行では
     // 未定義エラーになる。DOMContentLoadedまで遅らせて確実に定義済みの状態で呼び出す。
     document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.timeline-card').forEach(initTimelineCard);
+        document.querySelectorAll('.timeline-card:not(.timeline-comment-card)').forEach(initTimelineCard);
+        // コメントのカードには星やコメント欄が無いので、書いた人の名前（別ページへ飛ぶ）だけ
+        document.querySelectorAll('.timeline-comment-card [data-nav-url]').forEach(function (el) {
+            el.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.location.href = el.dataset.navUrl;
+            });
+        });
     });
 
     // ブラウザのbfcacheから復元された場合（投稿詳細でコメントを追加後に「戻る」した時など）、

@@ -55,6 +55,28 @@ class DbConcertController extends Controller
         return view('db_concerts.index', compact('tours', 'bios', 'type', 'totalCount', 'artist'));
     }
 
+    // 会場（Venues）。ツアー・ライブのスケジュールに出てくる会場の一覧。?keyword=会場名 のときは、その会場の公演（日付とツアー）の一覧
+    public function venues($artistId)
+    {
+        $artist = Artist::findOrFail($artistId);
+        $keyword = trim((string) request()->input('keyword'));
+        $entries = DbConcert::scheduleVenueEntries((int) $artistId);
+
+        if ($keyword !== '') {
+            $performances = $entries->where('venue', $keyword)->sortByDesc('date')->values();
+
+            return view('db_concerts.venue', compact('artist', 'keyword', 'performances'));
+        }
+
+        // 公演の多い順、同じ数なら最後の公演の新しい順
+        $venues = $entries->groupBy('venue')
+            ->map(fn ($rows, $venue) => (object) ['venue' => $venue, 'count' => $rows->count(), 'last' => $rows->max('date')])
+            ->sort(fn ($a, $b) => [$b->count, $b->last] <=> [$a->count, $a->last])
+            ->values();
+
+        return view('db_concerts.venues', compact('artist', 'venues'));
+    }
+
     public function show(Request $request, $id)
     {
         $tours = DbConcert::findOrFail($id);

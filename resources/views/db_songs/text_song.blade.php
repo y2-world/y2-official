@@ -51,7 +51,7 @@
                                 <a href="{{ route('live.show', $tour->id) }}">{{ $tour->title }}</a>
                                 {{-- 一部のパターンにだけ入っているときは、そのパターン（公演）を小さく出す --}}
                                 @if ($tourSetlists->count() < \App\Models\DbSetlist::where('tour_id', $tour->id)->count())
-                                    <br><small style="color: #888;">{{ $tourSetlists->pluck('subtitle')->filter()->implode(' / ') }}</small>
+                                    <br><small style="color: #888;">{!! $tourSetlists->map(fn ($p) => \App\Support\PatternTitle::textHtml($p))->filter()->implode('<br>') !!}</small>
                                 @endif
                             </td>
                         </tr>

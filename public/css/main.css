@@ -2227,6 +2227,22 @@ h5.setlist-subtitle-heading {
     overflow: visible;
 }
 
+/* 公演日（1公演1行、見出しの半分の大きさ）の見出しは、たたんだとき公演日のちょうど1行分だけ見せる */
+.setlist-pattern-wrap .setlist-subtitle-collapsible:has(.setlist-schedule-date-line):not(.is-expanded) {
+    max-height: 0.75em;
+    line-height: 0.75em;
+}
+
+/* たたんでいるときだけ、1行目のうしろに「他 N 公演」 */
+.setlist-subtitle-more {
+    display: none;
+    margin-left: 0.6em;
+    color: #b3a7d6;
+}
+.setlist-subtitle-collapsible:not(.is-expanded) .setlist-subtitle-more {
+    display: inline;
+}
+
 .setlist-pattern-wrap .setlist-subtitle-toggle {
     position: absolute;
     top: auto;
@@ -4221,41 +4237,15 @@ h5.setlist-subtitle-heading {
     right: 74px;
 }
 
-.stamp-sort-menu {
+/* アイコンの上に重ねる透明なセレクト。押すとブラウザ標準のプルダウンが開く */
+.stamp-sort-select {
     position: absolute;
-    top: calc(100% + 6px);
-    right: 0;
-    min-width: 140px;
-    background: #fffaf0;
-    border: 1px solid #d8cdb5;
-    border-radius: 8px;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-    padding: 4px 0;
-}
-
-.stamp-sort-menu[hidden] {
-    display: none;
-}
-
-.stamp-sort-menu button {
-    display: block;
+    inset: 0;
     width: 100%;
-    padding: 8px 14px;
-    border: 0;
-    background: none;
-    color: #8a7f6a;
-    text-align: left;
-    white-space: nowrap;
+    height: 100%;
+    opacity: 0;
     cursor: pointer;
-}
-
-.stamp-sort-menu button:hover,
-.stamp-sort-menu button[aria-checked="true"] {
-    color: #667eea;
-}
-
-.stamp-sort-menu button[aria-checked="true"] {
-    font-weight: 600;
+    font-size: 16px;
 }
 
 .stamp-sort-button {
@@ -4271,14 +4261,15 @@ h5.setlist-subtitle-heading {
     cursor: pointer;
 }
 
-.stamp-sort-button:hover,
+.stamp-sort:hover .stamp-sort-button,
 .stamp-sort-button.is-active {
     color: #667eea;
     border-color: #667eea;
 }
 
-.stamp-sort-button:focus:not(:focus-visible) {
-    outline: none;
+.stamp-sort:has(.stamp-sort-select:focus-visible) .stamp-sort-button {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
 }
 
 /* 絞り込みのタイトルは、右のボタン2つ分と同じだけ左右を空ける */

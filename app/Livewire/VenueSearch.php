@@ -15,12 +15,26 @@ class VenueSearch extends Component
     public $myPageUserId = null;
     // My Page で、他の人の一覧を見ているとき（?user_id=）。自分のときは null
     public $userIdParam = null;
+    // Database のアーティストの会場（Venues）のページで使うとき：そのアーティストのツアー・ライブのスケジュールの会場から探す（部分一致）
+    public $dbArtistId = null;
 
-    public function mount($myPageUserId = null, $userIdParam = null)
+    public function mount($myPageUserId = null, $userIdParam = null, $dbArtistId = null)
     {
         $this->myPageUserId = $myPageUserId;
         $this->userIdParam = $userIdParam;
+        $this->dbArtistId = $dbArtistId;
         $this->loadInitialVenues();
+    }
+
+    // Database の会場：公演の多い順に、打った文字を含む会場
+    private function scheduleVenueNames(string $search = '')
+    {
+        return \App\Models\DbConcert::scheduleVenueEntries((int) $this->dbArtistId)
+            ->countBy('venue')
+            ->filter(fn ($count, $venue) => $search === '' || mb_stripos($venue, $search) !== false)
+            ->sortDesc()
+            ->keys()
+            ->take(10);
     }
 
     private function venueQuery()
@@ -37,15 +51,21 @@ class VenueSearch extends Component
         return collect($names)
             ->map(fn ($venue) => [
                 'name' => $venue,
-                'url' => $this->myPageUserId
-                    ? route('mypage.attendances.index', array_filter(['user_id' => $this->userIdParam, 'venue' => $venue]))
-                    : '/venue?keyword=' . urlencode($venue),
+                'url' => match (true) {
+                    (bool) $this->dbArtistId => route('database.venues', [$this->dbArtistId, 'keyword' => $venue]),
+                    (bool) $this->myPageUserId => route('mypage.attendances.index', array_filter(['user_id' => $this->userIdParam, 'venue' => $venue])),
+                    default => '/venue?keyword=' . urlencode($venue),
+                },
             ])
             ->toArray();
     }
 
     public function loadInitialVenues()
     {
+        if ($this->dbArtistId) {
+            $this->venues = $this->toVenues($this->scheduleVenueNames());
+            return;
+        }
         $this->venues = $this->toVenues($this->venueQuery()->distinct()->orderBy('venue')->limit(10)->pluck('venue'));
     }
 
@@ -53,6 +73,12 @@ class VenueSearch extends Component
     {
         if ($this->search === '') {
             $this->loadInitialVenues();
+            return;
+        }
+
+        if ($this->dbArtistId) {
+            $this->venues = $this->toVenues($this->scheduleVenueNames(trim($this->search)));
+            $this->selectedIndex = -1;
             return;
         }
 

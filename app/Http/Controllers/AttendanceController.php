@@ -722,12 +722,25 @@ class AttendanceController extends Controller
 
         // スケジュール表（db_concerts.schedule）から日付・会場の候補をドロップダウン用に用意する。
         // パースできる行のみ候補になり、パース失敗時は従来通り手入力にフォールバックできる。
-        $scheduleOptions = $tour->parseScheduleEntries();
+        $scheduleOptions = $this->patternScheduleOptions($tour, $setlist);
 
         $selectedDailySongs = request('selected_daily_songs', []);
         $attachTarget = $this->attachTarget($kind, (int) $tour->id);
 
         return view('mypage.attendances.form', compact('setlistId', 'kind', 'setlist', 'tour', 'defaultAttendedDate', 'scheduleOptions', 'selectedDailySongs', 'attachTarget'));
+    }
+
+    // パターンを選んだときの参加日・会場の候補。パターンにスケジュールから選んだ公演日（schedule_dates）があれば、その日だけ。
+    // 無ければタイトルの日付（「7.17 大阪1」の 7.17、「4.4-5.17」「6.13-」のような範囲。SubtitleScheduleDates）で絞る。
+    // どちらにも日付が無い（またはどの日にも当たらない）パターンは、スケジュールの全部の日
+    private function patternScheduleOptions($tour, $setlist): array
+    {
+        $options = $tour->parseScheduleEntries();
+        if (filled($setlist?->schedule_dates)) {
+            return \App\Support\PatternTitle::entries((array) $setlist->schedule_dates, $options) ?: $options;
+        }
+
+        return \App\Support\SubtitleScheduleDates::entries((string) $setlist?->subtitle, $options) ?: $options;
     }
 
     public function store(Request $request)
@@ -774,7 +787,7 @@ class AttendanceController extends Controller
             // 自動リダイレクト（パターンが1つしかない場合）が間に挟まってエラーが失われることがあるため、
             // リダイレクトせずこの場でform画面をエラー付きで直接描画する
             $defaultAttendedDate = !$tour->date2 ? $tour->date1 : null;
-            $scheduleOptions = $tour->parseScheduleEntries();
+            $scheduleOptions = $this->patternScheduleOptions($tour, $setlist);
 
             $errorBag = new \Illuminate\Support\ViewErrorBag();
             $errorBag->put('default', $validator->errors());
@@ -894,6 +907,8 @@ class AttendanceController extends Controller
         // 参加予定の記録はセットリストを持たない（セトリは出さず、本人には追加の「＋」を出す）
         $tourSetlists = $attendance->is_planned ? collect() : collect([$isOfficial ? $attendance->dbSetlist : $attendance->userSetlist]);
         $tour = $attendance->attendedTour;
+        // ツアーが消えている記録（パターンだけ残ったもの）は、500 エラーにせず「見つからない」にする
+        abort_unless($tour?->artist, 404);
         $artist = $tour->artist;
         $songs = $isOfficial ? DbSong::orderBy('sort_order', 'asc')->get() : UserSong::where('user_artist_id', $artist->id)->orderBy('sort_order', 'asc')->get();
 

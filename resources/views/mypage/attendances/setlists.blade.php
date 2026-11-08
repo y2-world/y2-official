@@ -52,12 +52,10 @@
                     @foreach ($tourSetlists as $setlist)
                         @php
                             $songCount = countActualSongs($setlist->setlist ?? []) + countActualSongs($setlist->encore ?? []);
-                            if ($setlist->subtitle) {
-                                $labelRendered = renderSubtitleWithGreyedVenues($setlist->subtitle);
-                                $label = implode('<br>', $labelRendered['lines']);
-                            } else {
-                                $label = null;
-                            }
+                            // 公演日（「5.30 大阪城ホール」1日1行）とタイトル
+                            $labelLines = \App\Support\PatternTitle::htmlLines($setlist);
+                            // 公演日の行はそれぞれ1行（display: block）なので、改行を足さずにつなぐ。タイトルの行（あれば）は改行で
+                            $label = $labelLines ? preg_replace('/(<\/span>)<br>(?=<span class="setlist-schedule-date-line")/', '$1', implode('<br>', $labelLines)) : null;
                             $groupTitle = $groupTitlesByRowAndOrderNo[$setlist->row][$setlist->order_no] ?? null;
                         @endphp
                         @if ($groupTitle)
@@ -75,7 +73,7 @@
                                 <i class="fa-solid fa-chevron-down"></i>
                             </button>
                             <div class="setlist-pick-body" @if ($tourSetlists->count() !== 1) hidden @endif>
-                                @include('db_concerts._setlist_rows', ['tourSetlists' => collect([$setlist]), 'songs' => $songs, 'noSongLinks' => true])
+                                @include('db_concerts._setlist_rows', ['tourSetlists' => collect([$setlist]), 'songs' => $songs, 'noSongLinks' => true, 'noGroupTitles' => true])
                                 <div class="setlist-pick-confirm">
                                     <a href="{{ route('mypage.attendances.daily_songs', $kind . '-' . $setlist->id) }}" class="btn-pill">
                                         選択
@@ -88,6 +86,15 @@
             </div>
         </div>
     </div>
+
+    <style>
+    /* この画面だけ、カードの見出しの公演日（「5.30 大阪城ホール」）を黒にし、カードの見出しに近い大きさにする
+       （ほかの画面は PatternTitle の、見出しの半分の大きさのグレー） */
+    .select-card-title .setlist-schedule-date-line {
+        color: #333 !important;
+        font-size: 0.8rem !important;
+    }
+    </style>
 
     <script>
     function toggleSetlistPick(button) {

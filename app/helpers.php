@@ -1437,3 +1437,53 @@ if (!function_exists('ordinal')) {
         };
     }
 }
+
+if (!function_exists('subtitleWithScheduleVenues')) {
+    // パターンのタイトルの日付を、ツアーのスケジュールの「月.日 会場名」にする（表示だけ。保存されている文字は変えない）。
+    // 「5.30 大阪1」は「5.30 大阪城ホール」、「4.4-5.17」「6.13-」のような範囲は、その間のスケジュールの日を全部並べる。1日ずつ改行する。
+    // スケジュールに無い日はそのまま。Database のツアーのページで試した出し方で、今はどこからも使っていない（取っておく）。
+    // 今のパターンの見出しは、選んだ公演日（schedule_dates）から作る App\Support\PatternTitle
+    function subtitleWithScheduleVenues(?string $subtitle, $tour): string
+    {
+        $subtitle = (string) $subtitle;
+        $entries = $tour?->parseScheduleEntries() ?? [];
+        if ($entries === [] || trim($subtitle) === '') {
+            return $subtitle;
+        }
+        $label = function (array $entry) {
+            $date = \Illuminate\Support\Carbon::parse($entry['date']);
+            $venue = \App\Models\DbConcert::venueKeyword($entry['venue']);
+            return $date->month . '.' . $date->day . ($venue !== '' ? ' ' . $venue : '');
+        };
+
+        // 範囲の書き方で分け、範囲はその間の日を並べる。範囲の外は、日付とそのあとの1語（地名）を会場名にする
+        preg_match_all(\App\Support\SubtitleScheduleDates::RANGE_PATTERN, $subtitle, $rangeMatches, PREG_SET_ORDER);
+        $pieces = preg_split(\App\Support\SubtitleScheduleDates::RANGE_PATTERN, $subtitle);
+        $out = '';
+        foreach ($pieces as $n => $piece) {
+            $out .= preg_replace_callback(
+                '/(?<![\d.])(\d{1,2})\.(\d{1,2})(?![\d])(?:\s+(?!\d{1,2}\.\d)\S+)?/u',
+                function ($m) use ($entries, $label) {
+                    $date = \App\Support\SubtitleScheduleDates::toDate((int) $m[1], (int) $m[2], $entries);
+                    foreach ($entries as $entry) {
+                        if ($entry['date'] === $date) {
+                            return $label($entry);
+                        }
+                    }
+                    return $m[0];
+                },
+                $piece
+            );
+            if (isset($rangeMatches[$n])) {
+                $range = \App\Support\SubtitleScheduleDates::range($rangeMatches[$n], $entries);
+                $days = $range ? \App\Support\SubtitleScheduleDates::inRanges($entries, [$range]) : [];
+                $out .= $days ? ' ' . implode(' ', array_map($label, $days)) . ' ' : $rangeMatches[$n][0];
+            }
+        }
+
+        // 1日1行（「月.日 会場名」ごとに改行）
+        $out = trim(preg_replace('/[ \t]{2,}/u', ' ', $out));
+
+        return preg_replace('/\s+(?=(?<![\d.])\d{1,2}\.\d{1,2}(?![\d]))/u', "\n", $out);
+    }
+}

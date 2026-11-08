@@ -16,6 +16,15 @@ class DbConcert extends Model
                 $concert->schedule = \App\Support\ScheduleFormatter::format($concert->schedule, $concert->date1, $concert->date2)['text'];
             }
         });
+
+        // ツアーを消したら、パターン・Summary の段も消す（パターンを消すと、付いている参加記録も DB の cascade で消える）。
+        // db_setlists・db_setlist_rows にはツアーへの外部キーが無く、消さないとパターンと参加記録だけが残って一覧や詳細がエラーになる。
+        // Yuki's Setlists（sl_setlists）は Yuki の記録なので消さず、ツアーとの結び付けだけ外す
+        static::deleting(function (self $concert) {
+            DbSetlist::where('tour_id', $concert->id)->delete();
+            DbSetlistRow::where('tour_id', $concert->id)->delete();
+            SlSetlist::where('db_concert_id', $concert->id)->update(['db_concert_id' => null]);
+        });
     }
 
     protected $fillable = [
@@ -59,7 +68,42 @@ class DbConcert extends Model
         return $this->hasMany(DbSetlist::class, 'tour_id', 'id');
     }
 
-    // scheduleカラム（フリーテキストの日程表）から日付・会場の候補を抽出する。
+    // Database の会場（Venues）用。アーティストのツアー・ライブのスケジュールから、1公演ずつ [date, venue, concert] を集める。
+    // スケジュールが無いライブは、会場の欄と日付から（parseScheduleEntries と同じ）。「※公演中止」のような注記は会場名から外す
+    // $scope でライブを絞れる（Stats の種類の絞り込みなど）。Solo（type 4、メンバーのソロ活動）は数えない
+    public static function scheduleVenueEntries(int $artistId, ?\Closure $scope = null): \Illuminate\Support\Collection
+    {
+        return static::where('artist_id', $artistId)->where(fn ($q) => $q->whereNull('type')->orWhere('type', '!=', '4'))->when($scope, $scope)->get()
+            ->flatMap(fn (self $concert) => collect($concert->parseScheduleEntries())
+                ->map(fn ($entry) => [
+                    'date' => $entry['date'],
+                    'venue' => static::venueKeyword($entry['venue']),
+                    'concert' => $concert,
+                ]))
+            ->filter(fn ($entry) => $entry['venue'] !== '')
+            ->values();
+    }
+
+    // 会場のページに公演が1つでも出る会場名（Solo だけの会場は入らない）。会場名にリンクを付けるかどうかに使う。1回のページ表示の間は覚えておく
+    public static function linkableVenue(int $artistId, ?string $venue): ?string
+    {
+        static $names = [];
+        $names[$artistId] ??= static::scheduleVenueEntries($artistId)->pluck('venue')->flip()->all();
+        $keyword = static::venueKeyword($venue);
+
+        return $keyword !== '' && isset($names[$artistId][$keyword]) ? $keyword : null;
+    }
+
+    // 会場のページ（?keyword=）で使う会場名。うしろのかっこ書き（「(公演中止)」など）と「※…」の注記を外す。
+    // スケジュールの表・ライブの会場の欄からリンクするときも、これでそろえる
+    public static function venueKeyword(?string $venue): string
+    {
+        $venue = trim(preg_replace('/\s*※.*$/u', '', (string) $venue));
+
+        return trim(preg_replace('/\s*[（(][^）)]*[）)]\s*$/u', '', $venue));
+    }
+
+    // scheduleカラム（フリーテキストの日程表）から日付・会場の候補を抽出する。[date, venue]、同じ日に何回かあるときは part（「1部」）も。
     // 表記ゆれが大きい（"M月D日(曜)" / "M.D" / "MM.DD(曜)"、複数日をまとめた"M.D,D2"等）ため、
     // パースできない行は単に候補から外れるだけで、フォームの手入力へフォールバックできる。
     public function parseScheduleEntries(): array
@@ -101,13 +145,13 @@ class DbConcert extends Model
             if (preg_match('/^(\d{1,2})月(\d{1,2})日\s*(?:\([^)]*\))?\s*(?:〜|～|-)\s*(\d{1,2})日\s*(?:\([^)]*\))?\s*(.+)$/u', $line, $m)) {
                 $month = (int)$m[1];
                 $advanceYearIfMonthWrapped($month);
-                $venue = trim(preg_replace('/[（(][^）)]*[）)]\s*$/u', '', $m[4]));
+                [$venue, $part] = $this->splitVenueNote($m[4]);
                 $startDay = (int)$m[2];
                 $endDay = (int)$m[3];
                 foreach (range($startDay, $endDay) as $day) {
                     $date = $this->buildDate($currentYear, $month, (int)$day);
                     if ($date && $venue !== '') {
-                        $entries[] = ['date' => $date, 'venue' => $venue];
+                        $entries[] = ['date' => $date, 'venue' => $venue] + ($part !== null ? ['part' => $part] : []);
                     }
                 }
                 continue;
@@ -116,10 +160,10 @@ class DbConcert extends Model
             // "4月24日(土) 愛知・日本ガイシホール (公演中止)" 形式
             if (preg_match('/^(\d{1,2})月(\d{1,2})日\s*(?:\([^)]*\))?\s*(.+)$/u', $line, $m)) {
                 $advanceYearIfMonthWrapped((int)$m[1]);
-                $venue = trim(preg_replace('/[（(][^）)]*[）)]\s*$/u', '', $m[3]));
+                [$venue, $part] = $this->splitVenueNote($m[3]);
                 $date = $this->buildDate($currentYear, (int)$m[1], (int)$m[2]);
                 if ($date && $venue !== '') {
-                    $entries[] = ['date' => $date, 'venue' => $venue];
+                    $entries[] = ['date' => $date, 'venue' => $venue] + ($part !== null ? ['part' => $part] : []);
                 }
                 continue;
             }
@@ -128,10 +172,10 @@ class DbConcert extends Model
             if (preg_match('/^(\d{4})[.\/](\d{1,2})[.\/](\d{1,2})\s*(?:\([^)]*\))?\s+(.+)$/u', $line, $m)) {
                 $currentYear = (int)$m[1];
                 $lastMonth = (int)$m[2];
-                $venue = trim(preg_replace('/[（(][^）)]*[）)]\s*$/u', '', $m[4]));
+                [$venue, $part] = $this->splitVenueNote($m[4]);
                 $date = $this->buildDate($currentYear, (int)$m[2], (int)$m[3]);
                 if ($date && $venue !== '') {
-                    $entries[] = ['date' => $date, 'venue' => $venue];
+                    $entries[] = ['date' => $date, 'venue' => $venue] + ($part !== null ? ['part' => $part] : []);
                 }
                 continue;
             }
@@ -139,10 +183,10 @@ class DbConcert extends Model
             // "06.18(月) Zepp Sapporo" / "05.14(土) マリンメッセ福岡A館" / "06/18(月) Zepp Sapporo" 形式
             if (preg_match('/^(\d{1,2})[.\/](\d{1,2})\s*(?:\([^)]*\))?\s+(.+)$/u', $line, $m)) {
                 $advanceYearIfMonthWrapped((int)$m[1]);
-                $venue = trim(preg_replace('/[（(][^）)]*[）)]\s*$/u', '', $m[3]));
+                [$venue, $part] = $this->splitVenueNote($m[3]);
                 $date = $this->buildDate($currentYear, (int)$m[1], (int)$m[2]);
                 if ($date && $venue !== '') {
-                    $entries[] = ['date' => $date, 'venue' => $venue];
+                    $entries[] = ['date' => $date, 'venue' => $venue] + ($part !== null ? ['part' => $part] : []);
                 }
                 continue;
             }
@@ -152,12 +196,12 @@ class DbConcert extends Model
                 preg_match('/^(\d{1,2})[.\/]((?:\d{1,2},?)+)\s+(.+)$/u', $line, $m2);
                 $month = (int)$m2[1];
                 $advanceYearIfMonthWrapped($month);
-                $venue = trim($m2[3]);
+                [$venue, $part] = $this->splitVenueNote($m2[3]);
                 $days = explode(',', $m2[2]);
                 foreach ($days as $day) {
                     $date = $this->buildDate($currentYear, $month, (int)$day);
                     if ($date && $venue !== '') {
-                        $entries[] = ['date' => $date, 'venue' => $venue];
+                        $entries[] = ['date' => $date, 'venue' => $venue] + ($part !== null ? ['part' => $part] : []);
                     }
                 }
                 continue;
@@ -165,6 +209,18 @@ class DbConcert extends Model
         }
 
         return $entries;
+    }
+
+    // スケジュールの会場の欄から、うしろのかっこ書き（延期・振替・県名などの注記）を外す。
+    // 「(1部)」「(2部)」のように同じ日の何回目かを書いたものだけは、捨てずに [会場名, '1部'] として返す（パターンで回まで選べるように）
+    private function splitVenueNote(string $text): array
+    {
+        $part = null;
+        if (preg_match('/[（(]\s*(\d+\s*部)\s*[）)]\s*$/u', $text, $m)) {
+            $part = preg_replace('/\s+/u', '', $m[1]);
+        }
+
+        return [trim(preg_replace('/[（(][^）)]*[）)]\s*$/u', '', $text)), $part];
     }
 
     private function buildDate(int $year, int $month, int $day): ?string

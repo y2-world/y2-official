@@ -33,7 +33,8 @@
                     <td class="td_title"><a href="{{ $tourUrl($tour) }}">{{ $tour->title }}</a>
                         {{-- ツアーの全パターンではやっていないときは、やったパターン（段を全部やっていれば段のタイトル） --}}
                         @if (!empty($partialPatterns[$tour->id]))
-                            <br><small style="color: #888;">{{ implode(' / ', $partialPatterns[$tour->id]) }}</small>
+                            {{-- やったパターン（公演日・段のタイトル）。1公演1行 --}}
+                            <br><small style="color: #888;">{!! collect($partialPatterns[$tour->id])->map(fn ($name) => e($name))->implode('<br>') !!}</small>
                         @endif
                     </td>
                     @if ($isHikigatariArtist)@include('songs._hikigatari_cell', ['hikigatari' => isset($hikigatariTourIds[$tour->id]), 'normal' => isset($normalTourIds[$tour->id])])@endif

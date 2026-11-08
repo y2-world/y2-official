@@ -3,10 +3,13 @@
      db_concerts/show.blade.php と mypage/attendances/show.blade.php から共通で利用する。
      曲名のリンク先は既定でdatabase側の曲詳細だが、$songLinkResolver（fn($songModel, $alternativeTitle) => string|null）を
      渡すと呼び出し元でリンク先を差し替えられる（mypageでは自分の参加履歴一覧へ誘導するため）。
-     $noSongLinks = true のときは曲名にリンクを付けない（参加登録のパターン選択画面など、選ぶための画面）。 --}}
+     $noSongLinks = true のときは曲名にリンクを付けない（参加登録のパターン選択画面など、選ぶための画面）。
+     パターンの見出しは PatternTitle（スケジュールから選んだ公演日を「5.30 大阪城ホール」と1日1行、その下にタイトル）。
+     $noGroupTitles = true のときは段のタイトル（グループの見出し）を出さない（パターン選択画面はカードの上に出しているので、プレビューには出さない）。 --}}
 @php
     $songLinkResolver = $songLinkResolver ?? null;
     $noSongLinks = $noSongLinks ?? false;
+    $noGroupTitles = $noGroupTitles ?? false;
 @endphp
 @if ($tourSetlists->count())
     @php
@@ -58,7 +61,7 @@
                 }
                 $groups[array_key_last($groups)]['items']->push($setlistModel);
             }
-            $rowHasGroupTitle = collect($groups)->contains(fn($g) => !empty($g['title']));
+            $rowHasGroupTitle = !$noGroupTitles && collect($groups)->contains(fn($g) => !empty($g['title']));
         @endphp
         @if ($rowHasGroupTitle)
             <h4 class="setlist-group-title-sticky"></h4>
@@ -66,7 +69,7 @@
         <div class="setlist-row" data-row-num="{{ $rowNum }}" style="justify-content: safe center;">
             @foreach ($groups as $group)
                 <div class="setlist-group-wrap" data-group-title="{{ $group['title'] }}">
-                    @if ($group['title'])
+                    @if ($group['title'] && !$noGroupTitles)
                         <h4 class="setlist-group-title">{{ $group['title'] }}</h4>
                     @endif
                     <div class="setlist-group-columns {{ $group['title'] && $group['items']->count() === 1 ? 'setlist-row-single' : '' }}" style="display: flex; justify-content: safe center;">
@@ -78,12 +81,9 @@
                             @endphp
 
                             @php
-                                $subtitleRendered = renderSubtitleWithGreyedVenues($setlistModel->subtitle ?? '');
-                                $subtitleHtml = implode(' ', $subtitleRendered['lines']);
-                                $rawSubtitle = trim(strip_tags($setlistModel->subtitle ?? ''));
-                                $patternLabel = $rawSubtitle !== ''
-                                    ? preg_replace('/\s+/', ' ', $rawSubtitle)
-                                    : 'パターン' . $loop->iteration;
+                                // 公演日（1公演1行の小さいグレー）とタイトル。パターンを選ぶプルダウンは改行できないので、短い形（「6.17 佐賀 6.24 広島」）
+                                $subtitleHtml = implode(' ', \App\Support\PatternTitle::htmlLines($setlistModel));
+                                $patternLabel = \App\Support\PatternTitle::shortText($setlistModel) ?: 'パターン' . $loop->iteration;
                             @endphp
                             @if (count($setlist) || count($encore))
                                 <div class="live-column-wrap setlist-pattern-wrap" id="setlist-pattern-{{ $setlistModel->id }}" data-pattern-label="{{ $patternLabel }}">

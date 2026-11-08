@@ -53,6 +53,11 @@
                             <span><i class="fa-solid fa-calendar-day" style="margin-right: 10px;"></i>Events</span>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
+                        {{-- 会場：スケジュールに出てくる会場の一覧と検索 --}}
+                        <a href="{{ route('database.venues', $artist->id) }}" class="database-link">
+                            <span><i class="fa-solid fa-location-dot" style="margin-right: 10px;"></i>Venues</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
                         @if($artist->name === 'Mr.Children')
                         <a href="{{ route('database.live', $artist->id) }}?type=3" class="database-link">
                             <span><i class="fa-solid fa-leaf" style="margin-right: 10px;"></i>ap bank fes</span>

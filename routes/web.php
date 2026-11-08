@@ -61,6 +61,7 @@ Route::prefix('database')->group(function () {
         Route::get('singles', [DbSingleController::class, 'index'])->name('database.singles');
         Route::get('albums', [DbAlbumController::class, 'index'])->name('database.albums');
         Route::get('live', [DbConcertController::class, 'index'])->name('database.live');
+        Route::get('venues', [DbConcertController::class, 'venues'])->name('database.venues');
         Route::get('biography', [BioController::class, 'index'])->name('database.biography');
         Route::get('biography/{year}', [BioController::class, 'show'])->name('database.biography.year');
     });

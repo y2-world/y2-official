@@ -33,13 +33,43 @@ class TimelineController extends Controller
             $query->where('external_user_id', $userId);
         }
 
-        $attendances = $query
+        // ?show=comments：コメントだけ（プルダウンの「すべてのコメント」「自分のコメント」）
+        $commentsOnly = $request->input('show') === 'comments';
+
+        $attendances = $commentsOnly ? collect() : $query
             ->orderByDesc('created_at')
             ->orderByDesc('id')
             ->limit(50)
             ->get();
 
-        return view('mypage.timeline.index', compact('attendances', 'filterUser'));
+        // コメントもタイムラインに1件として並べる（誰が・どの投稿に・何と書いたか）。?user_id= のときはその人が書いたコメント
+        $comments = TimelineComment::with([
+            'externalUser',
+            'attendance.externalUser',
+            'attendance.dbSetlist.tour.artist',
+            'attendance.userSetlist.concert.artist',
+            'attendance.dbConcert.artist',
+            'attendance.userConcert.artist',
+        ])
+            ->when($userId && $userId !== 'all', fn ($q) => $q->where('external_user_id', $userId))
+            ->whereHas('attendance')
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->limit(50)
+            ->get();
+
+        // ツアーが消えている記録（パターンだけ残ったもの）と、それへのコメントは出さない（開いても 404 なので）
+        $attendances = $attendances->filter(fn ($attendance) => $attendance->attendedTour?->artist);
+        $comments = $comments->filter(fn ($comment) => $comment->attendance->attendedTour?->artist);
+
+        // 投稿とコメントを新しい順に混ぜて、合わせて50件
+        $items = $attendances->map(fn ($attendance) => ['type' => 'attendance', 'model' => $attendance, 'at' => $attendance->created_at])
+            ->concat($comments->map(fn ($comment) => ['type' => 'comment', 'model' => $comment, 'at' => $comment->created_at]))
+            ->sortByDesc(fn ($item) => $item['at']?->getTimestamp() ?? 0)
+            ->take(50)
+            ->values();
+
+        return view('mypage.timeline.index', compact('attendances', 'items', 'filterUser', 'commentsOnly'));
     }
 
     // 星評価（投稿者本人の自己評価）の更新（インライン編集からのAjax）

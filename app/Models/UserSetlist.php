@@ -9,6 +9,8 @@ class UserSetlist extends Model
     protected $casts = [
         'setlist' => 'array',
         'encore' => 'array',
+        // スケジュールから選んだ公演日（「2026-05-30」「2000-04-06 1部」）。表示は SubtitleScheduleDates
+        'schedule_dates' => 'array',
     ];
 
     protected $fillable = [
@@ -19,6 +21,7 @@ class UserSetlist extends Model
         'order_no',
         'row',
         'subtitle',
+        'schedule_dates',
         'setlist',
         'encore',
     ];

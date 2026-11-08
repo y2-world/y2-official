@@ -80,7 +80,12 @@
                     {{ date('Y.m.d', strtotime($tours->date1)) }}
                 @endif
                 <br>
-                {{ $tours->venue }}
+                {{-- 会場名から Database の会場のページへ --}}
+                @if ($venueKeyword = \App\Models\DbConcert::linkableVenue($tours->artist_id, $tours->venue))
+                    <a href="{{ route('database.venues', [$tours->artist_id, 'keyword' => $venueKeyword]) }}" class="header-link">{{ $tours->venue }}</a>
+                @else
+                    {{ $tours->venue }}
+                @endif
             </p>
 
             @if ($totalOlCount >= 2)
@@ -226,7 +231,7 @@
                             <hr>
                         @endif
                         <h5>SCHEDULE</h5>
-                        @include('partials._schedule', ['schedule' => $tours->schedule])
+                        @include('partials._schedule', ['schedule' => $tours->schedule, 'venueArtistId' => $tours->artist_id])
                     @endif
                     @if (!is_null($tours->text))
                         <hr>

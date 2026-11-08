@@ -503,6 +503,7 @@ class StatsController extends Controller
         $openingSongStats = $this->getDatabaseOpeningSongStats($artistId, $type);
         $longestSetlists = $this->getDatabaseLongestSetlists($artistId, $type);
         $yearStats = $this->getDatabaseYearStats($artistId, $type);
+        $venueStats = $this->getDatabaseVenueStats($artistId, $type);
 
         // タブの「Artists」：セットリストが登録されているアーティストのDatabaseのstatsに切り替える（今のアーティストを選んだ状態）
         $tourArtistIds = DbConcert::whereIn('id', DbSetlist::distinct()->pluck('tour_id'))->distinct()->pluck('artist_id');
@@ -546,7 +547,8 @@ class StatsController extends Controller
             'topicClosingSongs',
             'openingSongStats',
             'longestSetlists',
-            'yearStats'
+            'yearStats',
+            'venueStats'
         ));
     }
 
@@ -653,6 +655,20 @@ class StatsController extends Controller
             ->get();
     }
 
+    // Top Venues：スケジュールに出てくる会場ごとの公演数（今日までの公演）。多い順に25件、同じ数なら最後の公演が新しい順
+    private function getDatabaseVenueStats(int $artistId, string $type = 'all')
+    {
+        $today = now()->toDateString();
+
+        return DbConcert::scheduleVenueEntries($artistId, fn ($query) => $this->applyDatabaseTypeFilter($query, $type))
+            ->filter(fn ($entry) => $entry['date'] <= $today)
+            ->groupBy('venue')
+            ->map(fn ($rows, $venue) => (object) ['venue' => $venue, 'count' => $rows->count(), 'last' => $rows->max('date')])
+            ->sort(fn ($a, $b) => [$b->count, $b->last] <=> [$a->count, $a->last])
+            ->take(25)
+            ->values();
+    }
+
     // 福山雅治のDOUBLE ENCORE（弾き語り）で演奏された曲。数え方は他のランキングと同じく、演奏されたツアーの数
     private function getDatabaseDoubleEncoreSongStats(int $artistId, string $type = 'all')
     {
@@ -754,7 +770,8 @@ class StatsController extends Controller
                 $lengths[] = [
                     'tour_id' => $setlist->tour_id,
                     'tour_title' => $tour ? $tour->title : '不明',
-                    'subtitle' => $setlist->subtitle ?? '',
+                    // 公演日（「5.30 大阪城ホール」1公演1行）とタイトル。HTML
+                    'subtitle' => \App\Support\PatternTitle::textHtml($setlist),
                     'song_count' => $count,
                 ];
             }

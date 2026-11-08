@@ -344,7 +344,7 @@
                                             <a href="{{ route('live.show', $setlist['tour_id']) }}" class="stats-link">
                                                 {{ $setlist['tour_title'] }}
                                                 @if($setlist['subtitle'])
-                                                    <br><small style="color: #666;">{{ $setlist['subtitle'] }}</small>
+                                                    <br><small style="color: #666;">{!! $setlist['subtitle'] !!}</small>
                                                 @endif
                                             </a>
                                         </td>
@@ -357,6 +357,40 @@
                             </table>
                         </div>
                     </div>
+
+                    <!-- Top Venues Section：スケジュールに出てくる会場の公演数。会場を押すと Database の会場のページ -->
+                    @if ($venueStats->isNotEmpty())
+                    <div class="stats-section visible">
+                        <h2 class="section-title">
+                            <i class="fas fa-map-marker-alt"></i> Top Venues
+    <span class="section-title-desc">公演の多い会場</span></h2>
+                        <div class="stats-table-container">
+                            <table class="stats-table">
+                                <thead>
+                                    <tr>
+                                        <th class="rank-col">Rank</th>
+                                        <th>Venue</th>
+                                        <th class="count-col">Shows</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($venueStats as $index => $venue)
+                                    @php
+                                        $showRank = $index === 0 || $venueStats[$index - 1]->count !== $venue->count;
+                                        $actualRank = $index + 1;
+                                    @endphp
+                                    <tr @if($index >= 10) data-more style="display: none;" @endif>
+                                        <td class="rank-col">
+                                            @if($showRank)
+                                                @if($index === 0)
+                                                    <span class="rank-badge gold">🏆</span>
+                                                @elseif($index === 1)
+                                                    <span class="rank-badge silver">🥈</span>
+                                                @elseif($index === 2)
+                                                    <span class="rank-badge bronze">🥉</span>
+                                                @else
+                                                    <span class="rank-number">{{ $actualRank }}</span>
+                                                @endif
 
                     <!-- Tours by Year Section -->
                     <div class="stats-section visible">
@@ -389,6 +423,23 @@
                             </table>
                         </div>
                     </div>
+
+                                            @endif
+                                        </td>
+                                        <td class="venue-name">
+                                            <a href="{{ route('database.venues', [$artist->id, 'keyword' => $venue->venue]) }}" class="stats-link">{{ $venue->venue }}</a>
+                                        </td>
+                                        <td class="count-col">
+                                            <span class="count-badge">{{ $venue->count }}</span>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            @include('stats._show_more', ['count' => count($venueStats)])
+                        </div>
+                    </div>
+                    @endif
                     </div>
 
                 </div>
