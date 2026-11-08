@@ -94,6 +94,12 @@
         color: #333 !important;
         font-size: 0.8rem !important;
     }
+    /* スマホは一段小さく */
+    @media (max-width: 768px) {
+        .select-card-title .setlist-schedule-date-line {
+            font-size: 0.75rem !important;
+        }
+    }
     </style>
 
     <script>
