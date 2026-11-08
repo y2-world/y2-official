@@ -81,6 +81,22 @@ class PatternTitle
         return array_values(array_filter([...static::dateLabels($pattern), $title], fn ($line) => $line !== ''));
     }
 
+    // 縦に長くしたくないところ（管理画面の一覧）用。最初の公演の1行と「他 N 公演」、タイトルがあればその下
+    public static function compactHtml($pattern): string
+    {
+        $dates = static::dateLabels($pattern);
+        $title = trim(preg_replace('/\s+/u', ' ', strip_tags((string) $pattern?->subtitle)));
+        $lines = [];
+        if ($dates) {
+            $lines[] = e($dates[0]) . (count($dates) > 1 ? ' <span style="color: #999;">他' . (count($dates) - 1) . '公演</span>' : '');
+        }
+        if ($title !== '') {
+            $lines[] = e($title);
+        }
+
+        return implode('<br>', $lines);
+    }
+
     // 改行でつないだ HTML（1公演1行）
     public static function textHtml($pattern): string
     {

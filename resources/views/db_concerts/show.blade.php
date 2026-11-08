@@ -304,6 +304,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updatePatternSubtitleAccordions() {
         document.querySelectorAll('.setlist-pattern-wrap .setlist-subtitle-auto').forEach(function (heading) {
+            // 作り直しても、開いている見出しは開いたままにする
+            var wasExpanded = heading.classList.contains('is-expanded');
             heading.classList.remove('setlist-subtitle-collapsible', 'is-expanded');
 
             // 改行位置を固定せず出力した見出し自身の実高さを見る。
@@ -316,6 +318,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var wrapsNaturally = heading.scrollHeight > lineHeight * 1.5;
             if (wrapsNaturally) {
                 heading.classList.add('setlist-subtitle-collapsible');
+                heading.classList.toggle('is-expanded', wasExpanded);
                 heading.onclick = function () {
                     heading.classList.toggle('is-expanded');
                 };
@@ -325,10 +328,22 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // スマホでスクロールしてアドレスバーが出入りしたとき（高さだけが変わる）にも resize が来るので、横の幅が変わったときだけ作り直す
+    var onWidthResize = function (callback) {
+        var lastWidth = window.innerWidth;
+        window.addEventListener('resize', function () {
+            if (window.innerWidth === lastWidth) {
+                return;
+            }
+            lastWidth = window.innerWidth;
+            callback();
+        });
+    };
+
     updateSongFeaturingWrap();
     updatePatternSubtitleAccordions();
-    window.addEventListener('resize', updateSongFeaturingWrap);
-    window.addEventListener('resize', updatePatternSubtitleAccordions);
+    onWidthResize(updateSongFeaturingWrap);
+    onWidthResize(updatePatternSubtitleAccordions);
     if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(function () {
             updateSongFeaturingWrap();
@@ -340,6 +355,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // 複数行が切り詰められる場合だけアコーディオンを有効にする。
     function updateSummarySubtitleAccordions() {
         document.querySelectorAll('.setlist-subtitle-wrap').forEach(function (el) {
+            var wasExpanded = el.classList.contains('is-expanded');
             el.classList.add('setlist-subtitle-collapsible');
             el.classList.remove('is-expanded');
             var clampedHeight = el.getBoundingClientRect().height;
@@ -348,6 +364,7 @@ document.addEventListener('DOMContentLoaded', function () {
             el.classList.remove('is-expanded');
 
             if (fullHeight > clampedHeight + 1) {
+                el.classList.toggle('is-expanded', wasExpanded);
                 el.onclick = function () {
                     el.classList.toggle('is-expanded');
                 };
@@ -359,7 +376,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     updateSummarySubtitleAccordions();
-    window.addEventListener('resize', updateSummarySubtitleAccordions);
+    onWidthResize(updateSummarySubtitleAccordions);
     if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(updateSummarySubtitleAccordions);
     }

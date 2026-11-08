@@ -1083,10 +1083,10 @@ class DbSetlistResource extends Resource
                 Tables\Columns\TextColumn::make('order_no')
                     ->label('パターン')
                     ->sortable(),
-                // 公演日（「5.30 大阪城ホール」1公演1行）とタイトル。検索はタイトルの文字で
+                // 公演日（最初の公演と「他 N 公演」。縦に長くしない）とタイトル。検索はタイトルの文字で
                 Tables\Columns\TextColumn::make('subtitle')
                     ->label('公演日・タイトル')
-                    ->state(fn ($record) => \App\Support\PatternTitle::textHtml($record))->html()
+                    ->state(fn ($record) => \App\Support\PatternTitle::compactHtml($record))->html()
                     ->wrap()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
