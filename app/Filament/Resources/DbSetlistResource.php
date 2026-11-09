@@ -856,7 +856,8 @@ class DbSetlistResource extends Resource
                             ->label('公演日（スケジュールから選択）')
                             ->multiple()
                             ->searchable()
-                            ->options(fn (Get $get, $state) => static::scheduleOptions($get('tour_id'), (array) $state))
+                            // ツアーのほかのパターン（どの段でも）で選んだ公演日は出さない（このパターンで選んでいる日は残す）
+                            ->options(fn (Get $get, $state, $record) => static::scheduleOptions($get('tour_id'), (array) $state, $record?->id))
                             ->visible(fn (Get $get) => count(static::scheduleOptions($get('tour_id'))) > 0)
                             ->live()
                             // 選んだ順ではなく、スケジュールの順（日付順）で保存する
@@ -1152,12 +1153,21 @@ class DbSetlistResource extends Resource
 
     // 公演日の選択肢。キーは保存する形（「2026-05-30」「2000-04-06 1部」）、表示は「5.30 大阪城ホール 1部」。
     // 選んであるのにスケジュールに無い日（スケジュールを直した・「1部」がスケジュールに書かれていない日）も、消えないように選択肢に入れる
-    public static function scheduleOptions($tourId, array $selected = []): array
+    // $patternId を渡すと、そのツアーのほかのパターンで選んだ公演日を外す（$selected にある日は残す）
+    public static function scheduleOptions($tourId, array $selected = [], $patternId = false): array
     {
         $schedule = static::scheduleEntries($tourId);
+        $taken = [];
+        if ($patternId !== false && $tourId) {
+            $others = AdminData::query('setlist')->ofTour($tourId)->when($patternId, fn ($q) => $q->whereKeyNot($patternId))->pluck('schedule_dates');
+            $taken = array_flip(array_diff($others->flatten()->filter()->map(fn ($key) => (string) $key)->all(), $selected));
+        }
         $options = [];
         foreach ($schedule as $entry) {
-            $options[\App\Support\PatternTitle::key($entry)] ??= \App\Support\PatternTitle::label($entry);
+            $key = \App\Support\PatternTitle::key($entry);
+            if (!isset($taken[$key])) {
+                $options[$key] ??= \App\Support\PatternTitle::label($entry);
+            }
         }
         foreach (\App\Support\PatternTitle::entries(array_diff($selected, array_keys($options)), $schedule) as $entry) {
             $options[\App\Support\PatternTitle::key($entry)] = \App\Support\PatternTitle::label($entry) . '（スケジュールに無い）';
