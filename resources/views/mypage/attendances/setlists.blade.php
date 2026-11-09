@@ -55,7 +55,7 @@
                             // 公演日（「5.30 大阪城ホール」1日1行）とタイトル
                             $labelLines = \App\Support\PatternTitle::htmlLines($setlist);
                             // 公演日の行はそれぞれ1行（display: block）なので、改行を足さずにつなぐ。タイトルの行（あれば）は改行で
-                            $label = $labelLines ? preg_replace('/(<\/span>)<br>(?=<span class="setlist-schedule-date-line")/', '$1', implode('<br>', $labelLines)) : null;
+                            $label = $labelLines ? preg_replace('/(<\/span>)<br>(?=<span class="setlist-schedule-date-line)/', '$1', implode('<br>', $labelLines)) : null;
                             $groupTitle = $groupTitlesByRowAndOrderNo[$setlist->row][$setlist->order_no] ?? null;
                         @endphp
                         @if ($groupTitle)
@@ -94,10 +94,10 @@
         color: #333 !important;
         font-size: 0.8rem !important;
     }
-    /* スマホは一段小さく */
+    /* スマホは一段小さく（0.75rem では PC の 0.8rem とほとんど変わらなかった） */
     @media (max-width: 768px) {
         .select-card-title .setlist-schedule-date-line {
-            font-size: 0.75rem !important;
+            font-size: 0.7rem !important;
         }
     }
     </style>

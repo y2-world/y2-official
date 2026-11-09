@@ -81,9 +81,10 @@
                             @endphp
 
                             @php
-                                // 公演日（1公演1行の小さいグレー）とタイトル。パターンを選ぶプルダウンは改行できないので、短い形（「6.17 佐賀 6.24 広島」）
+                                // 公演日（1公演1行の小さいグレー）とタイトル
                                 $subtitleHtml = implode(' ', \App\Support\PatternTitle::htmlLines($setlistModel));
-                                $patternLabel = \App\Support\PatternTitle::shortText($setlistModel) ?: 'パターン' . $loop->iteration;
+                                // プルダウンは、最初の公演（会場名はフル）と「他 N 公演」（「12.16 北海道立総合体育センター 北海きたえーる 他1公演」）。地名の短い形は shortText
+                                $patternLabel = \App\Support\PatternTitle::oneLine($setlistModel) ?: 'パターン' . $loop->iteration;
                             @endphp
                             @if (count($setlist) || count($encore))
                                 <div class="live-column-wrap setlist-pattern-wrap" id="setlist-pattern-{{ $setlistModel->id }}" data-pattern-label="{{ $patternLabel }}">
@@ -171,8 +172,8 @@
                                                 </span>
                                                 <br>
                                             @elseif ($isInline)
-                                                {{-- 日替わりの候補は「-」、メドレーは「~」（Summary のメドレーのつなぎと同じ）。タイトルのあるメドレーは「~」なし --}}
-                                                @unless ($isMedley && !empty($inTitledMedley)){{ $isMedley ? '~' : '-' }}@endunless
+                                                {{-- 日替わりの候補は「-」。メドレーの曲は（タイトルがあってもなくても）「~」を付けない --}}
+                                                @unless ($isMedley)-@endunless
                                                 <span class="setlist-song-featuring">
                                                     @if ($link)
                                                         <a href="{{ $link }}" @if($isUnique) style="font-weight:900;" @endif>{{ $title }}</a>

@@ -2227,10 +2227,16 @@ h5.setlist-subtitle-heading {
     overflow: visible;
 }
 
-/* 公演日（1公演1行、見出しの半分の大きさ）の見出しは、たたんだとき公演日のちょうど1行分だけ見せる */
-.setlist-pattern-wrap .setlist-subtitle-collapsible:has(.setlist-schedule-date-line):not(.is-expanded) {
-    max-height: 0.75em;
-    line-height: 0.75em;
+/* 公演日（1公演1行、見出しの半分の大きさ）の見出しは、たたんだとき1行目の公演だけ見せる。
+   高さで切ると長い会場名が折り返したところで切れるので、2行目からの公演（--rest）を隠す */
+.setlist-subtitle-collapsible:has(.setlist-schedule-date-line):not(.is-expanded),
+.setlist-pattern-wrap .setlist-subtitle-collapsible:has(.setlist-schedule-date-line):not(.is-expanded),
+.setlist-summary-wrap .setlist-subtitle-collapsible.setlist-subtitle-wrap:has(.setlist-schedule-date-line):not(.is-expanded) {
+    max-height: none;
+    overflow: visible;
+}
+.setlist-subtitle-collapsible:not(.is-expanded) .setlist-schedule-date-line--rest {
+    display: none !important;
 }
 
 /* たたんでいるときだけ、1行目のうしろに「他 N 公演」 */
@@ -2285,6 +2291,10 @@ h5.setlist-subtitle-heading {
     overflow: hidden;
 }
 
+.setlist-subtitle-wrap:has(.setlist-schedule-date-line):not(.setlist-subtitle-collapsible) {
+    max-height: none;
+}
+
 .setlist-subtitle-collapsible.setlist-subtitle-wrap.is-expanded {
     max-height: none;
     overflow: visible;
@@ -2300,6 +2310,11 @@ h5.setlist-subtitle-heading {
     .setlist-summary-wrap .setlist-summary-single-pattern-label {
         max-height: none;
         overflow: visible;
+    }
+
+    /* 公演日の見出しは行数でたたむかを決める（1公演なら全部出す）ので、高さで切らない */
+    .setlist-summary-wrap .setlist-subtitle-wrap:has(.setlist-schedule-date-line) {
+        max-height: none;
     }
 
 }

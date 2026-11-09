@@ -104,6 +104,7 @@ class PatternTitle
     }
 
     // 短い形（「6.17 佐賀 6.24 広島」）。公演日は日付と地名（会場名から決める。DbSetlistResource::venuePlace）、回があれば「1部」も。
+    // 同じ地名で続けて何日かあるときは、地名のうしろにその何日目か（「12.16 札幌2」）。
     // 改行できない、Database のツアーのページのパターンを選ぶプルダウンだけで使う
     public static function shortText($pattern): string
     {
@@ -111,13 +112,44 @@ class PatternTitle
         $schedule = $keys === [] ? [] : static::schedule($pattern);
         // 会場が1つだけのライブは、地名を付けずに日付（と回）だけ
         $withPlace = !static::singleVenue($schedule);
-        $dates = array_map(function ($entry) use ($withPlace) {
-            $place = $withPlace ? \App\Filament\Resources\DbSetlistResource::venuePlace(\App\Models\DbConcert::venueKeyword($entry['venue'] ?? '')) : '';
-            return preg_replace('/\s+/u', ' ', trim(Carbon::parse($entry['date'])->format('n.j') . ' ' . $place . ' ' . ($entry['part'] ?? '')));
+        $place = fn ($entry) => \App\Filament\Resources\DbSetlistResource::venuePlace(\App\Models\DbConcert::venueKeyword($entry['venue'] ?? ''));
+        // 何日目か：スケジュールで同じ地名が続くところ（1回の訪問）ごとに、日付を1から数える（「札幌1 札幌2 札幌3」）
+        $ordinal = [];
+        $runs = [];
+        $prevPlace = null;
+        foreach ($schedule as $entry) {
+            $name = $place($entry);
+            if ($name !== $prevPlace) {
+                $runs[] = [];
+            }
+            $prevPlace = $name;
+            $runs[count($runs) - 1][$entry['date']] = true;
+            $ordinal[$entry['date']] = [count($runs) - 1, count($runs[count($runs) - 1])];
+        }
+        $dates = array_map(function ($entry) use ($withPlace, $place, $ordinal, $runs) {
+            $name = '';
+            if ($withPlace) {
+                $name = $place($entry);
+                [$run, $nth] = $ordinal[$entry['date']] ?? [null, null];
+                if ($run !== null && count($runs[$run]) > 1) {
+                    $name .= $nth;
+                }
+            }
+            return preg_replace('/\s+/u', ' ', trim(Carbon::parse($entry['date'])->format('n.j') . ' ' . $name . ' ' . ($entry['part'] ?? '')));
         }, $keys === [] ? [] : static::entries($keys, $schedule));
         $title = trim(preg_replace('/\s+/u', ' ', strip_tags((string) $pattern?->subtitle)));
 
         return trim(implode(' ', $dates) . ' ' . $title);
+    }
+
+    // プルダウン（改行できない）用の1行。最初の公演（会場名はフル）と「他 N 公演」、タイトルがあればそのうしろ
+    public static function oneLine($pattern): string
+    {
+        $dates = static::dateLabels($pattern);
+        $title = trim(preg_replace('/\s+/u', ' ', strip_tags((string) $pattern?->subtitle)));
+        $first = $dates ? $dates[0] . (count($dates) > 1 ? ' 他' . (count($dates) - 1) . '公演' : '') : '';
+
+        return trim($first . ' ' . $title);
     }
 
     // 空かどうかを見る・検索に使う文字（行を空白でつないだもの）。画面に出すときは textLines / textHtml
@@ -126,17 +158,40 @@ class PatternTitle
         return implode(' ', static::textLines($pattern));
     }
 
-    // 見出しの HTML の行。公演日は1日1行で、日付も会場名も小さいグレー（見出しの半分の大きさ）。タイトルは今までの出し方（renderSubtitleWithGreyedVenues）
+    // 見出しの HTML の行。公演日は1日1行で、日付も会場名も小さいグレー（見出しの半分の大きさ）
     // 公演日もタイトル（「en-Zepp 1」「Day1」）も、同じ文字で1行ずつ出す（公演日の無いパターンのタイトルも同じ）
     public static function htmlLines($pattern): array
     {
-        $line = fn ($text) => '<span class="setlist-schedule-date-line" style="display: block; font-size: 0.5em; line-height: 1.5; color: #999; font-weight: normal;">' . e($text) . '</span>';
-        $titles = array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', (string) $pattern?->subtitle)), fn ($t) => $t !== '');
-        $dates = static::dateLabels($pattern);
-        $lines = array_map($line, [...$dates, ...$titles]);
-        // 公演が2つ以上あるときは、1行目のうしろに「他 N 公演」。見出しがたたまれているときだけ出す（1行目だけでその公演だけと思わないように）
-        if (count($dates) >= 2) {
-            $lines[0] = preg_replace('/<\/span>$/', '<span class="setlist-subtitle-more">他' . (count($dates) - 1) . '公演</span></span>', $lines[0]);
+        return static::htmlLinesFor([$pattern]);
+    }
+
+    // たたんだ見出しに出す行の数。これより多いときだけたたむ（db_concerts/show の SUBTITLE_COLLAPSE_LINES と合わせる）
+    public const VISIBLE_LINES = 1;
+
+    // いくつかのパターンの見出しの行をつないだもの（Summary の、段のパターンを全部並べる見出し）。
+    // 見出しをたたんだときは1行目だけ見せる。2行目からは --rest（たたむと隠す）。
+    // 1行目のうしろの「他 N 公演」（隠れた公演の数）はたたんでいるときだけ出す（見えている公演だけと思わないように）
+    public static function htmlLinesFor(iterable $patterns): array
+    {
+        $texts = [];
+        foreach ($patterns as $pattern) {
+            foreach (static::dateLabels($pattern) as $date) {
+                $texts[] = [$date, true];
+            }
+            foreach (array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', (string) $pattern?->subtitle)), fn ($t) => $t !== '') as $title) {
+                $texts[] = [$title, false];
+            }
+        }
+        $lines = [];
+        $hiddenDates = 0;
+        foreach ($texts as $i => [$text, $isDate]) {
+            $rest = $i >= static::VISIBLE_LINES;
+            $hiddenDates += $rest && $isDate ? 1 : 0;
+            $lines[] = '<span class="setlist-schedule-date-line' . ($rest ? ' setlist-schedule-date-line--rest' : '') . '" style="display: block; font-size: 0.5em; line-height: 1.5; color: #999; font-weight: normal;">' . e($text) . '</span>';
+        }
+        if ($hiddenDates >= 1) {
+            $last = static::VISIBLE_LINES - 1;
+            $lines[$last] = preg_replace('/<\/span>$/', '<span class="setlist-subtitle-more">他' . $hiddenDates . '公演</span></span>', $lines[$last]);
         }
 
         return $lines;

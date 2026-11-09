@@ -144,16 +144,16 @@
                             }
 
                             $isMedley = !empty($data['medley']) && $data['medley'] == 1;
-                            // タイトルのあるメドレー（1曲目に medley_title）：曲番はタイトルの行に付け、その下に曲を「~」なしで並べる
+                            // タイトルのあるメドレー（1曲目に medley_title）：曲番はタイトルの行に付け、その下に曲を並べる（メドレーの曲には、タイトルがなくても「~」を付けない）
                             if (!$isMedley) { $titledMedley = false; }
                             $medleyTitle = !$isMedley ? trim((string) ($data['medley_title'] ?? '')) : '';
                             if ($medleyTitle !== '') { $count++; echo '<li>' . htmlspecialchars($medleyTitle, ENT_COMPAT, 'UTF-8') . '</li>'; $isMedley = true; $titledMedley = true; }
 
                             if ($isMedley) {
                                 if ($url !== '#') {
-                                    echo (!empty($titledMedley) ? '' : '~ ') . '<a href="' . $url . '">' . $keyword . '</a>';
+                                    echo '<a href="' . $url . '">' . $keyword . '</a>';
                                 } else {
-                                    echo (!empty($titledMedley) ? '' : '~ ') . $keyword;
+                                    echo $keyword;
                                 }
                                 if (!empty($featuring)) {
                                     echo $featuring;
@@ -243,16 +243,16 @@
                             }
 
                             $isMedley = !empty($data['medley']) && $data['medley'] == 1;
-                            // タイトルのあるメドレー（1曲目に medley_title）：曲番はタイトルの行に付け、その下に曲を「~」なしで並べる
+                            // タイトルのあるメドレー（1曲目に medley_title）：曲番はタイトルの行に付け、その下に曲を並べる（メドレーの曲には、タイトルがなくても「~」を付けない）
                             if (!$isMedley) { $titledMedley = false; }
                             $medleyTitle = !$isMedley ? trim((string) ($data['medley_title'] ?? '')) : '';
                             if ($medleyTitle !== '') { $count++; echo '<li>' . htmlspecialchars($medleyTitle, ENT_COMPAT, 'UTF-8') . '</li>'; $isMedley = true; $titledMedley = true; }
 
                             if ($isMedley) {
                                 if ($url !== '#') {
-                                    echo (!empty($titledMedley) ? '' : '~ ') . '<a href="' . $url . '">' . $keyword . '</a>';
+                                    echo '<a href="' . $url . '">' . $keyword . '</a>';
                                 } else {
-                                    echo (!empty($titledMedley) ? '' : '~ ') . $keyword;
+                                    echo $keyword;
                                 }
                                 if (!empty($featuring)) {
                                     echo $featuring;
@@ -354,12 +354,11 @@
                                             ? ' <span style="color:#999;font-size:0.75em;">' . ($songFeaturingType === 'artist' ? '/ ' : '') . htmlspecialchars($song['featuring'], ENT_COMPAT, 'UTF-8') . '</span>'
                                             : ($songCredit ? ' <span style="color:#999;font-size:0.75em;">/ ' . htmlspecialchars($songCredit, ENT_COMPAT, 'UTF-8') . '</span>' : '');
                                         $isMedley = !empty($song['medley']) && $song['medley'] == 1;
-                                        // タイトルのあるメドレー（1曲目に medley_title）：曲番はタイトルの行に付け、その下に曲を「~」なしで並べる
+                                        // タイトルのあるメドレー（1曲目に medley_title）：曲番はタイトルの行に付け、その下に曲を並べる（メドレーの曲には、タイトルがなくても「~」を付けない）
                                         if (!$isMedley) { $titledMedley = false; }
                             $medleyTitle = !$isMedley ? trim((string) ($song['medley_title'] ?? '')) : '';
                                         if ($medleyTitle !== '') { echo '<li>' . htmlspecialchars($medleyTitle, ENT_COMPAT, 'UTF-8') . '</li>'; $isMedley = true; $titledMedley = true; }
                                         if ($isMedley) {
-                                            echo !empty($titledMedley) ? '' : '~ ';
                                             echo ($url !== '#') ? '<a href="' . $url . '">' . htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8') . '</a>' : htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8');
                                             echo $feat . (!empty($annotation) ? ' ' . $annotation : '') . '<br>';
                                         } else {
@@ -394,7 +393,7 @@
                                     if (!empty($data['alternative_title']) && $url !== '#') { $url .= '?' . http_build_query(['title' => $data['alternative_title']]); }
                                     $annotation = $parts['annotation'];
                                     $isMedley = !empty($data['medley']) && $data['medley'] == 1;
-                                    // タイトルのあるメドレー（1曲目に medley_title）：曲番はタイトルの行に付け、その下に曲を「~」なしで並べる
+                                    // タイトルのあるメドレー（1曲目に medley_title）：曲番はタイトルの行に付け、その下に曲を並べる（メドレーの曲には、タイトルがなくても「~」を付けない）
                                     if (!$isMedley) { $titledMedley = false; }
                             $medleyTitle = !$isMedley ? trim((string) ($data['medley_title'] ?? '')) : '';
                                     if ($medleyTitle !== '') { echo '<li>' . htmlspecialchars($medleyTitle, ENT_COMPAT, 'UTF-8') . '</li>'; $isMedley = true; $titledMedley = true; }
@@ -408,7 +407,6 @@
                                         $artistDisplay .= ' <span style="color:#999;font-size:0.75em;">' . htmlspecialchars($data['featuring'], ENT_COMPAT, 'UTF-8') . '</span>';
                                     }
                                     if ($isMedley) {
-                                        echo !empty($titledMedley) ? '' : '~ ';
                                         echo ($url !== '#') ? '<a href="' . $url . '">' . htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8') . '</a>' : htmlspecialchars($keyword, ENT_COMPAT, 'UTF-8');
                                         echo $artistDisplay . (!empty($annotation) ? ' ' . $annotation : '') . '<br>';
                                     } else {

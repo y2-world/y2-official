@@ -58,10 +58,10 @@
                                              分からないため。 --}}
                                         @php
                                             // subtitleに改行が残っていても全行を拾えるよう、行配列をflattenする
-                                            $rowPatternLabels = $tourSetlists
+                                            // 段のパターンの公演日をつなぎ、たたんだときは1行目と「他 N 公演」
+                                            $rowPatternLabels = collect(\App\Support\PatternTitle::htmlLinesFor($tourSetlists
                                                 ->filter(fn ($m) => ($m->row ?? 1) == $rowNum)
-                                                ->sortBy('order_no')
-                                                ->flatMap(fn ($m) => $patternLabelLines($m))
+                                                ->sortBy('order_no')))
                                                 ->filter(fn ($line) => trim(strip_tags($line)) !== '')
                                                 ->map(fn ($line) => '<span class="setlist-summary-pattern-label">' . $line . '</span>')
                                                 ->values();
@@ -127,7 +127,7 @@
                                                                     ? '/ ' . $featuring
                                                                     : $featuring;
                                                                 // セットリストの表示と同じ形にする。タイトルのあるメドレーは、タイトルの行の下に曲を「~」なしで1行ずつ。
-                                                                // タイトルのないメドレーは、2曲目から改行して「~」を付ける（メドレー以外の曲が来たら戻す）
+                                                                // タイトルのないメドレーも、2曲目から改行するだけで「~」は付けない
                                                                 $medleyOpen = !empty($variant['medley_title']) ? e($variant['medley_title']) . '<br>' : '';
                                                                 if (empty($variant['medley'])) { $inTitledMedley = $medleyOpen !== ''; }
                                                                 $medleyClose = '';
@@ -140,7 +140,7 @@
                                                                 @endif
                                                                 @if (!$loop->first)
                                                                     @if (!empty($variant['medley']))
-                                                                        @unless (!empty($inTitledMedley))<span class="setlist-summary-variant-separator">~</span>@endunless
+                                                                        {{-- メドレーの曲は改行だけで「~」を付けない --}}
                                                                     @else
                                                                         <span class="setlist-summary-variant-separator">/</span>
                                                                     @endif

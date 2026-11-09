@@ -100,7 +100,7 @@ class DbConcert extends Model
     {
         $venue = trim(preg_replace('/\s*※.*$/u', '', (string) $venue));
 
-        return trim(preg_replace('/\s*[（(][^）)]*[）)]\s*$/u', '', $venue));
+        return trim(preg_replace('/\s*(?:[（(][^）)]*[）)]|【[^】]*】)\s*$/u', '', $venue));
     }
 
     // scheduleカラム（フリーテキストの日程表）から日付・会場の候補を抽出する。[date, venue]、同じ日に何回かあるときは part（「1部」）も。
@@ -150,7 +150,7 @@ class DbConcert extends Model
                 $endDay = (int)$m[3];
                 foreach (range($startDay, $endDay) as $day) {
                     $date = $this->buildDate($currentYear, $month, (int)$day);
-                    if ($date && $venue !== '') {
+                    if ($date && $venue !== '' && !static::cancelledOn($m[4], $date)) {
                         $entries[] = ['date' => $date, 'venue' => $venue] + ($part !== null ? ['part' => $part] : []);
                     }
                 }
@@ -162,7 +162,7 @@ class DbConcert extends Model
                 $advanceYearIfMonthWrapped((int)$m[1]);
                 [$venue, $part] = $this->splitVenueNote($m[3]);
                 $date = $this->buildDate($currentYear, (int)$m[1], (int)$m[2]);
-                if ($date && $venue !== '') {
+                if ($date && $venue !== '' && !static::cancelledOn($m[3], $date)) {
                     $entries[] = ['date' => $date, 'venue' => $venue] + ($part !== null ? ['part' => $part] : []);
                 }
                 continue;
@@ -174,7 +174,7 @@ class DbConcert extends Model
                 $lastMonth = (int)$m[2];
                 [$venue, $part] = $this->splitVenueNote($m[4]);
                 $date = $this->buildDate($currentYear, (int)$m[2], (int)$m[3]);
-                if ($date && $venue !== '') {
+                if ($date && $venue !== '' && !static::cancelledOn($m[4], $date)) {
                     $entries[] = ['date' => $date, 'venue' => $venue] + ($part !== null ? ['part' => $part] : []);
                 }
                 continue;
@@ -185,7 +185,7 @@ class DbConcert extends Model
                 $advanceYearIfMonthWrapped((int)$m[1]);
                 [$venue, $part] = $this->splitVenueNote($m[3]);
                 $date = $this->buildDate($currentYear, (int)$m[1], (int)$m[2]);
-                if ($date && $venue !== '') {
+                if ($date && $venue !== '' && !static::cancelledOn($m[3], $date)) {
                     $entries[] = ['date' => $date, 'venue' => $venue] + ($part !== null ? ['part' => $part] : []);
                 }
                 continue;
@@ -200,7 +200,7 @@ class DbConcert extends Model
                 $days = explode(',', $m2[2]);
                 foreach ($days as $day) {
                     $date = $this->buildDate($currentYear, $month, (int)$day);
-                    if ($date && $venue !== '') {
+                    if ($date && $venue !== '' && !static::cancelledOn($m2[3], $date)) {
                         $entries[] = ['date' => $date, 'venue' => $venue] + ($part !== null ? ['part' => $part] : []);
                     }
                 }
@@ -209,6 +209,29 @@ class DbConcert extends Model
         }
 
         return $entries;
+    }
+
+    // 中止・延期の公演か（その日にやっていない公演）。スケジュールの表にはそのまま出すが、公演日の選択肢・会場の集計などには入れない。
+    // 「(中止)」「※公演中止」は書いてある行の公演が中止。「(26日中止)」「(※7/14は公演中止)」のように日が書いてあれば、その日だけ。
+    // 「(公演延期)」「(9.4,5に延期)」も入れない。「(3/7から延期)」は延期してきた公演（その日にやった）なので入れる
+    public static function cancelledOn(string $text, string $date): bool
+    {
+        if (str_contains($text, '延期') && !str_contains($text, 'から延期')) {
+            return true;
+        }
+        if (!str_contains($text, '中止')) {
+            return false;
+        }
+        if (!preg_match_all('/(?:(\d{1,2})[\/.月])?(\d{1,2})日?\s*(?:は|が)?\s*(?:公演)?中止/u', $text, $matches, PREG_SET_ORDER)) {
+            return true;
+        }
+        foreach ($matches as $m) {
+            if ((int) $m[2] === (int) substr($date, 8, 2) && ($m[1] === '' || (int) $m[1] === (int) substr($date, 5, 2))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     // スケジュールの会場の欄から、うしろのかっこ書き（延期・振替・県名などの注記）を外す。
@@ -220,7 +243,7 @@ class DbConcert extends Model
             $part = preg_replace('/\s+/u', '', $m[1]);
         }
 
-        return [trim(preg_replace('/[（(][^）)]*[）)]\s*$/u', '', $text)), $part];
+        return [trim(preg_replace('/(?:[（(][^）)]*[）)]|【[^】]*】)\s*$/u', '', $text)), $part];
     }
 
     private function buildDate(int $year, int $month, int $day): ?string
