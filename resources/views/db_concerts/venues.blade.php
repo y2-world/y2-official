@@ -32,7 +32,7 @@
                 <tr>
                     <th class="mobile col-no">#</th>
                     <th class="mobile">会場</th>
-                    <th class="mobile">公演数</th>
+                    <th class="mobile col-count">公演数</th>
                     <th class="pc col-date">最後の公演</th>
                 </tr>
             </thead>
@@ -40,7 +40,7 @@
                 @forelse ($venues as $venue)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td><a href="{{ route('database.venues', [$artist->id, 'keyword' => $venue->venue]) }}">{{ $venue->venue }}</a></td>
+                        <td class="td-wrap"><a href="{{ route('database.venues', [$artist->id, 'keyword' => $venue->venue]) }}">{{ $venue->venue }}</a></td>
                         <td>{{ $venue->count }}</td>
                         <td class="pc">{{ date('Y.m.d', strtotime($venue->last)) }}</td>
                     </tr>
