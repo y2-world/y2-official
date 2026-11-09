@@ -23,6 +23,12 @@
                         data-total-percentage="{{ $percentage }}"
                         data-performed="{{ $performedCount }}"
                         data-performed-percentage="{{ $performedPercentage }}">
+                            @if ($canEditDeco)
+                                {{-- テーマ（枠の色とタイトル）の編集は、この枠の右下（自分のスタンプ帳だけ） --}}
+                                <button type="button" class="stamp-deco-edit-button" id="stampDecoEditButton" title="テーマのタイトルとスタンプの枠の色を編集" aria-label="テーマのタイトルとスタンプの枠の色を編集">
+                                    <i class="fa-solid fa-palette"></i>
+                                </button>
+                            @endif
                         <div class="stamp-summary-count">
                             <span class="stamp-summary-done" id="stampSummaryDone">{{ $doneCount }}</span>
                             <span class="stamp-summary-slash">/</span>
@@ -66,12 +72,6 @@
                                     <option value="last-performed">Last Performed</option>
                                 </select>
                             </div>
-                            @if ($canEditDeco)
-                                {{-- 枠の色とタイトルの編集（全部のスタンプ帳で共通） --}}
-                                <button type="button" class="stamp-deco-edit-button" id="stampDecoEditButton" title="スタンプの枠の色とタイトルを編集" aria-label="スタンプの枠の色とタイトルを編集">
-                                    <i class="fa-solid fa-palette"></i>
-                                </button>
-                            @endif
                             {{-- Hanko の表の見出し「印」「タイトル」（Stamp のときは出さない） --}}
                             <div class="stamp-hanko-head" aria-hidden="true"><span>印</span><span>タイトル</span></div>
                             @foreach ($stamps as $stamp)

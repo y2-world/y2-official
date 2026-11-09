@@ -4232,8 +4232,9 @@ h5.setlist-subtitle-heading {
 
 .stamp-deco-edit-button {
     position: absolute;
-    top: 30px;
-    right: 30px;
+    /* 台紙の上の「〇/〇 songs」の枠の右下 */
+    bottom: 16px;
+    right: 16px;
     width: 34px;
     height: 34px;
     border: 1px solid #d8cdb5;
@@ -4262,10 +4263,6 @@ h5.setlist-subtitle-heading {
     top: 30px;
     right: 30px;
     z-index: 5;
-}
-
-.stamp-book.is-owner .stamp-sort {
-    right: 74px;
 }
 
 /* アイコンの上に重ねる透明なセレクト。押すとブラウザ標準のプルダウンが開く */
@@ -4303,12 +4300,6 @@ h5.setlist-subtitle-heading {
     outline-offset: 2px;
 }
 
-/* 絞り込みのタイトルは、右のボタン2つ分と同じだけ左右を空ける */
-.stamp-book.is-owner .stamp-book-filter-title {
-    left: 118px;
-    right: 118px;
-}
-
 .stamp-book.is-hanko.has-sort {
     padding-top: 80px;
 }
@@ -4324,19 +4315,10 @@ h5.setlist-subtitle-heading {
         right: 16px;
     }
 
-    .stamp-book.is-owner .stamp-sort {
-        right: 54px;
-    }
-
     .stamp-sort-button {
         width: 30px;
         height: 30px;
         font-size: 0.85rem;
-    }
-
-    .stamp-book.is-owner .stamp-book-filter-title {
-        left: 92px;
-        right: 92px;
     }
 }
 
@@ -4588,8 +4570,8 @@ body.stamp-deco-open {
     }
 
     .stamp-deco-edit-button {
-        top: 16px;
-        right: 16px;
+        bottom: 12px;
+        right: 12px;
         width: 30px;
         height: 30px;
         font-size: 0.85rem;
