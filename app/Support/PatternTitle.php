@@ -170,7 +170,8 @@ class PatternTitle
 
     // いくつかのパターンの見出しの行をつないだもの（Summary の、段のパターンを全部並べる見出し）。
     // 見出しをたたんだときは1行目だけ見せる。2行目からは --rest（たたむと隠す）。
-    // 1行目のうしろの「他 N 公演」（隠れた公演の数）はたたんでいるときだけ出す（見えている公演だけと思わないように）
+    // 1行目のうしろの「他 N 公演」（隠れた公演の数）はたたんでいるときだけ出す（見えている公演だけと思わないように）。
+    // そのときは1行に収め、長い会場名は「他 N 公演」の前を「…」で切る
     public static function htmlLinesFor(iterable $patterns): array
     {
         $texts = [];
@@ -191,7 +192,8 @@ class PatternTitle
         }
         if ($hiddenDates >= 1) {
             $last = static::VISIBLE_LINES - 1;
-            $lines[$last] = preg_replace('/<\/span>$/', '<span class="setlist-subtitle-more">他' . $hiddenDates . '公演</span></span>', $lines[$last]);
+            // 長い会場名でも2行にせず、「他 N 公演」の前を「…」で切る（文字を囲んで、CSS で1行にする）
+            $lines[$last] = preg_replace('/>([^<]*)<\/span>$/', '><span class="setlist-schedule-date-text">$1</span><span class="setlist-subtitle-more">他' . $hiddenDates . '公演</span></span>', $lines[$last]);
         }
 
         return $lines;

@@ -834,7 +834,6 @@ class DbSetlistResource extends Resource
                         Forms\Components\TextInput::make('order_no')
                             ->label('パターン番号')
                             // 保存のときに段の中を公演日の順に並べ直す（PatternOrder）。番号は日付が無いパターン（A・B など）のときだけ使う
-                            ->helperText('公演日があるパターンは日付順に並ぶので空欄でかまいません。日付が無いパターンだけ、置きたい番号を入れます（空欄なら段の最後）。')
                             ->numeric()
                             ->minValue(1),
 
