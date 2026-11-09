@@ -1170,7 +1170,7 @@ class DbSetlistResource extends Resource
             }
         }
         foreach (\App\Support\PatternTitle::entries(array_diff($selected, array_keys($options)), $schedule) as $entry) {
-            $options[\App\Support\PatternTitle::key($entry)] = \App\Support\PatternTitle::label($entry) . '（スケジュールに無い）';
+            $options[\App\Support\PatternTitle::key($entry)] = \App\Support\PatternTitle::label($entry);
         }
 
         return $options;

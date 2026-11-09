@@ -21,7 +21,7 @@ class PatternTitle
     {
         $venue = \App\Models\DbConcert::venueKeyword($entry['venue'] ?? '');
 
-        return trim(Carbon::parse($entry['date'])->format('n.j') . ' ' . $venue . ' ' . ($entry['part'] ?? ''));
+        return trim(Carbon::parse($entry['date'])->format('n.j') . ' ' . $venue . ' ' . static::partLabel($entry['part'] ?? null));
     }
 
     // 保存した公演日（キーの並び）を、スケジュールの日に当てる。スケジュールに無い回（「1部」がスケジュールに書かれていない日など）は、
@@ -50,6 +50,14 @@ class PatternTitle
         return $entries;
     }
 
+    // 回の見出し。昼公演・夜公演はスケジュールの書き方のまま、かっこを付ける（「4.7 宮城県民会館 (昼公演)」）。1部・2部はかっこなし
+    public static function partLabel(?string $part): string
+    {
+        $part = (string) $part;
+
+        return in_array($part, ['昼公演', '夜公演'], true) ? '(' . $part . ')' : $part;
+    }
+
     // 同じ日の回を並べるための文字。昼公演・夜公演は 1部・2部 と同じ順（文字のままだと「夜」が「昼」より前になる）
     public static function partOrder(?string $part): string
     {
@@ -67,7 +75,7 @@ class PatternTitle
         $schedule = static::schedule($pattern);
         $entries = static::entries($keys, $schedule);
         if (static::singleVenue($schedule)) {
-            return array_map(fn ($entry) => trim(Carbon::parse($entry['date'])->format('n.j') . ' ' . ($entry['part'] ?? '')), $entries);
+            return array_map(fn ($entry) => trim(Carbon::parse($entry['date'])->format('n.j') . ' ' . static::partLabel($entry['part'] ?? null)), $entries);
         }
 
         return array_map([static::class, 'label'], $entries);
@@ -141,7 +149,7 @@ class PatternTitle
                     $name .= $nth;
                 }
             }
-            return preg_replace('/\s+/u', ' ', trim(Carbon::parse($entry['date'])->format('n.j') . ' ' . $name . ' ' . ($entry['part'] ?? '')));
+            return preg_replace('/\s+/u', ' ', trim(Carbon::parse($entry['date'])->format('n.j') . ' ' . $name . ' ' . static::partLabel($entry['part'] ?? null)));
         }, $keys === [] ? [] : static::entries($keys, $schedule));
         $title = trim(preg_replace('/\s+/u', ' ', strip_tags((string) $pattern?->subtitle)));
 
