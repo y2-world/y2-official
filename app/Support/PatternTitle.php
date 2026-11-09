@@ -45,9 +45,15 @@ class PatternTitle
             $sameDay = collect($schedule)->firstWhere('date', $date);
             $entries[] = ['date' => $date, 'venue' => $sameDay['venue'] ?? '', 'part' => $part];
         }
-        usort($entries, fn ($a, $b) => [$a['date'], (string) ($a['part'] ?? '')] <=> [$b['date'], (string) ($b['part'] ?? '')]);
+        usort($entries, fn ($a, $b) => [$a['date'], static::partOrder($a['part'] ?? null)] <=> [$b['date'], static::partOrder($b['part'] ?? null)]);
 
         return $entries;
+    }
+
+    // 同じ日の回を並べるための文字。昼公演・夜公演は 1部・2部 と同じ順（文字のままだと「夜」が「昼」より前になる）
+    public static function partOrder(?string $part): string
+    {
+        return strtr((string) $part, ['昼公演' => '1部', '夜公演' => '2部']);
     }
 
     // パターンの公演日の見出しの並び（「5.30 大阪城ホール」…）。公演日を選んでいなければ空

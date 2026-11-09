@@ -89,7 +89,7 @@ class PatternOrder
     {
         $scheduled = array_values(array_filter((array) ($pattern->schedule_dates ?? [])));
         if ($scheduled !== []) {
-            return (string) $scheduled[0];
+            return PatternTitle::partOrder((string) $scheduled[0]);
         }
 
         if (!preg_match('/(?:(\d{4})\/)?(?<!\d)(\d{1,2})\.(\d{1,2})(?!\d)/', (string) ($pattern->subtitle ?? ''), $m)) {
