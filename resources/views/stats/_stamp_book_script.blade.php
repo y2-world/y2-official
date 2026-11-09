@@ -112,7 +112,10 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         const hasThemes = !!pickModal.querySelector('.js-stamp-deco-choice[data-color-id]:not([data-color-id=""])');
-        const titleOptions = stampTitleOptions(slot);
+        // 長押しで選んだバージョンはテーマで絞り込んだときだけ出るので、選択肢もそのときだけ出す
+        const filterSelect = document.getElementById('stampFilterSelect');
+        const inTheme = !!filterSelect && filterSelect.value.indexOf('color:') === 0;
+        const titleOptions = inTheme ? stampTitleOptions(slot) : [];
         // テーマがまだ無く、曲名も選べないときは、テーマを作る画面を開く
         if (!hasThemes && titleOptions.length < 2) {
             openModal(editModal);
@@ -144,11 +147,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     window.openStampPicker = openStampPicker;
 
-    // バージョンの選択肢：元の曲名と、シングル・アルバムでの違う表記（同じ表記は1つにまとめる）
+    // バージョンの選択肢：元の曲名と、シングル・アルバムでの違う表記（カップリングも）、ライブで演奏した表記（同じ表記は1つにまとめる）
     function stampTitleOptions(slot) {
         const options = [{ key: '', title: slot._baseTitle || '' }];
-        Object.keys(slot._trackTitles || {}).forEach(function (key) {
-            const title = slot._trackTitles[key];
+        Object.keys(slot._versions || {}).forEach(function (key) {
+            const title = slot._versions[key];
             if (!title || options.some(function (o) { return o.title === title; })) {
                 return;
             }

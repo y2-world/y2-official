@@ -15,7 +15,7 @@ class StampDeco
         return StampColor::where('external_user_id', $userId)->orderBy('sort_order')->orderBy('id')->get(['id', 'color', 'label']);
     }
 
-    // 各スタンプに color_id と、選んだ曲名の表記 title_key を足す。title は選んだ表記に差し替え、元の曲名は base_title に残す
+    // 各スタンプに color_id と、選んだ曲名の表記 title_key を足す。title は選んだ表記（versions の中から）に差し替え、元の曲名は base_title に残す
     public static function withColors(Collection $stamps, int $userId, string $artistRef): Collection
     {
         $marks = StampMark::where('external_user_id', $userId)->where('artist_ref', $artistRef)->get(['song_id', 'stamp_color_id', 'title_key'])->keyBy('song_id');
@@ -23,13 +23,13 @@ class StampDeco
         return $stamps->map(function ($stamp) use ($marks) {
             $mark = $marks[$stamp['song_id']] ?? null;
             // 選んだ表記が今は無い（アルバムの表記が変わった等）ときは、曲名のまま
-            $titleKey = $mark && $mark->title_key && isset($stamp['track_titles'][$mark->title_key]) ? $mark->title_key : null;
+            $titleKey = $mark && $mark->title_key && isset($stamp['versions'][$mark->title_key]) ? $mark->title_key : null;
 
             return array_merge($stamp, [
                 'color_id' => $mark?->stamp_color_id,
                 'title_key' => $titleKey,
                 'base_title' => $stamp['title'],
-                'title' => $titleKey ? $stamp['track_titles'][$titleKey] : $stamp['title'],
+                'title' => $titleKey ? $stamp['versions'][$titleKey] : $stamp['title'],
             ]);
         });
     }
@@ -80,6 +80,12 @@ class StampDeco
         return true;
     }
 
+    // ライブで演奏した別表記の title_key（表記の文字から作る。同じ表記なら同じ印）
+    public static function liveTitleKey(string $title): string
+    {
+        return 'live-' . substr(md5($title), 0, 12);
+    }
+
     public static function colorRules(): array
     {
         return [
@@ -92,6 +98,6 @@ class StampDeco
 
     public static function markRules(): array
     {
-        return ['song_id' => ['required', 'integer'], 'color_id' => ['nullable', 'integer'], 'title_key' => ['nullable', 'string', 'regex:/^(single|album-[0-9]+)$/']];
+        return ['song_id' => ['required', 'integer'], 'color_id' => ['nullable', 'integer'], 'title_key' => ['nullable', 'string', 'regex:/^(single|single-[0-9]+|album-[0-9]+|live-[0-9a-f]{12})$/']];
     }
 }

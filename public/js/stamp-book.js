@@ -22,7 +22,9 @@ document.addEventListener('DOMContentLoaded', function () {
         // _defaultTitle は長押しで選んだ表記（選んでいなければ曲名）、_baseTitle は元の曲名
         slot._baseTitle = slot.dataset.baseTitle || (titleEl ? titleEl.textContent : '');
         slot._trackTitles = slot.dataset.trackTitles ? JSON.parse(slot.dataset.trackTitles) : {};
-        slot._defaultTitle = (slot.dataset.titleKey && slot._trackTitles[slot.dataset.titleKey]) || slot._baseTitle;
+        // 長押しで選べるバージョン（シングル・アルバムの表記とライブで演奏した表記。[title_key => 表記]）
+        slot._versions = slot.dataset.versions ? JSON.parse(slot.dataset.versions) : {};
+        slot._defaultTitle = (slot.dataset.titleKey && slot._versions[slot.dataset.titleKey]) || slot._baseTitle;
         slot._trackOrders = slot.dataset.trackOrders ? JSON.parse(slot.dataset.trackOrders) : {};
     });
 
@@ -97,7 +99,8 @@ document.addEventListener('DOMContentLoaded', function () {
         slots.forEach(function (slot) {
             if (slot._titleEl) {
                 let title = discKey ? (slot._trackTitles[key] || slot._baseTitle) : (themeKey ? slot._defaultTitle : slot._baseTitle);
-                if (sortTitle && slot.dataset[sortTitle[0]]) {
+                // テーマで絞り込んだときは、並べ替えにかかわらず長押しで選んだバージョン
+                if (sortTitle && !themeKey && slot.dataset[sortTitle[0]]) {
                     title = slot.dataset[sortTitle[1]] || slot._baseTitle;
                 }
                 slot._titleEl.textContent = title;
@@ -338,7 +341,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // 長押しで曲名の表記を選んだとき（_stamp_book_script から呼ぶ）
     window.stampBookSetTitle = function (slot, titleKey) {
         slot.dataset.titleKey = titleKey || '';
-        slot._defaultTitle = (titleKey && slot._trackTitles[titleKey]) || slot._baseTitle;
+        slot._defaultTitle = (titleKey && slot._versions[titleKey]) || slot._baseTitle;
         applyTitles(select ? select.value : '');
     };
 

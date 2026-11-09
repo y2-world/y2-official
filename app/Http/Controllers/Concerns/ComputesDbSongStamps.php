@@ -75,6 +75,7 @@ trait ComputesDbSongStamps
         $lastPatternDate = [];
         $tours = [];
         $titleTours = [];
+        $performedTitles = [];
         foreach ($setlists->sortBy('id') as $setlist) {
             $tourId = $userArtist ? $setlist->user_concert_id : $setlist->tour_id;
             $date = $tourDates[$tourId] ?? null;
@@ -89,6 +90,9 @@ trait ComputesDbSongStamps
                 $title = trim((string) ($s['alternative_title'] ?? ''));
                 $tours[$songId][$tourId] = true;
                 $titleTours[$songId][$title][$tourId] = true;
+                if ($title !== '') {
+                    $performedTitles[$songId][$title] = true;
+                }
                 if (($last[$songId] ?? '') < $date || (($last[$songId] ?? '') === $date && $lastPatternDate[$songId] <= $patternDate)) {
                     $last[$songId] = $date;
                     $lastTitle[$songId] = $title;
@@ -106,6 +110,8 @@ trait ComputesDbSongStamps
                 'performed_last_title' => $lastTitle[$songId],
                 // Most Performed で並べたときに出す、いちばん多くのツアーで演奏した表記
                 'performed_most_title' => \App\Support\StampHeardOrder::mostTitle($titleTours[$songId], $lastTitle[$songId]),
+                // ライブで演奏した別表記（長押しのバージョンの選択肢に出す）
+                'performed_titles' => array_keys($performedTitles[$songId] ?? []),
             ];
         }
 
@@ -189,7 +195,18 @@ trait ComputesDbSongStamps
             ->values()
             ->all();
 
+        // 曲ID => ['single-{id}' => 表記]。シングルの全曲（カップリングも）の別表記。長押しのバージョンの選択肢に出す
+        $singleVersions = [];
+        foreach ($singleModel::where($artistColumn, $artistId)->orderBy('date')->orderBy('id')->get(['id', 'tracklist']) as $single) {
+            foreach ($songTracks($single->tracklist) as $track) {
+                if (filled($track['exception'] ?? null)) {
+                    $singleVersions[(int) $track['id']]['single-' . $single->id] ??= $track['exception'];
+                }
+            }
+        }
+
         return [
+            'single_versions' => $singleVersions,
             // 曲ID => シングル発売順（同じ曲が複数のシングルに入る場合は最初のシングル）
             'single_song_ids' => $singleTitleTracks->values()->mapWithKeys(fn ($track, $index) => [(int) $track['id'] => $index + 1])->all(),
             'single_titles' => $singleTitleTracks
@@ -222,6 +239,18 @@ trait ComputesDbSongStamps
         }
 
         return $orders;
+    }
+
+    // 長押しで選べるバージョン（[title_key => 表記]）。シングル・アルバムの表記（カップリングも）と、ライブで演奏した別表記。
+    // ライブの表記は文字が長いことがあるので、表記から作った印（live-…）を title_key にする
+    private function stampVersions(int $songId, array $filters, array $performedTitles): array
+    {
+        $versions = $this->stampTrackTitles($songId, $filters) + ($filters['single_versions'][$songId] ?? []);
+        foreach ($performedTitles as $title) {
+            $versions[\App\Support\StampDeco::liveTitleKey($title)] = $title;
+        }
+
+        return $versions;
     }
 
     private function stampTrackTitles(int $songId, array $filters): array

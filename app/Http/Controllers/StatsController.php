@@ -1247,6 +1247,7 @@ class StatsController extends Controller
                 'hikigatari_only' => !empty($hikigatariDbSongIds[$song->id]),
                 'filter_keys' => $this->stampFilterKeys($song->id, $stampFilters),
                 'track_titles' => $this->stampTrackTitles($song->id, $stampFilters),
+                'versions' => $this->stampVersions($song->id, $stampFilters, $performed[$song->id]['performed_titles'] ?? []),
                 'track_orders' => $this->stampTrackOrders($song->id, $stampFilters),
             ];
         });
@@ -1385,6 +1386,7 @@ class StatsController extends Controller
                     'hikigatari_only' => false,
                     'filter_keys' => $this->stampFilterKeys($song->id, $stampFilters),
                     'track_titles' => $this->stampTrackTitles($song->id, $stampFilters),
+                    'versions' => $this->stampVersions($song->id, $stampFilters, $performed[$song->id]['performed_titles'] ?? []),
                     'track_orders' => $this->stampTrackOrders($song->id, $stampFilters),
                 ];
             });
