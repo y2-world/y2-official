@@ -2242,6 +2242,19 @@ h5.setlist-subtitle-heading {
     display: none !important;
 }
 
+/* 公演日の見出しは文字が小さい（見出しの半分）ので、開け閉めの矢印も同じ大きさにし、右の余白もその分だけにする
+   （見出しの大きさの余白のままだと、会場名が早く折り返してしまう） */
+.setlist-subtitle-heading.setlist-subtitle-collapsible:has(.setlist-schedule-date-line) {
+    padding-right: 0.6em;
+}
+.setlist-subtitle-heading:has(.setlist-schedule-date-line) > .setlist-subtitle-toggle {
+    font-size: 0.5em;
+}
+/* 見出しの text-wrap: balance は、長い会場名を半分の幅で折り返してしまうので、公演日の行では使わない */
+.setlist-subtitle-heading .setlist-schedule-date-line {
+    text-wrap: wrap;
+}
+
 /* たたんでいるときだけ、1行目のうしろに「他 N 公演」 */
 .setlist-subtitle-more {
     display: none;
