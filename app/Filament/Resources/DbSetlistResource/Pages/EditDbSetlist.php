@@ -17,6 +17,8 @@ class EditDbSetlist extends EditRecord
     private ?int $previousTourId = null;
     private ?int $previousRow = null;
     private ?int $previousOrderNo = null;
+    // 入力されたパターン番号（日付が無いパターンの置き場所。空なら段の最後）
+    private $wantedOrderNo = null;
 
     protected function getHeaderActions(): array
     {
@@ -34,6 +36,8 @@ class EditDbSetlist extends EditRecord
         $this->previousTourId = $this->record->tour_id;
         $this->previousRow = $this->record->row;
         $this->previousOrderNo = $this->record->order_no;
+        $this->wantedOrderNo = $data['order_no'] ?? null;
+        $data['order_no'] = \App\Support\PatternOrder::temporaryNumber($data['tour_id'] ?? $this->record->tour_id, $data['row'] ?? 1);
 
         return $data;
     }
@@ -61,5 +65,10 @@ class EditDbSetlist extends EditRecord
         }
 
         \App\Support\AdminData::setRowTitle($tourId, $row, $orderNo, $this->pendingRowTitle);
+
+        \App\Support\PatternOrder::reorder($tourId, $row, [$this->record->id => $this->wantedOrderNo]);
+        if ($this->previousTourId !== $tourId || $this->previousRow !== $row) {
+            \App\Support\PatternOrder::reorder($this->previousTourId, $this->previousRow);
+        }
     }
 }

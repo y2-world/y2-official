@@ -822,12 +822,6 @@ class DbSetlistResource extends Resource
                             ->in(fn () => AdminData::query('concert')->pluck('id')->map(fn ($id) => (string) $id)->all())
                             ->searchable()
                             ->native(false)
-                            ->afterStateUpdated(function ($state, Forms\Set $set, Get $get): void {
-                                if (!$state || filled($get('order_no'))) return;
-
-                                $row = (int) ($get('row') ?: 1);
-                                $set('order_no', (int) AdminData::query('setlist')->ofTour($state)->where('row', $row)->max('order_no') + 1);
-                            })
                             ->required(),
 
                         Forms\Components\TextInput::make('row')
@@ -839,20 +833,10 @@ class DbSetlistResource extends Resource
 
                         Forms\Components\TextInput::make('order_no')
                             ->label('パターン番号')
+                            // 保存のときに段の中を公演日の順に並べ直す（PatternOrder）。番号は日付が無いパターン（A・B など）のときだけ使う
+                            ->helperText('公演日があるパターンは日付順に並ぶので空欄でかまいません。日付が無いパターンだけ、置きたい番号を入れます（空欄なら段の最後）。')
                             ->numeric()
-                            ->default(fn (Get $get) => $get('tour_id')
-                                ? (int) AdminData::query('setlist')->ofTour($get('tour_id'))->where('row', (int) ($get('row') ?: 1))->max('order_no') + 1
-                                : null)
-                            ->required()
-                            ->rules(fn(Get $get, $record) => [
-                                Rule::unique(AdminData::table('setlist'), 'order_no')
-                                    ->where(AdminData::column('setlist', 'tour_id'), $get('tour_id'))
-                                    ->where('row', $get('row') ?? 1)
-                                    ->ignore($record?->id),
-                            ])
-                            ->validationMessages([
-                                'unique' => 'この段ではすでに使われているパターン番号です。',
-                            ]),
+                            ->minValue(1),
 
                         Forms\Components\TextInput::make('row_title')
                             ->label('段のグループタイトル')

@@ -15,6 +15,8 @@ class CreateDbSetlist extends CreateRecord
     protected static string $resource = DbSetlistResource::class;
 
     private ?string $pendingRowTitle = null;
+    // 入力されたパターン番号（日付が無いパターンの置き場所。空なら段の最後）
+    private $wantedOrderNo = null;
     public ?int $returnToTourId = null;
     // Yuki's Setlists の「パターンを追加」から開いたとき、その参加記録（曲を入れた状態で開き、保存のときにまとめて登録する）
     public ?int $fromSlSetlistId = null;
@@ -99,6 +101,8 @@ class CreateDbSetlist extends CreateRecord
         $data = DbSetlistResource::mergeEncoreFormData($data);
         $this->pendingRowTitle = $data['row_title'] ?? null;
         unset($data['row_title']);
+        $this->wantedOrderNo = $data['order_no'] ?? null;
+        $data['order_no'] = \App\Support\PatternOrder::temporaryNumber($data['tour_id'] ?? null, $data['row'] ?? 1);
 
         // マイページの人が作るセットリストは、その人のもの
         return $data + \App\Support\AdminData::ownerAttributes('setlist');
@@ -116,12 +120,10 @@ class CreateDbSetlist extends CreateRecord
         parent::create($another);
 
         if ($another && $artistId && $tourId) {
-            $nextOrder = (int) \App\Support\AdminData::query('setlist')->ofTour($tourId)->where('row', $row)->max('order_no') + 1;
             $this->form->fill([
                 '_artist_id' => $artistId,
                 'tour_id' => $tourId,
                 'row' => $row,
-                'order_no' => $nextOrder,
             ]);
         }
     }
@@ -131,6 +133,7 @@ class CreateDbSetlist extends CreateRecord
         $this->clearDraftAutosave();
 
         \App\Support\AdminData::setRowTitle($this->record->tour_id, $this->record->row, $this->record->order_no, $this->pendingRowTitle);
+        \App\Support\PatternOrder::reorder($this->record->tour_id, $this->record->row, [$this->record->id => $this->wantedOrderNo]);
     }
 
     protected function getRedirectUrl(): string
