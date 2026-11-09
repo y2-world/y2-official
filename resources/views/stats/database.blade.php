@@ -392,6 +392,23 @@
                                                     <span class="rank-number">{{ $actualRank }}</span>
                                                 @endif
 
+                                            @endif
+                                        </td>
+                                        <td class="venue-name">
+                                            <a href="{{ route('database.venues', [$artist->id, 'keyword' => $venue->venue]) }}" class="stats-link">{{ $venue->venue }}</a>
+                                        </td>
+                                        <td class="count-col">
+                                            <span class="count-badge">{{ $venue->count }}</span>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            @include('stats._show_more', ['count' => count($venueStats)])
+                        </div>
+                    </div>
+                    @endif
+
                     <!-- Tours by Year Section -->
                     <div class="stats-section visible">
                         <h2 class="section-title">
@@ -423,23 +440,6 @@
                             </table>
                         </div>
                     </div>
-
-                                            @endif
-                                        </td>
-                                        <td class="venue-name">
-                                            <a href="{{ route('database.venues', [$artist->id, 'keyword' => $venue->venue]) }}" class="stats-link">{{ $venue->venue }}</a>
-                                        </td>
-                                        <td class="count-col">
-                                            <span class="count-badge">{{ $venue->count }}</span>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            @include('stats._show_more', ['count' => count($venueStats)])
-                        </div>
-                    </div>
-                    @endif
                     </div>
 
                 </div>
