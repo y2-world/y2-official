@@ -826,7 +826,7 @@ class SlSetlistResource extends Resource
                                 'credit' => 'アーティスト表記あり',
                             ])->default('guest')->inline(),
                             Forms\Components\TextInput::make('featuring')->label('共演者・アーティスト')->placeholder('例: ゲスト名')->maxLength(255),
-                            Forms\Components\TextInput::make('alternative_title')->label('別表記')->placeholder('例: I\'LL BE')->maxLength(255),
+                            Forms\Components\TextInput::make('alternative_title')->label('別表記')->datalist(fn (Forms\Get $get) => \App\Support\SongVersions::forSlSong($get('song')))->placeholder('例: I\'LL BE')->maxLength(255),
                         ])->collapsible()->collapsed()->columnSpanFull(),
                     ])
                     ->defaultItems(0)->live()->reorderable()
@@ -1299,6 +1299,8 @@ class SlSetlistResource extends Resource
                                             ->maxLength(255),
                                         Forms\Components\TextInput::make('alternative_title')
                                             ->label('別表記')
+                                            // 入力候補：その曲の盤の表記と、前に使った別表記（記号の違いだけのものは1つ）
+                                            ->datalist(fn (Forms\Get $get) => \App\Support\SongVersions::forSlSong($get('song')))
                                             ->placeholder('例: I\'LL BE')
                                             ->maxLength(255),
                                     ])
@@ -1472,6 +1474,8 @@ class SlSetlistResource extends Resource
                                         ]),
                                         Forms\Components\TextInput::make('alternative_title')
                                             ->label('別表記')
+                                            // 入力候補：その曲の盤の表記と、前に使った別表記（記号の違いだけのものは1つ）
+                                            ->datalist(fn (Forms\Get $get) => \App\Support\SongVersions::forSlSong($get('song')))
                                             ->maxLength(255)
                                             ->dehydrated(),
                                     ])
@@ -1547,6 +1551,8 @@ class SlSetlistResource extends Resource
                                                 ->dehydrated(),
                                             Forms\Components\TextInput::make('alternative_title')
                                                 ->label('別表記')
+                                                // 入力候補：その曲の盤の表記と、前に使った別表記（記号の違いだけのものは1つ）
+                                                ->datalist(fn (Forms\Get $get) => \App\Support\SongVersions::forSlSong($get('song')))
                                                 ->maxLength(255)
                                                 ->dehydrated(),
                                             ])
@@ -1692,6 +1698,8 @@ class SlSetlistResource extends Resource
                                         ]),
                                         Forms\Components\TextInput::make('alternative_title')
                                             ->label('別表記')
+                                            // 入力候補：その曲の盤の表記と、前に使った別表記（記号の違いだけのものは1つ）
+                                            ->datalist(fn (Forms\Get $get) => \App\Support\SongVersions::forSlSong($get('song')))
                                             ->maxLength(255)
                                             ->dehydrated(),
                                     ])
@@ -1766,6 +1774,8 @@ class SlSetlistResource extends Resource
                                                 ->dehydrated(),
                                             Forms\Components\TextInput::make('alternative_title')
                                                 ->label('別表記')
+                                                // 入力候補：その曲の盤の表記と、前に使った別表記（記号の違いだけのものは1つ）
+                                                ->datalist(fn (Forms\Get $get) => \App\Support\SongVersions::forSlSong($get('song')))
                                                 ->maxLength(255)
                                                 ->dehydrated(),
                                             ])

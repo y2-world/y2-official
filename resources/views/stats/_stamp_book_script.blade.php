@@ -132,7 +132,8 @@ document.addEventListener('DOMContentLoaded', function () {
             button.type = 'button';
             button.className = 'stamp-deco-choice js-stamp-title-choice';
             button.dataset.titleKey = option.key;
-            button.classList.toggle('is-current', option.key === (slot.dataset.titleKey || ''));
+            // まとめた表記のほうを選んで保存してあることもあるので、表記で比べる
+            button.classList.toggle('is-current', sameVersionKey(option.title) === sameVersionKey(slot._defaultTitle));
             button.textContent = option.title;
             titleChoices.appendChild(button);
         });
@@ -147,12 +148,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     window.openStampPicker = openStampPicker;
 
-    // バージョンの選択肢：元の曲名と、シングル・アルバムでの違う表記（カップリングも）、ライブで演奏した表記（同じ表記は1つにまとめる）
+    // 記号の違いだけの表記（「’」と「'」、「～」と「〜」など。iPhone と Mac で入力が変わる）は同じ表記とみなす
+    function sameVersionKey(title) {
+        return String(title || '').replace(/[’‘]/g, "'").replace(/[“”]/g, '"').replace(/～/g, '〜');
+    }
+
+    // バージョンの選択肢：元の曲名と、シングル・アルバムでの違う表記（カップリングも）、ライブで演奏した表記。
+    // 同じ表記は1つにまとめ、先に出てきた書き方（元の曲名 → 盤 → ライブの順）で出す
     function stampTitleOptions(slot) {
         const options = [{ key: '', title: slot._baseTitle || '' }];
         Object.keys(slot._versions || {}).forEach(function (key) {
             const title = slot._versions[key];
-            if (!title || options.some(function (o) { return o.title === title; })) {
+            if (!title || options.some(function (o) { return sameVersionKey(o.title) === sameVersionKey(title); })) {
                 return;
             }
             options.push({ key: key, title: title });

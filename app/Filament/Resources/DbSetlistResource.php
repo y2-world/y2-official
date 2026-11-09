@@ -695,7 +695,7 @@ class DbSetlistResource extends Resource
                             'guest' => '共演者（feat.表記のまま表示）', 'artist' => '別名義アーティスト（「 / 」区切りで表示）', 'credit' => 'アーティスト表記あり',
                         ])->default('guest')->inline(),
                         Forms\Components\TextInput::make('featuring')->label('共演者・アーティスト')->maxLength(255),
-                        Forms\Components\TextInput::make('alternative_title')->label('別表記')->maxLength(255),
+                        Forms\Components\TextInput::make('alternative_title')->label('別表記')->datalist(fn (Forms\Get $get) => \App\Support\SongVersions::forSong($get('song')))->maxLength(255),
                     ])->collapsible()->collapsed()->columnSpanFull(),
                 ])->defaultItems(0)->live()->reorderable()
                     ->itemLabel(function (array $state, $component, Forms\Get $get): ?string {
@@ -991,6 +991,8 @@ class DbSetlistResource extends Resource
 
                                         Forms\Components\TextInput::make('alternative_title')
                                             ->label('別表記')
+                                            // 入力候補：その曲の盤の表記と、前に使った別表記（記号の違いだけのものは1つ）
+                                            ->datalist(fn (Forms\Get $get) => \App\Support\SongVersions::forSong($get('song')))
                                             ->placeholder('例: I\'LL BE')
                                             ->maxLength(255),
                                     ])

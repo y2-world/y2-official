@@ -84,6 +84,8 @@ class DbSingleResource extends Resource
                             ->options(fn(Forms\Get $get) => AdminData::query('song')->ofArtists([$get('../../artist_id')])->orderBy('sort_order')->pluck('title', 'id'))
                             ->searchable()
                             ->native(false)
+                            // 曲を選んだら「例外」の入力候補（その曲のほかの盤の表記）を出し直す
+                            ->live()
                             ->columnSpanFull(),
 
                         // 詳細設定（折りたたみ式）
@@ -93,6 +95,8 @@ class DbSingleResource extends Resource
                             ->schema([
                                 Forms\Components\TextInput::make('exception')
                                     ->label('例外 (Instrumentalなど)')
+                                    // 入力候補：ほかのシングル・アルバムでこの曲に入れた表記（ライブの表記は出さない）
+                                    ->datalist(fn (Forms\Get $get) => \App\Support\SongVersions::discForSong($get('id')))
                                     ->columnSpanFull(),
                             ])
                             ->columnSpanFull(),
