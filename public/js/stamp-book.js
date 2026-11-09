@@ -323,7 +323,8 @@ document.addEventListener('DOMContentLoaded', function () {
         showView('hanko', false);
     }
 
-    // タブの「アーティスト」：選んだアーティストのスタンプ帳を開く（Hanko を開いていたら、その先も Hanko で開く）
+    // タブの「アーティスト」：選んだアーティストのスタンプ帳を開く（Hanko を開いていたら、その先も Hanko で開く）。
+    // テーマ・状態（Incompleted など）の絞り込み、演奏曲のみ、並べ替えもそのまま。シングル・アルバムの絞り込みはアーティストごとなので外す
     const artistSelect = document.getElementById('stampArtistSelect');
     if (artistSelect) {
         artistSelect.addEventListener('change', function () {
@@ -334,6 +335,16 @@ document.addEventListener('DOMContentLoaded', function () {
             if (book.classList.contains('is-hanko')) {
                 url.searchParams.set('view', 'hanko');
             }
+            const current = new URL(window.location.href).searchParams;
+            const filter = current.get('filter') || '';
+            if (filter && filter !== 'single' && filter.indexOf('album-') !== 0) {
+                url.searchParams.set('filter', filter);
+            }
+            ['performed', 'sort'].forEach(function (name) {
+                if (current.get(name)) {
+                    url.searchParams.set(name, current.get(name));
+                }
+            });
             window.location.href = url.toString();
         });
     }

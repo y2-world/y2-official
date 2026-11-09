@@ -120,6 +120,6 @@
 @endsection
 
 @section('page-script')
-<script src="{{ asset('/js/stamp-book.js?v=20261109g') }}"></script>
+<script src="{{ asset('/js/stamp-book.js?v=20261109h') }}"></script>
 @include('stats._stamp_book_script')
 @endsection
