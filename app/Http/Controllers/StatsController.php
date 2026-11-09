@@ -146,8 +146,9 @@ class StatsController extends Controller
                     $byArtist[$dbSongArtist[$dbSongId]][] = (int) $dbSongId;
                 }
             }
+            $titles = \App\Support\ArtistTopics::versionTitles($items, fn ($id) => $slToDbSong[$id] ?? null);
             foreach ($byArtist as $artistId => $songIds) {
-                $heardByArtist[$artistId][] = ['date' => substr((string) $setlist->date, 0, 10), 'title' => $setlist->title, 'url' => route('setlists.show', $setlist->id), 'song_ids' => $songIds];
+                $heardByArtist[$artistId][] = ['date' => substr((string) $setlist->date, 0, 10), 'title' => $setlist->title, 'url' => route('setlists.show', $setlist->id), 'song_ids' => $songIds, 'titles' => $titles];
             }
         }
         extract(\App\Support\ArtistTopics::combined($heardByArtist));
@@ -1030,7 +1031,8 @@ class StatsController extends Controller
                 }
             }
             if ($songIds) {
-                $heard[] = ['date' => substr((string) $setlist->date, 0, 10), 'title' => $setlist->title, 'url' => route('setlists.show', $setlist->id), 'song_ids' => $songIds];
+                $heard[] = ['date' => substr((string) $setlist->date, 0, 10), 'title' => $setlist->title, 'url' => route('setlists.show', $setlist->id), 'song_ids' => $songIds,
+                    'titles' => \App\Support\ArtistTopics::versionTitles($items, fn ($id) => $slToDbSong[$id] ?? null)];
             }
         }
         $topics = $topicUserArtist ? new \App\Support\ArtistTopics($topicUserArtist->id, true) : new \App\Support\ArtistTopics((int) $artistId);

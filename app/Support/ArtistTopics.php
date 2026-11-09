@@ -258,7 +258,30 @@ class ArtistTopics
     }
 
     // ===== 参加記録と組み合わせるもの（Yuki／マイページのstats） =====
-    // $heard: 参加した公演の一覧 [['date' => 'Y-m-d', 'song_ids' => [DbSongのID, ...]], ...]
+    // $heard: 参加した公演の一覧 [['date' => 'Y-m-d', 'song_ids' => [DbSongのID, ...], 'titles' => [DbSongのID => その公演の別表記]], ...]
+    // 曲名は、その公演で聴いた表記（セトリの別表記）で出す（スタンプ帳の並べ替えと同じ考え方）。version はその表記（曲名のままなら null）
+
+    // セトリの曲（$items）から、曲ごとのその公演の別表記 [曲の id => 別表記]。$songId で曲の id に置き換える（Yuki's Setlists の曲 → Database の曲）
+    public static function versionTitles(iterable $items, ?callable $songId = null): array
+    {
+        $titles = [];
+        foreach ($items as $s) {
+            $id = is_numeric($s['song'] ?? null) ? ($songId ? $songId((int) $s['song']) : (int) $s['song']) : null;
+            $version = trim((string) ($s['alternative_title'] ?? ''));
+            if ($id !== null && $version !== '') {
+                $titles[(int) $id] = $version;
+            }
+        }
+
+        return $titles;
+    }
+
+    private function heardTitle(array $show, int $songId): array
+    {
+        $version = $show['titles'][$songId] ?? null;
+
+        return ['title' => $version ?: $this->songs[$songId], 'version' => $version ?: null];
+    }
 
     // 自分が聴いた「久しぶり」：参加した公演で聴いた曲が、その前のツアーから何年ぶりの演奏だったか（長い順）
     public function heardRevivals(array $heard): array
@@ -284,7 +307,7 @@ class ArtistTopics
                 $years = self::years(substr($prevTour->date2 ?? $prevTour->date1, 0, 10), $show['date']);
                 // 1年未満でも、前の演奏から間が空いていれば出す（空いた年数の長い順に上位だけ出すので、長いものが先に並ぶ）
                 if ($years > 0 && (!isset($rows[$songId]) || $years > $rows[$songId]['years'])) {
-                    $rows[$songId] = ['song_id' => $songId, 'title' => $this->songs[$songId], 'years' => $years, 'date' => $show['date'], 'show' => $show['title'] ?? '', 'show_url' => $show['url'] ?? null, 'previous' => $this->tourInfo($prev)];
+                    $rows[$songId] = ['song_id' => $songId] + $this->heardTitle($show, $songId) + ['years' => $years, 'date' => $show['date'], 'show' => $show['title'] ?? '', 'show_url' => $show['url'] ?? null, 'previous' => $this->tourInfo($prev)];
                 }
             }
         }
@@ -307,7 +330,7 @@ class ArtistTopics
                 if (isset($last[$songId]) && $last[$songId]['date'] < $show['date']) {
                     $years = self::years($last[$songId]['date'], $show['date']);
                     if ($years >= 1 && (!isset($rows[$songId]) || $years > $rows[$songId]['years'])) {
-                        $rows[$songId] = ['song_id' => $songId, 'title' => $this->songs[$songId], 'years' => $years,
+                        $rows[$songId] = ['song_id' => $songId] + $this->heardTitle($show, $songId) + ['years' => $years,
                             'from' => $last[$songId],
                             'to' => ['date' => $show['date'], 'title' => $show['title'] ?? '', 'url' => $show['url'] ?? null]];
                     }
@@ -331,13 +354,13 @@ class ArtistTopics
             }
             foreach (array_unique($show['song_ids']) as $songId) {
                 if (isset($this->songs[$songId]) && (!isset($last[$songId]) || $last[$songId]['date'] < $show['date'])) {
-                    $last[$songId] = ['date' => $show['date'], 'title' => $show['title'] ?? '', 'url' => $show['url'] ?? null];
+                    $last[$songId] = ['date' => $show['date'], 'title' => $show['title'] ?? '', 'url' => $show['url'] ?? null, 'song' => $this->heardTitle($show, $songId)];
                 }
             }
         }
         $rows = [];
         foreach ($last as $songId => $show) {
-            $rows[] = ['song_id' => $songId, 'title' => $this->songs[$songId], 'last' => $show, 'years' => self::years($show['date'], $today)];
+            $rows[] = ['song_id' => $songId] + $show['song'] + ['last' => $show, 'years' => self::years($show['date'], $today)];
         }
         usort($rows, fn ($a, $b) => $b['years'] <=> $a['years']);
 
@@ -353,7 +376,7 @@ class ArtistTopics
         foreach ($heard as $show) {
             foreach ($show['song_ids'] as $songId) {
                 if (isset($this->songs[$songId]) && !isset($first[$songId])) {
-                    $first[$songId] = ['song_id' => $songId, 'title' => $this->songs[$songId], 'date' => $show['date'], 'show' => $show['title'] ?? '', 'show_url' => $show['url'] ?? null,
+                    $first[$songId] = ['song_id' => $songId] + $this->heardTitle($show, $songId) + ['date' => $show['date'], 'show' => $show['title'] ?? '', 'show_url' => $show['url'] ?? null,
                         'new' => $this->isNewSong($songId, $show['date'])];
                 }
             }
@@ -415,7 +438,7 @@ class ArtistTopics
             foreach ($show['song_ids'] as $songId) {
                 if (isset($this->songs[$songId]) && !isset($seen[$songId])) {
                     $seen[$songId] = true;
-                    $timeline[substr($show['date'], 0, 4)][] = ['song_id' => $songId, 'title' => $this->songs[$songId], 'new' => $this->isNewSong($songId, $show['date'])];
+                    $timeline[substr($show['date'], 0, 4)][] = ['song_id' => $songId] + $this->heardTitle($show, $songId) + ['new' => $this->isNewSong($songId, $show['date'])];
                 }
             }
         }

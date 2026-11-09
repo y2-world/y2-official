@@ -226,6 +226,7 @@ class MyPageStatsController extends Controller
             'url' => route('mypage.attendances.show', ['attendance' => $a, 'from' => 'stats']),
             'song_ids' => collect(array_merge($a->dbSetlist->setlist ?? [], $a->dbSetlist->encore ?? []))
                 ->filter(fn ($s) => is_numeric($s['song'] ?? null))->map(fn ($s) => (int) $s['song'])->values()->all(),
+            'titles' => \App\Support\ArtistTopics::versionTitles(array_merge($a->dbSetlist->setlist ?? [], $a->dbSetlist->encore ?? [])),
         ])->values()->all();
         $topics = new \App\Support\ArtistTopics((int) $artist->id);
         $topicHeardRevivals = $topics->heardRevivals($heard);
@@ -361,6 +362,7 @@ class MyPageStatsController extends Controller
             'url' => route('mypage.attendances.show', ['attendance' => $a, 'from' => 'stats']),
             'song_ids' => collect(array_merge($a->userSetlist->setlist ?? [], $a->userSetlist->encore ?? []))
                 ->filter(fn ($s) => is_numeric($s['song'] ?? null))->map(fn ($s) => (int) $s['song'])->values()->all(),
+            'titles' => \App\Support\ArtistTopics::versionTitles(array_merge($a->userSetlist->setlist ?? [], $a->userSetlist->encore ?? [])),
         ])->values()->all();
         $topics = new \App\Support\ArtistTopics((int) $artist->id, true);
         $topicHeardRevivals = $topics->heardRevivals($heard);

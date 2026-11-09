@@ -323,6 +323,7 @@ class MyPageController extends Controller
                 'url' => route('mypage.attendances.show', ['attendance' => $attendance, 'from' => 'stats']),
                 'song_ids' => collect(array_merge($setlist->setlist ?? [], $setlist->encore ?? []))
                     ->filter(fn ($s) => is_numeric($s['song'] ?? null))->map(fn ($s) => (int) $s['song'])->values()->all(),
+                'titles' => \App\Support\ArtistTopics::versionTitles(array_merge($setlist->setlist ?? [], $setlist->encore ?? [])),
             ];
         }
         ['topicHeardRevivals' => $topicHeardRevivals, 'topicFirstHeard' => $topicFirstHeard,

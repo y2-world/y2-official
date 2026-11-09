@@ -21,7 +21,12 @@
     // 曲・ツアーのリンク先は $topicSongUrl / $topicTourUrl（ID => URL）で変えられる（マイページで作ったアーティストではマイページのページへ）。渡さなければ Database
     $topicSongUrl ??= fn ($id) => url('/database/songs/' . $id);
     $topicTourUrl ??= fn ($id) => route('live.show', $id);
-    $topicSongLink = fn ($row) => '<a href="' . e($topicSongUrl($row['song_id'])) . '" class="stats-link">' . e($row['title']) . '</a>';
+    // 曲名はその公演で聴いた表記。別表記（version）のときは、楽曲ページもその表記で絞り込んだ状態で開く（スタンプ帳と同じ）
+    $topicSongHref = function ($row) use ($topicSongUrl) {
+        $href = $topicSongUrl($row['song_id']);
+        return empty($row['version']) ? $href : $href . (str_contains($href, '?') ? '&' : '?') . http_build_query(['title' => $row['version']]);
+    };
+    $topicSongLink = fn ($row) => '<a href="' . e($topicSongHref($row)) . '" class="stats-link">' . e($row['title']) . '</a>';
     // 新曲以外（リリースから時間がたってから初めて聴けた曲）は太字にする
     $topicSongLinkMarked = fn ($row) => empty($row['new']) ? '<span style="font-weight: 700;">' . $topicSongLink($row) . '</span>' : $topicSongLink($row);
 
