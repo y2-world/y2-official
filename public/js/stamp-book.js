@@ -20,9 +20,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const titleEl = slot.querySelector('.stamp-slot-title');
         slot._titleEl = titleEl;
         // _defaultTitle は長押しで選んだ表記（選んでいなければ曲名）、_baseTitle は元の曲名
-        slot._defaultTitle = titleEl ? titleEl.textContent : '';
-        slot._baseTitle = slot.dataset.baseTitle || slot._defaultTitle;
+        slot._baseTitle = slot.dataset.baseTitle || (titleEl ? titleEl.textContent : '');
         slot._trackTitles = slot.dataset.trackTitles ? JSON.parse(slot.dataset.trackTitles) : {};
+        slot._defaultTitle = (slot.dataset.titleKey && slot._trackTitles[slot.dataset.titleKey]) || slot._baseTitle;
         slot._trackOrders = slot.dataset.trackOrders ? JSON.parse(slot.dataset.trackOrders) : {};
     });
 
@@ -77,15 +77,32 @@ document.addEventListener('DOMContentLoaded', function () {
         return ordered;
     }
 
-    // シングル・アルバムで絞り込んだときはその盤の表記（無ければ元の曲名）、それ以外は長押しで選んだ表記
+    // Release Date 以外で並べたときに出す、そのとき聴いた（演奏した）表記（Most は、いちばん多く聴いた・演奏した表記）。
+    // [並べ替え => [記録があるかの data, 表記の data]]
+    const sortTitles = {
+        'heard': ['heardOrder', 'heardFirstTitle'],
+        'most-heard': ['heardOrder', 'heardMostTitle'],
+        'last-heard': ['lastHeard', 'heardLastTitle'],
+        'most-performed': ['performedLast', 'performedMostTitle'],
+        'last-performed': ['performedLast', 'performedLastTitle'],
+    };
+
+    // 上の並べ替えのときは、そのときの表記（絞り込みより先）。
+    // Release Date のときは、シングル・アルバムで絞り込んだらその盤の表記（無ければ元の曲名）、テーマで絞り込んだら長押しで選んだ表記、
+    // それ以外は元の曲名
     function applyTitles(key) {
+        const sortTitle = sortTitles[sortMode] || null;
         const discKey = key === 'single' || key.indexOf('album-') === 0;
+        const themeKey = key.indexOf('color:') === 0;
         slots.forEach(function (slot) {
             if (slot._titleEl) {
-                const title = discKey ? (slot._trackTitles[key] || slot._baseTitle) : slot._defaultTitle;
+                let title = discKey ? (slot._trackTitles[key] || slot._baseTitle) : (themeKey ? slot._defaultTitle : slot._baseTitle);
+                if (sortTitle && slot.dataset[sortTitle[0]]) {
+                    title = slot.dataset[sortTitle[1]] || slot._baseTitle;
+                }
                 slot._titleEl.textContent = title;
-                // テーマの枠の色は、長押しで選んだバージョン（選んでいなければ元の曲名）で出ているときだけ付ける
-                slot.classList.toggle('is-other-version', title !== slot._defaultTitle);
+                // テーマの枠の色は、盤の表記・聴いた（演奏した）ときの表記が長押しで選んだバージョンと違うときは付けない
+                slot.classList.toggle('is-other-version', (discKey || !!sortTitle) && title !== slot._defaultTitle);
                 // 曲名と違う表記で出しているときは、楽曲ページもその表記で絞り込んだ状態で開く
                 const url = new URL(slot._titleEl.href, window.location.href);
                 if (title !== slot._baseTitle) {
@@ -154,7 +171,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function showSlots(visibleSlots, animate, key) {
-        applyTitles(key);
+        // 曲名の表記はテーマの絞り込みでも変わるので、並び順の key ではなく絞り込みそのもので決める
+        applyTitles(select ? select.value : '');
         const visibleSet = new Set(visibleSlots);
         const ordered = orderedSlots(key);
         ordered.forEach(function (slot) { book.appendChild(slot); });

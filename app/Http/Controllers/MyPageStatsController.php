@@ -479,6 +479,8 @@ class MyPageStatsController extends Controller
                 'song_id' => $song->id,
                 'performed_last' => $performed[$song->id]['performed_last'] ?? null,
                 'performed_count' => $performed[$song->id]['performed_count'] ?? 0,
+                'performed_last_title' => $performed[$song->id]['performed_last_title'] ?? '',
+                'performed_most_title' => $performed[$song->id]['performed_most_title'] ?? '',
                 'song_url' => $this->isOwner() ? route('mypage.attendances.index', ['song_id' => 'official-' . $song->id]) : url('/database/songs/' . $song->id),
                 'title' => $song->title,
                 // ほかの人との曲のアーティスト表記（スタンプでは曲名のあとに灰色で出す）
@@ -549,6 +551,8 @@ class MyPageStatsController extends Controller
                 'song_id' => $song->id,
                 'performed_last' => $performed[$song->id]['performed_last'] ?? null,
                 'performed_count' => $performed[$song->id]['performed_count'] ?? 0,
+                'performed_last_title' => $performed[$song->id]['performed_last_title'] ?? '',
+                'performed_most_title' => $performed[$song->id]['performed_most_title'] ?? '',
                 'song_url' => $this->isOwner() ? route('mypage.attendances.index', ['song_id' => 'user-' . $song->id]) : null,
                 'title' => $song->title,
                 'done' => isset($playedUserSongIds[$song->id]),
@@ -574,7 +578,7 @@ class MyPageStatsController extends Controller
             $setlist = $setlists[$attendance->$setlistColumn] ?? null;
             foreach (array_merge($setlist?->setlist ?? [], $setlist?->encore ?? []) as $position => $s) {
                 if (isset($s['song']) && is_numeric($s['song'])) {
-                    \App\Support\StampHeardOrder::add($stats, (int) $s['song'], $attendance->attended_date, $attendance->id, $position);
+                    \App\Support\StampHeardOrder::add($stats, (int) $s['song'], $attendance->attended_date, $attendance->id, $position, $s['alternative_title'] ?? null);
                 }
             }
         }

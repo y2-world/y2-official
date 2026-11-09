@@ -1161,15 +1161,15 @@ class StatsController extends Controller
         $playedSlSongIdsOutsideDoubleEncore = [];
         // 聴いた記録（スタンプの並べ替え：First heard・Most heard・Last heard）。[sl_song_id => StampHeardOrder::add の記録]
         $heardSl = [];
-        $heard = function (int $slSongId, $setlist, int $position) use (&$heardSl) {
-            \App\Support\StampHeardOrder::add($heardSl, $slSongId, $setlist->date, $setlist->id, $position);
+        $heard = function (int $slSongId, $setlist, int $position, array $songData) use (&$heardSl) {
+            \App\Support\StampHeardOrder::add($heardSl, $slSongId, $setlist->date, $setlist->id, $position, $songData['alternative_title'] ?? null);
         };
         foreach ($setlists as $setlist) {
             $encore = array_values((array) ($setlist->encore ?? []));
             $encoreBlocks = \App\Support\EncoreBlocks::blockIndexes($encore);
             foreach (array_merge($setlist->setlist ?? [], $encore) as $position => $songData) {
                 if (isset($songData['song']) && is_numeric($songData['song'])) {
-                    $heard((int) $songData['song'], $setlist, $position);
+                    $heard((int) $songData['song'], $setlist, $position, $songData);
                     $playedSlSongIdsNormal[(int)$songData['song']] = true;
                     $encoreIndex = $position - count($setlist->setlist ?? []);
                     if ($encoreIndex >= 0 && ($encoreBlocks[$encoreIndex] ?? 0) >= \App\Support\EncoreBlocks::DOUBLE_ENCORE) {
@@ -1183,7 +1183,7 @@ class StatsController extends Controller
             $fesSongs = $this->flattenFesSongs(array_merge($setlist->fes_setlist ?? [], $setlist->fes_encore ?? []));
             foreach ($fesSongs as $position => $songData) {
                 if (isset($songData['song']) && is_numeric($songData['song'])) {
-                    $heard((int) $songData['song'], $setlist, $position);
+                    $heard((int) $songData['song'], $setlist, $position, $songData);
                     $playedSlSongIdsFes[(int)$songData['song']] = true;
                     $playedSlSongIdsOutsideDoubleEncore[(int)$songData['song']] = true;
                 }
@@ -1235,6 +1235,8 @@ class StatsController extends Controller
                 'song_id' => $song->id,
                 'performed_last' => $performed[$song->id]['performed_last'] ?? null,
                 'performed_count' => $performed[$song->id]['performed_count'] ?? 0,
+                'performed_last_title' => $performed[$song->id]['performed_last_title'] ?? '',
+                'performed_most_title' => $performed[$song->id]['performed_most_title'] ?? '',
                 'title' => $song->title,
                 // ほかの人との曲のアーティスト表記（スタンプでは曲名のあとに灰色で出す）
                 'credit' => $song->credit,
@@ -1371,6 +1373,8 @@ class StatsController extends Controller
                     'song_id' => $song->id,
                     'performed_last' => $performed[$song->id]['performed_last'] ?? null,
                     'performed_count' => $performed[$song->id]['performed_count'] ?? 0,
+                    'performed_last_title' => $performed[$song->id]['performed_last_title'] ?? '',
+                    'performed_most_title' => $performed[$song->id]['performed_most_title'] ?? '',
                     // マイページの曲のページを、2つ目のタブ（自分の参加記録）で開く
                     'song_url' => route('mypage.user_songs.show', ['id' => $song->id, 'tab' => 'mine']),
                     'title' => $song->title,

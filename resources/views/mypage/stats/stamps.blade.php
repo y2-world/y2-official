@@ -83,6 +83,11 @@
                                     data-heard-order="{{ $stamp['heard_order'] ?? '' }}"
                                     data-performed-last="{{ $stamp['performed_last'] ?? '' }}"
                                     data-performed-count="{{ $stamp['performed_count'] ?? 0 }}"
+                                    data-performed-last-title="{{ $stamp['performed_last_title'] ?? '' }}"
+                                    data-heard-first-title="{{ $stamp['heard_first_title'] ?? '' }}"
+                                    data-heard-last-title="{{ $stamp['heard_last_title'] ?? '' }}"
+                                    data-heard-most-title="{{ $stamp['heard_most_title'] ?? '' }}"
+                                    data-performed-most-title="{{ $stamp['performed_most_title'] ?? '' }}"
                                     data-last-heard="{{ $stamp['last_heard'] ?? '' }}"
                                     data-heard-count="{{ $stamp['heard_count'] ?? 0 }}"
                                     data-color-id="{{ $stamp['color_id'] ?? '' }}"
@@ -104,9 +109,9 @@
                                         @endif
                                     </div>
                                     @if ($stamp['song_url'])
-                                        <a href="{{ $stamp['song_url'] }}" class="stamp-slot-title">{{ $stamp['title'] }}</a>@if (!empty($stamp['credit']))<span class="stamp-slot-credit">{{ $stamp['credit'] }}</span>@endif
+                                        <a href="{{ $stamp['song_url'] }}" class="stamp-slot-title">{{ $stamp['base_title'] ?? $stamp['title'] }}</a>@if (!empty($stamp['credit']))<span class="stamp-slot-credit">{{ $stamp['credit'] }}</span>@endif
                                     @else
-                                        <span class="stamp-slot-title">{{ $stamp['title'] }}</span>@if (!empty($stamp['credit']))<span class="stamp-slot-credit">{{ $stamp['credit'] }}</span>@endif
+                                        <span class="stamp-slot-title">{{ $stamp['base_title'] ?? $stamp['title'] }}</span>@if (!empty($stamp['credit']))<span class="stamp-slot-credit">{{ $stamp['credit'] }}</span>@endif
                                     @endif
                                 </div>
                             @endforeach
@@ -124,6 +129,6 @@
 @endsection
 
 @section('page-script')
-<script src="{{ asset('/js/stamp-book.js?v=20261108a') }}"></script>
+<script src="{{ asset('/js/stamp-book.js?v=20261109e') }}"></script>
 @include('stats._stamp_book_script')
 @endsection

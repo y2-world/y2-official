@@ -71,25 +71,42 @@ trait ComputesDbSongStamps
             : DbSetlist::whereIn('tour_id', $tourDates->keys())->get();
 
         $last = [];
+        $lastTitle = [];
+        $lastPatternDate = [];
         $tours = [];
-        foreach ($setlists as $setlist) {
+        $titleTours = [];
+        foreach ($setlists->sortBy('id') as $setlist) {
             $tourId = $userArtist ? $setlist->user_concert_id : $setlist->tour_id;
             $date = $tourDates[$tourId] ?? null;
+            // 同じツアーのパターンどうしは、最後の公演日（schedule_dates）が遅いほうの表記にする
+            $patternDate = (string) collect($setlist->schedule_dates ?? [])->max();
             foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $s) {
                 $songId = is_numeric($s['song'] ?? null) ? (int) $s['song'] : null;
                 if (!$date || $songId === null || !isset($songIds[$songId])) {
                     continue;
                 }
+                // そのとき演奏した表記（セトリの alternative_title。無ければ曲名で ''）
+                $title = trim((string) ($s['alternative_title'] ?? ''));
                 $tours[$songId][$tourId] = true;
-                if (($last[$songId] ?? '') < $date) {
+                $titleTours[$songId][$title][$tourId] = true;
+                if (($last[$songId] ?? '') < $date || (($last[$songId] ?? '') === $date && $lastPatternDate[$songId] <= $patternDate)) {
                     $last[$songId] = $date;
+                    $lastTitle[$songId] = $title;
+                    $lastPatternDate[$songId] = $patternDate;
                 }
             }
         }
 
         $stats = [];
         foreach ($last as $songId => $date) {
-            $stats[$songId] = ['performed_last' => $date, 'performed_count' => count($tours[$songId])];
+            $stats[$songId] = [
+                'performed_last' => $date,
+                'performed_count' => count($tours[$songId]),
+                // Last Performed で並べたときに出す、最後に演奏したときの表記（'' は曲名のまま）
+                'performed_last_title' => $lastTitle[$songId],
+                // Most Performed で並べたときに出す、いちばん多くのツアーで演奏した表記
+                'performed_most_title' => \App\Support\StampHeardOrder::mostTitle($titleTours[$songId], $lastTitle[$songId]),
+            ];
         }
 
         return $stats;
