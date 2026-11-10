@@ -3226,6 +3226,11 @@ h5.setlist-subtitle-heading {
         font-size: 0.75rem;
     }
 
+    /* 順位の下の、もう一方の数え方での順位は、スマホでは順位の数字より小さく */
+    .rank-other {
+        font-size: 0.55rem;
+    }
+
     .count-badge {
         padding: 3px 6px;
         font-size: 0.7rem;
@@ -3688,23 +3693,6 @@ h5.setlist-subtitle-heading {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     color: #667eea;
-}
-
-/* アーティスト別統計の「View Live Stamp Book」「Database Stats」: モバイルでも1行に並べ、入りきらないときはボタンを小さくする */
-@media (max-width: 576px) {
-    .stats-link-row {
-        flex-wrap: nowrap !important;
-        gap: 8px !important;
-    }
-
-    .stats-link-row .stamp-book-link {
-        flex: 0 1 auto;
-        min-width: 0;
-        gap: 6px;
-        padding: 8px clamp(10px, 3.5vw, 18px);
-        font-size: clamp(0.7rem, 3.5vw, 0.9rem);
-        white-space: nowrap;
-    }
 }
 
 .mypage-add-button {
