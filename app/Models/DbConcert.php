@@ -84,11 +84,22 @@ class DbConcert extends Model
             ->values();
     }
 
-    // 会場のページに公演が1つでも出る会場名（Solo だけの会場は入らない）。会場名にリンクを付けるかどうかに使う。1回のページ表示の間は覚えておく
+    // 会場のページ・会場検索・stats の Top Venues で数える公演。ツアーと単発ライブ（type 0・1）だけで、イベント・フェス・ap bank fes・ソロは入れない
+    public static function venuePageEntries(int $artistId, ?\Closure $scope = null): \Illuminate\Support\Collection
+    {
+        return static::scheduleVenueEntries($artistId, function ($query) use ($scope) {
+            $query->whereIn('type', [0, 1]);
+            if ($scope) {
+                $scope($query);
+            }
+        });
+    }
+
+    // 会場のページに公演が1つでも出る会場名（ツアーと単発ライブの会場だけ）。会場名にリンクを付けるかどうかに使う。1回のページ表示の間は覚えておく
     public static function linkableVenue(int $artistId, ?string $venue): ?string
     {
         static $names = [];
-        $names[$artistId] ??= static::scheduleVenueEntries($artistId)->pluck('venue')->flip()->all();
+        $names[$artistId] ??= static::venuePageEntries($artistId)->pluck('venue')->flip()->all();
         $keyword = static::venueKeyword($venue);
 
         return $keyword !== '' && isset($names[$artistId][$keyword]) ? $keyword : null;

@@ -29,7 +29,7 @@ class VenueSearch extends Component
     // Database の会場：公演の多い順に、打った文字を含む会場
     private function scheduleVenueNames(string $search = '')
     {
-        return \App\Models\DbConcert::scheduleVenueEntries((int) $this->dbArtistId)
+        return \App\Models\DbConcert::venuePageEntries((int) $this->dbArtistId)
             ->countBy('venue')
             ->filter(fn ($count, $venue) => $search === '' || mb_stripos($venue, $search) !== false)
             ->sortDesc()

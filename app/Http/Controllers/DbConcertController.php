@@ -60,7 +60,8 @@ class DbConcertController extends Controller
     {
         $artist = Artist::findOrFail($artistId);
         $keyword = trim((string) request()->input('keyword'));
-        $entries = DbConcert::scheduleVenueEntries((int) $artistId);
+        // 会場の一覧も、会場ごとの公演も、ツアーと単発ライブだけ（venuePageEntries）
+        $entries = DbConcert::venuePageEntries((int) $artistId);
 
         if ($keyword !== '') {
             $performances = $entries->where('venue', $keyword)->sortByDesc('date')->values();

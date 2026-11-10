@@ -771,12 +771,13 @@ class StatsController extends Controller
             ->get();
     }
 
-    // Top Venues：スケジュールに出てくる会場ごとの公演数（今日までの公演）。多い順に25件、同じ数なら最後の公演が新しい順
+    // Top Venues：スケジュールに出てくる会場ごとの公演数（今日までの公演）。多い順に25件、同じ数なら最後の公演が新しい順。
+    // 会場のページと同じく、ツアーと単発ライブだけで数える（DbConcert::venuePageEntries）
     private function getDatabaseVenueStats(int $artistId, string $type = 'all')
     {
         $today = now()->toDateString();
 
-        return DbConcert::scheduleVenueEntries($artistId, fn ($query) => $this->applyDatabaseTypeFilter($query, $type))
+        return DbConcert::venuePageEntries($artistId, fn ($query) => $this->applyDatabaseTypeFilter($query, $type))
             ->filter(fn ($entry) => $entry['date'] <= $today)
             ->groupBy('venue')
             ->map(fn ($rows, $venue) => (object) ['venue' => $venue, 'count' => $rows->count(), 'last' => $rows->max('date')])

@@ -383,7 +383,7 @@
                     <div class="stats-section visible">
                         <h2 class="section-title">
                             <i class="fas fa-map-marker-alt"></i> Top Venues
-    <span class="section-title-desc">公演の多い会場</span></h2>
+    <span class="section-title-desc">ツアー・単発ライブで公演の多い会場</span></h2>
                         <div class="stats-table-container">
                             <table class="stats-table">
                                 <thead>
