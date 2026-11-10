@@ -2880,6 +2880,20 @@ h5.setlist-subtitle-heading {
     color: #666;
 }
 
+/* 順位の下の、もう一方の数え方（ツアー・ライブの数 ⇔ 公演の数）での順位 */
+.rank-other {
+    font-size: 0.7rem;
+    line-height: 1.2;
+    color: #999;
+    white-space: nowrap;
+}
+.rank-other-up {
+    color: #2e9d5b;
+}
+.rank-other-down {
+    color: #d9534f;
+}
+
 .song-title {
     font-weight: 400;
     color: #333;

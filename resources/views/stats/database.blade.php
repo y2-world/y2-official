@@ -29,8 +29,8 @@
                                 <div class="stat-icon">
                                     <i class="fas fa-guitar"></i>
                                 </div>
-                                <div class="stat-value">{{ $overallStats['total_tours'] }}</div>
-                                <div class="stat-label">Total Lives</div>
+                                <div class="stat-value" id="statTotalValue">{{ $overallStats['total_tours'] }}</div>
+                                <div class="stat-label" id="statTotalLabel">{{ $byShows ? 'Total Shows' : 'Total Tours' }}</div>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-6 mb-4">
@@ -56,7 +56,7 @@
                                 <div class="stat-icon">
                                     <i class="fas fa-chart-line"></i>
                                 </div>
-                                <div class="stat-value">{{ $overallStats['avg_setlist_length'] }}</div>
+                                <div class="stat-value" id="statAvgValue">{{ $overallStats['avg_setlist_length'] }}</div>
                                 <div class="stat-label">Avg Songs/Show</div>
                             </div>
                         </div>
@@ -76,13 +76,21 @@
                         @endif
                     </div>
 
+                    {{-- Songs・Data のボタンの下。パネルと曲のランキング（Most Performed・Encore・Opening・DOUBLE ENCORE）を、ツアー・ライブの数ではなく公演の数で出す（読み込み直さずに切り替える。?count=shows で開けば最初から公演数） --}}
+                    <div class="unique-tour-toggle" style="margin: -10px 0 24px; display: flex; justify-content: center;">
+                        {{-- 紫の背景の上なので白い文字 --}}
+                        <label class="unique-tour-label" style="color: #fff;">
+                            <input type="checkbox" id="countByShows" class="unique-tour-checkbox" {{ $byShows ? 'checked' : '' }}>
+                            <span class="unique-tour-text">公演数統計に切替</span>
+                        </label>
+                    </div>
                     <div class="stats-tab-panel" data-stats-panel="songs">
                     <!-- Most Performed Songs Section -->
                     <div class="stats-section visible">
                         <div class="section-title-wrapper" style="flex-direction: column; align-items: center; gap: 10px;">
                             <h2 class="section-title" style="text-align: center;">
                                 <i class="fas fa-fire"></i> Most Performed Songs (<span id="dbSongCountLabel">{{ count(array_filter($songStats, fn($s) => $s['count'] > 0)) }}</span>)
-    <span class="section-title-desc">演奏されたツアー・ライブの数が多い曲</span></h2>
+    <span class="section-title-desc" data-count-desc-tours="演奏されたツアー・ライブの数が多い曲" data-count-desc-shows="演奏された公演の数が多い曲">{{ $byShows ? '演奏された公演の数が多い曲' : '演奏されたツアー・ライブの数が多い曲' }}</span></h2>
                             @if (!empty($isHikigatariArtist) && !empty($doubleEncoreSongStats))
                             {{-- 福山雅治のみ：演奏回数を、DOUBLE ENCORE（弾き語り）を除いて数える（その場で表を切り替える） --}}
                             <div class="unique-tour-toggle" style="margin-left: 0;">
@@ -121,6 +129,7 @@
                                                     <span class="rank-number">{{ $actualRank }}</span>
                                                 @endif
                                             @endif
+                                            @include('stats._other_rank', ['song' => $song])
                                         </td>
                                         <td class="song-title">
                                             <a href="{{ url('/database/songs/' . $song['song_id']) }}" class="stats-link">{{ $song['title'] }}</a>
@@ -148,9 +157,9 @@
                     <div class="stats-section visible">
                         <h2 class="section-title">
                             <i class="fas fa-guitar"></i> Most Performed DOUBLE ENCORE Songs
-    <span class="section-title-desc">DOUBLE ENCOREで演奏されたツアー・ライブの数が多い曲</span></h2>
+    <span class="section-title-desc" data-count-desc-tours="DOUBLE ENCOREで演奏されたツアー・ライブの数が多い曲" data-count-desc-shows="DOUBLE ENCOREで演奏された公演の数が多い曲">DOUBLE ENCOREで{{ $byShows ? '演奏された公演の数が多い曲' : '演奏されたツアー・ライブの数が多い曲' }}</span></h2>
                         <div class="stats-table-container">
-                            <table class="stats-table">
+                            <table class="stats-table" id="dbDoubleEncoreStatsTable">
                                 <thead>
                                     <tr>
                                         <th class="rank-col">Rank</th>
@@ -177,6 +186,7 @@
                                                     <span class="rank-number">{{ $actualRank }}</span>
                                                 @endif
                                             @endif
+                                            @include('stats._other_rank', ['song' => $song])
                                         </td>
                                         <td class="song-title">
                                             <a href="{{ url('/database/songs/' . $song['song_id']) }}" class="stats-link">{{ $song['title'] }}</a>
@@ -203,9 +213,9 @@
                     <div class="stats-section visible">
                         <h2 class="section-title">
                             <i class="fas fa-play"></i> Most Used Opening Songs
-    <span class="section-title-desc">1曲目に演奏されたツアー・ライブの数が多い曲</span></h2>
+    <span class="section-title-desc" data-count-desc-tours="1曲目に演奏されたツアー・ライブの数が多い曲" data-count-desc-shows="1曲目に演奏された公演の数が多い曲">1曲目に{{ $byShows ? '演奏された公演の数が多い曲' : '演奏されたツアー・ライブの数が多い曲' }}</span></h2>
                         <div class="stats-table-container">
-                            <table class="stats-table">
+                            <table class="stats-table" id="dbOpeningStatsTable">
                                 <thead>
                                     <tr>
                                         <th class="rank-col">Rank</th>
@@ -232,6 +242,7 @@
                                                     <span class="rank-number">{{ $actualRank }}</span>
                                                 @endif
                                             @endif
+                                            @include('stats._other_rank', ['song' => $song])
                                         </td>
                                         <td class="song-title">
                                             <a href="{{ url('/database/songs/' . $song['song_id']) }}" class="stats-link">{{ $song['title'] }}</a>
@@ -253,7 +264,7 @@
                         <div class="section-title-wrapper" style="flex-direction: column; align-items: center; gap: 10px;">
                             <h2 class="section-title" style="text-align: center;">
                                 <i class="fas fa-star"></i> Most Performed Encore Songs
-    <span class="section-title-desc">アンコールで演奏されたツアー・ライブの数が多い曲</span></h2>
+    <span class="section-title-desc" data-count-desc-tours="アンコールで演奏されたツアー・ライブの数が多い曲" data-count-desc-shows="アンコールで演奏された公演の数が多い曲">アンコールで{{ $byShows ? '演奏された公演の数が多い曲' : '演奏されたツアー・ライブの数が多い曲' }}</span></h2>
                             @if (!empty($isHikigatariArtist) && !empty($doubleEncoreSongStats))
                             {{-- 福山雅治のみ：アンコールの回数を、DOUBLE ENCORE（弾き語り）を除いて数える（その場で表を切り替える） --}}
                             <div class="unique-tour-toggle" style="margin-left: 0;">
@@ -292,6 +303,7 @@
                                                     <span class="rank-number">{{ $actualRank }}</span>
                                                 @endif
                                             @endif
+                                            @include('stats._other_rank', ['song' => $song])
                                         </td>
                                         <td class="song-title">
                                             <a href="{{ url('/database/songs/' . $song['song_id']) }}" class="stats-link">{{ $song['title'] }}</a>
@@ -490,20 +502,34 @@ function toggleSongRows(button) {
         : 'Show Less <i class="fas fa-chevron-up"></i>';
 }
 
-@if (!empty($isHikigatariArtist) && !empty($doubleEncoreSongStats))
-// 福山雅治のみ：「DOUBLE ENCOREを除く」で、ページを読み込み直さずに表を描き直す（同ツアーを除くと同じ動き）
-const dbSongStats = { normal: @json($songStats), noDoubleEncore: @json($songStatsNoDoubleEncore) };
-const dbEncoreStats = { normal: @json($encoreSongStats), noDoubleEncore: @json($encoreSongStatsNoDoubleEncore) };
+// 「公演数統計に切替」「DOUBLE ENCOREを除く」（福山雅治のみ）で、ページを読み込み直さずにパネルと表を描き直す（同ツアーを除くと同じ動き）
+const countModes = @json($countModes);
 
-function renderRanking(tableId, data, collapseAfter) {
-    const tbody = document.querySelector('#' + tableId + ' tbody');
-    const expanded = document.querySelector('#' + tableId + ' ~ .show-more-container .show-more-btn')?.classList.contains('expanded');
+// もう一方の数え方での順位（stats/_other_rank と同じ形）。上がった ↑・下がった ↓・同じなら矢印なし、もう一方で演奏されていなければ（-）
+function otherRankHtml(song) {
+    if (!song.rank) return '';
+    if (!song.other_rank) return '<div class="rank-other">(-)</div>';
+    const arrow = song.other_rank > song.rank ? '<span class="rank-other-up">↑</span>' : song.other_rank < song.rank ? '<span class="rank-other-down">↓</span>' : '';
+    return '<div class="rank-other">(' + arrow + song.other_rank + ')</div>';
+}
+
+// 表を描き直す。collapse: 'hidden-row'（Show More で開く行）か 'data-more'（_show_more の行）。10曲目まではいつも出す
+function renderRanking(tableId, data, collapse) {
+    const table = document.getElementById(tableId);
+    if (!table) return;
+    const tbody = table.querySelector('tbody');
+    const expanded = table.closest('.stats-section')?.querySelector('.show-more-btn')?.classList.contains('expanded');
     tbody.innerHTML = '';
     data.forEach((song, index) => {
         const tr = document.createElement('tr');
-        if (collapseAfter && index >= collapseAfter) {
-            tr.classList.add('hidden-row');
-            if (expanded) tr.style.display = 'table-row';
+        if (collapse && index >= 10) {
+            if (collapse === 'data-more') {
+                tr.setAttribute('data-more', '1');
+                if (!expanded) tr.style.display = 'none';
+            } else {
+                tr.classList.add('hidden-row');
+                if (expanded) tr.style.display = 'table-row';
+            }
         }
         const showRank = index === 0 || data[index - 1].count !== song.count;
         let rankBadge = '';
@@ -517,20 +543,36 @@ function renderRanking(tableId, data, collapseAfter) {
         link.href = '/database/songs/' + song.song_id;
         link.className = 'stats-link';
         link.textContent = song.title;
-        tr.innerHTML = `<td class="rank-col">${rankBadge}</td><td class="song-title"></td><td class="count-col"><span class="count-badge">${song.count}</span></td>`;
+        tr.innerHTML = `<td class="rank-col">${rankBadge}${otherRankHtml(song)}</td><td class="song-title"></td><td class="count-col"><span class="count-badge">${song.count}</span></td>`;
         tr.querySelector('.song-title').appendChild(link);
         tbody.appendChild(tr);
     });
 }
 
-document.getElementById('excludeDoubleEncoreSongs')?.addEventListener('change', function (e) {
-    const data = e.target.checked ? dbSongStats.noDoubleEncore : dbSongStats.normal;
-    renderRanking('dbSongStatsTable', data, 10);
-    document.getElementById('dbSongCountLabel').textContent = data.filter(s => s.count > 0).length;
-});
-document.getElementById('excludeDoubleEncoreEncore')?.addEventListener('change', function (e) {
-    renderRanking('dbEncoreStatsTable', e.target.checked ? dbEncoreStats.noDoubleEncore : dbEncoreStats.normal, 0);
-});
-@endif
+function updateCountMode() {
+    const mode = document.getElementById('countByShows')?.checked ? 'shows' : 'tours';
+    const stats = countModes[mode];
+    const noDoubleEncoreSongs = document.getElementById('excludeDoubleEncoreSongs')?.checked;
+    const noDoubleEncoreEncore = document.getElementById('excludeDoubleEncoreEncore')?.checked;
+    const songs = noDoubleEncoreSongs ? stats.songsNoDoubleEncore : stats.songs;
+    renderRanking('dbSongStatsTable', songs, 'hidden-row');
+    document.getElementById('dbSongCountLabel').textContent = songs.filter(s => s.count > 0).length;
+    renderRanking('dbEncoreStatsTable', noDoubleEncoreEncore ? stats.encoreNoDoubleEncore : stats.encore, null);
+    renderRanking('dbDoubleEncoreStatsTable', stats.doubleEncore, 'data-more');
+    renderRanking('dbOpeningStatsTable', stats.opening, null);
+    document.getElementById('statTotalValue').textContent = stats.overall.total_tours;
+    document.getElementById('statTotalLabel').textContent = mode === 'shows' ? 'Total Shows' : 'Total Tours';
+    document.getElementById('statAvgValue').textContent = stats.overall.avg_setlist_length;
+    document.querySelectorAll('[data-count-desc-tours]').forEach(el => {
+        el.textContent = el.getAttribute(mode === 'shows' ? 'data-count-desc-shows' : 'data-count-desc-tours');
+    });
+    // 読み込み直したり共有したりしても同じ数え方になるよう、URL の ?count=shows も変える（ページは読み込み直さない）
+    const url = new URL(window.location.href);
+    if (mode === 'shows') url.searchParams.set('count', 'shows'); else url.searchParams.delete('count');
+    history.replaceState(history.state, '', url.toString());
+}
+document.getElementById('countByShows')?.addEventListener('change', updateCountMode);
+document.getElementById('excludeDoubleEncoreSongs')?.addEventListener('change', updateCountMode);
+document.getElementById('excludeDoubleEncoreEncore')?.addEventListener('change', updateCountMode);
 </script>
 @endsection

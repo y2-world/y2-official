@@ -481,12 +481,39 @@ class StatsController extends Controller
     private function getDatabaseStats(int $artistId, string $type = 'all')
     {
         $artist = Artist::findOrFail($artistId);
-        $overallStats = $this->getDatabaseOverallStats($artistId, $type);
-        $songStats = $this->getDatabaseSongStats($artistId, $type);
-        $encoreSongStats = $this->getDatabaseEncoreSongStats($artistId, $type);
+        // 「公演数統計に切替」（?count=shows）：パネルと曲のランキングを、ツアー・ライブの数ではなく公演の数で出す。
+        // 画面のチェックでページを読み込み直さずに切り替えるので、両方の数え方を用意する（$countModes）
+        $byShows = request('count') === 'shows';
         // 福山雅治のみ：DOUBLE ENCORE（弾き語り）を除いた版も用意して、画面上のチェックでその場で切り替える
         $isHikigatariArtist = $artistId === \App\Support\EncoreBlocks::HIKIGATARI_ARTIST_ID;
-        $songStatsNoDoubleEncore = $isHikigatariArtist ? $this->getDatabaseSongStats($artistId, $type, true) : [];
+        $countModes = [];
+        foreach (['tours' => false, 'shows' => true] as $mode => $modeByShows) {
+            $countModes[$mode] = [
+                'overall' => $this->getDatabaseOverallStats($artistId, $type, $modeByShows),
+                'songs' => $this->getDatabaseSongStats($artistId, $type, false, $modeByShows),
+                'songsNoDoubleEncore' => $isHikigatariArtist ? $this->getDatabaseSongStats($artistId, $type, true, $modeByShows) : [],
+                'encore' => $this->getDatabaseEncoreSongStats($artistId, $type, false, $modeByShows, null),
+                'encoreNoDoubleEncore' => $isHikigatariArtist ? $this->getDatabaseEncoreSongStats($artistId, $type, true, $modeByShows, null) : [],
+                'doubleEncore' => $isHikigatariArtist ? $this->getDatabaseDoubleEncoreSongStats($artistId, $type, $modeByShows) : [],
+                'opening' => $this->getDatabaseOpeningSongStats($artistId, $type, $modeByShows, null),
+            ];
+        }
+        // 順位の横に、もう一方の数え方での順位（other_rank）を出す。全曲で順位を付けてから、表に出す曲数に切る
+        $limits = ['songs' => null, 'songsNoDoubleEncore' => null, 'encore' => 10, 'encoreNoDoubleEncore' => 10, 'doubleEncore' => 25, 'opening' => 10];
+        foreach ($limits as $list => $limit) {
+            $ranks = ['tours' => $this->statsRanks($countModes['tours'][$list]), 'shows' => $this->statsRanks($countModes['shows'][$list])];
+            foreach (['tours' => 'shows', 'shows' => 'tours'] as $mode => $other) {
+                $countModes[$mode][$list] = array_map(fn ($song) => $song + [
+                    'rank' => $ranks[$mode][$song['song_id']] ?? null,
+                    'other_rank' => $ranks[$other][$song['song_id']] ?? null,
+                ], $limit === null ? $countModes[$mode][$list] : array_slice($countModes[$mode][$list], 0, $limit));
+            }
+        }
+        $current = $countModes[$byShows ? 'shows' : 'tours'];
+        $overallStats = $current['overall'];
+        $songStats = $current['songs'];
+        $encoreSongStats = $current['encore'];
+        $songStatsNoDoubleEncore = $current['songsNoDoubleEncore'];
         // トピックス（久しぶりに演奏された曲など）
         $topics = new \App\Support\ArtistTopics($artistId);
         // Long-Awaited Returns も50曲まで（最初の10曲だけ見せて、残りは折りたたむ）
@@ -499,9 +526,9 @@ class StatsController extends Controller
         $topicOnlyOnce = $topics->performedOnlyOnce();
         $topicOnlyOnceTours = $topics->performedOnlyOnce(true);
         $topicClosingSongs = array_slice($topics->closingSongs(), 0, 10);
-        $encoreSongStatsNoDoubleEncore = $isHikigatariArtist ? $this->getDatabaseEncoreSongStats($artistId, $type, true) : [];
-        $doubleEncoreSongStats = $isHikigatariArtist ? $this->getDatabaseDoubleEncoreSongStats($artistId, $type) : [];
-        $openingSongStats = $this->getDatabaseOpeningSongStats($artistId, $type);
+        $encoreSongStatsNoDoubleEncore = $current['encoreNoDoubleEncore'];
+        $doubleEncoreSongStats = $current['doubleEncore'];
+        $openingSongStats = $current['opening'];
         $longestSetlists = $this->getDatabaseLongestSetlists($artistId, $type);
         $yearStats = $this->getDatabaseYearStats($artistId, $type);
         $venueStats = $this->getDatabaseVenueStats($artistId, $type);
@@ -540,6 +567,8 @@ class StatsController extends Controller
             'doubleEncoreSongStats',
             'isHikigatariArtist',
             'songStatsNoDoubleEncore',
+            'byShows',
+            'countModes',
             'encoreSongStatsNoDoubleEncore',
             'topicRevivals',
             'topicDormant',
@@ -553,7 +582,8 @@ class StatsController extends Controller
         ));
     }
 
-    private function getDatabaseOverallStats(int $artistId, string $type = 'all')
+    // $byShows: ツアー・ライブの数の代わりに公演の数（Total Shows）、平均曲数も公演ごとに数える
+    private function getDatabaseOverallStats(int $artistId, string $type = 'all', bool $byShows = false)
     {
         $tourIds = $this->databaseConcertIds([$artistId], $type);
         $totalTours = $tourIds->count();
@@ -575,13 +605,37 @@ class StatsController extends Controller
 
         // 平均曲数は、そのアーティストのツアーのセットリストだけで数える（組になっているソロプロジェクト・バンドのツアーは入れない）
         $ownSetlists = $tourSetlists->whereIn('tour_id', $tourIds->all());
+        // 公演数のときは、パターンの曲数をそのパターンの公演の数だけ数える
+        $patternShows = $byShows ? \App\Support\PatternShows::of($ownSetlists) : [];
         $totalSongCount = 0;
-        $setlistCount = $ownSetlists->count();
+        $setlistCount = 0;
         foreach ($ownSetlists as $setlist) {
+            $weight = $byShows ? count($patternShows[$setlist->id] ?? []) : 1;
             // メドレーは1曲、日替わりの候補は1か所につき1曲として数える
-            $totalSongCount += countActualSongs($setlist->setlist ?? []) + countActualSongs($setlist->encore ?? []);
+            $totalSongCount += (countActualSongs($setlist->setlist ?? []) + countActualSongs($setlist->encore ?? [])) * $weight;
+            $setlistCount += $weight;
         }
         $avgSetlistLength = $setlistCount > 0 ? round($totalSongCount / $setlistCount, 1) : 0;
+
+        if ($byShows) {
+            // 公演の数：スケジュールの公演（中止・延期は入れない）。スケジュールが無いライブは、パターンの公演（無ければ1公演）
+            $showKeys = [];
+            foreach (DbConcert::whereIn('id', $tourIds)->get() as $tour) {
+                foreach ($tour->parseScheduleEntries() as $entry) {
+                    $showKeys[$tour->id . '|' . \App\Support\PatternTitle::key($entry)] = true;
+                }
+            }
+            foreach ($patternShows as $keys) {
+                foreach ($keys as $key) {
+                    $showKeys[$key] = true;
+                }
+            }
+            $toursWithShows = [];
+            foreach (array_keys($showKeys) as $key) {
+                $toursWithShows[strtok($key, '|')] = true;
+            }
+            $totalTours = count($showKeys) + count(array_diff($tourIds->map(fn ($id) => (string) $id)->all(), array_keys($toursWithShows)));
+        }
 
         return [
             'total_tours' => $totalTours,
@@ -600,21 +654,47 @@ class StatsController extends Controller
         return $excludeDoubleEncore ? \App\Support\EncoreBlocks::withoutDoubleEncore($encore) : $encore;
     }
 
-    private function getDatabaseSongStats(int $artistId, string $type = 'all', bool $excludeDoubleEncore = false)
+    // 曲の順位（[曲の id => 順位]）。同じ回数は同じ順位（1, 1, 3…）。一度も演奏されていない曲（0回）は順位なし
+    private function statsRanks(array $stats): array
+    {
+        $ranks = [];
+        $prev = null;
+        $rank = 0;
+        foreach (array_values($stats) as $i => $song) {
+            if ($song['count'] <= 0) {
+                continue;
+            }
+            if ($song['count'] !== $prev) {
+                $rank = $i + 1;
+                $prev = $song['count'];
+            }
+            $ranks[$song['song_id']] = $rank;
+        }
+
+        return $ranks;
+    }
+
+    // 曲を数える単位：ツアー、または公演（「ツアーid|公演日」。パターンごとの公演は PatternShows）
+    private function statsCountUnits($setlist, array $patternShows, bool $byShows): array
+    {
+        return $byShows ? ($patternShows[$setlist->id] ?? []) : [$setlist->tour_id];
+    }
+
+    // $byShows: 演奏されたツアーの数ではなく、公演の数で数える
+    private function getDatabaseSongStats(int $artistId, string $type = 'all', bool $excludeDoubleEncore = false, bool $byShows = false)
     {
         $songArtistIds = DbSong::pluck('artist_id', 'id');
         $tourIds = $this->databaseConcertIds($this->crossoverTourArtistIds($artistId), $type);
         $tourSetlists = DbSetlist::whereIn('tour_id', $tourIds)->get();
+        $patternShows = $byShows ? \App\Support\PatternShows::of($tourSetlists) : [];
         $songTourCounts = [];
 
         foreach ($tourSetlists as $setlist) {
             foreach (array_merge($setlist->setlist ?? [], $this->statsEncore($setlist, $excludeDoubleEncore)) as $s) {
                 if (isset($s['song']) && is_numeric($s['song']) && ($songArtistIds[(int)$s['song']] ?? null) === $artistId) {
                     $songId = (int)$s['song'];
-                    $tourId = $setlist->tour_id;
-                    if (!isset($songTourCounts[$songId])) $songTourCounts[$songId] = [];
-                    if (!in_array($tourId, $songTourCounts[$songId])) {
-                        $songTourCounts[$songId][] = $tourId;
+                    foreach ($this->statsCountUnits($setlist, $patternShows, $byShows) as $unit) {
+                        $songTourCounts[$songId][$unit] = true;
                     }
                 }
             }
@@ -671,15 +751,19 @@ class StatsController extends Controller
     }
 
     // 福山雅治のDOUBLE ENCORE（弾き語り）で演奏された曲。数え方は他のランキングと同じく、演奏されたツアーの数
-    private function getDatabaseDoubleEncoreSongStats(int $artistId, string $type = 'all')
+    private function getDatabaseDoubleEncoreSongStats(int $artistId, string $type = 'all', bool $byShows = false)
     {
         $songArtistIds = DbSong::pluck('artist_id', 'id');
         $tourIds = $this->databaseConcertIds([$artistId], $type);
+        $tourSetlists = DbSetlist::whereIn('tour_id', $tourIds)->get();
+        $patternShows = $byShows ? \App\Support\PatternShows::of($tourSetlists) : [];
         $counts = [];
-        foreach (DbSetlist::whereIn('tour_id', $tourIds)->get() as $setlist) {
+        foreach ($tourSetlists as $setlist) {
             foreach (\App\Support\EncoreBlocks::doubleEncore((array) ($setlist->encore ?? [])) as $s) {
                 if (isset($s['song']) && is_numeric($s['song']) && ($songArtistIds[(int)$s['song']] ?? null) === $artistId) {
-                    $counts[(int)$s['song']][$setlist->tour_id] = true;
+                    foreach ($this->statsCountUnits($setlist, $patternShows, $byShows) as $unit) {
+                        $counts[(int)$s['song']][$unit] = true;
+                    }
                 }
             }
         }
@@ -694,20 +778,21 @@ class StatsController extends Controller
         return $stats;
     }
 
-    private function getDatabaseEncoreSongStats(int $artistId, string $type = 'all', bool $excludeDoubleEncore = false)
+    // $limit: 上位何曲まで（null なら全曲。もう一方の数え方での順位を出すのに使う）
+    private function getDatabaseEncoreSongStats(int $artistId, string $type = 'all', bool $excludeDoubleEncore = false, bool $byShows = false, ?int $limit = 10)
     {
         $songArtistIds = DbSong::pluck('artist_id', 'id');
         $tourIds = $this->databaseConcertIds($this->crossoverTourArtistIds($artistId), $type);
         $tourSetlists = DbSetlist::whereIn('tour_id', $tourIds)->get();
+        $patternShows = $byShows ? \App\Support\PatternShows::of($tourSetlists) : [];
         $counts = [];
 
         foreach ($tourSetlists as $setlist) {
             foreach ($this->statsEncore($setlist, $excludeDoubleEncore) as $s) {
                 if (isset($s['song']) && is_numeric($s['song']) && ($songArtistIds[(int)$s['song']] ?? null) === $artistId) {
-                    $songId = (int)$s['song'];
-                    $tourId = $setlist->tour_id;
-                    if (!isset($counts[$songId])) $counts[$songId] = [];
-                    if (!in_array($tourId, $counts[$songId])) $counts[$songId][] = $tourId;
+                    foreach ($this->statsCountUnits($setlist, $patternShows, $byShows) as $unit) {
+                        $counts[(int)$s['song']][$unit] = true;
+                    }
                 }
             }
         }
@@ -717,27 +802,27 @@ class StatsController extends Controller
         uksort($counts, fn($a, $b) => $counts[$b] !== $counts[$a] ? $counts[$b] - $counts[$a] : $a - $b);
 
         $stats = [];
-        foreach (array_slice($counts, 0, 10, true) as $songId => $count) {
+        foreach (array_slice($counts, 0, $limit, true) as $songId => $count) {
             $song = DbSong::find($songId);
             if ($song) $stats[] = ['song_id' => $songId, 'title' => $song->title, 'count' => $count];
         }
         return $stats;
     }
 
-    private function getDatabaseOpeningSongStats(int $artistId, string $type = 'all')
+    private function getDatabaseOpeningSongStats(int $artistId, string $type = 'all', bool $byShows = false, ?int $limit = 10)
     {
         $songArtistIds = DbSong::pluck('artist_id', 'id');
         $tourIds = $this->databaseConcertIds($this->crossoverTourArtistIds($artistId), $type);
         $tourSetlists = DbSetlist::whereIn('tour_id', $tourIds)->get();
+        $patternShows = $byShows ? \App\Support\PatternShows::of($tourSetlists) : [];
         $counts = [];
 
         foreach ($tourSetlists as $setlist) {
             $songs = $setlist->setlist ?? [];
             if (!empty($songs) && isset($songs[0]['song']) && is_numeric($songs[0]['song']) && ($songArtistIds[(int)$songs[0]['song']] ?? null) === $artistId) {
-                $songId = (int)$songs[0]['song'];
-                $tourId = $setlist->tour_id;
-                if (!isset($counts[$songId])) $counts[$songId] = [];
-                if (!in_array($tourId, $counts[$songId])) $counts[$songId][] = $tourId;
+                foreach ($this->statsCountUnits($setlist, $patternShows, $byShows) as $unit) {
+                    $counts[(int)$songs[0]['song']][$unit] = true;
+                }
             }
         }
 
@@ -746,7 +831,7 @@ class StatsController extends Controller
         uksort($counts, fn($a, $b) => $counts[$b] !== $counts[$a] ? $counts[$b] - $counts[$a] : $a - $b);
 
         $stats = [];
-        foreach (array_slice($counts, 0, 10, true) as $songId => $count) {
+        foreach (array_slice($counts, 0, $limit, true) as $songId => $count) {
             $song = DbSong::find($songId);
             if ($song) $stats[] = ['song_id' => $songId, 'title' => $song->title, 'count' => $count];
         }
