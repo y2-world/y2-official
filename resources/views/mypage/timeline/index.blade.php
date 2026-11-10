@@ -56,7 +56,7 @@
                                 $target = $comment->attendance;
                                 $targetTour = $target->attendedTour;
                             @endphp
-                            <a href="{{ route('mypage.attendances.show', ['attendance' => $target, 'from' => 'timeline']) }}" class="timeline-card timeline-comment-card">
+                            <a href="{{ route('mypage.attendances.show', ['attendance' => $target, 'from' => 'timeline']) }}" class="timeline-card timeline-comment-card{{ $target->is_planned ? ' is-planned' : '' }}">
                                 <div class="timeline-card-meta">
                                     <span class="timeline-card-user" data-nav-url="{{ route('mypage.users.stats', $comment->external_user_id) }}">
                                         @if ($comment->externalUser?->avatar_url)
@@ -322,24 +322,28 @@
     </style>
 
     <script>
-    // 「参加予定を除く」「コメントを除く」：チェックした種類のカードを隠す。チェックの状態はブラウザに覚えておく
+    // 「参加予定を除く」「コメントを除く」：チェックした種類のカードを隠す。チェックの状態はブラウザに覚えておく。
+    // 参加予定の投稿へのコメント（.timeline-comment-card.is-planned）は、どちらのチェックでも隠す。
+    // 片方を外したときにもう片方で隠れているカードを出さないよう、両方のチェックを見て決める
     (function () {
-        [
+        var filters = [
             { id: 'timelineExcludePlanned', selector: '.timeline-card.is-planned' },
             { id: 'timelineExcludeComments', selector: '.timeline-card.timeline-comment-card' },
-        ].forEach(function (filter) {
-            var box = document.getElementById(filter.id);
-            if (!box) return;
-            var apply = function () {
-                document.querySelectorAll(filter.selector).forEach(function (card) { card.style.display = box.checked ? 'none' : ''; });
-            };
-            try { box.checked = localStorage.getItem(filter.id) === '1'; } catch (e) {}
-            apply();
-            box.addEventListener('change', function () {
-                try { localStorage.setItem(filter.id, box.checked ? '1' : '0'); } catch (e) {}
+        ].filter(function (filter) { return (filter.box = document.getElementById(filter.id)); });
+        var apply = function () {
+            document.querySelectorAll('.timeline-card').forEach(function (card) {
+                var hidden = filters.some(function (filter) { return filter.box.checked && card.matches(filter.selector); });
+                card.style.display = hidden ? 'none' : '';
+            });
+        };
+        filters.forEach(function (filter) {
+            try { filter.box.checked = localStorage.getItem(filter.id) === '1'; } catch (e) {}
+            filter.box.addEventListener('change', function () {
+                try { localStorage.setItem(filter.id, filter.box.checked ? '1' : '0'); } catch (e) {}
                 apply();
             });
         });
+        apply();
     })();
     </script>
 
