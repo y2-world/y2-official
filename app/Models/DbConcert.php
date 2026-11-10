@@ -84,7 +84,8 @@ class DbConcert extends Model
             ->values();
     }
 
-    // 会場のページ・会場検索・stats の Top Venues で数える公演。ツアーと単発ライブ（type 0・1）だけで、イベント・フェス・ap bank fes・ソロは入れない
+    // 会場のページ・会場検索・stats の Top Venues で数える公演。ツアーと単発ライブ（type 0・1）だけで、イベント・フェス・ap bank fes・ソロは入れない。
+    // venue は今の会場名（改称する前の名前・書き方の違いは VenueAlias でまとめる）、name はスケジュールに書いてある会場名
     public static function venuePageEntries(int $artistId, ?\Closure $scope = null): \Illuminate\Support\Collection
     {
         return static::scheduleVenueEntries($artistId, function ($query) use ($scope) {
@@ -92,7 +93,7 @@ class DbConcert extends Model
             if ($scope) {
                 $scope($query);
             }
-        });
+        })->map(fn ($entry) => ['name' => $entry['venue'], 'venue' => VenueAlias::resolve($entry['venue'])] + $entry);
     }
 
     // 会場のページに公演が1つでも出る会場名（ツアーと単発ライブの会場だけ）。会場名にリンクを付けるかどうかに使う。1回のページ表示の間は覚えておく
@@ -100,7 +101,7 @@ class DbConcert extends Model
     {
         static $names = [];
         $names[$artistId] ??= static::venuePageEntries($artistId)->pluck('venue')->flip()->all();
-        $keyword = static::venueKeyword($venue);
+        $keyword = VenueAlias::resolve(static::venueKeyword($venue));
 
         return $keyword !== '' && isset($names[$artistId][$keyword]) ? $keyword : null;
     }

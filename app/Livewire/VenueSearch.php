@@ -26,12 +26,14 @@ class VenueSearch extends Component
         $this->loadInitialVenues();
     }
 
-    // Database の会場：公演の多い順に、打った文字を含む会場
+    // Database の会場：公演の多い順に、打った文字を含む会場（今の会場名。改称する前の名前で探しても出る）
     private function scheduleVenueNames(string $search = '')
     {
+        $aliases = \App\Models\VenueAlias::aliasesByVenue();
+
         return \App\Models\DbConcert::venuePageEntries((int) $this->dbArtistId)
             ->countBy('venue')
-            ->filter(fn ($count, $venue) => $search === '' || mb_stripos($venue, $search) !== false)
+            ->filter(fn ($count, $venue) => $search === '' || collect([$venue, ...($aliases[$venue] ?? [])])->contains(fn ($name) => mb_stripos($name, $search) !== false))
             ->sortDesc()
             ->keys()
             ->take(10);

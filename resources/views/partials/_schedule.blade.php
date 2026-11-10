@@ -12,10 +12,12 @@
             @php
                 // 会場名は Database の会場のページへのリンク（$venueArtistId があるとき）。うしろの「(公演中止)」などの注記はリンクの外
                 // Solo の公演しか無い会場は、会場のページに何も出ないのでリンクにしない
+                // リンクにするのは書いてある会場名（注記の前まで）。行き先は今の会場名のページ（前の名前・書き方の違いは VenueAlias でまとめる）
                 $venueKeyword = isset($venueArtistId) ? (string) \App\Models\DbConcert::linkableVenue($venueArtistId, $m[2]) : '';
+                $venueText = \App\Models\DbConcert::venueKeyword($m[2]);
             @endphp
-            @if ($venueKeyword !== '' && str_starts_with($m[2], $venueKeyword))
-                <tr><td class="schedule-date">{{ $m[1] }}</td><td><a href="{{ route('database.venues', [$venueArtistId, 'keyword' => $venueKeyword]) }}">{{ $venueKeyword }}</a>{{ substr($m[2], strlen($venueKeyword)) }}</td></tr>
+            @if ($venueKeyword !== '' && $venueText !== '' && str_starts_with($m[2], $venueText))
+                <tr><td class="schedule-date">{{ $m[1] }}</td><td><a href="{{ route('database.venues', [$venueArtistId, 'keyword' => $venueKeyword]) }}">{{ $venueText }}</a>{{ substr($m[2], strlen($venueText)) }}</td></tr>
             @else
                 <tr><td class="schedule-date">{{ $m[1] }}</td><td>{{ $m[2] }}</td></tr>
             @endif
