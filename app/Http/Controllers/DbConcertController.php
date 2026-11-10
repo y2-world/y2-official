@@ -64,9 +64,9 @@ class DbConcertController extends Controller
         $entries = DbConcert::venuePageEntries((int) $artistId);
 
         if ($keyword !== '') {
-            // 改称する前の名前で開いたときは、今の会場名のページへ
-            $current = \App\Models\VenueAlias::resolve($keyword);
-            if ($current !== $keyword) {
+            // 前の名前・書き方の違い・ほかのアーティストの会場名で開いたときは、このアーティストの会場名のページへ
+            $current = DbConcert::venuePageName($artist->id, $keyword);
+            if ($current !== null && $current !== $keyword) {
                 return redirect()->route('database.venues', [$artist->id, 'keyword' => $current]);
             }
             // 前の名前・書き方の違いの公演もまとめて出す（今の会場名で）

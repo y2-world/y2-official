@@ -30,10 +30,14 @@ class VenueSearch extends Component
     private function scheduleVenueNames(string $search = '')
     {
         $aliases = \App\Models\VenueAlias::aliasesByVenue();
+        $entries = \App\Models\DbConcert::venuePageEntries((int) $this->dbArtistId);
+        // 会場ごとに、探せる名前（会場名・スケジュールの名前・同じ会場の前の名前）
+        $searchNames = $entries->groupBy('venue')->map(fn ($rows) => $rows->pluck('name')
+            ->merge($rows->pluck('group'))->merge($rows->flatMap(fn ($row) => $aliases[$row['group']] ?? []))->unique());
 
-        return \App\Models\DbConcert::venuePageEntries((int) $this->dbArtistId)
+        return $entries
             ->countBy('venue')
-            ->filter(fn ($count, $venue) => $search === '' || collect([$venue, ...($aliases[$venue] ?? [])])->contains(fn ($name) => mb_stripos($name, $search) !== false))
+            ->filter(fn ($count, $venue) => $search === '' || collect([$venue, ...$searchNames[$venue]])->contains(fn ($name) => mb_stripos($name, $search) !== false))
             ->sortDesc()
             ->keys()
             ->take(10);

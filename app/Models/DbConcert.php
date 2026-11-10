@@ -85,25 +85,40 @@ class DbConcert extends Model
     }
 
     // 会場のページ・会場検索・stats の Top Venues で数える公演。ツアーと単発ライブ（type 0・1）だけで、イベント・フェス・ap bank fes・ソロは入れない。
-    // venue は今の会場名（改称する前の名前・書き方の違いは VenueAlias でまとめる）、name はスケジュールに書いてある会場名
+    // 改称する前の名前・書き方の違いは VenueAlias で同じ会場にまとめる（group）。会場名（venue）は、そのアーティストの公演で最後に使われた名前
+    // （ほかのアーティストだけが使った名前は出さない。出演者などの注記が混ざった名前は、ほかにあれば使わない）。name はスケジュールに書いてある会場名
     public static function venuePageEntries(int $artistId, ?\Closure $scope = null): \Illuminate\Support\Collection
     {
-        return static::scheduleVenueEntries($artistId, function ($query) use ($scope) {
+        $entries = static::scheduleVenueEntries($artistId, function ($query) use ($scope) {
             $query->whereIn('type', [0, 1]);
             if ($scope) {
                 $scope($query);
             }
-        })->map(fn ($entry) => ['name' => $entry['venue'], 'venue' => VenueAlias::resolve($entry['venue'])] + $entry);
+        })->map(fn ($entry) => ['name' => $entry['venue'], 'group' => VenueAlias::resolve($entry['venue'])] + $entry);
+        $display = $entries->groupBy('group')->map(function ($rows) {
+            $clean = $rows->reject(fn ($row) => preg_match('/《|＜|</u', $row['name']));
+
+            return ($clean->isNotEmpty() ? $clean : $rows)->sortBy('date')->last()['name'];
+        });
+
+        return $entries->map(fn ($entry) => ['venue' => $display[$entry['group']]] + $entry);
+    }
+
+    // そのアーティストの会場のページの会場名（venuePageEntries の venue）。スケジュールの会場名・前の名前・ほかのアーティストの会場名から。無ければ null
+    public static function venuePageName(int $artistId, string $venue): ?string
+    {
+        static $maps = [];
+        $maps[$artistId] ??= static::venuePageEntries($artistId)->mapWithKeys(fn ($e) => [$e['group'] => $e['venue']])->all();
+
+        return $maps[$artistId][VenueAlias::resolve($venue)] ?? null;
     }
 
     // 会場のページに公演が1つでも出る会場名（ツアーと単発ライブの会場だけ）。会場名にリンクを付けるかどうかに使う。1回のページ表示の間は覚えておく
     public static function linkableVenue(int $artistId, ?string $venue): ?string
     {
-        static $names = [];
-        $names[$artistId] ??= static::venuePageEntries($artistId)->pluck('venue')->flip()->all();
-        $keyword = VenueAlias::resolve(static::venueKeyword($venue));
+        $keyword = static::venueKeyword($venue);
 
-        return $keyword !== '' && isset($names[$artistId][$keyword]) ? $keyword : null;
+        return $keyword !== '' ? static::venuePageName($artistId, $keyword) : null;
     }
 
     // 会場のページ（?keyword=）で使う会場名。うしろのかっこ書き（「(公演中止)」など）と「※…」の注記を外す。
