@@ -47,7 +47,9 @@ class MyPageController extends Controller
     // 参加記録の会場ごとの回数（[会場 => 回数]。会場の前後の空白は除く）
     private static function venueCounts($attendances): \Illuminate\Support\Collection
     {
-        return $attendances->pluck('venue')->map(fn ($venue) => trim((string) $venue))->filter()->countBy();
+        // 改称する前の名前・書き方の違いは同じ会場（VenueAlias）。会場名は最後に行ったときの名前
+        return \App\Models\VenueAlias::countByVenue($attendances->map(fn ($a) => [$a->venue, $a->attended_date]))
+            ->mapWithKeys(fn ($v) => [$v->venue => $v->count]);
     }
 
     // 他ユーザーのプロフィール（Timelineのユーザー名クリック経由）。
@@ -292,13 +294,8 @@ class MyPageController extends Controller
         $artistStats = collect($officialArtistStats)->merge($userArtistStats)->sortByDesc('show_count')->values();
         $tabArtistStats = $artistStats->sortBy(fn ($stat) => $firstDates[$stat['id']] ?? '9999-12-31')->values();
 
-        $venueStats = $attendances
-            ->filter(fn ($a) => $a->venue)
-            ->groupBy('venue')
-            ->map(fn ($group, $venue) => (object) ['venue' => $venue, 'count' => $group->count()])
-            ->sortByDesc('count')
-            ->take(10)
-            ->values();
+        $venueStats = \App\Models\VenueAlias::countByVenue($attendances->map(fn ($a) => [$a->venue, $a->attended_date]))
+            ->take(10);
         // Map のタブ：都道府県ランキング
         $prefectureStats = \App\Support\VenueMap::build(static::venueCounts($attendances))['prefectures'];
 

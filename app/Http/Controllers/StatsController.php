@@ -408,12 +408,11 @@ class StatsController extends Controller
     // 参加したライブの会場ごとの回数（[会場 => 回数]。会場の前後の空白は除く）
     private function personalVenueCounts(): \Illuminate\Support\Collection
     {
-        return SlSetlist::where('date', '<=', now()->toDateString())
+        // 改称する前の名前・書き方の違いは同じ会場（VenueAlias）。会場名は最後に行ったときの名前
+        return \App\Models\VenueAlias::countByVenue(SlSetlist::where('date', '<=', now()->toDateString())
             ->whereNotNull('venue')->where('venue', '!=', '')
-            ->pluck('venue')
-            ->map(fn ($venue) => trim($venue))
-            ->filter()
-            ->countBy();
+            ->get(['venue', 'date'])->map(fn ($s) => [$s->venue, $s->date]))
+            ->mapWithKeys(fn ($v) => [$v->venue => $v->count]);
     }
 
     // Map：行った会場の都道府県を、行った回数で染めた日本地図。都道府県を押すと会場の一覧が出る
@@ -430,17 +429,13 @@ class StatsController extends Controller
     private function getPersonalVenueStats()
     {
         // 最も訪れた会場トップ10
+        // 改称する前の名前・書き方の違いは同じ会場（VenueAlias）。会場名は最後に行ったときの名前
         $today = now()->toDateString();
-        $venues = SlSetlist::where('date', '<=', $today)
-            ->select('venue', DB::raw('count(*) as count'))
-            ->whereNotNull('venue')
-            ->where('venue', '!=', '')
-            ->groupBy('venue')
-            ->orderBy('count', 'desc')
-            ->limit(10)
-            ->get();
 
-        return $venues;
+        return \App\Models\VenueAlias::countByVenue(SlSetlist::where('date', '<=', $today)
+            ->whereNotNull('venue')->where('venue', '!=', '')
+            ->get(['venue', 'date'])->map(fn ($s) => [$s->venue, $s->date]))
+            ->take(10);
     }
 
     private function getPersonalYearStats()
@@ -1101,15 +1096,8 @@ class StatsController extends Controller
             ->values();
 
         // 会場別トップ5
-        $venueStats = $artistSetlists->filter(function ($setlist) {
-                return !empty($setlist->venue);
-            })
-            ->groupBy('venue')
-            ->map(function ($items, $venue) {
-                return (object)['venue' => $venue, 'count' => $items->count()];
-            })
-            ->sortByDesc('count')
-            ->values()
+        // 改称する前の名前・書き方の違いは同じ会場（VenueAlias）。会場名は最後に行ったときの名前
+        $venueStats = \App\Models\VenueAlias::countByVenue($artistSetlists->map(fn ($setlist) => [$setlist->venue, $setlist->date]))
             ->take(5);
 
         // 総曲数（ユニーク）
