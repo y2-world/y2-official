@@ -10,6 +10,18 @@ function showStatsTab(name) {
     if (name === document.querySelector('button.stats-tab-btn').dataset.statsTab) { url.searchParams.delete('stats_tab'); } else { url.searchParams.set('stats_tab', name); }
     history.replaceState(null, '', url);
 }
+// タブのアーティストの選択：開いているタブ（?stats_tab=）と、Database の stats の公演数統計（?count=shows）のまま、ほかのアーティストへ。
+// 行き先にそのタブが無ければ、行き先のページで最初のタブになる（下の initialStatsTab）
+function statsGoToArtist(select) {
+    if (!select.value) return;
+    var current = new URL(window.location.href);
+    var next = new URL(select.value, window.location.origin);
+    ['stats_tab', 'count'].forEach(function (key) {
+        var value = current.searchParams.get(key);
+        if (value) { next.searchParams.set(key, value); } else { next.searchParams.delete(key); }
+    });
+    window.location.href = next.toString();
+}
 var initialStatsTab = new URL(window.location.href).searchParams.get('stats_tab');
 // My Statistics の「Setlists」タブは「Data」に名前を変えたので、古いリンク（?stats_tab=setlists）も Data で開く
 if (initialStatsTab === 'setlists') { initialStatsTab = 'data'; }

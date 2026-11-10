@@ -93,7 +93,7 @@
                         <button type="button" class="stats-tab-btn" data-stats-tab="map">Map</button>
                         {{-- Artists：選んだアーティストのstatsに移動する --}}
                         @if (count($artistStats))
-                        <select class="stats-tab-btn stats-tab-select" onchange="if (this.value) location.href = this.value;">
+                        <select class="stats-tab-btn stats-tab-select" onchange="statsGoToArtist(this)">
                             <option value="" selected>All</option>
                             {{-- 初めてライブに行った順 --}}
                             @foreach ($tabArtistStats as $tabArtist)

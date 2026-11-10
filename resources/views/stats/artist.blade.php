@@ -59,7 +59,7 @@
                         @endif
                         <button type="button" class="stats-tab-btn" data-stats-tab="data">Data</button>
                         @if (count($tabArtists))
-                        <select class="stats-tab-btn stats-tab-select" onchange="if (this.value) location.href = this.value;" aria-label="Artists">
+                        <select class="stats-tab-btn stats-tab-select" onchange="statsGoToArtist(this)" aria-label="Artists">
                             <option value="{{ url('/stats?tab=personal') }}">All</option>
                             {{-- Yuki's Setlists と同じく Live / Fes に分ける（それぞれ初めてライブに行った順） --}}
                             @foreach (\App\Support\SetlistArtistGroups::split($tabArtists) as $groupLabel => $groupArtists)

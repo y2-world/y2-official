@@ -45,7 +45,7 @@
                         <button type="button" class="stats-tab-btn" data-stats-tab="data">Data</button>
                         {{-- Artists：ほかのアーティストの stats へ切り替える --}}
                         @if (count($tabArtists) > 1)
-                        <select class="stats-tab-btn stats-tab-select" onchange="if (this.value) location.href = this.value;" aria-label="Artists">
+                        <select class="stats-tab-btn stats-tab-select" onchange="statsGoToArtist(this)" aria-label="Artists">
                             @foreach ($tabArtists as $tabArtist)
                                 <option value="{{ $tabArtist['url'] }}" {{ $tabArtist['current'] ? 'selected' : '' }}>{{ $tabArtist['name'] }}</option>
                             @endforeach
