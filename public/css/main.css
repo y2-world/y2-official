@@ -2264,6 +2264,15 @@ h5.setlist-subtitle-heading {
 .setlist-subtitle-collapsible:not(.is-expanded) .setlist-subtitle-more {
     display: inline;
 }
+/* たたんでいるときの1行目は、長い会場名でも折り返さず「…」で切る（1公演だけの見出しも、折り返すならたたむ） */
+.setlist-subtitle-collapsible:not(.is-expanded) .setlist-schedule-date-line:not(.setlist-schedule-date-line--rest) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* 折り返さない1行が、パターンの列の幅を広げないように（幅は列に合わせる） */
+    width: 0;
+    min-width: 100%;
+}
 /* たたんでいるときの「他 N 公演」の行は1行にする。長い会場名は折り返さず、「他 N 公演」の前を「…」で切る */
 .setlist-subtitle-collapsible:not(.is-expanded) .setlist-schedule-date-line:has(> .setlist-subtitle-more) {
     display: flex !important;

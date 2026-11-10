@@ -306,6 +306,19 @@ document.addEventListener('DOMContentLoaded', function () {
     // 公演日の見出しをたたむ行数（これより少なければ全部出す）。たたむと1行目だけ出す（PatternTitle::VISIBLE_LINES）
     var SUBTITLE_COLLAPSE_LINES = 2;
 
+    // 公演日の見出しの1行目が、長い会場名で折り返しているか（そのときも、1公演でもたたんで1行にする）
+    function firstDateLineWraps(el) {
+        var line = el.querySelector('.setlist-schedule-date-line');
+        if (!line) {
+            return false;
+        }
+        var lineHeight = parseFloat(window.getComputedStyle(line).lineHeight);
+        if (!Number.isFinite(lineHeight)) {
+            lineHeight = parseFloat(window.getComputedStyle(line).fontSize) * 1.5;
+        }
+        return line.getBoundingClientRect().height > lineHeight * 1.5;
+    }
+
     function updatePatternSubtitleAccordions() {
         document.querySelectorAll('.setlist-pattern-wrap .setlist-subtitle-auto').forEach(function (heading) {
             // 作り直しても、開いている見出しは開いたままにする
@@ -319,9 +332,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!Number.isFinite(lineHeight)) {
                 lineHeight = parseFloat(style.fontSize) * 1.2;
             }
-            // 公演日の見出しは、2行（公演）以上ならたたむ（1行目と「他 N 公演」）
+            // 公演日の見出しは、2行（公演）以上か、1行目が長い会場名で折り返しているならたたむ（1行目と「他 N 公演」）
             var dateLines = heading.querySelectorAll('.setlist-schedule-date-line').length;
-            var wrapsNaturally = dateLines ? dateLines >= SUBTITLE_COLLAPSE_LINES : heading.scrollHeight > lineHeight * 1.5;
+            var wrapsNaturally = dateLines ? dateLines >= SUBTITLE_COLLAPSE_LINES || firstDateLineWraps(heading) : heading.scrollHeight > lineHeight * 1.5;
             if (wrapsNaturally) {
                 heading.classList.add('setlist-subtitle-collapsible');
                 heading.classList.toggle('is-expanded', wasExpanded);
@@ -367,11 +380,12 @@ document.addEventListener('DOMContentLoaded', function () {
             var clampedHeight = el.getBoundingClientRect().height;
             el.classList.add('is-expanded');
             var fullHeight = el.getBoundingClientRect().height;
+            var firstLineWraps = firstDateLineWraps(el);
             el.classList.remove('is-expanded');
-            // 公演日の見出しは、ツアーのページと同じく2行（公演）以上ならたたむ
+            // 公演日の見出しは、ツアーのページと同じく2行（公演）以上か、1行目が折り返しているならたたむ
             var dateLines = el.querySelectorAll('.setlist-schedule-date-line').length;
 
-            if (dateLines ? dateLines >= SUBTITLE_COLLAPSE_LINES : fullHeight > clampedHeight + 1) {
+            if (dateLines ? dateLines >= SUBTITLE_COLLAPSE_LINES || firstLineWraps : fullHeight > clampedHeight + 1) {
                 el.classList.toggle('is-expanded', wasExpanded);
                 el.onclick = function () {
                     el.classList.toggle('is-expanded');
