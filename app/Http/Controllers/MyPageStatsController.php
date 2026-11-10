@@ -219,8 +219,14 @@ class MyPageStatsController extends Controller
         $statsUser = $this->statsUser;
         $tabArtists = $this->tabArtists($artistRef);
 
-        // トピックス（最近初めて聴いた曲・久しぶりに聴いた曲・自分が聴いた「久しぶり」・初めて聴いた曲の年表）
-        $heard = $attendances->filter(fn ($a) => $a->dbSetlist)->map(fn ($a) => [
+        // トピックス（最近初めて聴いた曲・久しぶりに聴いた曲・自分が聴いた「久しぶり」・初めて聴いた曲の年表）。
+        // 生で聴いた曲の記録なので、ソロ（type=4）の参加記録も入れる（My Page 全体の stats と同じ）
+        $topicAttendances = $this->statsUser
+            ->attendances()
+            ->with('dbSetlist.tour')
+            ->whereHas('dbSetlist.tour', fn ($q) => $q->where('artist_id', $id))
+            ->get();
+        $heard = $topicAttendances->filter(fn ($a) => $a->dbSetlist)->map(fn ($a) => [
             'date' => $a->attended_date ? $a->attended_date->format('Y-m-d') : substr((string) optional($a->dbSetlist->tour)->date1, 0, 10),
             'title' => optional($a->dbSetlist->tour)->title,
             'url' => route('mypage.attendances.show', ['attendance' => $a, 'from' => 'stats']),

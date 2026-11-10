@@ -386,11 +386,14 @@ function initTimelineCard(card) {
 {{-- 見出しの右上の検索窓がタイトルに重なるときは、虫眼鏡アイコンに切り替える --}}
 <script src="{{ asset('/js/search-collapse.js?time=' . filemtime(public_path('js/search-collapse.js'))) }}"></script>
 <script>
-// スマホのハンバーガーメニュー：中のリンク（「Music」など、同じページの中へ移るものも）を押したら閉じる
+// スマホのハンバーガーメニュー：同じページの中へ移るリンク（トップページの「Music」など）を押したときだけ閉じる。
+// 別のページへ移るリンクでは閉じない（次のページが出るまでメニューが先に消えてしまうので）
 document.querySelectorAll('#navbarSupportedContent a').forEach(function (link) {
     link.addEventListener('click', function () {
         var menu = document.getElementById('navbarSupportedContent');
         if (!menu.classList.contains('show')) return;
+        var url = new window.URL(link.href, location.href);
+        if (!url.hash || url.origin + url.pathname !== location.origin + location.pathname) return;
         menu.classList.remove('show');
         var toggler = document.querySelector('.navbar-toggler');
         if (toggler) {

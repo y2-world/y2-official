@@ -611,8 +611,10 @@ class StatsController extends Controller
         }
         $uniqueSongsInTours = count($uniqueSongIds);
 
-        // 平均曲数は、そのアーティストのツアーのセットリストだけで数える（組になっているソロプロジェクト・バンドのツアーは入れない）
-        $ownSetlists = $tourSetlists->whereIn('tour_id', $tourIds->all());
+        // 平均曲数は、そのアーティストのツアーと単発ライブ（type 0・1）のセットリストだけで数える
+        // （イベント・ap bank fes・ソロ、組になっているソロプロジェクト・バンドのツアーは入れない）
+        $averageTourIds = DbConcert::whereIn('id', $tourIds)->whereIn('type', [0, 1])->pluck('id');
+        $ownSetlists = $tourSetlists->whereIn('tour_id', $averageTourIds->all());
         // 公演数のときは、パターンの曲数をそのパターンの公演の数だけ数える
         $patternShows = $byShows ? \App\Support\PatternShows::of($ownSetlists) : [];
         $totalSongCount = 0;
@@ -1122,6 +1124,11 @@ class StatsController extends Controller
         } else {
             $slToDbSong = SlSong::whereNotNull('db_song_id')->pluck('db_song_id', 'id');
         }
+        // Database でそのアーティストのソロ（type=4、Mr.Children のメンバーのソロ活動）があった日。
+        // Yuki's Setlists ではフェスとして入れ、出演者は「桜井和寿」などになっているので、その日のフェスは出演者を問わずそのアーティストの曲を聴いた曲にする
+        $soloDates = DbConcert::where('artist_id', (int) $artistId)->where('type', 4)->whereNotNull('date1')->get(['date1', 'date2'])
+            ->map(fn ($concert) => [substr((string) $concert->date1, 0, 10), substr((string) ($concert->date2 ?: $concert->date1), 0, 10)]);
+        $ownSlSongIds = SlSong::where('artist_id', (int) $artistId)->pluck('id')->flip();
         $heard = [];
         foreach ($setlists as $setlist) {
             $items = [];
@@ -1130,8 +1137,11 @@ class StatsController extends Controller
             } elseif ($this->isCrossoverLive($setlist, (int) $artistId)) {
                 $items = $this->ownSongsIn(array_merge($setlist->setlist ?? [], $setlist->encore ?? []), (int) $artistId);
             } elseif ($setlist->fes == 1) {
+                $date = substr((string) $setlist->date, 0, 10);
+                $isSolo = $soloDates->contains(fn ($range) => $range[0] <= $date && $date <= $range[1]);
                 $items = array_filter($this->flattenFesSongs(array_merge($setlist->fes_setlist ?? [], $setlist->fes_encore ?? [])),
-                    fn ($songData) => isset($songData['artist']) && (string) $songData['artist'] === (string) $artistId);
+                    fn ($songData) => (isset($songData['artist']) && (string) $songData['artist'] === (string) $artistId)
+                        || ($isSolo && is_numeric($songData['song'] ?? null) && isset($ownSlSongIds[(int) $songData['song']])));
             }
             $songIds = [];
             foreach ($items as $songData) {
