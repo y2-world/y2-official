@@ -66,6 +66,10 @@
                                         @endif{{ $comment->externalUser?->name ?: 'ゲスト' }}</span>
                                     <span class="timeline-comment-card-label"><i class="fa-regular fa-comment"></i> {{ $target->externalUser?->name ?: 'ゲスト' }}さんの投稿にコメント</span>
                                 </div>
+                                {{-- 参加予定の投稿へのコメントも、投稿のカードと同じく右上に「参加予定」のバッジ --}}
+                                @if ($target->is_planned)
+                                    <span class="timeline-planned-badge">参加予定</span>
+                                @endif
                                 <p class="timeline-comment-card-body">{{ $comment->body }}</p>
                                 <div class="timeline-comment-card-target">
                                     @if ($targetTour?->artist)

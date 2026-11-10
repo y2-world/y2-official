@@ -5182,20 +5182,37 @@ a.setlist-card:hover {
 .timeline-comment-edit,
 .timeline-comment-delete {
     position: absolute;
-    top: 6px;
+    top: 0;
     background: none;
     border: none;
     color: #bbb;
     cursor: pointer;
-    padding: 2px 4px;
+    /* 印は小さいので、押せる範囲を広くとる */
+    padding: 6px 8px;
 }
 
 .timeline-comment-edit {
-    right: 24px;
+    right: 28px;
 }
 
 .timeline-comment-delete {
-    right: 2px;
+    right: 0;
+}
+
+/* 編集中は、鉛筆の印の代わりに入力欄の下へ「更新」ボタン（送信ボタンと同じ形） */
+.timeline-comment-item.is-editing .timeline-comment-edit {
+    position: static;
+    display: block;
+    margin: 8px auto 2px;
+    padding: 6px 20px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 0.8rem;
+}
+
+.timeline-comment-item.is-editing .timeline-comment-body-input {
+    margin-right: 28px;
 }
 
 .timeline-comment-form-input.form-control {

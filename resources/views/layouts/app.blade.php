@@ -256,7 +256,8 @@ function initTimelineCard(card) {
         const bodyDisplay = item.querySelector('.timeline-comment-body');
         const bodyInput = item.querySelector('.timeline-comment-body-input');
         const penIcon = btn.querySelector('.fa-pen');
-        const checkIcon = btn.querySelector('.fa-check');
+        // 編集中は、鉛筆の印の代わりに入力欄の下の「更新」ボタンになる（item の is-editing）
+        const checkIcon = btn.querySelector('.timeline-comment-edit-save');
         let isEditing = false;
 
         const resizeBodyInput = function () {
@@ -273,6 +274,7 @@ function initTimelineCard(card) {
             bodyInput.setSelectionRange(bodyInput.value.length, bodyInput.value.length);
             penIcon.hidden = true;
             checkIcon.hidden = false;
+            item.classList.add('is-editing');
         };
 
         const commitEdit = function () {
@@ -297,6 +299,7 @@ function initTimelineCard(card) {
                     bodyDisplay.hidden = false;
                     penIcon.hidden = false;
                     checkIcon.hidden = true;
+                    item.classList.remove('is-editing');
                     showAppToast(data.message);
                 });
         };
@@ -311,7 +314,7 @@ function initTimelineCard(card) {
         });
         bodyInput.addEventListener('click', function (e) { e.stopPropagation(); });
         bodyInput.addEventListener('input', resizeBodyInput);
-        // Enter は改行（コメントは何行でも書ける）。保存はチェックのボタンか、⌘（Ctrl）＋ Enter
+        // Enter は改行（コメントは何行でも書ける）。保存は「更新」ボタンか、⌘（Ctrl）＋ Enter
         bodyInput.addEventListener('keydown', function (e) {
             if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && !e.isComposing) { e.preventDefault(); commitEdit(); }
         });
@@ -352,7 +355,7 @@ function initTimelineCard(card) {
                     item.innerHTML = '<span class="timeline-comment-user"></span>'
                         + '<span class="timeline-comment-body"></span>'
                         + '<textarea class="form-control timeline-comment-body-input" maxlength="1000" rows="1" hidden></textarea>'
-                        + '<button type="button" class="timeline-comment-edit" data-update-url="' + data.comment.update_url + '" title="編集"><i class="fa-solid fa-pen"></i><i class="fa-solid fa-check" hidden></i></button>'
+                        + '<button type="button" class="timeline-comment-edit" data-update-url="' + data.comment.update_url + '" title="編集"><i class="fa-solid fa-pen"></i><span class="timeline-comment-edit-save" hidden>更新</span></button>'
                         + '<button type="button" class="timeline-comment-delete" data-delete-url="' + data.comment.delete_url + '" title="削除"><i class="fa-solid fa-trash"></i></button>';
                     item.querySelector('.timeline-comment-user').textContent = data.comment.user_name;
                     item.querySelector('.timeline-comment-body').textContent = data.comment.body;

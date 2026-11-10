@@ -144,7 +144,7 @@
                                 @if ($comment->external_user_id === Auth::guard('external')->id())
                                     <button type="button" class="timeline-comment-edit" data-update-url="{{ route('mypage.timeline.comments.update', $comment) }}" title="編集">
                                         <i class="fa-solid fa-pen"></i>
-                                        <i class="fa-solid fa-check" hidden></i>
+                                        <span class="timeline-comment-edit-save" hidden>更新</span>
                                     </button>
                                     <button type="button" class="timeline-comment-delete" data-delete-url="{{ route('mypage.timeline.comments.destroy', $comment) }}" title="削除">
                                         <i class="fa-solid fa-trash"></i>
