@@ -18,9 +18,10 @@ class VenueController extends Controller
         $query = SlSetlist::query();
         $keyword = $request->input('keyword');
 
-        // 検索結果ではなく、その会場のすべてのセットリスト（My Page の会場のページと同じく、会場名が一致するもの）
+        // 検索結果ではなく、その会場のすべてのセットリスト（My Page の会場のページと同じく、会場名が一致するもの）。
+        // 前の名前・書き方の違いの公演もまとめて出す（VenueAlias）
         if (!empty($keyword)) {
-            $query->where('venue', $keyword);
+            $query->whereIn('venue', \App\Models\VenueAlias::sameVenueNames($keyword, SlSetlist::distinct()->pluck('venue')));
         }
 
         $artists = Artist::orderBy('id', 'asc')->get();

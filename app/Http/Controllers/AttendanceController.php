@@ -64,9 +64,10 @@ class AttendanceController extends Controller
             $query->whereYear('attended_date', $year);
         }
 
+        // 会場：前の名前・書き方の違いの参加記録もまとめて出す（VenueAlias）
         $venue = $request->input('venue');
         if ($venue) {
-            $query->where('venue', $venue);
+            $query->whereIn('venue', \App\Models\VenueAlias::sameVenueNames($venue, $targetUser->attendances()->distinct()->pluck('venue')));
         }
 
         $songId = $request->input('song_id'); // "official-{id}" or "user-{id}"

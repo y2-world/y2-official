@@ -47,6 +47,15 @@ class VenueAlias extends Model
         return mb_strtolower(str_replace('＆', '&', $key));
     }
 
+    // $names（会場名の一覧）のうち、$venue と同じ会場の名前（前の名前・書き方の違い）。会場のページで、同じ会場の公演をまとめて出すのに使う
+    public static function sameVenueNames(string $venue, iterable $names): array
+    {
+        $group = static::resolve($venue);
+
+        return collect($names)->map(fn ($name) => trim((string) $name))->filter()->unique()
+            ->filter(fn ($name) => $name === $venue || static::resolve($name) === $group)->values()->all();
+    }
+
     // 参加した公演の会場（[[会場名, 日付], …]）を会場ごとに数える。会場名は、その中で最後に使われた名前。多い順、同じ数なら最後の公演が新しい順
     public static function countByVenue(iterable $rows): \Illuminate\Support\Collection
     {

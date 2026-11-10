@@ -56,7 +56,8 @@
                                     <path d="{{ $d }}" data-pref="{{ $code }}"
                                         class="venue-map-pref{{ $p ? ' is-visited' : '' }}"
                                         fill="{{ $levelColors[$p['level'] ?? 0] }}">
-                                        <title>{{ \App\Models\VenuePrefecture::NAMES[$code] }}{{ $p ? ' ' . $p['count'] . '回' : '' }}</title>
+                                        {{-- 行っていない都道府県も「0回」 --}}
+                                        <title>{{ \App\Models\VenuePrefecture::NAMES[$code] }} {{ $p['count'] ?? 0 }}回</title>
                                     </path>
                                 @endforeach
                                 </g>
@@ -211,7 +212,7 @@
         .venue-map-panel { padding: 24px !important; margin-top: 16px !important; height: 324px; }
     }
     .venue-map-pref { stroke: #fff; stroke-width: 0.6; stroke-linejoin: round; }
-    .venue-map-pref.is-visited { cursor: pointer; }
+    .venue-map-pref { cursor: pointer; }
     .venue-map-pref.is-visited:hover { filter: brightness(0.92); }
     .venue-map-pref.is-selected { stroke: #ffb703; stroke-width: 1; }
     .venue-map-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; justify-content: center; margin-top: 8px; font-size: 0.8rem; color: #fff; }
@@ -239,11 +240,13 @@
 <script>
 (function () {
     var data = @json($panelData);
+    // 行っていない都道府県も押せる（「0回 0会場」）
+    var prefNames = @json(\App\Models\VenuePrefecture::NAMES);
     var title = document.getElementById('venueMapPanelTitle');
     var rows = document.getElementById('venueMapPanelRows');
 
     function show(code) {
-        var pref = data[code];
+        var pref = data[code] || (prefNames[code] && code !== 'overseas' ? { name: prefNames[code], count: 0, venueCount: 0, venues: [] } : null);
         if (!pref) return;
         document.querySelectorAll('.venue-map-pref, .venue-map-overseas').forEach(function (el) { el.classList.toggle('is-selected', (el.dataset.pref || el.dataset.prefLink) === code); });
         var layout = document.querySelector('.venue-map-layout');
@@ -278,7 +281,8 @@
         document.querySelector('#venueMapPanel .stats-table-container').scrollTop = 0;
         var hasCountry = pref.venues.some(function (v) { return v.country; });
         document.getElementById('venueMapCountryHead').style.display = hasCountry ? '' : 'none';
-        rows.innerHTML = pref.venues.map(function (v) {
+        rows.innerHTML = pref.venues.length ? '' : '<tr><td colspan="3" style="color: #999; text-align: center;">まだ行っていません</td></tr>';
+        rows.innerHTML += pref.venues.map(function (v) {
             var country = document.createElement('td');
             country.textContent = v.country || '';
             return '<tr>' + (hasCountry ? country.outerHTML : '') + '<td class="venue-name">' + v.html + '</td><td class="count-col"><span class="count-badge">' + v.count + '</span></td></tr>';
@@ -288,7 +292,7 @@
         history.replaceState(null, '', url);
     }
 
-    document.querySelectorAll('.venue-map-pref.is-visited').forEach(function (el) {
+    document.querySelectorAll('.venue-map-pref').forEach(function (el) {
         el.addEventListener('click', function () { show(el.dataset.pref); });
     });
     document.querySelectorAll('[data-pref-link]').forEach(function (el) {
