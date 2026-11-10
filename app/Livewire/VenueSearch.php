@@ -52,6 +52,23 @@ class VenueSearch extends Component
         return $query->whereNotNull('venue')->where('venue', '!=', '');
     }
 
+    // Yuki's Setlists・My Page の会場：同じ会場（前の名前・書き方の違い）は1つにまとめ、会場名は最後に行ったときの名前（VenueAlias::countByVenue）。
+    // 何も打っていないときは名前の順に10件、打ったときは、その会場のどれかの名前が打った文字で始まる会場
+    private function attendedVenueNames(string $search = '')
+    {
+        $dateColumn = $this->myPageUserId ? 'attended_date' : 'date';
+        $rows = $this->venueQuery()->get(['venue', $dateColumn])->map(fn ($row) => [$row->venue, (string) $row->{$dateColumn}]);
+        $namesByVenue = $rows->groupBy(fn ($row) => \App\Models\VenueAlias::resolve(trim($row[0])))->map(fn ($group) => $group->pluck(0)->map(fn ($n) => trim($n))->unique());
+
+        return \App\Models\VenueAlias::countByVenue($rows)
+            ->filter(fn ($venue) => $search === '' || ($namesByVenue[\App\Models\VenueAlias::resolve($venue->venue)] ?? collect([$venue->venue]))
+                ->contains(fn ($name) => mb_stripos($name, $search) === 0))
+            ->pluck('venue')
+            ->sort()
+            ->values()
+            ->take(10);
+    }
+
     private function toVenues($names): array
     {
         return collect($names)
@@ -72,7 +89,7 @@ class VenueSearch extends Component
             $this->venues = $this->toVenues($this->scheduleVenueNames());
             return;
         }
-        $this->venues = $this->toVenues($this->venueQuery()->distinct()->orderBy('venue')->limit(10)->pluck('venue'));
+        $this->venues = $this->toVenues($this->attendedVenueNames());
     }
 
     public function updatedSearch()
@@ -88,14 +105,7 @@ class VenueSearch extends Component
             return;
         }
 
-        $escapedQuery = str_replace(['%', '_'], ['\%', '\_'], $this->search);
-
-        $this->venues = $this->toVenues($this->venueQuery()
-            ->whereRaw('LOWER(venue) LIKE LOWER(?)', [$escapedQuery . '%'])
-            ->distinct()
-            ->orderBy('venue')
-            ->limit(10)
-            ->pluck('venue'));
+        $this->venues = $this->toVenues($this->attendedVenueNames(trim($this->search)));
 
         $this->selectedIndex = -1;
     }
