@@ -36,11 +36,13 @@ class DbSetlistResource extends Resource
     }
 
     // 曲を差し替えたら、前の曲用の別表記・共演者・アーティストと表示形式を消す（メドレー・日替わりの印は曲の並びの印なので残す）
-    public static function clearSongDetails(Forms\Set $set): void
+    public static function clearSongDetails(Forms\Set $set, $song = null): void
     {
         $set('alternative_title', null);
         $set('featuring', null);
         $set('featuring_type', 'guest');
+        // 「＋」で曲名の文字のまま入れた曲は、同じ曲名の登録曲があっても別の曲として扱う（DbSong::isTextEntry）
+        $set('as_text', $song !== null && $song !== '' && !is_numeric($song) ? true : null);
     }
 
     protected static function bulkSongValue(string $title, $artistId): string|int
@@ -672,10 +674,11 @@ class DbSetlistResource extends Resource
                 Forms\Components\Hidden::make('_uuid')->default(fn() => (string) \Illuminate\Support\Str::uuid()),
                 Forms\Components\Repeater::make('songs')->hiddenLabel()->extraAttributes(['class' => 'setlist-encore-songs'])->schema([
                     Forms\Components\Hidden::make('_uuid')->default(fn() => (string) \Illuminate\Support\Str::uuid()),
+                    Forms\Components\Hidden::make('as_text'),
                     Forms\Components\Select::make('song')->label('曲名')->required()
                         ->options(fn(Forms\Get $get) => static::songOptions($get('../../../../_artist_id')))
                         ->searchable()->native(false)->allowHtml()->live()
-                        ->afterStateUpdated(fn($state, Forms\Set $set) => static::clearSongDetails($set))
+                        ->afterStateUpdated(fn($state, Forms\Set $set) => static::clearSongDetails($set, $state))
                         ->getOptionLabelUsing(function ($value) {
                             if (!is_numeric($value)) return $value;
                             $song = AdminData::query('song')->find($value);
@@ -897,6 +900,7 @@ class DbSetlistResource extends Resource
                             ->schema([
                                 Forms\Components\Hidden::make('_uuid')
                                     ->default(fn() => \Illuminate\Support\Str::uuid()->toString()),
+                                Forms\Components\Hidden::make('as_text'),
 
                                 // 曲名（横いっぱい）
                                 Forms\Components\Select::make('song')
@@ -907,11 +911,11 @@ class DbSetlistResource extends Resource
                                     ->required()
                                     ->allowHtml()
                                     ->live()
-                                    ->afterStateUpdated(function ($set) {
+                                    ->afterStateUpdated(function ($state, $set) {
                                         // 曲を差し替えたのに別表記（前の曲用のライブバージョン名等）や共演者が
                                         // 残ってしまい、差し替え後の曲と噛み合わない表記のまま表示され続ける
                                         // 事故を防ぐため、曲を変更したタイミングでクリアする
-                                        static::clearSongDetails($set);
+                                        static::clearSongDetails($set, $state);
                                     })
                                     ->getOptionLabelUsing(function ($value) {
                                         if (is_numeric($value)) {

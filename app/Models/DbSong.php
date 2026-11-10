@@ -209,7 +209,7 @@ class DbSong extends Model
                     if (is_numeric($entry['song']) && (int) $entry['song'] === (int) $id) {
                         return true;
                     }
-                    if (!is_numeric($entry['song'])) {
+                    if (!is_numeric($entry['song']) && !static::isTextEntry($entry)) {
                         // 曲名の文字列一致は同名異アーティスト曲を拾ってしまうため、
                         // このセットリストのツアーが自分と同じアーティストのものである場合に限定する
                         if (optional($setlistModel->tour)->artist_id !== $artistId) {
@@ -243,8 +243,16 @@ class DbSong extends Model
 
     // セットリストの中でこの曲にあたる項目が、どの表記で載っているか（別表記があればそれ、無ければ曲名）を返す。
     // 楽曲ページの表記ごとの絞り込み（All / 表記1 / 表記2）に使う。$slSongIds を渡すとセットリストサイト側（SlSetlist）の曲IDで照合する
+    // 管理画面の「＋」で曲名の文字のまま入れた曲（as_text）。同じ曲名の登録曲があっても、その曲としては数えない
+    public static function isTextEntry(array $entry): bool
+    {
+        return !empty($entry['as_text']) && !is_numeric($entry['song'] ?? null);
+    }
+
     public function performanceTitlesIn(array $entries, array $slSongIds = []): array
     {
+        $entries = array_filter($entries, fn ($entry) => !static::isTextEntry((array) $entry));
+
         return \App\Support\PerformanceTitles::in($entries, function ($song) use ($slSongIds) {
             if (is_numeric($song)) {
                 return $slSongIds ? in_array((string) (int) $song, $slSongIds, true) : (int) $song === (int) $this->id;
@@ -369,7 +377,7 @@ class DbSong extends Model
                     if (is_numeric($song) && in_array((string) (int) $song, $slSongIds, true)) {
                         return true;
                     }
-                    if (!is_numeric($song)) {
+                    if (!is_numeric($song) && !static::isTextEntry($entry)) {
                         $entryTitle = preg_replace('/\s*\[[^\]]+\]/u', '', $song);
                         if (trim($entryTitle) === $title) {
                             return true;
