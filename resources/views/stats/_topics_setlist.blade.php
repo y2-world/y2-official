@@ -7,9 +7,10 @@
 @if (count($topicClosingSongs))
 <div class="stats-section visible">
     <h2 class="section-title"><i class="fas fa-flag-checkered"></i> Most Used Closing Songs
-    <span class="section-title-desc">本編の最後に演奏されたツアー・ライブの数が多い曲</span></h2>
+    <span class="section-title-desc" data-count-desc-tours="本編の最後に演奏されたツアー・ライブの数が多い曲" data-count-desc-shows="本編の最後に演奏された公演の数が多い曲">本編の最後に{{ !empty($byShows) ? '演奏された公演の数が多い曲' : '演奏されたツアー・ライブの数が多い曲' }}</span></h2>
     <div class="stats-table-container">
-        <table class="stats-table">
+        {{-- Database の stats では、公演数統計の切り替えで表を描き直す（id）。順位の下にもう一方の数え方での順位（rank・other_rank があるときだけ） --}}
+        <table class="stats-table" id="dbClosingStatsTable">
             <thead><tr><th class="rank-col">Rank</th><th>Song Title</th><th class="count-col">Times</th></tr></thead>
             <tbody>
                 @foreach ($topicClosingSongs as $index => $row)
@@ -23,6 +24,7 @@
                             @else <span class="rank-number">{{ $index + 1 }}</span>
                             @endif
                         @endif
+                        @include('stats._other_rank', ['song' => $row])
                     </td>
                     <td class="song-title">{!! $topicSongLink($row) !!}</td>
                     <td class="count-col"><span class="count-badge">{{ $row['count'] }}</span></td>

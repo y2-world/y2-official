@@ -108,7 +108,7 @@
                                         $showRank = $index === 0 || $songStats[$index - 1]['count'] !== $song['count'];
                                         $actualRank = $index + 1;
                                     @endphp
-                                    <tr>
+                                    <tr @if ($index >= 10) data-more="1" style="display: none;" @endif>
                                         <td class="rank-col">
                                             @if($showRank)
                                                 @if($index === 0)
@@ -139,6 +139,7 @@
                                     @endforelse
                                 </tbody>
                             </table>
+                            @include('stats._show_more', ['count' => max(count($songStats), count($songStatsUnique))])
                         </div>
                     </div>
 
@@ -488,8 +489,15 @@ function toggleStampBookSongStatsRows(button) {
 }
 
 // Most Listened Songs - Unique Tour Toggle
+@include('stats._other_rank_script')
 const songStatsData = @json($songStats);
 const songStatsUnique = @json($songStatsUnique);
+// 順位の下に、同ツアーを除く／除かないのもう一方での順位（チェックがあるときだけ）
+// 表は25曲までなので、順位は全曲の回数（songRankCounts）で決める
+const songRankCounts = @json($songRankCounts);
+if (document.getElementById('uniqueTourCheckbox')) {
+    statsAddOtherRanks(document.querySelector('#songStatsTable tbody'), songRankCounts.normal, songRankCounts.unique);
+}
 
 document.getElementById('uniqueTourCheckbox')?.addEventListener('change', function(e) {
     const useUnique = e.target.checked;
@@ -498,8 +506,14 @@ document.getElementById('uniqueTourCheckbox')?.addEventListener('change', functi
     const tbody = document.querySelector('#songStatsTable tbody');
     tbody.innerHTML = '';
 
+    // 11曲目からは Show More で開く行（開いていれば出したまま）
+    const expanded = document.querySelector('#songStatsTable')?.closest('.stats-section')?.querySelector('.show-more-btn')?.classList.contains('expanded');
     data.forEach((song, index) => {
         const tr = document.createElement('tr');
+        if (index >= 10) {
+            tr.setAttribute('data-more', '1');
+            if (!expanded) tr.style.display = 'none';
+        }
 
         // Check if we should show rank (first item or count different from previous)
         const showRank = index === 0 || data[index - 1].count !== song.count;
@@ -533,6 +547,7 @@ document.getElementById('uniqueTourCheckbox')?.addEventListener('change', functi
 
         tbody.appendChild(tr);
     });
+    statsAddOtherRanks(tbody, useUnique ? songRankCounts.unique : songRankCounts.normal, useUnique ? songRankCounts.normal : songRankCounts.unique);
 });
 </script>
 @endsection

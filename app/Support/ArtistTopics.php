@@ -242,14 +242,17 @@ class ArtistTopics
 
     // 本編ラスト曲：各パターンの本編（アンコール前）最後の曲を、演奏されたツアーの数で数える。
     // 自分のライブだけ（組になっているアーティストのライブでは、本編の途中の曲が「自分の曲の中で最後」になってしまう）
-    public function closingSongs(): array
+    // $patternShows: 公演の数で数えるとき、パターンごとの公演（PatternShows::of）。渡さなければツアー・ライブの数
+    public function closingSongs(?array $patternShows = null): array
     {
         $counts = [];
         foreach (array_intersect_key($this->setlistsByTour, array_flip($this->ownTourIds)) as $tourId => $setlists) {
             foreach ($setlists as $setlist) {
                 $main = array_values(array_filter($setlist->setlist ?? [], fn ($item) => $this->isSong($item) && empty($item['medley'])));
                 if ($main) {
-                    $counts[(int) end($main)['song']][$tourId] = true;
+                    foreach ($patternShows === null ? [$tourId] : ($patternShows[$setlist->id] ?? []) as $unit) {
+                        $counts[(int) end($main)['song']][$unit] = true;
+                    }
                 }
             }
         }

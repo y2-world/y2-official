@@ -334,6 +334,7 @@ const allSongsUnique = @json($allSongsUnique);
 // 福山雅治のみ：DOUBLE ENCOREを除いた版（同ツアーを除くと組み合わせられる）
 const allSongsNoDoubleEncore = @json($allSongsNoDoubleEncore);
 const allSongsUniqueNoDoubleEncore = @json($allSongsUniqueNoDoubleEncore);
+@include('stats._other_rank_script')
 
 function renderArtistSongs() {
     const useUnique = document.getElementById('uniqueTourCheckboxArtist')?.checked || false;
@@ -400,8 +401,18 @@ function renderArtistSongs() {
 
         tbody.appendChild(tr);
     });
+    // 順位の下に、同ツアーを除く／除かないのもう一方での順位（DOUBLE ENCOREを除くはそのまま）。チェックがあるときだけ
+    if (document.getElementById('uniqueTourCheckboxArtist')) {
+        const other = excludeDoubleEncore
+            ? (useUnique ? allSongsNoDoubleEncore : allSongsUniqueNoDoubleEncore)
+            : (useUnique ? allSongsData : allSongsUnique);
+        statsAddOtherRanks(tbody, data, other);
+    }
 }
 
+if (document.getElementById('uniqueTourCheckboxArtist')) {
+    statsAddOtherRanks(document.querySelector('#artistSongStatsTable tbody'), allSongsData, allSongsUnique);
+}
 document.getElementById('uniqueTourCheckboxArtist')?.addEventListener('change', renderArtistSongs);
 document.getElementById('excludeDoubleEncoreArtist')?.addEventListener('change', renderArtistSongs);
 </script>

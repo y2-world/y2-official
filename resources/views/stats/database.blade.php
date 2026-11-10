@@ -29,8 +29,9 @@
                                 <div class="stat-icon">
                                     <i class="fas fa-guitar"></i>
                                 </div>
+                                {{-- ツアーとイベントなど（1日だけのライブ）が混ざっているので「Tours / Shows」。公演数統計では公演の数 --}}
                                 <div class="stat-value" id="statTotalValue">{{ $overallStats['total_tours'] }}</div>
-                                <div class="stat-label" id="statTotalLabel">{{ $byShows ? 'Total Shows' : 'Total Tours' }}</div>
+                                <div class="stat-label" id="statTotalLabel">{{ $byShows ? 'Total Shows' : 'Total Tours/Shows' }}</div>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-6 mb-4">
@@ -62,9 +63,10 @@
                         </div>
                     </div>
 
-                    {{-- 集計をタブで分ける：Songs（曲ごとのランキング・トピックス）／Data（セトリの中の位置や曲数、年ごとのツアー数） --}}
+                    {{-- 集計をタブで分ける：Songs（曲ごとのランキング・トピックス）／Setlists（セトリの中の位置、セトリの曲数）／Data（会場、公演の多いツアー、年ごとの数） --}}
                     <div class="stats-tab-bar">
                         <button type="button" class="stats-tab-btn is-active" data-stats-tab="songs">Songs</button>
+                        <button type="button" class="stats-tab-btn" data-stats-tab="setlist">Setlists</button>
                         <button type="button" class="stats-tab-btn" data-stats-tab="data">Data</button>
                         {{-- Artists：ほかのアーティストのDatabaseのstatsへ切り替える --}}
                         @if (count($tabArtists) > 1)
@@ -208,7 +210,9 @@
 
                     </div>
 
-                    <div class="stats-tab-panel" data-stats-panel="data" style="display: none;">
+                    {{-- Setlists：セットリストの中の場所（1曲目・本編の最後・アンコール）で曲を並べたランキングと、曲数の多いセットリスト。
+                         ボタンの文字は複数形、URL は ?stats_tab=setlist（?stats_tab=setlists は My Statistics の古いリンクで Data になる） --}}
+                    <div class="stats-tab-panel" data-stats-panel="setlist" style="display: none;">
                     <!-- Most Opening Songs Section -->
                     <div class="stats-section visible">
                         <h2 class="section-title">
@@ -370,6 +374,10 @@
                         </div>
                     </div>
 
+                    </div>
+
+                    {{-- Data：会場・公演の多いツアー・年ごとの数 --}}
+                    <div class="stats-tab-panel" data-stats-panel="data" style="display: none;">
                     <!-- Top Venues Section：スケジュールに出てくる会場の公演数。会場を押すと Database の会場のページ -->
                     @if ($venueStats->isNotEmpty())
                     <div class="stats-section visible">
@@ -421,17 +429,67 @@
                     </div>
                     @endif
 
-                    <!-- Tours by Year Section -->
+                    <!-- Most Shows Tours Section：公演の多いツアー・ライブ（Total Shows と同じ数え方）。ツアーを押すとそのツアーのページ -->
+                    @if ($tourShowStats->isNotEmpty())
                     <div class="stats-section visible">
                         <h2 class="section-title">
-                            <i class="fas fa-calendar-alt"></i> Tours by Year
+                            <i class="fas fa-route"></i> Most Shows Tours
+    <span class="section-title-desc">公演の多いツアー・ライブ</span></h2>
+                        <div class="stats-table-container">
+                            <table class="stats-table">
+                                <thead>
+                                    <tr>
+                                        <th class="rank-col">Rank</th>
+                                        <th>Tour / Show</th>
+                                        <th class="count-col">Shows</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($tourShowStats as $index => $tourShow)
+                                    @php
+                                        $showRank = $index === 0 || $tourShowStats[$index - 1]->count !== $tourShow->count;
+                                        $actualRank = $index + 1;
+                                    @endphp
+                                    <tr @if($index >= 10) data-more style="display: none;" @endif>
+                                        <td class="rank-col">
+                                            @if($showRank)
+                                                @if($index === 0)
+                                                    <span class="rank-badge gold">🏆</span>
+                                                @elseif($index === 1)
+                                                    <span class="rank-badge silver">🥈</span>
+                                                @elseif($index === 2)
+                                                    <span class="rank-badge bronze">🥉</span>
+                                                @else
+                                                    <span class="rank-number">{{ $actualRank }}</span>
+                                                @endif
+                                            @endif
+                                        </td>
+                                        <td class="song-title">
+                                            <a href="{{ url('/database/live/' . $tourShow->id) }}" class="stats-link">{{ $tourShow->title }}</a>
+                                        </td>
+                                        <td class="count-col">
+                                            <span class="count-badge">{{ $tourShow->count }}</span>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            @include('stats._show_more', ['count' => count($tourShowStats)])
+                        </div>
+                    </div>
+                    @endif
+
+                    <!-- Tours / Shows by Year Section（ツアーとイベントなど1日だけのライブが混ざっているので Tours / Shows） -->
+                    <div class="stats-section visible">
+                        <h2 class="section-title">
+                            <i class="fas fa-calendar-alt"></i> Tours / Shows by Year
     <span class="section-title-desc">ツアー・ライブが多かった年</span></h2>
                         <div class="stats-table-container">
                             <table class="stats-table has-bar-indicator">
                                 <thead>
                                     <tr>
                                         <th>Year</th>
-                                        <th class="count-col">Tour Count</th>
+                                        <th class="count-col">Tour / Show Count</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -560,8 +618,9 @@ function updateCountMode() {
     renderRanking('dbEncoreStatsTable', noDoubleEncoreEncore ? stats.encoreNoDoubleEncore : stats.encore, null);
     renderRanking('dbDoubleEncoreStatsTable', stats.doubleEncore, 'data-more');
     renderRanking('dbOpeningStatsTable', stats.opening, null);
+    renderRanking('dbClosingStatsTable', stats.closing, 'data-more');
     document.getElementById('statTotalValue').textContent = stats.overall.total_tours;
-    document.getElementById('statTotalLabel').textContent = mode === 'shows' ? 'Total Shows' : 'Total Tours';
+    document.getElementById('statTotalLabel').textContent = mode === 'shows' ? 'Total Shows' : 'Total Tours/Shows';
     document.getElementById('statAvgValue').textContent = stats.overall.avg_setlist_length;
     document.querySelectorAll('[data-count-desc-tours]').forEach(el => {
         el.textContent = el.getAttribute(mode === 'shows' ? 'data-count-desc-shows' : 'data-count-desc-tours');

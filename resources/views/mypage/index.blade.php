@@ -480,6 +480,11 @@ function toggleArtistSongStatsRows(button) {
 // Most Listened Songs - Unique Tour Toggle
 const mypageSongStatsData = @json($topSongs);
 const mypageSongStatsUnique = @json($topSongsUnique);
+@include('stats._other_rank_script')
+// 順位の下に、同ツアーを除く／除かないのもう一方での順位（チェックがあるときだけ）
+if (document.getElementById('mypageUniqueTourCheckbox')) {
+    statsAddOtherRanks(document.querySelector('#mypageSongStatsTable tbody'), mypageSongStatsData, mypageSongStatsUnique);
+}
 
 document.getElementById('mypageUniqueTourCheckbox')?.addEventListener('change', function(e) {
     const useUnique = e.target.checked;
@@ -548,6 +553,7 @@ document.getElementById('mypageUniqueTourCheckbox')?.addEventListener('change', 
 
         tbody.appendChild(tr);
     });
+    statsAddOtherRanks(tbody, data, useUnique ? mypageSongStatsData : mypageSongStatsUnique);
 });
 </script>
 @endsection
