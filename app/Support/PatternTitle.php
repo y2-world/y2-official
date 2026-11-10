@@ -174,9 +174,10 @@ class PatternTitle
 
     // 見出しの HTML の行。公演日は1日1行で、日付も会場名も小さいグレー（見出しの半分の大きさ）
     // 公演日もタイトル（「en-Zepp 1」「Day1」）も、同じ文字で1行ずつ出す（公演日の無いパターンのタイトルも同じ）
+    // 公演日のあるパターンのタイトル（「＜対バン：BLUE ENCOUNT＞」「en-Zepp 1」）は、公演日の上に出し、たたんでも隠さない（たたむのは2公演目から）
     public static function htmlLines($pattern): array
     {
-        return static::htmlLinesFor([$pattern]);
+        return static::htmlLinesFor([$pattern], true);
     }
 
     // たたんだ見出しに出す行の数。これより多いときだけたたむ（db_concerts/show の SUBTITLE_COLLAPSE_LINES と合わせる）
@@ -186,26 +187,44 @@ class PatternTitle
     // 見出しをたたんだときは1行目だけ見せる。2行目からは --rest（たたむと隠す）。
     // 1行目のうしろの「他 N 公演」（隠れた公演の数）はたたんでいるときだけ出す（見えている公演だけと思わないように）。
     // そのときは1行に収め、長い会場名は「他 N 公演」の前を「…」で切る
-    public static function htmlLinesFor(iterable $patterns): array
+    // $keepTitles: 公演日のあるパターンのタイトルの行は、たたんでも出す（--title。たたむかどうかの行の数にも入れない）
+    public static function htmlLinesFor(iterable $patterns, bool $keepTitles = false): array
     {
         $texts = [];
         foreach ($patterns as $pattern) {
-            foreach (static::dateLabels($pattern) as $date) {
-                $texts[] = [$date, true];
+            $dates = static::dateLabels($pattern);
+            $titles = array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', (string) $pattern?->subtitle)), fn ($t) => $t !== '');
+            // 公演日のあるパターンのタイトルは、公演日の上に出す
+            if ($keepTitles && $dates !== []) {
+                foreach ($titles as $title) {
+                    $texts[] = [$title, false, true];
+                }
+                $titles = [];
             }
-            foreach (array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', (string) $pattern?->subtitle)), fn ($t) => $t !== '') as $title) {
-                $texts[] = [$title, false];
+            foreach ($dates as $date) {
+                $texts[] = [$date, true, false];
+            }
+            foreach ($titles as $title) {
+                $texts[] = [$title, false, false];
             }
         }
         $lines = [];
         $hiddenDates = 0;
-        foreach ($texts as $i => [$text, $isDate]) {
-            $rest = $i >= static::VISIBLE_LINES;
+        // たたむときに見せる行は、上に出すタイトルを数えずに VISIBLE_LINES 行
+        $counted = 0;
+        $firstCounted = null;
+        foreach ($texts as [$text, $isDate, $isKeptTitle]) {
+            $rest = false;
+            if (!$isKeptTitle) {
+                $rest = $counted >= static::VISIBLE_LINES;
+                $firstCounted ??= count($lines);
+                $counted++;
+            }
             $hiddenDates += $rest && $isDate ? 1 : 0;
-            $lines[] = '<span class="setlist-schedule-date-line' . ($rest ? ' setlist-schedule-date-line--rest' : '') . '" style="display: block; font-size: 0.5em; line-height: 1.5; color: #999; font-weight: normal;">' . e($text) . '</span>';
+            $lines[] = '<span class="setlist-schedule-date-line' . ($rest ? ' setlist-schedule-date-line--rest' : '') . ($isKeptTitle ? ' setlist-schedule-date-line--title' : '') . '" style="display: block; font-size: 0.5em; line-height: 1.5; color: #999; font-weight: normal;">' . e($text) . '</span>';
         }
         if ($hiddenDates >= 1) {
-            $last = static::VISIBLE_LINES - 1;
+            $last = $firstCounted + static::VISIBLE_LINES - 1;
             // 長い会場名でも2行にせず、「他 N 公演」の前を「…」で切る（文字を囲んで、CSS で1行にする）
             $lines[$last] = preg_replace('/>([^<]*)<\/span>$/', '><span class="setlist-schedule-date-text">$1</span><span class="setlist-subtitle-more">他' . $hiddenDates . '公演</span></span>', $lines[$last]);
         }
