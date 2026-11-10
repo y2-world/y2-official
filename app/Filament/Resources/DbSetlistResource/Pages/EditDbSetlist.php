@@ -23,6 +23,15 @@ class EditDbSetlist extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('editTour')
+                ->label('ツアー・ライブ情報を編集')
+                ->icon('heroicon-o-pencil-square')
+                ->url(fn () => \App\Filament\Resources\DbConcertResource::getUrl('edit', ['record' => $this->record->tour_id])),
+            // パターンが1つのツアーでも、この画面に戻らずツアーのパターンの一覧を開く（tourManagementUrl は1つならその編集画面になる）
+            Actions\Action::make('manageSetlistPatterns')
+                ->label('セットリストを管理')
+                ->icon('heroicon-o-queue-list')
+                ->url(fn () => DbSetlistResource::getUrl('manage-tour', ['tourId' => $this->record->tour_id])),
             Actions\DeleteAction::make(),
         ];
     }
