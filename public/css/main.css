@@ -3228,7 +3228,7 @@ h5.setlist-subtitle-heading {
 
     /* 順位の下の、もう一方の数え方での順位は、スマホでは順位の数字より小さく */
     .rank-other {
-        font-size: 0.55rem;
+        font-size: 0.45rem;
     }
 
     .count-badge {
