@@ -110,7 +110,7 @@
                             @endif
                         </div>
                         <div class="show_button">
-                            <a href="#" onclick="window.history.back(); return false;"> <i class="fa-solid fa-arrow-left fa-lg"></i> Back</a>
+                            <a href="{{ url('/#music') }}"> <i class="fa-solid fa-arrow-left fa-lg"></i> Back to Music</a>
                         </div>
                     </div>
                 </div>
