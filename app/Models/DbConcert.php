@@ -79,6 +79,8 @@ class DbConcert extends Model
                     'date' => $entry['date'],
                     'venue' => static::venueKeyword($entry['venue']),
                     'concert' => $concert,
+                    // 公演日（パターンの schedule_dates と同じ「2000-04-06 1部」）
+                    'key' => \App\Support\PatternTitle::key($entry),
                 ]))
             ->filter(fn ($entry) => $entry['venue'] !== '')
             ->values();
@@ -133,7 +135,8 @@ class DbConcert extends Model
     // scheduleカラム（フリーテキストの日程表）から日付・会場の候補を抽出する。[date, venue]、同じ日に何回かあるときは part（「1部」）も。
     // 表記ゆれが大きい（"M月D日(曜)" / "M.D" / "MM.DD(曜)"、複数日をまとめた"M.D,D2"等）ため、
     // パースできない行は単に候補から外れるだけで、フォームの手入力へフォールバックできる。
-    public function parseScheduleEntries(): array
+    // $withLines: スケジュールの何行目の公演か（line、0から）も付ける。ライブのページの SCHEDULE の表から、その日のパターンへ移るのに使う
+    public function parseScheduleEntries(bool $withLines = false): array
     {
         if (!$this->schedule) {
             // schedule列自体が無くても、date1〜date2が数日程度の短い範囲かつ
@@ -155,7 +158,7 @@ class DbConcert extends Model
             $lastMonth = $month;
         };
 
-        foreach ($lines as $line) {
+        foreach ($lines as $lineIndex => $line) {
             $line = trim($line);
             if ($line === '') {
                 continue;
@@ -178,7 +181,7 @@ class DbConcert extends Model
                 foreach (range($startDay, $endDay) as $day) {
                     $date = $this->buildDate($currentYear, $month, (int)$day);
                     if ($date && $venue !== '' && !static::cancelledOn($m[4], $date)) {
-                        $entries[] = ['date' => $date, 'venue' => $venue] + ($part !== null ? ['part' => $part] : []);
+                        $entries[] = ['date' => $date, 'venue' => $venue] + ($part !== null ? ['part' => $part] : []) + ($withLines ? ['line' => $lineIndex] : []);
                     }
                 }
                 continue;
@@ -190,7 +193,7 @@ class DbConcert extends Model
                 [$venue, $part] = $this->splitVenueNote($m[3]);
                 $date = $this->buildDate($currentYear, (int)$m[1], (int)$m[2]);
                 if ($date && $venue !== '' && !static::cancelledOn($m[3], $date)) {
-                    $entries[] = ['date' => $date, 'venue' => $venue] + ($part !== null ? ['part' => $part] : []);
+                    $entries[] = ['date' => $date, 'venue' => $venue] + ($part !== null ? ['part' => $part] : []) + ($withLines ? ['line' => $lineIndex] : []);
                 }
                 continue;
             }
@@ -202,7 +205,7 @@ class DbConcert extends Model
                 [$venue, $part] = $this->splitVenueNote($m[4]);
                 $date = $this->buildDate($currentYear, (int)$m[2], (int)$m[3]);
                 if ($date && $venue !== '' && !static::cancelledOn($m[4], $date)) {
-                    $entries[] = ['date' => $date, 'venue' => $venue] + ($part !== null ? ['part' => $part] : []);
+                    $entries[] = ['date' => $date, 'venue' => $venue] + ($part !== null ? ['part' => $part] : []) + ($withLines ? ['line' => $lineIndex] : []);
                 }
                 continue;
             }
@@ -213,7 +216,7 @@ class DbConcert extends Model
                 [$venue, $part] = $this->splitVenueNote($m[3]);
                 $date = $this->buildDate($currentYear, (int)$m[1], (int)$m[2]);
                 if ($date && $venue !== '' && !static::cancelledOn($m[3], $date)) {
-                    $entries[] = ['date' => $date, 'venue' => $venue] + ($part !== null ? ['part' => $part] : []);
+                    $entries[] = ['date' => $date, 'venue' => $venue] + ($part !== null ? ['part' => $part] : []) + ($withLines ? ['line' => $lineIndex] : []);
                 }
                 continue;
             }
@@ -228,7 +231,7 @@ class DbConcert extends Model
                 foreach ($days as $day) {
                     $date = $this->buildDate($currentYear, $month, (int)$day);
                     if ($date && $venue !== '' && !static::cancelledOn($m2[3], $date)) {
-                        $entries[] = ['date' => $date, 'venue' => $venue] + ($part !== null ? ['part' => $part] : []);
+                        $entries[] = ['date' => $date, 'venue' => $venue] + ($part !== null ? ['part' => $part] : []) + ($withLines ? ['line' => $lineIndex] : []);
                     }
                 }
                 continue;

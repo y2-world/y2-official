@@ -232,7 +232,32 @@
                             <hr>
                         @endif
                         <h5>SCHEDULE</h5>
-                        @include('partials._schedule', ['schedule' => $tours->schedule, 'venueArtistId' => $tours->artist_id])
+                        @php
+                            // SCHEDULE の行（何行目か）=> その公演の公演日とパターン。日付を押すと、そのパターンへ移って公演の行を目立たせる。
+                            // 公式のライブは公演日の無いパターンも PatternShows で当てる。マイページのライブは公演日（schedule_dates）だけ
+                            $showPatterns = [];
+                            $shownSetlists = $tourSetlists->filter(fn ($s) => count((array) $s->setlist) || count((array) $s->encore))->sortBy([['row', 'asc'], ['order_no', 'asc']]);
+                            $patternKeys = $tours instanceof \App\Models\DbConcert
+                                ? array_map(fn ($keys) => array_map(fn ($key) => substr($key, strpos($key, '|') + 1), $keys), \App\Support\PatternShows::of($shownSetlists))
+                                : $shownSetlists->mapWithKeys(fn ($s) => [$s->id => array_map('strval', (array) ($s->schedule_dates ?? []))])->all();
+                            foreach ($shownSetlists as $shownSetlist) {
+                                foreach ($patternKeys[$shownSetlist->id] ?? [] as $key) {
+                                    $showPatterns[$key] ??= $shownSetlist->id;
+                                }
+                            }
+                            $scheduleShows = [];
+                            foreach ($tours->parseScheduleEntries(true) as $entry) {
+                                $key = \App\Support\PatternTitle::key($entry);
+                                if (isset($entry['line'], $showPatterns[$key])) {
+                                    $scheduleShows[$entry['line']] ??= [
+                                        'key' => $key,
+                                        'pattern' => 'setlist-pattern-' . $showPatterns[$key],
+                                        'url' => $liveUrl($tours->id) . $standardViewQuery . '&' . http_build_query(['pattern' => 'setlist-pattern-' . $showPatterns[$key], 'show' => $key]),
+                                    ];
+                                }
+                            }
+                        @endphp
+                        @include('partials._schedule', ['schedule' => $tours->schedule, 'venueArtistId' => $tours->artist_id, 'scheduleShows' => $scheduleShows])
                     @endif
                     @if (!is_null($tours->text))
                         <hr>
@@ -241,8 +266,13 @@
                 </div>
                 {{-- 前後リンク --}}
                 <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">
-                    @if (isset($previous))
-                        <a href="{{ $liveUrl($previous->id) }}{{ $previousQuery }}" rel="prev"
+                    @php
+                        // 会場のページから来たときは、同じ会場の前後の公演のリンク（コントローラーで作る）
+                        $previousUrl ??= isset($previous) ? $liveUrl($previous->id) . $previousQuery : null;
+                        $nextUrl ??= isset($next) ? $liveUrl($next->id) . $nextQuery : null;
+                    @endphp
+                    @if ($previousUrl)
+                        <a href="{{ $previousUrl }}" rel="prev"
                            style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
                             <i class="fa-solid fa-arrow-left" style="margin-right: 8px;"></i>
                             Previous
@@ -250,8 +280,8 @@
                     @else
                         <div></div>
                     @endif
-                    @if (isset($next))
-                        <a href="{{ $liveUrl($next->id) }}{{ $nextQuery }}" rel="next"
+                    @if ($nextUrl)
+                        <a href="{{ $nextUrl }}" rel="next"
                            style="display: inline-flex; align-items: center; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;">
                             Next
                             <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
@@ -698,6 +728,94 @@ function closeSetlistSummary() {
 </script>
 {{-- 曲のページから来たとき（from=song-{曲ID}）、その曲名を黄色で目立たせる --}}
 @include('partials._song_highlight', ['highlightPaths' => preg_match('/^song-(\d+)$/', (string) $from, $fromSongMatch) ? [$songPathPrefix . $fromSongMatch[1]] : []])
+{{-- 公演の行を目立たせる。会場のページから来たとき（?show=公演日）と、SCHEDULE の表の日付を押したとき。
+     パターンの見出しのその公演の行（日付と会場名）を、曲と同じ黄色にする。たたんだ見出しで隠れている行なら、見出しを開く。数秒で消える --}}
+<style>
+    .venue-find-highlight {
+        background: #ffe95c;
+        color: #333;
+        border-radius: 3px;
+        box-shadow: 0 0 0 2px #ffe95c;
+        transition: background-color 1s ease, box-shadow 1s ease, color 1s ease;
+    }
+    .venue-find-highlight.is-fading {
+        background: transparent;
+        box-shadow: 0 0 0 2px transparent;
+        color: inherit;
+    }
+</style>
+<script>
+// 公演日（「2000-04-06 1部」）の行を目立たせ、その行を返す。scope はパターンの枠（無ければページ全体から探す）。行が無ければ null
+function highlightShowLine(showKey, scope) {
+    var line = Array.prototype.find.call((scope || document).querySelectorAll('.setlist-schedule-date-line[data-show-key]'), function (el) {
+        return el.getAttribute('data-show-key') === showKey;
+    });
+    if (!line) return null;
+    if (line.classList.contains('setlist-schedule-date-line--rest')) {
+        var heading = line.closest('.setlist-subtitle-heading');
+        if (heading) heading.classList.add('is-expanded');
+        // 段のパターンの見出しの高さは、たたんだ高さでそろえてあるので、開いた高さでそろえ直す（見出しを押して開いたときと同じ）
+        var row = line.closest('.setlist-row');
+        var areas = row ? row.querySelectorAll('.setlist-subtitle-area') : [];
+        var maxH = 0;
+        areas.forEach(function (a) { a.style.height = 'auto'; maxH = Math.max(maxH, a.scrollHeight); });
+        areas.forEach(function (a) { a.style.height = maxH + 'px'; });
+    }
+    // 行（幅いっぱい）ではなく文字だけを囲む。「他 N 公演」の付いた行は日付と会場名の部分だけ
+    var mark = line.querySelector('.setlist-schedule-date-text, .venue-find-mark');
+    if (!mark) {
+        mark = document.createElement('span');
+        mark.className = 'venue-find-mark';
+        while (line.firstChild) mark.appendChild(line.firstChild);
+        line.appendChild(mark);
+    }
+    clearTimeout(mark._fadeTimer);
+    clearTimeout(mark._removeTimer);
+    mark.classList.remove('is-fading');
+    mark.classList.add('venue-find-highlight');
+    mark._fadeTimer = setTimeout(function () { mark.classList.add('is-fading'); }, 3500);
+    mark._removeTimer = setTimeout(function () { mark.classList.remove('venue-find-highlight', 'is-fading'); }, 4700);
+    return mark;
+}
+
+// 目立たせた行が上の固定メニューに隠れていたら、見えるところまで戻す
+function revealShowLine(mark) {
+    var header = document.querySelector('nav.fixed-top');
+    var headerBottom = header ? header.getBoundingClientRect().bottom : 0;
+    var top = mark.getBoundingClientRect().top;
+    if (top < headerBottom + 8) {
+        window.scrollTo(0, Math.max(0, window.scrollY + top - headerBottom - 8));
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    // SCHEDULE の日付：同じページのその日のパターンへ移って、その公演の行を目立たせる。
+    // パターンが見えていない（スマホの Summary の表示など）ときは、リンクのとおり通常の表示で開き直す
+    document.querySelectorAll('.schedule-show-link').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            var wrap = document.getElementById(link.getAttribute('data-pattern'));
+            if (!wrap || wrap.offsetParent === null) return;
+            e.preventDefault();
+            highlightShowLine(link.getAttribute('data-show-key'), wrap);
+            scrollToPatternWrap(wrap, 'smooth');
+        });
+    });
+
+    var showKey = new URLSearchParams(window.location.search).get('show');
+    if (!showKey) return;
+    var patternId = new URLSearchParams(window.location.search).get('pattern');
+    var mark = highlightShowLine(showKey, patternId && document.getElementById(patternId));
+    if (!mark) return;
+    var loaded = new Promise(function (resolve) {
+        if (document.readyState === 'complete') resolve(); else window.addEventListener('load', resolve, { once: true });
+    });
+    var fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+    Promise.all([loaded, fontsReady]).then(function () {
+        // パターンへのジャンプ（load とフォントのあと2フレーム）のあとで
+        requestAnimationFrame(function () { requestAnimationFrame(function () { requestAnimationFrame(function () { revealShowLine(mark); }); }); });
+    });
+});
+</script>
 @endsection
 
 @endsection

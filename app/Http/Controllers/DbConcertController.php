@@ -70,7 +70,7 @@ class DbConcertController extends Controller
                 return redirect()->route('database.venues', [$artist->id, 'keyword' => $current]);
             }
             // 前の名前・書き方の違いの公演もまとめて出す（今の会場名で）
-            $performances = $entries->where('venue', $keyword)->sortByDesc('date')->values();
+            $performances = self::venueShows($keyword, $entries)->reverse()->values();
 
             return view('db_concerts.venue', compact('artist', 'keyword', 'performances'));
         }
@@ -82,6 +82,33 @@ class DbConcertController extends Controller
             ->values();
 
         return view('db_concerts.venues', compact('artist', 'venues'));
+    }
+
+    // 1つの会場の公演（古い順）。url はその公演のパターンを開くリンクで、Previous/Next が同じ会場の前後の公演になるよう
+    // from=venue・会場名・公演日（show）を付ける。公演日に当たるパターンが無ければ、ライブのページの頭
+    private static function venueShows(string $venue, \Illuminate\Support\Collection $entries): \Illuminate\Support\Collection
+    {
+        // 同じ日の昼・夜などは、スケジュールに書いてある順
+        $shows = $entries->where('venue', $venue)
+            ->map(fn ($entry, $index) => $entry + ['index' => $index])
+            ->sort(fn ($a, $b) => [$a['date'], $a['index']] <=> [$b['date'], $b['index']])
+            ->values();
+        $setlists = DbSetlist::whereIn('tour_id', $shows->pluck('concert.id')->unique()->all())
+            ->orderBy('row')->orderBy('order_no')->get();
+        $patternOf = [];
+        foreach (\App\Support\PatternShows::of($setlists) as $patternId => $keys) {
+            foreach ($keys as $key) {
+                $patternOf[$key] ??= $patternId;
+            }
+        }
+
+        return $shows->map(function ($show) use ($venue, $patternOf) {
+            $patternId = $patternOf[$show['concert']->id . '|' . $show['key']] ?? null;
+            $query = ['view' => 'standard', 'from' => 'venue', 'venue' => $venue, 'show' => $show['key']]
+                + ($patternId ? ['pattern' => 'setlist-pattern-' . $patternId] : []);
+
+            return $show + ['url' => route('live.show', $show['concert']->id) . '?' . http_build_query($query)];
+        });
     }
 
     public function show(Request $request, $id)
@@ -150,6 +177,21 @@ class DbConcertController extends Controller
         $previous = $previousQuery->first();
         $next = $nextQuery->first();
 
+        // 会場のページから来たとき（from=venue）は、同じ会場の前後の公演（同じツアーのほかの日も）へ
+        $previousUrl = $nextUrl = null;
+        if ($from === 'venue' && ($venue = (string) $request->query('venue')) !== '') {
+            $venueShows = self::venueShows($venue, DbConcert::venuePageEntries((int) $tours->artist_id));
+            $index = $venueShows->search(fn ($show) => $show['concert']->id === $tours->id && $show['key'] === (string) $request->query('show'));
+            if ($index === false) {
+                $index = $venueShows->search(fn ($show) => $show['concert']->id === $tours->id);
+            }
+            if ($index !== false) {
+                $previous = $next = null;
+                $previousUrl = $venueShows[$index - 1]['url'] ?? null;
+                $nextUrl = $venueShows[$index + 1]['url'] ?? null;
+            }
+        }
+
         // Summaryを見ながらPrevious/Nextで移動している間は、Summaryの無いライブを通っても
         // その先のライブでSummaryに戻れるよう、Summaryで見ている状態（?tab=summary）を引き継ぐ。
         // Summaryの無いライブ自体は通常の表示で開く（Summaryで開くと中身が無いため）
@@ -158,6 +200,6 @@ class DbConcertController extends Controller
             $tab = null;
         }
 
-        return view('db_concerts.show', compact('songs', 'previous', 'next', 'summaryMode', 'tours', 'tourSetlists', 'artist', 'setlistSummaries', 'summaryRows', 'from', 'tab', 'summaryRowTitles', 'summaryPickedPatterns'));
+        return view('db_concerts.show', compact('songs', 'previous', 'next', 'previousUrl', 'nextUrl', 'summaryMode', 'tours', 'tourSetlists', 'artist', 'setlistSummaries', 'summaryRows', 'from', 'tab', 'summaryRowTitles', 'summaryPickedPatterns'));
     }
 }

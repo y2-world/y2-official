@@ -48,7 +48,7 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td class="td_date">{{ date('Y.m.d', strtotime($performance['date'])) }}</td>
-                            <td class="td_title"><a href="{{ route('live.show', $performance['concert']->id) }}">{{ $performance['concert']->title }}</a></td>
+                            <td class="td_title"><a href="{{ $performance['url'] }}">{{ $performance['concert']->title }}</a></td>
                         </tr>
                     @endforeach
                 </tbody>

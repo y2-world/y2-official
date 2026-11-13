@@ -68,17 +68,28 @@ class PatternTitle
     // 会場が1つだけのライブ（単発のライブや、同じ会場で何日もやるライブ）は、会場名を出さずに日付（と回）だけ
     public static function dateLabels($pattern): array
     {
+        return array_values(static::dateLabelsByKey($pattern));
+    }
+
+    // dateLabels を公演日（「2000-04-06 1部」）ごとに。会場のページから来たときに、その公演の行を目立たせるのに使う
+    public static function dateLabelsByKey($pattern): array
+    {
         $keys = (array) ($pattern?->schedule_dates ?? []);
         if ($keys === []) {
             return [];
         }
         $schedule = static::schedule($pattern);
         $entries = static::entries($keys, $schedule);
-        if (static::singleVenue($schedule)) {
-            return array_map(fn ($entry) => trim(Carbon::parse($entry['date'])->format('n.j') . ' ' . static::partLabel($entry['part'] ?? null)), $entries);
+        $label = static::singleVenue($schedule)
+            ? fn ($entry) => trim(Carbon::parse($entry['date'])->format('n.j') . ' ' . static::partLabel($entry['part'] ?? null))
+            : [static::class, 'label'];
+
+        $labels = [];
+        foreach ($entries as $entry) {
+            $labels[static::key($entry)] = $label($entry);
         }
 
-        return array_map([static::class, 'label'], $entries);
+        return $labels;
     }
 
     // スケジュールの会場が1つだけか
@@ -192,20 +203,20 @@ class PatternTitle
     {
         $texts = [];
         foreach ($patterns as $pattern) {
-            $dates = static::dateLabels($pattern);
+            $dates = static::dateLabelsByKey($pattern);
             $titles = array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', (string) $pattern?->subtitle)), fn ($t) => $t !== '');
             // 公演日のあるパターンのタイトルは、公演日の上に出す
             if ($keepTitles && $dates !== []) {
                 foreach ($titles as $title) {
-                    $texts[] = [$title, false, true];
+                    $texts[] = [$title, false, true, null];
                 }
                 $titles = [];
             }
-            foreach ($dates as $date) {
-                $texts[] = [$date, true, false];
+            foreach ($dates as $key => $date) {
+                $texts[] = [$date, true, false, (string) $key];
             }
             foreach ($titles as $title) {
-                $texts[] = [$title, false, false];
+                $texts[] = [$title, false, false, null];
             }
         }
         $lines = [];
@@ -213,7 +224,7 @@ class PatternTitle
         // たたむときに見せる行は、上に出すタイトルを数えずに VISIBLE_LINES 行
         $counted = 0;
         $firstCounted = null;
-        foreach ($texts as [$text, $isDate, $isKeptTitle]) {
+        foreach ($texts as [$text, $isDate, $isKeptTitle, $showKey]) {
             $rest = false;
             if (!$isKeptTitle) {
                 $rest = $counted >= static::VISIBLE_LINES;
@@ -221,7 +232,7 @@ class PatternTitle
                 $counted++;
             }
             $hiddenDates += $rest && $isDate ? 1 : 0;
-            $lines[] = '<span class="setlist-schedule-date-line' . ($rest ? ' setlist-schedule-date-line--rest' : '') . ($isKeptTitle ? ' setlist-schedule-date-line--title' : '') . '" style="display: block; font-size: 0.5em; line-height: 1.5; color: #999; font-weight: normal;">' . e($text) . '</span>';
+            $lines[] = '<span class="setlist-schedule-date-line' . ($rest ? ' setlist-schedule-date-line--rest' : '') . ($isKeptTitle ? ' setlist-schedule-date-line--title' : '') . '"' . ($showKey !== null ? ' data-show-key="' . e($showKey) . '"' : '') . ' style="display: block; font-size: 0.5em; line-height: 1.5; color: #999; font-weight: normal;">' . e($text) . '</span>';
         }
         if ($hiddenDates >= 1) {
             $last = $firstCounted + static::VISIBLE_LINES - 1;
