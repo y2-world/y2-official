@@ -246,7 +246,9 @@
                                 }
                             }
                             $scheduleShows = [];
-                            foreach ($tours->parseScheduleEntries(true) as $entry) {
+                            // セトリが1パターンだけ、または1公演だけのライブは、日付にリンクを付けない（飛んでも同じパターンしか無い）
+                            $scheduleEntries = $tours->parseScheduleEntries(true);
+                            foreach ($shownSetlists->count() > 1 && count($scheduleEntries) > 1 ? $scheduleEntries : [] as $entry) {
                                 $key = \App\Support\PatternTitle::key($entry);
                                 if (isset($entry['line'], $showPatterns[$key])) {
                                     $scheduleShows[$entry['line']] ??= [
@@ -598,7 +600,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // 通常表示に切り替え、選択したパターンの位置へ移動する。
                 if (wrap && wrap.id) {
                     var standardViewUrl = '{{ $liveUrl($tours->id) }}{{ $standardViewQuery }}';
-                    window.location.href = standardViewUrl + '&pattern=' + encodeURIComponent(wrap.id);
+                    window.location.href = standardViewUrl + '&pattern=' + encodeURIComponent(wrap.id) + '&picked=1';
                 }
                 return;
             @else
@@ -606,12 +608,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 // 選択したパターンの位置へスクロールする通常表示に遷移する。
                 if (isMobileSummaryView) {
                     if (wrap && wrap.id) {
-                        window.location.href = '{{ $liveUrl($tours->id) }}{{ $standardViewQuery }}&pattern=' + encodeURIComponent(wrap.id);
+                        window.location.href = '{{ $liveUrl($tours->id) }}{{ $standardViewQuery }}&pattern=' + encodeURIComponent(wrap.id) + '&picked=1';
                     }
                     return;
                 }
             @endif
             if (wrap) {
+                highlightPatternLines(wrap);
                 scrollToPatternWrap(wrap);
                 patternSelect.value = '';
             }
@@ -778,6 +781,16 @@ function highlightShowLine(showKey, scope) {
     return mark;
 }
 
+// パターンを選ぶプルダウンで選んだとき：そのパターンの見出しの公演の行を全部目立たせ（たたんだ見出しは開く）、最初の行を返す
+function highlightPatternLines(wrap) {
+    var first = null;
+    wrap.querySelectorAll('.setlist-schedule-date-line[data-show-key]').forEach(function (line) {
+        var mark = highlightShowLine(line.getAttribute('data-show-key'), wrap);
+        first = first || mark;
+    });
+    return first;
+}
+
 // 目立たせた行が上の固定メニューに隠れていたら、見えるところまで戻す
 function revealShowLine(mark) {
     var header = document.querySelector('nav.fixed-top');
@@ -801,10 +814,13 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    var showKey = new URLSearchParams(window.location.search).get('show');
-    if (!showKey) return;
-    var patternId = new URLSearchParams(window.location.search).get('pattern');
-    var mark = highlightShowLine(showKey, patternId && document.getElementById(patternId));
+    var params = new URLSearchParams(window.location.search);
+    var showKey = params.get('show');
+    var patternId = params.get('pattern');
+    // Summary の表示のプルダウンで選んで通常の表示に移ってきたとき（picked=1）は、そのパターンの公演の行
+    var pickedWrap = !showKey && params.get('picked') && patternId ? document.getElementById(patternId) : null;
+    if (!showKey && !pickedWrap) return;
+    var mark = pickedWrap ? highlightPatternLines(pickedWrap) : highlightShowLine(showKey, patternId && document.getElementById(patternId));
     if (!mark) return;
     var loaded = new Promise(function (resolve) {
         if (document.readyState === 'complete') resolve(); else window.addEventListener('load', resolve, { once: true });

@@ -7269,6 +7269,15 @@
               "song_title": "コンピューターシティ"
             },
             {
+              "title": "Perfumeの掟",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 2993,
+              "song_title": "Perfumeの掟"
+            },
+            {
               "title": "エレクトロ・ワールド",
               "alternative_title": null,
               "medley": false,
@@ -47933,6 +47942,15 @@
               "song_title": "FUSION"
             },
             {
+              "title": "Perfumeの掟",
+              "alternative_title": "Perfumeの掟 2025",
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 2993,
+              "song_title": "Perfumeの掟"
+            },
+            {
               "title": "Flow",
               "alternative_title": null,
               "medley": false,
@@ -48039,6 +48057,15 @@
               "featuring_type": null,
               "song_id": 2981,
               "song_title": "巡ループ"
+            },
+            {
+              "title": "GISHIKI",
+              "alternative_title": null,
+              "medley": false,
+              "featuring": null,
+              "featuring_type": null,
+              "song_id": 2994,
+              "song_title": "GISHIKI"
             }
           ],
           "encore": []
