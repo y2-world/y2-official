@@ -157,8 +157,11 @@ class ImportArtistSetlists extends Command
         if ($songId === null && !empty($item['song_title'])) {
             $songId = $this->resolveSongId($item['song_title']);
         }
-        $songId ??= $this->resolveSongId($item['title']);
-        if ($songId === null) {
+        // no_link：同じ名前のほかの人の曲（Perfume の GAME と福山雅治の GAME など）。曲名で探さず、曲名の文字のまま入れる
+        if (empty($item['no_link'])) {
+            $songId ??= $this->resolveSongId($item['title']);
+        }
+        if ($songId === null && empty($item['no_link'])) {
             $this->unmatched[$item['title']][] = $tour->date1 ? substr($tour->date1, 0, 10) : (string) $tour->id;
         }
 
