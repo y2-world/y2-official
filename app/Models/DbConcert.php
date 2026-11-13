@@ -287,10 +287,9 @@ class DbConcert extends Model
         return sprintf('%04d-%02d-%02d', $year, $month, $day);
     }
 
-    // schedule列にデータが無い単発〜数日開催のツアー向けフォールバック。
-    // date1〜date2の日数が短く（1週間以内）、venueが単一なら、日毎に同じ会場の候補を作る。
-    // 長期ツアーで単に日程表がまだ入力されていないだけのケースを、
-    // 大量の候補生成で誤魔化さないよう上限を設ける。
+    // schedule列にデータが無いライブ向けフォールバック。venueが単一なら、date1〜date2の毎日に同じ会場の公演を作る。
+    // 会場が1つで日が続くライブはスケジュールを登録しない決まり（2026-11-13 ユーザー）なので、日数の上限は付けない。
+    // 日が飛んでいる・1日に何回かあるライブは、スケジュールを登録する
     private function buildDateRangeFallbackEntries(): array
     {
         if (!$this->date1 || !$this->venue) {
@@ -304,9 +303,6 @@ class DbConcert extends Model
         }
 
         $dayCount = (int)round(($end - $start) / 86400) + 1;
-        if ($dayCount > 7) {
-            return [];
-        }
 
         $entries = [];
         for ($i = 0; $i < $dayCount; $i++) {
