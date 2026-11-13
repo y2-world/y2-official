@@ -1,0 +1,3005 @@
+{
+ "source": "perfume-web.jp/discography と ja.wikipedia「Perfumeの作品」（2026-11-13）。storage/app/setlist-work/perfume/build_perfume.py が作る",
+ "artist": {
+  "name": "Perfume"
+ },
+ "songs": [
+  {
+   "title": "OMAJINAI★ペロリ",
+   "credit": null
+  },
+  {
+   "title": "彼氏募集中",
+   "credit": null
+  },
+  {
+   "title": "スウィートドーナッツ",
+   "credit": null
+  },
+  {
+   "title": "シークレットメッセージ",
+   "credit": null
+  },
+  {
+   "title": "ジェニーはご機嫌ななめ",
+   "credit": null
+  },
+  {
+   "title": "モノクロームエフェクト",
+   "credit": null
+  },
+  {
+   "title": "エレベーター",
+   "credit": null
+  },
+  {
+   "title": "おいしいレシピ",
+   "credit": null
+  },
+  {
+   "title": "ビタミンドロップ",
+   "credit": null
+  },
+  {
+   "title": "引力",
+   "credit": null
+  },
+  {
+   "title": "リニアモーターガール",
+   "credit": null
+  },
+  {
+   "title": "ファンデーション",
+   "credit": null
+  },
+  {
+   "title": "コンピューター ドライビング",
+   "credit": null
+  },
+  {
+   "title": "コンピューターシティ",
+   "credit": null
+  },
+  {
+   "title": "Perfume",
+   "credit": null
+  },
+  {
+   "title": "エレクトロ・ワールド",
+   "credit": null
+  },
+  {
+   "title": "wonder2",
+   "credit": null
+  },
+  {
+   "title": "パーフェクトスター・パーフェクトスタイル",
+   "credit": null
+  },
+  {
+   "title": "Twinkle Snow Powdery Snow",
+   "credit": null
+  },
+  {
+   "title": "チョコレイト・ディスコ",
+   "credit": null
+  },
+  {
+   "title": "ポリリズム",
+   "credit": null
+  },
+  {
+   "title": "SEVENTH HEAVEN",
+   "credit": null
+  },
+  {
+   "title": "Baby cruising Love",
+   "credit": null
+  },
+  {
+   "title": "マカロニ",
+   "credit": null
+  },
+  {
+   "title": "plastic smile",
+   "credit": null
+  },
+  {
+   "title": "GAME",
+   "credit": null
+  },
+  {
+   "title": "セラミックガール",
+   "credit": null
+  },
+  {
+   "title": "Take me Take me",
+   "credit": null
+  },
+  {
+   "title": "シークレットシークレット",
+   "credit": null
+  },
+  {
+   "title": "Butterfly",
+   "credit": null
+  },
+  {
+   "title": "Puppy love",
+   "credit": null
+  },
+  {
+   "title": "love the world",
+   "credit": null
+  },
+  {
+   "title": "edge",
+   "credit": null
+  },
+  {
+   "title": "Dream Fighter",
+   "credit": null
+  },
+  {
+   "title": "願い",
+   "credit": null
+  },
+  {
+   "title": "ワンルーム・ディスコ",
+   "credit": null
+  },
+  {
+   "title": "23:30",
+   "credit": null
+  },
+  {
+   "title": "NIGHT FLIGHT",
+   "credit": null
+  },
+  {
+   "title": "Take off",
+   "credit": null
+  },
+  {
+   "title": "Kiss and Music",
+   "credit": null
+  },
+  {
+   "title": "Zero Gravity",
+   "credit": null
+  },
+  {
+   "title": "I still love U",
+   "credit": null
+  },
+  {
+   "title": "The best thing",
+   "credit": null
+  },
+  {
+   "title": "Speed of Sound",
+   "credit": null
+  },
+  {
+   "title": "不自然なガール",
+   "credit": null
+  },
+  {
+   "title": "ナチュラルに恋して",
+   "credit": null
+  },
+  {
+   "title": "Lovefool",
+   "credit": null
+  },
+  {
+   "title": "VOICE",
+   "credit": null
+  },
+  {
+   "title": "575",
+   "credit": null
+  },
+  {
+   "title": "ねぇ",
+   "credit": null
+  },
+  {
+   "title": "FAKE IT",
+   "credit": null
+  },
+  {
+   "title": "レーザービーム",
+   "credit": null
+  },
+  {
+   "title": "微かなカオリ",
+   "credit": null
+  },
+  {
+   "title": "GLITTER",
+   "credit": null
+  },
+  {
+   "title": "スパイス",
+   "credit": null
+  },
+  {
+   "title": "The Opening",
+   "credit": null
+  },
+  {
+   "title": "MY COLOR",
+   "credit": null
+  },
+  {
+   "title": "時の針",
+   "credit": null
+  },
+  {
+   "title": "心のスポーツ",
+   "credit": null
+  },
+  {
+   "title": "Have a Stroll",
+   "credit": null
+  },
+  {
+   "title": "ポイント",
+   "credit": null
+  },
+  {
+   "title": "Spring of Life",
+   "credit": null
+  },
+  {
+   "title": "コミュニケーション",
+   "credit": null
+  },
+  {
+   "title": "Hurly Burly",
+   "credit": null
+  },
+  {
+   "title": "Spending all my time",
+   "credit": null
+  },
+  {
+   "title": "未来のミュージアム",
+   "credit": null
+  },
+  {
+   "title": "だいじょばない",
+   "credit": null
+  },
+  {
+   "title": "Magic of Love",
+   "credit": null
+  },
+  {
+   "title": "Handy Man",
+   "credit": null
+  },
+  {
+   "title": "Party Maker",
+   "credit": null
+  },
+  {
+   "title": "1mm",
+   "credit": null
+  },
+  {
+   "title": "Enter the Sphere",
+   "credit": null
+  },
+  {
+   "title": "Clockwork",
+   "credit": null
+  },
+  {
+   "title": "ふりかえるといるよ",
+   "credit": null
+  },
+  {
+   "title": "Sleeping Beauty",
+   "credit": null
+  },
+  {
+   "title": "Dream Land",
+   "credit": null
+  },
+  {
+   "title": "Sweet Refrain",
+   "credit": null
+  },
+  {
+   "title": "恋は前傾姿勢",
+   "credit": null
+  },
+  {
+   "title": "Hold Your Hand",
+   "credit": null
+  },
+  {
+   "title": "Cling Cling",
+   "credit": null
+  },
+  {
+   "title": "DISPLAY",
+   "credit": null
+  },
+  {
+   "title": "いじわるなハロー",
+   "credit": null
+  },
+  {
+   "title": "Relax In The City",
+   "credit": null
+  },
+  {
+   "title": "Pick Me Up",
+   "credit": null
+  },
+  {
+   "title": "透明人間",
+   "credit": null
+  },
+  {
+   "title": "STAR TRAIN",
+   "credit": null
+  },
+  {
+   "title": "TOKIMEKI LIGHTS",
+   "credit": null
+  },
+  {
+   "title": "イミテーションワールド",
+   "credit": null
+  },
+  {
+   "title": "FLASH",
+   "credit": null
+  },
+  {
+   "title": "Navigate",
+   "credit": null
+  },
+  {
+   "title": "Cosmic Explorer",
+   "credit": null
+  },
+  {
+   "title": "Miracle Worker",
+   "credit": null
+  },
+  {
+   "title": "Next Stage with YOU",
+   "credit": null
+  },
+  {
+   "title": "STORY",
+   "credit": null
+  },
+  {
+   "title": "Baby Face",
+   "credit": null
+  },
+  {
+   "title": "I Don't Understand You",
+   "credit": "OK Go × Perfume"
+  },
+  {
+   "title": "TOKYO GIRL",
+   "credit": null
+  },
+  {
+   "title": "宝石の雨",
+   "credit": null
+  },
+  {
+   "title": "If you wanna",
+   "credit": null
+  },
+  {
+   "title": "Everyday",
+   "credit": null
+  },
+  {
+   "title": "無限未来",
+   "credit": null
+  },
+  {
+   "title": "FUSION",
+   "credit": null
+  },
+  {
+   "title": "Start-Up",
+   "credit": null
+  },
+  {
+   "title": "Future Pop",
+   "credit": null
+  },
+  {
+   "title": "Tiny Baby",
+   "credit": null
+  },
+  {
+   "title": "Let Me Know",
+   "credit": null
+  },
+  {
+   "title": "超来輪",
+   "credit": null
+  },
+  {
+   "title": "天空",
+   "credit": null
+  },
+  {
+   "title": "ナナナナナイロ",
+   "credit": null
+  },
+  {
+   "title": "Challenger",
+   "credit": null
+  },
+  {
+   "title": "再生",
+   "credit": null
+  },
+  {
+   "title": "Time Warp",
+   "credit": null
+  },
+  {
+   "title": "ポリゴンウェイヴ",
+   "credit": null
+  },
+  {
+   "title": "∞ループ",
+   "credit": null
+  },
+  {
+   "title": "アンドロイド＆",
+   "credit": null
+  },
+  {
+   "title": "Flow",
+   "credit": null
+  },
+  {
+   "title": "マワルカガミ",
+   "credit": null
+  },
+  {
+   "title": "さよならプラスティックワールド",
+   "credit": null
+  },
+  {
+   "title": "Spinning World",
+   "credit": null
+  },
+  {
+   "title": "Plasma",
+   "credit": null
+  },
+  {
+   "title": "Drive’n The Rain",
+   "credit": null
+  },
+  {
+   "title": "ハテナビト",
+   "credit": null
+  },
+  {
+   "title": "Moon",
+   "credit": null
+  },
+  {
+   "title": "ラヴ・クラウド",
+   "credit": null
+  },
+  {
+   "title": "すみっコディスコ",
+   "credit": null
+  },
+  {
+   "title": "The Light",
+   "credit": null
+  },
+  {
+   "title": "Cosmic Treat",
+   "credit": null
+  },
+  {
+   "title": "Starlight Dreams",
+   "credit": null
+  },
+  {
+   "title": "IMA IMA IMA",
+   "credit": null
+  },
+  {
+   "title": "Morning Cruising",
+   "credit": null
+  },
+  {
+   "title": "タイムカプセル",
+   "credit": null
+  },
+  {
+   "title": "時空花",
+   "credit": null
+  },
+  {
+   "title": "メビウス",
+   "credit": null
+  },
+  {
+   "title": "Human Factory - 電造人間 -",
+   "credit": null
+  },
+  {
+   "title": "ネビュラロマンス",
+   "credit": null
+  },
+  {
+   "title": "巡ループ",
+   "credit": null
+  },
+  {
+   "title": "Cipher",
+   "credit": null
+  },
+  {
+   "title": "再起動世界",
+   "credit": null
+  },
+  {
+   "title": "ソーラ・ウィンド",
+   "credit": null
+  },
+  {
+   "title": "Virtual Fantasy",
+   "credit": null
+  },
+  {
+   "title": "Teenage Dreams",
+   "credit": null
+  },
+  {
+   "title": "exit",
+   "credit": null
+  },
+  {
+   "title": "ふめつのあなた",
+   "credit": null
+  },
+  {
+   "title": "コールドスリープ",
+   "credit": null
+  }
+ ],
+ "releases": [
+  {
+   "kind": "single",
+   "num": null,
+   "date": "2002-03-21",
+   "title": "OMAJINAI★ペロリ",
+   "credit": "ぱふゅ〜む",
+   "tracks": [
+    {
+     "label": "OMAJINAI★ペロリ",
+     "link": "OMAJINAI★ペロリ"
+    },
+    {
+     "label": "OMAJINAI★ペロリ(オリジナルカラオケ)",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": null,
+   "date": "2002-11-01",
+   "title": "彼氏募集中",
+   "credit": "ぱふゅ〜む",
+   "tracks": [
+    {
+     "label": "彼氏募集中",
+     "link": "彼氏募集中"
+    },
+    {
+     "label": "彼氏募集中(オリジナルカラオケ)",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": null,
+   "date": "2003-08-06",
+   "title": "スウィートドーナッツ",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "スウィートドーナッツ",
+     "link": "スウィートドーナッツ"
+    },
+    {
+     "label": "シークレットメッセージ",
+     "link": "シークレットメッセージ"
+    },
+    {
+     "label": "ジェニーはご機嫌ななめ",
+     "link": "ジェニーはご機嫌ななめ"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": null,
+   "date": "2004-03-17",
+   "title": "モノクロームエフェクト",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "モノクロームエフェクト",
+     "link": "モノクロームエフェクト"
+    },
+    {
+     "label": "エレベーター",
+     "link": "エレベーター"
+    },
+    {
+     "label": "おいしいレシピ",
+     "link": "おいしいレシピ"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": null,
+   "date": "2004-09-08",
+   "title": "ビタミンドロップ",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "ビタミンドロップ",
+     "link": "ビタミンドロップ"
+    },
+    {
+     "label": "引力",
+     "link": "引力"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 1,
+   "date": "2005-09-21",
+   "title": "リニアモーターガール",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "リニアモーターガール",
+     "link": "リニアモーターガール"
+    },
+    {
+     "label": "ファンデーション",
+     "link": "ファンデーション"
+    },
+    {
+     "label": "コンピューター ドライビング",
+     "link": "コンピューター ドライビング"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 2,
+   "date": "2006-01-11",
+   "title": "コンピューターシティ",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "コンピューターシティ",
+     "link": "コンピューターシティ"
+    },
+    {
+     "label": "Perfume",
+     "link": "Perfume"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 3,
+   "date": "2006-06-28",
+   "title": "エレクトロ・ワールド",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "エレクトロ・ワールド",
+     "link": "エレクトロ・ワールド"
+    },
+    {
+     "label": "wonder2",
+     "link": "wonder2"
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 1,
+   "date": "2006-08-02",
+   "title": "Perfume ～Complete Best～",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "パーフェクトスター・パーフェクトスタイル",
+     "link": "パーフェクトスター・パーフェクトスタイル"
+    },
+    {
+     "label": "リニアモーターガール",
+     "link": "リニアモーターガール"
+    },
+    {
+     "label": "コンピューターシティ",
+     "link": "コンピューターシティ"
+    },
+    {
+     "label": "エレクトロ・ワールド(Album Version)",
+     "link": "エレクトロ・ワールド"
+    },
+    {
+     "label": "引力",
+     "link": "引力"
+    },
+    {
+     "label": "モノクロームエフェクト",
+     "link": "モノクロームエフェクト"
+    },
+    {
+     "label": "ビタミンドロップ",
+     "link": "ビタミンドロップ"
+    },
+    {
+     "label": "スウィートドーナッツ",
+     "link": "スウィートドーナッツ"
+    },
+    {
+     "label": "ファンデーション",
+     "link": "ファンデーション"
+    },
+    {
+     "label": "コンピュータードライビング",
+     "link": "コンピューター ドライビング"
+    },
+    {
+     "label": "Ｐｅｒｆｕｍｅ",
+     "link": "Perfume"
+    },
+    {
+     "label": "ｗｏｎｄｅｒ２",
+     "link": "wonder2"
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2006-12-20",
+   "title": "Twinkle Snow Powdery Snow",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Twinkle Snow Powdery Snow",
+     "link": "Twinkle Snow Powdery Snow"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 4,
+   "date": "2007-02-14",
+   "title": "Fan Service sweet",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "チョコレイト・ディスコ",
+     "link": "チョコレイト・ディスコ"
+    },
+    {
+     "label": "Twinkle Snow Powdery Snow",
+     "link": "Twinkle Snow Powdery Snow"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 5,
+   "date": "2007-09-12",
+   "title": "ポリリズム",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "ポリリズム",
+     "link": "ポリリズム"
+    },
+    {
+     "label": "SEVENTH HEAVEN",
+     "link": "SEVENTH HEAVEN"
+    },
+    {
+     "label": "ポリリズム -extra short edit-",
+     "link": "ポリリズム"
+    },
+    {
+     "label": "ポリリズム〜Original Instrumental〜",
+     "link": null
+    },
+    {
+     "label": "SEVENTH HEAVEN 〜Original Instrumental〜",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 6,
+   "date": "2008-01-16",
+   "title": "Baby cruising Love / マカロニ",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Baby cruising Love",
+     "link": "Baby cruising Love"
+    },
+    {
+     "label": "マカロニ",
+     "link": "マカロニ"
+    },
+    {
+     "label": "Baby cruising Love 〜Original Instrumental〜",
+     "link": null
+    },
+    {
+     "label": "マカロニ 〜Original Instrumental〜",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "special",
+   "num": null,
+   "date": "2008-02-13",
+   "title": "Fan Service ～Prima Box～",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "スウィートドーナッツ",
+     "link": "スウィートドーナッツ",
+     "disc": "DISC1"
+    },
+    {
+     "label": "シークレットメッセージ",
+     "link": "シークレットメッセージ",
+     "disc": "DISC1"
+    },
+    {
+     "label": "ジェニーはご機嫌ななめ",
+     "link": "ジェニーはご機嫌ななめ",
+     "disc": "DISC1"
+    },
+    {
+     "label": "モノクロームエフェクト",
+     "link": "モノクロームエフェクト",
+     "disc": "DISC2"
+    },
+    {
+     "label": "エレベーター",
+     "link": "エレベーター",
+     "disc": "DISC2"
+    },
+    {
+     "label": "おいしいレシピ",
+     "link": "おいしいレシピ",
+     "disc": "DISC2"
+    },
+    {
+     "label": "ビタミンドロップ",
+     "link": "ビタミンドロップ",
+     "disc": "DISC3"
+    },
+    {
+     "label": "引力",
+     "link": "引力",
+     "disc": "DISC3"
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 2,
+   "date": "2008-04-16",
+   "title": "GAME",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "ポリリズム",
+     "link": "ポリリズム"
+    },
+    {
+     "label": "plastic smile",
+     "link": "plastic smile"
+    },
+    {
+     "label": "GAME",
+     "link": "GAME"
+    },
+    {
+     "label": "Baby cruising Love",
+     "link": "Baby cruising Love"
+    },
+    {
+     "label": "チョコレイト・ディスコ",
+     "link": "チョコレイト・ディスコ"
+    },
+    {
+     "label": "マカロニ",
+     "link": "マカロニ"
+    },
+    {
+     "label": "セラミックガール",
+     "link": "セラミックガール"
+    },
+    {
+     "label": "Take me Take me",
+     "link": "Take me Take me"
+    },
+    {
+     "label": "シークレットシークレット",
+     "link": "シークレットシークレット"
+    },
+    {
+     "label": "Butterfly",
+     "link": "Butterfly"
+    },
+    {
+     "label": "Twinkle Snow Powdery Snow",
+     "link": "Twinkle Snow Powdery Snow"
+    },
+    {
+     "label": "Puppy love",
+     "link": "Puppy love"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 7,
+   "date": "2008-07-09",
+   "title": "love the world",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "love the world",
+     "link": "love the world"
+    },
+    {
+     "label": "edge",
+     "link": "edge"
+    },
+    {
+     "label": "love the world -Original Instrumental-",
+     "link": null
+    },
+    {
+     "label": "edge -extended mix-",
+     "link": "edge"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 8,
+   "date": "2008-11-19",
+   "title": "Dream Fighter",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Dream Fighter",
+     "link": "Dream Fighter"
+    },
+    {
+     "label": "願い",
+     "link": "願い"
+    },
+    {
+     "label": "Dream Fighter -Original Instrumental-",
+     "link": null
+    },
+    {
+     "label": "願い -Original Instrumental-",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 9,
+   "date": "2009-03-25",
+   "title": "ワンルーム・ディスコ",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "ワンルーム・ディスコ",
+     "link": "ワンルーム・ディスコ"
+    },
+    {
+     "label": "23:30",
+     "link": "23:30"
+    },
+    {
+     "label": "ワンルーム・ディスコ -Original Instrumental-",
+     "link": null
+    },
+    {
+     "label": "23:30 -Original Instrumental-",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2009-04-29",
+   "title": "NIGHT FLIGHT",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "NIGHT FLIGHT",
+     "link": "NIGHT FLIGHT"
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 3,
+   "date": "2009-07-08",
+   "title": "⊿",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Take off",
+     "link": "Take off"
+    },
+    {
+     "label": "love the world",
+     "link": "love the world"
+    },
+    {
+     "label": "Dream Fighter",
+     "link": "Dream Fighter"
+    },
+    {
+     "label": "edge (⊿-mix)",
+     "link": "edge"
+    },
+    {
+     "label": "NIGHT FLIGHT",
+     "link": "NIGHT FLIGHT"
+    },
+    {
+     "label": "Kiss and Music",
+     "link": "Kiss and Music"
+    },
+    {
+     "label": "Zero Gravity",
+     "link": "Zero Gravity"
+    },
+    {
+     "label": "I still love U",
+     "link": "I still love U"
+    },
+    {
+     "label": "The best thing",
+     "link": "The best thing"
+    },
+    {
+     "label": "Speed of Sound",
+     "link": "Speed of Sound"
+    },
+    {
+     "label": "ワンルーム・ディスコ",
+     "link": "ワンルーム・ディスコ"
+    },
+    {
+     "label": "願い (Album-mix)",
+     "link": "願い"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 10,
+   "date": "2010-04-14",
+   "title": "不自然なガール / ナチュラルに恋して",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "不自然なガール",
+     "link": "不自然なガール"
+    },
+    {
+     "label": "ナチュラルに恋して",
+     "link": "ナチュラルに恋して"
+    },
+    {
+     "label": "不自然なガール -Original Instrumental-",
+     "link": null
+    },
+    {
+     "label": "ナチュラルに恋して -Original Instrumental-",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2010-06-08",
+   "title": "Lovefool",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Lovefool",
+     "link": "Lovefool"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 11,
+   "date": "2010-08-11",
+   "title": "VOICE",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "VOICE",
+     "link": "VOICE"
+    },
+    {
+     "label": "575",
+     "link": "575"
+    },
+    {
+     "label": "VOICE -Original Instrumental-",
+     "link": null
+    },
+    {
+     "label": "575 -Original Instrumental-",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 12,
+   "date": "2010-11-10",
+   "title": "ねぇ",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "ねぇ",
+     "link": "ねぇ"
+    },
+    {
+     "label": "FAKE IT",
+     "link": "FAKE IT"
+    },
+    {
+     "label": "ねぇ -Original Instrumental-",
+     "link": null
+    },
+    {
+     "label": "FAKE IT -Original Instrumental-",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 13,
+   "date": "2011-05-18",
+   "title": "レーザービーム / 微かなカオリ",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "レーザービーム",
+     "link": "レーザービーム"
+    },
+    {
+     "label": "微かなカオリ",
+     "link": "微かなカオリ"
+    },
+    {
+     "label": "レーザービーム -Original Instrumental-",
+     "link": null
+    },
+    {
+     "label": "微かなカオリ -Original Instrumental-",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2011-07-13",
+   "title": "GLITTER",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "GLITTER",
+     "link": "GLITTER"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 14,
+   "date": "2011-11-02",
+   "title": "スパイス",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "スパイス",
+     "link": "スパイス"
+    },
+    {
+     "label": "GLITTER",
+     "link": "GLITTER"
+    },
+    {
+     "label": "スパイス -Original Instrumental-",
+     "link": null
+    },
+    {
+     "label": "GLITTER -Original Instrumental-",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 4,
+   "date": "2011-11-30",
+   "title": "JPN",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "The Opening",
+     "link": "The Opening"
+    },
+    {
+     "label": "レーザービーム(Album-mix)",
+     "link": "レーザービーム"
+    },
+    {
+     "label": "GLITTER(Album-mix)",
+     "link": "GLITTER"
+    },
+    {
+     "label": "ナチュラルに恋して",
+     "link": "ナチュラルに恋して"
+    },
+    {
+     "label": "MY COLOR",
+     "link": "MY COLOR"
+    },
+    {
+     "label": "時の針",
+     "link": "時の針"
+    },
+    {
+     "label": "ねぇ",
+     "link": "ねぇ"
+    },
+    {
+     "label": "微かなカオリ",
+     "link": "微かなカオリ"
+    },
+    {
+     "label": "575",
+     "link": "575"
+    },
+    {
+     "label": "VOICE",
+     "link": "VOICE"
+    },
+    {
+     "label": "心のスポーツ",
+     "link": "心のスポーツ"
+    },
+    {
+     "label": "Have a Stroll",
+     "link": "Have a Stroll"
+    },
+    {
+     "label": "不自然なガール",
+     "link": "不自然なガール"
+    },
+    {
+     "label": "スパイス",
+     "link": "スパイス"
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2012-03-14",
+   "title": "ポイント",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "ポイント",
+     "link": "ポイント"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 15,
+   "date": "2012-04-11",
+   "title": "Spring of Life",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Spring of Life",
+     "link": "Spring of Life"
+    },
+    {
+     "label": "コミュニケーション",
+     "link": "コミュニケーション"
+    },
+    {
+     "label": "Spring of Life -Original Instrumental-",
+     "link": null
+    },
+    {
+     "label": "コミュニケーション -Original Instrumental-",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2012-06-06",
+   "title": "Hurly Burly",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Hurly Burly",
+     "link": "Hurly Burly"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 16,
+   "date": "2012-08-15",
+   "title": "Spending all my time",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Spending all my time",
+     "link": "Spending all my time"
+    },
+    {
+     "label": "ポイント",
+     "link": "ポイント"
+    },
+    {
+     "label": "Hurly Burly",
+     "link": "Hurly Burly"
+    },
+    {
+     "label": "Spending all my time -Original Instrumental-",
+     "link": null
+    },
+    {
+     "label": "ポイント -Original Instrumental-",
+     "link": null
+    },
+    {
+     "label": "Hurly Burly -Original Instrumental-",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "compilation",
+   "num": null,
+   "date": "2012-09-12",
+   "title": "Perfume Global Compilation LOVE THE WORLD",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "ポリリズム",
+     "link": "ポリリズム"
+    },
+    {
+     "label": "edge (⊿-mix)",
+     "link": "edge"
+    },
+    {
+     "label": "love the world",
+     "link": "love the world"
+    },
+    {
+     "label": "エレクトロ・ワールド",
+     "link": "エレクトロ・ワールド"
+    },
+    {
+     "label": "チョコレイト・ディスコ (2012-Mix)",
+     "link": "チョコレイト・ディスコ"
+    },
+    {
+     "label": "SEVENTH HEAVEN",
+     "link": "SEVENTH HEAVEN"
+    },
+    {
+     "label": "GAME",
+     "link": "GAME"
+    },
+    {
+     "label": "シークレットシークレット",
+     "link": "シークレットシークレット"
+    },
+    {
+     "label": "NIGHT FLIGHT",
+     "link": "NIGHT FLIGHT"
+    },
+    {
+     "label": "Baby cruising Love",
+     "link": "Baby cruising Love"
+    },
+    {
+     "label": "Butterfly",
+     "link": "Butterfly"
+    },
+    {
+     "label": "FAKE IT",
+     "link": "FAKE IT"
+    },
+    {
+     "label": "レーザービーム",
+     "link": "レーザービーム"
+    },
+    {
+     "label": "GLITTER",
+     "link": "GLITTER"
+    },
+    {
+     "label": "MY COLOR (LTW-Mix)",
+     "link": "MY COLOR"
+    },
+    {
+     "label": "Dream Fighter",
+     "link": "Dream Fighter"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 17,
+   "date": "2013-02-27",
+   "title": "未来のミュージアム",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "未来のミュージアム",
+     "link": "未来のミュージアム"
+    },
+    {
+     "label": "だいじょばない",
+     "link": "だいじょばない"
+    },
+    {
+     "label": "未来のミュージアム -Original Instrumental-",
+     "link": null
+    },
+    {
+     "label": "だいじょばない -Original Instrumental-",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 18,
+   "date": "2013-05-22",
+   "title": "Magic of Love",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Magic of Love",
+     "link": "Magic of Love"
+    },
+    {
+     "label": "Handy Man",
+     "link": "Handy Man"
+    },
+    {
+     "label": "Magic of Love -Original Instrumental-",
+     "link": null
+    },
+    {
+     "label": "Handy Man -Original Instrumental-",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2013-08-06",
+   "title": "Party Maker",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Party Maker",
+     "link": "Party Maker"
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2013-09-04",
+   "title": "1mm",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "1mm",
+     "link": "1mm"
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 5,
+   "date": "2013-10-02",
+   "title": "LEVEL3",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Enter the Sphere",
+     "link": "Enter the Sphere"
+    },
+    {
+     "label": "Spring of Life (Album-mix)",
+     "link": "Spring of Life"
+    },
+    {
+     "label": "Magic of Love (Album-mix)",
+     "link": "Magic of Love"
+    },
+    {
+     "label": "Clockwork",
+     "link": "Clockwork"
+    },
+    {
+     "label": "1mm",
+     "link": "1mm"
+    },
+    {
+     "label": "未来のミュージアム",
+     "link": "未来のミュージアム"
+    },
+    {
+     "label": "Party Maker",
+     "link": "Party Maker"
+    },
+    {
+     "label": "ふりかえるといるよ",
+     "link": "ふりかえるといるよ"
+    },
+    {
+     "label": "ポイント",
+     "link": "ポイント"
+    },
+    {
+     "label": "だいじょばない",
+     "link": "だいじょばない"
+    },
+    {
+     "label": "Handy Man",
+     "link": "Handy Man"
+    },
+    {
+     "label": "Sleeping Beauty",
+     "link": "Sleeping Beauty"
+    },
+    {
+     "label": "Spending all my time (Album-mix)",
+     "link": "Spending all my time"
+    },
+    {
+     "label": "Dream Land",
+     "link": "Dream Land"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 19,
+   "date": "2013-11-27",
+   "title": "Sweet Refrain",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Sweet Refrain",
+     "link": "Sweet Refrain"
+    },
+    {
+     "label": "恋は前傾姿勢",
+     "link": "恋は前傾姿勢"
+    },
+    {
+     "label": "Sweet Refrain -Original Instrumental-",
+     "link": null
+    },
+    {
+     "label": "恋は前傾姿勢 -Original Instrumental-",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2014-05-21",
+   "title": "Hold Your Hand",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Hold Your Hand",
+     "link": "Hold Your Hand"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 20,
+   "date": "2014-07-16",
+   "title": "Cling Cling",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Cling Cling",
+     "link": "Cling Cling"
+    },
+    {
+     "label": "Hold Your Hand",
+     "link": "Hold Your Hand"
+    },
+    {
+     "label": "DISPLAY",
+     "link": "DISPLAY"
+    },
+    {
+     "label": "いじわるなハロー",
+     "link": "いじわるなハロー"
+    },
+    {
+     "label": "Cling Cling - Original Instrumental -",
+     "link": null
+    },
+    {
+     "label": "Hold Your Hand - Original Instrumental -",
+     "link": null
+    },
+    {
+     "label": "DISPLAY - Original Instrumental -",
+     "link": null
+    },
+    {
+     "label": "いじわるなハロー - Original Instrumental -",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "special",
+   "num": null,
+   "date": "2014-10-27",
+   "title": "LEVEL3 Bonus Edition",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Enter the Sphere",
+     "link": "Enter the Sphere"
+    },
+    {
+     "label": "Spring of Life (Album-mix)",
+     "link": "Spring of Life"
+    },
+    {
+     "label": "Magic of Love (Album-mix)",
+     "link": "Magic of Love"
+    },
+    {
+     "label": "Clockwork",
+     "link": "Clockwork"
+    },
+    {
+     "label": "1mm",
+     "link": "1mm"
+    },
+    {
+     "label": "未来のミュージアム",
+     "link": "未来のミュージアム"
+    },
+    {
+     "label": "Party Maker",
+     "link": "Party Maker"
+    },
+    {
+     "label": "ふりかえるといるよ",
+     "link": "ふりかえるといるよ"
+    },
+    {
+     "label": "ポイント",
+     "link": "ポイント"
+    },
+    {
+     "label": "だいじょばない",
+     "link": "だいじょばない"
+    },
+    {
+     "label": "Handy Man",
+     "link": "Handy Man"
+    },
+    {
+     "label": "Sleeping Beauty",
+     "link": "Sleeping Beauty"
+    },
+    {
+     "label": "Spending all my time (Album-mix)",
+     "link": "Spending all my time"
+    },
+    {
+     "label": "Dream Land",
+     "link": "Dream Land"
+    },
+    {
+     "label": "Spending all my time (Radio Mix)",
+     "link": null
+    },
+    {
+     "label": "Spending all my time (DV&LM remix)",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 21,
+   "date": "2015-04-29",
+   "title": "Relax In The City / Pick Me Up",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Relax In The City",
+     "link": "Relax In The City"
+    },
+    {
+     "label": "Pick Me Up",
+     "link": "Pick Me Up"
+    },
+    {
+     "label": "透明人間",
+     "link": "透明人間"
+    },
+    {
+     "label": "Relax In The City - Original Instrumental -",
+     "link": null
+    },
+    {
+     "label": "Pick Me Up - Original Instrumental -",
+     "link": null
+    },
+    {
+     "label": "透明人間 - Original Instrumental -",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 22,
+   "date": "2015-10-28",
+   "title": "STAR TRAIN",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "STAR TRAIN",
+     "link": "STAR TRAIN"
+    },
+    {
+     "label": "TOKIMEKI LIGHTS",
+     "link": "TOKIMEKI LIGHTS"
+    },
+    {
+     "label": "イミテーションワールド",
+     "link": "イミテーションワールド"
+    },
+    {
+     "label": "STAR TRAIN -Original Instrumental-",
+     "link": null
+    },
+    {
+     "label": "TOKIMEKI LIGHTS -Original Instrumental-",
+     "link": null
+    },
+    {
+     "label": "イミテーションワールド -Original Instrumental-",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2016-03-16",
+   "title": "FLASH",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "FLASH",
+     "link": "FLASH"
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 6,
+   "date": "2016-04-06",
+   "title": "COSMIC EXPLORER",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Navigate",
+     "link": "Navigate"
+    },
+    {
+     "label": "Cosmic Explorer",
+     "link": "Cosmic Explorer"
+    },
+    {
+     "label": "Miracle Worker",
+     "link": "Miracle Worker"
+    },
+    {
+     "label": "Next Stage with YOU",
+     "link": "Next Stage with YOU"
+    },
+    {
+     "label": "STORY",
+     "link": "STORY"
+    },
+    {
+     "label": "FLASH (Album-mix)",
+     "link": "FLASH"
+    },
+    {
+     "label": "Sweet Refrain (Album-mix)",
+     "link": "Sweet Refrain"
+    },
+    {
+     "label": "Baby Face",
+     "link": "Baby Face"
+    },
+    {
+     "label": "TOKIMEKI LIGHTS (Album-mix)",
+     "link": "TOKIMEKI LIGHTS"
+    },
+    {
+     "label": "STAR TRAIN (Album-mix)",
+     "link": "STAR TRAIN"
+    },
+    {
+     "label": "Relax In The City",
+     "link": "Relax In The City"
+    },
+    {
+     "label": "Pick Me Up",
+     "link": "Pick Me Up"
+    },
+    {
+     "label": "Cling Cling (Album-mix)",
+     "link": "Cling Cling"
+    },
+    {
+     "label": "Hold Your Hand",
+     "link": "Hold Your Hand"
+    },
+    {
+     "label": "FLASH",
+     "link": "FLASH",
+     "disc": "初回限定盤特典 CD"
+    },
+    {
+     "label": "FLASH -Original Instrumental-",
+     "link": null,
+     "disc": "初回限定盤特典 CD"
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2016-07-20",
+   "title": "I Don't Understand You",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "I Don't Understand You",
+     "link": "I Don't Understand You"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 23,
+   "date": "2017-02-15",
+   "title": "TOKYO GIRL",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "TOKYO GIRL",
+     "link": "TOKYO GIRL"
+    },
+    {
+     "label": "宝石の雨",
+     "link": "宝石の雨"
+    },
+    {
+     "label": "TOKYO GIRL -Original Instrumental-",
+     "link": null
+    },
+    {
+     "label": "宝石の雨 -Original Instrumental-",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 24,
+   "date": "2017-08-30",
+   "title": "If you wanna",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "If you wanna",
+     "link": "If you wanna"
+    },
+    {
+     "label": "Everyday",
+     "link": "Everyday"
+    },
+    {
+     "label": "If you wanna - Original Instrumental -",
+     "link": null
+    },
+    {
+     "label": "Everyday - Original Instrumental -",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 25,
+   "date": "2018-03-14",
+   "title": "無限未来",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "無限未来",
+     "link": "無限未来"
+    },
+    {
+     "label": "FUSION",
+     "link": "FUSION"
+    },
+    {
+     "label": "無限未来 - Original Instrumental -",
+     "link": null
+    },
+    {
+     "label": "FLASH",
+     "link": "FLASH"
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 7,
+   "date": "2018-08-15",
+   "title": "Future Pop",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Start-Up",
+     "link": "Start-Up"
+    },
+    {
+     "label": "Future Pop",
+     "link": "Future Pop"
+    },
+    {
+     "label": "If you wanna",
+     "link": "If you wanna"
+    },
+    {
+     "label": "TOKYO GIRL",
+     "link": "TOKYO GIRL"
+    },
+    {
+     "label": "FUSION",
+     "link": "FUSION"
+    },
+    {
+     "label": "Tiny Baby",
+     "link": "Tiny Baby"
+    },
+    {
+     "label": "Let Me Know",
+     "link": "Let Me Know"
+    },
+    {
+     "label": "超来輪",
+     "link": "超来輪"
+    },
+    {
+     "label": "無限未来",
+     "link": "無限未来"
+    },
+    {
+     "label": "宝石の雨",
+     "link": "宝石の雨"
+    },
+    {
+     "label": "天空",
+     "link": "天空"
+    },
+    {
+     "label": "Everyday",
+     "link": "Everyday"
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2019-07-05",
+   "title": "ナナナナナイロ",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "ナナナナナイロ",
+     "link": "ナナナナナイロ"
+    }
+   ]
+  },
+  {
+   "kind": "best",
+   "num": null,
+   "date": "2019-09-18",
+   "title": "Perfume The Best P Cubed",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Challenger",
+     "link": "Challenger",
+     "disc": "CD-1"
+    },
+    {
+     "label": "リニアモーターガール",
+     "link": "リニアモーターガール",
+     "disc": "CD-1"
+    },
+    {
+     "label": "コンピューターシティ",
+     "link": "コンピューターシティ",
+     "disc": "CD-1"
+    },
+    {
+     "label": "エレクトロ・ワールド",
+     "link": "エレクトロ・ワールド",
+     "disc": "CD-1"
+    },
+    {
+     "label": "パーフェクトスター・パーフェクトスタイル",
+     "link": "パーフェクトスター・パーフェクトスタイル",
+     "disc": "CD-1"
+    },
+    {
+     "label": "チョコレイト・ディスコ",
+     "link": "チョコレイト・ディスコ",
+     "disc": "CD-1"
+    },
+    {
+     "label": "ポリリズム",
+     "link": "ポリリズム",
+     "disc": "CD-1"
+    },
+    {
+     "label": "SEVENTH HEAVEN",
+     "link": "SEVENTH HEAVEN",
+     "disc": "CD-1"
+    },
+    {
+     "label": "Baby cruising Love",
+     "link": "Baby cruising Love",
+     "disc": "CD-1"
+    },
+    {
+     "label": "マカロニ",
+     "link": "マカロニ",
+     "disc": "CD-1"
+    },
+    {
+     "label": "GAME",
+     "link": "GAME",
+     "disc": "CD-1"
+    },
+    {
+     "label": "シークレットシークレット",
+     "link": "シークレットシークレット",
+     "disc": "CD-1"
+    },
+    {
+     "label": "love the world",
+     "link": "love the world",
+     "disc": "CD-1"
+    },
+    {
+     "label": "edge (⊿-mix)",
+     "link": "edge",
+     "disc": "CD-1"
+    },
+    {
+     "label": "Dream Fighter",
+     "link": "Dream Fighter",
+     "disc": "CD-1"
+    },
+    {
+     "label": "ワンルーム・ディスコ",
+     "link": "ワンルーム・ディスコ",
+     "disc": "CD-1"
+    },
+    {
+     "label": "NIGHT FLIGHT",
+     "link": "NIGHT FLIGHT",
+     "disc": "CD-2"
+    },
+    {
+     "label": "I still love U",
+     "link": "I still love U",
+     "disc": "CD-2"
+    },
+    {
+     "label": "不自然なガール",
+     "link": "不自然なガール",
+     "disc": "CD-2"
+    },
+    {
+     "label": "ナチュラルに恋して",
+     "link": "ナチュラルに恋して",
+     "disc": "CD-2"
+    },
+    {
+     "label": "VOICE",
+     "link": "VOICE",
+     "disc": "CD-2"
+    },
+    {
+     "label": "ねぇ",
+     "link": "ねぇ",
+     "disc": "CD-2"
+    },
+    {
+     "label": "FAKE IT",
+     "link": "FAKE IT",
+     "disc": "CD-2"
+    },
+    {
+     "label": "レーザービーム",
+     "link": "レーザービーム",
+     "disc": "CD-2"
+    },
+    {
+     "label": "微かなカオリ",
+     "link": "微かなカオリ",
+     "disc": "CD-2"
+    },
+    {
+     "label": "スパイス",
+     "link": "スパイス",
+     "disc": "CD-2"
+    },
+    {
+     "label": "MY COLOR",
+     "link": "MY COLOR",
+     "disc": "CD-2"
+    },
+    {
+     "label": "Spring of Life",
+     "link": "Spring of Life",
+     "disc": "CD-2"
+    },
+    {
+     "label": "Spending all my time",
+     "link": "Spending all my time",
+     "disc": "CD-2"
+    },
+    {
+     "label": "Hurly Burly",
+     "link": "Hurly Burly",
+     "disc": "CD-2"
+    },
+    {
+     "label": "未来のミュージアム",
+     "link": "未来のミュージアム",
+     "disc": "CD-2"
+    },
+    {
+     "label": "だいじょばない",
+     "link": "だいじょばない",
+     "disc": "CD-2"
+    },
+    {
+     "label": "Magic of Love (Album-mix)",
+     "link": "Magic of Love",
+     "disc": "CD-2"
+    },
+    {
+     "label": "1mm",
+     "link": "1mm",
+     "disc": "CD-2"
+    },
+    {
+     "label": "Party Maker",
+     "link": "Party Maker",
+     "disc": "CD-3"
+    },
+    {
+     "label": "Sweet Refrain",
+     "link": "Sweet Refrain",
+     "disc": "CD-3"
+    },
+    {
+     "label": "Cling Cling",
+     "link": "Cling Cling",
+     "disc": "CD-3"
+    },
+    {
+     "label": "Hold Your Hand",
+     "link": "Hold Your Hand",
+     "disc": "CD-3"
+    },
+    {
+     "label": "DISPLAY",
+     "link": "DISPLAY",
+     "disc": "CD-3"
+    },
+    {
+     "label": "Relax In The City",
+     "link": "Relax In The City",
+     "disc": "CD-3"
+    },
+    {
+     "label": "Pick Me Up",
+     "link": "Pick Me Up",
+     "disc": "CD-3"
+    },
+    {
+     "label": "STAR TRAIN",
+     "link": "STAR TRAIN",
+     "disc": "CD-3"
+    },
+    {
+     "label": "STORY",
+     "link": "STORY",
+     "disc": "CD-3"
+    },
+    {
+     "label": "FLASH",
+     "link": "FLASH",
+     "disc": "CD-3"
+    },
+    {
+     "label": "TOKYO GIRL",
+     "link": "TOKYO GIRL",
+     "disc": "CD-3"
+    },
+    {
+     "label": "If you wanna",
+     "link": "If you wanna",
+     "disc": "CD-3"
+    },
+    {
+     "label": "Everyday",
+     "link": "Everyday",
+     "disc": "CD-3"
+    },
+    {
+     "label": "無限未来",
+     "link": "無限未来",
+     "disc": "CD-3"
+    },
+    {
+     "label": "FUSION",
+     "link": "FUSION",
+     "disc": "CD-3"
+    },
+    {
+     "label": "Future Pop",
+     "link": "Future Pop",
+     "disc": "CD-3"
+    },
+    {
+     "label": "Let Me Know",
+     "link": "Let Me Know",
+     "disc": "CD-3"
+    },
+    {
+     "label": "ナナナナナイロ",
+     "link": "ナナナナナイロ",
+     "disc": "CD-3"
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2019-11-28",
+   "title": "再生",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "再生",
+     "link": "再生"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 26,
+   "date": "2020-09-16",
+   "title": "Time Warp",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Time Warp",
+     "link": "Time Warp"
+    },
+    {
+     "label": "再生",
+     "link": "再生"
+    },
+    {
+     "label": "Time Warp -Original Instrumental-",
+     "link": null
+    },
+    {
+     "label": "再生 -Original Instrumental-",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2021-07-02",
+   "title": "ポリゴンウェイヴ",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "ポリゴンウェイヴ",
+     "link": "ポリゴンウェイヴ"
+    }
+   ]
+  },
+  {
+   "kind": "ep",
+   "num": null,
+   "date": "2021-09-22",
+   "title": "ポリゴンウェイヴEP",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "ポリゴンウェイヴ (Original Mix)",
+     "link": "ポリゴンウェイヴ"
+    },
+    {
+     "label": "ポリゴンウェイヴ",
+     "link": "ポリゴンウェイヴ"
+    },
+    {
+     "label": "ポリゴンウェイヴ (Remix)",
+     "link": null
+    },
+    {
+     "label": "ポリゴンウェイヴ (Instrumental)",
+     "link": null
+    },
+    {
+     "label": "∞ループ",
+     "link": "∞ループ"
+    },
+    {
+     "label": "アンドロイド＆",
+     "link": "アンドロイド＆"
+    },
+    {
+     "label": "システムリブート(Perfume LIVE 2021 [polygon wave] intro)",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 27,
+   "date": "2022-03-09",
+   "title": "Flow",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Flow",
+     "link": "Flow"
+    },
+    {
+     "label": "マワルカガミ(polygon wave live ver.)",
+     "link": "マワルカガミ"
+    },
+    {
+     "label": "Flow (Instrumental)",
+     "link": null
+    },
+    {
+     "label": "マワルカガミ(polygon wave live ver./ Instrumental)",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2022-04-29",
+   "title": "さよならプラスティックワールド",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "さよならプラスティックワールド",
+     "link": "さよならプラスティックワールド"
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2022-07-15",
+   "title": "Spinning World",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Spinning World",
+     "link": "Spinning World"
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 8,
+   "date": "2022-07-27",
+   "title": "PLASMA",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Plasma",
+     "link": "Plasma"
+    },
+    {
+     "label": "Time Warp (v1.1)",
+     "link": "Time Warp"
+    },
+    {
+     "label": "ポリゴンウェイヴ (Original Mix)",
+     "link": "ポリゴンウェイヴ"
+    },
+    {
+     "label": "再生",
+     "link": "再生"
+    },
+    {
+     "label": "Spinning World",
+     "link": "Spinning World"
+    },
+    {
+     "label": "マワルカガミ",
+     "link": "マワルカガミ"
+    },
+    {
+     "label": "Flow",
+     "link": "Flow"
+    },
+    {
+     "label": "∞ループ",
+     "link": "∞ループ"
+    },
+    {
+     "label": "Drive’n The Rain",
+     "link": "Drive’n The Rain"
+    },
+    {
+     "label": "ハテナビト",
+     "link": "ハテナビト"
+    },
+    {
+     "label": "アンドロイド＆",
+     "link": "アンドロイド＆"
+    },
+    {
+     "label": "さよならプラスティックワールド",
+     "link": "さよならプラスティックワールド"
+    }
+   ]
+  },
+  {
+   "kind": "single",
+   "num": 28,
+   "date": "2023-09-06",
+   "title": "Moon",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Moon",
+     "link": "Moon"
+    },
+    {
+     "label": "ラヴ・クラウド",
+     "link": "ラヴ・クラウド"
+    },
+    {
+     "label": "Moon -Original Instrumental-",
+     "link": null
+    },
+    {
+     "label": "ラヴ・クラウド-Original Instrumental-",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2023-11-03",
+   "title": "すみっコディスコ",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "すみっコディスコ",
+     "link": "すみっコディスコ"
+    },
+    {
+     "label": "すみっコディスコ (Movie Ver.)",
+     "link": "すみっコディスコ"
+    },
+    {
+     "label": "すみっコディスコ (Original Instrumental)",
+     "link": null
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2024-05-24",
+   "title": "The Light",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "The Light",
+     "link": "The Light"
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 9,
+   "date": "2024-10-30",
+   "title": "ネビュラロマンス 前篇",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "The Light",
+     "link": "The Light"
+    },
+    {
+     "label": "ラヴ・クラウド",
+     "link": "ラヴ・クラウド"
+    },
+    {
+     "label": "Cosmic Treat",
+     "link": "Cosmic Treat"
+    },
+    {
+     "label": "Starlight Dreams",
+     "link": "Starlight Dreams"
+    },
+    {
+     "label": "IMA IMA IMA",
+     "link": "IMA IMA IMA"
+    },
+    {
+     "label": "すみっコディスコ",
+     "link": "すみっコディスコ"
+    },
+    {
+     "label": "Morning Cruising",
+     "link": "Morning Cruising"
+    },
+    {
+     "label": "タイムカプセル",
+     "link": "タイムカプセル"
+    },
+    {
+     "label": "時空花",
+     "link": "時空花"
+    },
+    {
+     "label": "メビウス",
+     "link": "メビウス"
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2025-02-07",
+   "title": "Human Factory - 電造人間 -",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Human Factory - 電造人間 -",
+     "link": "Human Factory - 電造人間 -"
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2025-04-02",
+   "title": "ネビュラロマンス",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "ネビュラロマンス",
+     "link": "ネビュラロマンス"
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2025-07-10",
+   "title": "巡ループ",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "巡ループ",
+     "link": "巡ループ"
+    }
+   ]
+  },
+  {
+   "kind": "album",
+   "num": 10,
+   "date": "2025-09-17",
+   "title": "ネビュラロマンス 後篇",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Cipher",
+     "link": "Cipher"
+    },
+    {
+     "label": "再起動世界",
+     "link": "再起動世界"
+    },
+    {
+     "label": "ネビュラロマンス",
+     "link": "ネビュラロマンス"
+    },
+    {
+     "label": "ソーラ・ウィンド",
+     "link": "ソーラ・ウィンド"
+    },
+    {
+     "label": "Virtual Fantasy",
+     "link": "Virtual Fantasy"
+    },
+    {
+     "label": "Teenage Dreams",
+     "link": "Teenage Dreams"
+    },
+    {
+     "label": "Human Factory - 電造人間 -",
+     "link": "Human Factory - 電造人間 -"
+    },
+    {
+     "label": "Moon",
+     "link": "Moon"
+    },
+    {
+     "label": "exit",
+     "link": "exit"
+    },
+    {
+     "label": "巡ループ",
+     "link": "巡ループ"
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2025-12-27",
+   "title": "ふめつのあなた",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "ふめつのあなた",
+     "link": "ふめつのあなた"
+    }
+   ]
+  },
+  {
+   "kind": "digital_single",
+   "num": null,
+   "date": "2026-05-15",
+   "title": "コールドスリープ",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "コールドスリープ",
+     "link": "コールドスリープ"
+    }
+   ]
+  },
+  {
+   "kind": "compilation",
+   "num": null,
+   "date": "2026-12-23",
+   "title": "Favorites (Selected by Perfume) / コールドスリープ",
+   "credit": null,
+   "tracks": [
+    {
+     "label": "Magic of Love (Level3-mix)",
+     "link": "Magic of Love",
+     "disc": "Side A"
+    },
+    {
+     "label": "Zero Gravity",
+     "link": "Zero Gravity",
+     "disc": "Side A"
+    },
+    {
+     "label": "宝石の雨",
+     "link": "宝石の雨",
+     "disc": "Side A"
+    },
+    {
+     "label": "未来のミュージアム",
+     "link": "未来のミュージアム",
+     "disc": "Side A"
+    },
+    {
+     "label": "I still love U",
+     "link": "I still love U",
+     "disc": "Side A"
+    },
+    {
+     "label": "Baby Face",
+     "link": "Baby Face",
+     "disc": "Side A"
+    },
+    {
+     "label": "ナチュラルに恋して",
+     "link": "ナチュラルに恋して",
+     "disc": "Side A"
+    },
+    {
+     "label": "微かなカオリ",
+     "link": "微かなカオリ",
+     "disc": "Side A"
+    },
+    {
+     "label": "Have a Stroll",
+     "link": "Have a Stroll",
+     "disc": "Side A"
+    },
+    {
+     "label": "恋は前傾姿勢",
+     "link": "恋は前傾姿勢",
+     "disc": "Side A"
+    },
+    {
+     "label": "Baby cruising Love (2026 Remix)",
+     "link": null,
+     "disc": "Side A"
+    },
+    {
+     "label": "マカロニ",
+     "link": "マカロニ",
+     "disc": "Side A"
+    },
+    {
+     "label": "ふりかえるといるよ",
+     "link": "ふりかえるといるよ",
+     "disc": "Side A"
+    },
+    {
+     "label": "STAR TRAIN",
+     "link": "STAR TRAIN",
+     "disc": "Side K"
+    },
+    {
+     "label": "SEVENTH HEAVEN",
+     "link": "SEVENTH HEAVEN",
+     "disc": "Side K"
+    },
+    {
+     "label": "願い (album mix)",
+     "link": "願い",
+     "disc": "Side K"
+    },
+    {
+     "label": "575",
+     "link": "575",
+     "disc": "Side K"
+    },
+    {
+     "label": "wonder2",
+     "link": "wonder2",
+     "disc": "Side K"
+    },
+    {
+     "label": "ナナナナナイロ",
+     "link": "ナナナナナイロ",
+     "disc": "Side K"
+    },
+    {
+     "label": "Drive’n The Rain",
+     "link": "Drive’n The Rain",
+     "disc": "Side K"
+    },
+    {
+     "label": "23:30",
+     "link": "23:30",
+     "disc": "Side K"
+    },
+    {
+     "label": "∞ループ",
+     "link": "∞ループ",
+     "disc": "Side K"
+    },
+    {
+     "label": "Virtual Fantasy",
+     "link": "Virtual Fantasy",
+     "disc": "Side K"
+    },
+    {
+     "label": "マワルカガミ",
+     "link": "マワルカガミ",
+     "disc": "Side K"
+    },
+    {
+     "label": "MY COLOR (2026 Remix)",
+     "link": null,
+     "disc": "Side K"
+    },
+    {
+     "label": "再起動世界",
+     "link": "再起動世界",
+     "disc": "Side K"
+    },
+    {
+     "label": "エレクトロ・ワールド (2026 Remix)",
+     "link": null,
+     "disc": "Side N"
+    },
+    {
+     "label": "Dream Fighter",
+     "link": "Dream Fighter",
+     "disc": "Side N"
+    },
+    {
+     "label": "Let Me Know",
+     "link": "Let Me Know",
+     "disc": "Side N"
+    },
+    {
+     "label": "Everyday",
+     "link": "Everyday",
+     "disc": "Side N"
+    },
+    {
+     "label": "無限未来",
+     "link": "無限未来",
+     "disc": "Side N"
+    },
+    {
+     "label": "さよならプラスティックワールド",
+     "link": "さよならプラスティックワールド",
+     "disc": "Side N"
+    },
+    {
+     "label": "Flow",
+     "link": "Flow",
+     "disc": "Side N"
+    },
+    {
+     "label": "巡ループ",
+     "link": "巡ループ",
+     "disc": "Side N"
+    },
+    {
+     "label": "Handy Man",
+     "link": "Handy Man",
+     "disc": "Side N"
+    },
+    {
+     "label": "Miracle Worker",
+     "link": "Miracle Worker",
+     "disc": "Side N"
+    },
+    {
+     "label": "ポリリズム",
+     "link": "ポリリズム",
+     "disc": "Side N"
+    },
+    {
+     "label": "ポイント",
+     "link": "ポイント",
+     "disc": "Side N"
+    },
+    {
+     "label": "Dream Land",
+     "link": "Dream Land",
+     "disc": "Side N"
+    },
+    {
+     "label": "コールドスリープ",
+     "link": "コールドスリープ",
+     "disc": "Disc 4"
+    },
+    {
+     "label": "ふめつのあなた",
+     "link": "ふめつのあなた",
+     "disc": "Disc 4"
+    }
+   ]
+  }
+ ]
+}

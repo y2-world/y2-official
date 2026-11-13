@@ -1,0 +1,2672 @@
+{
+ "artist_id": 63,
+ "tours": [
+  {
+   "title": "第26回ひろしまフラワーフェスティバル",
+   "type": 2,
+   "date1": "2002-05-03",
+   "date2": "2002-05-05",
+   "venue": "広島平和記念公園",
+   "schedule": "5月3日 (金) 広島平和記念公園\n5月4日 (土) 広島平和記念公園\n5月5日 (日) 広島平和記念公園",
+   "source": "livefans",
+   "lf_event_ids": [
+    1492893,
+    1492894,
+    1492895
+   ]
+  },
+  {
+   "title": "「彼氏募集中」発売記念インストアライブ",
+   "type": 2,
+   "date1": "2002-11-03",
+   "date2": "2002-11-10",
+   "venue": null,
+   "schedule": "11月3日 (日) デオデオ本店サテライトスタジオ\n11月10日 (日) フタバ図書SOUND GIGA",
+   "source": "livefans",
+   "lf_event_ids": [
+    1492934,
+    1492935
+   ]
+  },
+  {
+   "title": "GIRL POP FACTORY 03",
+   "type": 2,
+   "date1": "2003-07-29",
+   "date2": null,
+   "venue": "お台場冒険王 冒険ステージ",
+   "schedule": "7月29日 (火) お台場冒険王 冒険ステージ",
+   "source": "livefans",
+   "lf_event_ids": [
+    171160
+   ]
+  },
+  {
+   "title": "BEE-HIVE Performance Tour 2003 summer",
+   "type": 2,
+   "date1": "2003-08-17",
+   "date2": "2003-08-30",
+   "venue": null,
+   "schedule": "8月17日 (日) 札幌サンプラザ コンサートホール\n8月19日 (火) 仙台電力ホール\n8月23日 (土) 大阪国際交流センター\n8月26日 (火) 名古屋市民会館\n8月27日 (水) 東京厚生年金会館\n8月29日 (金) 広島市南区民文化センター ホール\n8月30日 (土) 福岡電気ホール",
+   "source": "livefans",
+   "lf_event_ids": [
+    234893,
+    1492791,
+    234895,
+    1492792,
+    1492793,
+    234901,
+    235139
+   ]
+  },
+  {
+   "title": "サンストらいぶ",
+   "type": 2,
+   "date1": "2003-10-07",
+   "date2": "2003-12-26",
+   "venue": "サンストリート亀戸 マーケット広場",
+   "schedule": "10月7日 (火) サンストリート亀戸 マーケット広場\n10月14日 (火) サンストリート亀戸 マーケット広場\n10月21日 (火) サンストリート亀戸 マーケット広場\n10月28日 (火) サンストリート亀戸 マーケット広場\n11月12日 (水) サンストリート亀戸 マーケット広場\n11月29日 (土) サンストリート亀戸 マーケット広場\n12月5日 (金) サンストリート亀戸 マーケット広場\n12月12日 (金) サンストリート亀戸 マーケット広場\n12月19日 (金) サンストリート亀戸 マーケット広場\n12月26日 (金) サンストリート亀戸 マーケット広場",
+   "source": "livefans",
+   "lf_event_ids": [
+    234998,
+    235001,
+    235004,
+    235007,
+    234992,
+    234995,
+    234975,
+    234969,
+    234965,
+    234962
+   ]
+  },
+  {
+   "title": "アミューズフェスティバル",
+   "type": 2,
+   "date1": "2003-11-20",
+   "date2": null,
+   "venue": "サンストリート亀戸 マーケット広場",
+   "schedule": "11月20日 (木) サンストリート亀戸 マーケット広場",
+   "source": "livefans",
+   "lf_event_ids": [
+    234987
+   ]
+  },
+  {
+   "title": "BEE-HIVE New Year Live '04 ～Perfume day～",
+   "type": 2,
+   "date1": "2004-01-03",
+   "date2": null,
+   "venue": "SHIBUYA BOXX",
+   "schedule": "1月3日 (土) SHIBUYA BOXX",
+   "source": "livefans",
+   "lf_event_ids": [
+    32923
+   ]
+  },
+  {
+   "title": "サンストらいぶ",
+   "type": 2,
+   "date1": "2004-01-10",
+   "date2": "2004-04-25",
+   "venue": "サンストリート亀戸 マーケット広場",
+   "schedule": "1月10日 (土) サンストリート亀戸 マーケット広場\n1月24日 (土) サンストリート亀戸 マーケット広場\n1月31日 (土) サンストリート亀戸 マーケット広場\n2月8日 (日) サンストリート亀戸 マーケット広場\n2月15日 (日) サンストリート亀戸 マーケット広場\n2月22日 (日) サンストリート亀戸 マーケット広場\n4月25日 (日) サンストリート亀戸 マーケット広場",
+   "source": "livefans",
+   "lf_event_ids": [
+    234950,
+    234953,
+    234959,
+    234947,
+    234945,
+    234943,
+    235069
+   ]
+  },
+  {
+   "title": "サンストらいぶ カーニバル",
+   "type": 2,
+   "date1": "2004-01-25",
+   "date2": "2004-07-25",
+   "venue": "サンストリート亀戸 マーケット広場",
+   "schedule": "1月25日 (日) サンストリート亀戸 マーケット広場\n5月30日 (日) サンストリート亀戸 マーケット広場\n6月27日 (日) サンストリート亀戸 マーケット広場\n7月25日 (日) サンストリート亀戸 マーケット広場",
+   "source": "livefans",
+   "lf_event_ids": [
+    234956,
+    235082,
+    235104,
+    235118
+   ]
+  },
+  {
+   "title": "『モノクローム エフェクト』リリースイベント",
+   "type": 2,
+   "date1": "2004-03-21",
+   "date2": "2004-04-17",
+   "venue": null,
+   "schedule": "3月21日 (日) サンストリート亀戸 マーケット広場\n3月29日 (月) ダイヤモンドシティ・ソレイユ フタバ図書TERA店\n4月3日 (土) ディスクピア梅田店\n4月4日 (日) ナディアパーク ヤマギワソフト\n4月10日 (土) TSUTAYA 稲沢\n4月17日 (土) 石丸電気SOFT1",
+   "source": "livefans",
+   "lf_event_ids": [
+    234932,
+    235085,
+    235086,
+    235092,
+    235093,
+    235012
+   ]
+  },
+  {
+   "title": "Perfume レコ発!Sing Ravure SPECIAL!!",
+   "type": 2,
+   "date1": "2004-04-11",
+   "date2": null,
+   "venue": "SHIBUYA O-Crest",
+   "schedule": "4月11日 (日) SHIBUYA O-Crest",
+   "source": "livefans",
+   "lf_event_ids": [
+    32922
+   ]
+  },
+  {
+   "title": "第28回ひろしまフラワーフェスティバル",
+   "type": 2,
+   "date1": "2004-05-04",
+   "date2": "2004-05-05",
+   "venue": "広島平和記念公園",
+   "schedule": "5月4日 (火) 広島平和記念公園\n5月5日 (水) 広島平和記念公園",
+   "source": "livefans",
+   "lf_event_ids": [
+    1492899,
+    1492901,
+    1492900,
+    1492903
+   ]
+  },
+  {
+   "title": "HONEY ENTERTAINMENT presents 「SingRavure Vol.5 ～梅雨だってぶっ飛ばせ!～」",
+   "type": 2,
+   "date1": "2004-06-11",
+   "date2": null,
+   "venue": "SHIBUYA O-Crest",
+   "schedule": "6月11日 (金) SHIBUYA O-Crest",
+   "source": "livefans",
+   "lf_event_ids": [
+    235098
+   ]
+  },
+  {
+   "title": "HONEY ENTERTAINMENT presents 「SingRavure Vol.6～真夏まで待てないぞっ!～」",
+   "type": 2,
+   "date1": "2004-07-02",
+   "date2": null,
+   "venue": "SHIBUYA O-Crest",
+   "schedule": "7月2日 (金) SHIBUYA O-Crest",
+   "source": "livefans",
+   "lf_event_ids": [
+    235109
+   ]
+  },
+  {
+   "title": "15-0Presentsダンス&アイドル サマーナイトジュニアフェスティバル",
+   "type": 2,
+   "date1": "2004-07-30",
+   "date2": null,
+   "venue": "SHIBUYA BOXX",
+   "schedule": "7月30日 (金) SHIBUYA BOXX",
+   "source": "livefans",
+   "lf_event_ids": [
+    235121
+   ]
+  },
+  {
+   "title": "Cutie Pop Union '04 ～Summer～",
+   "type": 2,
+   "date1": "2004-08-18",
+   "date2": null,
+   "venue": "SHIBUYA O-EAST",
+   "schedule": "8月18日 (水) SHIBUYA O-EAST",
+   "source": "livefans",
+   "lf_event_ids": [
+    235125
+   ]
+  },
+  {
+   "title": "Ex-Girls Style",
+   "type": 2,
+   "date1": "2004-10-29",
+   "date2": null,
+   "venue": "SHIBUYA O-WEST",
+   "schedule": "10月29日 (金) SHIBUYA O-WEST",
+   "source": "livefans",
+   "lf_event_ids": [
+    235127
+   ]
+  },
+  {
+   "title": "Play a trick on YOU!! 〜 Dreamy☆World〜",
+   "type": 1,
+   "date1": "2004-12-16",
+   "date2": null,
+   "venue": "Shibuya O-Crest",
+   "schedule": "12月16日 (木) Shibuya O-Crest",
+   "source": "official"
+  },
+  {
+   "title": "Perfumeと申し訳のビタミンSUNDAY",
+   "type": 2,
+   "date1": "2005-02-27",
+   "date2": null,
+   "venue": "宇都宮PLANET",
+   "schedule": "2月27日 (日) 宇都宮PLANET",
+   "source": "livefans",
+   "lf_event_ids": [
+    1492773
+   ]
+  },
+  {
+   "title": "SingRavue Vol.9",
+   "type": 2,
+   "date1": "2005-05-01",
+   "date2": null,
+   "venue": "SHIBUYA O-Crest",
+   "schedule": "5月1日 (日) SHIBUYA O-Crest",
+   "source": "livefans",
+   "lf_event_ids": [
+    235255
+   ]
+  },
+  {
+   "title": "第29回ひろしまフラワーフェスティバル",
+   "type": 2,
+   "date1": "2005-05-03",
+   "date2": "2005-05-05",
+   "venue": "広島平和記念公園",
+   "schedule": "5月3日 (火) 広島平和記念公園\n5月4日 (水) 広島平和記念公園\n5月5日 (木) 広島平和記念公園",
+   "source": "livefans",
+   "lf_event_ids": [
+    1492916,
+    1492917,
+    1492918
+   ]
+  },
+  {
+   "title": "Fave rave Competition Vol.1",
+   "type": 2,
+   "date1": "2005-05-06",
+   "date2": null,
+   "venue": "SHIBUYA-AX",
+   "schedule": "5月6日 (金) SHIBUYA-AX",
+   "source": "livefans",
+   "lf_event_ids": [
+    235276
+   ]
+  },
+  {
+   "title": "Play a trick on YOU!! 〜エレクトリカル♪girls〜",
+   "type": 1,
+   "date1": "2005-07-07",
+   "date2": null,
+   "venue": "Shibuya O-West",
+   "schedule": "7月7日 (木) Shibuya O-West",
+   "source": "official"
+  },
+  {
+   "title": "リニアモーターガールリリースイベント",
+   "type": 2,
+   "date1": "2005-09-23",
+   "date2": "2005-10-29",
+   "venue": null,
+   "schedule": "9月23日 (金) サンシャインシティ アルパB1F 噴水広場\n10月1日 (土) ダイヤモンドシティ・ソレイユ フタバ図書TERA店\n10月8日 (土) ナディアパーク ヤマギワソフト\n10月10日 (月) 秋葉原ヤマギワソフト\n10月14日 (金) WAVE汐留\n10月15日 (土) 石丸電気SOFT1\n10月22日 (土) 川崎アゼリア\n10月23日 (日) アソビットゲームシティ\n10月29日 (土) ディスクピア日本橋店 音楽館",
+   "source": "livefans",
+   "lf_event_ids": [
+    235279,
+    235282,
+    235283,
+    235284,
+    235285,
+    235287,
+    235288,
+    235289,
+    235291
+   ]
+  },
+  {
+   "title": "SingRavure Vol.10「み～んな、レコ発 SPECIAL Nights!!」",
+   "type": 2,
+   "date1": "2005-11-08",
+   "date2": null,
+   "venue": "SHIBUYA O-WEST",
+   "schedule": "11月8日 (火) SHIBUYA O-WEST",
+   "source": "livefans",
+   "lf_event_ids": [
+    235296
+   ]
+  },
+  {
+   "title": "Girl's BOX～Winter Special Live～",
+   "type": 2,
+   "date1": "2005-12-03",
+   "date2": null,
+   "venue": "velfarre",
+   "schedule": "12月3日 (土) velfarre",
+   "source": "livefans",
+   "lf_event_ids": [
+    235314
+   ]
+  },
+  {
+   "title": "GIRLs-RockPop stadium",
+   "type": 2,
+   "date1": "2005-12-06",
+   "date2": null,
+   "venue": "原宿ASTRO HALL",
+   "schedule": "12月6日 (火) 原宿ASTRO HALL",
+   "source": "livefans",
+   "lf_event_ids": [
+    235336
+   ]
+  },
+  {
+   "title": "PerfumeのPOPpokePiiiii-ないと",
+   "type": 1,
+   "date1": "2005-12-21",
+   "date2": null,
+   "venue": "原宿ASTRO HALL",
+   "schedule": "12月21日 (水) 原宿ASTRO HALL",
+   "source": "official"
+  },
+  {
+   "title": "Merry Xmas Party",
+   "type": 2,
+   "date1": "2005-12-23",
+   "date2": null,
+   "venue": "新宿コマ劇場",
+   "schedule": "12月23日 (金) 新宿コマ劇場",
+   "source": "livefans",
+   "lf_event_ids": [
+    1492914
+   ]
+  },
+  {
+   "title": "AJF2006アニソンアイドル\"お正月でchu !\"",
+   "type": 2,
+   "date1": "2006-01-07",
+   "date2": null,
+   "venue": "SHIBUYA O-WEST",
+   "schedule": "1月7日 (土) SHIBUYA O-WEST",
+   "source": "livefans",
+   "lf_event_ids": [
+    235649
+   ]
+  },
+  {
+   "title": "コンピューターシティ リリースイベント",
+   "type": 2,
+   "date1": "2006-01-14",
+   "date2": "2006-02-11",
+   "venue": null,
+   "schedule": "1月14日 (土) サンシャインシティ アルパB1F 噴水広場\n1月21日 (土) ダイヤモンドシティ・ソレイユ フタバ図書TERA店\n1月21日 (土) 新星堂福山\n1月29日 (日) サッポロファクトリー アトリウム\n2月11日 (土) キャナルシティ博多 サンプラザステージ",
+   "source": "livefans",
+   "lf_event_ids": [
+    235659,
+    235660,
+    235663,
+    235690,
+    235691
+   ]
+  },
+  {
+   "title": "ハレンチ☆パンチ LIVE PACK ～春☆パンチ 2006～ ファイナル☆パンチ",
+   "type": 2,
+   "date1": "2006-03-20",
+   "date2": null,
+   "venue": "六本木morph-Tokyo",
+   "schedule": "3月20日 (月) 六本木morph-Tokyo",
+   "source": "livefans",
+   "lf_event_ids": [
+    235707
+   ]
+  },
+  {
+   "title": "Girl's BOX ～Spring Special Live～ 2006",
+   "type": 2,
+   "date1": "2006-04-02",
+   "date2": null,
+   "venue": "横浜BLITZ",
+   "schedule": "4月2日 (日) 横浜BLITZ",
+   "source": "livefans",
+   "lf_event_ids": [
+    235762
+   ]
+  },
+  {
+   "title": "RHYTHM OF FEAR",
+   "type": 2,
+   "date1": "2006-04-19",
+   "date2": null,
+   "venue": "新宿LOFT",
+   "schedule": "4月19日 (水) 新宿LOFT",
+   "source": "livefans",
+   "lf_event_ids": [
+    235777
+   ]
+  },
+  {
+   "title": "第30回ひろしまフラワーフェスティバル",
+   "type": 2,
+   "date1": "2006-05-03",
+   "date2": null,
+   "venue": "広島平和記念公園",
+   "schedule": "5月3日 (水) 広島平和記念公園",
+   "source": "livefans",
+   "lf_event_ids": [
+    1492920
+   ]
+  },
+  {
+   "title": "PINK BUNNY RECORD presents「完全異種格闘技Vol.4」",
+   "type": 2,
+   "date1": "2006-05-28",
+   "date2": null,
+   "venue": "原宿ASTRO HALL",
+   "schedule": "5月28日 (日) 原宿ASTRO HALL",
+   "source": "livefans",
+   "lf_event_ids": [
+    235786
+   ]
+  },
+  {
+   "title": "エレクトロ・ワールド リリースイベント",
+   "type": 2,
+   "date1": "2006-07-09",
+   "date2": null,
+   "venue": "AKIBA SQUARE",
+   "schedule": "7月9日 (日) AKIBA SQUARE",
+   "source": "livefans",
+   "lf_event_ids": [
+    235808
+   ]
+  },
+  {
+   "title": "Perfumeアルバム発売記念ミニライブ♪",
+   "type": 2,
+   "date1": "2006-08-02",
+   "date2": null,
+   "venue": "東京ドームシティ ラクーア ガーデンステージ",
+   "schedule": "8月2日 (水) 東京ドームシティ ラクーア ガーデンステージ",
+   "source": "livefans",
+   "lf_event_ids": [
+    235759
+   ]
+  },
+  {
+   "title": "「Perfume ～ Complete Best ～」リリース・イベント♪",
+   "type": 2,
+   "date1": "2006-08-04",
+   "date2": "2006-08-27",
+   "venue": null,
+   "schedule": "8月4日 (金) サッポロファクトリー アトリウム\n8月6日 (日) TOWER RECORDS新宿\n8月6日 (日) HMV渋谷\n8月13日 (日) ダイヤモンドシティ・ソレイユ フタバ図書TERA店\n8月13日 (日) HMV広島\n8月15日 (火) 新星堂福山\n8月19日 (土) Apple Store心斎橋\n8月19日 (土) TOWER RECORDS難波\n8月20日 (日) ナディアパーク ヤマギワソフト\n8月27日 (日) アソビットゲームシティ\n8月27日 (日) 石丸電気SOFT2",
+   "source": "livefans",
+   "lf_event_ids": [
+    235813,
+    235818,
+    235820,
+    235821,
+    235823,
+    235826,
+    235827,
+    235828,
+    235833,
+    235837,
+    235838
+   ]
+  },
+  {
+   "title": "武蔵野美術大学芸術祭2006",
+   "type": 2,
+   "date1": "2006-10-28",
+   "date2": null,
+   "venue": "武蔵野美術大学",
+   "schedule": "10月28日 (土) 武蔵野美術大学",
+   "source": "livefans",
+   "lf_event_ids": [
+    235720
+   ]
+  },
+  {
+   "title": "LIVE RING vol.1「ハレンチ☆パンチ loves Perfume」",
+   "type": 2,
+   "date1": "2006-11-19",
+   "date2": null,
+   "venue": "川崎Serbian Night",
+   "schedule": "11月19日 (日) 川崎Serbian Night",
+   "source": "livefans",
+   "lf_event_ids": [
+    235754
+   ]
+  },
+  {
+   "title": "Perfume presents 〜Perfumeがいっぱいサンタ呼んじゃいました♪〜",
+   "type": 1,
+   "date1": "2006-12-21",
+   "date2": null,
+   "venue": "原宿ASTRO HALL",
+   "schedule": "12月21日 (木) 原宿ASTRO HALL",
+   "source": "official"
+  },
+  {
+   "title": "ファン・サーヴィス〔bitter〕リリース記念インストアイベント",
+   "type": 2,
+   "date1": "2007-03-24",
+   "date2": "2007-03-24",
+   "venue": null,
+   "schedule": "3月24日 (土) HMV心斎橋\n3月24日 (土) TOWER RECORDS難波",
+   "source": "livefans",
+   "lf_event_ids": [
+    192945,
+    192950
+   ]
+  },
+  {
+   "title": "スウィート エンジェル ウィスパーズ",
+   "type": 2,
+   "date1": "2007-03-25",
+   "date2": null,
+   "venue": "表参道FAB",
+   "schedule": "3月25日 (日) 表参道FAB",
+   "source": "livefans",
+   "lf_event_ids": [
+    239804
+   ]
+  },
+  {
+   "title": "SHINJYUKU LOFT 8TH ANNIVERSARY～special master+mind オトノミライ～",
+   "type": 2,
+   "date1": "2007-05-15",
+   "date2": null,
+   "venue": "新宿LOFT",
+   "schedule": "5月15日 (火) 新宿LOFT",
+   "source": "livefans",
+   "lf_event_ids": [
+    239811
+   ]
+  },
+  {
+   "title": "LIVE RING vol.5",
+   "type": 2,
+   "date1": "2007-06-08",
+   "date2": null,
+   "venue": "恵比寿LIQUIDROOM",
+   "schedule": "6月8日 (金) 恵比寿LIQUIDROOM",
+   "source": "livefans",
+   "lf_event_ids": [
+    239824
+   ]
+  },
+  {
+   "title": "(有)申し訳ないと ～医大祭スペシャル～",
+   "type": 2,
+   "date1": "2007-06-16",
+   "date2": null,
+   "venue": "札幌医科大学 体育館",
+   "schedule": "6月16日 (土) 札幌医科大学 体育館",
+   "source": "livefans",
+   "lf_event_ids": [
+    239829
+   ]
+  },
+  {
+   "title": "MEN☆SOUL 発売前夜祭!! in申し訳ナイト",
+   "type": 2,
+   "date1": "2007-06-16",
+   "date2": null,
+   "venue": "札幌Sound Lab mole",
+   "schedule": "6月16日 (土) 札幌Sound Lab mole",
+   "source": "livefans",
+   "lf_event_ids": [
+    239904
+   ]
+  },
+  {
+   "title": "Perfume ひこぼし☆募集中",
+   "type": 1,
+   "date1": "2007-07-05",
+   "date2": "2007-07-06",
+   "venue": "代官山UNIT",
+   "schedule": "7月5日 (木) 代官山UNIT\n7月6日 (金) 代官山UNIT",
+   "source": "official"
+  },
+  {
+   "title": "Live Ring vol.6",
+   "type": 2,
+   "date1": "2007-07-22",
+   "date2": null,
+   "venue": "Electric Lady Land",
+   "schedule": "7月22日 (日) Electric Lady Land",
+   "source": "livefans",
+   "lf_event_ids": [
+    240163
+   ]
+  },
+  {
+   "title": "SUMMER SONIC 2007",
+   "type": 2,
+   "date1": "2007-08-11",
+   "date2": null,
+   "venue": "舞洲スポーツアイランド",
+   "schedule": "8月11日 (土) 舞洲スポーツアイランド",
+   "source": "livefans",
+   "lf_event_ids": [
+    192969
+   ]
+  },
+  {
+   "title": "Fukushimania Rock vol.2",
+   "type": 2,
+   "date1": "2007-09-07",
+   "date2": null,
+   "venue": "LIVE SQUARE 2nd LINE",
+   "schedule": "9月7日 (金) LIVE SQUARE 2nd LINE",
+   "source": "livefans",
+   "lf_event_ids": [
+    9744
+   ]
+  },
+  {
+   "title": "「ポリリズム」リリース記念インストアイベント",
+   "type": 2,
+   "date1": "2007-09-15",
+   "date2": "2007-10-13",
+   "venue": null,
+   "schedule": "9月15日 (土) HMV渋谷\n9月16日 (日) TOWER RECORDS新宿\n9月17日 (月) サンシャインシティ アルパB1F 噴水広場\n9月22日 (土) HMV札幌ステラプレイス\n9月22日 (土) TOWER RECORDS札幌ピヴォ\n9月23日 (日) TOWER RECORDS渋谷 B1F STAGE ONE\n9月24日 (月) ナディアパーク ヤマギワソフト\n9月29日 (土) TOWER RECORDS梅田NU茶屋町\n9月29日 (土) HMV三宮\n10月6日 (土) HMVリバーウォーク北九州\n10月12日 (金) ヴィレッジヴァンガード下北沢\n10月13日 (土) 石丸電気SOFT2",
+   "source": "livefans",
+   "lf_event_ids": [
+    240172,
+    240175,
+    240177,
+    240206,
+    240209,
+    240212,
+    240216,
+    240219,
+    208546,
+    208548,
+    240223,
+    240232,
+    240235
+   ]
+  },
+  {
+   "title": "TOKYO PRETTY COLLECTION VOL.4.2",
+   "type": 2,
+   "date1": "2007-09-16",
+   "date2": null,
+   "venue": "HIT STUDIO TOKYO",
+   "schedule": "9月16日 (日) HIT STUDIO TOKYO",
+   "source": "livefans",
+   "lf_event_ids": [
+    1492927
+   ]
+  },
+  {
+   "title": "duo Night 3回目「エイジアエンジニア / カルテット / Perfume」",
+   "type": 2,
+   "date1": "2007-09-19",
+   "date2": null,
+   "venue": "duo MUSIC EXCHANGE",
+   "schedule": "9月19日 (水) duo MUSIC EXCHANGE",
+   "source": "livefans",
+   "lf_event_ids": [
+    240188
+   ]
+  },
+  {
+   "title": "PILOT presents COLONY 6th ANNIVERSARY ～JUMP OUT COLONY～",
+   "type": 2,
+   "date1": "2007-09-21",
+   "date2": null,
+   "venue": "札幌Sound Lab mole",
+   "schedule": "9月21日 (金) 札幌Sound Lab mole",
+   "source": "livefans",
+   "lf_event_ids": [
+    240201
+   ]
+  },
+  {
+   "title": "テレ玉 HOT WAVE presents SPECIAL LIVE 2007",
+   "type": 2,
+   "date1": "2007-10-18",
+   "date2": null,
+   "venue": "浦和PARCO",
+   "schedule": "10月18日 (木) 浦和PARCO",
+   "source": "livefans",
+   "lf_event_ids": [
+    240237
+   ]
+  },
+  {
+   "title": "感謝! 感激! ポリ荒らし! 〜あらためまして、Perfumeです〜",
+   "type": 0,
+   "date1": "2007-10-31",
+   "date2": "2007-11-03",
+   "venue": null,
+   "schedule": "10月31日 (水) Electric Lady Land\n11月1日 (木) OSAKA MUSE\n11月3日 (土) テレビ新広島 新館9Fスタジオ",
+   "source": "official"
+  },
+  {
+   "title": "Perfume 〜SEVENTH HEAVEN イイ気分♪〜",
+   "type": 1,
+   "date1": "2007-11-08",
+   "date2": null,
+   "venue": "LIQUIDROOM",
+   "schedule": "11月8日 (木) LIQUIDROOM",
+   "source": "official"
+  },
+  {
+   "title": "Act Against AIDS 2007「15年かヨ!全員集合」",
+   "type": 2,
+   "date1": "2007-12-01",
+   "date2": null,
+   "venue": "日本武道館",
+   "schedule": "12月1日 (土) 日本武道館",
+   "source": "livefans",
+   "lf_event_ids": [
+    226601
+   ]
+  },
+  {
+   "title": "COUNTDOWN JAPAN 07/08",
+   "type": 2,
+   "date1": "2007-12-28",
+   "date2": null,
+   "venue": "幕張メッセ",
+   "schedule": "12月28日 (金) 幕張メッセ",
+   "source": "livefans",
+   "lf_event_ids": [
+    9797
+   ]
+  },
+  {
+   "title": "COUNTDOWN JAPAN 07/08 -WEST-",
+   "type": 2,
+   "date1": "2007-12-29",
+   "date2": null,
+   "venue": "インテックス大阪",
+   "schedule": "12月29日 (土) インテックス大阪",
+   "source": "livefans",
+   "lf_event_ids": [
+    21713
+   ]
+  },
+  {
+   "title": "Perfume まさかのカウントダウン!? 〜リ◯ッドルーム あの夜をもう一度 in Zepp Tokyo〜",
+   "type": 1,
+   "date1": "2007-12-31",
+   "date2": null,
+   "venue": "Zepp Tokyo",
+   "schedule": "12月31日 (月) Zepp Tokyo",
+   "source": "official"
+  },
+  {
+   "title": "『Baby Cruising Love/マカロニ』リリース記念イベント",
+   "type": 2,
+   "date1": "2008-01-26",
+   "date2": "2008-02-23",
+   "venue": null,
+   "schedule": "1月26日 (土) ナディアパーク アトリウム\n2月2日 (土) キャナルシティ博多 サンプラザステージ\n2月3日 (日) HEP HALL\n2月16日 (土) ESPミュージカルアカデミー 12号館ホール club 1ne2wo\n2月17日 (日) 札幌KRAPS HALL\n2月22日 (金) 下北沢MOSAiC\n2月23日 (土) TOWER RECORDS渋谷 B1F STAGE ONE\n2月23日 (土) 石丸電気SOFT2",
+   "source": "livefans",
+   "lf_event_ids": [
+    239515,
+    239518,
+    192967,
+    239519,
+    239520,
+    239521,
+    239522,
+    239523,
+    239533
+   ]
+  },
+  {
+   "title": "Perfume 〜ソックス フィックス マックス〜",
+   "type": 1,
+   "date1": "2008-02-12",
+   "date2": null,
+   "venue": "SHIBUYA-AX",
+   "schedule": "2月12日 (火) SHIBUYA-AX",
+   "source": "official"
+  },
+  {
+   "title": "P.T.A.発足前夜祭「パッと楽しく遊ぼうの会」オフィシャルWEBファンクラブ「P.T.A.」発足記念イベント",
+   "type": 2,
+   "date1": "2008-02-13",
+   "date2": null,
+   "venue": "恵比寿LIQUIDROOM",
+   "schedule": "2月13日 (水) 恵比寿LIQUIDROOM",
+   "source": "livefans",
+   "lf_event_ids": [
+    32930
+   ]
+  },
+  {
+   "title": "ロマンポルシェ。10周年&BEST ALBUM発売記念コンサート",
+   "type": 2,
+   "date1": "2008-04-04",
+   "date2": null,
+   "venue": "恵比寿LIQUIDROOM",
+   "schedule": "4月4日 (金) 恵比寿LIQUIDROOM",
+   "source": "livefans",
+   "lf_event_ids": [
+    239543
+   ]
+  },
+  {
+   "title": "Perfume First Tour \"GAME\"",
+   "type": 0,
+   "date1": "2008-04-27",
+   "date2": "2008-06-01",
+   "venue": null,
+   "schedule": "4月27日 (日) Zepp Osaka\n4月29日 (火・祝) 高松オリーブホール\n5月1日 (木) 広島 CLUB QUATTRO\n5月2日 (金) 福岡 DRUM LOGOS\n5月4日 (日・祝) Zepp Tokyo\n5月6日 (火・祝) Zepp Nagoya\n5月10日 (土) 新潟 LOTS\n5月16日 (金) 仙台 CLUB JUNK BOX\n5月18日 (日) 札幌 PENNY LANE 24\n5月31日 (土) 横浜 BLITZ\n6月1日 (日) 横浜 BLITZ",
+   "source": "official"
+  },
+  {
+   "title": "渋谷エコライブ",
+   "type": 2,
+   "date1": "2008-06-08",
+   "date2": null,
+   "venue": "NHK放送センター",
+   "schedule": "6月8日 (日) NHK放送センター",
+   "source": "livefans",
+   "lf_event_ids": [
+    1644901
+   ]
+  },
+  {
+   "title": "BLACK AND BLUE",
+   "type": 2,
+   "date1": "2008-06-21",
+   "date2": null,
+   "venue": "Zepp Tokyo",
+   "schedule": "6月21日 (土) Zepp Tokyo",
+   "source": "livefans",
+   "lf_event_ids": [
+    146903
+   ]
+  },
+  {
+   "title": "アミューズ 第30期定時株主総会後イベント",
+   "type": 2,
+   "date1": "2008-06-22",
+   "date2": null,
+   "venue": "両国国技館",
+   "schedule": "6月22日 (日) 両国国技館",
+   "source": "livefans",
+   "lf_event_ids": [
+    1492790
+   ]
+  },
+  {
+   "title": "美浜海遊祭 MUSIC WAVE 2008 Supported by SUNSHINE SAKAE",
+   "type": 2,
+   "date1": "2008-07-26",
+   "date2": null,
+   "venue": "美浜小野浦海水浴場特設ステージ",
+   "schedule": "7月26日 (土) 美浜小野浦海水浴場特設ステージ",
+   "source": "livefans",
+   "lf_event_ids": [
+    9746
+   ]
+  },
+  {
+   "title": "ROCK IN JAPAN FESTIVAL 2008",
+   "type": 2,
+   "date1": "2008-08-02",
+   "date2": null,
+   "venue": "国営ひたち海浜公園",
+   "schedule": "8月2日 (土) 国営ひたち海浜公園",
+   "source": "livefans",
+   "lf_event_ids": [
+    251431
+   ]
+  },
+  {
+   "title": "GIRL POP FACTORY 08",
+   "type": 2,
+   "date1": "2008-08-03",
+   "date2": null,
+   "venue": "Zepp Tokyo",
+   "schedule": "8月3日 (日) Zepp Tokyo",
+   "source": "livefans",
+   "lf_event_ids": [
+    170765
+   ]
+  },
+  {
+   "title": "SUMMER SONIC 2008",
+   "type": 2,
+   "date1": "2008-08-09",
+   "date2": "2008-08-10",
+   "venue": null,
+   "schedule": "8月9日 (土) 幕張メッセ\n8月10日 (日) 舞洲スポーツアイランド",
+   "source": "livefans",
+   "lf_event_ids": [
+    16329,
+    16379
+   ]
+  },
+  {
+   "title": "SOUND MARINA 2008 ～Feel the Voice 7～",
+   "type": 2,
+   "date1": "2008-08-23",
+   "date2": null,
+   "venue": "広島港出島野外特設会場",
+   "schedule": "8月23日 (土) 広島港出島野外特設会場",
+   "source": "livefans",
+   "lf_event_ids": [
+    306366
+   ]
+  },
+  {
+   "title": "MONSTER baSH 2008",
+   "type": 2,
+   "date1": "2008-08-24",
+   "date2": null,
+   "venue": "国営讃岐まんのう公園内 芝生広場",
+   "schedule": "8月24日 (日) 国営讃岐まんのう公園内 芝生広場",
+   "source": "livefans",
+   "lf_event_ids": [
+    55050
+   ]
+  },
+  {
+   "title": "BUDOUKaaaaaaaaaaN!!!!!",
+   "type": 1,
+   "date1": "2008-11-06",
+   "date2": "2008-11-07",
+   "venue": "日本武道館",
+   "schedule": "11月6日 (木) 日本武道館\n11月7日 (金) 日本武道館",
+   "source": "official"
+  },
+  {
+   "title": "Act Against AIDS 2008「THE VARIETY」",
+   "type": 2,
+   "date1": "2008-12-01",
+   "date2": null,
+   "venue": "日本武道館",
+   "schedule": "12月1日 (月) 日本武道館",
+   "source": "livefans",
+   "lf_event_ids": [
+    226631
+   ]
+  },
+  {
+   "title": "COUNTDOWN JAPAN 08/09",
+   "type": 2,
+   "date1": "2008-12-28",
+   "date2": null,
+   "venue": "幕張メッセ",
+   "schedule": "12月28日 (日) 幕張メッセ",
+   "source": "livefans",
+   "lf_event_ids": [
+    21942
+   ]
+  },
+  {
+   "title": "COUNTDOWN JAPAN 08/09 -WEST-",
+   "type": 2,
+   "date1": "2008-12-29",
+   "date2": null,
+   "venue": "インテックス大阪",
+   "schedule": "12月29日 (月) インテックス大阪",
+   "source": "livefans",
+   "lf_event_ids": [
+    21876
+   ]
+  },
+  {
+   "title": "au by KDDI presents オンタマカーニバル 2009",
+   "type": 2,
+   "date1": "2009-01-25",
+   "date2": null,
+   "venue": "横浜アリーナ",
+   "schedule": "1月25日 (日) 横浜アリーナ",
+   "source": "livefans",
+   "lf_event_ids": [
+    238983
+   ]
+  },
+  {
+   "title": "REQUESTAGE 7",
+   "type": 2,
+   "date1": "2009-04-29",
+   "date2": null,
+   "venue": "大阪城ホール",
+   "schedule": "4月29日 (水) 大阪城ホール",
+   "source": "livefans",
+   "lf_event_ids": [
+    146346
+   ]
+  },
+  {
+   "title": "ディスコ! ディスコ! ディスコ!",
+   "type": 1,
+   "date1": "2009-05-09",
+   "date2": "2009-05-10",
+   "venue": "国立代々木競技場第一体育館",
+   "schedule": "5月9日 (土) 国立代々木競技場第一体育館\n5月10日 (日) 国立代々木競技場第一体育館",
+   "source": "official"
+  },
+  {
+   "title": "ROCK IN JAPAN FESTIVAL 2009",
+   "type": 2,
+   "date1": "2009-07-31",
+   "date2": null,
+   "venue": "国営ひたち海浜公園",
+   "schedule": "7月31日 (金) 国営ひたち海浜公園",
+   "source": "livefans",
+   "lf_event_ids": [
+    249189
+   ]
+  },
+  {
+   "title": "Perfume Second Tour 2009 \"直角二等辺三角形 TOUR\"",
+   "type": 0,
+   "date1": "2009-08-07",
+   "date2": "2009-10-30",
+   "venue": null,
+   "schedule": "8月7日 (金) 戸田市文化会館\n8月12日 (水) 福岡サンパレスホテル&ホール\n8月13日 (木) 福岡サンパレスホテル&ホール\n8月15日 (土) 広島厚生年金会館\n8月16日 (日) ひめぎんホール\n8月21日 (金) 石川厚生年金会館\n8月22日 (土) 新潟県民会館\n8月26日 (水) 札幌市民ホール\n8月27日 (木) 札幌市民ホール\n8月29日 (土) 仙台サンプラザホール\n8月30日 (日) 仙台サンプラザホール\n9月26日 (土) 日本ガイシホール\n9月27日 (日) 日本ガイシホール\n10月10日 (土) 大阪城ホール\n10月11日 (日) 大阪城ホール\n10月14日 (水) 横浜アリーナ\n10月15日 (木) 横浜アリーナ\n10月29日 (木) 横浜アリーナ\n10月30日 (金) 横浜アリーナ",
+   "source": "official"
+  },
+  {
+   "title": "SCHOOL OF LOCK! LIVE TOUR YOUNG FLAG 09",
+   "type": 2,
+   "date1": "2009-09-20",
+   "date2": null,
+   "venue": "Zepp Tokyo",
+   "schedule": "9月20日 (日) Zepp Tokyo",
+   "source": "livefans",
+   "lf_event_ids": [
+    290861
+   ]
+  },
+  {
+   "title": "Act Against AIDS 2009",
+   "type": 2,
+   "date1": "2009-12-01",
+   "date2": null,
+   "venue": "日本武道館",
+   "schedule": "12月1日 (火) 日本武道館",
+   "source": "livefans",
+   "lf_event_ids": [
+    43521
+   ]
+  },
+  {
+   "title": "「オンナク祭オトコク祭2009」",
+   "type": 2,
+   "date1": "2009-12-18",
+   "date2": null,
+   "venue": "SHIBUYA-AX",
+   "schedule": "12月18日 (金) SHIBUYA-AX",
+   "source": "livefans",
+   "lf_event_ids": [
+    238997
+   ]
+  },
+  {
+   "title": "COUNTDOWN JAPAN 09/10",
+   "type": 2,
+   "date1": "2009-12-28",
+   "date2": null,
+   "venue": "幕張メッセ",
+   "schedule": "12月28日 (月) 幕張メッセ",
+   "source": "livefans",
+   "lf_event_ids": [
+    22077
+   ]
+  },
+  {
+   "title": "P.T.A. presents Perfume結成10周年!!!! \"パッと楽しく遊ぼうの会\" ライブハウストゥワー",
+   "type": 0,
+   "date1": "2010-03-07",
+   "date2": "2010-04-03",
+   "venue": null,
+   "schedule": "3月7日 (日) 横浜 BLITZ\n3月9日 (火) Zepp Nagoya\n3月10日 (水) Zepp Osaka\n3月15日 (月) Zepp Tokyo\n3月16日 (火) Zepp Tokyo\n3月18日 (木) Zepp Sendai\n3月22日 (月・祝) 新潟 LOTS\n3月24日 (水) Zepp Sapporo\n3月31日 (水) Zepp Fukuoka\n4月2日 (金) 広島 CLUB QUATTRO\n4月3日 (土) 高知 BAY5 SQUARE",
+   "source": "official"
+  },
+  {
+   "title": "GO!FES 2010",
+   "type": 2,
+   "date1": "2010-03-20",
+   "date2": null,
+   "venue": "幕張メッセ 国際展示場 9～11ホール",
+   "schedule": "3月20日 (土) 幕張メッセ 国際展示場 9～11ホール",
+   "source": "livefans",
+   "lf_event_ids": [
+    244588
+   ]
+  },
+  {
+   "title": "REQUESTAGE 8",
+   "type": 2,
+   "date1": "2010-04-29",
+   "date2": null,
+   "venue": "大阪城ホール",
+   "schedule": "4月29日 (木) 大阪城ホール",
+   "source": "livefans",
+   "lf_event_ids": [
+    243601
+   ]
+  },
+  {
+   "title": "KDDI presents Music Lovers Live 2010",
+   "type": 2,
+   "date1": "2010-06-05",
+   "date2": null,
+   "venue": "横浜アリーナ",
+   "schedule": "6月5日 (土) 横浜アリーナ",
+   "source": "livefans",
+   "lf_event_ids": [
+    326780
+   ]
+  },
+  {
+   "title": "うたの日カーニバル 2010",
+   "type": 2,
+   "date1": "2010-06-26",
+   "date2": null,
+   "venue": "西原マリンパーク",
+   "schedule": "6月26日 (土) 西原マリンパーク",
+   "source": "livefans",
+   "lf_event_ids": [
+    507487
+   ]
+  },
+  {
+   "title": "GIRL POP FACTORY 10",
+   "type": 2,
+   "date1": "2010-08-01",
+   "date2": null,
+   "venue": "Zepp Tokyo",
+   "schedule": "8月1日 (日) Zepp Tokyo",
+   "source": "livefans",
+   "lf_event_ids": [
+    547900
+   ]
+  },
+  {
+   "title": "ROCK IN JAPAN FESTIVAL 2010",
+   "type": 2,
+   "date1": "2010-08-06",
+   "date2": null,
+   "venue": "国営ひたち海浜公園",
+   "schedule": "8月6日 (金) 国営ひたち海浜公園",
+   "source": "livefans",
+   "lf_event_ids": [
+    9762
+   ]
+  },
+  {
+   "title": "MONSTER baSH 2010",
+   "type": 2,
+   "date1": "2010-08-22",
+   "date2": null,
+   "venue": "国営讃岐まんのう公園内 芝生広場",
+   "schedule": "8月22日 (日) 国営讃岐まんのう公園内 芝生広場",
+   "source": "livefans",
+   "lf_event_ids": [
+    265188
+   ]
+  },
+  {
+   "title": "結成10周年、メジャーデビュー5周年記念! Perfume LIVE @ 東京ドーム \"1 2 3 4 5 6 7 8 9 10 11\"",
+   "type": 1,
+   "date1": "2010-11-03",
+   "date2": null,
+   "venue": "東京ドーム",
+   "schedule": "11月3日 (水・祝) 東京ドーム",
+   "source": "official"
+  },
+  {
+   "title": "2010 Mnet Asian Music Awards \"MAMA\"",
+   "type": 2,
+   "date1": "2010-11-28",
+   "date2": null,
+   "venue": "ザ・ベネチアン・マカオ",
+   "schedule": "11月28日 (日) ザ・ベネチアン・マカオ",
+   "source": "livefans",
+   "lf_event_ids": [
+    1493289
+   ]
+  },
+  {
+   "title": "Act Against AIDS 2010 感謝まつり THE VARIETY ジュワッチ!(18)",
+   "type": 2,
+   "date1": "2010-12-01",
+   "date2": null,
+   "venue": "日本武道館",
+   "schedule": "12月1日 (水) 日本武道館",
+   "source": "livefans",
+   "lf_event_ids": [
+    226786
+   ]
+  },
+  {
+   "title": "COUNTDOWN JAPAN 10/11",
+   "type": 2,
+   "date1": "2010-12-28",
+   "date2": null,
+   "venue": "幕張メッセ",
+   "schedule": "12月28日 (火) 幕張メッセ",
+   "source": "livefans",
+   "lf_event_ids": [
+    81366
+   ]
+  },
+  {
+   "title": "au by KDDI presents オンタマカーニバル 2011",
+   "type": 2,
+   "date1": "2011-01-29",
+   "date2": null,
+   "venue": "横浜アリーナ",
+   "schedule": "1月29日 (土) 横浜アリーナ",
+   "source": "livefans",
+   "lf_event_ids": [
+    227360
+   ]
+  },
+  {
+   "title": "REQUESTAGE 9",
+   "type": 2,
+   "date1": "2011-04-30",
+   "date2": null,
+   "venue": "大阪城ホール",
+   "schedule": "4月30日 (土) 大阪城ホール",
+   "source": "livefans",
+   "lf_event_ids": [
+    236688
+   ]
+  },
+  {
+   "title": "第35回ひろしまフラワーフェスティバル",
+   "type": 2,
+   "date1": "2011-05-03",
+   "date2": null,
+   "venue": "広島平和記念公園",
+   "schedule": "5月3日 (火) 広島平和記念公園",
+   "source": "livefans",
+   "lf_event_ids": [
+    236690
+   ]
+  },
+  {
+   "title": "ONE OK ROCK 2011 \"Answer is aLive\" TOUR",
+   "type": 2,
+   "date1": "2011-06-04",
+   "date2": null,
+   "venue": "ナムラホール",
+   "schedule": "6月4日 (土) ナムラホール",
+   "source": "livefans",
+   "lf_event_ids": [
+    236684
+   ]
+  },
+  {
+   "title": "JOIN ALIVE 2011",
+   "type": 2,
+   "date1": "2011-07-23",
+   "date2": null,
+   "venue": "いわみざわ公園",
+   "schedule": "7月23日 (土) いわみざわ公園",
+   "source": "livefans",
+   "lf_event_ids": [
+    56600
+   ]
+  },
+  {
+   "title": "ROCK IN JAPAN FESTIVAL 2011",
+   "type": 2,
+   "date1": "2011-08-05",
+   "date2": null,
+   "venue": "国営ひたち海浜公園",
+   "schedule": "8月5日 (金) 国営ひたち海浜公園",
+   "source": "livefans",
+   "lf_event_ids": [
+    54919
+   ]
+  },
+  {
+   "title": "SUMMER SONIC 2011",
+   "type": 2,
+   "date1": "2011-08-13",
+   "date2": "2011-08-14",
+   "venue": null,
+   "schedule": "8月13日 (土) 幕張メッセ\n8月14日 (日) 舞洲SUMMER SONIC大阪特設会場",
+   "source": "livefans",
+   "lf_event_ids": [
+    54617,
+    54607
+   ]
+  },
+  {
+   "title": "MONSTER baSH 2011",
+   "type": 2,
+   "date1": "2011-08-21",
+   "date2": null,
+   "venue": "国営讃岐まんのう公園内 芝生広場",
+   "schedule": "8月21日 (日) 国営讃岐まんのう公園内 芝生広場",
+   "source": "livefans",
+   "lf_event_ids": [
+    55078
+   ]
+  },
+  {
+   "title": "テレビ朝日ドリームフェスティバル 2011",
+   "type": 2,
+   "date1": "2011-09-24",
+   "date2": null,
+   "venue": "日本武道館",
+   "schedule": "9月24日 (土) 日本武道館",
+   "source": "livefans",
+   "lf_event_ids": [
+    312580
+   ]
+  },
+  {
+   "title": "2011 Asia Song Festival",
+   "type": 2,
+   "date1": "2011-10-15",
+   "date2": null,
+   "venue": "大邱スタジアム",
+   "schedule": "10月15日 (土) 大邱スタジアム",
+   "source": "livefans",
+   "lf_event_ids": [
+    1644915
+   ]
+  },
+  {
+   "title": "Perfume ダンスコンテスト ～魅せよ、JPN!～ 決勝戦",
+   "type": 2,
+   "date1": "2011-10-29",
+   "date2": null,
+   "venue": "品川プリンスホテル ステラボール",
+   "schedule": "10月29日 (土) 品川プリンスホテル ステラボール",
+   "source": "livefans",
+   "lf_event_ids": [
+    236691
+   ]
+  },
+  {
+   "title": "Act Against AIDS 2011「THE VARIETY 19 -頑張れ!東北-」",
+   "type": 2,
+   "date1": "2011-12-01",
+   "date2": null,
+   "venue": "日本武道館",
+   "schedule": "12月1日 (木) 日本武道館",
+   "source": "livefans",
+   "lf_event_ids": [
+    226835
+   ]
+  },
+  {
+   "title": "Perfume 3rd Tour \"JPN\"",
+   "type": 0,
+   "date1": "2012-01-14",
+   "date2": "2012-05-12",
+   "venue": null,
+   "schedule": "1月14日 (土) 神戸ワールド記念ホール\n1月15日 (日) 神戸ワールド記念ホール\n1月28日 (土) さいたまスーパーアリーナ\n1月29日 (日) さいたまスーパーアリーナ\n2月4日 (土) 朱鷺メッセ 新潟コンベンションセンター\n2月11日 (土・祝) 福岡国際センター\n2月12日 (日) 福岡国際センター\n2月29日 (水) 日本ガイシホール\n3月1日 (木) 日本ガイシホール\n3月24日 (土) 静岡エコパアリーナ\n3月27日 (火) 大阪城ホール\n3月28日 (水) 大阪城ホール\n3月31日 (土) 広島グリーンアリーナ\n4月1日 (日) 広島グリーンアリーナ\n4月7日 (土) 愛媛県武道館\n4月14日 (土) 宮城セキスイハイムスーパーアリーナ\n4月21日 (土) 真駒内セキスイハイムアイスアリーナ\n5月8日 (火) 日本武道館\n5月9日 (水) 日本武道館\n5月11日 (金) 日本武道館\n5月12日 (土) 日本武道館",
+   "source": "official"
+  },
+  {
+   "title": "GO!FES 2012",
+   "type": 2,
+   "date1": "2012-03-17",
+   "date2": null,
+   "venue": "幕張メッセ 国際展示場 9～11ホール",
+   "schedule": "3月17日 (土) 幕張メッセ 国際展示場 9～11ホール",
+   "source": "livefans",
+   "lf_event_ids": [
+    82529
+   ]
+  },
+  {
+   "title": "Perfume 3rd Tour \"JPN\" 打ち上げ公演! 海パーン!",
+   "type": 1,
+   "date1": "2012-05-26",
+   "date2": null,
+   "venue": "宜野湾海浜公園屋外劇場",
+   "schedule": "5月26日 (土) 宜野湾海浜公園屋外劇場",
+   "source": "official"
+  },
+  {
+   "title": "MTV VIDEO MUSIC AWARDS JAPAN 2012",
+   "type": 2,
+   "date1": "2012-06-23",
+   "date2": null,
+   "venue": "幕張メッセ イベントホール",
+   "schedule": "6月23日 (土) 幕張メッセ イベントホール",
+   "source": "livefans",
+   "lf_event_ids": [
+    427728
+   ]
+  },
+  {
+   "title": "氷結 SUMMER NIGHT",
+   "type": 2,
+   "date1": "2012-07-23",
+   "date2": null,
+   "venue": "渋谷ヒカリエ",
+   "schedule": "7月23日 (月) 渋谷ヒカリエ",
+   "source": "livefans",
+   "lf_event_ids": [
+    1493313
+   ]
+  },
+  {
+   "title": "ROCK IN JAPAN FESTIVAL 2012",
+   "type": 2,
+   "date1": "2012-08-04",
+   "date2": null,
+   "venue": "国営ひたち海浜公園",
+   "schedule": "8月4日 (土) 国営ひたち海浜公園",
+   "source": "livefans",
+   "lf_event_ids": [
+    98783
+   ]
+  },
+  {
+   "title": "RISING SUN ROCK FESTIVAL 2012 in EZO",
+   "type": 2,
+   "date1": "2012-08-10",
+   "date2": null,
+   "venue": "石狩湾新港樽川ふ頭横野外特設ステージ",
+   "schedule": "8月10日 (金) 石狩湾新港樽川ふ頭横野外特設ステージ",
+   "source": "livefans",
+   "lf_event_ids": [
+    98656
+   ]
+  },
+  {
+   "title": "SUMMER SONIC 2012",
+   "type": 2,
+   "date1": "2012-08-18",
+   "date2": "2012-08-19",
+   "venue": null,
+   "schedule": "8月18日 (土) 舞洲SUMMER SONIC大阪特設会場\n8月19日 (日) QVCマリンフィールド",
+   "source": "livefans",
+   "lf_event_ids": [
+    98376,
+    98357
+   ]
+  },
+  {
+   "title": "SPACE SHOWER SWEET LOVE SHOWER 2012",
+   "type": 2,
+   "date1": "2012-09-02",
+   "date2": null,
+   "venue": "山中湖交流プラザきらら",
+   "schedule": "9月2日 (日) 山中湖交流プラザきらら",
+   "source": "livefans",
+   "lf_event_ids": [
+    98274
+   ]
+  },
+  {
+   "title": "テレビ朝日ドリームフェスティバル 2012",
+   "type": 2,
+   "date1": "2012-10-07",
+   "date2": null,
+   "venue": "国立代々木競技場 第一体育館",
+   "schedule": "10月7日 (日) 国立代々木競技場 第一体育館",
+   "source": "livefans",
+   "lf_event_ids": [
+    113637
+   ]
+  },
+  {
+   "title": "ABU TV ソング・フェスティバル2012",
+   "type": 2,
+   "date1": "2012-10-14",
+   "date2": null,
+   "venue": "釜山KBSホール",
+   "schedule": "10月14日 (日) 釜山KBSホール",
+   "source": "livefans",
+   "lf_event_ids": [
+    1492924
+   ]
+  },
+  {
+   "title": "Perfume WORLD TOUR 1st",
+   "type": 0,
+   "date1": "2012-10-26",
+   "date2": "2012-11-24",
+   "venue": null,
+   "schedule": "10月26日 (金) Neo Studio\n11月7日 (水) Rotunda 3\n11月17日 (土) AX-KOREA\n11月24日 (土) *SCAPE",
+   "source": "official"
+  },
+  {
+   "title": "Act Against AIDS 2012 「THE VARIETY 20」",
+   "type": 2,
+   "date1": "2012-11-30",
+   "date2": null,
+   "venue": "日本武道館",
+   "schedule": "11月30日 (金) 日本武道館",
+   "source": "livefans",
+   "lf_event_ids": [
+    115557
+   ]
+  },
+  {
+   "title": "COUNTDOWN JAPAN 12/13",
+   "type": 2,
+   "date1": "2012-12-28",
+   "date2": null,
+   "venue": "幕張メッセ",
+   "schedule": "12月28日 (金) 幕張メッセ",
+   "source": "livefans",
+   "lf_event_ids": [
+    126155
+   ]
+  },
+  {
+   "title": "U-EXPRESS LIVE 2013",
+   "type": 2,
+   "date1": "2013-03-02",
+   "date2": null,
+   "venue": "幕張メッセ 国際展示場 9～11ホール",
+   "schedule": "3月2日 (土) 幕張メッセ 国際展示場 9～11ホール",
+   "source": "livefans",
+   "lf_event_ids": [
+    153904
+   ]
+  },
+  {
+   "title": "TOKYO METROPOLITAN ROCK FESTIVAL 2013",
+   "type": 2,
+   "date1": "2013-05-26",
+   "date2": null,
+   "venue": "若洲公園",
+   "schedule": "5月26日 (日) 若洲公園",
+   "source": "livefans",
+   "lf_event_ids": [
+    153696
+   ]
+  },
+  {
+   "title": "ずっと好きだったんじゃけぇ〜さすらいの麺カタ Perfume FES!!",
+   "type": 0,
+   "date1": "2013-05-29",
+   "date2": "2013-06-18",
+   "venue": null,
+   "schedule": "5月29日 (水) Zepp DiverCity (出演: 斉藤和義)\n5月30日 (木) Zepp DiverCity (出演: 斉藤和義)\n6月4日 (火) Zepp Nagoya (出演: 奥田民生)\n6月5日 (水) Zepp Nagoya (出演: 奥田民生)\n6月17日 (月) Zepp Namba (出演: マキシマム ザ ホルモン)\n6月18日 (火) Zepp Namba (出演: マキシマム ザ ホルモン)",
+   "source": "official"
+  },
+  {
+   "title": "カンヌライオンズ 国際クリエイティビティ・フェスティバル",
+   "type": 2,
+   "date1": "2013-06-20",
+   "date2": null,
+   "venue": "Palais des Festivals et des Congrès",
+   "schedule": "6月20日 (木) Palais des Festivals et des Congrès",
+   "source": "official"
+  },
+  {
+   "title": "Perfume WORLD TOUR 2nd",
+   "type": 0,
+   "date1": "2013-07-03",
+   "date2": "2013-07-07",
+   "venue": null,
+   "schedule": "7月3日 (水) GLORIA\n7月5日 (金) O2 Shepherd's Bush Empire\n7月7日 (日) Le Bataclan",
+   "source": "official"
+  },
+  {
+   "title": "Amuse 35th Anniversary BBQ inつま恋 ～僕らのビートを喰らえコラ!～",
+   "type": 2,
+   "date1": "2013-07-13",
+   "date2": "2013-07-14",
+   "venue": "つま恋",
+   "schedule": "7月13日 (土) つま恋\n7月14日 (日) つま恋",
+   "source": "livefans",
+   "lf_event_ids": [
+    161086,
+    161100
+   ]
+  },
+  {
+   "title": "ROCK IN JAPAN FESTIVAL 2013",
+   "type": 2,
+   "date1": "2013-08-04",
+   "date2": null,
+   "venue": "国営ひたち海浜公園",
+   "schedule": "8月4日 (日) 国営ひたち海浜公園",
+   "source": "livefans",
+   "lf_event_ids": [
+    172370
+   ]
+  },
+  {
+   "title": "SONICMANIA 2013",
+   "type": 2,
+   "date1": "2013-08-09",
+   "date2": null,
+   "venue": "幕張メッセ",
+   "schedule": "8月9日 (金) 幕張メッセ",
+   "source": "livefans",
+   "lf_event_ids": [
+    176070
+   ]
+  },
+  {
+   "title": "SUMMER SONIC 2013",
+   "type": 2,
+   "date1": "2013-08-11",
+   "date2": null,
+   "venue": "舞洲SUMMER SONIC大阪特設会場",
+   "schedule": "8月11日 (日) 舞洲SUMMER SONIC大阪特設会場",
+   "source": "livefans",
+   "lf_event_ids": [
+    185626
+   ]
+  },
+  {
+   "title": "Perfume LIVE at NHK",
+   "type": 2,
+   "date1": "2013-09-26",
+   "date2": null,
+   "venue": "NHK放送センター 101スタジオ",
+   "schedule": "9月26日 (木) NHK放送センター 101スタジオ",
+   "source": "livefans",
+   "lf_event_ids": [
+    1473423
+   ]
+  },
+  {
+   "title": "Perfume 4th Tour in DOME \"LEVEL3\"",
+   "type": 0,
+   "date1": "2013-12-07",
+   "date2": "2013-12-25",
+   "venue": null,
+   "schedule": "12月7日 (土) 京セラドーム大阪\n12月8日 (日) 京セラドーム大阪\n12月24日 (火) 東京ドーム\n12月25日 (水) 東京ドーム",
+   "source": "official"
+  },
+  {
+   "title": "第9回 KKBOX MUSIC AWARDS",
+   "type": 2,
+   "date1": "2014-02-22",
+   "date2": null,
+   "venue": "台北アリーナ",
+   "schedule": "2月22日 (土) 台北アリーナ",
+   "source": "livefans",
+   "lf_event_ids": [
+    1645706
+   ]
+  },
+  {
+   "title": "Perfume FES!! 2014",
+   "type": 0,
+   "date1": "2014-03-15",
+   "date2": "2014-10-12",
+   "venue": null,
+   "schedule": "3月15日 (土) NHK ホール (出演: 東京スカパラダイスオーケストラ)\n3月16日 (日) NHK ホール (出演: RIP SLYME)\n3月20日 (木) 上野学園ホール (出演: 9nine)\n3月21日 (金・祝) 上野学園ホール (出演: 9nine)\n4月4日 (金) 静岡市民文化会館 (出演: 9mm Parabellum Bullet)\n4月7日 (月) 本多の森ホール (出演: RHYMESTER)\n4月9日 (水) アルファあなぶきホール (出演: 秦 基博)\n4月11日 (金) 鹿児島市民文化ホール第一 (出演: 高橋 優)\n10月12日 (日) AX-KOREA (出演: マキシマム ザ ホルモン)",
+   "source": "official"
+  },
+  {
+   "title": "REQUESTAGE 12",
+   "type": 2,
+   "date1": "2014-04-29",
+   "date2": null,
+   "venue": "大阪城ホール",
+   "schedule": "4月29日 (火) 大阪城ホール",
+   "source": "livefans",
+   "lf_event_ids": [
+    246515
+   ]
+  },
+  {
+   "title": "TOKYO METROPOLITAN ROCK FESTIVAL 2014",
+   "type": 2,
+   "date1": "2014-05-25",
+   "date2": null,
+   "venue": "若洲公園",
+   "schedule": "5月25日 (日) 若洲公園",
+   "source": "livefans",
+   "lf_event_ids": [
+    245318
+   ]
+  },
+  {
+   "title": "「SAYONARA 国立競技場FINAL WEEK JAPAN NIGHT」\"Japan to the World\"",
+   "type": 2,
+   "date1": "2014-05-29",
+   "date2": null,
+   "venue": "国立競技場",
+   "schedule": "5月29日 (木) 国立競技場",
+   "source": "livefans",
+   "lf_event_ids": [
+    280854
+   ]
+  },
+  {
+   "title": "\"Cling Cling\" World スペシャルイベント",
+   "type": 2,
+   "date1": "2014-07-14",
+   "date2": null,
+   "venue": "原宿ASTRO HALL",
+   "schedule": "7月14日 (月) 原宿ASTRO HALL",
+   "source": "livefans",
+   "lf_event_ids": [
+    1619285
+   ]
+  },
+  {
+   "title": "Amuse Fes 2014 BBQ inつま恋 ～僕らのビートを喰らえコラ!～",
+   "type": 2,
+   "date1": "2014-07-19",
+   "date2": null,
+   "venue": "つま恋",
+   "schedule": "7月19日 (土) つま恋",
+   "source": "livefans",
+   "lf_event_ids": [
+    264747
+   ]
+  },
+  {
+   "title": "Perfume 5th Tour 2014 \"ぐるんぐるん\"",
+   "type": 0,
+   "date1": "2014-08-01",
+   "date2": "2014-09-21",
+   "venue": null,
+   "schedule": "8月1日 (金) 広島グリーンアリーナ\n8月2日 (土) 広島グリーンアリーナ\n8月9日 (土) マリンメッセ福岡\n8月10日 (日) マリンメッセ福岡\n8月19日 (火) 大阪城ホール\n8月20日 (水) 大阪城ホール\n8月30日 (土) 真駒内セキスイハイムアイスアリーナ\n9月5日 (金) 日本ガイシホール\n9月6日 (土) 日本ガイシホール\n9月13日 (土) 宮城セキスイハイムスーパーアリーナ\n9月17日 (水) 国立代々木競技場第一体育館\n9月18日 (木) 国立代々木競技場第一体育館\n9月20日 (土) 国立代々木競技場第一体育館\n9月21日 (日) 国立代々木競技場第一体育館",
+   "source": "official"
+  },
+  {
+   "title": "Perfume WORLD TOUR 3rd",
+   "type": 0,
+   "date1": "2014-10-31",
+   "date2": "2014-11-15",
+   "venue": null,
+   "schedule": "10月31日 (金) Taipei International Convention Center\n11月2日 (日) Resorts WorldTM Theatre, Resorts World Sentosa\n11月9日 (日) HOLLYWOOD PALLADIUM\n11月12日 (水) EVENTIM APOLLO HAMMERSMITH\n11月15日 (土) HAMMERSTEIN BALLROOM",
+   "source": "official"
+  },
+  {
+   "title": "仮面チャウダー ～YAJIO CRAZY～ チャウ大ユニバーシティインターナショナルコラーゲンハイスクール",
+   "type": 2,
+   "date1": "2014-12-20",
+   "date2": null,
+   "venue": "大阪城ホール",
+   "schedule": "12月20日 (土) 大阪城ホール",
+   "source": "livefans",
+   "lf_event_ids": [
+    389420
+   ]
+  },
+  {
+   "title": "SXSW 2015",
+   "type": 2,
+   "date1": "2015-03-17",
+   "date2": null,
+   "venue": "Highland",
+   "schedule": "3月17日 (火) Highland",
+   "source": "official"
+  },
+  {
+   "title": "TOKYO METROPOLITAN ROCK FESTIVAL 2015",
+   "type": 2,
+   "date1": "2015-05-23",
+   "date2": null,
+   "venue": "若洲公園",
+   "schedule": "5月23日 (土) 若洲公園",
+   "source": "livefans",
+   "lf_event_ids": [
+    422365
+   ]
+  },
+  {
+   "title": "Amuse Fes 2015 BBQ inつま恋 ～僕らのビートを喰らえコラ!～",
+   "type": 2,
+   "date1": "2015-07-19",
+   "date2": null,
+   "venue": "つま恋",
+   "schedule": "7月19日 (日) つま恋",
+   "source": "livefans",
+   "lf_event_ids": [
+    456905
+   ]
+  },
+  {
+   "title": "ROCK IN JAPAN FESTIVAL 2015",
+   "type": 2,
+   "date1": "2015-08-01",
+   "date2": null,
+   "venue": "国営ひたち海浜公園",
+   "schedule": "8月1日 (土) 国営ひたち海浜公園",
+   "source": "livefans",
+   "lf_event_ids": [
+    475692
+   ]
+  },
+  {
+   "title": "SONICMANIA 2015",
+   "type": 2,
+   "date1": "2015-08-14",
+   "date2": null,
+   "venue": "幕張メッセ",
+   "schedule": "8月14日 (金) 幕張メッセ",
+   "source": "livefans",
+   "lf_event_ids": [
+    467477
+   ]
+  },
+  {
+   "title": "RISING SUN ROCK FESTIVAL 2015 in EZO",
+   "type": 2,
+   "date1": "2015-08-15",
+   "date2": null,
+   "venue": "石狩湾新港樽川ふ頭横野外特設ステージ",
+   "schedule": "8月15日 (土) 石狩湾新港樽川ふ頭横野外特設ステージ",
+   "source": "livefans",
+   "lf_event_ids": [
+    467488,
+    502280
+   ]
+  },
+  {
+   "title": "MONSTER baSH 2015",
+   "type": 2,
+   "date1": "2015-08-22",
+   "date2": null,
+   "venue": "国営讃岐まんのう公園内 芝生広場",
+   "schedule": "8月22日 (土) 国営讃岐まんのう公園内 芝生広場",
+   "source": "livefans",
+   "lf_event_ids": [
+    470514
+   ]
+  },
+  {
+   "title": "SPACE SHOWER SWEET LOVE SHOWER 2015 -20th ANNIVERSARY-",
+   "type": 2,
+   "date1": "2015-08-30",
+   "date2": null,
+   "venue": "山中湖交流プラザきらら",
+   "schedule": "8月30日 (日) 山中湖交流プラザきらら",
+   "source": "livefans",
+   "lf_event_ids": [
+    479792
+   ]
+  },
+  {
+   "title": "Perfume Anniversary 10days 2015 PPPPPPPPPP",
+   "type": 0,
+   "date1": "2015-09-21",
+   "date2": "2015-10-07",
+   "venue": null,
+   "schedule": "9月21日 (月・祝) TSUTAYA O-WEST (P.T.A. サミット)\n9月22日 (火・祝) 日本武道館 (Perfume FES!! 2015 ~三人祭~)\n9月26日 (土) 日本武道館 (LIVE 3:5:6:9)\n9月27日 (日) 日本武道館 (LIVE 3:5:6:9)\n9月29日 (火) 日本武道館 (LIVE 3:5:6:9)\n9月30日 (水) 日本武道館 (LIVE 3:5:6:9)\n10月6日 (火) 広島グリーンアリーナ (LIVE 3:5:6:9)\n10月7日 (水) 広島グリーンアリーナ (LIVE 3:5:6:9)",
+   "source": "official"
+  },
+  {
+   "title": "Act Against AIDS 2015「THE VARIETY 23」",
+   "type": 2,
+   "date1": "2015-12-01",
+   "date2": null,
+   "venue": "日本武道館",
+   "schedule": "12月1日 (火) 日本武道館",
+   "source": "livefans",
+   "lf_event_ids": [
+    545795
+   ]
+  },
+  {
+   "title": "チャットモンチーの徳島こなそんそんフェス2016～みな、おいでなしてよ!～",
+   "type": 2,
+   "date1": "2016-02-28",
+   "date2": null,
+   "venue": "アスティとくしま",
+   "schedule": "2月28日 (日) アスティとくしま",
+   "source": "livefans",
+   "lf_event_ids": [
+    562131
+   ]
+  },
+  {
+   "title": "Perfume 6th Tour 2016 \"COSMIC EXPLORER\"",
+   "type": 0,
+   "date1": "2016-05-03",
+   "date2": "2016-07-03",
+   "venue": null,
+   "schedule": "5月3日 (火・祝) 宮城セキスイハイムスーパーアリーナ\n5月4日 (水・祝) 宮城セキスイハイムスーパーアリーナ\n5月21日 (土) 静岡エコパアリーナ\n5月22日 (日) 静岡エコパアリーナ\n5月28日 (土) サンドーム福井\n5月29日 (日) サンドーム福井\n6月4日 (土) アスティとくしま\n6月5日 (日) アスティとくしま\n6月16日 (木) 幕張メッセ国際展示場\n6月18日 (土) 幕張メッセ国際展示場\n6月19日 (日) 幕張メッセ国際展示場\n6月25日 (土) 和歌山ビッグホエール\n6月26日 (日) 和歌山ビッグホエール\n7月2日 (土) 北海きたえーる\n7月3日 (日) 北海きたえーる",
+   "source": "official"
+  },
+  {
+   "title": "Perfume 6th Tour 2016 \"COSMIC EXPLORER\" 北米ツアー",
+   "type": 0,
+   "date1": "2016-08-26",
+   "date2": "2016-09-04",
+   "venue": null,
+   "schedule": "8月26日 (金) The Wiltern\n8月28日 (日) The Warfield\n8月31日 (水) The Vic Theatre\n9月3日 (土) HAMMERSTEIN BALLROOM\n9月4日 (日) HAMMERSTEIN BALLROOM",
+   "source": "official"
+  },
+  {
+   "title": "Perfume 6th Tour 2016 \"COSMIC EXPLORER\" Dome Edition",
+   "type": 0,
+   "date1": "2016-10-22",
+   "date2": "2016-11-12",
+   "venue": null,
+   "schedule": "10月22日 (土) 京セラドーム大阪\n10月23日 (日) 京セラドーム大阪\n11月3日 (木・祝) ナゴヤドーム\n11月4日 (金) ナゴヤドーム\n11月12日 (土) 福岡 ヤフオク!ドーム",
+   "source": "official"
+  },
+  {
+   "title": "COUNTDOWN JAPAN 16/17",
+   "type": 2,
+   "date1": "2016-12-28",
+   "date2": null,
+   "venue": "幕張メッセ",
+   "schedule": "12月28日 (水) 幕張メッセ",
+   "source": "livefans",
+   "lf_event_ids": [
+    723398
+   ]
+  },
+  {
+   "title": "New Single 「TOKYO GIRL」 リリース記念企画",
+   "type": 2,
+   "date1": "2017-02-14",
+   "date2": null,
+   "venue": "オンラインライブ",
+   "schedule": "2月14日 (火) オンラインライブ",
+   "source": "livefans",
+   "lf_event_ids": [
+    1619288
+   ]
+  },
+  {
+   "title": "FM802 SPECIAL LIVE 紀陽銀行 presents REQUESTAGE 15",
+   "type": 2,
+   "date1": "2017-04-29",
+   "date2": null,
+   "venue": "大阪城ホール",
+   "schedule": "4月29日 (土) 大阪城ホール",
+   "source": "livefans",
+   "lf_event_ids": [
+    768081
+   ]
+  },
+  {
+   "title": "OSAKA METROPOLITAN ROCK FESTIVAL 2017",
+   "type": 2,
+   "date1": "2017-05-14",
+   "date2": null,
+   "venue": "海とのふれあい広場",
+   "schedule": "5月14日 (日) 海とのふれあい広場",
+   "source": "livefans",
+   "lf_event_ids": [
+    778633
+   ]
+  },
+  {
+   "title": "Perfume FES!! 2017 〜前夜祭〜",
+   "type": 1,
+   "date1": "2017-06-02",
+   "date2": null,
+   "venue": "幕張メッセ国際展示場 9〜11ホール",
+   "schedule": "6月2日 (金) 幕張メッセ国際展示場 9〜11ホール (出演: 電気グルーヴ)",
+   "source": "official"
+  },
+  {
+   "title": "Perfume FES!! 2017",
+   "type": 0,
+   "date1": "2017-06-03",
+   "date2": "2017-09-14",
+   "venue": null,
+   "schedule": "6月3日 (土) 幕張メッセ国際展示場 9〜11ホール (出演: チャットモンチー・渡辺直美)\n9月6日 (水) 愛知県体育館 (出演: スガ シカオ)\n9月7日 (木) 愛知県体育館 (出演: レキシ)\n9月13日 (水) 大阪城ホール (出演: 星野 源)\n9月14日 (木) 大阪城ホール (出演: マキシマム ザ ホルモン)",
+   "source": "official"
+  },
+  {
+   "title": "Amuse Fes in MAKUHARI 2017 -rediscover-",
+   "type": 2,
+   "date1": "2017-06-04",
+   "date2": null,
+   "venue": "幕張メッセ 国際展示場 9～10ホール",
+   "schedule": "6月4日 (日) 幕張メッセ 国際展示場 9～10ホール",
+   "source": "livefans",
+   "lf_event_ids": [
+    776234
+   ]
+  },
+  {
+   "title": "フジファブリック 2マンツアー フジフレンドパーク2017",
+   "type": 2,
+   "date1": "2017-06-26",
+   "date2": null,
+   "venue": "Zepp Osaka Bayside",
+   "schedule": "6月26日 (月) Zepp Osaka Bayside",
+   "source": "livefans",
+   "lf_event_ids": [
+    807979
+   ]
+  },
+  {
+   "title": "JOIN ALIVE 2017",
+   "type": 2,
+   "date1": "2017-07-16",
+   "date2": null,
+   "venue": "いわみざわ公園",
+   "schedule": "7月16日 (日) いわみざわ公園",
+   "source": "livefans",
+   "lf_event_ids": [
+    813675
+   ]
+  },
+  {
+   "title": "ROCK IN JAPAN FESTIVAL 2017",
+   "type": 2,
+   "date1": "2017-08-11",
+   "date2": null,
+   "venue": "国営ひたち海浜公園",
+   "schedule": "8月11日 (金) 国営ひたち海浜公園",
+   "source": "livefans",
+   "lf_event_ids": [
+    817472
+   ]
+  },
+  {
+   "title": "SONICMANIA 2017",
+   "type": 2,
+   "date1": "2017-08-18",
+   "date2": null,
+   "venue": "幕張メッセ",
+   "schedule": "8月18日 (金) 幕張メッセ",
+   "source": "livefans",
+   "lf_event_ids": [
+    815874
+   ]
+  },
+  {
+   "title": "音楽と髭達 2017 -NO BORDER-",
+   "type": 2,
+   "date1": "2017-08-26",
+   "date2": null,
+   "venue": "HARD OFF ECOスタジアム新潟",
+   "schedule": "8月26日 (土) HARD OFF ECOスタジアム新潟",
+   "source": "livefans",
+   "lf_event_ids": [
+    807880
+   ]
+  },
+  {
+   "title": "「If you wanna」発売記念『Special Live』",
+   "type": 2,
+   "date1": "2017-08-31",
+   "date2": null,
+   "venue": "オンラインライブ",
+   "schedule": "8月31日 (木) オンラインライブ",
+   "source": "livefans",
+   "lf_event_ids": [
+    1619291
+   ]
+  },
+  {
+   "title": "KOYABU SONIC 2017",
+   "type": 2,
+   "date1": "2017-11-05",
+   "date2": null,
+   "venue": "インテックス大阪 2, 5号館",
+   "schedule": "11月5日 (日) インテックス大阪 2, 5号館",
+   "source": "livefans",
+   "lf_event_ids": [
+    867802
+   ]
+  },
+  {
+   "title": "Yasutaka Nakata presents OTONOKO 2017",
+   "type": 2,
+   "date1": "2017-12-02",
+   "date2": null,
+   "venue": "石川県産業展示館 4号館",
+   "schedule": "12月2日 (土) 石川県産業展示館 4号館",
+   "source": "livefans",
+   "lf_event_ids": [
+    853622
+   ]
+  },
+  {
+   "title": "Perfume×9nineの9ジラジNIGHT",
+   "type": 2,
+   "date1": "2017-12-06",
+   "date2": null,
+   "venue": "広島文化学園HBGホール",
+   "schedule": "12月6日 (水) 広島文化学園HBGホール",
+   "source": "livefans",
+   "lf_event_ids": [
+    863576
+   ]
+  },
+  {
+   "title": "P.T.A.発足10周年!! と5周年!! \"Perfumeとあなた\" ホールトゥワー",
+   "type": 0,
+   "date1": "2018-02-14",
+   "date2": "2018-05-24",
+   "venue": null,
+   "schedule": "2月14日 (水) 幕張イベントホール\n2月15日 (木) 幕張イベントホール\n5月7日 (月) フェスティバルホール\n5月8日 (火) フェスティバルホール\n5月10日 (木) 福岡市民会館\n5月12日 (土) 広島文化学園 HBG ホール\n5月13日 (日) 広島文化学園 HBG ホール\n5月16日 (水) 道新ホール\n5月18日 (金) 東京エレクトロンホール宮城\n5月20日 (日) 新潟テルサ\n5月22日 (火) 名古屋国際会議場センチュリーホール\n5月24日 (木) 静岡市清水文化会館マリナート",
+   "source": "official"
+  },
+  {
+   "title": "Perfume × TECHNOLOGY presents \"Reframe\"",
+   "type": 1,
+   "date1": "2018-03-20",
+   "date2": "2018-03-21",
+   "venue": "NHKホール",
+   "schedule": "3月20日 (火) NHKホール\n3月21日 (水・祝) NHKホール",
+   "source": "official"
+  },
+  {
+   "title": "Amuse Fes in MAKUHARI 2018 -雨男晴女-",
+   "type": 2,
+   "date1": "2018-06-02",
+   "date2": null,
+   "venue": "幕張メッセ 国際展示場 9～11ホール",
+   "schedule": "6月2日 (土) 幕張メッセ 国際展示場 9～11ホール",
+   "source": "livefans",
+   "lf_event_ids": [
+    909580
+   ]
+  },
+  {
+   "title": "超犀利趴9 (SUPER SLIPPA 9)",
+   "type": 2,
+   "date1": "2018-08-04",
+   "date2": null,
+   "venue": "台北アリーナ",
+   "schedule": "8月4日 (土) 台北アリーナ",
+   "source": "livefans",
+   "lf_event_ids": [
+    1005760
+   ]
+  },
+  {
+   "title": "NEW ALBUM『Future Pop』発売記念スペシャルライブ配信",
+   "type": 2,
+   "date1": "2018-08-17",
+   "date2": null,
+   "venue": "オンラインライブ",
+   "schedule": "8月17日 (金) オンラインライブ",
+   "source": "livefans",
+   "lf_event_ids": [
+    1619299
+   ]
+  },
+  {
+   "title": "Perfume 7th Tour 2018 \"FUTURE POP\"",
+   "type": 0,
+   "date1": "2018-09-21",
+   "date2": "2019-03-07",
+   "venue": null,
+   "schedule": "9月21日 (金) 長野市多目的スポーツアリーナ ビッグハット\n9月22日 (土) 長野市多目的スポーツアリーナ ビッグハット\n9月29日 (土) 大阪城ホール\n10月6日 (土) 盛運輸アリーナ (青森県営スケート場)\n10月7日 (日) 盛運輸アリーナ (青森県営スケート場)\n10月13日 (土) 静岡エコパアリーナ\n10月14日 (日) 静岡エコパアリーナ\n10月24日 (水) アスティとくしま\n10月25日 (木) アスティとくしま\n11月3日 (土・祝) 真駒内セキスイハイムアイスアリーナ\n11月4日 (日) 真駒内セキスイハイムアイスアリーナ\n11月19日 (月) 日本ガイシホール\n11月20日 (火) 日本ガイシホール\n12月11日 (火) 横浜アリーナ\n12月12日 (水) 横浜アリーナ\n12月23日 (日・祝) マリンメッセ福岡\n12月24日 (月・祝) マリンメッセ福岡\n12月28日 (金) 横浜アリーナ\n12月29日 (土) 横浜アリーナ\n12月31日 (月) 横浜アリーナ\n2019年\n3月6日 (水) 大阪城ホール\n3月7日 (木) 大阪城ホール",
+   "source": "official"
+  },
+  {
+   "title": "Perfume WORLD TOUR 4th \"FUTURE POP\"",
+   "type": 0,
+   "date1": "2019-02-23",
+   "date2": "2019-04-19",
+   "venue": null,
+   "schedule": "2月23日 (土) 国家会展中心 (上海) 虹館 EH\n3月2日 (土) 台湾大学体育館 (台大體育館1樓)\n3月30日 (土) HAMMERSTEIN BALLROOM\n4月2日 (火) QUEEN ELIZABETH THEATRE\n4月5日 (金) CHICAGO THEATRE\n4月7日 (日) THE BOMB FACTORY\n4月10日 (水) PARAMOUNT THEATRE\n4月17日 (水) CITY NATIONAL CIVIC\n4月19日 (金) ACE THEATRE",
+   "source": "official"
+  },
+  {
+   "title": "The Coachella Valley Music And Arts Festival 2019",
+   "type": 2,
+   "date1": "2019-04-14",
+   "date2": "2019-04-21",
+   "venue": "Empire Polo Club",
+   "schedule": "4月14日 (日) Empire Polo Club\n4月21日 (日) Empire Polo Club",
+   "source": "official"
+  },
+  {
+   "title": "Amuse Fes in MAKUHARI 2019",
+   "type": 2,
+   "date1": "2019-06-01",
+   "date2": null,
+   "venue": "幕張メッセ 国際展示場 9～11ホール",
+   "schedule": "6月1日 (土) 幕張メッセ 国際展示場 9～11ホール",
+   "source": "livefans",
+   "lf_event_ids": [
+    1082521
+   ]
+  },
+  {
+   "title": "ROCK IN JAPAN FESTIVAL 2019",
+   "type": 2,
+   "date1": "2019-08-04",
+   "date2": null,
+   "venue": "国営ひたち海浜公園",
+   "schedule": "8月4日 (日) 国営ひたち海浜公園",
+   "source": "livefans",
+   "lf_event_ids": [
+    1123339
+   ]
+  },
+  {
+   "title": "SUMMER SONIC 2019",
+   "type": 2,
+   "date1": "2019-08-18",
+   "date2": null,
+   "venue": "ZOZOマリンスタジアム",
+   "schedule": "8月18日 (日) ZOZOマリンスタジアム",
+   "source": "livefans",
+   "lf_event_ids": [
+    1115474
+   ]
+  },
+  {
+   "title": "SPACE SHOWER SWEET LOVE SHOWER 2019",
+   "type": 2,
+   "date1": "2019-08-31",
+   "date2": null,
+   "venue": "山中湖交流プラザきらら",
+   "schedule": "8月31日 (土) 山中湖交流プラザきらら",
+   "source": "livefans",
+   "lf_event_ids": [
+    1119470
+   ]
+  },
+  {
+   "title": "KOYABU SONIC 2019",
+   "type": 2,
+   "date1": "2019-09-15",
+   "date2": null,
+   "venue": "インテックス大阪 4～5号館",
+   "schedule": "9月15日 (日) インテックス大阪 4～5号館",
+   "source": "livefans",
+   "lf_event_ids": [
+    1146358
+   ]
+  },
+  {
+   "title": "Reframe 2019",
+   "type": 1,
+   "date1": "2019-10-16",
+   "date2": "2019-10-27",
+   "venue": "LINE CUBE SHIBUYA",
+   "schedule": "10月16日 (水) LINE CUBE SHIBUYA\n10月17日 (木) LINE CUBE SHIBUYA\n10月19日 (土) LINE CUBE SHIBUYA\n10月20日 (日) LINE CUBE SHIBUYA\n10月22日 (火・祝) LINE CUBE SHIBUYA\n10月23日 (水) LINE CUBE SHIBUYA\n10月26日 (土) LINE CUBE SHIBUYA\n10月27日 (日) LINE CUBE SHIBUYA",
+   "source": "official"
+  },
+  {
+   "title": "Perfume 8th Tour 2020 \"P Cubed\" in Dome",
+   "type": 0,
+   "date1": "2020-02-01",
+   "date2": "2020-02-26",
+   "venue": null,
+   "schedule": "2月1日 (土) 京セラドーム大阪\n2月2日 (日) 京セラドーム大阪\n2月8日 (土) 福岡 ヤフオク!ドーム\n2月15日 (土) ナゴヤドーム\n2月16日 (日) ナゴヤドーム\n2月25日 (火) 東京ドーム\n2月26日 (水) 東京ドーム",
+   "source": "official"
+  },
+  {
+   "title": "P.O.P(Perfume Online Present) Festival",
+   "type": 2,
+   "date1": "2020-09-21",
+   "date2": null,
+   "venue": "オンラインライブ",
+   "schedule": "9月21日 (月) オンラインライブ",
+   "source": "livefans",
+   "lf_event_ids": [
+    1266837
+   ]
+  },
+  {
+   "title": "Spotify presents Tokyo Super Hits Live 2020",
+   "type": 2,
+   "date1": "2020-11-26",
+   "date2": null,
+   "venue": "オンラインライブ",
+   "schedule": "11月26日 (木) オンラインライブ",
+   "source": "livefans",
+   "lf_event_ids": [
+    1278359
+   ]
+  },
+  {
+   "title": "Perfume LIVE 2021 [polygon wave]",
+   "type": 1,
+   "date1": "2021-08-14",
+   "date2": "2021-08-15",
+   "venue": "ぴあアリーナMM",
+   "schedule": "8月14日 (土) ぴあアリーナMM\n8月15日 (日) ぴあアリーナMM",
+   "source": "official"
+  },
+  {
+   "title": "SUPERSONIC 2021",
+   "type": 2,
+   "date1": "2021-09-19",
+   "date2": null,
+   "venue": "ZOZOマリンスタジアム",
+   "schedule": "9月19日 (日) ZOZOマリンスタジアム",
+   "source": "livefans",
+   "lf_event_ids": [
+    1341145
+   ]
+  },
+  {
+   "title": "テレビ朝日ドリームフェスティバル2021",
+   "type": 2,
+   "date1": "2021-09-25",
+   "date2": null,
+   "venue": "幕張メッセ 国際展示場 1～3ホール",
+   "schedule": "9月25日 (土) 幕張メッセ 国際展示場 1～3ホール",
+   "source": "livefans",
+   "lf_event_ids": [
+    1341156
+   ]
+  },
+  {
+   "title": "Reframe Tour 2021",
+   "type": 0,
+   "date1": "2021-11-12",
+   "date2": "2021-12-18",
+   "venue": null,
+   "schedule": "11月12日 (金) LINE CUBE SHIBUYA\n11月13日 (土) LINE CUBE SHIBUYA\n11月14日 (日) LINE CUBE SHIBUYA\n11月19日 (金) 金沢歌劇座\n11月20日 (土) 金沢歌劇座\n12月2日 (木) 愛知県芸術劇場・大ホール\n12月3日 (金) 愛知県芸術劇場・大ホール\n12月7日 (火) 神戸国際会館・こくさいホール\n12月9日 (木) 神戸国際会館・こくさいホール\n12月10日 (金) 神戸国際会館・こくさいホール\n12月15日 (水) 広島文化学園HBGホール\n12月17日 (金) 広島文化学園HBGホール\n12月18日 (土) 広島文化学園HBGホール",
+   "source": "official"
+  },
+  {
+   "title": "Perfume LIVE 2022 [polygon wave]",
+   "type": 1,
+   "date1": "2022-01-09",
+   "date2": "2022-01-16",
+   "venue": "ぴあアリーナMM",
+   "schedule": "1月9日 (日) ぴあアリーナMM\n1月10日 (月・祝) ぴあアリーナMM\n1月12日 (水) ぴあアリーナMM\n1月13日 (木) ぴあアリーナMM\n1月15日 (土) ぴあアリーナMM\n1月16日 (日) ぴあアリーナMM",
+   "source": "official"
+  },
+  {
+   "title": "Perfume TikTok LIVE",
+   "type": 2,
+   "date1": "2022-07-30",
+   "date2": "2022-08-13",
+   "venue": "オンラインライブ",
+   "schedule": "7月30日 (土) オンラインライブ\n8月13日 (土) オンラインライブ",
+   "source": "livefans",
+   "lf_event_ids": [
+    1472727,
+    1472736
+   ]
+  },
+  {
+   "title": "Perfume 9th Tour 2022 \"PLASMA\"",
+   "type": 0,
+   "date1": "2022-08-20",
+   "date2": "2022-11-06",
+   "venue": null,
+   "schedule": "8月20日 (土) 有明アリーナ\n8月21日 (日) 有明アリーナ\n8月31日 (水) 日本ガイシホール\n9月1日 (木) 日本ガイシホール\n9月6日 (火) 大阪城ホール\n9月7日 (水) 大阪城ホール\n9月17日 (土) 広島グリーンアリーナ\n9月18日 (日) 広島グリーンアリーナ\n9月24日 (土) マリンメッセ福岡A館\n9月25日 (日) マリンメッセ福岡A館\n10月1日 (土) 長野市多目的スポーツアリーナ　ビッグハット\n10月2日 (日) 長野市多目的スポーツアリーナ　ビッグハット\n10月7日 (金) 宮城セキスイハイムスーパーアリーナ (グランディ・21)\n10月8日 (土) 宮城セキスイハイムスーパーアリーナ (グランディ・21)\n10月29日 (土) さいたまスーパーアリーナ\n10月30日 (日) さいたまスーパーアリーナ\n11月5日 (土) 北海きたえーる\n11月6日 (日) 北海きたえーる",
+   "source": "official"
+  },
+  {
+   "title": "GENERATIONS 24時間テレビ 24時間いろんなライブできるかなぁ?",
+   "type": 2,
+   "date1": "2022-12-04",
+   "date2": null,
+   "venue": "オンラインライブ",
+   "schedule": "12月4日 (日) オンラインライブ",
+   "source": "livefans",
+   "lf_event_ids": [
+    1495936
+   ]
+  },
+  {
+   "title": "FM802 SPECIAL LIVE 紀陽銀行 presents REQUESTAGE 2023",
+   "type": 2,
+   "date1": "2023-04-29",
+   "date2": null,
+   "venue": "大阪城ホール",
+   "schedule": "4月29日 (土) 大阪城ホール",
+   "source": "livefans",
+   "lf_event_ids": [
+    1518777
+   ]
+  },
+  {
+   "title": "Primavera Sound Barcelona 2023",
+   "type": 2,
+   "date1": "2023-06-01",
+   "date2": null,
+   "venue": "PARC DEL FÒRUM",
+   "schedule": "6月1日 (木) PARC DEL FÒRUM",
+   "source": "official"
+  },
+  {
+   "title": "Perfume LIVE 2023 “CODE OF PERFUME”",
+   "type": 1,
+   "date1": "2023-06-03",
+   "date2": null,
+   "venue": "O2 Shepherd's Bush Empire",
+   "schedule": "6月3日 (土) O2 Shepherd's Bush Empire",
+   "source": "official"
+  },
+  {
+   "title": "J-WAVE presents INSPIRE TOKYO 2023 -Best Music & Market-",
+   "type": 2,
+   "date1": "2023-07-16",
+   "date2": null,
+   "venue": "国立代々木競技場 第一体育館",
+   "schedule": "7月16日 (日) 国立代々木競技場 第一体育館",
+   "source": "livefans",
+   "lf_event_ids": [
+    1541708
+   ]
+  },
+  {
+   "title": "SONICMANIA 2023",
+   "type": 2,
+   "date1": "2023-08-18",
+   "date2": null,
+   "venue": "幕張メッセ",
+   "schedule": "8月18日 (金) 幕張メッセ",
+   "source": "livefans",
+   "lf_event_ids": [
+    1543108
+   ]
+  },
+  {
+   "title": "SUMMER SONIC 2023",
+   "type": 2,
+   "date1": "2023-08-20",
+   "date2": null,
+   "venue": "舞洲SUMMER SONIC大阪特設会場",
+   "schedule": "8月20日 (日) 舞洲SUMMER SONIC大阪特設会場",
+   "source": "livefans",
+   "lf_event_ids": [
+    1543129
+   ]
+  },
+  {
+   "title": "SPACE SHOWER SWEET LOVE SHOWER 2023",
+   "type": 2,
+   "date1": "2023-08-25",
+   "date2": null,
+   "venue": "山中湖交流プラザきらら",
+   "schedule": "8月25日 (金) 山中湖交流プラザきらら",
+   "source": "livefans",
+   "lf_event_ids": [
+    1538478
+   ]
+  },
+  {
+   "title": "P.T.A.15th&10th Anniversary “Perfumeとあなた”ホールトゥワー2023",
+   "type": 0,
+   "date1": "2023-09-21",
+   "date2": "2023-11-18",
+   "venue": null,
+   "schedule": "9月21日 (木) カナモトホール\n9月26日 (火) 愛知県芸術劇場\n9月27日 (水) 愛知県芸術劇場\n10月3日 (火) 大阪国際会議場メインホール\n10月4日 (水) 大阪国際会議場メインホール\n10月10日 (火) 上野学園ホール\n10月11日 (水) 上野学園ホール\n10月17日 (火) LINE CUBE SHIBUYA\n10月18日 (水) LINE CUBE SHIBUYA\n10月23日 (月) パシフィコ横浜国⽴⼤ホール\n10月24日 (火) 仙台サンプラザホール\n10月27日 (金) 福岡サンパレス ホテル&ホール\n10月30日 (月) 神⼾国際会館こくさいホール\n11月18日 (土) 沖縄市⺠会館",
+   "source": "official"
+  },
+  {
+   "title": "イナズマロックフェス 2023",
+   "type": 2,
+   "date1": "2023-10-08",
+   "date2": null,
+   "venue": "滋賀県草津市烏丸半島芝生広場",
+   "schedule": "10月8日 (日) 滋賀県草津市烏丸半島芝生広場",
+   "source": "livefans",
+   "lf_event_ids": [
+    1559246
+   ]
+  },
+  {
+   "title": "テレビ朝日ドリームフェスティバル2023×Perfume FES!!",
+   "type": 2,
+   "date1": "2023-11-05",
+   "date2": null,
+   "venue": "幕張メッセ　国際展示場1・2・3・4ホール",
+   "schedule": "11月5日 (日) 幕張メッセ　国際展示場1・2・3・4ホール",
+   "source": "official"
+  },
+  {
+   "title": "Perfume Countdown Live 2023→2024 “COD3 OF P3RFUM3” ZOZ5",
+   "type": 1,
+   "date1": "2023-12-30",
+   "date2": "2023-12-31",
+   "venue": "ぴあアリーナMM",
+   "schedule": "12月30日 (土) ぴあアリーナMM\n12月31日 (日) ぴあアリーナMM",
+   "source": "official"
+  },
+  {
+   "title": "Perfume P.T.A.発足 16周年へのカウントダウン 猛者だけのLIVE 〜 リキッドルーム あの夜をもう一度 2024 〜",
+   "type": 1,
+   "date1": "2024-02-13",
+   "date2": "2024-02-14",
+   "venue": "恵比寿LIQUIDROOM",
+   "schedule": "2月13日 (火) 恵比寿LIQUIDROOM\n2月14日 (水) 恵比寿LIQUIDROOM",
+   "source": "official"
+  },
+  {
+   "title": "DayDay. SUPER LIVE 2024",
+   "type": 2,
+   "date1": "2024-03-09",
+   "date2": null,
+   "venue": "横浜アリーナ",
+   "schedule": "3月9日 (土) 横浜アリーナ",
+   "source": "livefans",
+   "lf_event_ids": [
+    1638178
+   ]
+  },
+  {
+   "title": "Perfume \"COD3 OF P3RFUM3 ZOZ5\" Asia Tour 2024",
+   "type": 0,
+   "date1": "2024-06-08",
+   "date2": "2024-07-13",
+   "venue": null,
+   "schedule": "6月8日 (土) AsiaWorld-Expo, Hall 10\n6月29日 (土) NECC Hong Arena\n7月6日 (土) Taipei Music Center\n7月13日 (土) UOB LIVE",
+   "source": "official"
+  },
+  {
+   "title": "EIGHT-JAM FES",
+   "type": 2,
+   "date1": "2024-06-22",
+   "date2": null,
+   "venue": "さいたまスーパーアリーナ",
+   "schedule": "6月22日 (土) さいたまスーパーアリーナ",
+   "source": "livefans",
+   "lf_event_ids": [
+    1661837
+   ]
+  },
+  {
+   "title": "Perfume 25th & 20th Anniversary Live Performance \"IMA IMA IMA\" Powered by NTT",
+   "type": 2,
+   "date1": "2024-09-21",
+   "date2": null,
+   "venue": "オンラインライブ",
+   "schedule": "9月21日 (土) オンラインライブ",
+   "source": "livefans",
+   "lf_event_ids": [
+    1716586
+   ]
+  },
+  {
+   "title": "UMIMOYASU 2024 MOVE -MAKE A MOVE-",
+   "type": 2,
+   "date1": "2024-10-20",
+   "date2": null,
+   "venue": "Zepp Haneda",
+   "schedule": "10月20日 (日) Zepp Haneda",
+   "source": "livefans",
+   "lf_event_ids": [
+    1700814
+   ]
+  },
+  {
+   "title": "anti sleeps tour 2024",
+   "type": 2,
+   "date1": "2024-11-23",
+   "date2": "2024-11-24",
+   "venue": "広島県立総合体育館 広島グリーンアリーナ",
+   "schedule": "11月23日 (土) 広島県立総合体育館 広島グリーンアリーナ\n11月24日 (日) 広島県立総合体育館 広島グリーンアリーナ",
+   "source": "livefans",
+   "lf_event_ids": [
+    1672177,
+    1672182
+   ]
+  },
+  {
+   "title": "Perfume 10th Tour ZOZ5 \"ネビュラロマンス\" Episode 1",
+   "type": 0,
+   "date1": "2024-12-28",
+   "date2": "2025-04-20",
+   "venue": null,
+   "schedule": "12月28日 (土) ぴあアリーナMM\n12月29日 (日) ぴあアリーナMM\n12月31日 (火) ぴあアリーナMM\n2025年\n1月18日 (土) SAGAアリーナ\n1月19日 (日) SAGAアリーナ\n1月25日 (土) アスティとくしま\n1月26日 (日) アスティとくしま\n2月15日 (土) 有明アリーナ\n2月16日 (日) 有明アリーナ\n2月22日 (土) エコパアリーナ\n2月23日 (日) エコパリーナ\n3月4日 (火) 大阪城ホール\n3月5日 (水) 大阪城ホール\n3月15日 (土) サンドーム福井\n3月16日 (日) サンドーム福井\n3月22日 (土) 宮城セキスイハイムスーパーアリーナ\n3月23日 (日) 宮城セキスイハイムスーパーアリーナ\n3月29日 (土) ポートメッセなごや 第1展示館\n3月30日 (日) ポートメッセなごや 第1展示館\n4月12日 (土) 真駒内セキスイハイムアイスアリーナ\n4月13日 (日) 真駒内セキスイハイムアイスアリーナ\n4月19日 (土) LaLa arena TOKYO-BAY\n4月20日 (日) LaLa arena TOKYO-BAY",
+   "source": "official"
+  },
+  {
+   "title": "OSAKA MUSIC LOVER -LIVE TO THE WORLD- supported by アサヒスーパードライ WITH MASSIVE BEATS OSAKA",
+   "type": 2,
+   "date1": "2025-06-06",
+   "date2": null,
+   "venue": "大阪城ホール",
+   "schedule": "6月6日 (金) 大阪城ホール",
+   "source": "livefans",
+   "lf_event_ids": [
+    1793621
+   ]
+  },
+  {
+   "title": "SPACE SHOWER TV presents NO LIMIT!",
+   "type": 2,
+   "date1": "2025-07-11",
+   "date2": null,
+   "venue": "Zepp Haneda",
+   "schedule": "7月11日 (金) Zepp Haneda",
+   "source": "livefans",
+   "lf_event_ids": [
+    1809884
+   ]
+  },
+  {
+   "title": "70号室の住人 LIVE!!!! ～ チョコレイトポテトサラダ ～",
+   "type": 2,
+   "date1": "2025-08-09",
+   "date2": null,
+   "venue": "豊洲PIT",
+   "schedule": "8月9日 (土) 豊洲PIT",
+   "source": "livefans",
+   "lf_event_ids": [
+    1823983
+   ]
+  },
+  {
+   "title": "SONICMANIA 2025",
+   "type": 2,
+   "date1": "2025-08-15",
+   "date2": null,
+   "venue": "幕張メッセ",
+   "schedule": "8月15日 (金) 幕張メッセ",
+   "source": "livefans",
+   "lf_event_ids": [
+    1800738
+   ]
+  },
+  {
+   "title": "Perfume ZO/Z5 Anniversary “ネビュラロマンス” Episode TOKYO DOME",
+   "type": 1,
+   "date1": "2025-09-22",
+   "date2": "2025-09-23",
+   "venue": "東京ドーム",
+   "schedule": "9月22日 (月) 東京ドーム\n9月23日 (火・祝) 東京ドーム",
+   "source": "official"
+  }
+ ]
+}

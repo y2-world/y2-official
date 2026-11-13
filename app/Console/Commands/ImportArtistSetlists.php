@@ -36,7 +36,9 @@ class ImportArtistSetlists extends Command
 
         foreach ($data['setlists'] as $entry) {
             // ツアーはIDではなく開始日で特定する（新規登録したツアーはローカルと本番でIDが異なるため）
-            $tour = DbConcert::where('artist_id', $artistId)->whereDate('date1', $entry['date1'])->first();
+            // 同じ日に始まるライブが2つ以上あるとき（同じ日の別のイベント）は、題名でも見分ける
+            $sameDay = DbConcert::where('artist_id', $artistId)->whereDate('date1', $entry['date1'])->get();
+            $tour = $sameDay->count() > 1 ? $sameDay->firstWhere('title', $entry['tour_title']) : $sameDay->first();
             if (!$tour) {
                 $this->warn("tour not found: {$entry['date1']} {$entry['tour_title']}");
                 $skipped++;

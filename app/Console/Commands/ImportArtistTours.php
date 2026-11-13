@@ -27,11 +27,16 @@ class ImportArtistTours extends Command
         $update = (bool) $this->option('update');
         $created = $updated = $skipped = 0;
 
+        // 同じ日に始まるライブが2つ以上ある日（同じ日の別のイベント）
+        $sharedStarts = collect($data['tours'])->countBy('date1')->filter(fn ($count) => $count > 1);
+
         foreach ($data['tours'] as $tour) {
             $tour = array_intersect_key($tour, array_flip(self::FIELDS));
 
             // 開始日で同じツアーかを判定する。既存があれば、--update 指定時以外は管理画面での編集を守るため触らない
-            $existing = DbConcert::where('artist_id', $artistId)->whereDate('date1', $tour['date1'])->first();
+            // 同じ日に始まるライブが2つ以上ある日は、題名でも見分ける
+            $existingQuery = DbConcert::where('artist_id', $artistId)->whereDate('date1', $tour['date1']);
+            $existing = $sharedStarts->has($tour['date1']) ? $existingQuery->where('title', $tour['title'])->first() : $existingQuery->first();
 
             if ($existing && !$update) {
                 $this->line("skip (exists id={$existing->id}): {$tour['date1']} {$existing->title}");
