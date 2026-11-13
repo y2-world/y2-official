@@ -2887,6 +2887,10 @@ h5.setlist-subtitle-heading {
     color: #999;
     white-space: nowrap;
 }
+/* 🏆🥈🥉 の下は、絵文字の下の端と 🏆 の拡大（pulse）でかっこに重なるので、少しあける */
+.rank-badge + .rank-other {
+    margin-top: 4px;
+}
 .rank-other-up {
     color: #2e9d5b;
 }
