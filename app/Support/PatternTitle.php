@@ -65,14 +65,15 @@ class PatternTitle
     }
 
     // パターンの公演日の見出しの並び（「5.30 大阪城ホール」…）。公演日を選んでいなければ空
-    // 会場が1つだけのライブ（単発のライブや、同じ会場で何日もやるライブ）は、会場名を出さずに日付（と回）だけ
-    public static function dateLabels($pattern): array
+    // 会場が1つだけのライブ（単発のライブや、同じ会場で何日もやるライブ）は、会場名を出さずに日付（と回）だけ。
+    // $withVenue：会場が1つでも会場名を出す（Database の曲のページの Live Performances だけ。2026-11-13 ユーザー）
+    public static function dateLabels($pattern, bool $withVenue = false): array
     {
-        return array_values(static::dateLabelsByKey($pattern));
+        return array_values(static::dateLabelsByKey($pattern, $withVenue));
     }
 
     // dateLabels を公演日（「2000-04-06 1部」）ごとに。会場のページから来たときに、その公演の行を目立たせるのに使う
-    public static function dateLabelsByKey($pattern): array
+    public static function dateLabelsByKey($pattern, bool $withVenue = false): array
     {
         $keys = (array) ($pattern?->schedule_dates ?? []);
         if ($keys === []) {
@@ -80,7 +81,7 @@ class PatternTitle
         }
         $schedule = static::schedule($pattern);
         $entries = static::entries($keys, $schedule);
-        $label = static::singleVenue($schedule)
+        $label = !$withVenue && static::singleVenue($schedule)
             ? fn ($entry) => trim(Carbon::parse($entry['date'])->format('n.j') . ' ' . static::partLabel($entry['part'] ?? null))
             : [static::class, 'label'];
 
@@ -99,11 +100,11 @@ class PatternTitle
     }
 
     // 1公演1行。公演日1つずつと、タイトル（あれば）の行の並び。画面ではこの行を改行でつないで出す
-    public static function textLines($pattern): array
+    public static function textLines($pattern, bool $withVenue = false): array
     {
         $title = trim(preg_replace('/\s+/u', ' ', strip_tags((string) $pattern?->subtitle)));
 
-        return array_values(array_filter([...static::dateLabels($pattern), $title], fn ($line) => $line !== ''));
+        return array_values(array_filter([...static::dateLabels($pattern, $withVenue), $title], fn ($line) => $line !== ''));
     }
 
     // 縦に長くしたくないところ（管理画面の一覧）用。最初の公演の1行と「他 N 公演」、タイトルがあればその下

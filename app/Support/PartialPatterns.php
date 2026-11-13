@@ -13,7 +13,8 @@ use Illuminate\Support\Collection;
 class PartialPatterns
 {
     // $played：その曲が入っているパターン（DbSetlist か UserSetlist）。返り値：ツアー id（UserSetlist は user_concert_id） => [名前, ...]（1公演1つ。画面では1行ずつ出す）
-    public static function of(Collection $played): array
+    // $withVenue：会場が1つのライブでも公演日に会場名を付ける（Database の曲のページだけ）
+    public static function of(Collection $played, bool $withVenue = false): array
     {
         if ($played->isEmpty()) {
             return [];
@@ -33,7 +34,7 @@ class PartialPatterns
             }
             $playedIds = $playedInTour->pluck('id')->all();
             // 公演日（「5.30 大阪城ホール」1公演1行）とタイトル。どちらも無ければ「パターンN」
-            $label = fn ($p) => \App\Support\PatternTitle::textLines($p) ?: ['パターン' . ($all->search(fn ($x) => $x->id === $p->id) + 1)];
+            $label = fn ($p) => \App\Support\PatternTitle::textLines($p, $withVenue) ?: ['パターン' . ($all->search(fn ($x) => $x->id === $p->id) + 1)];
             $titles = ($groupTitlesByTour[$tourId] ?? collect())->groupBy('row')->map(fn ($rows) => $rows->pluck('title', 'order_no'));
             $names = [];
             foreach ($all->groupBy(fn ($p) => $p->row ?? 1) as $row => $rowPatterns) {
