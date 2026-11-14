@@ -7,6 +7,8 @@ use App\Filament\Resources\DbConcertResource;
 use Filament\Actions;
 use Filament\Forms;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Tables;
+use Filament\Tables\Table;
 
 class ListDbSetlists extends ListRecords
 {
@@ -30,5 +32,20 @@ class ListDbSetlists extends ListRecords
                 ->modalSubmitActionLabel('選択'),
             Actions\CreateAction::make(),
         ];
+    }
+
+    // 一覧の行ごとに、そのセットリストのライブ情報（ツアー・ライブ情報の編集画面）へのボタンを付ける
+    public function table(Table $table): Table
+    {
+        $table = DbSetlistResource::table($table);
+
+        return $table->actions([
+            Tables\Actions\Action::make('editTour')
+                ->label('ライブ情報')
+                ->icon('heroicon-o-pencil-square')
+                ->visible(fn ($record) => filled($record->tour_id))
+                ->url(fn ($record) => DbConcertResource::getUrl('edit', ['record' => $record->tour_id])),
+            ...array_values($table->getActions()),
+        ]);
     }
 }

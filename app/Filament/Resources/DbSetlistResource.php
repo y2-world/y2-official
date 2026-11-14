@@ -1063,8 +1063,11 @@ class DbSetlistResource extends Resource
                     ->label('アーティスト')
                     ->sortable()
                     ->searchable(),
+                // 長いタイトルは短くして、全部はマウスを載せると出す（ライブの一覧と同じ）
                 Tables\Columns\TextColumn::make('tour.title')
                     ->label('タイトル')
+                    ->limit(32)
+                    ->tooltip(fn ($state) => $state)
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('row')
