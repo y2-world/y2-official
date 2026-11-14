@@ -133,7 +133,8 @@
                                                                 $medleyClose = '';
                                                             @endphp
                                                             {{-- 1曲ずつが inline-block の箱なので、メドレーの改行は箱の外に置く（箱の中の改行では行が折り返さない） --}}
-                                                            @if (!$loop->first && !empty($variant['medley']))<br>@endif
+                                                            {{-- メドレーの前後で日替わりが変わるところも改行する（「ねぇ / レキシメドレー」と続けず、次の行の頭に「/ レキシメドレー」） --}}
+                                                            @if (!$loop->first && (!empty($variant['medley']) || !empty(($row['variants'][$loop->index + 1] ?? [])['medley']) || !empty(($row['variants'][$loop->index - 1] ?? [])['medley'])))<br>@endif
                                                             <span class="setlist-song-featuring">
                                                                 @if ($isExtraRow && $loop->first)
                                                                     <span class="setlist-extra-prefix">-&nbsp;</span>
