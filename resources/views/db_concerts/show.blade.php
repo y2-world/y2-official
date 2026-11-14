@@ -181,11 +181,9 @@
                                                     $featuringDisplay = $featuring !== '' && $featuringType === 'artist'
                                                         ? '/ ' . $featuring
                                                         : $featuring;
-                                                    // タイトルのあるメドレーは「タイトル（曲 ~ 曲 ~ …）」にする。かっこは曲名とすき間なしでつなぐ
-                                                    $medleyOpen = !empty($variant['medley_title']) ? e($variant['medley_title']) . '（' : '';
-                                                    if ($medleyOpen !== '') { $inTitledMedley = true; }
-                                                    $medleyClose = !empty($inTitledMedley) && empty(($row['variants'][$loop->index + 1] ?? [])['medley']) ? '）' : '';
-                                                    if ($medleyClose !== '') { $inTitledMedley = false; }
+                                                    // Summary のページと同じ形にする。タイトルのあるメドレーは、タイトルの行の下に曲を1行ずつ（かっこは付けない）
+                                                    $medleyOpen = !empty($variant['medley_title']) ? e($variant['medley_title']) . '<br>' : '';
+                                                    $medleyClose = '';
                                                 @endphp
                                                 {{-- メドレーの曲は2曲目から改行し、「~」は付けない（Summary のページと同じ） --}}
                                                 @if (!$loop->first && !empty($variant['medley']))<br>@endif
