@@ -49,7 +49,7 @@
                     $songSingle = $song->singleFromTracklist;
                     $songAlbum = $song->albumFromTracklist;
                     $isOfficialSong = $songKind === 'official';
-                    $songAlbumTitle = $isOfficialSong && $songAlbum ? $song->albumDisplayTitleFromTracklist : $songAlbum?->title;
+                    $songAlbumTitle = $songAlbum?->title;
                 @endphp
                 @if ($songSingle)
                     <p class="database-subtitle" style="font-weight: 400;"><strong>Single:</strong> <a href="{{ $isOfficialSong ? route('singles.show', $songSingle->id) : route('mypage.user_singles.show', $songSingle->id) }}" style="color: white; text-decoration: underline;">{{ $songSingle->title }}</a></p>

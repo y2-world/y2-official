@@ -15,7 +15,7 @@
     @endif
 @endif
 @if ($album)
-    <p class="database-subtitle" style="font-weight: 400;"><strong>Album:</strong> <a href="{{ route('albums.show', $album->id) }}" style="color: white; text-decoration: underline;">{{ $dbSong->albumDisplayTitleFromTracklist }}</a></p>
+    <p class="database-subtitle" style="font-weight: 400;"><strong>Album:</strong> <a href="{{ route('albums.show', $album->id) }}" style="color: white; text-decoration: underline;">{{ $album->title }}</a></p>
     @if ($album->date)
         <p class="database-subtitle">Release: {{ date('Y.m.d', strtotime($album->date)) }}</p>
     @endif
