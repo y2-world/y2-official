@@ -1302,12 +1302,6 @@ body:has(.popup.open) .navbar.fixed-top {
     padding: 96px 0 60px;
 }
 
-.popup .lyrics-item {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
 /* 閉じるボタンは丸い背景を付けず、バツだけ。ヘッダーのすぐ下の右に置く */
 .popup .close-btn,
 .popup .close-btn:hover {
@@ -1326,10 +1320,6 @@ body:has(.popup.open) .navbar.fixed-top {
 
     .popup .popup-content {
         padding: 96px 0 40px;
-    }
-
-    .popup .lyrics-item {
-        padding: 0 12px;
     }
 
     .popup .close-btn {

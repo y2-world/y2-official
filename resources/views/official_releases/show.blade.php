@@ -122,10 +122,17 @@
     <div id="lyrics-popup" class="popup">
         <div class="popup-content">
             <span class="close-btn">&times;</span>
-            <div class="lyrics-item">
-                <h4 id="popup-title" style="padding-right: 10px;"></h4> <!-- タグを修正 -->
-                <hr>
-                <p class="text" id="popup-lyrics"></p> <!-- テキストを表示 -->
+            {{-- ニュースのポップアップと同じ幅（container の中の col-xl-8） --}}
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-8">
+                        <div class="lyrics-item">
+                            <h4 id="popup-title" style="padding-right: 10px;"></h4> <!-- タグを修正 -->
+                            <hr>
+                            <p class="text" id="popup-lyrics"></p> <!-- テキストを表示 -->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
