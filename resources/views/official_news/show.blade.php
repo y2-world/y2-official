@@ -11,7 +11,7 @@
 <div class="news-detail-wrapper" style="padding-top: 40px;">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-xl-9">
+            <div class="col-xl-8">
                 <div class="element js-fadein">
                     @include('official_news._detail', ['showBackLink' => true])
                 </div>

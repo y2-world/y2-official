@@ -53,7 +53,7 @@
             {{-- 中身は /news/{id} の JSON の html（URL直打ちのページと同じ本文）を入れる --}}
             <div class="container">
                 <div class="row justify-content-center">
-                    <div class="col-xl-9" id="popup-body"></div>
+                    <div class="col-xl-8" id="popup-body"></div>
                 </div>
             </div>
         </div>
