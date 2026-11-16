@@ -1273,6 +1273,71 @@ h2 {
     }
 }
 
+/* ニュース・歌詞のポップアップは画面全体に出す。ヘッダーは上に残し、本文はURL直打ちのページと同じ位置・幅にする */
+.popup {
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    border-radius: 0;
+    box-shadow: none;
+    transform: translateY(24px);
+    transition: transform 0.35s ease, opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.popup.open {
+    transform: none;
+}
+
+/* ポップアップを開いている間も、ヘッダー（fixed-top）はポップアップより上に出す */
+body:has(.popup.open) .navbar.fixed-top {
+    z-index: 1300;
+}
+
+.popup .popup-content {
+    height: 100%;
+    max-height: none;
+    padding: 96px 0 60px;
+}
+
+.popup .lyrics-item {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* 閉じるボタンは丸い背景を付けず、バツだけ。ヘッダーのすぐ下の右に置く */
+.popup .close-btn,
+.popup .close-btn:hover {
+    position: fixed;
+    top: 68px;
+    right: 20px;
+    background: none;
+    font-size: 32px;
+}
+
+@media (max-width: 768px) {
+    .popup {
+        width: 100%;
+        border-radius: 0;
+    }
+
+    .popup .popup-content {
+        padding: 96px 0 40px;
+    }
+
+    .popup .lyrics-item {
+        padding: 0 12px;
+    }
+
+    .popup .close-btn {
+        top: 64px;
+        right: 12px;
+    }
+}
+
 
 .small-label {
     font-size: 0.8rem; /* お好みで調整 */

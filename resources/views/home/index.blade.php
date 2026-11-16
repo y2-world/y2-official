@@ -50,12 +50,11 @@
     <div id="news-popup" class="popup">
         <div class="popup-content">
             <span class="close-btn">&times;</span>
-            <div class="news-item">
-                <h4 id="popup-title"></h4>
-                <small class="date" id="popup-date"></small>
-                <hr>
-                <div class="news-text" id="popup-text"></div>
-                <img class="image" width="100%" style="padding-top: 10px;" id="popup-img">
+            {{-- 中身は /news/{id} の JSON の html（URL直打ちのページと同じ本文）を入れる --}}
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-9" id="popup-body"></div>
+                </div>
             </div>
         </div>
     </div>

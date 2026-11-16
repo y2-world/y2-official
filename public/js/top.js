@@ -216,10 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function () {
     const overlay = document.getElementById('overlay');
     const popup = document.getElementById('news-popup');
-    const popupTitle = document.getElementById('popup-title');
-    const popupDate = document.getElementById('popup-date');
-    const popupText = document.getElementById('popup-text');
-    const popupImg = document.getElementById('popup-img');
+    const popupBody = document.getElementById('popup-body');
     const closeBtn = document.querySelector('.close-btn');
     const newsContainer = document.getElementById('news-container');
 
@@ -254,24 +251,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
-                // 日付を整形
-                const date = new Date(data.published_at || data.date);
-                const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
-
-                // データをポップアップにセット
-                popupTitle.textContent = data.title;
-                popupDate.textContent = formattedDate;
-
-                // XSS対策: textContentを使用する or HTMLを許可するならDOMPurifyを利用
-                popupText.innerHTML = data.text;
-                // popupText.innerHTML = DOMPurify.sanitize(data.text);
-
-                if (data.image) {
-                    popupImg.style.display = 'block';
-                    popupImg.src = `https://res.cloudinary.com/hqrgbxuiv/${data.image}`;
-                } else {
-                    popupImg.style.display = 'none'; // 画像がない場合は非表示にする
-                }
+                // URL直打ちのページと同じ本文（サーバーで組み立てたHTML。本文は管理画面で入れたHTMLをそのまま出す）
+                popupBody.innerHTML = data.html;
+                popup.querySelector('.popup-content').scrollTop = 0;
 
                 // ポップアップを表示
                 overlay.classList.add('open');

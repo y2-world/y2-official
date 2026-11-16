@@ -56,6 +56,8 @@ class OfficialNewsController extends Controller
                 'published_at' => $news->published_at,
                 'text' => $news->text_html,
                 'image' => $news->image,
+                // ポップアップはURL直打ちのページと同じ本文を出す
+                'html' => view('official_news._detail', compact('news'))->render(),
             ]);
         }
 
