@@ -167,14 +167,9 @@ class DbSetlistResource extends Resource
     // （「I'LL BE」→「I'll be」など）、打った表記を別表記に入れる。知らない書き方（大文字・小文字だけ違う打ち間違いなど）はオリジナルの曲名のまま
     protected static function bulkItem(string $title, $artistId): array
     {
-        // 「曲名 / アーティスト名」（カバー・別名義）は、行ごとでは曲に合わないときだけ分けて、アーティスト名を「別名義アーティスト（ / 区切り）」に入れる
-        $artist = null;
-        if (($split = \App\Support\BulkCover::split($title)) && !is_int(static::bulkSongValue($title, $artistId))) {
-            [$title, $artist] = $split;
-        }
         // 手で足した行と同じ項目を初めから入れておく。無いと、反映したあとにメドレーなどのスイッチを押しても値に結び付かず、
         // 曲番が消えない・メドレーのタイトルの欄が出ない（2026-11-04）
-        $item = ['_uuid' => (string) \Illuminate\Support\Str::uuid(), 'song' => static::bulkSongValue($title, $artistId)] + ['is_daily' => false, 'medley' => false, 'medley_title' => null, 'daily_note' => null, 'featuring' => $artist, 'featuring_type' => $artist !== null ? 'artist' : 'guest', 'alternative_title' => null];
+        $item = ['_uuid' => (string) \Illuminate\Support\Str::uuid(), 'song' => static::bulkSongValue($title, $artistId)] + ['is_daily' => false, 'medley' => false, 'medley_title' => null, 'daily_note' => null, 'featuring' => null, 'featuring_type' => 'guest', 'alternative_title' => null];
         if (is_int($item['song'])
             && static::songQuery($artistId)->whereKey($item['song'])->value('title') !== $title
             && isset(static::alternativeTitleMaps($artistId)['exact'][(string) $item['song']][$title])) {
@@ -321,8 +316,7 @@ class DbSetlistResource extends Resource
                 [$typed, $linkedTitle, $linkedId, $alt] = static::$bulkLooseMatches[$uuid];
                 $rows[] = ['no' => $number, 'typed' => $typed, 'uuid' => $uuid, 'candidates' => [$linkedId => $linkedTitle], 'linked' => $linkedId, 'alts' => $alt !== null ? [$linkedId => $alt] : []];
             } elseif (isset($generated[$uuid]) && $song !== '' && !is_numeric($song)) {
-                // アーティスト名を付けた行（カバーなど）は、似ている自分の曲を候補にしない（候補が1つだとつないでしまうため）
-                $candidates = !empty($after['_artist_id']) && blank($item['featuring'] ?? null) ? \App\Support\SongMatcher::candidates(static::bulkSongTitles($after['_artist_id']), $song) : [];
+                $candidates = !empty($after['_artist_id']) ? \App\Support\SongMatcher::candidates(static::bulkSongTitles($after['_artist_id']), $song) : [];
                 $alts = [];
                 foreach ($candidates as $id => $title) {
                     $alt = static::knownVersionTitle($song, (string) $id, $title, $after['_artist_id']);
@@ -507,8 +501,8 @@ class DbSetlistResource extends Resource
             if (!$skipped) $number++;
             $song = trim((string) ($item['song'] ?? ''));
             if (isset($generated[$item['_uuid'] ?? '']) && $song !== '' && !is_numeric($song) && (!$withoutFeaturing || blank($item['featuring'] ?? null))) {
-                // 似ている曲があれば候補として出す（つなぎはしない）。アーティスト名を付けた行（カバーなど）は出さない
-                $candidates = !empty($data['_artist_id']) && blank($item['featuring'] ?? null) ? \App\Support\SongMatcher::candidates(static::bulkSongTitles($data['_artist_id']), $song) : [];
+                // 似ている曲があれば候補として出す（つなぎはしない）
+                $candidates = !empty($data['_artist_id']) ? \App\Support\SongMatcher::candidates(static::bulkSongTitles($data['_artist_id']), $song) : [];
                 $unmatched[] = $number . '. ' . $song . ($candidates ? '（候補：' . implode(' / ', $candidates) . '）' : '');
             }
         }
@@ -561,10 +555,6 @@ class DbSetlistResource extends Resource
             $title = filled($item['alternative_title'] ?? null) ? (string) $item['alternative_title'] : (is_numeric($songValue)
                 ? (string) (static::songQuery($artistId)->whereKey($songValue)->value('title') ?? $songValue)
                 : (string) $songValue);
-            // 「曲名 / アーティスト名」で入った行は、その形で見分ける
-            if (($item['featuring_type'] ?? null) === 'artist' && filled($item['featuring'] ?? null)) {
-                $title .= ' / ' . $item['featuring'];
-            }
             $preservedByTitle[$title][] = $item;
         }
 

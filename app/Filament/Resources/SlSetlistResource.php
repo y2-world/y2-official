@@ -93,10 +93,6 @@ class SlSetlistResource extends Resource
         foreach ($generatedItems as $item) {
             // 打った表記（別表記に入れたもの）があればそれ、無ければ曲名で、同じ行かを見分ける
             $title = filled($item['alternative_title'] ?? null) ? (string) $item['alternative_title'] : static::bulkSongTitle($item['song'] ?? null);
-            // 「曲名 / アーティスト名」で入った行は、その形で見分ける
-            if (($item['featuring_type'] ?? null) === 'artist' && filled($item['featuring'] ?? null)) {
-                $title .= ' / ' . $item['featuring'];
-            }
             $preservedByTitle[$title][] = $item;
         }
 
@@ -137,14 +133,9 @@ class SlSetlistResource extends Resource
     // 一括入力の1行を、セットリストの1曲にする
     private static function bulkItem(string $title, ?int $artistId): array
     {
-        // 「曲名 / アーティスト名」（カバー・別名義）は、行ごとでは曲に合わないときだけ分けて、アーティスト名を「別名義アーティスト（ / 区切り）」に入れる
-        $artist = null;
-        if (($split = \App\Support\BulkCover::split($title)) && static::bulkSongValue($title, $artistId) === $title) {
-            [$title, $artist] = $split;
-        }
         // 手で足した行と同じ項目を初めから入れておく。無いと、反映したあとにメドレーなどのスイッチを押しても値に結び付かず、
         // 曲番が消えない・メドレーのタイトルの欄が出ない（2026-11-04）
-        $item = ['_uuid' => (string) \Illuminate\Support\Str::uuid(), 'song' => static::bulkSongValue($title, $artistId)] + ['medley' => false, 'medley_title' => null, 'featuring' => $artist, 'featuring_type' => $artist !== null ? 'artist' : 'guest', 'alternative_title' => null];
+        $item = ['_uuid' => (string) \Illuminate\Support\Str::uuid(), 'song' => static::bulkSongValue($title, $artistId)] + ['medley' => false, 'medley_title' => null, 'featuring' => null, 'featuring_type' => 'guest', 'alternative_title' => null];
         // 打った表記が合った曲の名前と違い、今までのセットリストでその曲に登録した別表記と同じときだけ、別表記に入れる。
         // 知らない書き方（大文字・小文字だけ違う打ち間違いなど）はオリジナルの曲名のまま
         if ($item['song'] !== $title && static::bulkSongTitle($item['song']) !== $title && static::isKnownAlternativeTitle($item['song'], $title, $artistId)) {
@@ -225,8 +216,7 @@ class SlSetlistResource extends Resource
     private static function withCandidates(string $label, array $item, ?int $artistId): string
     {
         $song = trim((string) ($item['song'] ?? ''));
-        // アーティスト名を付けた行（カバーなど）は、似ている自分の曲を候補にしない
-        if (!$artistId || $song === '' || str_starts_with($song, 'db-') || filled($item['featuring'] ?? null)) {
+        if (!$artistId || $song === '' || str_starts_with($song, 'db-')) {
             return $label;
         }
         $candidates = \App\Support\SongMatcher::candidates(static::bulkSlSongTitles($artistId) + array_combine(
@@ -478,9 +468,8 @@ class SlSetlistResource extends Resource
                 [$typed, $linkedTitle, $linked, $alt] = static::$bulkLooseMatches[$uuid];
                 $rows[] = ['no' => $number, 'typed' => $typed, 'uuid' => $uuid, 'candidates' => [$linked => $linkedTitle], 'linked' => $linked, 'alts' => $alt !== null ? [$linked => $alt] : []];
             } elseif (isset($added[$uuid]) && $song !== '' && !is_numeric($song)) {
-                // データベースの曲とだけ合ったもの（db-…）は、Yuki's Setlists の曲として新しく登録する。候補は出さない。
-                // アーティスト名を付けた行（カバーなど）も、似ている自分の曲を候補にしない（候補が1つだとつないでしまうため）
-                $candidates = str_starts_with($song, 'db-') || !$artistId || filled($item['featuring'] ?? null) ? [] : \App\Support\SongMatcher::candidates(static::bulkSlSongTitles($artistId) + array_combine(
+                // データベースの曲とだけ合ったもの（db-…）は、Yuki's Setlists の曲として新しく登録する。候補は出さない
+                $candidates = str_starts_with($song, 'db-') || !$artistId ? [] : \App\Support\SongMatcher::candidates(static::bulkSlSongTitles($artistId) + array_combine(
                     array_map(fn ($id) => 'db-' . $id, array_keys(static::bulkUnlinkedDbSongTitles($artistId))),
                     static::bulkUnlinkedDbSongTitles($artistId),
                 ), $song);
