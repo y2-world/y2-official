@@ -78,14 +78,12 @@ class OfficialReleaseResource extends Resource
                     ->columns(1) // 1列構成（曲名 → 詳細設定）
                     ->defaultItems(1)
                     ->reorderable()
-                    ->itemLabel(function ($state, $component): string {
-                        $items = array_values($component->getState() ?: []);
-                        foreach ($items as $i => $item) {
-                            if ($item === $state) {
-                                return (string) ($i + 1);
-                            }
-                        }
-                        return (string) (count($items) ?: 1);
+                    // 曲番は行の位置で決める。中身で探すと、まだ曲を選んでいない行（中身が同じ）がみな「1」になる
+                    ->itemLabel(function (string $uuid, $component): string {
+                        $keys = array_keys($component->getState() ?? []);
+                        $position = array_search($uuid, $keys, true);
+
+                        return (string) (($position === false ? count($keys) : $position) + 1);
                     })
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('text')

@@ -38,8 +38,9 @@ class SongMatcher
         return preg_replace('/[\s\'"~\-‐―－・･.,!?！？、。\/()（）\[\]［］【】*＊]+/u', '', $title);
     }
 
-    // 似ている曲（候補。[id => 曲名]）。表記ゆれを除いた形どうしで、片方がもう片方を含む曲と、似ている度合いが高い曲を、似ている順に $limit 曲まで。
-    // 表記ゆれを除くと同じになる曲があれば、その曲だけ（「miss you*」に「YOU」は出さない。1曲に決められなかった同じ名前の曲もここ）
+    // 候補の曲（[id => 曲名]）。表記ゆれを除くと同じになる曲だけを $limit 曲まで（1曲に決められなかった同じ名前の曲もここ）。
+    // 片方がもう片方を含む曲・文字が似ているだけの曲は候補にしない。候補が1つだと確かめずにつなぐので、
+    // 「Do You Still Love Me」が「You」に、「Imagine」が「Image」につながってしまうため（2026-11-22 ユーザー）
     /** @param array<int|string, string> $songs */
     public static function candidates(array $songs, string $title, int $limit = 3): array
     {
@@ -47,36 +48,14 @@ class SongMatcher
         if ($wanted === '') {
             return [];
         }
-        // 1文字（「轍」など）は、その文字で始まる曲だけ（「轍 -わだち-」）。どこかに含むだけの曲までは出さない
-        $short = mb_strlen($wanted) < 2;
-        $scores = [];
-        foreach ($songs as $id => $song) {
-            $key = static::key((string) $song);
-            if ($key === '') {
-                continue;
-            }
-            if ($short) {
-                if (str_starts_with($key, $wanted)) {
-                    $scores[$id] = $key === $wanted ? 101 : 80;
-                }
-                continue;
-            }
-            $percent = static::similarity($wanted, $key);
-            $contains = mb_strlen($key) >= 2 && (str_contains($key, $wanted) || str_contains($wanted, $key));
-            if ($key === $wanted || $contains || $percent >= 70) {
-                $scores[$id] = $key === $wanted ? 101 : ($contains ? max($percent, 80) : $percent);
-            }
-        }
-        if (in_array(101, $scores, true)) {
-            $scores = array_filter($scores, fn ($score) => $score === 101);
-        }
-        arsort($scores);
         $result = [];
-        foreach (array_keys(array_slice($scores, 0, $limit, true)) as $id) {
-            $result[$id] = (string) $songs[$id];
+        foreach ($songs as $id => $song) {
+            if (static::key((string) $song) === $wanted) {
+                $result[$id] = (string) $song;
+            }
         }
 
-        return $result;
+        return array_slice($result, 0, $limit, true);
     }
 
     // 行の頭の曲番（「M10.」「En1.」「11.」）を外した曲名
@@ -111,23 +90,5 @@ class SongMatcher
         }
 
         return count($partial) === 1 ? reset($partial) : null;
-    }
-
-    // 似ている度合い（%）。similar_text はバイトで比べるので、日本語は1文字を1バイトに置き換えてから比べる
-    private static function similarity(string $a, string $b): float
-    {
-        $map = [];
-        $encode = function (string $s) use (&$map): string {
-            $out = '';
-            foreach (mb_str_split($s) as $char) {
-                $map[$char] ??= chr(count($map) % 256);
-                $out .= $map[$char];
-            }
-
-            return $out;
-        };
-        similar_text($encode($a), $encode($b), $percent);
-
-        return $percent;
     }
 }
