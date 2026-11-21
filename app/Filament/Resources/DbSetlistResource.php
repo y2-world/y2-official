@@ -101,7 +101,8 @@ class DbSetlistResource extends Resource
         return count($ids) === 1 ? (int) $ids[0] : null;
     }
 
-    // 今までのセットリストの別表記。lower：小文字にした別表記 => 曲、exact：曲 => 別表記（書いたとおり）
+    // 今までのセットリストの別表記。lower：小文字にした別表記 => 曲、exact：曲 => 別表記（書いたとおり）、
+    // covers：文字のまま入れた曲（カバーなど）に付けた共演者・アーティスト（表記ゆれを除いた曲名 => [共演者|表示形式 => [共演者, 表示形式]]）
     protected static function alternativeTitleMaps($artistId): array
     {
         static $maps = [];
@@ -111,6 +112,7 @@ class DbSetlistResource extends Resource
             $tourIds = AdminData::query('concert')->whereIn(AdminData::column('concert', 'artist_id'), static::songArtistIds($artistId))->pluck('id');
             $lower = [];
             $exact = [];
+            $covers = [];
             foreach (AdminData::query('setlist')->whereIn(AdminData::column('setlist', 'tour_id'), $tourIds)->get() as $setlist) {
                 foreach (array_merge($setlist->setlist ?? [], $setlist->encore ?? []) as $item) {
                     $alt = trim((string) ($item['alternative_title'] ?? ''));
@@ -119,12 +121,26 @@ class DbSetlistResource extends Resource
                         $lower[mb_strtolower($alt)][$song] = true;
                         $exact[$song][$alt] = true;
                     }
+                    $featuring = trim((string) ($item['featuring'] ?? ''));
+                    if ($featuring !== '' && $song !== '' && !is_numeric($song)) {
+                        $type = (string) ($item['featuring_type'] ?? 'guest');
+                        $covers[\App\Support\SongMatcher::key(\App\Support\TextSongs::clean($song))][$featuring . '|' . $type] = [$featuring, $type];
+                    }
                 }
             }
-            $maps[$key] = compact('lower', 'exact');
+            $maps[$key] = compact('lower', 'exact', 'covers');
         }
 
         return $maps[$key];
+    }
+
+    // 今までのセットリストで、同じ曲名（表記ゆれを除いて同じ）を文字のまま入れたときの共演者・アーティスト（[共演者, 表示形式]）。
+    // カバーの「真夏の果実 / サザンオールスターズ」など。別々の書き方があれば決められないので null
+    protected static function pastCoverCredit(string $title, $artistId): ?array
+    {
+        $credits = static::alternativeTitleMaps($artistId)['covers'][\App\Support\SongMatcher::key($title)] ?? [];
+
+        return count($credits) === 1 ? reset($credits) : null;
     }
 
     // アルバム・シングルの曲目に書いてあるバージョンの表記（「ultra soul 2011」など）。[曲の id => [書いてある表記 => true]]。
@@ -178,6 +194,10 @@ class DbSetlistResource extends Resource
             && \App\Support\SongMatcher::key($version[1]) !== \App\Support\SongMatcher::key((string) (static::bulkSongTitles($artistId)[$item['song']] ?? ''))) {
             // アルバム・シングルの曲目のバージョンでつないだ行は、曲目に書いてある表記を別表記に入れる
             $item['alternative_title'] = $version[1];
+        }
+        // 曲につながらない行は、今までのセットリストで同じ曲名に付けた共演者・アーティスト（カバーの元のアーティストなど）を入れる
+        if (!is_int($item['song']) && $artistId && ($credit = static::pastCoverCredit($title, $artistId))) {
+            [$item['featuring'], $item['featuring_type']] = $credit;
         }
         // 表記ゆれ（大文字・小文字、アポストロフィ、～〜など）だけ違う曲・別表記（前のセットリストで使った表記）でつないだ行は、反映する前のダイアログで知らせる
         if (is_int($item['song'])) {
@@ -322,7 +342,10 @@ class DbSetlistResource extends Resource
                     $alt = static::knownVersionTitle($song, (string) $id, $title, $after['_artist_id']);
                     if ($alt !== null) $alts[$id] = $alt;
                 }
-                $rows[] = ['no' => $number, 'typed' => $song, 'uuid' => $uuid, 'candidates' => $candidates, 'linked' => null, 'alts' => $alts];
+                // 今までのセットリストから共演者・アーティストを入れた行（カバーなど）は、その表記も出す（「真夏の果実 / サザンオールスターズ」）
+                $featuring = trim((string) ($item['featuring'] ?? ''));
+                $typed = $song . ($featuring === '' ? '' : (($item['featuring_type'] ?? 'guest') === 'guest' ? ' feat. ' : ' / ') . $featuring);
+                $rows[] = ['no' => $number, 'typed' => $typed, 'uuid' => $uuid, 'candidates' => $candidates, 'linked' => null, 'alts' => $alts];
             }
         }
 
