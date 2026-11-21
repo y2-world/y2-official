@@ -195,10 +195,6 @@ class DbSetlistResource extends Resource
             // アルバム・シングルの曲目のバージョンでつないだ行は、曲目に書いてある表記を別表記に入れる
             $item['alternative_title'] = $version[1];
         }
-        // 曲につながらない行は、今までのセットリストで同じ曲名に付けた共演者・アーティスト（カバーの元のアーティストなど）を入れる
-        if (!is_int($item['song']) && $artistId && ($credit = static::pastCoverCredit($title, $artistId))) {
-            [$item['featuring'], $item['featuring_type']] = $credit;
-        }
         // 表記ゆれ（大文字・小文字、アポストロフィ、～〜など）だけ違う曲・別表記（前のセットリストで使った表記）でつないだ行は、反映する前のダイアログで知らせる
         if (is_int($item['song'])) {
             $songTitle = (string) (static::bulkSongTitles($artistId)[$item['song']] ?? '');
@@ -289,7 +285,7 @@ class DbSetlistResource extends Resource
     {
         return new HtmlString(
             '以下の楽曲が合致しませんでした。<br>'
-            . implode('<br>', array_map('e', static::unmatchedBulkSongs($data)))
+            . implode('<br>', array_map('e', static::unmatchedBulkSongs($data, withCoverCredit: true)))
             . '<br>既存の楽曲にリンクせずに登録します。よろしいですか？'
         );
     }
@@ -342,10 +338,7 @@ class DbSetlistResource extends Resource
                     $alt = static::knownVersionTitle($song, (string) $id, $title, $after['_artist_id']);
                     if ($alt !== null) $alts[$id] = $alt;
                 }
-                // 今までのセットリストから共演者・アーティストを入れた行（カバーなど）は、その表記も出す（「真夏の果実 / サザンオールスターズ」）
-                $featuring = trim((string) ($item['featuring'] ?? ''));
-                $typed = $song . ($featuring === '' ? '' : (($item['featuring_type'] ?? 'guest') === 'guest' ? ' feat. ' : ' / ') . $featuring);
-                $rows[] = ['no' => $number, 'typed' => $typed, 'uuid' => $uuid, 'candidates' => $candidates, 'linked' => null, 'alts' => $alts];
+                $rows[] = ['no' => $number, 'typed' => $song, 'uuid' => $uuid, 'candidates' => $candidates, 'linked' => null, 'alts' => $alts];
             }
         }
 
@@ -510,7 +503,8 @@ class DbSetlistResource extends Resource
     }
 
     // 一括入力で新しく入った行のうち、曲にリンクしなかったもの。$withoutFeaturing なら、共演者・アーティストを入れた行（曲名の文字のまま入れる）を除く
-    public static function unmatchedBulkSongs(array $data, bool $withoutFeaturing = false): array
+    // $withCoverCredit：登録するときのダイアログだけ、今までのセットリストのカバーの表記（「真夏の果実 / サザンオールスターズ」）を付けて出す
+    public static function unmatchedBulkSongs(array $data, bool $withoutFeaturing = false, bool $withCoverCredit = false): array
     {
         $generated = array_fill_keys((array) ($data['_bulk_added_uuids'] ?? []), true);
         $items = array_merge(
@@ -526,7 +520,13 @@ class DbSetlistResource extends Resource
             if (isset($generated[$item['_uuid'] ?? '']) && $song !== '' && !is_numeric($song) && (!$withoutFeaturing || blank($item['featuring'] ?? null))) {
                 // 似ている曲があれば候補として出す（つなぎはしない）
                 $candidates = !empty($data['_artist_id']) ? \App\Support\SongMatcher::candidates(static::bulkSongTitles($data['_artist_id']), $song) : [];
-                $unmatched[] = $number . '. ' . $song . ($candidates ? '（候補：' . implode(' / ', $candidates) . '）' : '');
+                // カバーの表記も出す（「真夏の果実 / サザンオールスターズ」）。行に共演者・アーティストが入っていればそれ
+                // （「パターンを追加」で参加記録から入った行）、無ければ登録するときのダイアログだけ、今までのセットリストで同じ曲名に付けていたもの（出すだけで、行には入れない）
+                $credit = filled($item['featuring'] ?? null)
+                    ? [trim((string) $item['featuring']), (string) ($item['featuring_type'] ?? 'guest')]
+                    : ($withCoverCredit && !empty($data['_artist_id']) ? static::pastCoverCredit($song, $data['_artist_id']) : null);
+                $label = $song . ($credit === null ? '' : ($credit[1] === 'guest' ? ' feat. ' : ' / ') . $credit[0]);
+                $unmatched[] = $number . '. ' . $label . ($candidates ? '（候補：' . implode(' / ', $candidates) . '）' : '');
             }
         }
 
