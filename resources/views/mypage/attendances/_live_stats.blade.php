@@ -1,6 +1,7 @@
 {{-- 参加した公演の stats（セトリの下）。マイページの参加記録のページと、Yuki's Setlists のセットリストのページで使う。
      見た目は stats のトピックス（stats._topics_listener）と同じ（PC は .topic-pc の表、スマホは .topic-sp の段に分けた表、最初は3曲ずつ出し、4曲目からは Show More）。
      $liveStats：ArtistTopics::attendanceSummary の結果（firstHeard・welcomeBack・returns・debuts。releaseYears は Timeline のタブ＝_live_timeline）。
+     $showMostListened（任意）：Most Listened Songs を出す（Yuki's Setlists のページ）。
      $liveStatsSongUrl（任意）：曲の id => 曲のページの URL（渡さなければ Database の曲のページ）。$liveStatsTourUrl（任意）：ツアーの id => URL
      曲の無い区切りは出さない --}}
 @php
@@ -31,6 +32,8 @@
 @endphp
 {{-- Analyze のタブの中に出すので、タブとの間はあけない（タブの下の余白だけ） --}}
 <div class="live-stats">
+
+
 
 @php
     // First Listens：stats の Recent First Listens と同じく「新曲を除く」（最初は除いた状態）。新曲以外（リリースから時間がたってから初めて聴けた曲）は太字。
@@ -184,5 +187,11 @@ document.addEventListener('change', function (e) {
 @include('mypage.attendances._live_stats_songs', ['section' => ['rows' => $liveStats['onlyHere'] ?? [], 'icon' => 'fa-1', 'title' => 'Performed Only Once', 'desc' => 'このライブでしか演奏されていない曲'], 'topicSongLink' => $topicSongLink, 'shown' => $liveStatsShown])
 
 
+
+{{-- Most Listened Songs（Yuki's Setlists のページだけ。$showMostListened）：この公演で聴いた曲を、この公演までに聴いた回数の多い順。いちばん下 --}}
+@if (!empty($showMostListened))
+    @include('mypage.attendances._live_stats_badges', ['shown' => $liveStatsShown, 'section' => ['rows' => $liveStats['mostListened'] ?? [], 'icon' => 'fa-fire', 'title' => 'Most Listened Songs',
+        'desc' => 'この公演までに聴いた回数（この公演を含む）', 'label' => 'Times', 'badge' => fn ($row) => $row['count'], 'rankKey' => 'count']])
+@endif
 
 </div>

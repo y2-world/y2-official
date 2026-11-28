@@ -399,7 +399,19 @@ class ArtistTopics
         }
         usort($welcomeBack, fn ($a, $b) => $b['days'] <=> $a['days']);
 
-        return compact('firstHeard', 'welcomeBack');
+        // mostListened：この公演で聴いた曲を、この公演までに聴いた回数（この公演を含む。1公演で2回聴いても1回）の多い順。同じ回数ならセトリの順
+        $mostListened = [];
+        foreach (array_values(array_unique($show['song_ids'])) as $position => $songId) {
+            if (!isset($songTitles[$songId])) {
+                continue;
+            }
+            $count = count(array_filter($heard, fn ($other) => $other['date'] <= $show['date'] && in_array($songId, $other['song_ids'], true)));
+            $version = $show['titles'][$songId] ?? null;
+            $mostListened[] = ['song_id' => $songId, 'title' => $version ?: $songTitles[$songId], 'version' => $version ?: null, 'count' => max(1, $count), 'position' => $position];
+        }
+        usort($mostListened, fn ($a, $b) => [$b['count'], $a['position']] <=> [$a['count'], $b['position']]);
+
+        return compact('firstHeard', 'welcomeBack', 'mostListened');
     }
 
     // 参加記録のページの、その公演の stats（セトリの下）。$show はその公演（$heard の1件と同じ形。tour_id も付ける）、$heard はその人のそのアーティストの参加記録の全部。
@@ -408,7 +420,7 @@ class ArtistTopics
     // debuts：このツアーで初めて演奏された曲（このツアーより前のツアーで演奏していない曲）。セトリの順
     public function attendanceSummary(array $show, array $heard): array
     {
-        ['firstHeard' => $firstHeard, 'welcomeBack' => $welcomeBack] = static::personalListens($show, $heard, $this->songs, fn ($songId, $date) => $this->isNewSong($songId, $date));
+        ['firstHeard' => $firstHeard, 'welcomeBack' => $welcomeBack, 'mostListened' => $mostListened] = static::personalListens($show, $heard, $this->songs, fn ($songId, $date) => $this->isNewSong($songId, $date));
         $returns = $debuts = [];
         foreach (array_unique($show['song_ids']) as $songId) {
             if (!isset($this->songs[$songId])) {
@@ -438,7 +450,7 @@ class ArtistTopics
         usort($returns, fn ($a, $b) => $b['years'] <=> $a['years']);
         $releaseYears = $this->releaseYears($show);
 
-        return compact('firstHeard', 'welcomeBack', 'returns', 'debuts', 'releaseYears');
+        return compact('mostListened', 'firstHeard', 'welcomeBack', 'returns', 'debuts', 'releaseYears');
     }
 
     // その公演で演奏した曲を、発売年（シングル・アルバムでいちばん早く出た日の年）ごとに、新しい年から（参加記録のページの Analyze の下の年表）。

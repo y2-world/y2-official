@@ -285,7 +285,7 @@
                 {{-- その公演の stats があれば、Setlist / Analyze のタブで切り替える（マイページの参加記録のページと同じ） --}}
                 @php
                     // Analyze：その公演の stats がある、Timeline：演奏した曲の発売年の年表がある（どちらもアーティストのどれか1組にあれば）
-                    $artistHasAnalyze = fn ($artistStats) => collect($artistStats['stats'])->only(['firstHeard', 'welcomeBack', 'returns', 'debuts'])->contains(fn ($rows) => count($rows));
+                    $artistHasAnalyze = fn ($artistStats) => collect($artistStats['stats'])->only(['mostListened', 'firstHeard', 'welcomeBack', 'returns', 'debuts'])->contains(fn ($rows) => count($rows));
                     $artistHasTimeline = fn ($artistStats) => !empty($artistStats['stats']['releaseYears'] ?? []);
                     $hasLiveStats = collect($liveStatsByArtist ?? [])->contains($artistHasAnalyze);
                     $hasTimeline = collect($liveStatsByArtist ?? [])->contains($artistHasTimeline);
@@ -459,7 +459,7 @@
                             @if (count($liveStatsByArtist) > 1)
                                 <h3 style="text-align: center; margin: {{ $loop->first ? '0' : '40px' }} 0 16px;">{{ $artistStats['artist']->name }}</h3>
                             @endif
-                            @include('mypage.attendances._live_stats', ['liveStats' => $artistStats['stats'], 'liveStatsSongUrl' => $artistStats['songUrl'], 'liveStatsTourUrl' => $artistStats['tourUrl']])
+                            @include('mypage.attendances._live_stats', ['liveStats' => $artistStats['stats'], 'liveStatsSongUrl' => $artistStats['songUrl'], 'liveStatsTourUrl' => $artistStats['tourUrl'], 'showMostListened' => true])
                         @endforeach
                     </div>
                 @endif
