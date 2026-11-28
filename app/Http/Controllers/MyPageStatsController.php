@@ -112,6 +112,11 @@ class MyPageStatsController extends Controller
         [$kind, $id] = $this->splitRef($artistId);
         $this->statsUser = $this->resolveStatsUser($request);
 
+        // Yuki 本人のアカウントの公式アーティストの stats は、Yuki's Setlists の記録の stats（Yuki's Stats）へ
+        if ($kind === 'official' && $this->statsUser->is_yuki) {
+            return redirect()->route('stats.artist', $id);
+        }
+
         if ($kind === 'official') {
             return $this->officialArtistStats($id);
         }
@@ -226,14 +231,7 @@ class MyPageStatsController extends Controller
             ->with('dbSetlist.tour')
             ->whereHas('dbSetlist.tour', fn ($q) => $q->where('artist_id', $id))
             ->get();
-        $heard = $topicAttendances->filter(fn ($a) => $a->dbSetlist)->map(fn ($a) => [
-            'date' => $a->attended_date ? $a->attended_date->format('Y-m-d') : substr((string) optional($a->dbSetlist->tour)->date1, 0, 10),
-            'title' => optional($a->dbSetlist->tour)->title,
-            'url' => route('mypage.attendances.show', ['attendance' => $a, 'from' => 'stats']),
-            'song_ids' => collect(array_merge($a->dbSetlist->setlist ?? [], $a->dbSetlist->encore ?? []))
-                ->filter(fn ($s) => is_numeric($s['song'] ?? null))->map(fn ($s) => (int) $s['song'])->values()->all(),
-            'titles' => \App\Support\ArtistTopics::versionTitles(array_merge($a->dbSetlist->setlist ?? [], $a->dbSetlist->encore ?? [])),
-        ])->values()->all();
+        $heard = \App\Support\ArtistTopics::heardFromAttendances($topicAttendances);
         $topics = new \App\Support\ArtistTopics((int) $artist->id);
         $topicHeardRevivals = $topics->heardRevivals($heard);
         $topicFirstHeard = $topics->firstHeardTimeline($heard);
@@ -362,14 +360,7 @@ class MyPageStatsController extends Controller
         $tabArtists = $this->tabArtists($artistRef);
 
         // トピックス（公式アーティストと同じ。登録したシングル・アルバムの発売日で新曲を判定する）
-        $heard = $attendances->filter(fn ($a) => $a->userSetlist)->map(fn ($a) => [
-            'date' => $a->attended_date ? $a->attended_date->format('Y-m-d') : substr((string) optional($a->userSetlist->concert)->date1, 0, 10),
-            'title' => optional($a->userSetlist->concert)->title,
-            'url' => route('mypage.attendances.show', ['attendance' => $a, 'from' => 'stats']),
-            'song_ids' => collect(array_merge($a->userSetlist->setlist ?? [], $a->userSetlist->encore ?? []))
-                ->filter(fn ($s) => is_numeric($s['song'] ?? null))->map(fn ($s) => (int) $s['song'])->values()->all(),
-            'titles' => \App\Support\ArtistTopics::versionTitles(array_merge($a->userSetlist->setlist ?? [], $a->userSetlist->encore ?? [])),
-        ])->values()->all();
+        $heard = \App\Support\ArtistTopics::heardFromAttendances($attendances, true);
         $topics = new \App\Support\ArtistTopics((int) $artist->id, true);
         $topicHeardRevivals = $topics->heardRevivals($heard);
         $topicFirstHeard = $topics->firstHeardTimeline($heard);
@@ -415,6 +406,11 @@ class MyPageStatsController extends Controller
         [$kind, $id] = $this->splitRef($artistId);
 
         $externalUser = $this->statsUser = $this->resolveStatsUser($request);
+
+        // Yuki 本人のアカウントの公式アーティストのスタンプ帳は、Yuki's Setlists の記録のスタンプ帳へ
+        if ($kind === 'official' && $externalUser->is_yuki) {
+            return redirect()->route('stats.stamps', $id);
+        }
 
         if ($kind === 'official') {
             return $this->officialStamps($id, $externalUser);

@@ -282,6 +282,18 @@
                     }
                 @endphp
 
+                {{-- その公演の stats があれば、Setlist / Analyze のタブで切り替える（マイページの参加記録のページと同じ） --}}
+                @php
+                    // Analyze：その公演の stats がある、Timeline：演奏した曲の発売年の年表がある（どちらもアーティストのどれか1組にあれば）
+                    $artistHasAnalyze = fn ($artistStats) => collect($artistStats['stats'])->only(['firstHeard', 'welcomeBack', 'returns', 'debuts'])->contains(fn ($rows) => count($rows));
+                    $artistHasTimeline = fn ($artistStats) => !empty($artistStats['stats']['releaseYears'] ?? []);
+                    $hasLiveStats = collect($liveStatsByArtist ?? [])->contains($artistHasAnalyze);
+                    $hasTimeline = collect($liveStatsByArtist ?? [])->contains($artistHasTimeline);
+                @endphp
+                @if ($hasLiveStats || $hasTimeline)
+                    @include('mypage.attendances._live_tabs', ['liveTabs' => array_filter(['setlist' => 'Setlists', 'analyze' => $hasLiveStats ? 'Analyze' : null, 'timeline' => $hasTimeline ? 'Timeline' : null])])
+                @endif
+                <div data-live-tab-panel="setlist">
                 <div class="setlist-row setlist-row--single" style="justify-content: safe center;">
                 <div class="live-column-wrap">
                 <div class="live-column">
@@ -438,6 +450,30 @@
                 </div>{{-- live-column --}}
                 </div>{{-- live-column-wrap --}}
                 </div>{{-- setlist-row --}}
+                </div>{{-- data-live-tab-panel="setlist" --}}
+
+                {{-- その公演の stats（アーティストごと。フェスで2組以上なら、アーティスト名を見出しに） --}}
+                @if ($hasLiveStats)
+                    <div data-live-tab-panel="analyze" hidden>
+                        @foreach (collect($liveStatsByArtist)->filter($artistHasAnalyze)->values() as $artistStats)
+                            @if (count($liveStatsByArtist) > 1)
+                                <h3 style="text-align: center; margin: {{ $loop->first ? '0' : '40px' }} 0 16px;">{{ $artistStats['artist']->name }}</h3>
+                            @endif
+                            @include('mypage.attendances._live_stats', ['liveStats' => $artistStats['stats'], 'liveStatsSongUrl' => $artistStats['songUrl'], 'liveStatsTourUrl' => $artistStats['tourUrl']])
+                        @endforeach
+                    </div>
+                @endif
+                {{-- 演奏した曲の発売年の年表（アーティストごと） --}}
+                @if ($hasTimeline)
+                    <div data-live-tab-panel="timeline" hidden>
+                        @foreach (collect($liveStatsByArtist)->filter($artistHasTimeline)->values() as $artistStats)
+                            @if (count($liveStatsByArtist) > 1)
+                                <h3 style="text-align: center; margin: {{ $loop->first ? '0' : '40px' }} 0 16px;">{{ $artistStats['artist']->name }}</h3>
+                            @endif
+                            @include('mypage.attendances._live_timeline', ['releaseYears' => $artistStats['stats']['releaseYears'], 'liveStatsSongUrl' => $artistStats['songUrl']])
+                        @endforeach
+                    </div>
+                @endif
 
                 {{-- 前後リンク --}}
                 <div style="display: flex; justify-content: space-between; margin-top: 40px; padding-bottom: 40px;">

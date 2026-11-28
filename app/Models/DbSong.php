@@ -154,12 +154,20 @@ class DbSong extends Model
         }
 
         $songId = $this->id;
-        $contains = fn($single) => collect($single->tracklist ?? [])->pluck('id')->contains((string) $songId);
+        // カップリングのライブ音源（「labo (live at …)」）だけが入っているシングルは、その曲のシングルにしない（2026-11-29）
+        $contains = fn($single) => collect($single->tracklist ?? [])
+            ->contains(fn ($track) => (string) ($track['id'] ?? '') === (string) $songId && !static::isLiveVersion($track['exception'] ?? null));
 
         return DbSingle::where('artist_id', $this->artist_id)
             ->orderBy('date', 'asc')
             ->get()
             ->first($contains);
+    }
+
+    // シングル・アルバムの曲目の表記（exception）がライブ音源か（「(Live at Tokyo Dome)」「年末ライブ「FOR ROOTS」」など）
+    public static function isLiveVersion(?string $exception): bool
+    {
+        return $exception !== null && preg_match('/\blive\b|ライブ/iu', $exception) === 1;
     }
 
     // この曲（db_songs.id）が実際に演奏されたDbSetlist（setlist/encore列内に自分のidまたは

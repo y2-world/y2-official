@@ -116,12 +116,33 @@
                         @endif
                     </div>
                 @else
-                    <div class="setlist" style="width: 100%;">
+                    {{-- Setlist / Analyze / Timeline / Comments のタブで切り替える。Analyze はその公演の stats（初めて聴いた曲・久しぶりに聴いた曲・久しぶりに演奏された曲・初披露の曲）があるときだけ、
+                         Timeline は演奏した曲の発売年の年表があるときだけ。Comments は評価の星・投稿日時・コメントの枠ごと --}}
+                    @php
+                        $hasLiveStats = $liveStats && collect($liveStats)->only(['firstHeard', 'welcomeBack', 'returns', 'debuts'])->contains(fn ($rows) => count($rows));
+                        $hasTimeline = !empty($liveStats['releaseYears'] ?? []);
+                    @endphp
+                    @include('mypage.attendances._live_tabs', [
+                        'liveTabs' => array_filter(['setlist' => 'Setlists', 'analyze' => $hasLiveStats ? 'Analyze' : null, 'timeline' => $hasTimeline ? 'Timeline' : null, 'comment' => 'Comments']),
+                        'liveCommentCount' => $attendance->comments->count(),
+                    ])
+                    <div class="setlist" data-live-tab-panel="setlist" style="width: 100%;">
                         @include('mypage.attendances._setlist_cards', ['setlistModel' => $isOfficial ? $attendance->dbSetlist : $attendance->userSetlist, 'songs' => $songs, 'kind' => $isOfficial ? 'official' : 'user', 'isFromTimeline' => $isFromTimeline, 'selectedDailySongs' => $attendance->selected_daily_songs ?? []])
                     </div>
+                    @if ($hasLiveStats)
+                        <div data-live-tab-panel="analyze" hidden>
+                            @include('mypage.attendances._live_stats', ['liveStats' => $liveStats] + array_filter(['liveStatsSongUrl' => $liveStatsSongUrl ?? null, 'liveStatsTourUrl' => $liveStatsTourUrl ?? null]))
+                        </div>
+                    @endif
+                    @if ($hasTimeline)
+                        <div data-live-tab-panel="timeline" hidden>
+                            @include('mypage.attendances._live_timeline', ['releaseYears' => $liveStats['releaseYears']] + array_filter(['liveStatsSongUrl' => $liveStatsSongUrl ?? null]))
+                        </div>
+                    @endif
                 @endif
 
-                <div class="timeline-card timeline-card--plain" style="margin-top: 40px;">
+                {{-- 参加予定の記録（タブが無い）は、セトリの欄の下にいつも出す --}}
+                <div class="timeline-card timeline-card--plain" @unless ($attendance->is_planned) data-live-tab-panel="comment" hidden @endunless style="margin-top: {{ $attendance->is_planned ? '40px' : '0' }};">
                     <div class="timeline-card-footer" style="margin: 20px 0;">
                         <div class="timeline-card-footer-left">
                             <div class="timeline-rating" data-update-url="{{ route('mypage.timeline.update', $attendance) }}">

@@ -224,6 +224,11 @@ function initTimelineCard(card) {
     let noCommentsMessage = card.querySelector('.timeline-no-comments');
 
     function updateCommentCount(delta) {
+        // 参加記録のページの「Comments (3)」のタブの件数も合わせる
+        const tabCount = document.querySelector('.live-tab-count');
+        if (tabCount) {
+            tabCount.textContent = (parseInt(tabCount.textContent, 10) || 0) + delta;
+        }
         if (!commentCount) return;
         const current = parseInt(commentCount.textContent.trim(), 10) || 0;
         commentCount.innerHTML = '<i class="fa-regular fa-comment"></i> ' + (current + delta);
@@ -259,6 +264,26 @@ function initTimelineCard(card) {
         // 編集中は、鉛筆の印の代わりに入力欄の下の「更新」ボタンになる（item の is-editing）
         const checkIcon = btn.querySelector('.timeline-comment-edit-save');
         let isEditing = false;
+        // 編集中だけ、入力欄の下に「キャンセル」「更新」を横に並べる（btn をこの中へ移し、終わったら元の場所へ戻す）
+        const btnHome = btn.nextSibling;
+        const actions = document.createElement('div');
+        actions.className = 'timeline-comment-edit-actions';
+        const cancelBtn = document.createElement('button');
+        cancelBtn.type = 'button';
+        cancelBtn.className = 'timeline-comment-edit-cancel';
+        cancelBtn.textContent = 'キャンセル';
+        actions.appendChild(cancelBtn);
+
+        const endEdit = function () {
+            isEditing = false;
+            bodyInput.hidden = true;
+            bodyDisplay.hidden = false;
+            penIcon.hidden = false;
+            checkIcon.hidden = true;
+            item.classList.remove('is-editing');
+            item.insertBefore(btn, btnHome);
+            actions.remove();
+        };
 
         const resizeBodyInput = function () {
             bodyInput.style.height = 'auto';
@@ -275,7 +300,16 @@ function initTimelineCard(card) {
             penIcon.hidden = true;
             checkIcon.hidden = false;
             item.classList.add('is-editing');
+            bodyInput.after(actions);
+            actions.appendChild(btn);
         };
+
+        // キャンセル：書きかけを捨てて、保存してある本文に戻す
+        cancelBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            bodyInput.value = bodyDisplay.textContent;
+            endEdit();
+        });
 
         const commitEdit = function () {
             const newBody = bodyInput.value.trim();
@@ -292,14 +326,9 @@ function initTimelineCard(card) {
             })
                 .then(function (res) { return res.json(); })
                 .then(function (data) {
-                    isEditing = false;
                     bodyDisplay.textContent = data.body;
                     bodyInput.value = data.body;
-                    bodyInput.hidden = true;
-                    bodyDisplay.hidden = false;
-                    penIcon.hidden = false;
-                    checkIcon.hidden = true;
-                    item.classList.remove('is-editing');
+                    endEdit();
                     showAppToast(data.message);
                 });
         };

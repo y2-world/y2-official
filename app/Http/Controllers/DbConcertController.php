@@ -200,6 +200,10 @@ class DbConcertController extends Controller
             $tab = null;
         }
 
-        return view('db_concerts.show', compact('songs', 'previous', 'next', 'previousUrl', 'nextUrl', 'summaryMode', 'tours', 'tourSetlists', 'artist', 'setlistSummaries', 'summaryRows', 'from', 'tab', 'summaryRowTitles', 'summaryPickedPatterns'));
+        // Analyze・Timeline のタブ：アーティストの stats と同じ決まりで、このライブの stats と発売年の年表（参加記録の人ごとのものは無し）。
+        // これがあると、Summary も別の表示ではなく Setlists の右隣のタブになる（?tab=summary はそのタブを開く）
+        $liveStats = (new \App\Support\ArtistTopics((int) $tours->artist_id))->tourStats((int) $tours->id) + ['firstHeard' => [], 'welcomeBack' => []];
+
+        return view('db_concerts.show', compact('songs', 'previous', 'next', 'previousUrl', 'nextUrl', 'summaryMode', 'tours', 'tourSetlists', 'artist', 'setlistSummaries', 'summaryRows', 'from', 'tab', 'summaryRowTitles', 'summaryPickedPatterns', 'liveStats'));
     }
 }

@@ -15,18 +15,31 @@ class MyPageController extends Controller
 {
     public function index()
     {
+        // Yuki 本人のアカウントは、マイページに一部しか参加記録を登録していないので、Yuki's Setlists の記録の stats（Yuki's Stats）へ
+        if (Auth::guard('external')->user()->is_yuki) {
+            return redirect()->route('stats.index', ['tab' => 'personal']);
+        }
+
         return $this->render(Auth::guard('external')->user());
     }
 
     // Map：行った会場の都道府県を、行った回数で染めた日本地図（本人）
     public function map()
     {
+        if (Auth::guard('external')->user()->is_yuki) {
+            return redirect()->route('stats.map');
+        }
+
         return $this->renderMap(Auth::guard('external')->user());
     }
 
     // Map（他ユーザーのプロフィールから）
     public function showMap(ExternalUser $user)
     {
+        if ($user->is_yuki) {
+            return redirect()->route('stats.map');
+        }
+
         return $this->renderMap($user);
     }
 
@@ -56,6 +69,11 @@ class MyPageController extends Controller
     // ログインしてプロフィールを見た人には、アバター・自己紹介の下に My Statistics をすべて出す
     public function show(ExternalUser $user)
     {
+        // Yuki 本人のアカウントのプロフィールは、Yuki's Setlists の記録の stats（Yuki's Stats）へ
+        if ($user->is_yuki) {
+            return redirect()->route('stats.index', ['tab' => 'personal']);
+        }
+
         return $this->render($user, true);
     }
 

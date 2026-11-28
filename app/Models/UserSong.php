@@ -63,7 +63,8 @@ class UserSong extends Model
             return $manual;
         }
 
-        return $this->firstDiscContaining(UserSingle::class);
+        // カップリングのライブ音源だけが入っているシングルは、その曲のシングルにしない（公式と同じ）
+        return $this->firstDiscContaining(UserSingle::class, null, skipLive: true);
     }
 
     // アルバムは初出のオリジナルアルバム（ベスト盤・企画盤ではないもの）を基準にする。オリジナルアルバムに入っていない曲だけ、ベスト盤・企画盤のいちばん早いもの
@@ -77,7 +78,7 @@ class UserSong extends Model
             ?? $this->firstDiscContaining(UserAlbum::class);
     }
 
-    private function firstDiscContaining(string $model, ?\Closure $scope = null)
+    private function firstDiscContaining(string $model, ?\Closure $scope = null, bool $skipLive = false)
     {
         $songId = (int) $this->id;
 
@@ -85,7 +86,8 @@ class UserSong extends Model
             ->when($scope, $scope)
             ->orderByRaw('date IS NULL')->orderBy('date')->orderBy('id')
             ->get()
-            ->first(fn ($disc) => collect($disc->tracklist ?? [])->contains(fn ($track) => (int) ($track['id'] ?? 0) === $songId));
+            ->first(fn ($disc) => collect($disc->tracklist ?? [])->contains(fn ($track) => (int) ($track['id'] ?? 0) === $songId
+                && !($skipLive && DbSong::isLiveVersion($track['exception'] ?? null))));
     }
 
     // 大文字小文字を無視して既存曲を検索し、無ければ作成する。

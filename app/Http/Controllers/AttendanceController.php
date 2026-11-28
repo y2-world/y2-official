@@ -225,8 +225,11 @@ class AttendanceController extends Controller
         session()->forget('attach_attendance_id');
         $officialArtists = JapaneseNameSorter::sortBy(Artist::whereHas('tours')->get());
         $myArtists = JapaneseNameSorter::sortBy(UserArtist::visibleTo()->get());
+        // Yuki 本人のアカウントは、Yuki's Setlists の公演（まだ登録していない日）からも選べる
+        $user = Auth::guard('external')->user();
+        $yukiCandidates = $user?->is_yuki ? \App\Support\YukiSetlistCandidates::for($user) : null;
 
-        return view('mypage.attendances.create', compact('officialArtists', 'myArtists'));
+        return view('mypage.attendances.create', compact('officialArtists', 'myArtists', 'yukiCandidates'));
     }
 
     // 一覧に無いアーティスト名を入力し、そのままツアー選択画面へ進む。
@@ -724,6 +727,13 @@ class AttendanceController extends Controller
         // スケジュール表（db_concerts.schedule）から日付・会場の候補をドロップダウン用に用意する。
         // パースできる行のみ候補になり、パース失敗時は従来通り手入力にフォールバックできる。
         $scheduleOptions = $this->patternScheduleOptions($tour, $setlist);
+        // 参加日を決めて開いたとき（Yuki's Setlists の公演から選んだとき ?date=）は、その日の候補だけにする
+        $wantedDate = (string) request('date', '');
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $wantedDate)) {
+            $onDate = array_values(array_filter($scheduleOptions, fn ($option) => substr((string) $option['date'], 0, 10) === $wantedDate));
+            $scheduleOptions = $onDate ?: $scheduleOptions;
+            $defaultAttendedDate = $onDate ? $defaultAttendedDate : $wantedDate;
+        }
 
         $selectedDailySongs = request('selected_daily_songs', []);
         $attachTarget = $this->attachTarget($kind, (int) $tour->id);
@@ -959,7 +969,39 @@ class AttendanceController extends Controller
         // ページ構成は共通のまま、アーティスト名・曲名のリンク先だけこの文脈で出し分ける。
         $isFromTimeline = $request->query('from') === 'timeline';
 
-        return view('mypage.attendances.show', compact('attendance', 'tourSetlists', 'tour', 'artist', 'isOfficial', 'songs', 'previous', 'next', 'isOwner', 'backUrl', 'isFromTimeline'));
+        // セトリの下の、その公演の stats（初めて聴いた曲・久しぶりに聴いた曲・久しぶりに演奏された曲・初披露の曲）。
+        // 聴いた曲はその記録の人の、そのアーティストの参加記録で見る（マイページのアーティストの stats と同じ）。
+        // Database のパターンの記録は Database の演奏記録、マイページで作ったアーティストの記録はそのアーティストに登録されたライブで見る
+        $liveStats = null;
+        $liveStatsSongUrl = $isOfficial ? null : fn ($id) => route('mypage.user_songs.show', $id);
+        $liveStatsTourUrl = $isOfficial ? null : fn ($id) => route('mypage.user_concerts.show', $id);
+        if (!$attendance->is_planned && ($isOfficial ? $attendance->dbSetlist : $attendance->userSetlist)) {
+            $heard = \App\Support\ArtistTopics::heardFromAttendances(
+                ExternalUserAttendance::where('external_user_id', $attendance->external_user_id)
+                    ->when($isOfficial,
+                        fn ($q) => $q->with('dbSetlist.tour')->whereHas('dbSetlist.tour', fn ($t) => $t->where('artist_id', $artist->id)),
+                        fn ($q) => $q->with('userSetlist.concert')->whereHas('userSetlist.concert', fn ($t) => $t->where('user_artist_id', $artist->id)))
+                    ->get(),
+                !$isOfficial
+            );
+            $show = collect($heard)->firstWhere('attendance_id', $attendance->id);
+            if ($show) {
+                $liveStats = (new \App\Support\ArtistTopics((int) $artist->id, !$isOfficial))->attendanceSummary($show, $heard);
+            }
+            // Yuki 本人のアカウントは、マイページの参加記録ではなく Yuki's Setlists の参加記録で見る（Yuki's Setlists のセットリストのページと同じ。
+            // マイページには一部しか登録していないため）。その日の Yuki's Setlists の公演が無ければ、マイページの記録のまま
+            if ($isOfficial && $attendance->externalUser?->is_yuki && $attendance->attended_date) {
+                ['heard' => $yukiHeard, 'topics' => $yukiTopics, 'topicUserArtist' => $yukiUserArtist] = (new StatsController())
+                    ->yukiHeard($artist, \App\Models\SlSetlist::where('date', '<=', now()->toDateString())->get());
+                $yukiShow = collect($yukiHeard)->firstWhere('date', $attendance->attended_date->format('Y-m-d'));
+                if ($yukiShow && !$yukiUserArtist) {
+                    $liveStats = $yukiTopics->attendanceSummary($yukiShow + ['tour_id' => $attendance->dbSetlist->tour_id], $yukiHeard);
+                    $liveStatsSongUrl = fn ($id) => route('songs.show', ['id' => $id, 'tab' => 'mine']);
+                }
+            }
+        }
+
+        return view('mypage.attendances.show', compact('attendance', 'tourSetlists', 'tour', 'artist', 'isOfficial', 'songs', 'previous', 'next', 'isOwner', 'backUrl', 'isFromTimeline', 'liveStats', 'liveStatsSongUrl', 'liveStatsTourUrl'));
     }
 
     public function edit(ExternalUserAttendance $attendance)

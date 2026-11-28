@@ -279,11 +279,179 @@ class ArtistTopics
         return $titles;
     }
 
+    // マイページの参加記録を、$heard の形にする。$userArtist = false なら Database のパターンの記録（dbSetlist.tour を読み込んでおく）、
+    // true ならマイページで作ったアーティストの記録（userSetlist.concert を読み込んでおく）。
+    // マイページのアーティストの stats と、参加記録のページの「その公演の stats」で使う
+    public static function heardFromAttendances(iterable $attendances, bool $userArtist = false): array
+    {
+        $setlistOf = fn ($a) => $userArtist ? $a->userSetlist : $a->dbSetlist;
+        $tourOf = fn ($a) => $userArtist ? $a->userSetlist->concert : $a->dbSetlist->tour;
+
+        return collect($attendances)->filter(fn ($a) => $setlistOf($a))->map(fn ($a) => [
+            'date' => $a->attended_date ? $a->attended_date->format('Y-m-d') : substr((string) optional($tourOf($a))->date1, 0, 10),
+            'title' => optional($tourOf($a))->title,
+            'url' => route('mypage.attendances.show', ['attendance' => $a, 'from' => 'stats']),
+            'song_ids' => collect(array_merge($setlistOf($a)->setlist ?? [], $setlistOf($a)->encore ?? []))
+                ->filter(fn ($s) => is_numeric($s['song'] ?? null))->map(fn ($s) => (int) $s['song'])->values()->all(),
+            'titles' => static::versionTitles(array_merge($setlistOf($a)->setlist ?? [], $setlistOf($a)->encore ?? [])),
+            // その公演のツアー（参加記録のページの「その公演の stats」で、このツアーより前のツアーを見るため）
+            'tour_id' => $userArtist ? $setlistOf($a)->user_concert_id : $setlistOf($a)->tour_id,
+            'attendance_id' => $a->id,
+        ])->values()->all();
+    }
+
     private function heardTitle(array $show, int $songId): array
     {
         $version = $show['titles'][$songId] ?? null;
 
         return ['title' => $version ?: $this->songs[$songId], 'version' => $version ?: null];
+    }
+
+    // Database のライブのページの Analyze（アーティストの stats と同じ決まりで、そのライブについて）。
+    // returns：前に演奏したツアー（このライブより前に終わったもの）から1年以上あいて演奏された曲、debuts：このライブで初めて演奏された曲、
+    // lateDebuts：このライブが初演で、発売から1年以上たっていた曲（lateDebuts と同じ決まり。あいた年数の長い順）、
+    // onlyHere：このライブでしか演奏されていない曲（performedOnlyOnce と同じ。同じライブシリーズはまとめない）、
+    // notPlayedSince：このライブのあと演奏されていない曲（このライブより後のライブがあるときだけ。今日までの年数）、
+    // releaseYears：このライブで演奏した曲の発売年の年表（Timeline のタブ）。
+    // ライブの曲はそのライブのパターン全部（段・パターン番号の順に、初めて出てきた順）。まだ開催していないライブは空
+    public function tourStats(int $tourId): array
+    {
+        $empty = ['returns' => [], 'debuts' => [], 'lateDebuts' => [], 'onlyHere' => [], 'notPlayedSince' => [], 'releaseYears' => []];
+        if (!isset($this->tours[$tourId])) {
+            return $empty;
+        }
+        $patterns = $this->setlistsByTour[$tourId] ?? [];
+        usort($patterns, fn ($a, $b) => [(int) ($a->row ?? 1), (int) $a->order_no] <=> [(int) ($b->row ?? 1), (int) $b->order_no]);
+        $songIds = [];
+        foreach ($patterns as $pattern) {
+            foreach (array_merge($pattern->setlist ?? [], $pattern->encore ?? []) as $item) {
+                if ($this->isSong($item)) {
+                    $songIds[(int) $item['song']] = true;
+                }
+            }
+        }
+        $tour = $this->tours[$tourId];
+        $tourDate = substr($tour->date1, 0, 10);
+        $show = ['date' => $tourDate, 'title' => $tour->title, 'url' => null, 'song_ids' => array_keys($songIds), 'titles' => [], 'tour_id' => $tourId];
+        $summary = $this->attendanceSummary($show, []);
+
+        $this->releaseDates ??= $this->releaseDates();
+        $hasLater = (bool) array_filter($this->tours, fn ($other) => $other->date1 > $tour->date1);
+        $today = now()->toDateString();
+        $lateDebuts = $onlyHere = $notPlayedSince = [];
+        foreach (array_keys($songIds) as $songId) {
+            $ids = $this->sortedTours($songId);
+            $row = ['song_id' => $songId, 'title' => $this->songs[$songId], 'version' => null];
+            if (($ids[0] ?? null) === $tourId && isset($this->releaseDates[$songId]) && ($years = self::years($this->releaseDates[$songId], $tourDate)) >= 1) {
+                $lateDebuts[] = $row + ['released' => $this->releaseDates[$songId], 'years' => $years];
+            }
+            if ($ids === [$tourId]) {
+                $onlyHere[] = $row;
+            }
+            if ($hasLater && end($ids) === $tourId) {
+                $notPlayedSince[] = $row + ['years' => self::years(substr($tour->date2 ?? $tour->date1, 0, 10), $today)];
+            }
+        }
+        usort($lateDebuts, fn ($a, $b) => $b['years'] <=> $a['years']);
+
+        return ['returns' => $summary['returns'], 'debuts' => $summary['debuts'], 'lateDebuts' => $lateDebuts, 'onlyHere' => $onlyHere,
+            'notPlayedSince' => $notPlayedSince, 'releaseYears' => $summary['releaseYears']];
+    }
+
+    // 参加記録のページの、その公演の stats のうち、その人の参加記録だけで決まるもの（Database に曲が無いアーティストでも出せる）。
+    // $show はその公演（$heard の1件と同じ形）、$heard はその人のそのアーティストの参加記録の全部、$songTitles は [曲の id => 曲名]（ここに無い曲は数えない）。
+    // $isNew（任意）：[曲の id, 公演日] => 新曲か（「新曲を除く」用。渡さなければ新曲の印を付けない）。
+    // firstHeard：その人がこの公演で初めて生で聴いた曲（前の参加記録に無い曲）。セトリの順
+    // welcomeBack：その人が前に聴いたことのある曲（あいた期間は問わない。1年未満でも出す）。あいた年数の長い順
+    public static function personalListens(array $show, array $heard, array $songTitles, ?callable $isNew = null): array
+    {
+        $before = array_filter($heard, fn ($other) => $other['date'] < $show['date']);
+        $firstHeard = $welcomeBack = [];
+        foreach (array_unique($show['song_ids']) as $songId) {
+            if (!isset($songTitles[$songId])) {
+                continue;
+            }
+            $version = $show['titles'][$songId] ?? null;
+            $title = ['title' => $version ?: $songTitles[$songId], 'version' => $version ?: null];
+            $lastHeard = null;
+            foreach ($before as $other) {
+                if (in_array($songId, $other['song_ids'], true) && ($lastHeard === null || $other['date'] > $lastHeard['date'])) {
+                    $lastHeard = $other;
+                }
+            }
+            if ($lastHeard === null) {
+                // 新曲（そのライブの1年前以降に発売された曲と、発売前だった曲）かどうか。「新曲を除く」で使う（Recent First Listens と同じ）
+                $firstHeard[] = ['song_id' => $songId] + $title + ['new' => $isNew ? $isNew($songId, $show['date']) : false];
+            } else {
+                // 1年未満でも出す（参加記録のページの Welcome Back。2026-11-29 ユーザー。stats のページの Welcome Back は1年以上のまま）
+                $years = self::years($lastHeard['date'], $show['date']);
+                // 1年未満は月数（暦の月）、1ヶ月未満は日数で出す（「0.0年」にならないよう）。並びは日数で
+                $days = (int) round((strtotime($show['date']) - strtotime($lastHeard['date'])) / 86400);
+                $months = (int) \Illuminate\Support\Carbon::parse($lastHeard['date'])->diffInMonths(\Illuminate\Support\Carbon::parse($show['date']));
+                $welcomeBack[] = ['song_id' => $songId] + $title + ['years' => $years, 'months' => $months, 'days' => $days, 'from' => ['date' => $lastHeard['date'], 'title' => $lastHeard['title'] ?? '', 'url' => $lastHeard['url'] ?? null],
+                    'to' => ['date' => $show['date'], 'title' => $show['title'] ?? '', 'url' => $show['url'] ?? null]];
+            }
+        }
+        usort($welcomeBack, fn ($a, $b) => $b['days'] <=> $a['days']);
+
+        return compact('firstHeard', 'welcomeBack');
+    }
+
+    // 参加記録のページの、その公演の stats（セトリの下）。$show はその公演（$heard の1件と同じ形。tour_id も付ける）、$heard はその人のそのアーティストの参加記録の全部。
+    // firstHeard・welcomeBack：personalListens
+    // returns：アーティストが前に演奏したツアー（この公演より前に終わったもの）から1年以上あいて演奏した曲（revivals と同じ決まり）。あいた年数の長い順
+    // debuts：このツアーで初めて演奏された曲（このツアーより前のツアーで演奏していない曲）。セトリの順
+    public function attendanceSummary(array $show, array $heard): array
+    {
+        ['firstHeard' => $firstHeard, 'welcomeBack' => $welcomeBack] = static::personalListens($show, $heard, $this->songs, fn ($songId, $date) => $this->isNewSong($songId, $date));
+        $returns = $debuts = [];
+        foreach (array_unique($show['song_ids']) as $songId) {
+            if (!isset($this->songs[$songId])) {
+                continue;
+            }
+            $title = $this->heardTitle($show, $songId);
+
+            $ids = $this->sortedTours($songId);
+            $prev = null;
+            foreach ($ids as $tourId) {
+                $tour = $this->tours[$tourId];
+                if ($tourId !== ($show['tour_id'] ?? null) && substr($tour->date2 ?? $tour->date1, 0, 10) < $show['date']) {
+                    $prev = $tourId;
+                }
+            }
+            if ($prev !== null) {
+                $prevTour = $this->tours[$prev];
+                $years = self::years(substr($prevTour->date2 ?? $prevTour->date1, 0, 10), $show['date']);
+                if ($years >= 1) {
+                    $returns[] = ['song_id' => $songId] + $title + ['years' => $years, 'previous' => $this->tourInfo($prev), 'date' => $show['date'], 'show' => $show['title'] ?? '', 'show_url' => $show['url'] ?? null];
+                }
+            }
+            if (($ids[0] ?? null) === ($show['tour_id'] ?? null)) {
+                $debuts[] = ['song_id' => $songId] + $title;
+            }
+        }
+        usort($returns, fn ($a, $b) => $b['years'] <=> $a['years']);
+        $releaseYears = $this->releaseYears($show);
+
+        return compact('firstHeard', 'welcomeBack', 'returns', 'debuts', 'releaseYears');
+    }
+
+    // その公演で演奏した曲を、発売年（シングル・アルバムでいちばん早く出た日の年）ごとに、新しい年から（参加記録のページの Analyze の下の年表）。
+    // まだ発売されていない曲（シングル・アルバムに入っていない曲）は 'Unreleased' としていちばん上に。年の中はセトリの順
+    private function releaseYears(array $show): array
+    {
+        $this->releaseDates ??= $this->releaseDates();
+        $years = [];
+        foreach (array_unique($show['song_ids']) as $songId) {
+            if (!isset($this->songs[$songId])) {
+                continue;
+            }
+            $date = $this->releaseDates[$songId] ?? null;
+            $years[$date ? substr($date, 0, 4) : 'Unreleased'][] = ['song_id' => $songId] + $this->heardTitle($show, $songId);
+        }
+        uksort($years, fn ($a, $b) => $a === 'Unreleased' ? -1 : ($b === 'Unreleased' ? 1 : strcmp($b, $a)));
+
+        return $years;
     }
 
     // 自分が聴いた「久しぶり」：参加した公演で聴いた曲が、その前のツアーから何年ぶりの演奏だったか（長い順）

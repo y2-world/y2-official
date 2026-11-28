@@ -111,7 +111,10 @@
         </div>
     </div>
 
-    @if (($tab ?? null) === 'summary')
+    {{-- 公式のライブ（$liveStats がある）は、Summary を Setlists の右隣のタブにする（?tab=summary はそのタブを開く）。
+         マイページのライブのページ（タブが無い）は、今までどおり Summary だけの表示 --}}
+    @php $liveTabsMode = !empty($liveStats); @endphp
+    @if (($tab ?? null) === 'summary' && !$liveTabsMode)
         {{-- Live一覧の「Summary」タブから遷移してきた場合、ページ本文には
              Summarizeの内容をそのままテキスト表示する。ただし、タイトル右の
              パターン一覧アイコン（fa-bars、見出し内で先に描画済み）はDOM上の
@@ -123,7 +126,22 @@
         </div>
         @include('db_concerts._summary_page')
     @else
-        <div class="setlist-standard-page{{ $totalOlCount === 1 ? ' is-single-pattern' : '' }}{{ isset($setlistSummaries) && $setlistSummaries->count() ? ' has-responsive-summary' : '' }}{{ request()->query('view') === 'standard' ? ' is-mobile-selected' : '' }}">
+        {{-- Setlists / Summary / Analyze / Timeline のタブ（公式のライブで、中身があるときだけ）。Summary はパターンに違いのあるライブ、
+             Analyze はアーティストの stats と同じ決まりのそのライブの stats、Timeline は演奏した曲の発売年の年表。
+             SCHEDULE は Setlists のタブにだけ、前後のリンクはどのタブでも出す --}}
+        @php
+            $hasSummaryTab = $liveTabsMode && isset($setlistSummaries) && $setlistSummaries->count();
+            $hasLiveStats = !empty($liveStats) && collect($liveStats)->only(['returns', 'debuts', 'lateDebuts', 'onlyHere', 'notPlayedSince'])->contains(fn ($rows) => count($rows));
+            $hasTimeline = !empty($liveStats['releaseYears'] ?? []);
+        @endphp
+        @if ($hasSummaryTab || $hasLiveStats || $hasTimeline)
+            {{-- 見出し（ライブ名・日付）とタブの間をあける --}}
+            <div class="container" style="padding-top: 30px;">
+                @include('mypage.attendances._live_tabs', ['liveTabs' => array_filter(['setlist' => 'Setlists', 'summary' => $hasSummaryTab ? 'Summary' : null, 'analyze' => $hasLiveStats ? 'Analyze' : null, 'timeline' => $hasTimeline ? 'Timeline' : null]), 'liveMobileDefault' => $hasSummaryTab ? 'summary' : null])
+            </div>
+        @endif
+        <div data-live-tab-panel="setlist">
+        <div class="setlist-standard-page{{ $totalOlCount === 1 ? ' is-single-pattern' : '' }}{{ !$liveTabsMode && isset($setlistSummaries) && $setlistSummaries->count() ? ' has-responsive-summary' : '' }}{{ request()->query('view') === 'standard' ? ' is-mobile-selected' : '' }}">
         <div class="{{ $totalOlCount >= 3 ? 'container-fluid' : 'container' }} database-year-content">
             <div class="row justify-content-center">
                 <div class="{{ $colClass }}">
@@ -135,9 +153,38 @@
         </div>
         </div>
 
-        @if (isset($setlistSummaries) && $setlistSummaries->count())
+        {{-- スマホで Summary を初めに出す表示は、タブの無いライブ（マイページのライブのページ）だけ。公式のライブは Summary のタブ --}}
+        @if (!$liveTabsMode && isset($setlistSummaries) && $setlistSummaries->count())
             <div class="setlist-responsive-summary-page{{ request()->query('view') === 'standard' ? ' is-mobile-hidden' : '' }}">
                 @include('db_concerts._summary_page')
+            </div>
+        @endif
+        </div>{{-- data-live-tab-panel="setlist" --}}
+        @if ($hasSummaryTab)
+            <div data-live-tab-panel="summary" hidden>
+                @include('db_concerts._summary_page')
+            </div>
+        @endif
+        @if ($hasLiveStats)
+            <div data-live-tab-panel="analyze" hidden>
+                <div class="container database-year-content">
+                    <div class="row justify-content-center">
+                        <div class="col-xl-9">
+                            @include('mypage.attendances._live_stats', ['liveStats' => $liveStats])
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+        @if ($hasTimeline)
+            <div data-live-tab-panel="timeline" hidden>
+                <div class="container database-year-content">
+                    <div class="row justify-content-center">
+                        <div class="col-xl-9">
+                            @include('mypage.attendances._live_timeline', ['releaseYears' => $liveStats['releaseYears']])
+                        </div>
+                    </div>
+                </div>
             </div>
         @endif
 
@@ -224,7 +271,8 @@
     <div class="container database-year-content" style="padding-top: 0;">
         <div class="row justify-content-center">
             <div class="col-xl-9">
-                <div class="schedule-text">
+                {{-- SCHEDULE はセトリ（Setlist のタブ）の下にだけ出す。タブの無いライブ・Summary の表示ではいつも出る --}}
+                <div class="schedule-text" data-live-tab-panel="setlist">
                     <!-- Additional content -->
                     @if (!is_null($tours->schedule))
                         @if ($tourSetlists->count())
@@ -430,6 +478,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     updateSummarySubtitleAccordions();
     onWidthResize(updateSummarySubtitleAccordions);
+    // タブ（Setlists / Summary など）を開いたら測り直す（隠れていた間は高さが0で、見出しが消えたままになるため）
+    document.addEventListener('live-tab-opened', updateSummarySubtitleAccordions);
     if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(updateSummarySubtitleAccordions);
     }
@@ -441,9 +491,16 @@ document.addEventListener('DOMContentLoaded', function () {
         var recalcSubtitleHeights = function () {
             var maxH = 0;
             areas.forEach(function (a) { a.style.height = 'auto'; maxH = Math.max(maxH, a.scrollHeight); });
+            // 隠れているタブの中（高さが測れない）は書き込まない。0 を入れると、見出しが消える・見切れる
+            if (maxH === 0) return;
             areas.forEach(function (a) { a.style.height = maxH + 'px'; });
         };
         recalcSubtitleHeights();
+        // タブ（Setlists / Summary など）を開いたら、見出しの折りたたみを測り直してから高さをそろえ直す
+        document.addEventListener('live-tab-opened', function () {
+            updatePatternSubtitleAccordions();
+            recalcSubtitleHeights();
+        });
 
         // 日付・地名を1行目のみ表示している見出しを展開/折りたたみしたら、
         // カード間で揃えている高さも再計算する
@@ -484,7 +541,8 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         var wraps = document.querySelectorAll('.live-column-wrap[data-pattern-label]');
-        var summaryRowNums = Array.prototype.map.call(
+        // タブのあるページ（公式のライブ）は Summary がタブなので、パターン一覧に Summarize・Summaryに移動 を出さない
+        var summaryRowNums = @json(!empty($liveStats)) ? [] : Array.prototype.map.call(
             document.querySelectorAll('.setlist-summary-popup[data-summary-row]'),
             function (popup) { return popup.getAttribute('data-summary-row'); }
         );
@@ -568,7 +626,7 @@ document.addEventListener('DOMContentLoaded', function () {
             option.textContent = wrap.getAttribute('data-pattern-label');
             currentContainer.appendChild(option);
         });
-        @if (($tab ?? null) !== 'summary')
+        @if (!(($tab ?? null) === 'summary' && !$liveTabsMode))
             var isMobileSummaryView = window.matchMedia('(max-width: 767px)').matches
                 && document.querySelector('.setlist-responsive-summary-page:not(.is-mobile-hidden)');
             if (summaryRowNums.length && !isMobileSummaryView) {
@@ -583,6 +641,14 @@ document.addEventListener('DOMContentLoaded', function () {
         @endif
         patternSelect.addEventListener('change', function () {
             if (patternSelect.value === '__summary_page__') {
+                // Summary のタブがあれば、そのタブを開く
+                var summaryTabBtn = document.querySelector('.live-tab-btn[data-live-tab="summary"]');
+                if (summaryTabBtn) {
+                    summaryTabBtn.click();
+                    patternSelect.value = '';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
                 window.location.href = '{{ $liveUrl($tours->id) }}?tab=summary{{ !empty($from) ? '&from=' . urlencode($from) : '' }}';
                 return;
             }
@@ -593,7 +659,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
             var wrap = wraps[Number(patternSelect.value)];
-            @if (($tab ?? null) === 'summary')
+            // タブのあるページで Setlists 以外のタブを開いていたら、Setlists のタブに戻してからそのパターンへ
+            var setlistTabBtn = document.querySelector('.live-tab-btn[data-live-tab="setlist"]');
+            if (setlistTabBtn) {
+                setlistTabBtn.click();
+            }
+            @if (($tab ?? null) === 'summary' && !$liveTabsMode)
                 // Summaryテキスト表示ページでは通常のセットリスト自体を非表示で
                 // 埋め込んでいるだけなので、その場でスクロールしても意味が無い。
                 // 通常表示に切り替え、選択したパターンの位置へ移動する。

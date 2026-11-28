@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Artist;
 use App\Models\SlSetlist;
+use App\Models\SlSong;
 use Illuminate\Http\Request;
 
 class SlSetlistController extends Controller
@@ -168,7 +169,89 @@ class SlSetlistController extends Controller
                   });
             }))->orderBy('date')->orderBy('id')->first();
 
-        return view('sl_setlists.show', compact('artists', 'setlists', 'previous', 'next', 'from'));
+        $liveStatsByArtist = $this->liveStats($setlists);
+
+        return view('sl_setlists.show', compact('artists', 'setlists', 'previous', 'next', 'from', 'liveStatsByArtist'));
+    }
+
+    // Yuki's Setlists の曲のまま（Database の曲に置き換えずに）の、そのアーティストの「聴いた公演」の一覧（ArtistTopics の $heard の形）。
+    // そのアーティストのライブの曲と、フェスでそのアーティストが出たステージの曲
+    private function slHeard(Artist $artist, $setlists): array
+    {
+        $heard = [];
+        foreach ($setlists as $setlist) {
+            $items = (int) $setlist->artist_id === (int) $artist->id ? array_merge($setlist->setlist ?? [], $setlist->encore ?? []) : [];
+            if ($setlist->fes) {
+                foreach (array_merge((array) ($setlist->fes_setlist ?? []), (array) ($setlist->fes_encore ?? [])) as $block) {
+                    if (($block['type'] ?? 'song') === 'block' && (string) ($block['artist'] ?? '') === (string) $artist->id) {
+                        $items = array_merge($items, (array) ($block['songs'] ?? []));
+                    }
+                }
+            }
+            $songIds = array_values(array_map('intval', array_filter(array_column($items, 'song'), 'is_numeric')));
+            if ($songIds) {
+                $heard[] = ['date' => substr((string) $setlist->date, 0, 10), 'title' => $setlist->title, 'url' => route('setlists.show', $setlist->id),
+                    'song_ids' => $songIds, 'titles' => \App\Support\ArtistTopics::versionTitles($items), 'sl_setlist_id' => $setlist->id];
+            }
+        }
+
+        return $heard;
+    }
+
+    // セトリの下の、その公演の stats（初めて聴いた曲・久しぶりに聴いた曲・久しぶりに演奏された曲・初披露の曲）。Yuki の参加記録（Yuki's Setlists）で見る。
+    // アーティストごと（フェスは出演したアーティストごと）。[['artist' => Artist, 'stats' => ArtistTopics::attendanceSummary, 'songUrl', 'tourUrl'], ...]。
+    // 「このツアー」は、その日を含む Database のそのアーティスト（組になっているアーティストを含む）のライブ
+    private function liveStats(SlSetlist $setlist): array
+    {
+        if ($setlist->date === null || substr((string) $setlist->date, 0, 10) > now()->toDateString()) {
+            return [];
+        }
+        $artistIds = $setlist->fes
+            ? collect(array_merge((array) ($setlist->fes_setlist ?? []), (array) ($setlist->fes_encore ?? [])))
+                ->filter(fn ($block) => ($block['type'] ?? 'song') === 'block' && is_numeric($block['artist'] ?? null))
+                ->pluck('artist')->map(fn ($id) => (int) $id)->unique()->values()->all()
+            : array_filter([(int) $setlist->artist_id]);
+        $date = substr((string) $setlist->date, 0, 10);
+        $setlistsUntilToday = SlSetlist::where('date', '<=', now()->toDateString())->get();
+        $stats = new StatsController();
+        $result = [];
+        foreach (Artist::whereIn('id', $artistIds)->get() as $artist) {
+            // Database に曲が無く、マイページで作ったアーティストとも結び付いていないアーティストは、Yuki's Setlists の曲で
+            // 初めて聴いた曲・久しぶりに聴いた曲だけ出す（久しぶりに演奏された曲・初披露の曲は演奏記録が要るので出さない）
+            if (!\App\Models\DbSong::where('artist_id', $artist->id)->exists() && !\App\Support\ArtistLink::userArtistFor($artist)) {
+                $heard = $this->slHeard($artist, $setlistsUntilToday);
+                $show = collect($heard)->firstWhere('sl_setlist_id', $setlist->id);
+                if ($show) {
+                    $result[] = [
+                        'artist' => $artist,
+                        'stats' => \App\Support\ArtistTopics::personalListens($show, $heard, SlSong::where('artist_id', $artist->id)->pluck('title', 'id')->all()) + ['returns' => [], 'debuts' => [], 'releaseYears' => []],
+                        'songUrl' => fn ($id) => url('/setlists/songs/' . $id),
+                        'tourUrl' => fn ($id) => route('setlists.show', $id),
+                    ];
+                }
+                continue;
+            }
+            ['heard' => $heard, 'topics' => $topics, 'topicUserArtist' => $userArtist] = $stats->yukiHeard($artist, $setlistsUntilToday);
+            $show = collect($heard)->firstWhere('sl_setlist_id', $setlist->id);
+            if (!$show) {
+                continue;
+            }
+            $show['tour_id'] = $userArtist
+                ? null
+                : \App\Models\DbConcert::whereIn('artist_id', Artist::songArtistIds($artist->id))
+                    ->whereDate('date1', '<=', $date)
+                    ->where(fn ($q) => $q->whereDate('date2', '>=', $date)->orWhere(fn ($q2) => $q2->whereNull('date2')->whereDate('date1', $date)))
+                    ->orderByDesc('date1')->value('id');
+            $result[] = [
+                'artist' => $artist,
+                'stats' => $topics->attendanceSummary($show, $heard),
+                // マイページで作ったアーティストと結び付いた曲は、マイページの曲・ライブのページへ（アーティストの stats と同じ）
+                'songUrl' => $userArtist ? fn ($id) => route('mypage.user_songs.show', ['id' => $id, 'tab' => 'mine']) : fn ($id) => route('songs.show', ['id' => $id, 'tab' => 'mine']),
+                'tourUrl' => $userArtist ? fn ($id) => route('mypage.user_concerts.show', $id) : fn ($id) => route('live.show', $id),
+            ];
+        }
+
+        return $result;
     }
 
     /**

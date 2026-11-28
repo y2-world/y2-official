@@ -920,6 +920,57 @@ class StatsController extends Controller
     // アーティスト詳細ページ
     // =====================================
 
+    // Yuki の参加記録（Yuki's Setlists）から、そのアーティストの「聴いた公演」の一覧（ArtistTopics の $heard の形）と、そのアーティストの ArtistTopics。
+    // アーティストの stats のトピックスと、Yuki's Setlists のセットリストのページの「その公演の stats」で使う。$setlists は Yuki's Setlists のセットリスト（今日まで）
+    public function yukiHeard(Artist $artist, $setlists): array
+    {
+        $topicUserArtist = DbSong::where('artist_id', (int) $artist->id)->exists() ? null : \App\Support\ArtistLink::userArtistFor($artist);
+        if ($topicUserArtist) {
+            $userSongIdsByTitle = \App\Models\UserSong::where('user_artist_id', $topicUserArtist->id)->get()
+                ->mapWithKeys(fn ($song) => [\App\Support\ArtistLink::normalize($song->title) => $song->id]);
+            $slToDbSong = SlSong::where('artist_id', (int) $artist->id)->get()
+                ->mapWithKeys(fn ($slSong) => [$slSong->id => $userSongIdsByTitle[\App\Support\ArtistLink::normalize($slSong->title)] ?? null])
+                ->filter();
+        } else {
+            $slToDbSong = SlSong::whereNotNull('db_song_id')->pluck('db_song_id', 'id');
+        }
+        // Database でそのアーティストのソロ（type=4、Mr.Children のメンバーのソロ活動）があった日。
+        // Yuki's Setlists ではフェスとして入れ、出演者は「桜井和寿」などになっているので、その日のフェスは出演者を問わずそのアーティストの曲を聴いた曲にする
+        $soloDates = DbConcert::where('artist_id', (int) $artist->id)->where('type', 4)->whereNotNull('date1')->get(['date1', 'date2'])
+            ->map(fn ($concert) => [substr((string) $concert->date1, 0, 10), substr((string) ($concert->date2 ?: $concert->date1), 0, 10)]);
+        $ownSlSongIds = SlSong::where('artist_id', (int) $artist->id)->pluck('id')->flip();
+        $heard = [];
+        foreach ($setlists as $setlist) {
+            $items = [];
+            if ($setlist->artist_id == $artist->id) {
+                $items = array_merge($setlist->setlist ?? [], $setlist->encore ?? []);
+            } elseif ($this->isCrossoverLive($setlist, (int) $artist->id)) {
+                $items = $this->ownSongsIn(array_merge($setlist->setlist ?? [], $setlist->encore ?? []), (int) $artist->id);
+            } elseif ($setlist->fes == 1) {
+                $date = substr((string) $setlist->date, 0, 10);
+                $isSolo = $soloDates->contains(fn ($range) => $range[0] <= $date && $date <= $range[1]);
+                $items = array_filter($this->flattenFesSongs(array_merge($setlist->fes_setlist ?? [], $setlist->fes_encore ?? [])),
+                    fn ($songData) => (isset($songData['artist']) && (string) $songData['artist'] === (string) $artist->id)
+                        || ($isSolo && is_numeric($songData['song'] ?? null) && isset($ownSlSongIds[(int) $songData['song']])));
+            }
+            $songIds = [];
+            foreach ($items as $songData) {
+                if (is_numeric($songData['song'] ?? null) && isset($slToDbSong[(int) $songData['song']])) {
+                    $songIds[] = (int) $slToDbSong[(int) $songData['song']];
+                }
+            }
+            if ($songIds) {
+                $heard[] = ['date' => substr((string) $setlist->date, 0, 10), 'title' => $setlist->title, 'url' => route('setlists.show', $setlist->id), 'song_ids' => $songIds,
+                    'titles' => \App\Support\ArtistTopics::versionTitles($items, fn ($id) => $slToDbSong[$id] ?? null),
+                    // セットリストのページの「その公演の stats」で、自分の公演を見つけるため
+                    'sl_setlist_id' => $setlist->id];
+            }
+        }
+        $topics = $topicUserArtist ? new \App\Support\ArtistTopics($topicUserArtist->id, true) : new \App\Support\ArtistTopics((int) $artist->id);
+
+        return ['heard' => $heard, 'topics' => $topics, 'topicUserArtist' => $topicUserArtist];
+    }
+
     public function getArtistTopSongs($artistId)
     {
         $artist = Artist::find($artistId);
@@ -1114,47 +1165,7 @@ class StatsController extends Controller
         // トピックス（最近初めて聴いた曲・久しぶりに聴いた曲・自分が聴いた「久しぶり」・初めて聴いた曲の年表）。
         // 参加記録の曲（SlSong）を、紐付いたDatabaseの曲（DbSong）に置き換えて使う。
         // 公式の Database に曲が無く、マイページで作られた同じ名前のアーティストと結び付いていれば、曲名でそのアーティストの曲に置き換える
-        $topicUserArtist = DbSong::where('artist_id', (int) $artistId)->exists() ? null : \App\Support\ArtistLink::userArtistFor($artist);
-        if ($topicUserArtist) {
-            $userSongIdsByTitle = \App\Models\UserSong::where('user_artist_id', $topicUserArtist->id)->get()
-                ->mapWithKeys(fn ($song) => [\App\Support\ArtistLink::normalize($song->title) => $song->id]);
-            $slToDbSong = SlSong::where('artist_id', (int) $artistId)->get()
-                ->mapWithKeys(fn ($slSong) => [$slSong->id => $userSongIdsByTitle[\App\Support\ArtistLink::normalize($slSong->title)] ?? null])
-                ->filter();
-        } else {
-            $slToDbSong = SlSong::whereNotNull('db_song_id')->pluck('db_song_id', 'id');
-        }
-        // Database でそのアーティストのソロ（type=4、Mr.Children のメンバーのソロ活動）があった日。
-        // Yuki's Setlists ではフェスとして入れ、出演者は「桜井和寿」などになっているので、その日のフェスは出演者を問わずそのアーティストの曲を聴いた曲にする
-        $soloDates = DbConcert::where('artist_id', (int) $artistId)->where('type', 4)->whereNotNull('date1')->get(['date1', 'date2'])
-            ->map(fn ($concert) => [substr((string) $concert->date1, 0, 10), substr((string) ($concert->date2 ?: $concert->date1), 0, 10)]);
-        $ownSlSongIds = SlSong::where('artist_id', (int) $artistId)->pluck('id')->flip();
-        $heard = [];
-        foreach ($setlists as $setlist) {
-            $items = [];
-            if ($setlist->artist_id == $artistId) {
-                $items = array_merge($setlist->setlist ?? [], $setlist->encore ?? []);
-            } elseif ($this->isCrossoverLive($setlist, (int) $artistId)) {
-                $items = $this->ownSongsIn(array_merge($setlist->setlist ?? [], $setlist->encore ?? []), (int) $artistId);
-            } elseif ($setlist->fes == 1) {
-                $date = substr((string) $setlist->date, 0, 10);
-                $isSolo = $soloDates->contains(fn ($range) => $range[0] <= $date && $date <= $range[1]);
-                $items = array_filter($this->flattenFesSongs(array_merge($setlist->fes_setlist ?? [], $setlist->fes_encore ?? [])),
-                    fn ($songData) => (isset($songData['artist']) && (string) $songData['artist'] === (string) $artistId)
-                        || ($isSolo && is_numeric($songData['song'] ?? null) && isset($ownSlSongIds[(int) $songData['song']])));
-            }
-            $songIds = [];
-            foreach ($items as $songData) {
-                if (is_numeric($songData['song'] ?? null) && isset($slToDbSong[(int) $songData['song']])) {
-                    $songIds[] = (int) $slToDbSong[(int) $songData['song']];
-                }
-            }
-            if ($songIds) {
-                $heard[] = ['date' => substr((string) $setlist->date, 0, 10), 'title' => $setlist->title, 'url' => route('setlists.show', $setlist->id), 'song_ids' => $songIds,
-                    'titles' => \App\Support\ArtistTopics::versionTitles($items, fn ($id) => $slToDbSong[$id] ?? null)];
-            }
-        }
-        $topics = $topicUserArtist ? new \App\Support\ArtistTopics($topicUserArtist->id, true) : new \App\Support\ArtistTopics((int) $artistId);
+        ['heard' => $heard, 'topics' => $topics, 'topicUserArtist' => $topicUserArtist] = $this->yukiHeard($artist, $setlists);
         // 曲のリンクは、2つ目のタブ（ログインしている人で決まる。Yuki なら Yuki's Live Attendances）で開く（?tab=mine）。
         // 結び付いたアーティストの曲・ライブは、マイページのページへ
         $topicSongUrl = $topicUserArtist

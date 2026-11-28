@@ -5246,16 +5246,32 @@ a.setlist-card:hover {
     right: 0;
 }
 
-/* 編集中は、鉛筆の印の代わりに入力欄の下へ「更新」ボタン（送信ボタンと同じ形） */
+/* 編集中は、鉛筆の印の代わりに入力欄の下へ「キャンセル」「更新」ボタン（更新は送信ボタンと同じ形） */
+.timeline-comment-edit-actions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 8px 0 2px;
+}
+
 .timeline-comment-item.is-editing .timeline-comment-edit {
     position: static;
     display: block;
-    margin: 8px auto 2px;
     padding: 6px 20px;
     border-radius: 20px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     font-size: 0.8rem;
+}
+
+.timeline-comment-edit-cancel {
+    padding: 6px 20px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    background: white;
+    color: #666;
+    font-size: 0.8rem;
+    cursor: pointer;
 }
 
 .timeline-comment-item.is-editing .timeline-comment-body-input {
