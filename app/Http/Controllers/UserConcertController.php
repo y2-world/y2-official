@@ -92,7 +92,10 @@ class UserConcertController extends Controller
             'title' => filled($title) && trim($title) !== ($songTitles[$songId] ?? null) ? trim($title) : null,
         ]));
 
-        return view('db_concerts.show', compact('songs', 'previous', 'next', 'summaryMode', 'tours', 'tourSetlists', 'artist', 'setlistSummaries', 'summaryRows', 'from', 'tab', 'summaryRowTitles', 'summaryPickedPatterns', 'songUrl') + [
+        // Summary・Analyze・Timeline のタブ（公式の Database のライブのページと同じ。そのアーティストに登録されたライブ・シングル・アルバムで見る）
+        $liveStats = (new \App\Support\ArtistTopics((int) $tours->user_artist_id, true))->tourStats((int) $tours->id) + ['firstHeard' => [], 'welcomeBack' => []];
+
+        return view('db_concerts.show', compact('songs', 'previous', 'next', 'summaryMode', 'tours', 'tourSetlists', 'artist', 'setlistSummaries', 'summaryRows', 'from', 'tab', 'summaryRowTitles', 'summaryPickedPatterns', 'songUrl', 'liveStats') + [
             'liveUrl' => fn ($tourId) => route('mypage.user_concerts.show', $tourId),
             'artistUrl' => route('mypage.user_artists.show', $artist->id),
             'breadcrumbs' => [

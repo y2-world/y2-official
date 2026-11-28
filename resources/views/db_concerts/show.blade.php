@@ -111,8 +111,8 @@
         </div>
     </div>
 
-    {{-- 公式のライブ（$liveStats がある）は、Summary を Setlists の右隣のタブにする（?tab=summary はそのタブを開く）。
-         マイページのライブのページ（タブが無い）は、今までどおり Summary だけの表示 --}}
+    {{-- ライブのページ（公式・マイページとも $liveStats がある）は、Summary を Setlists の右隣のタブにする（?tab=summary はそのタブを開く）。
+         $liveStats を渡さないときは、今までどおり Summary だけの表示 --}}
     @php $liveTabsMode = !empty($liveStats); @endphp
     @if (($tab ?? null) === 'summary' && !$liveTabsMode)
         {{-- Live一覧の「Summary」タブから遷移してきた場合、ページ本文には
@@ -171,7 +171,7 @@
                 <div class="container database-year-content" style="padding-top: 0;">
                     <div class="row justify-content-center">
                         <div class="col-xl-9">
-                            @include('mypage.attendances._live_stats', ['liveStats' => $liveStats])
+                            @include('mypage.attendances._live_stats', ['liveStats' => $liveStats, 'liveStatsSongUrl' => fn ($id) => $songUrl($id), 'liveStatsTourUrl' => $liveUrl])
                         </div>
                     </div>
                 </div>
@@ -182,7 +182,7 @@
                 <div class="container database-year-content" style="padding-top: 0;">
                     <div class="row justify-content-center">
                         <div class="col-xl-9">
-                            @include('mypage.attendances._live_timeline', ['releaseYears' => $liveStats['releaseYears']])
+                            @include('mypage.attendances._live_timeline', ['releaseYears' => $liveStats['releaseYears'], 'liveStatsSongUrl' => fn ($id) => $songUrl($id)])
                         </div>
                     </div>
                 </div>
