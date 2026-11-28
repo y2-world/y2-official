@@ -146,7 +146,7 @@ document.addEventListener('change', function (e) {
 @if (count($liveStats['returns']))
 <div class="stats-section visible">
     <h2 class="section-title"><i class="fas fa-rotate-left"></i> Long-Awaited Returns
-    <span class="section-title-desc">この公演で演奏された曲が、前のツアーから何年ぶりの演奏だったか（1年以上）</span></h2>
+    <span class="section-title-desc">この公演で演奏された曲が、前のツアーから何年ぶりの演奏だったか</span></h2>
     <div class="stats-table-container">
         <table class="stats-table topic-pc">
             <thead><tr><th class="rank-col">Rank</th><th>Song Title</th><th>Tour Title</th><th class="count-col">Years</th></tr></thead>
@@ -191,7 +191,7 @@ document.addEventListener('change', function (e) {
 {{-- Most Listened Songs（Yuki's Setlists のページだけ。$showMostListened）：この公演で聴いた曲を、この公演までに聴いた回数の多い順。いちばん下 --}}
 @if (!empty($showMostListened))
     @include('mypage.attendances._live_stats_badges', ['shown' => $liveStatsShown, 'section' => ['rows' => $liveStats['mostListened'] ?? [], 'icon' => 'fa-fire', 'title' => 'Most Listened Songs',
-        'desc' => 'この公演までに聴いた回数（この公演を含む）', 'label' => 'Times', 'badge' => fn ($row) => $row['count'], 'rankKey' => 'count']])
+        'desc' => 'この公演までに聴いた回数', 'label' => 'Times', 'badge' => fn ($row) => $row['count'], 'rankKey' => 'count']])
 @endif
 
 </div>
