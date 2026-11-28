@@ -35,7 +35,7 @@
                         <div class="select-card-list">
                             @foreach ($yukiCandidates['matched'] as $candidate)
                                 @foreach ($candidate['patterns'] as $choice)
-                                    <a href="{{ route('mypage.attendances.form', ['setlistId' => 'official-' . $choice['pattern']->id, 'date' => $candidate['date'], 'selected_daily_songs' => $choice['daily']]) }}" class="select-card">
+                                    <a href="{{ route('mypage.attendances.form', ['setlistId' => 'official-' . $choice['pattern']->id, 'date' => $candidate['date'], 'venue' => $candidate['venue'], 'selected_daily_songs' => $choice['daily']]) }}" class="select-card">
                                         <span class="select-card-body">
                                             <span class="select-card-meta">{{ $candidate['artist'] }}</span>
                                             <span class="select-card-title">{{ $candidate['tour']->title }}@if (count($candidate['patterns']) > 1) ／ {{ \App\Support\PatternTitle::oneLine($choice['pattern']) ?: 'パターン ' . $loop->iteration }}@endif</span>

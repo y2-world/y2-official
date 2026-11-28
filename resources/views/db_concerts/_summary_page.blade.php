@@ -40,7 +40,7 @@
                                     @elseif ($rowTitleList->count() === 1 && $summaryRows->count() > 1)
                                         {{-- 表示するrowが複数ある場合は、rowごとのグループ名を見出しにする。 --}}
                                         <div class="setlist-subtitle-area">
-                                            <h5 class="setlist-subtitle-heading">{{ $rowTitleList->first() }}</h5>
+                                            <h5 class="setlist-subtitle-heading setlist-summary-group-title">{{ $rowTitleList->first() }}</h5>
                                         </div>
                                     @elseif ($rowTitleList->count() >= 2)
                                         {{-- rowの途中でグループタイトルが切り替わる場合（例:
@@ -48,7 +48,7 @@
                                              1つだけを見出しにすると残りのグループの存在が分からなく
                                              なるため、全タイトルを列挙する。 --}}
                                         <div class="setlist-subtitle-area">
-                                            <h5 class="setlist-subtitle-heading">{!! $rowTitleList->map(fn ($title) => e($title))->implode(' / ') !!}</h5>
+                                            <h5 class="setlist-subtitle-heading setlist-summary-group-title">{!! $rowTitleList->map(fn ($title) => e($title))->implode(' / ') !!}</h5>
                                         </div>
                                     @else
                                         {{-- rowにDbSetlistRowのグループ名が設定されていない場合、代わりに

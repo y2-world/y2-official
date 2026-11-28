@@ -123,7 +123,7 @@
                         $hasTimeline = !empty($liveStats['releaseYears'] ?? []);
                     @endphp
                     @include('mypage.attendances._live_tabs', [
-                        'liveTabsMarginTop' => '15px',
+                        'liveTabsMarginTop' => '12px',
                         'liveTabs' => array_filter(['setlist' => 'Setlists', 'analyze' => $hasLiveStats ? 'Analyze' : null, 'timeline' => $hasTimeline ? 'Timeline' : null, 'comment' => 'Comments']),
                         'liveCommentCount' => $attendance->comments->count(),
                     ])
@@ -143,7 +143,7 @@
                 @endif
 
                 {{-- 参加予定の記録（タブが無い）は、セトリの欄の下にいつも出す --}}
-                <div class="timeline-card timeline-card--plain" @unless ($attendance->is_planned) data-live-tab-panel="comment" hidden @endunless style="margin-top: {{ $attendance->is_planned ? '40px' : '0' }};">
+                <div class="timeline-card timeline-card--plain" @unless ($attendance->is_planned) data-live-tab-panel="comment" hidden @endunless style="margin-top: {{ $attendance->is_planned ? '40px' : '-4px' }};">
                     <div class="timeline-card-footer" style="margin: 20px 0;">
                         <div class="timeline-card-footer-left">
                             <div class="timeline-rating" data-update-url="{{ route('mypage.timeline.update', $attendance) }}">

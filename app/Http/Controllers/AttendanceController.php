@@ -727,12 +727,12 @@ class AttendanceController extends Controller
         // スケジュール表（db_concerts.schedule）から日付・会場の候補をドロップダウン用に用意する。
         // パースできる行のみ候補になり、パース失敗時は従来通り手入力にフォールバックできる。
         $scheduleOptions = $this->patternScheduleOptions($tour, $setlist);
-        // 参加日を決めて開いたとき（Yuki's Setlists の公演から選んだとき ?date=）は、その日の候補だけにする
+        // 参加日を決めて開いたとき（Yuki's Setlists の公演から選んだとき ?date=&venue=）は、その日付・会場のまま登録する
+        // （Database のスケジュールに無い日でも、スケジュールの別の日に置き換えない）
         $wantedDate = (string) request('date', '');
         if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $wantedDate)) {
             $onDate = array_values(array_filter($scheduleOptions, fn ($option) => substr((string) $option['date'], 0, 10) === $wantedDate));
-            $scheduleOptions = $onDate ?: $scheduleOptions;
-            $defaultAttendedDate = $onDate ? $defaultAttendedDate : $wantedDate;
+            $scheduleOptions = $onDate ?: [['date' => $wantedDate, 'venue' => trim((string) request('venue', ''))]];
         }
 
         $selectedDailySongs = request('selected_daily_songs', []);

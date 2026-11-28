@@ -291,9 +291,10 @@
                     $hasTimeline = collect($liveStatsByArtist ?? [])->contains($artistHasTimeline);
                 @endphp
                 @if ($hasLiveStats || $hasTimeline)
-                    @include('mypage.attendances._live_tabs', ['liveTabsMarginTop' => '15px', 'liveTabs' => array_filter(['setlist' => 'Setlists', 'analyze' => $hasLiveStats ? 'Analyze' : null, 'timeline' => $hasTimeline ? 'Timeline' : null])])
+                    @include('mypage.attendances._live_tabs', ['liveTabsMarginTop' => '12px', 'liveTabs' => array_filter(['setlist' => 'Setlists', 'analyze' => $hasLiveStats ? 'Analyze' : null, 'timeline' => $hasTimeline ? 'Timeline' : null])])
                 @endif
-                <div data-live-tab-panel="setlist">
+                {{-- タブがあるときは、セトリの上の 10px を差し引いて、タブの 27px 下に来るようにする --}}
+                <div data-live-tab-panel="setlist" @if ($hasLiveStats || $hasTimeline) style="margin-top: -10px;" @endif>
                 <div class="setlist-row setlist-row--single" style="justify-content: safe center;">
                 <div class="live-column-wrap">
                 <div class="live-column">

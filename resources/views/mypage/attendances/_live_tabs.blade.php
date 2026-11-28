@@ -1,10 +1,11 @@
 {{-- 参加した公演のページのタブ。マイページの参加記録のページ（Setlists / Analyze / Timeline / Comments）と、Yuki's Setlists のセットリストのページ（Setlists / Analyze / Timeline）で使う。
      $liveTabs：[キー => 見出し]（最初のタブを開いた状態で出す）。$liveCommentCount（任意）：Comments のタブに出す件数（「Comments (3)」。コメントを書く・消すと増減する）。
-     $liveTabsMarginTop（任意）：タブの上の余白。ヒーロー（紫の帯）からタブまでが、どのページも 30px になるように渡す（参加記録・Yuki's Setlists のページは中身の上に 15px あるので 15px）。
+     $liveTabsMarginTop（任意）：タブの上の余白。ヒーロー（紫の帯）からタブまでが、どのページもタブの下と同じ 27px になるように渡す（Database のライブの Setlists のタブの下の空き。参加記録・Yuki's Setlists のページは中身の上に 15px あるので 12px）。
+     タブの下は 27px。中身の最初の要素にもともと上の余白がある画面は、その分を中身の側で差し引いて、見えるものがタブの 27px 下に来るようにする。
      $liveMobileDefault（任意）：スマホで最初に開くタブ（URL で ?tab= を決めていないとき。Database のライブのページの Summary）。
      中身は data-live-tab-panel="キー" の要素（最初のタブ以外は hidden）。形は曲のページのタブ（Live Performances / My Live Attendances）と同じで、
      文字は中の曲名（stats の表）に合わせて小さめ（0.8rem） --}}
-<div class="song-performance-tabs live-tabs" @if (!empty($liveMobileDefault)) data-mobile-default="{{ $liveMobileDefault }}" @endif style="display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: {{ $liveTabsMarginTop ?? '0' }}; margin-bottom: 8px;">
+<div class="song-performance-tabs live-tabs" @if (!empty($liveMobileDefault)) data-mobile-default="{{ $liveMobileDefault }}" @endif style="display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: {{ $liveTabsMarginTop ?? '0' }}; margin-bottom: 27px;">
     @foreach ($liveTabs as $key => $label)
         <button type="button" class="live-tab-btn" data-live-tab="{{ $key }}"
             style="padding: 6px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; cursor: pointer; {{ $loop->first ? 'border: none; background: #667eea; color: white;' : 'border: 1px solid #667eea; background: white; color: #667eea;' }}">

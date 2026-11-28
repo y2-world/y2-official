@@ -136,11 +136,12 @@
         @endphp
         @if ($hasSummaryTab || $hasLiveStats || $hasTimeline)
             {{-- 見出し（ライブ名・日付）とタブの間をあける --}}
-            <div class="container" style="padding-top: 30px;">
+            <div class="container" style="padding-top: 27px;">
                 @include('mypage.attendances._live_tabs', ['liveTabs' => array_filter(['setlist' => 'Setlists', 'summary' => $hasSummaryTab ? 'Summary' : null, 'analyze' => $hasLiveStats ? 'Analyze' : null, 'timeline' => $hasTimeline ? 'Timeline' : null]), 'liveMobileDefault' => $hasSummaryTab ? 'summary' : null])
             </div>
         @endif
-        <div data-live-tab-panel="setlist">
+        {{-- タブがあるときは、セトリの上の 19px を差し引いて、最初の見出しがタブの 27px 下に来るようにする --}}
+        <div data-live-tab-panel="setlist" @if ($hasSummaryTab || $hasLiveStats || $hasTimeline) style="margin-top: -19px;" @endif>
         <div class="setlist-standard-page{{ $totalOlCount === 1 ? ' is-single-pattern' : '' }}{{ !$liveTabsMode && isset($setlistSummaries) && $setlistSummaries->count() ? ' has-responsive-summary' : '' }}{{ request()->query('view') === 'standard' ? ' is-mobile-selected' : '' }}">
         <div class="{{ $totalOlCount >= 3 ? 'container-fluid' : 'container' }} database-year-content">
             <div class="row justify-content-center">
@@ -161,7 +162,7 @@
         @endif
         </div>{{-- data-live-tab-panel="setlist" --}}
         @if ($hasSummaryTab)
-            <div data-live-tab-panel="summary" hidden>
+            <div data-live-tab-panel="summary" hidden style="margin-top: -25px;">
                 @include('db_concerts._summary_page')
             </div>
         @endif

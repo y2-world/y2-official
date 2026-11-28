@@ -1947,6 +1947,14 @@ a.plain-link:focus-visible,
     }
 }
 
+/* スマホ幅：Summary のグループ名は Setlists のグループ名（sticky見出し）と同じ大きさ */
+@media (max-width: 767px) {
+    .database-year-content h5.setlist-summary-group-title {
+        font-size: 1.1rem;
+        font-weight: 400;
+    }
+}
+
 @media (max-width: 768px) {
     .database-content {
         padding: 30px 15px;
