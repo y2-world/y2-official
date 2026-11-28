@@ -121,7 +121,8 @@ document.addEventListener('change', function (e) {
                 <tr @if ($index >= $liveStatsShown) data-more="1" style="display: none;" @endif>
                     <td class="rank-col">{!! $topicRank($liveStats['welcomeBack'], $index, 'days') !!}</td>
                     <td class="song-title">{!! $topicSongLink($row) !!}</td>
-                    <td style="font-size: 0.85em;">{!! $topicShowLink($row['from']['date'], $row['from']['title'], $row['from']['url'] ?? null) !!}<br>→ {!! $topicShowLink($row['to']['date'], $row['to']['title'], $row['to']['url'] ?? null) !!}</td>
+                    {{-- 前に聴いた公演だけ（「→ この公演」はこのページそのものなので出さない） --}}
+                    <td style="font-size: 0.85em;">{!! $topicShowLink($row['from']['date'], $row['from']['title'], $row['from']['url'] ?? null) !!}</td>
                     <td class="count-col"><span class="count-badge">{{ $welcomeBackBadge($row) }}</span></td>
                 </tr>
                 @endforeach
@@ -131,7 +132,7 @@ document.addEventListener('change', function (e) {
             @include('stats._stacked_head', ['hasRank' => true, 'badgeLabel' => 'Years', 'showArtist' => false])
             @foreach ($liveStats['welcomeBack'] as $index => $row)
                 @include('stats._stacked_row', ['rank' => $topicRank($liveStats['welcomeBack'], $index, 'days'), 'song' => $topicSongLink($row), 'artist' => null, 'showArtist' => false,
-                    'lines' => [['tour' => $topicShowLink($row['from']['date'], $row['from']['title'], $row['from']['url'] ?? null)], ['tour' => '→ ' . $topicShowLink($row['to']['date'], $row['to']['title'], $row['to']['url'] ?? null)]], 'badge' => $welcomeBackBadge($row), 'more' => $index >= $liveStatsShown])
+                    'lines' => [['tour' => $topicShowLink($row['from']['date'], $row['from']['title'], $row['from']['url'] ?? null)]], 'badge' => $welcomeBackBadge($row), 'more' => $index >= $liveStatsShown])
             @endforeach
         </table>
         @include('stats._show_more', ['count' => count($liveStats['welcomeBack']), 'limit' => $liveStatsShown])
@@ -151,8 +152,8 @@ document.addEventListener('change', function (e) {
                 <tr @if ($index >= $liveStatsShown) data-more="1" style="display: none;" @endif>
                     <td class="rank-col">{!! $topicRank($liveStats['returns'], $index, 'years') !!}</td>
                     <td class="song-title">{!! $topicSongLink($row) !!}</td>
-                    <td style="font-size: 0.85em;">{{ substr($row['previous']['date'], 0, 4) }} / <a href="{{ $liveStatsTourUrl($row['previous']['id']) }}" class="stats-link">{{ $row['previous']['title'] }}</a><br>
-                        → {!! $topicShowLink($row['date'], $row['show'], $row['show_url'] ?? null) !!}</td>
+                    {{-- 前回のツアーだけ（「→ この公演・ライブ」はこのページそのものなので出さない） --}}
+                    <td style="font-size: 0.85em;">{{ substr($row['previous']['date'], 0, 4) }} / <a href="{{ $liveStatsTourUrl($row['previous']['id']) }}" class="stats-link">{{ $row['previous']['title'] }}</a></td>
                     <td class="count-col"><span class="count-badge">{{ number_format($row['years'], 1) }}年</span></td>
                 </tr>
                 @endforeach
@@ -162,7 +163,7 @@ document.addEventListener('change', function (e) {
             @include('stats._stacked_head', ['hasRank' => true, 'badgeLabel' => 'Years', 'showArtist' => false])
             @foreach ($liveStats['returns'] as $index => $row)
                 @include('stats._stacked_row', ['rank' => $topicRank($liveStats['returns'], $index, 'years'), 'song' => $topicSongLink($row), 'artist' => null, 'showArtist' => false,
-                    'lines' => [['tour' => $topicShowLink($row['previous']['date'], $row['previous']['title'], $liveStatsTourUrl($row['previous']['id']))], ['tour' => '→ ' . $topicShowLink($row['date'], $row['show'], $row['show_url'] ?? null)]], 'badge' => number_format($row['years'], 1) . '年', 'more' => $index >= $liveStatsShown])
+                    'lines' => [['tour' => $topicShowLink($row['previous']['date'], $row['previous']['title'], $liveStatsTourUrl($row['previous']['id']))]], 'badge' => number_format($row['years'], 1) . '年', 'more' => $index >= $liveStatsShown])
             @endforeach
         </table>
         @include('stats._show_more', ['count' => count($liveStats['returns']), 'limit' => $liveStatsShown])
@@ -179,7 +180,7 @@ document.addEventListener('change', function (e) {
 {{-- Late Live Debuts・Performed Only Once（Database のライブのページだけ。並びは stats と同じ） --}}
 @include('mypage.attendances._live_stats_badges', ['shown' => $liveStatsShown, 'section' => ['rows' => $liveStats['lateDebuts'] ?? [], 'icon' => 'fa-hourglass-start', 'title' => 'Late Live Debuts',
     'desc' => 'このライブが初演で、発売から1年以上たっていた曲', 'label' => 'Years', 'badge' => fn ($row) => number_format($row['years'], 1) . '年', 'rankKey' => 'years',
-    'detail' => fn ($row) => '発売：' . date('Y.m.d', strtotime($row['released']))]])
+    'detail' => fn ($row) => date('Y.m.d', strtotime($row['released']))]])
 @include('mypage.attendances._live_stats_songs', ['section' => ['rows' => $liveStats['onlyHere'] ?? [], 'icon' => 'fa-1', 'title' => 'Performed Only Once', 'desc' => 'このライブでしか演奏されていない曲'], 'topicSongLink' => $topicSongLink, 'shown' => $liveStatsShown])
 
 
