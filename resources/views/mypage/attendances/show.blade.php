@@ -123,6 +123,7 @@
                         $hasTimeline = !empty($liveStats['releaseYears'] ?? []);
                     @endphp
                     @include('mypage.attendances._live_tabs', [
+                        'liveTabsMarginTop' => '15px',
                         'liveTabs' => array_filter(['setlist' => 'Setlists', 'analyze' => $hasLiveStats ? 'Analyze' : null, 'timeline' => $hasTimeline ? 'Timeline' : null, 'comment' => 'Comments']),
                         'liveCommentCount' => $attendance->comments->count(),
                     ])

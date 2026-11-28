@@ -291,7 +291,7 @@
                     $hasTimeline = collect($liveStatsByArtist ?? [])->contains($artistHasTimeline);
                 @endphp
                 @if ($hasLiveStats || $hasTimeline)
-                    @include('mypage.attendances._live_tabs', ['liveTabs' => array_filter(['setlist' => 'Setlists', 'analyze' => $hasLiveStats ? 'Analyze' : null, 'timeline' => $hasTimeline ? 'Timeline' : null])])
+                    @include('mypage.attendances._live_tabs', ['liveTabsMarginTop' => '15px', 'liveTabs' => array_filter(['setlist' => 'Setlists', 'analyze' => $hasLiveStats ? 'Analyze' : null, 'timeline' => $hasTimeline ? 'Timeline' : null])])
                 @endif
                 <div data-live-tab-panel="setlist">
                 <div class="setlist-row setlist-row--single" style="justify-content: safe center;">

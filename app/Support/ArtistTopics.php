@@ -332,7 +332,12 @@ class ArtistTopics
         }
         $tour = $this->tours[$tourId];
         $tourDate = substr($tour->date1, 0, 10);
-        $show = ['date' => $tourDate, 'title' => $tour->title, 'url' => null, 'song_ids' => array_keys($songIds), 'titles' => [], 'tour_id' => $tourId];
+        // 曲名はこのライブのセトリの表記（別表記があればそれ。パターンで違えば最初に出てきたもの）。参加記録のページと同じ
+        $titles = [];
+        foreach ($patterns as $pattern) {
+            $titles += static::versionTitles(array_merge($pattern->setlist ?? [], $pattern->encore ?? []));
+        }
+        $show = ['date' => $tourDate, 'title' => $tour->title, 'url' => null, 'song_ids' => array_keys($songIds), 'titles' => $titles, 'tour_id' => $tourId];
         $summary = $this->attendanceSummary($show, []);
 
         $this->releaseDates ??= $this->releaseDates();
@@ -341,7 +346,7 @@ class ArtistTopics
         $lateDebuts = $onlyHere = $notPlayedSince = [];
         foreach (array_keys($songIds) as $songId) {
             $ids = $this->sortedTours($songId);
-            $row = ['song_id' => $songId, 'title' => $this->songs[$songId], 'version' => null];
+            $row = ['song_id' => $songId] + $this->heardTitle($show, $songId);
             if (($ids[0] ?? null) === $tourId && isset($this->releaseDates[$songId]) && ($years = self::years($this->releaseDates[$songId], $tourDate)) >= 1) {
                 $lateDebuts[] = $row + ['released' => $this->releaseDates[$songId], 'years' => $years];
             }

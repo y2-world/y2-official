@@ -167,7 +167,8 @@
         @endif
         @if ($hasLiveStats)
             <div data-live-tab-panel="analyze" hidden>
-                <div class="container database-year-content">
+                {{-- タブと最初の枠の間は、参加記録・Yuki's Setlists のページと同じ 8px（タブの下の余白だけ） --}}
+                <div class="container database-year-content" style="padding-top: 0;">
                     <div class="row justify-content-center">
                         <div class="col-xl-9">
                             @include('mypage.attendances._live_stats', ['liveStats' => $liveStats])
@@ -178,7 +179,7 @@
         @endif
         @if ($hasTimeline)
             <div data-live-tab-panel="timeline" hidden>
-                <div class="container database-year-content">
+                <div class="container database-year-content" style="padding-top: 0;">
                     <div class="row justify-content-center">
                         <div class="col-xl-9">
                             @include('mypage.attendances._live_timeline', ['releaseYears' => $liveStats['releaseYears']])
